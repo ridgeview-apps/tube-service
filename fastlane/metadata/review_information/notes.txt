@@ -1,0 +1,4 @@
+- No demo user required
+- On the "Status" tab, tap any tube line for a detailed status and links to Twitter
+- Tap "Live arrivals" and search for any station (e.g. "King" for "King's Cross") and view the live arrivals boards
+- Tap "Settings" for feedback / contact info

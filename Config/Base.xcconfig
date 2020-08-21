@@ -1,0 +1,10 @@
+#include "Base.secret.xcconfig"
+
+//
+// Build settings prefixed with APP_SETTING_<VALUE_NAME> are added to BuildSettings.generated.swift.
+// They can then be accessed from code as BuildSettings.VALUE_NAME
+//
+// See: https://medium.com/@hamdullahshah/generating-code-from-xcode-configurations-6fd203ec69ef
+//
+APP_SETTING_APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
+APP_SETTING_CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

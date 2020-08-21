@@ -1,0 +1,14 @@
+devices([
+    "iPhone 12 Pro Max",
+    "iPhone 8 Plus",
+    "iPad Pro (12.9-inch) (4th generation)",
+    "iPad Pro (12.9-inch) (2nd generation)",
+])
+
+languages([
+  "en-GB"
+])
+
+clear_previous_screenshots(true)
+override_status_bar(true)
+erase_simulator(true)

@@ -1,0 +1,6 @@
+#include "Base.xcconfig"
+
+MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service.debug
+PROVISIONING_PROFILE_SPECIFIER = Automatic
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic

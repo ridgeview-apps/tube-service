@@ -1,0 +1,3 @@
+Welcome to Tube Service! A new app for London Underground commuters. 
+
+Tube Service tells you the latest status of all London Underground lines as well as live tube arrivals at your favourite stations. It also gives you quick links to Twitter so you can fact-check whether there really is a "good service" happening right now.

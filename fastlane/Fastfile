@@ -1,0 +1,206 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+require_relative 'config'
+
+default_platform(:ios)
+
+platform :ios do
+
+  lane :beta do
+    load_app_store_connect_api_key($beta_config)
+    add_app_icon_shield($beta_config)
+    build_the_app($beta_config)    
+    upload_to_appcenter($beta_config)    
+  end
+
+  lane :prod do
+    load_app_store_connect_api_key($prod_config)
+    build_the_app($prod_config)
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  # Private lanes
+  private_lane :load_app_store_connect_api_key do |options|
+    app_store_connect_api_key(
+      key_id: options[:app_store_connect_api_key_id],
+      issuer_id: options[:app_store_connect_api_issuer_id],
+      key_filepath: options[:app_store_connect_api_key_filepath],
+      in_house: options[:app_store_connect_api_in_house]
+    )
+  end
+
+  private_lane :build_the_app do |options|
+
+    increment_build_number(
+      # build_number: "1"
+      build_number: "$BITRISE_BUILD_NUMBER"
+    )
+
+    xcargs = {
+      DEVELOPMENT_TEAM: options[:team_id],
+      MAIN_TARGET_BUNDLE_ID: options[:main_target_bundle_id],
+      PROVISIONING_PROFILE_SPECIFIER: options[:provisioning_profile_specifier],
+    }
+
+    xcargs_str = xcargs.map { |key, value| "#{key}='#{value}'" }
+                       .join(" ")
+
+    app_identifiers = all_bundle_types(options).join(",")
+
+    match(
+      git_url: options[:match_git_url],
+      app_identifier: app_identifiers,
+      type: options[:match_type],
+      force_for_new_devices: options[:match_force_for_new_devices]
+      # username: options[:app_store_connect_user_id],
+    )
+
+    # run_tests(
+    #   scheme: options[:xcode_scheme],            
+    #   devices: options[:unit_test_devices],
+    # )
+
+    gym(
+      output_name: options[:output_name],
+      export_method: options[:export_method],
+      scheme: options[:xcode_scheme],
+      configuration: options[:xcode_configuration],
+      export_options: options[:export_options],
+      xcconfig: options[:additional_xcconfig],
+      # codesigning_identity: options[:code_sign_identity], # Set directly in xcode project instead (causes pod-signing issues otherwise)
+      xcargs: xcargs_str
+    )
+
+  end
+
+  ### Grabs the last commit message into a changelog
+  private_lane :changelog do
+    changelog_from_git_commits(
+      commits_count: 1,
+      date_format: "short"
+    )
+  end
+
+  private_lane :upload_to_appcenter do |options|
+    appcenter_upload(
+      api_token: options[:app_center_api_token],
+      owner_name: options[:app_center_owner_name],
+      owner_type: options[:app_center_owner_type],
+      app_name: options[:app_center_app_name],
+      notify_testers: options[:app_center_notify_testers],
+      release_notes: changelog
+    )
+  end
+
+  private_lane :add_app_icon_shield do |options|
+    version = get_version_number
+    shield_colour = options[:shield_colour]
+    shield_prefix = options[:shield_prefix]
+    if version && shield_colour
+      puts("Adding app icon shield: #{version}-#{shield_colour}")
+      add_badge(
+        shield: "#{shield_prefix}-#{version}-#{shield_colour}",
+        no_badge: true
+      )
+    end
+  end
+
+  # Ad-hoc / non-CI actions
+  lane :create_bundle_ids_beta do
+    create_bundle_ids($beta_config)
+  end
+
+  #
+  #  Example: if you're building an iOS with multiple targets (e.g. watch, extensions etc)
+  #
+  #  1. Set MAIN_TARGET_BUNDLE_ID to "com.example.app"
+  #  2. In Xcode, set EACH target's PRODUCT_BUNDLE_IDENTIFIER to the following:
+  #
+  #     - Main iOS target PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID)
+  #     - Watch app PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID).watchkitapp
+  #     - Watch extension PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID).watchkitapp.extension
+  #     - etc
+  #     - (N.B. for watch targets, additionally set the WKCompanionAppId to $(MAIN_TARGET_BUNDLE_ID) in each info.plist file)
+  #
+  #  3. Add each target's bundle IDs to "all_bundle_types" below
+  #
+  private_lane :all_bundle_types do |options|
+    main_target_bundle_id = options[:main_target_bundle_id]
+
+    all_bundle_ids = [
+      "#{main_target_bundle_id}",
+      # "#{main_target_bundle_id}.watchkitapp", # See note above
+      # "#{main_target_bundle_id}.watchkitapp.extension", # See note above
+    ]
+  end
+
+  private_lane :create_bundle_ids do |options|
+
+    all_bundle_types(options).each do |bundle_id|
+      puts("********************************")
+      puts("Creating bundle id: #{bundle_id}")
+      puts("********************************")
+
+      # See: https://docs.fastlane.tools/app-store-connect-api/
+      # "produce" action still doesn't work with App Store Connect API, hence requires flaky
+      # (unreliable) username / password / 2FA etc. Which is why it's better to run
+      # it as a one-off command rather than as part of the CI pipeline.
+      produce(
+        username: options[:app_store_connect_user_id],
+        app_identifier: "#{bundle_id}",
+        app_name: "Tube Service",
+        language: "en-GB",
+        sku: "#{bundle_id}",
+        skip_itc: true
+      )
+    end
+  end
+
+  lane :upload_screenshots do
+    load_app_store_connect_api_key($prod_config)
+    deliver(
+      app_identifier: $prod_config[:main_target_bundle_id],
+      automatic_release: false,
+      submit_for_review: false,
+      overwrite_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      force: true, # Skips the interactive preview of html file before uploading
+    )
+  end
+  
+  lane :submit_for_review do
+    load_app_store_connect_api_key($prod_config)
+    deliver(
+      app_identifier: $prod_config[:main_target_bundle_id],
+      automatic_release: false,
+      submit_for_review: true,
+      build_number: latest_testflight_build_number,
+      precheck_include_in_app_purchases: false,
+      force: true, # Skips the interactive preview of html file before uploading
+      submission_information: {
+        add_id_info_uses_idfa: true,
+        add_id_info_serves_ads: false,
+        add_id_info_tracks_action: false,
+        add_id_info_tracks_install: false,
+        add_id_info_limits_tracking: true,
+      }
+    )
+  end
+  
+end
