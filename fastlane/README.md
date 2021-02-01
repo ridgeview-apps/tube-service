@@ -16,19 +16,9 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
-### ios beta
+### ios build_and_distribute
 ```
-fastlane ios beta
-```
-
-### ios prod
-```
-fastlane ios prod
-```
-
-### ios create_bundle_ids_beta
-```
-fastlane ios create_bundle_ids_beta
+fastlane ios build_and_distribute
 ```
 
 ### ios upload_screenshots
@@ -39,6 +29,11 @@ fastlane ios upload_screenshots
 ### ios submit_for_review
 ```
 fastlane ios submit_for_review
+```
+
+### ios create_bundle_ids
+```
+fastlane ios create_bundle_ids
 ```
 
 

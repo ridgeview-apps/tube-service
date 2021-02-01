@@ -13,8 +13,8 @@ echo "\nimport Foundation\n"
 echo "enum BuildSettings { \n"
 
 env |\
-grep "APP_SETTING_" | \
-sed "s/APP_SETTING_/    static let /" |\
+grep "codeConstant_" | \
+sed "s/codeConstant_/    static let /" |\
 sed -E 's/=(.*)/ = "\1"/' | \
 sed -E 's/"http.*/URL(string: &)!/'
 

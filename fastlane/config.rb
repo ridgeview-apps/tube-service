@@ -3,7 +3,6 @@ require_relative 'config_secrets'
 # Base
 $base_build_config = $base_config_secrets
   .merge({
-    team_id: "3H5L23529U", # Ridgeview Consulting Ltd
     xcode_scheme: "TubeService",
     export_options: {},
     output_name: "TubeService",
@@ -17,7 +16,8 @@ $base_build_config = $base_config_secrets
     app_center_owner_name: "RidgeviewApps",
     app_center_owner_type: "organization",
     app_center_app_name: "TubeService",
-    app_center_notify_testers: true,  
+    app_center_notify_testers: true, 
+    # app_center_destinations: "Beta Testers",
 })
     
 # Beta
@@ -26,11 +26,12 @@ $beta_config = $base_build_config
   .merge({
     main_target_bundle_id: "com.ridgeviewapps.tube-service.beta",
     match_type: "adhoc",
-    provisioning_profile_specifier: "match AdHoc $(PRODUCT_BUNDLE_IDENTIFIER)",
-    xcode_configuration: "Release",
+    xcode_configuration: "Adhoc",
     export_method: "ad-hoc",
     shield_prefix: "Beta",
-    shield_colour: "blue",    
+    shield_colour: "blue",
+    upload_to_appcenter: true,
+    upload_to_testflight: false,
   })
   
 # Prod
@@ -39,9 +40,10 @@ $prod_config = $base_build_config
   .merge({
     main_target_bundle_id: "com.ridgeviewapps.tube-service",
     match_type: "appstore",
-    provisioning_profile_specifier: "match AppStore $(PRODUCT_BUNDLE_IDENTIFIER)",
     xcode_configuration: "Release",
     export_method: "app-store",
+    upload_to_appcenter: false,
+    upload_to_testflight: true,
     export_options: {
       includeBitcode: true,
       compileBitcode: true

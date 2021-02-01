@@ -1,41 +1,113 @@
-# This file contains the fastlane.tools configuration
-# You can find the documentation at https://docs.fastlane.tools
-#
-# For a list of all available actions, check out
-#
-#     https://docs.fastlane.tools/actions
-#
-# For a list of all available plugins, check out
-#
-#     https://docs.fastlane.tools/plugins/available-plugins
-#
-
-
-# Uncomment the line if you want fastlane to automatically update itself
-# update_fastlane
-
 require_relative 'config'
 
 default_platform(:ios)
 
 platform :ios do
 
-  lane :beta do
-    load_app_store_connect_api_key($beta_config)
-    add_app_icon_shield($beta_config)
-    build_the_app($beta_config)    
-    upload_to_appcenter($beta_config)    
+  #
+  # Builds the app and uploads it to App Center (beta distribution) or TestFlight (prod distribution)
+  #
+  lane :build_and_distribute do |options|
+
+    default_config = load_default_config(options)
+    options = default_config.merge(options)
+
+    load_app_store_connect_api_key(options)
+    
+    if options[:shield_colour]
+      add_app_icon_shield(options)
+    end
+    
+    build_the_app(options)
+    
+    if options[:upload_to_appcenter]
+      appcenter_upload(
+        api_token: options[:app_center_api_token],
+        owner_name: options[:app_center_owner_name],
+        owner_type: options[:app_center_owner_type],
+        app_name: options[:app_center_app_name],
+        notify_testers: options[:app_center_notify_testers],
+        # destinations: options[:app_center_destinations],
+        release_notes: changelog
+      )
+    end
+    
+    if options[:upload_to_testflight]
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true
+      )
+    end
+    
   end
 
-  lane :prod do
-    load_app_store_connect_api_key($prod_config)
-    build_the_app($prod_config)
-    upload_to_testflight(
-      skip_waiting_for_build_processing: true
+  lane :upload_screenshots do
+    options = $prod_config
+    load_app_store_connect_api_key(options)
+    deliver(
+      app_identifier: options[:main_target_bundle_id],
+      automatic_release: false,
+      submit_for_review: false,
+      overwrite_screenshots: true,
+      precheck_include_in_app_purchases: false,
+      force: true, # Skips the interactive preview of html file before uploading
+    )
+  end
+  
+  lane :submit_for_review do |options|
+
+    options = $prod_config.merge(options)
+
+    load_app_store_connect_api_key(options)
+
+    main_bundle_id = options[:main_target_bundle_id]
+    
+    testflight_build_no = options[:build_no].to_s
+    if testflight_build_no.empty?
+      testflight_build_no = latest_testflight_build_number(app_identifier: main_bundle_id).to_s
+    end
+
+    puts "Submitting #{testflight_build_no} build number for review"
+
+    # TODO: Dec 2020. Revisit privacy upload later (too new & flaky right now)
+    #
+    # upload_app_privacy_details_to_app_store(
+    #   app_identifier: main_bundle_id,
+    #   username: options[:app_store_connect_user_id],
+    #   json_path: "./fastlane/metadata/app_privacy_details.json",
+    # )
+    
+    deliver(
+      app_identifier: main_bundle_id,
+      automatic_release: false,
+      submit_for_review: true,
+      build_number: testflight_build_no,
+      precheck_include_in_app_purchases: false,
+      app_rating_config_path: "./fastlane/metadata/rating_config.json",
+      force: true, # Skips the interactive preview of html file before uploading
+      price_tier: 0,
+      submission_information: {
+        add_id_info_uses_idfa: true,
+        add_id_info_serves_ads: false,
+        add_id_info_tracks_action: false,
+        add_id_info_tracks_install: false,
+        add_id_info_limits_tracking: true,
+        # content_rights_contains_third_party_content: true,
+        # content_rights_has_rights: true,
+      }
     )
   end
 
-  # Private lanes
+  # Ad-hoc / non-CI actions
+  lane :create_bundle_ids do |options|
+    default_config = load_default_config(options)
+    options = default_config.merge(options)
+    produce_bundle_ids(options)
+  end
+
+
+  #################################################################
+  ##  Private lanes
+  #################################################################
   private_lane :load_app_store_connect_api_key do |options|
     app_store_connect_api_key(
       key_id: options[:app_store_connect_api_key_id],
@@ -48,26 +120,16 @@ platform :ios do
   private_lane :build_the_app do |options|
 
     increment_build_number(
-      # build_number: "1"
       build_number: "$BITRISE_BUILD_NUMBER"
     )
 
-    xcargs = {
-      DEVELOPMENT_TEAM: options[:team_id],
-      MAIN_TARGET_BUNDLE_ID: options[:main_target_bundle_id],
-      PROVISIONING_PROFILE_SPECIFIER: options[:provisioning_profile_specifier],
-    }
-
-    xcargs_str = xcargs.map { |key, value| "#{key}='#{value}'" }
-                       .join(" ")
-
     app_identifiers = all_bundle_types(options).join(",")
-
+    
     match(
       git_url: options[:match_git_url],
       app_identifier: app_identifiers,
       type: options[:match_type],
-      force_for_new_devices: options[:match_force_for_new_devices]
+      force_for_new_devices: options[:match_force_for_new_devices],
       # username: options[:app_store_connect_user_id],
     )
 
@@ -76,15 +138,22 @@ platform :ios do
     #   devices: options[:unit_test_devices],
     # )
 
-    gym(
+    xcargs = {
+      MAIN_TARGET_BUNDLE_ID: options[:main_target_bundle_id],
+    }
+
+    xcargs_str = xcargs.map { |key, value| "#{key}='#{value}'" }
+                       .join(" ")
+
+    build_app(
       output_name: options[:output_name],
       export_method: options[:export_method],
       scheme: options[:xcode_scheme],
       configuration: options[:xcode_configuration],
       export_options: options[:export_options],
       xcconfig: options[:additional_xcconfig],
+      xcargs: xcargs_str,
       # codesigning_identity: options[:code_sign_identity], # Set directly in xcode project instead (causes pod-signing issues otherwise)
-      xcargs: xcargs_str
     )
 
   end
@@ -97,15 +166,15 @@ platform :ios do
     )
   end
 
-  private_lane :upload_to_appcenter do |options|
-    appcenter_upload(
-      api_token: options[:app_center_api_token],
-      owner_name: options[:app_center_owner_name],
-      owner_type: options[:app_center_owner_type],
-      app_name: options[:app_center_app_name],
-      notify_testers: options[:app_center_notify_testers],
-      release_notes: changelog
-    )
+  private_lane :load_default_config do |options|
+    case options[:config]
+    when "beta"
+      $beta_config
+    when "prod"
+      $prod_config
+    else
+      UI.user_error!("ERROR: please specify a config to run e.g. fastlane build_and_distribute config:beta")      
+    end
   end
 
   private_lane :add_app_icon_shield do |options|
@@ -119,11 +188,6 @@ platform :ios do
         no_badge: true
       )
     end
-  end
-
-  # Ad-hoc / non-CI actions
-  lane :create_bundle_ids_beta do
-    create_bundle_ids($beta_config)
   end
 
   #
@@ -150,7 +214,7 @@ platform :ios do
     ]
   end
 
-  private_lane :create_bundle_ids do |options|
+  private_lane :produce_bundle_ids do |options|
 
     all_bundle_types(options).each do |bundle_id|
       puts("********************************")
@@ -167,40 +231,9 @@ platform :ios do
         app_name: "Tube Service",
         language: "en-GB",
         sku: "#{bundle_id}",
-        skip_itc: true
+        skip_itc: true # true -> skip creation of bundle ID in App Store Connect
       )
     end
   end
 
-  lane :upload_screenshots do
-    load_app_store_connect_api_key($prod_config)
-    deliver(
-      app_identifier: $prod_config[:main_target_bundle_id],
-      automatic_release: false,
-      submit_for_review: false,
-      overwrite_screenshots: true,
-      precheck_include_in_app_purchases: false,
-      force: true, # Skips the interactive preview of html file before uploading
-    )
-  end
-  
-  lane :submit_for_review do
-    load_app_store_connect_api_key($prod_config)
-    deliver(
-      app_identifier: $prod_config[:main_target_bundle_id],
-      automatic_release: false,
-      submit_for_review: true,
-      build_number: latest_testflight_build_number,
-      precheck_include_in_app_purchases: false,
-      force: true, # Skips the interactive preview of html file before uploading
-      submission_information: {
-        add_id_info_uses_idfa: true,
-        add_id_info_serves_ads: false,
-        add_id_info_tracks_action: false,
-        add_id_info_tracks_install: false,
-        add_id_info_limits_tracking: true,
-      }
-    )
-  end
-  
 end
