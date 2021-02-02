@@ -8,7 +8,11 @@ The app uses the [Swift Composable Architecture](https://github.com/pointfreeco/
 
 ## Screenshots
 
-![](Docs/Images/Screenshots/iPhone-12-Pro-Max-01-ServiceStatuses.png) ![](Docs/Images/Screenshots/iPhone-12-Pro-Max-02-ServiceStatusDetail.png) ![](Docs/Images/Screenshots/iPhone-12-Pro-Max-03-LiveArrivalsPicker.png) ![](Docs/Images/Screenshots/iPhone-12-Pro-Max-04-LiveArrivalsBoard1.png) ![](Docs/Images/Screenshots/iPhone-12-Pro-Max-05-LiveArrivalsBoard2.png)
+![](Docs/Images/iPhone-12-Pro-Max-01-ServiceStatuses.png)
+![](Docs/Images/iPhone-12-Pro-Max-02-ServiceStatusDetail.png)
+![](Docs/Images/iPhone-12-Pro-Max-03-LiveArrivalsPicker.png)
+![](Docs/Images/iPhone-12-Pro-Max-04-LiveArrivalsBoard1.png)
+![](Docs/Images/iPhone-12-Pro-Max-05-LiveArrivalsBoard2.png)
 
 
 ## Getting Started
