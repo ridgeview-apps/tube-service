@@ -8,9 +8,11 @@ struct ArrivalsBoardView: View {
 
     var body: some View {
         VStack(spacing: 20) {
-            boardHeader
-            arrivalRows
-            expansionButton
+            WithViewStore(store) { viewStore in
+                boardHeader(viewStore: viewStore)
+                arrivalRows(viewStore: viewStore)
+                expansionButton(viewStore: viewStore)
+            }
         }
         .padding(20)
         .background(Color.black)
@@ -18,25 +20,22 @@ struct ArrivalsBoardView: View {
         .animation(.default)
     }
     
-    private var boardHeader: some View {
-        WithViewStore(store) { viewStore in
-            VStack(spacing: 4) {
-                Text(viewStore.platformTitleText)
-                    .font(.headline)
-                HStack(spacing: 8) {
-                    if viewStore.animationState == .refreshing {
-                        ProgressView()
-                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                    }
-                    Text(viewStore.timeText)
-                        .font(.subheadline)
+    private func boardHeader(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> some View {
+        VStack(spacing: 4) {
+            Text(viewStore.platformTitleText)
+                .font(.headline)
+            HStack(spacing: 8) {
+                if viewStore.animationState == .refreshing {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
                 }
-            }.foregroundColor(.white)
-        }
+                Text(viewStore.timeText)
+                    .font(.subheadline)
+            }
+        }.foregroundColor(.white)
     }
     
-    private var arrivalRows: some View {
-        WithViewStore(store) { viewStore in
+    private func arrivalRows(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> some View {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewStore.fixedRows) { row in
                     ArrivalsBoardRowView(row: row)
@@ -48,22 +47,18 @@ struct ArrivalsBoardView: View {
                         .transition(.slideUp)
                 }
             }
-
-        }
     }
     
-    private var expansionButton: some View {
-        WithViewStore(store) { viewStore in
+    @ViewBuilder private func expansionButton(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> some View {
             if viewStore.isExpandable {
                 ExpansionInfoButton(style: .pullDown,
-                                    isExpanded: isExpanded)
+                                    isExpanded: isExpanded(viewStore: viewStore))
                     .foregroundColor(.white)
             }
-        }
     }
     
-    private var isExpanded: Binding<Bool> {
-        ViewStore(store).binding(
+    private func isExpanded(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> Binding<Bool> {
+        viewStore.binding(
             get: \.isExpanded,
             send: ArrivalsBoard.Action.setExpanded
         )
@@ -109,8 +104,9 @@ struct ArrivalsBoardView_Previews: PreviewProvider {
     
     static var previews: some View {
         let store = ArrivalsBoardStore.preview()
-        WithViewStore(store) { viewStore in
-            Group {
+        Group {
+            WithViewStore(store) { viewStore in
+                
                 ArrivalsBoardView(store: store)
                     .onAppear {
                         viewStore.send(.setAnimationState(to: .stopped))

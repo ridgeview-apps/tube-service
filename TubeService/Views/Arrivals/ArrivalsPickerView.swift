@@ -8,7 +8,7 @@ struct ArrivalsPickerView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             List {
-                Section(header: sectionHeader) {
+                Section(header: sectionHeader(viewStore: viewStore)) {
                     if let emptySearchResultsStringKey = viewStore.emptySearchResultsStringKey {
                         Text(LocalizedStringKey(emptySearchResultsStringKey))
                             .italic()
@@ -16,16 +16,16 @@ struct ArrivalsPickerView: View {
                     ForEach(viewStore.selectableStations) { station in
                         if station.hasSingleArrivalsGroup {
                             ArrivalsBoardNavigationLink(store: store,
-                                                        selection: selectedRowId,
-                                                        destinationId: station.arrivalsBoardsListId(at: 0))
+                                                        rowId: station.arrivalsBoardsListId(at: 0),
+                                                        selection: selectedRowId(viewStore: viewStore))
                         } else {
                             DisclosureGroup(
-                                isExpanded: isRowExpanded(for: station),
+                                isExpanded: isRowExpanded(for: station, viewStore: viewStore),
                                 content: {
                                     ForEach(station.sortedArrivalsGroups) { arrivalsGroup in
                                         ArrivalsBoardNavigationLink(store: store,
-                                                                    selection: selectedRowId,
-                                                                    destinationId: .init(station: station, arrivalsGroup: arrivalsGroup))
+                                                                    rowId: .init(station: station, arrivalsGroup: arrivalsGroup),
+                                                                    selection: selectedRowId(viewStore: viewStore))
                                     }
                                 },
                                 label: {
@@ -44,7 +44,7 @@ struct ArrivalsPickerView: View {
                 }
             }
             .navigationSearchBar(
-                text: searchText,
+                text: searchText(viewStore: viewStore),
                 options: [
                     .placeholder: viewStore.placeholderSearchText,
                     .   searchTextFieldAccessibilityId: "stations.picker.search.bar"
@@ -62,78 +62,78 @@ struct ArrivalsPickerView: View {
         }
     }
     
-    private var sectionHeader: some View {
-        WithViewStore(store) { viewStore in
-            if viewStore.sectionHeaderShowsFilterOptions {
-                filterOptionsHeader
-            } else if viewStore.sectionHeaderShowsSearchResultsCount {
-                Text(viewStore.searchResultsCountText)
-            }
+    @ViewBuilder private func sectionHeader(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> some View {
+        if viewStore.sectionHeaderShowsFilterOptions {
+            filterOptionsHeader(viewStore: viewStore)
+        } else if viewStore.sectionHeaderShowsSearchResultsCount {
+            Text(viewStore.searchResultsCountText)
         }
     }
 
-    private var filterOptionsHeader: some View {
-        WithViewStore(store) { viewStore in
-            Picker("", selection: selectedFilterOption) {
-                ForEach(viewStore.filterOptions) { filterOption in
-                    Text(LocalizedStringKey(filterOption.localizedKey))
-                        .tag(filterOption)
-                }
+    private func filterOptionsHeader(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> some View {
+        Picker("", selection: selectedFilterOption(viewStore: viewStore)) {
+            ForEach(viewStore.filterOptions) { filterOption in
+                Text(LocalizedStringKey(filterOption.localizedKey))
+                    .tag(filterOption)
             }
-            .pickerStyle(SegmentedPickerStyle())
-            .padding(.top, 8)
-            .padding([.leading, .trailing, .bottom])
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .background(Color(UIColor.systemBackground))
         }
+        .pickerStyle(SegmentedPickerStyle())
+        .padding(.top, 8)
+        .padding([.leading, .trailing, .bottom])
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+        .background(Color(UIColor.systemBackground))
     }
     
-    private var selectedFilterOption: Binding<ArrivalsPicker.ViewState.Filter> {
-        ViewStore(store).binding(
+    private func selectedFilterOption(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<ArrivalsPicker.ViewState.Filter> {
+        viewStore.binding(
             get: \.selectedFilterOption,
             send: ArrivalsPicker.Action.selectFilterOption
         )
     }
     
-    private var selectedRowId: Binding<ArrivalsBoardsList.Id?> {
-        ViewStore(store).binding(
+    private func selectedRowId(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<ArrivalsBoardsList.Id?> {
+        viewStore.binding(
             get: \.rowSelection.id,
             send: ArrivalsPicker.Action.selectRow
         )
     }
     
-    private var searchText: Binding<String> {
-        ViewStore(store).binding(
+    private func searchText(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<String> {
+        viewStore.binding(
             get: \.searchText,
             send: ArrivalsPicker.Action.search(text:)
         )
     }
     
-    private func isRowExpanded(for station: Station) -> Binding<Bool> {
-        ViewStore(store).binding(
+    private func isRowExpanded(for station: Station, viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<Bool> {
+        viewStore.binding(
             get: { $0.expandedRows.contains(station) },
             send: { ArrivalsPicker.Action.setExpandedRowState(to: $0, for: station) }
         )
-    }
-    
-    private func selectedRowDestination() -> ArrivalsBoardsListView {
-        ArrivalsBoardsListView(store: self.store.arrivalsBoardsListStore)
     }
 }
 
 private struct ArrivalsBoardNavigationLink: View {
     
     let store: ArrivalsPickerStore
-    @Binding var selection: ArrivalsBoardsList.Id?
-    let destinationId: ArrivalsBoardsList.Id
-    
-    private var station: Station { destinationId.station }
-    private var arrivalsGroup: Station.ArrivalsGroup { destinationId.arrivalsGroup }
+    let rowId: ArrivalsBoardsList.State.ID
+    @Binding var selection: ArrivalsBoardsList.State.ID?
+        
+    private var station: Station { rowId.station }
+    private var arrivalsGroup: Station.ArrivalsGroup { rowId.arrivalsGroup }
     
     var body: some View {
         NavigationLink(
-            destination: ArrivalsBoardsListView(store: store.arrivalsBoardsListStore),
-            tag: ArrivalsBoardsList.Id(station: station, arrivalsGroup: arrivalsGroup),
+            destination:
+                IfLetStore(
+                    store.scope(
+                        state: { $0.rowSelection.navigationStates[id: rowId] },
+                        action: { ArrivalsPicker.Action.arrivalsBoardsList(id: rowId, action: $0) }
+                    ),
+                    then: ArrivalsBoardsListView.init(store:)
+                )
+            ,
+            tag: rowId,
             selection: $selection
         ) {
             LineColourKeyTextView(lines: station.hasSingleArrivalsGroup ? station.sortedLines : arrivalsGroup.sortedLineIds,

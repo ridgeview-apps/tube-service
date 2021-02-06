@@ -7,7 +7,7 @@ enum ArrivalsBoardsList {
         var arrivalsGroup: Station.ArrivalsGroup
     }
     
-    struct ViewState: Equatable {
+    struct ViewState: Identifiable, Equatable {
         var id: Id
         var lastRefreshedAt: Date?
         var isRefreshing = false
@@ -25,7 +25,7 @@ enum ArrivalsBoardsList {
         var sectionTitle: String = ""
     }
     
-    typealias State = BaseState<ViewState>
+    typealias State = IdentifiableState<ViewState>
 
     enum Action: Equatable {
         case onAppear
@@ -142,7 +142,7 @@ enum ArrivalsBoardsList {
 
 extension ArrivalsBoardsList.State {
     var isFavourite: Bool {
-        globalState.userPreferences.favourites.contains(viewState.arrivalsGroup.id)
+        self.userPreferences.favourites.contains(self.arrivalsGroup.id)
     }
 }
 

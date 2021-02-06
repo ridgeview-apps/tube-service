@@ -72,3 +72,22 @@ struct BaseState<State: Equatable>: Equatable {
     }
 }
 
+@dynamicMemberLookup
+struct IdentifiableState<ViewState: Equatable>: Equatable, Identifiable where ViewState: Identifiable {
+
+    var id: ViewState.ID { baseState.viewState.id }
+    var baseState: BaseState<ViewState>
+    
+    init(globalState: Global.State, viewState: ViewState) {
+        baseState = .init(globalState: globalState, viewState: viewState)
+    }
+    
+    subscript<Value>(dynamicMember keyPath: KeyPath<BaseState<ViewState>, Value>) -> Value {
+        get { self.baseState[keyPath: keyPath] }
+    }
+    
+    subscript<Value>(dynamicMember keyPath: WritableKeyPath<BaseState<ViewState>, Value>) -> Value {
+        get { self.baseState[keyPath: keyPath] }
+        set { self.baseState[keyPath: keyPath] = newValue }
+    }
+}

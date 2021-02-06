@@ -69,7 +69,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     
     private func startServices() {
         
-    #if RELEASE_BUILD
+    #if ADHOC_BUILD || RELEASE_BUILD
         let config = AppConfig.real
         AppCenter.start(withAppSecret: config.appCenter.appSecret, services: [Analytics.self, Crashes.self])
     #endif

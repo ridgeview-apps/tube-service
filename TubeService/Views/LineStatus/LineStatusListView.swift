@@ -8,15 +8,23 @@ struct LineStatusListView: View {
     var body: some View {
         WithViewStore(self.store) { viewStore in
             List {
-                Section(header: sectionHeader) {
+                Section(header: sectionHeader(viewStore: viewStore)) {
                     if let errorMessage = viewStore.errorMessage {
                         ErrorView(errorMessage: errorMessage)
                     }
                     ForEach(viewStore.statuses) { lineStatus in
                         NavigationLink(
-                            destination: selectedRowDestination,
+                            destination:
+                                IfLetStore(
+                                    store.scope(
+                                        state: { $0.rowSelection.navigationStates[id: lineStatus.id] },
+                                        action: { LineStatusList.Action.lineStatusDetail(id: lineStatus.id, action: $0) }
+                                    ),
+                                    then: LineStatusDetailView.init(store:)
+                                )
+                            ,
                             tag: lineStatus.id,
-                            selection: selectedRowId
+                            selection: selectedRowId(viewStore: viewStore)
                         ) {
                             LineStatusRowView(lineStatus: lineStatus)
                         }
@@ -26,7 +34,7 @@ struct LineStatusListView: View {
             }
             .listStyle(PlainListStyle())
             .navigationBarTitle(viewStore.navigationBarTitle)
-            .navigationBarItems(trailing: navigationBarItems)
+            .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -36,34 +44,30 @@ struct LineStatusListView: View {
         }
     }
     
-    private var sectionHeader: some View {
+    private func sectionHeader(viewStore: ViewStore<LineStatusList.State, LineStatusList.Action>) -> some View {
         HStack(spacing: 8) {
-            Text(ViewStore(store).lastRefreshedAtText)
-            if ViewStore(store).isRefreshing {
+            Text(viewStore.lastRefreshedAtText)
+            if viewStore.isRefreshing {
                 ProgressView()
             }
         }
     }
     
-    private var navigationBarItems: some View {
+    private func navigationBarItems(viewStore: ViewStore<LineStatusList.State, LineStatusList.Action>) -> some View {
         HStack {
             NavigationButton.Refresh {
-                ViewStore(store).send(.refresh)
+                viewStore.send(.refresh)
             }
-            .disabled(ViewStore(store).isRefreshing)
+            .disabled(viewStore.isRefreshing)
             .padding([.leading, .top, .bottom])            
         }
     }
     
-    private var selectedRowId: Binding<LineStatus.ID?> {
-        ViewStore(store).binding(
+    private func selectedRowId(viewStore: ViewStore<LineStatusList.State, LineStatusList.Action>) -> Binding<LineStatus.ID?> {
+        viewStore.binding(
             get: \.rowSelection.id,
             send: LineStatusList.Action.selectRow
         )
-    }
-    
-    private var selectedRowDestination: LineStatusDetailView {
-        LineStatusDetailView(store: store.lineStatusDetailStore)
     }
 }
 

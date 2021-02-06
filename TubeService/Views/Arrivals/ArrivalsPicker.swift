@@ -3,16 +3,31 @@ import ComposableArchitecture
 enum ArrivalsPicker: Equatable {
     
     struct ViewState: Equatable {
+        
         enum Filter: Int, Identifiable, CaseIterable, Codable {
             var id: Int { rawValue }
             case all, favourites
         }
         
         struct RowSelection: Equatable {
-            var id: ArrivalsBoardsList.Id? = nil
-            var arrivalsBoardsListViewState: ArrivalsBoardsList.ViewState = .placeholder
+            var id: ArrivalsBoardsList.State.ID? = nil
+            var navigationStates = IdentifiedArrayOf<ArrivalsBoardsList.State>()
+            
+            mutating func setNavigationState(to destinationViewState: ArrivalsBoardsList.State?) {
+                if let destinationViewState = destinationViewState {
+                    id = destinationViewState.id
+                    if navigationStates[id: destinationViewState.id] != nil {
+                        navigationStates.remove(id: destinationViewState.id)
+                    }
+                    navigationStates.append(destinationViewState)
+                } else {
+                    self.navigationStates = navigationStates.filter { $0.id == self.id }
+                    id = nil
+                }
+            }
         }
         
+        var rowSelection: RowSelection = .init()
         var selectedFilterOption: Filter = .all
         var navigationBarTitle: String = ""
         var stations: IdentifiedArrayOf<Station> = []
@@ -22,7 +37,6 @@ enum ArrivalsPicker: Equatable {
         var placeholderSearchText = ""
         var searchResultsCountText = ""
         var isSearching: Bool = false
-        var rowSelection: RowSelection = .init()
         var hasLoaded: Bool = false
         
         var filterOptions: [Filter] {
@@ -58,10 +72,10 @@ enum ArrivalsPicker: Equatable {
         case onAppear
         case search(text: String)
         case selectFilterOption(ViewState.Filter)
-        case selectRow(ArrivalsBoardsList.Id?)
+        case selectRow(ArrivalsBoardsList.State.ID?)
         case toggleExpandedRowState(for: Station)
         case setExpandedRowState(to: Bool, for: Station)
-        case arrivalsBoardsList(ArrivalsBoardsList.Action)
+        case arrivalsBoardsList(id: ArrivalsBoardsList.State.ID, action: ArrivalsBoardsList.Action)
         case didLoadStations([Station])
         case refreshStations
         case global(Global.Action)
@@ -78,7 +92,7 @@ enum ArrivalsPicker: Equatable {
                                 action: /Action.global,
                                 environment: { $0 }),
         
-        ArrivalsBoardsList.reducer.pullback(state: \.arrivalsBoardsListState,
+        ArrivalsBoardsList.reducer.forEach(state: \.rowSelection.navigationStates,
                                             action: /Action.arrivalsBoardsList,
                                             environment: { $0 }),
         
@@ -132,13 +146,13 @@ enum ArrivalsPicker: Equatable {
                 guard state.rowSelection.id != rowId else {
                     return .none
                 }
-                // TODO: fix iOS14 "splitview" bug here
                 if let rowId = rowId {
-                    state.rowSelection.id = rowId
-                    state.rowSelection.arrivalsBoardsListViewState = .init(id: rowId)
+                    let navigationState = ArrivalsBoardsList.State(globalState: state.globalState,
+                                                                   viewState: .init(id: rowId))
+                    state.rowSelection.setNavigationState(to: navigationState)
                 } else {
-                    state.rowSelection.id = nil
-                }                
+                    state.rowSelection.setNavigationState(to: nil)
+                }
                 return .none
             case let .selectFilterOption(filterOption):
                 guard state.selectedFilterOption != filterOption else {
@@ -168,8 +182,12 @@ enum ArrivalsPicker: Equatable {
                 state.isSearching = false
                 state.searchText = ""
                 return Effect(value: .refreshStations)
-            case .arrivalsBoardsList(.global(.didUpdateUserPreferences)):
-                return Effect(value: .refreshStations)
+            case let .arrivalsBoardsList(id, .global):
+                if let updatedGlobalState = state.rowSelection.navigationStates[id: id]?.globalState {
+                    state.globalState = updatedGlobalState
+                    return Effect(value: .refreshStations)
+                }
+                return .none
             case .global:
                 return .none
             case .arrivalsBoardsList:
@@ -181,20 +199,6 @@ enum ArrivalsPicker: Equatable {
 private extension String {
     var alphaNumerics: String {
         self.filter { $0.isLetter || $0.isNumber }
-    }
-}
-
-extension ArrivalsPicker.State {
-    
-    var arrivalsBoardsListState: ArrivalsBoardsList.State {
-        get {
-            .init(globalState: globalState,
-                  viewState: self.rowSelection.arrivalsBoardsListViewState)
-        }
-        set {
-            self.globalState = newValue.globalState
-            self.rowSelection.arrivalsBoardsListViewState = newValue.viewState
-        }
     }
 }
 

@@ -210,6 +210,12 @@ class ArrivalsPickerTests: XCTestCase {
         let highBarnet = Station.fake(ofType: .highBarnet)
         let highBarnetArrivalsListId = highBarnet.arrivalsBoardsListId(at: 0)
         
+        let finchleyCentral = Station.fake(ofType: .finchleyCentral)
+        let finchleyCentralArrivalsListId = finchleyCentral.arrivalsBoardsListId(at: 0)
+        
+        let boundsGreen = Station.fake(ofType: .boundsGreen)
+        let boundsGreenArrivalsListId = boundsGreen.arrivalsBoardsListId(at: 0)
+        
         let store = TestStore(initialState: .fake(),
                               reducer: ArrivalsPicker.reducer,
                               environment: .unitTest)
@@ -218,14 +224,42 @@ class ArrivalsPickerTests: XCTestCase {
         store.assert(
             .send(.selectRow(highBarnetArrivalsListId)) {
                 $0.rowSelection.id = highBarnetArrivalsListId
-                $0.rowSelection.arrivalsBoardsListViewState = .init(id: highBarnetArrivalsListId)
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId))]
+                )
             }
         )
         
-        // 2. De-select
+        // 2. Select another...
+        store.assert(
+            .send(.selectRow(finchleyCentralArrivalsListId)) {
+                $0.rowSelection.id = finchleyCentralArrivalsListId
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
+                     .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId))]
+                )
+            }
+        )
+        
+        // 2. ... and another
+        store.assert(
+            .send(.selectRow(boundsGreenArrivalsListId)) {
+                $0.rowSelection.id = boundsGreenArrivalsListId
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
+                     .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId)),
+                     .init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
+                )
+            }
+        )
+        
+        // 2. Remove deselected row states
         store.assert(
             .send(.selectRow(nil)) {
                 $0.rowSelection.id = nil
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
+                )
             }
         )
         

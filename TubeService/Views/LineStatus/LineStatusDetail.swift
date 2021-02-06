@@ -2,11 +2,12 @@ import ComposableArchitecture
 
 enum LineStatusDetail: Equatable {
     
-    struct ViewState: Equatable {
+    struct ViewState: Equatable, Identifiable {
         struct TwitterLink: Equatable {
             var title: String
             var url: URL
         }
+        var id: LineStatus.ID { lineStatus.id }
         var hasLoaded = false
         var lineStatus: LineStatus
         var allTweetsLink: TwitterLink?
@@ -14,7 +15,7 @@ enum LineStatusDetail: Equatable {
         var activeTwitterLink: TwitterLink?
     }
     
-    typealias State = BaseState<ViewState>
+    typealias State = IdentifiableState<ViewState>
     
     enum Action: Equatable {
         case onAppear

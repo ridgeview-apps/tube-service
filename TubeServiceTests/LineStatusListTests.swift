@@ -144,7 +144,9 @@ class LineStatusListTest: XCTestCase {
             },
             .send(.selectRow(.northern)) {
                 $0.rowSelection.id = .northern
-                $0.rowSelection.lineStatusDetailViewState = .init(lineStatus: rows[0])
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0]))]
+                )
             }
         )
             
@@ -157,7 +159,10 @@ class LineStatusListTest: XCTestCase {
         store.assert(
             .send(.selectRow(.central)) {
                 $0.rowSelection.id = .central
-                $0.rowSelection.lineStatusDetailViewState = .init(lineStatus: rows[1])
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0])),
+                     .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
+                )
             }
         )
         
@@ -165,6 +170,9 @@ class LineStatusListTest: XCTestCase {
         store.assert(
             .send(.selectRow(nil)) {
                 $0.rowSelection.id = nil
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
+                )
             }
         )
     }

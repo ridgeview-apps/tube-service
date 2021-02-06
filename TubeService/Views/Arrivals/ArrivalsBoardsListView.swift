@@ -19,7 +19,7 @@ struct ArrivalsBoardsListView: View {
                 if let errorMessage = viewStore.errorMessage {
                     ErrorView(errorMessage: errorMessage)
                 }
-                Section(header: sectionHeader) {
+                Section(header: sectionHeader(viewStore: viewStore)) {
                     if viewStore.boardDataUnavailable {
                         boardDataUnavailableView
                     } else {
@@ -47,7 +47,7 @@ struct ArrivalsBoardsListView: View {
             .animation(nil)
             .listStyle(PlainListStyle())
             .navigationBarTitle(Text(viewStore.station.name), displayMode: .inline)
-            .navigationBarItems(trailing: navigationBarItems)
+            .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -66,21 +66,21 @@ struct ArrivalsBoardsListView: View {
         }
     }
     
-    private var sectionHeader: some View {
+    private func sectionHeader(viewStore: ViewStore<ArrivalsBoardsList.State, ArrivalsBoardsList.Action>) -> some View {
         HStack(spacing: 8) {
-            Text(ViewStore(store).sectionTitle)
-            if ViewStore(store).isRefreshing {
+            Text(viewStore.sectionTitle)
+            if viewStore.isRefreshing {
                 ProgressView()
             }
         }
     }
     
-    private var navigationBarItems: some View {
+    private func navigationBarItems(viewStore: ViewStore<ArrivalsBoardsList.State, ArrivalsBoardsList.Action>) -> some View {
         HStack {
             NavigationButton.Refresh {
-                ViewStore(store).send(.refresh)
+                viewStore.send(.refresh)
             }
-            .disabled(ViewStore(store).isRefreshing)
+            .disabled(viewStore.isRefreshing)
             .padding([.leading, .top, .bottom])
             
             FavouritesButton(isFavourite: self.isFavourite)

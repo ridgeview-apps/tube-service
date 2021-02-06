@@ -11,11 +11,11 @@ struct SettingsView: View {
         WithViewStore(store) { viewStore in
             Form {
                 List {
-                    aboutSection
-                    supportSection
-//                    twitterLinksSection
+                    aboutSection(viewStore: viewStore)
+                    supportSection(viewStore: viewStore)
+//                    twitterLinksSection(viewStore: viewStore)
                     if showDebugSection {
-                        debugSection
+                        debugSection(viewStore: viewStore)
                     }
                 }
             }
@@ -26,49 +26,45 @@ struct SettingsView: View {
         }
     }
     
-    private var selectedBrowserType: Binding<Settings.ViewState.BrowserType> {
-        ViewStore(store).binding(
+    private func selectedBrowserType(viewStore: ViewStore<Settings.State, Settings.Action>) -> Binding<Settings.ViewState.BrowserType> {
+        viewStore.binding(
             get: \.selectedBrowserType,
             send: Settings.Action.select(browserType:)
         )
     }
     
     // MARK: - About
-    private var aboutSection: some View {
-        WithViewStore(store) { viewStore in
-            Section(
-                header: Text("settings.section.about.title")
-            ) {
-                HStack {
-                    Text("settings.app.version.title")
-                    Spacer()
-                    Text(viewStore.viewState.appVersionNumber)
-                }
-                .contentShape(Rectangle())
-                .onTapGesture(count: 10) {
-                    showDebugSection = true
-                }
-                NavigationLink(destination: acknowledgements) {
-                    Text("settings.acknowledgements.title")
-                }
+    private func aboutSection(viewStore: ViewStore<Settings.State, Settings.Action>) -> some View {
+        Section(
+            header: Text("settings.section.about.title")
+        ) {
+            HStack {
+                Text("settings.app.version.title")
+                Spacer()
+                Text(viewStore.viewState.appVersionNumber)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(count: 10) {
+                showDebugSection = true
+            }
+            NavigationLink(destination: acknowledgements) {
+                Text("settings.acknowledgements.title")
             }
         }
     }
     
     // MARK: - Support
-    private var supportSection: some View {
-        WithViewStore(store) { viewStore in
-            Section(
-                header: Text("settings.section.support.title")
-            ) {
-                MailButton("settings.contact.us.title",
-                           to: [viewStore.contactUs.email],
-                           subject: viewStore.contactUs.subject,
-                           body: viewStore.contactUs.body)
-                if let submitAppReviewUrl = viewStore.submitAppReviewUrl {
-                    Link("settings.rate.this.app.title",
-                         destination: submitAppReviewUrl)
-                }
+    private func supportSection(viewStore: ViewStore<Settings.State, Settings.Action>) -> some View {
+        Section(
+            header: Text("settings.section.support.title")
+        ) {
+            MailButton("settings.contact.us.title",
+                       to: [viewStore.contactUs.email],
+                       subject: viewStore.contactUs.subject,
+                       body: viewStore.contactUs.body)
+            if let submitAppReviewUrl = viewStore.submitAppReviewUrl {
+                Link("settings.rate.this.app.title",
+                     destination: submitAppReviewUrl)
             }
         }
     }
@@ -85,10 +81,10 @@ struct SettingsView: View {
     }
     
     // MARK: - Twitter
-    private var twitterLinksSection: some View {
+    private func twitterLinksSection(viewStore: ViewStore<Settings.State, Settings.Action>) -> some View {
         Section(header: Text("Twitter"),
                 footer: Text("settings.links.footnote")) {
-            Picker("settings.links.open.in.title", selection: selectedBrowserType) {
+            Picker("settings.links.open.in.title", selection: selectedBrowserType(viewStore: viewStore)) {
                 ForEach(Settings.ViewState.BrowserType.allCases) { browserType in
                     Text(browserType.localizedKey).tag(browserType)
                 }
@@ -97,14 +93,12 @@ struct SettingsView: View {
     }
     
     // MARK: - Debug
-    private var debugSection: some View {
-        WithViewStore(store) { viewStore in
-            Section(header: Text("Debug")) {
-                Button(action: {
-                    viewStore.send(.debug(.testCrashReporting))
-                }) {
-                    Text("Test crash reporting")
-                }
+    private func debugSection(viewStore: ViewStore<Settings.State, Settings.Action>) -> some View {
+        Section(header: Text("Debug")) {
+            Button(action: {
+                viewStore.send(.debug(.testCrashReporting))
+            }) {
+                Text("Test crash reporting")
             }
         }
     }

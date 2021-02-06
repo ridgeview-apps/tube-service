@@ -46,27 +46,10 @@ extension LineStatusTabStore {
     }
 }
 
-extension LineStatusListStore {
-    
-    var lineStatusDetailStore: LineStatusDetailStore {
-        self.scope(state: \.lineStatusDetailState,
-                   action: LineStatusList.Action.lineStatusDetail)
-    }
-
-}
-
 extension ArrivalsTabStore {
     
     var arrivalsPickerStore: ArrivalsPickerStore {
         self.scope(state: \.arrivalsPickerState,
                    action: ArrivalsTab.Action.arrivalsPicker)
-    }
-}
-
-extension ArrivalsPickerStore {
-    
-    var arrivalsBoardsListStore: ArrivalsBoardsListStore {
-        self.scope(state: \.arrivalsBoardsListState,
-                   action: ArrivalsPicker.Action.arrivalsBoardsList)
     }
 }
