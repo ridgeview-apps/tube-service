@@ -6,13 +6,6 @@ struct ArrivalsBoardsListView: View {
     
     let store: ArrivalsBoardsListStore
     
-    private var isFavourite: Binding<Bool> {
-        ViewStore(self.store).binding(
-            get: \.isFavourite,
-            send: ArrivalsBoardsList.Action.tapFavourite
-        )
-    }
-    
     var body: some View {
         WithViewStore(store) { viewStore in
             List {
@@ -83,10 +76,18 @@ struct ArrivalsBoardsListView: View {
             .disabled(viewStore.isRefreshing)
             .padding([.leading, .top, .bottom])
             
-            FavouritesButton(isFavourite: self.isFavourite)
+            FavouritesButton(isFavourite: self.isFavourite(viewStore: viewStore))
                 .padding([.leading, .top, .bottom])
         }
     }
+    
+    private func isFavourite(viewStore: ViewStore<ArrivalsBoardsList.State, ArrivalsBoardsList.Action>) -> Binding<Bool> {
+        viewStore.binding(
+            get: \.isFavourite,
+            send: ArrivalsBoardsList.Action.tapFavourite
+        )
+    }
+
 }
 
 // MARK: - Previews
@@ -97,7 +98,6 @@ struct ArrivalsBoardsListView_Previews: PreviewProvider {
         let populatedArrivalsView = ArrivalsBoardsListView(
             store: .preview(viewState: .fake())
         )
-        .embeddedInNavigationView()
         
         let emptyArrivalsView =  ArrivalsBoardsListView(
             store: .preview(
@@ -106,7 +106,6 @@ struct ArrivalsBoardsListView_Previews: PreviewProvider {
                                   boards: [])
             )
         )
-        .embeddedInNavigationView()
         
         let errorView =  ArrivalsBoardsListView(
             store: .preview(
@@ -116,12 +115,14 @@ struct ArrivalsBoardsListView_Previews: PreviewProvider {
                                   errorMessage: "An unexpected error occurred.")
             )
         )
-        .embeddedInNavigationView()
         
         Group {
             populatedArrivalsView
+                .embeddedInNavigationView()
             emptyArrivalsView
+                .embeddedInNavigationView()
             errorView
+                .embeddedInNavigationView()
         }
     }
 }

@@ -37,6 +37,7 @@ enum ArrivalsBoardsList {
         case tapFavourite(Bool)
         case arrivalsBoard(id: ArrivalsBoard.ViewState.ID, action: ArrivalsBoard.Action)
         case setEachBoardAnimationState(to: ArrivalsBoard.ViewState.AnimationState)
+        case rotateEachBoard
         case global(Global.Action)
     }
     
@@ -102,10 +103,28 @@ enum ArrivalsBoardsList {
                 
                 return .concatenate(Effect(value: .setEachBoardAnimationState(to: .refreshing)), fetchData)
             case let .setEachBoardAnimationState(toState):
-                let animationStates = state.boards.map {
+                let eachAnimationState = state.boards.map {
                     Effect<Action, Never>(value: Action.arrivalsBoard(id: $0.id, action: .setAnimationState(to: toState)))
                 }
-                return .concatenate(animationStates)
+                
+                let rotationTimerId = "RotationTimer-\(state.id)"
+                switch toState {
+                case .refreshing, .stopped:
+                    let stopRotationTimer = Effect<Action, Never>.cancel(id: rotationTimerId)
+                    return .concatenate([stopRotationTimer] + eachAnimationState)
+                case .rotating:
+                    let startRotationTimer = Effect.timer(id: rotationTimerId,
+                                                          every: 3,
+                                                          tolerance: .zero,
+                                                          on: environment.mainQueue)
+                                                    .map { _ in Action.rotateEachBoard }
+                    return .concatenate(eachAnimationState + [startRotationTimer])
+                }
+            case .rotateEachBoard:
+                let eachRotationAction = state.boards.map {
+                    Effect<Action, Never>(value: Action.arrivalsBoard(id: $0.id, action: .rotateNextArrival))
+                }
+                return .concatenate(eachRotationAction)
             case var .arrivalsResponse(.success(arrivals)):
                 let refreshTime = environment.date()
                 state.lastRefreshedAt = refreshTime
@@ -162,7 +181,8 @@ private extension Array where Element == Arrival {
                                        time: refreshTime,
                                        localizer: localizer,
                                        rotatingRowIndex: oldValues[id: boardId]?.rotatingRowIndex,
-                                       isExpanded: oldValues[id: boardId]?.isExpanded ?? false)
+                                       isExpanded: oldValues[id: boardId]?.isExpanded ?? false,
+                                       manualRotationTimer: true)
         }.sorted {
             $0.platformTitleText < $1.platformTitleText
         }

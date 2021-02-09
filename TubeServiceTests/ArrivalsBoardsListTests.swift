@@ -40,7 +40,8 @@ class ArrivalsBoardsListTests: XCTestCase {
                       time: simulatedNow,
                       localizer: .fake,
                       isExpanded: false,
-                      animationState: animationState)
+                      animationState: animationState,
+                      manualRotationTimer: true)
         }
 
         store.assert(

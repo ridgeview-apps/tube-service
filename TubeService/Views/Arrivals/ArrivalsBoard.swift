@@ -56,6 +56,7 @@ enum ArrivalsBoard {
         var rotatingRow: RowState?
         var rotatingRowIndex: Int
         var animationState: AnimationState
+        var manualRotationTimer: Bool
         
         var isCollapsed: Bool {
             isExpandable && !isExpanded
@@ -70,11 +71,13 @@ enum ArrivalsBoard {
              rotatingRowIndex: Int? = nil,
              isExpanded: Bool,
              animationState: AnimationState = .stopped,
+             manualRotationTimer: Bool = false,
              timeFormatter: DateFormatter = .shortTime,
              collapsedBoardSize: Int = 3) {
             self.station = station
             self.isExpanded = isExpanded
             self.animationState = animationState
+            self.manualRotationTimer = manualRotationTimer
             self.arrivals = arrivals.sortedByArrivalTime
             self.collapsedBoardSize = collapsedBoardSize
             self.rotatingRowIndex = rotatingRowIndex ?? (collapsedBoardSize - 1)
@@ -125,7 +128,7 @@ enum ArrivalsBoard {
     // Action
     enum Action: Equatable {
         case setAnimationState(to: ViewState.AnimationState)
-        case rotationTimerTriggered
+        case rotateNextArrival
         case setExpanded(Bool)
     }
     
@@ -141,7 +144,12 @@ enum ArrivalsBoard {
                     return .none
                 }
                 state.animationState = toState
-                switch toState {
+
+                guard !state.manualRotationTimer else {
+                    return .none
+                }
+                
+                switch state.animationState {
                 case .stopped, .refreshing:
                     // print("Cancel timer \(state.id)")
                     return Effect.cancel(id: state.id)
@@ -152,9 +160,9 @@ enum ArrivalsBoard {
                                    every: 3,
                                    tolerance: .zero,
                                    on: env.mainQueue)
-                            .map { _ in .rotationTimerTriggered }
+                            .map { _ in .rotateNextArrival }
                 }
-            case .rotationTimerTriggered:
+            case .rotateNextArrival:
                 guard state.isCollapsed && state.animationState == .rotating else {
                     return .none
                 }

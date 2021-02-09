@@ -46,7 +46,7 @@ class ArrivalsBoardTests: XCTestCase {
             
             // 1st rotation
             .do { self.scheduler.advance(by: 3) },
-            .receive(.rotationTimerTriggered) {
+            .receive(.rotateNextArrival) {
                 $0.rotatingRowIndex = 3
                 $0.rotatingRow = .init(station: finchleyCentral,
                                        rowIndex: 3,
@@ -56,7 +56,7 @@ class ArrivalsBoardTests: XCTestCase {
             
             // 2nd rotation
             .do { self.scheduler.advance(by: 3) },
-            .receive(.rotationTimerTriggered) {
+            .receive(.rotateNextArrival) {
                 $0.rotatingRowIndex = 4
                 $0.rotatingRow = .init(station: finchleyCentral,
                                        rowIndex: 4,
@@ -66,7 +66,7 @@ class ArrivalsBoardTests: XCTestCase {
             
             // 3rd rotation (wraps back to start)
             .do { self.scheduler.advance(by: 3) },
-            .receive(.rotationTimerTriggered) {
+            .receive(.rotateNextArrival) {
                 $0.rotatingRowIndex = 2
                 $0.rotatingRow = .init(station: finchleyCentral,
                                        rowIndex: 2,
