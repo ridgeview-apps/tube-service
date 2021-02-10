@@ -78,6 +78,7 @@ platform :ios do
     
     deliver(
       app_identifier: main_bundle_id,
+      app_version: options[:app_version],
       automatic_release: false,
       submit_for_review: true,
       build_number: testflight_build_no,
