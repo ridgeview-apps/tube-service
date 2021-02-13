@@ -40,11 +40,17 @@ platform :ios do
     
   end
 
-  lane :upload_screenshots do
-    options = $prod_config
+  lane :upload_screenshots do |options|
+    
+    options = $prod_config.merge(options)
+
     load_app_store_connect_api_key(options)
+
+    main_bundle_id = options[:main_target_bundle_id]
+
     deliver(
-      app_identifier: options[:main_target_bundle_id],
+      app_identifier: main_bundle_id,
+      app_version: options[:app_version],
       automatic_release: false,
       submit_for_review: false,
       overwrite_screenshots: true,
