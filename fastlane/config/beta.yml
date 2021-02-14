@@ -1,0 +1,4 @@
+main_target_bundle_id: com.ridgeviewapps.tube-service.beta
+shield_prefix: Beta
+shield_colour: blue
+upload_to_appcenter: true

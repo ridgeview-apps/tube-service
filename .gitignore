@@ -94,5 +94,7 @@ iOSInjectionProject/
 .gitsecret/keys/random_seed
 !*.secret
 fastlane/app_store_api_key_393B4NK7BM.p8
-fastlane/config_secrets.rb
 Config/Base.secret.xcconfig
+fastlane/config/base.secret.yml
+fastlane/config/beta.secret.yml
+fastlane/config/prod.secret.yml

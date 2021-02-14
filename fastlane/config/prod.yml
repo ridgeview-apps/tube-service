@@ -1,0 +1,8 @@
+main_target_bundle_id: com.ridgeviewapps.tube-service
+match_type: appstore
+xcode_configuration: Release
+export_method: app-store
+upload_to_testflight: true
+export_options:
+  includeBitcode: true
+  compileBitcode: true

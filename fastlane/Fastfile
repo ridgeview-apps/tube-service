@@ -1,4 +1,4 @@
-require_relative 'config'
+require 'pp'
 
 default_platform(:ios)
 
@@ -9,30 +9,29 @@ platform :ios do
   #
   lane :build_and_distribute do |options|
 
-    default_config = load_default_config(options)
-    options = default_config.merge(options)
+    options = merged_config_options(options)
 
     load_app_store_connect_api_key(options)
     
-    if options[:shield_colour]
+    if options["shield_colour"]
       add_app_icon_shield(options)
     end
     
     build_the_app(options)
     
-    if options[:upload_to_appcenter]
+    if options["upload_to_appcenter"]
       appcenter_upload(
-        api_token: options[:app_center_api_token],
-        owner_name: options[:app_center_owner_name],
-        owner_type: options[:app_center_owner_type],
-        app_name: options[:app_center_app_name],
-        notify_testers: options[:app_center_notify_testers],
-        # destinations: options[:app_center_destinations],
+        api_token: options["app_center_api_token"],
+        owner_name: options["app_center_owner_name"],
+        owner_type: options["app_center_owner_type"],
+        app_name: options["app_center_app_name"],
+        notify_testers: options["app_center_notify_testers"],
+        # destinations: options["app_center_destinations"],
         release_notes: changelog
       )
     end
     
-    if options[:upload_to_testflight]
+    if options["upload_to_testflight"]
       upload_to_testflight(
         skip_waiting_for_build_processing: true
       )
@@ -42,11 +41,15 @@ platform :ios do
 
   lane :upload_screenshots do |options|
     
-    options = $prod_config.merge(options)
+    unless options[:config]
+      options[:config] = "prod"
+    end
+
+    options = merged_config_options(options)
 
     load_app_store_connect_api_key(options)
 
-    main_bundle_id = options[:main_target_bundle_id]
+    main_bundle_id = options["main_target_bundle_id"]
 
     deliver(
       app_identifier: main_bundle_id,
@@ -60,12 +63,16 @@ platform :ios do
   end
   
   lane :submit_for_review do |options|
+    
+    unless options[:config]
+      options[:config] = "prod"
+    end
 
-    options = $prod_config.merge(options)
-
+    options = merged_config_options(options)
+    
     load_app_store_connect_api_key(options)
 
-    main_bundle_id = options[:main_target_bundle_id]
+    main_bundle_id = options["main_target_bundle_id"]
     
     testflight_build_no = options[:build_no].to_s
     if testflight_build_no.empty?
@@ -78,7 +85,7 @@ platform :ios do
     #
     # upload_app_privacy_details_to_app_store(
     #   app_identifier: main_bundle_id,
-    #   username: options[:app_store_connect_user_id],
+    #   username: options["app_store_connect_user_id"],
     #   json_path: "./fastlane/metadata/app_privacy_details.json",
     # )
     
@@ -106,8 +113,7 @@ platform :ios do
 
   # Ad-hoc / non-CI actions
   lane :create_bundle_ids do |options|
-    default_config = load_default_config(options)
-    options = default_config.merge(options)
+    options = merged_config_options(options)
     produce_bundle_ids(options)
   end
 
@@ -117,10 +123,10 @@ platform :ios do
   #################################################################
   private_lane :load_app_store_connect_api_key do |options|
     app_store_connect_api_key(
-      key_id: options[:app_store_connect_api_key_id],
-      issuer_id: options[:app_store_connect_api_issuer_id],
-      key_filepath: options[:app_store_connect_api_key_filepath],
-      in_house: options[:app_store_connect_api_in_house]
+      key_id: options["app_store_connect_api_key_id"],
+      issuer_id: options["app_store_connect_api_issuer_id"],
+      key_filepath: options["app_store_connect_api_key_filepath"],
+      in_house: options["app_store_connect_api_in_house"]
     )
   end
 
@@ -133,34 +139,34 @@ platform :ios do
     app_identifiers = all_bundle_types(options).join(",")
     
     match(
-      git_url: options[:match_git_url],
+      git_url: options["match_git_url"],
       app_identifier: app_identifiers,
-      type: options[:match_type],
-      force_for_new_devices: options[:match_force_for_new_devices],
-      # username: options[:app_store_connect_user_id],
+      type: options["match_type"],
+      force_for_new_devices: options["match_force_for_new_devices"],
+      # username: options["app_store_connect_user_id"],
     )
 
     # run_tests(
-    #   scheme: options[:xcode_scheme],            
-    #   devices: options[:unit_test_devices],
+    #   scheme: options["xcode_scheme"],            
+    #   devices: options["unit_test_devices"],
     # )
 
     xcargs = {
-      MAIN_TARGET_BUNDLE_ID: options[:main_target_bundle_id],
+      MAIN_TARGET_BUNDLE_ID: options["main_target_bundle_id"],
     }
 
     xcargs_str = xcargs.map { |key, value| "#{key}='#{value}'" }
                        .join(" ")
 
     build_app(
-      output_name: options[:output_name],
-      export_method: options[:export_method],
-      scheme: options[:xcode_scheme],
-      configuration: options[:xcode_configuration],
-      export_options: options[:export_options],
-      xcconfig: options[:additional_xcconfig],
+      output_name: options["output_name"],
+      export_method: options["export_method"],
+      scheme: options["xcode_scheme"],
+      configuration: options["xcode_configuration"],
+      export_options: options["export_options"],
+      xcconfig: options["additional_xcconfig"],
       xcargs: xcargs_str,
-      # codesigning_identity: options[:code_sign_identity], # Set directly in xcode project instead (causes pod-signing issues otherwise)
+      # codesigning_identity: options["code_sign_identity"], # Set directly in xcode project instead (causes pod-signing issues otherwise)
     )
 
   end
@@ -173,21 +179,44 @@ platform :ios do
     )
   end
 
-  private_lane :load_default_config do |options|
-    case options[:config]
-    when "beta"
-      $beta_config
-    when "prod"
-      $prod_config
-    else
-      UI.user_error!("ERROR: please specify a config to run e.g. fastlane build_and_distribute config:beta")      
+  def public_and_secret_config_from(file_name)
+    config_dir = "#{File.dirname(__FILE__)}/config"
+
+    file_path = "#{config_dir}/#{file_name}.yml"
+    loaded_values = YAML.load_file(file_path)
+
+    secret_file_path = "#{config_dir}/#{file_name}.secret.yml"
+    if File.exists?(secret_file_path)
+        secret_values = YAML.load_file(secret_file_path)
+        loaded_values = secret_values.merge(loaded_values)
     end
+
+    loaded_values
+  end
+
+  private_lane :merged_config_options do |options|
+    config_file_name = options[:config]
+
+    unless config_file_name
+      UI.user_error!("Please specify a config YML file to load (e.g. fastlane <action_name> config:beta)")
+    end
+
+    begin
+      base_config_file_options = public_and_secret_config_from("base")        
+      config_file_options = public_and_secret_config_from(config_file_name)
+    rescue Errno::ENOENT
+      UI.user_error!("File #{config_file_name}.yml not found or invalid ***\n")
+    end
+      
+    base_config_file_options
+      .merge(config_file_options)
+      .merge(options)
   end
 
   private_lane :add_app_icon_shield do |options|
     version = get_version_number
-    shield_colour = options[:shield_colour]
-    shield_prefix = options[:shield_prefix]
+    shield_colour = options["shield_colour"]
+    shield_prefix = options["shield_prefix"]
     if version && shield_colour
       puts("Adding app icon shield: #{version}-#{shield_colour}")
       add_badge(
@@ -212,7 +241,7 @@ platform :ios do
   #  3. Add each target's bundle IDs to "all_bundle_types" below
   #
   private_lane :all_bundle_types do |options|
-    main_target_bundle_id = options[:main_target_bundle_id]
+    main_target_bundle_id = options["main_target_bundle_id"]
 
     all_bundle_ids = [
       "#{main_target_bundle_id}",
@@ -233,7 +262,7 @@ platform :ios do
       # (unreliable) username / password / 2FA etc. Which is why it's better to run
       # it as a one-off command rather than as part of the CI pipeline.
       produce(
-        username: options[:app_store_connect_user_id],
+        username: options["app_store_connect_user_id"],
         app_identifier: "#{bundle_id}",
         app_name: "Tube Service",
         language: "en-GB",
