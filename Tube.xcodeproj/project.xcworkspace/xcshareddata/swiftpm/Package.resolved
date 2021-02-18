@@ -2,12 +2,12 @@
   "object": {
     "pins": [
       {
-        "package": "App Center",
+        "package": "AppCenter",
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "79d99eaff599d1b38adf81884fe220c75fd38867",
-          "version": "4.0.0"
+          "revision": "484dead179e6d7edd534d0d7defdf65c14a5b426",
+          "version": "4.1.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/pointfreeco/combine-schedulers",
         "state": {
           "branch": null,
-          "revision": "ff42ec9061d864de7982162011321d3df5080c10",
-          "version": "0.1.2"
+          "revision": "8eab6ad841ccc420f29f3e77e17e7b260841b50a",
+          "version": "0.2.0"
         }
       },
       {
@@ -24,13 +24,13 @@
         "repositoryURL": "https://github.com/devicekit/DeviceKit",
         "state": {
           "branch": null,
-          "revision": "dbddb0296e3ee4f83d52f9681e42705020a533e4",
-          "version": "4.2.1"
+          "revision": "4cf9f057db69104851634269f7839f8d0bd346a3",
+          "version": "4.3.0"
         }
       },
       {
         "package": "PLCrashReporter",
-        "repositoryURL": "https://github.com/microsoft/plcrashreporter.git",
+        "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
         "state": {
           "branch": null,
           "revision": "de6b8f9db4b2a0aa859a5507550a70548e4da936",
@@ -38,12 +38,21 @@
         }
       },
       {
+        "package": "RidgeviewCore",
+        "repositoryURL": "https://github.com/ridgeview-apps/ridgeview-core",
+        "state": {
+          "branch": "main",
+          "revision": "f17a3a9f93f7fdc66c903db8574985c19224600d",
+          "version": null
+        }
+      },
+      {
         "package": "swift-case-paths",
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
           "branch": null,
-          "revision": "ed1838ab4fa5d47db8aa640736dd5b7672548873",
-          "version": "0.1.2"
+          "revision": "1aa1bf7c4069d9ba2f7edd36dbfc96ff1c58cbff",
+          "version": "0.1.3"
         }
       },
       {
@@ -51,8 +60,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-composable-architecture",
         "state": {
           "branch": null,
-          "revision": "b67569f69813140cd9c984db33ee959d9711a008",
-          "version": "0.9.0"
+          "revision": "0fb6c9bfc306e39dc750786edf28a4a77e67749c",
+          "version": "0.14.0"
         }
       }
     ]

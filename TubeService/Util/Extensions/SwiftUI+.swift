@@ -23,29 +23,7 @@ extension AnyTransition {
     }
 }
 
-extension Binding {
-    func debug(_ prefix: String) -> Binding {
-        Binding(
-            get: {
-                print("\(prefix): getting \(self.wrappedValue)")
-                return self.wrappedValue
-        },
-            set: {
-                print("\(prefix): setting \(self.wrappedValue) to \($0)")
-                self.wrappedValue = $0
-        })
-    }
-}
-
 extension View {
-    
-    func embeddedInNavigationView() -> some View {
-        NavigationView { self }
-    }
-    
-    func eraseToAnyView() -> AnyView {
-        AnyView(self)
-    }
     
     var phoneOnlyStackNavigationViewForIOS13: some View {
         // See: https://www.hackingwithswift.com/books/ios-swiftui/making-navigationview-work-in-landscape
@@ -75,46 +53,5 @@ extension View {
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(color, lineWidth: lineWidth)
             )
-    }
-    
-//    func onChange<V>(of srcValue: V, to targetValue: V, perform action: @escaping (V) -> Void) -> some View where V : Equatable {
-//        self.onChange(of: srcValue, perform: { newValue in
-//            if newValue == targetValue {
-//                action(newValue)
-//            }
-//        })
-//    }
-//
-    func onSceneDidBecomeActive(action: @escaping () -> ()) -> some View {
-        self
-            .modifier(OnChangeOfScenePhaseModifier(to: .active, action: action))
-    }
-    
-    func onSceneDidBecomeInactive(action: @escaping () -> ()) -> some View {
-        self
-            .modifier(OnChangeOfScenePhaseModifier(to: .inactive, action: action))
-    }
-    
-    func onSceneDidEnterBackground(action: @escaping () -> ()) -> some View {
-        self
-            .modifier(OnChangeOfScenePhaseModifier(to: .background, action: action))
-    }
-    
-}
-
-struct OnChangeOfScenePhaseModifier: ViewModifier {
-    @Environment(\.scenePhase) private var scenePhase
-    
-    public let to: ScenePhase
-    
-    public let action: () -> ()
-    
-    public func body(content: Content) -> some View {
-        content
-            .onChange(of: scenePhase) { newPhase in
-                if (newPhase == to) {
-                    action()
-                }
-            }
     }
 }

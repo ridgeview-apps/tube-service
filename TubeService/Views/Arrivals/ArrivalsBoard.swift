@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import RidgeviewCore
 
 enum ArrivalsBoard {
 

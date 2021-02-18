@@ -1,5 +1,6 @@
 import ComposableArchitecture
 import DeviceKit
+import RidgeviewCore
 
 enum Settings {
     

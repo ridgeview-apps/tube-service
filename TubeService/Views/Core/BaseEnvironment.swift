@@ -1,6 +1,7 @@
 import Foundation
 import ComposableArchitecture
 import DeviceKit
+import RidgeviewCore
 
 @dynamicMemberLookup
 struct BaseEnvironment<Environment> {
