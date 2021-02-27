@@ -15,7 +15,7 @@ enum LineStatusDetail: Equatable {
         var activeTwitterLink: TwitterLink?
     }
     
-    typealias State = IdentifiableState<ViewState>
+    typealias State = BaseState<ViewState>
     
     enum Action: Equatable {
         case onAppear

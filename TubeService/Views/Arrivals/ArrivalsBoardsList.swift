@@ -26,7 +26,7 @@ enum ArrivalsBoardsList {
         var sectionTitle: String = ""
     }
     
-    typealias State = IdentifiableState<ViewState>
+    typealias State = BaseState<ViewState>
 
     enum Action: Equatable {
         case onAppear
