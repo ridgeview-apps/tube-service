@@ -188,7 +188,9 @@ platform :ios do
     secret_file_path = "#{config_dir}/#{file_name}.secret.yml"
     if File.exists?(secret_file_path)
         secret_values = YAML.load_file(secret_file_path)
-        loaded_values = secret_values.merge(loaded_values)
+        if secret_values
+          loaded_values = secret_values.merge(loaded_values)
+        end
     end
 
     loaded_values
