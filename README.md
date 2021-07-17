@@ -42,7 +42,7 @@ Since the app uses the [Swift Composable Architecture](https://github.com/pointf
 
 ## Config
 
-My preferred approach to config is to use `.xcconfig` files since they make it easier to handle merge (vs trying to resolve conflicts in a `.pbxproj` file). It also allows potentially sensitive data to be stored in separate `secret.xcconfig` files (which can be decrypted via [`git secret`](https://git-secret.io) to authorised users and CI environments).
+My preferred approach to config is to use `.xcconfig` files since they make it easier to handle merge conflicts (vs trying to resolve conflicts in a `.pbxproj` file). It also allows potentially sensitive data to be stored in separate `secret.xcconfig` files (which can be decrypted via [`git secret`](https://git-secret.io) to authorised users and CI environments).
 
 The app's config files are set up as follows:
 
