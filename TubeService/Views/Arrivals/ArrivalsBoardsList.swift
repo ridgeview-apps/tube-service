@@ -188,7 +188,7 @@ private extension Array where Element == Arrival {
             $0.platformTitleText < $1.platformTitleText
         }
         
-        return IdentifiedArrayOf(sortedBoards)
+        return IdentifiedArrayOf(uniqueElements: sortedBoards)
     }
     
     func sortedByArrivalTime() -> [Arrival] {

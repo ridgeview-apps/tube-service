@@ -62,7 +62,6 @@
 		318D485424EFC9A60026B5F4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D485124EFC9A60026B5F4 /* Color+.swift */; };
 		318D485624EFC9A60026B5F4 /* SwiftUI+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D485324EFC9A60026B5F4 /* SwiftUI+.swift */; };
 		318D485924EFC9F10026B5F4 /* Root.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D485824EFC9F10026B5F4 /* Root.swift */; };
-		318D485C24EFCA720026B5F4 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 318D485B24EFCA720026B5F4 /* ComposableArchitecture */; };
 		318D485E24EFCC790026B5F4 /* TransportAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318D485D24EFCC790026B5F4 /* TransportAPI.swift */; };
 		31994E7F2527896A0044CE81 /* PlaceholderState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31994E7E2527896A0044CE81 /* PlaceholderState.swift */; };
 		31A7422B2588FADA0078DDE2 /* PreviewStores.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A7422A2588FADA0078DDE2 /* PreviewStores.swift */; };
@@ -72,6 +71,7 @@
 		31A82E53252F149300760D87 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A82E52252F149300760D87 /* Global.swift */; };
 		31A95F99251793F70030E815 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A95F98251793F70030E815 /* SafariView.swift */; };
 		31A95FA02517B27B0030E815 /* DataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A95F9F2517B27B0030E815 /* DataServices.swift */; };
+		31ACDBDD2700E2DB00C33CF3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 31ACDBDC2700E2DB00C33CF3 /* ComposableArchitecture */; };
 		31C14841253F22AF0098AA92 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 31C14840253F22AF0098AA92 /* AppCenterCrashes */; };
 		31C14843253F22AF0098AA92 /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 31C14842253F22AF0098AA92 /* AppCenterAnalytics */; };
 		31C14846253F25290098AA92 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C14845253F25290098AA92 /* Debug.swift */; };
@@ -207,7 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				318D485C24EFCA720026B5F4 /* ComposableArchitecture in Frameworks */,
+				31ACDBDD2700E2DB00C33CF3 /* ComposableArchitecture in Frameworks */,
 				31508D3B25603C900047BC9C /* DeviceKit in Frameworks */,
 				31C14841253F22AF0098AA92 /* AppCenterCrashes in Frameworks */,
 				31FC209A25DEC4C40084D78E /* RidgeviewCore in Frameworks */,
@@ -529,11 +529,11 @@
 			);
 			name = TubeService;
 			packageProductDependencies = (
-				318D485B24EFCA720026B5F4 /* ComposableArchitecture */,
 				31C14840253F22AF0098AA92 /* AppCenterCrashes */,
 				31C14842253F22AF0098AA92 /* AppCenterAnalytics */,
 				31508D3A25603C900047BC9C /* DeviceKit */,
 				31FC209925DEC4C40084D78E /* RidgeviewCore */,
+				31ACDBDC2700E2DB00C33CF3 /* ComposableArchitecture */,
 			);
 			productName = Tube;
 			productReference = 318D482624EFC4900026B5F4 /* Tube Service.app */;
@@ -572,10 +572,10 @@
 			);
 			mainGroup = 318D481D24EFC4900026B5F4;
 			packageReferences = (
-				318D485A24EFCA720026B5F4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 				31508D3925603C900047BC9C /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				31FC209825DEC4C40084D78E /* XCRemoteSwiftPackageReference "ridgeview-core" */,
+				31ACDBDB2700E2DB00C33CF3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			productRefGroup = 318D482724EFC4900026B5F4 /* Products */;
 			projectDirPath = "";
@@ -624,7 +624,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		31C9904D257FE7BF00918812 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -636,7 +636,7 @@
 			outputPaths = (
 				"${PROJECT_DIR}/Config/BuildSettings.generated.swift",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PROJECT_DIR/Config/BuildSettings.sh\" > \"${PROJECT_DIR}/Config/BuildSettings.generated.swift\"\n";
 		};
@@ -799,7 +799,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -996,7 +996,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1053,7 +1053,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1158,12 +1158,12 @@
 				minimumVersion = 4.2.1;
 			};
 		};
-		318D485A24EFCA720026B5F4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+		31ACDBDB2700E2DB00C33CF3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.7.0;
+				minimumVersion = 0.28.0;
 			};
 		};
 		31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
@@ -1190,9 +1190,9 @@
 			package = 31508D3925603C900047BC9C /* XCRemoteSwiftPackageReference "DeviceKit" */;
 			productName = DeviceKit;
 		};
-		318D485B24EFCA720026B5F4 /* ComposableArchitecture */ = {
+		31ACDBDC2700E2DB00C33CF3 /* ComposableArchitecture */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 318D485A24EFCA720026B5F4 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			package = 31ACDBDB2700E2DB00C33CF3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
 		31C14840253F22AF0098AA92 /* AppCenterCrashes */ = {

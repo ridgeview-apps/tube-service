@@ -110,7 +110,7 @@ enum ArrivalsPicker: Equatable {
                 }
                 return Effect(value: .refreshStations)
             case let .didLoadStations(stations):
-                state.stations = IdentifiedArrayOf(stations)
+                state.stations = IdentifiedArrayOf(uniqueElements: stations)
                 state.hasLoaded = true
                 return Effect(value: .refreshStations)
             case .refreshStations:
@@ -130,7 +130,7 @@ enum ArrivalsPicker: Equatable {
                     }.filter {
                         !$0.arrivalsGroups.isEmpty
                     }
-                    state.selectableStations = IdentifiedArray(filteredStations)
+                    state.selectableStations = IdentifiedArray(uniqueElements: filteredStations)
                 }
                 
                 return .none

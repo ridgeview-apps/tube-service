@@ -182,7 +182,7 @@ extension LineStatusList.ViewState {
                      statuses: [LineStatus] = .fakes()) -> LineStatusList.ViewState {
         .init(lastRefreshedAt: lastRefreshedAt,
               isRefreshing: isRefreshing,
-              statuses: IdentifiedArrayOf(statuses))
+              statuses: IdentifiedArrayOf(uniqueElements: statuses))
     }
 }
 
@@ -337,7 +337,7 @@ extension ArrivalsPicker.ViewState {
     static func fake(selectedFilterOption: ArrivalsPicker.ViewState.Filter = .all,
                      selectableStations: [Station] = .fakes()) -> ArrivalsPicker.ViewState {
         .init(selectedFilterOption: selectedFilterOption,
-              selectableStations: IdentifiedArrayOf(selectableStations))
+              selectableStations: IdentifiedArrayOf(uniqueElements: selectableStations))
     }
 }
 
@@ -373,7 +373,7 @@ extension ArrivalsBoardsList.ViewState {
                      ],
                      errorMessage: String? = nil) -> ArrivalsBoardsList.ViewState {
         .init(id: .init(station: station, arrivalsGroup: station.arrivalsGroups[arrivalsGroupIndex]),
-              boards: IdentifiedArrayOf(boards),
+              boards: IdentifiedArrayOf(uniqueElements: boards),
               errorMessage: errorMessage)
     }
 }

@@ -86,7 +86,7 @@ enum LineStatusList: Equatable {
                 let refreshTime = environment.date()
                 state.lastRefreshedAt = refreshTime
                 state.lastRefreshedAtText = Formatter.relativeDateTime.string(for: refreshTime) ?? ""
-                state.statuses = IdentifiedArrayOf(lineStatuses.sortedByStatusThenName())
+                state.statuses = IdentifiedArrayOf(uniqueElements: lineStatuses.sortedByStatusThenName())
                 state.errorMessage = nil
                 return .none
             case let .lineStatusesResponse(.failure(error)):

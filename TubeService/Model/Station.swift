@@ -10,7 +10,7 @@ struct Station: Identifiable, Equatable, Hashable, Codable {
     }
     
     var sortedArrivalsGroups: IdentifiedArrayOf<ArrivalsGroup> {
-        IdentifiedArrayOf(arrivalsGroups.sortedByTitle())
+        IdentifiedArrayOf(uniqueElements: arrivalsGroups.sortedByTitle())
     }
 }
 
