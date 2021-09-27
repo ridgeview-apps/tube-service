@@ -11,7 +11,7 @@ enum ArrivalsBoardsList {
     struct ViewState: Identifiable, Equatable {
         var id: Id
         var lastRefreshedAt: Date?
-        var isRefreshing = false
+        var isRefreshing: Bool = false
         var isAutoRefreshTimerActive = false
         var boards: IdentifiedArrayOf<ArrivalsBoard.ViewState> = []
         var errorMessage: String?

@@ -40,6 +40,9 @@ struct ArrivalsBoardsListView: View {
             .listStyle(PlainListStyle())
             .navigationBarTitle(Text(viewStore.station.name), displayMode: .inline)
             .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))
+            .refreshable {
+                await viewStore.send(.refresh, while: \.isRefreshing)
+            }
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -69,12 +72,6 @@ struct ArrivalsBoardsListView: View {
     
     private func navigationBarItems(viewStore: ViewStore<ArrivalsBoardsList.State, ArrivalsBoardsList.Action>) -> some View {
         HStack {
-            NavigationButton.Refresh {
-                viewStore.send(.refresh)
-            }
-            .disabled(viewStore.isRefreshing)
-            .padding([.leading, .top, .bottom])
-            
             FavouritesButton(isFavourite: self.isFavourite(viewStore: viewStore))
                 .padding([.leading, .top, .bottom])
         }

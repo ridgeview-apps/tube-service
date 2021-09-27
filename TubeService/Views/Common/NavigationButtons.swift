@@ -2,17 +2,6 @@ import SwiftUI
 
 enum NavigationButton {
     
-    struct Refresh: View {
-        let action: () -> Void
-        
-        var body: some View {
-            Button(action: action) {
-                Image(systemName: "arrow.clockwise")
-                    .imageScale(.large)
-            }
-        }
-    }
-    
     struct Settings: View {
         let action: () -> Void
         

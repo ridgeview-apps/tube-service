@@ -6,7 +6,7 @@ struct Station: Identifiable, Equatable, Hashable, Codable {
     let arrivalsGroups: IdentifiedArrayOf<ArrivalsGroup>
     
     var sortedLines: [TrainLine] {
-        Set(arrivalsGroups).flatMap { $0.sortedLineIds }.sortedByName()
+        Set(arrivalsGroups.flatMap { $0.sortedLineIds }).sortedByName()
     }
     
     var sortedArrivalsGroups: IdentifiedArrayOf<ArrivalsGroup> {

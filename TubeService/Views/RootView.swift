@@ -39,7 +39,6 @@ struct RootView: View {
                 
             }
             .onAppear {
-                UITabBar.appearance().scrollEdgeAppearance = UITabBarAppearance()
                 viewStore.send(.onAppear)
             }
         }

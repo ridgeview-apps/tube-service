@@ -34,7 +34,9 @@ struct LineStatusListView: View {
             }
             .listStyle(PlainListStyle())
             .navigationBarTitle(viewStore.navigationBarTitle)
-            .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))
+            .refreshable {
+                await viewStore.send(.refresh, while: \.isRefreshing)
+            }
             .onAppear {
                 viewStore.send(.onAppear)
             }
@@ -50,16 +52,6 @@ struct LineStatusListView: View {
             if viewStore.isRefreshing {
                 ProgressView()
             }
-        }
-    }
-    
-    private func navigationBarItems(viewStore: ViewStore<LineStatusList.State, LineStatusList.Action>) -> some View {
-        HStack {
-            NavigationButton.Refresh {
-                viewStore.send(.refresh)
-            }
-            .disabled(viewStore.isRefreshing)
-            .padding([.leading, .top, .bottom])            
         }
     }
     

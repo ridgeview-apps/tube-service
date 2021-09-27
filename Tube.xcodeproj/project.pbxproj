@@ -82,6 +82,7 @@
 		31ECD87A252C626200BBF975 /* FavouritesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ECD879252C626200BBF975 /* FavouritesButton.swift */; };
 		31EEE6A3251645AC003A2B5C /* LineStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EEE6A2251645AC003A2B5C /* LineStatus.swift */; };
 		31EEE6A425164EEA003A2B5C /* fake-line-statuses.json in Resources */ = {isa = PBXBuildFile; fileRef = 31EEE6A02516457C003A2B5C /* fake-line-statuses.json */; };
+		31FB9DD3270240E800E65F41 /* ViewStore+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FB9DD2270240E800E65F41 /* ViewStore+.swift */; };
 		31FC209A25DEC4C40084D78E /* RidgeviewCore in Frameworks */ = {isa = PBXBuildFile; productRef = 31FC209925DEC4C40084D78E /* RidgeviewCore */; };
 /* End PBXBuildFile section */
 
@@ -186,6 +187,7 @@
 		31ECD879252C626200BBF975 /* FavouritesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesButton.swift; sourceTree = "<group>"; };
 		31EEE6A02516457C003A2B5C /* fake-line-statuses.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "fake-line-statuses.json"; sourceTree = "<group>"; };
 		31EEE6A2251645AC003A2B5C /* LineStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStatus.swift; sourceTree = "<group>"; };
+		31FB9DD2270240E800E65F41 /* ViewStore+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewStore+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -461,6 +463,7 @@
 				316CAAC324F0014C00481DC1 /* Formatter+.swift */,
 				316CAAC524F0029000481DC1 /* TubeLine+.swift */,
 				316FCDEE2577A25300328F66 /* ProcessInfo+.swift */,
+				31FB9DD2270240E800E65F41 /* ViewStore+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -632,7 +635,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		31C9904D257FE7BF00918812 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -644,9 +647,9 @@
 			outputPaths = (
 				"${PROJECT_DIR}/Config/BuildSettings.generated.swift",
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"$PROJECT_DIR/Config/BuildSettings.sh\" > \"${PROJECT_DIR}/Config/BuildSettings.generated.swift\"\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#if [ $ENABLE_PREVIEWS == \"NO\" ]\n#then\n    \"$PROJECT_DIR/Config/BuildSettings.sh\" > \"${PROJECT_DIR}/Config/BuildSettings.generated.swift\"\n#else\n#    echo \"Skipping script in preview mode\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -706,6 +709,7 @@
 				317ADDEF2534745600AB34B9 /* NavigationButtons.swift in Sources */,
 				31C99071257FF36D00918812 /* BuildSettings.generated.swift in Sources */,
 				31A82E4B252DFE8A00760D87 /* LineStatusTab.swift in Sources */,
+				31FB9DD3270240E800E65F41 /* ViewStore+.swift in Sources */,
 				315474A125137FB10082E3D9 /* ArrivalsBoardsListView.swift in Sources */,
 				31508D1B255EE3D90047BC9C /* DecodableDefaults.swift in Sources */,
 				31A95FA02517B27B0030E815 /* DataServices.swift in Sources */,
