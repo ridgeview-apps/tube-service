@@ -17,7 +17,6 @@ struct ArrivalsBoardView: View {
         .padding(20)
         .background(Color.black)
         .roundedBorder(Color.boardText, cornerRadius: 20, lineWidth: 4)
-        .animation(nil)
     }
     
     private func boardHeader(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> some View {
@@ -40,7 +39,7 @@ struct ArrivalsBoardView: View {
             VStack(alignment: .leading, spacing: 12) {
                 ForEach(viewStore.fixedRows) { row in
                     ArrivalsBoardRowView(row: row)
-                        .animation(nil)
+                        .animation(nil, value: row)
                 }                
                 if let rotatingRow = viewStore.rotatingRow {
                     ArrivalsBoardRowView(row: rotatingRow)
@@ -48,7 +47,7 @@ struct ArrivalsBoardView: View {
                 }
             }
             .transition(viewStore.isExpanded ? .identity : .slide)
-            .animation(.default)
+            .animation(.default, value: viewStore.rotatingRow)
     }
     
     @ViewBuilder private func expansionButton(viewStore: ViewStore<ArrivalsBoard.ViewState, ArrivalsBoard.Action>) -> some View {

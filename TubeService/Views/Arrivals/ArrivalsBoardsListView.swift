@@ -28,16 +28,15 @@ struct ArrivalsBoardsListView: View {
                                     .buttonStyle(PlainButtonStyle())
                                     .frame(maxWidth: 600)
                                     .padding()
-                                    .animation(.default)
                                 Spacer()
                             }
                         }
                         .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
                         .background(Color(UIColor.systemBackground))
                     }
                 }
             }
-            .animation(nil)
             .listStyle(PlainListStyle())
             .navigationBarTitle(Text(viewStore.station.name), displayMode: .inline)
             .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))

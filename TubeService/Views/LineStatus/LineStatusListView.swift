@@ -87,7 +87,6 @@ struct LineStatusRowView: View {
                         .background(lineStatus.id.backgroundColor)
                         .foregroundColor(lineStatus.id.textColor)
                         .roundedBorder(.white)
-                        .animation(nil)
                     HStack {
                         if lineStatus.isDisrupted {
                             Image(systemName: "exclamationmark.circle.fill")
@@ -99,12 +98,10 @@ struct LineStatusRowView: View {
                             .frame(maxWidth: .infinity,
                                    maxHeight: .infinity,
                                    alignment: .leading)
-                            .animation(nil)
                     }
                 }
             }
         }
-        .animation(.default)
     }
     
     private func tweetsButton(title: LocalizedStringKey,

@@ -72,8 +72,8 @@
 		31A95F99251793F70030E815 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A95F98251793F70030E815 /* SafariView.swift */; };
 		31A95FA02517B27B0030E815 /* DataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A95F9F2517B27B0030E815 /* DataServices.swift */; };
 		31ACDBDD2700E2DB00C33CF3 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 31ACDBDC2700E2DB00C33CF3 /* ComposableArchitecture */; };
-		31C14841253F22AF0098AA92 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 31C14840253F22AF0098AA92 /* AppCenterCrashes */; };
-		31C14843253F22AF0098AA92 /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 31C14842253F22AF0098AA92 /* AppCenterAnalytics */; };
+		31ACDBE02700E6A400C33CF3 /* AppCenterAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 31ACDBDF2700E6A400C33CF3 /* AppCenterAnalytics */; };
+		31ACDBE22700E6A400C33CF3 /* AppCenterCrashes in Frameworks */ = {isa = PBXBuildFile; productRef = 31ACDBE12700E6A400C33CF3 /* AppCenterCrashes */; };
 		31C14846253F25290098AA92 /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C14845253F25290098AA92 /* Debug.swift */; };
 		31C99071257FF36D00918812 /* BuildSettings.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C99066257FE91900918812 /* BuildSettings.generated.swift */; };
 		31E329B2251A5A7600E35EF3 /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31E329B1251A5A7600E35EF3 /* KeyValueStore.swift */; };
@@ -207,11 +207,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31ACDBE02700E6A400C33CF3 /* AppCenterAnalytics in Frameworks */,
+				31ACDBE22700E6A400C33CF3 /* AppCenterCrashes in Frameworks */,
 				31ACDBDD2700E2DB00C33CF3 /* ComposableArchitecture in Frameworks */,
 				31508D3B25603C900047BC9C /* DeviceKit in Frameworks */,
-				31C14841253F22AF0098AA92 /* AppCenterCrashes in Frameworks */,
 				31FC209A25DEC4C40084D78E /* RidgeviewCore in Frameworks */,
-				31C14843253F22AF0098AA92 /* AppCenterAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,6 +327,7 @@
 				315F89C82567BCB70069DD2D /* TubeServiceUITests */,
 				316DE036256ECFC8003D4B2A /* TubeServiceTests */,
 				318D482724EFC4900026B5F4 /* Products */,
+				31ACDBE32700E6E500C33CF3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -464,6 +465,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		31ACDBE32700E6E500C33CF3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		31E329B3251B5BBE00E35EF3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -529,11 +537,11 @@
 			);
 			name = TubeService;
 			packageProductDependencies = (
-				31C14840253F22AF0098AA92 /* AppCenterCrashes */,
-				31C14842253F22AF0098AA92 /* AppCenterAnalytics */,
 				31508D3A25603C900047BC9C /* DeviceKit */,
 				31FC209925DEC4C40084D78E /* RidgeviewCore */,
 				31ACDBDC2700E2DB00C33CF3 /* ComposableArchitecture */,
+				31ACDBDF2700E6A400C33CF3 /* AppCenterAnalytics */,
+				31ACDBE12700E6A400C33CF3 /* AppCenterCrashes */,
 			);
 			productName = Tube;
 			productReference = 318D482624EFC4900026B5F4 /* Tube Service.app */;
@@ -572,10 +580,10 @@
 			);
 			mainGroup = 318D481D24EFC4900026B5F4;
 			packageReferences = (
-				31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 				31508D3925603C900047BC9C /* XCRemoteSwiftPackageReference "DeviceKit" */,
 				31FC209825DEC4C40084D78E /* XCRemoteSwiftPackageReference "ridgeview-core" */,
 				31ACDBDB2700E2DB00C33CF3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				31ACDBDE2700E6A400C33CF3 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */,
 			);
 			productRefGroup = 318D482724EFC4900026B5F4 /* Products */;
 			projectDirPath = "";
@@ -1166,7 +1174,7 @@
 				minimumVersion = 0.28.0;
 			};
 		};
-		31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
+		31ACDBDE2700E6A400C33CF3 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/microsoft/appcenter-sdk-apple.git";
 			requirement = {
@@ -1195,15 +1203,15 @@
 			package = 31ACDBDB2700E2DB00C33CF3 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
 		};
-		31C14840253F22AF0098AA92 /* AppCenterCrashes */ = {
+		31ACDBDF2700E6A400C33CF3 /* AppCenterAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
-			productName = AppCenterCrashes;
-		};
-		31C14842253F22AF0098AA92 /* AppCenterAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 31C1483F253F22AF0098AA92 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			package = 31ACDBDE2700E6A400C33CF3 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
 			productName = AppCenterAnalytics;
+		};
+		31ACDBE12700E6A400C33CF3 /* AppCenterCrashes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 31ACDBDE2700E6A400C33CF3 /* XCRemoteSwiftPackageReference "appcenter-sdk-apple" */;
+			productName = AppCenterCrashes;
 		};
 		31FC209925DEC4C40084D78E /* RidgeviewCore */ = {
 			isa = XCSwiftPackageProductDependency;
