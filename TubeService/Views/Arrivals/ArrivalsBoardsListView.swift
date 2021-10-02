@@ -37,8 +37,9 @@ struct ArrivalsBoardsListView: View {
                     }
                 }
             }
-            .listStyle(PlainListStyle())
-            .navigationBarTitle(Text(viewStore.station.name), displayMode: .inline)
+            .listStyle(.plain)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitle(viewStore.station.name)
             .navigationBarItems(trailing: navigationBarItems(viewStore: viewStore))
             .refreshable {
                 await viewStore.send(.refresh, while: \.isRefreshing)

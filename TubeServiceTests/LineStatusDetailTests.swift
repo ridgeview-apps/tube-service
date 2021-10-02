@@ -6,7 +6,7 @@ import Combine
 
 class LineStatusDetailTest: XCTestCase {
     
-    let scheduler = DispatchQueue.testScheduler
+    let scheduler = DispatchQueue.test
     
     func testOnAppear() throws {
         

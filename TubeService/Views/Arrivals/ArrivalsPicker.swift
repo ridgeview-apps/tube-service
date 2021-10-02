@@ -36,12 +36,13 @@ enum ArrivalsPicker: Equatable {
         var searchText = ""
         var placeholderSearchText = ""
         var searchResultsCountText = ""
-        var isSearching: Bool = false
         var hasLoaded: Bool = false
         
         var filterOptions: [Filter] {
             Filter.allCases
         }
+        
+        var isSearching: Bool { !searchText.isEmpty }
         
         func isRowExpanded(for station: Station) -> Bool {
             expandedRows.contains(station)
@@ -79,8 +80,6 @@ enum ArrivalsPicker: Equatable {
         case didLoadStations([Station])
         case refreshStations
         case global(Global.Action)
-        case beginSearch
-        case endSearch
         
     }
     
@@ -139,6 +138,9 @@ enum ArrivalsPicker: Equatable {
                 guard state.searchText != text else {
                     return .none
                 }
+                guard state.rowSelection.id == nil else {
+                    return .none
+                }
                 state.searchText = text
                 return Effect(value: .refreshStations)
                             .debounce(id: SearchTextId(), for: 0.3, scheduler: env.mainQueue)
@@ -175,13 +177,6 @@ enum ArrivalsPicker: Equatable {
                     state.expandedRows.remove(station)
                 }
                 return .none
-            case .beginSearch:
-                state.isSearching = true
-                return Effect(value: .refreshStations)
-            case .endSearch:
-                state.isSearching = false
-                state.searchText = ""
-                return Effect(value: .refreshStations)
             case let .arrivalsBoardsList(id, .global):
                 if let updatedGlobalState = state.rowSelection.navigationStates[id: id]?.globalState {
                     state.globalState = updatedGlobalState

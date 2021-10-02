@@ -10,7 +10,6 @@
 		31260611256533F100358CA2 /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 31260610256533F100358CA2 /* Localizable.stringsdict */; };
 		31260614256542A900358CA2 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31260613256542A900358CA2 /* App.swift */; };
 		31289404253DDDC900B0AA81 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31289403253DDDC900B0AA81 /* ErrorView.swift */; };
-		312B42E4255964B100065024 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312B42E3255964B100065024 /* SearchBar.swift */; };
 		3141ADE5253082C100A12F92 /* ArrivalsPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3141ADE4253082C100A12F92 /* ArrivalsPickerView.swift */; };
 		3141ADE72530833400A12F92 /* ArrivalsPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3141ADE62530833400A12F92 /* ArrivalsPicker.swift */; };
 		314D6EB124F3F75600F9AF12 /* LineColourKeyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314D6EB024F3F75600F9AF12 /* LineColourKeyView.swift */; };
@@ -82,7 +81,6 @@
 		31ECD87A252C626200BBF975 /* FavouritesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31ECD879252C626200BBF975 /* FavouritesButton.swift */; };
 		31EEE6A3251645AC003A2B5C /* LineStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31EEE6A2251645AC003A2B5C /* LineStatus.swift */; };
 		31EEE6A425164EEA003A2B5C /* fake-line-statuses.json in Resources */ = {isa = PBXBuildFile; fileRef = 31EEE6A02516457C003A2B5C /* fake-line-statuses.json */; };
-		31FB9DD3270240E800E65F41 /* ViewStore+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31FB9DD2270240E800E65F41 /* ViewStore+.swift */; };
 		31FC209A25DEC4C40084D78E /* RidgeviewCore in Frameworks */ = {isa = PBXBuildFile; productRef = 31FC209925DEC4C40084D78E /* RidgeviewCore */; };
 /* End PBXBuildFile section */
 
@@ -107,7 +105,6 @@
 		31260610256533F100358CA2 /* Localizable.stringsdict */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; path = Localizable.stringsdict; sourceTree = "<group>"; };
 		31260613256542A900358CA2 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		31289403253DDDC900B0AA81 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
-		312B42E3255964B100065024 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		3141ADE4253082C100A12F92 /* ArrivalsPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsPickerView.swift; sourceTree = "<group>"; };
 		3141ADE62530833400A12F92 /* ArrivalsPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsPicker.swift; sourceTree = "<group>"; };
 		314A71A925C1A4470062D050 /* Adhoc.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Adhoc.xcconfig; sourceTree = "<group>"; };
@@ -187,7 +184,6 @@
 		31ECD879252C626200BBF975 /* FavouritesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesButton.swift; sourceTree = "<group>"; };
 		31EEE6A02516457C003A2B5C /* fake-line-statuses.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "fake-line-statuses.json"; sourceTree = "<group>"; };
 		31EEE6A2251645AC003A2B5C /* LineStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStatus.swift; sourceTree = "<group>"; };
-		31FB9DD2270240E800E65F41 /* ViewStore+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewStore+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,7 +247,6 @@
 		314D6EAF24F3F73E00F9AF12 /* General */ = {
 			isa = PBXGroup;
 			children = (
-				312B42E3255964B100065024 /* SearchBar.swift */,
 				31508D21256010BF0047BC9C /* MailButton.swift */,
 				315E14C72588CCCA003D681E /* RowButton.swift */,
 			);
@@ -463,7 +458,6 @@
 				316CAAC324F0014C00481DC1 /* Formatter+.swift */,
 				316CAAC524F0029000481DC1 /* TubeLine+.swift */,
 				316FCDEE2577A25300328F66 /* ProcessInfo+.swift */,
-				31FB9DD2270240E800E65F41 /* ViewStore+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -635,7 +629,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		31C9904D257FE7BF00918812 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -645,11 +639,11 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"${PROJECT_DIR}/Config/BuildSettings.generated.swift",
+				"${SRCROOT}/Config/BuildSettings.generated.swift",
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#if [ $ENABLE_PREVIEWS == \"NO\" ]\n#then\n    \"$PROJECT_DIR/Config/BuildSettings.sh\" > \"${PROJECT_DIR}/Config/BuildSettings.generated.swift\"\n#else\n#    echo \"Skipping script in preview mode\"\n#fi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ $ENABLE_PREVIEWS == \"NO\" ]\nthen\n    \"$SRCROOT/Config/BuildSettings.sh\" > \"${SRCROOT}/Config/BuildSettings.generated.swift\"\nelse\n    echo \"Skipping script in preview mode\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -709,7 +703,6 @@
 				317ADDEF2534745600AB34B9 /* NavigationButtons.swift in Sources */,
 				31C99071257FF36D00918812 /* BuildSettings.generated.swift in Sources */,
 				31A82E4B252DFE8A00760D87 /* LineStatusTab.swift in Sources */,
-				31FB9DD3270240E800E65F41 /* ViewStore+.swift in Sources */,
 				315474A125137FB10082E3D9 /* ArrivalsBoardsListView.swift in Sources */,
 				31508D1B255EE3D90047BC9C /* DecodableDefaults.swift in Sources */,
 				31A95FA02517B27B0030E815 /* DataServices.swift in Sources */,
@@ -720,7 +713,6 @@
 				31508D22256010BF0047BC9C /* MailButton.swift in Sources */,
 				318D484024EFC4B60026B5F4 /* Station.swift in Sources */,
 				318D485624EFC9A60026B5F4 /* SwiftUI+.swift in Sources */,
-				312B42E4255964B100065024 /* SearchBar.swift in Sources */,
 				31508D15255E92210047BC9C /* SettingsView.swift in Sources */,
 				316CAAC424F0014C00481DC1 /* Formatter+.swift in Sources */,
 				318D484C24EFC9680026B5F4 /* Fakes.swift in Sources */,
@@ -848,7 +840,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TubeServiceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -922,7 +913,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TubeServiceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -942,7 +932,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = TubeServiceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

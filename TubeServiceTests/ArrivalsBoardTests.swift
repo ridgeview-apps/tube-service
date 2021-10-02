@@ -6,7 +6,7 @@ import Combine
 
 class ArrivalsBoardTests: XCTestCase {
     
-    let scheduler = DispatchQueue.testScheduler
+    let scheduler = DispatchQueue.test
     
     func testAnimationStates() {
         

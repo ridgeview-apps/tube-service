@@ -6,7 +6,7 @@ import Combine
 
 class ArrivalsBoardsListTests: XCTestCase {
     
-    let scheduler = DispatchQueue.testScheduler
+    let scheduler = DispatchQueue.test
     
     func testAppearAndDisappear() throws {
 

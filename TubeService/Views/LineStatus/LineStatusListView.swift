@@ -32,7 +32,7 @@ struct LineStatusListView: View {
                     }
                 }
             }
-            .listStyle(PlainListStyle())
+            .listStyle(.plain)
             .navigationBarTitle(viewStore.navigationBarTitle)
             .refreshable {
                 await viewStore.send(.refresh, while: \.isRefreshing)

@@ -6,7 +6,7 @@ import Combine
 
 class LineStatusListTest: XCTestCase {
     
-    let scheduler = DispatchQueue.testScheduler
+    let scheduler = DispatchQueue.test
     
     func testAutoRefresh_success() throws {
         
@@ -126,7 +126,7 @@ class LineStatusListTest: XCTestCase {
         let rows: [LineStatus] = [
             .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .severeDelays)]),
             .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .severeDelays)]),
-            .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .severeDelays)])
+            .fake(ofType: .lineId(.bakerloo), serviceDetails: [.fake(ofType: .severeDelays)])
         ]
         
         let initialState = LineStatusList.State.fake(
@@ -144,7 +144,7 @@ class LineStatusListTest: XCTestCase {
             },
             .send(.selectRow(.northern)) {
                 $0.rowSelection.id = .northern
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
                     [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0]))]
                 )
             }
@@ -159,7 +159,7 @@ class LineStatusListTest: XCTestCase {
         store.assert(
             .send(.selectRow(.central)) {
                 $0.rowSelection.id = .central
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
                     [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0])),
                      .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
                 )
@@ -170,7 +170,7 @@ class LineStatusListTest: XCTestCase {
         store.assert(
             .send(.selectRow(nil)) {
                 $0.rowSelection.id = nil
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
                     [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
                 )
             }

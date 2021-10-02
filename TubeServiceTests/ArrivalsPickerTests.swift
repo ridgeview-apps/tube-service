@@ -6,7 +6,7 @@ import Combine
 
 class ArrivalsPickerTests: XCTestCase {
     
-    let scheduler = DispatchQueue.testScheduler
+    let scheduler = DispatchQueue.test
     
     func testAppear_filteredByAllStations() throws {
         
@@ -29,7 +29,7 @@ class ArrivalsPickerTests: XCTestCase {
             },
             .receive(.didLoadStations(stations)) {
                 $0.hasLoaded = true
-                $0.stations = IdentifiedArray(stations)
+                $0.stations = IdentifiedArray(uniqueElements: stations)
             },
             .receive(.refreshStations) {
                 $0.selectableStations = $0.stations
@@ -68,7 +68,7 @@ class ArrivalsPickerTests: XCTestCase {
             },
             .receive(.didLoadStations(stations)) {
                 $0.hasLoaded = true
-                $0.stations = IdentifiedArray(stations)
+                $0.stations = IdentifiedArray(uniqueElements: stations)
             },
             .receive(.refreshStations) {
                 $0.selectableStations = [boundsGreen, highBarnet]
@@ -93,7 +93,7 @@ class ArrivalsPickerTests: XCTestCase {
         let globalState = Global.State.fake(userPreferences: initialUserPrefs)
         
         var viewState = ArrivalsPicker.ViewState.fake()
-        viewState.stations = IdentifiedArrayOf(Station.fakes())
+        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes())
         
         let store = TestStore(initialState: .fake(globalState: globalState, viewState: viewState),
                               reducer: ArrivalsPicker.reducer,
@@ -141,36 +141,23 @@ class ArrivalsPickerTests: XCTestCase {
     func testSearch() throws {
         
         var viewState = ArrivalsPicker.ViewState.fake()
-        viewState.stations = IdentifiedArrayOf(Station.fakes())
+        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes())
         
         let initialState = ArrivalsPicker.State.fake(viewState: viewState)
         
         let store = TestStore(initialState: initialState,
                               reducer: ArrivalsPicker.reducer,
                               environment: .unitTest)
-        
-        // 1. Begin search
-        store.assert(
-            .send(.beginSearch) {
-                $0.isSearching = true
-            },
-            .receive(.refreshStations) {
-                $0.selectableStations = []
-                $0.searchResultsCountText = "arrivals.picker.search.results.count"
-            }
-        )
-        
         let kingsCross = Station.fake(ofType: .kingsCross)
         let barkingside = Station.fake(ofType: .barkingSide)
         let kingsbury = Station.fake(ofType: .kingsbury)
         
-        // 2. Change search text
+        // 1. Begin search
         store.assert(
             .environment {
                 $0.mainQueue = self.scheduler.eraseToAnyScheduler()
             },
             .send(.search(text: "Kings")) {
-                $0.isSearching = true
                 $0.searchText = "Kings"
             },
             .do { self.scheduler.advance(by: 0.3) },
@@ -179,11 +166,9 @@ class ArrivalsPickerTests: XCTestCase {
                 $0.searchResultsCountText = "arrivals.picker.search.results.count"
             },
             .send(.search(text: "Kings C")) {
-                $0.isSearching = true
                 $0.searchText = "Kings C"
             },
             .send(.search(text: "Kings Cr")) {
-                $0.isSearching = true
                 $0.searchText = "Kings Cr"
             },
             .do { self.scheduler.advance(by: 0.3) },
@@ -193,12 +178,12 @@ class ArrivalsPickerTests: XCTestCase {
             }
         )
         
-        // 3. End search
+        // 2. End search
         store.assert(
-            .send(.endSearch) {
-                $0.isSearching = false
+            .send(.search(text: "")) {
                 $0.searchText = ""
             },
+            .do { self.scheduler.advance(by: 0.3) },
             .receive(.refreshStations) {
                 $0.selectableStations = initialState.selectableStations
             }
@@ -225,7 +210,7 @@ class ArrivalsPickerTests: XCTestCase {
             .send(.selectRow(highBarnetArrivalsListId)) {
                 $0.rowSelection.id = highBarnetArrivalsListId
                 $0.rowSelection.navigationStates = IdentifiedArrayOf(
-                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId))]
+                    uniqueElements: [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId))]
                 )
             }
         )
@@ -234,9 +219,11 @@ class ArrivalsPickerTests: XCTestCase {
         store.assert(
             .send(.selectRow(finchleyCentralArrivalsListId)) {
                 $0.rowSelection.id = finchleyCentralArrivalsListId
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
-                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
-                     .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId))]
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
+                        [
+                            .init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
+                            .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId))
+                        ]
                 )
             }
         )
@@ -245,7 +232,7 @@ class ArrivalsPickerTests: XCTestCase {
         store.assert(
             .send(.selectRow(boundsGreenArrivalsListId)) {
                 $0.rowSelection.id = boundsGreenArrivalsListId
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
                     [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
                      .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId)),
                      .init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
@@ -257,7 +244,7 @@ class ArrivalsPickerTests: XCTestCase {
         store.assert(
             .send(.selectRow(nil)) {
                 $0.rowSelection.id = nil
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
                     [.init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
                 )
             }

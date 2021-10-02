@@ -75,7 +75,7 @@ extension BaseEnvironment {
     static var preview: BaseEnvironment<Void> {
         .init(date: Date.init,
               featureEnvironment: (),
-              mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+              mainQueue: DispatchQueue.immediate.eraseToAnyScheduler(),
               uuid: UUID.init,
               mainBundle: Bundle.main,
               currentLocale: Locale.current,
@@ -89,7 +89,7 @@ extension BaseEnvironment {
     static var unitTest: BaseEnvironment<Void> {
         .init(date: Date.init,
               featureEnvironment: (),
-              mainQueue: DispatchQueue.main.eraseToAnyScheduler(),
+              mainQueue: DispatchQueue.immediate.eraseToAnyScheduler(),
               uuid: UUID.init,
               mainBundle: Bundle.main,
               currentLocale: Locale.current,

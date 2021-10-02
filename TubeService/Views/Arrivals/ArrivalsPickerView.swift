@@ -43,18 +43,12 @@ struct ArrivalsPickerView: View {
                     }
                 }
             }
-            .navigationSearchBar(
+            .listStyle(.grouped)
+            .searchable(
                 text: searchText(viewStore: viewStore),
-                options: [
-                    .placeholder: viewStore.placeholderSearchText,
-                    .   searchTextFieldAccessibilityId: "stations.picker.search.bar"
-                ],
-                actions: [
-                    .onCancelButtonClicked: { viewStore.send(.endSearch) },
-                    .onDidBecomeActive: { viewStore.send(.beginSearch) },
-                ]
+                placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always),
+                prompt: Text(viewStore.placeholderSearchText)
             )
-            .listStyle(PlainListStyle())
             .navigationBarTitle(viewStore.navigationBarTitle)
             .onAppear {
                 viewStore.send(.onAppear)
@@ -81,7 +75,7 @@ struct ArrivalsPickerView: View {
         .padding(.top, 8)
         .padding([.leading, .trailing, .bottom])
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-        .background(Color(UIColor.systemBackground))
+        .background(Color(.systemBackground))
     }
     
     private func selectedFilterOption(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<ArrivalsPicker.ViewState.Filter> {
