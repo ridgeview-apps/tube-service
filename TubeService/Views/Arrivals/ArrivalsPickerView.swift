@@ -43,7 +43,7 @@ struct ArrivalsPickerView: View {
                     }
                 }
             }
-            .listStyle(.grouped)
+            .listStyle(.plain)
             .searchable(
                 text: searchText(viewStore: viewStore),
                 placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always),

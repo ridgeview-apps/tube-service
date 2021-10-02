@@ -39,6 +39,7 @@ struct RootView: View {
                 
             }
             .onAppear {
+                UITableView.appearance().sectionHeaderTopPadding = 0
                 viewStore.send(.onAppear)
             }
         }
