@@ -16,11 +16,6 @@ or alternatively using `brew install fastlane`
 
 # Available Actions
 ## iOS
-### ios test_loaded_options
-```
-fastlane ios test_loaded_options
-```
-
 ### ios build_and_distribute
 ```
 fastlane ios build_and_distribute
@@ -44,6 +39,6 @@ fastlane ios create_bundle_ids
 
 ----
 
-This README.md is auto-generated and will be re-generated every time [fastlane](https://fastlane.tools) is run.
+This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
 More information about fastlane can be found on [fastlane.tools](https://fastlane.tools).
 The documentation of fastlane can be found on [docs.fastlane.tools](https://docs.fastlane.tools).
