@@ -12,7 +12,7 @@ function usage() {
 }
 
 function commitAndPush() {
-    git commit -a -m "Bumped app version no: ($APP_VERSION)"
+    git commit -a -m "Bumped app version no: $APP_VERSION"
     git push origin release/$APP_VERSION
 }
 
