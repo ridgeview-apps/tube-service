@@ -9,6 +9,8 @@ struct Arrival: Identifiable, Equatable, Codable {
     let destinationName: String?
     let currentLocation: String?
     let timeToStation: Int?
+    let destinationNaptanId: String?
+    let naptanId: String?
 }
 
 enum TrainLine: String, Codable, CaseIterable {

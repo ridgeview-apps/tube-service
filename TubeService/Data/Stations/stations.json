@@ -4614,5 +4614,29 @@
         "atcoCode" : "940GZZLUWYP"
       }
     ]
+  },
+  {
+    "name" : "Battersea Power Station",
+    "id" : "940GZZBPSUST",
+    "arrivalsGroups" : [
+      {
+        "lineIds" : [
+          "northern"
+        ],
+        "atcoCode" : "940GZZBPSUST"
+      }
+    ]
+  },
+  {
+    "name" : "Nine Elms",
+    "id" : "940GZZNEUGST",
+    "arrivalsGroups" : [
+      {
+        "lineIds" : [
+          "northern"
+        ],
+        "atcoCode" : "940GZZNEUGST"
+      }
+    ]
   }
 ]

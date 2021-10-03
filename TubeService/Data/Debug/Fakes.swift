@@ -279,7 +279,9 @@ extension Arrival {
                          towards: nil,
                          destinationName: destinationName.rawValue,
                          currentLocation: nil,
-                         timeToStation: timeToStation.intValue)
+                         timeToStation: timeToStation.intValue,
+                         destinationNaptanId: nil,
+                         naptanId: nil)
         }
     }
     

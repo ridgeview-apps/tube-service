@@ -185,16 +185,32 @@ enum ArrivalsBoard {
 
 private extension Arrival {
     
+    var terminatesHere: Bool {
+        guard let naptanId = naptanId,
+              let destinationNaptanId = destinationNaptanId else {
+            return false
+        }
+        return naptanId == destinationNaptanId
+    }
+    
     func destinationText(localizedBy localizer: StringLocalizer,
                          stationName: String) -> String {
-        switch (towards, destinationName) {
-        case let (towards?, _) where !towards.isEmpty && !towards.contains(stationName):
-            return towards
-        case let (_, destinationName?) where !destinationName.isEmpty && !destinationName.contains(stationName):
-            return destinationName
-        default:
-            return localizer.localized("arrivals.check.front.of.train")
+        
+        let checkFrontOfTrain = localizer.localized("arrivals.check.front.of.train")
+        
+        guard !terminatesHere else {
+            return checkFrontOfTrain
         }
+        
+        if let towards = towards, !towards.isEmpty {
+            return towards
+        }
+        
+        if let destinationName = destinationName, !destinationName.isEmpty {
+            return destinationName
+        }
+        
+        return checkFrontOfTrain
     }
     
     func arrivalTimeText(localizedBy localizer: StringLocalizer) -> String {
