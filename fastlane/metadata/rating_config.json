@@ -12,5 +12,5 @@
     "sexualContentGraphicAndNudity" : "NONE",
     "unrestrictedWebAccess": false,
     "gambling": false,
-    "contests": false
+    "contests": "NONE"
 }
