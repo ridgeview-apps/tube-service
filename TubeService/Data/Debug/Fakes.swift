@@ -1,6 +1,8 @@
 import Foundation
 import ComposableArchitecture
+import Model
 import RidgeviewCore
+
 
 private class MocksBundlePin {}
 

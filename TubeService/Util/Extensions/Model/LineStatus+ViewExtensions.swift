@@ -1,41 +1,13 @@
-struct LineStatus: Codable, Identifiable, Equatable {
-    private enum CodingKeys: String, CodingKey {
-        case id, serviceDetails = "lineStatuses"
-    }
-    let id: TrainLine
-    let serviceDetails: [LineStatusServiceDetail]
-    
+import Model
+
+extension LineStatus {
+
     var statusSeverity: StatusSeverity {
         serviceDetails.contains { $0.statusSeverity == .disrupted } ? .disrupted : .goodService
     }
     
     var isDisrupted: Bool {
         statusSeverity == .disrupted
-    }
-}
-
-struct LineStatusServiceDetail: Codable, Equatable {
-    let statusSeverity: LineStatus.StatusSeverity
-    let statusSeverityDescription: String
-    let reason: String?
-}
-
-
-extension LineStatus {
-    
-    enum StatusSeverity: Int, Codable {
-        case disrupted
-        case goodService
-        
-        init(from decoder: Decoder) throws {
-          let container = try decoder.singleValueContainer()
-          switch try container.decode(Int.self) {
-          case 10:
-            self = .goodService
-          default:
-            self = .disrupted
-          }
-        }
     }
     
     var shortText: String {

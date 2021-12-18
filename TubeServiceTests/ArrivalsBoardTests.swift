@@ -1,6 +1,7 @@
 import XCTest
 import ComposableArchitecture
 import Combine
+import Model
 
 @testable import Tube_Service
 

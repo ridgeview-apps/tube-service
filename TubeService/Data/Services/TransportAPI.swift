@@ -1,6 +1,6 @@
-import ComposableArchitecture
-import Foundation
 import Combine
+import ComposableArchitecture
+import Model
 
 struct TransportAPI {
     var lineStatuses: () -> Effect<[LineStatus], APIFailure>

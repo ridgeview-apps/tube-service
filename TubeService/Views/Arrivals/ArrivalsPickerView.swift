@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Model
 import SwiftUI
 
 struct ArrivalsPickerView: View {

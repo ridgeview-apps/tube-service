@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Model
 
 enum LineStatusList: Equatable {
     

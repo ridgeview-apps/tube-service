@@ -1,3 +1,5 @@
+import Model
+
 extension Station {
     static let placeholder = Self(id: "", name: "", arrivalsGroups: [])
 }

@@ -1,10 +1,7 @@
 import ComposableArchitecture
+import Model
 
-struct Station: Identifiable, Equatable, Hashable, Codable {
-    let id: String
-    let name: String
-    let arrivalsGroups: IdentifiedArrayOf<ArrivalsGroup>
-    
+extension Station  {
     var sortedLines: [TrainLine] {
         Set(arrivalsGroups.flatMap { $0.sortedLineIds }).sortedByName()
     }
@@ -12,29 +9,24 @@ struct Station: Identifiable, Equatable, Hashable, Codable {
     var sortedArrivalsGroups: IdentifiedArrayOf<ArrivalsGroup> {
         IdentifiedArrayOf(uniqueElements: arrivalsGroups.sortedByTitle())
     }
-}
-
-extension Station {
-    
-    struct ArrivalsGroup: Hashable, Identifiable, Equatable, Codable {
-        let atcoCode: String
-        let lineIds: [TrainLine]
-                
-        var id: String {
-            "\(atcoCode)-\(lineIds.toId())"
-        }
-        
-        var title: String {
-            lineIds.toTitle()
-        }
-        
-        var sortedLineIds: [TrainLine] {
-            lineIds.sortedByName()
-        }
-    }
     
     func arrivalsBoardsListId(at index: Int) -> ArrivalsBoardsList.Id {
         .init(station: self, arrivalsGroup: arrivalsGroups[index])
+    }
+}
+
+extension Station.ArrivalsGroup: Identifiable {
+    
+    public var id: String {
+        "\(atcoCode)-\(lineIds.toId())"
+    }
+    
+    var title: String {
+        lineIds.toTitle()
+    }
+    
+    var sortedLineIds: [TrainLine] {
+        lineIds.sortedByName()
     }
 }
 

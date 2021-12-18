@@ -1,5 +1,6 @@
-import ComposableArchitecture
 import Combine
+import ComposableArchitecture
+import Model
 
 enum Global {
     

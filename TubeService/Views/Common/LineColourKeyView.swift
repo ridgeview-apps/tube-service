@@ -1,5 +1,5 @@
+import Model
 import SwiftUI
-
 
 struct LineColourKeyView: View {
     

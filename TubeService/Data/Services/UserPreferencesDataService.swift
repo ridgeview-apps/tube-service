@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Model
 
 struct UserPreferences: Equatable, Codable {
     var favourites: Set<Station.ArrivalsGroup.ID>

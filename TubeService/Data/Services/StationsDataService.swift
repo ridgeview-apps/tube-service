@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Model
 
 struct StationsDataService {
     let load: () -> Effect<[Station], Never>
