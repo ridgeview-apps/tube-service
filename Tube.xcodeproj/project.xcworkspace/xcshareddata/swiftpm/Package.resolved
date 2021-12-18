@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "484dead179e6d7edd534d0d7defdf65c14a5b426",
-          "version": "4.1.0"
+          "revision": "16d6ed7c3550870ac42f95a0fdccc7235450b863",
+          "version": "4.4.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/devicekit/DeviceKit",
         "state": {
           "branch": null,
-          "revision": "4cf9f057db69104851634269f7839f8d0bd346a3",
-          "version": "4.3.0"
+          "revision": "da57c444cbb7b6159aa871534d4cf2616d1d55c6",
+          "version": "4.5.2"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/microsoft/PLCrashReporter.git",
         "state": {
           "branch": null,
-          "revision": "de6b8f9db4b2a0aa859a5507550a70548e4da936",
-          "version": "1.8.1"
+          "revision": "6b27393cad517c067dceea85fadf050e70c4ceaa",
+          "version": "1.10.1"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/apple/swift-collections",
         "state": {
           "branch": null,
-          "revision": "2d33a0ea89c961dcb2b3da2157963d9c0370347e",
-          "version": "1.0.1"
+          "revision": "48254824bb4248676bf7ce56014ff57b142b77eb",
+          "version": "1.0.2"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-composable-architecture",
         "state": {
           "branch": null,
-          "revision": "599a2398adaaa7a4e3f5420cde7728c39e33677e",
-          "version": "0.28.1"
+          "revision": "23155a04fe426a5ee18befa29bd2627dbf79e653",
+          "version": "0.30.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-custom-dump",
         "state": {
           "branch": null,
-          "revision": "c2dd2c64b753dda592f5619303e02f741cd3e862",
-          "version": "0.2.0"
+          "revision": "51698ece74ecf31959d3fa81733f0a5363ef1b4e",
+          "version": "0.3.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-identified-collections",
         "state": {
           "branch": null,
-          "revision": "c8e6a40209650ab619853cd4ce89a0aa51792754",
-          "version": "0.3.0"
+          "revision": "680bf440178a78a627b1c2c64c0855f6523ad5b9",
+          "version": "0.3.2"
         }
       },
       {
