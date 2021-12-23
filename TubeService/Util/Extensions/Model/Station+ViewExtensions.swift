@@ -15,11 +15,7 @@ extension Station  {
     }
 }
 
-extension Station.ArrivalsGroup: Identifiable {
-    
-    public var id: String {
-        "\(atcoCode)-\(lineIds.toId())"
-    }
+extension Station.ArrivalsGroup {
     
     var title: String {
         lineIds.toTitle()
@@ -37,16 +33,8 @@ extension Sequence where Element == Station {
 }
 
 extension Sequence where Element == TrainLine {
-    func sortedByName() -> [TrainLine] {
-        self.sorted(by: { $0.shortName < $1.shortName })
-    }
-    
     func toTitle() -> String {
         self.sortedByName().map { $0.shortName }.joined(separator: ", ")
-    }
-    
-    func toId() -> String {
-        self.sortedByName().map { $0.rawValue }.joined(separator: ",")
     }
 }
 

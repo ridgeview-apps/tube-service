@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import DataClients
 import Model
 
 enum LineStatusList: Equatable {
@@ -43,7 +44,7 @@ enum LineStatusList: Equatable {
         case refresh
         case setRefreshing(Bool)
         case selectRow(LineStatusDetail.State.ID?)
-        case lineStatusesResponse(Result<[LineStatus], TransportAPI.APIFailure>)
+        case lineStatusesResponse(Result<[LineStatus], TransportAPIClient.APIFailure>)
         case lineStatusDetail(id: LineStatusDetail.State.ID, action: LineStatusDetail.Action)
         case global(Global.Action)
     }
@@ -78,7 +79,7 @@ enum LineStatusList: Equatable {
                 return Effect(value: .refresh)
             case .refresh:
                 state.isRefreshing = true
-                return environment.dataServices.api.lineStatuses()
+                return environment.dataClients.api.lineStatuses()
                     .receive(on: environment.mainQueue)
                     .catchToEffect()
                     .map(Action.lineStatusesResponse)

@@ -36,22 +36,3 @@ public struct Arrival: Identifiable, Equatable, Codable {
         self.naptanId = naptanId
     }
 }
-
-public enum TrainLine: String, Codable, CaseIterable {
-    
-    case bakerloo
-    case central
-    case circle
-    case district
-    case dlr
-    case hammersmithAndCity = "hammersmith-city"
-    case jubilee
-    case metropolitan
-    case northern
-    case piccadilly
-    case victoria
-    case waterlooAndCity = "waterloo-city"
-    case tram
-    case overground = "london-overground"
-    case tflRail = "tfl-rail"
-}

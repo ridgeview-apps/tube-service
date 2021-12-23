@@ -1,5 +1,6 @@
 import Foundation
 import ComposableArchitecture
+import DataClients
 import DeviceKit
 import RidgeviewCore
 
@@ -14,8 +15,7 @@ struct BaseEnvironment<Environment> {
     var currentDevice: Device
     var appConfig: AppConfig
     var stringLocalizer: StringLocalizer
-    var dataServices: DataServices
-    var keyValueStorage: KeyValueStore
+    var dataClients: DataClients
     
     subscript<Dependency>(
         dynamicMember keyPath: WritableKeyPath<Environment, Dependency>
@@ -38,8 +38,7 @@ struct BaseEnvironment<Environment> {
             currentDevice: self.currentDevice,
             appConfig: self.appConfig,
             stringLocalizer: self.stringLocalizer,
-            dataServices: self.dataServices,
-            keyValueStorage: self.keyValueStorage
+            dataClients: self.dataClients
         )
     }
 }
@@ -57,8 +56,7 @@ extension BaseEnvironment {
               currentDevice: Device.current,
               appConfig: .real,
               stringLocalizer: .real,
-              dataServices: .real,
-              keyValueStorage: .real)
+              dataClients: .real)
     }
 }
 
@@ -82,8 +80,7 @@ extension BaseEnvironment {
               currentDevice: Device.current,
               appConfig: .fake,
               stringLocalizer: .real, // Use NSLocalizedStrings in preview mode...
-              dataServices: .fake,
-              keyValueStorage: .fake)
+              dataClients: .fake)
     }
     
     static var unitTest: BaseEnvironment<Void> {
@@ -96,8 +93,7 @@ extension BaseEnvironment {
               currentDevice: Device.current,
               appConfig: .fake,
               stringLocalizer: .fake,
-              dataServices: .fake,
-              keyValueStorage: .fake)
+              dataClients: .fake)
     }
 }
 #endif

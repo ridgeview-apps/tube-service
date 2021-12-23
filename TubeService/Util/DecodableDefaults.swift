@@ -64,10 +64,7 @@ extension DecodableDefault {
         enum EmptyMap<T: Map>: Source {
             static var defaultValue: T { [:] }
         }
-        
-        enum BrowserTypeExternal: Source {
-            static var defaultValue: Settings.ViewState.BrowserType { .external }
-        }
+
     }
 }
 
@@ -77,5 +74,4 @@ extension DecodableDefault {
     typealias EmptyString = Wrapper<Sources.EmptyString>
     typealias EmptyList<T: List> = Wrapper<Sources.EmptyList<T>>
     typealias EmptyMap<T: Map> = Wrapper<Sources.EmptyMap<T>>
-    typealias BrowserTypeExternal = Wrapper<Sources.BrowserTypeExternal>
 }

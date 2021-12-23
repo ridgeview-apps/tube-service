@@ -15,27 +15,22 @@ class LineStatusDetailTest: XCTestCase {
                               environment: .unitTest)
         
         // 1. Appearing for first time (load triggered)
-        store.assert(
-            .send(.onAppear) {
-                
-                $0.allTweetsLink = .init(
-                    title: "status.tfl.twitter.handle (status.tfl.twitter.allTweets)",
-                    url: URL(string: "https://twitter.com/TfL/with_replies")!
-                )
-                    
-                $0.filteredTweetsLink = .init(
-                    title: "status.tfl.twitter.handle (Northern line)",
-                    url: URL(string: "https://twitter.com/search?q=(from:TfL%20OR%20to:TfL)%20northern%20line&f=live")!
-                )
-                
-                $0.hasLoaded = true
-            }
-        )
+        store.send(.onAppear) {
+            $0.allTweetsLink = .init(
+                title: "status.tfl.twitter.handle (status.tfl.twitter.allTweets)",
+                url: URL(string: "https://twitter.com/TfL/with_replies")!
+            )
+            
+            $0.filteredTweetsLink = .init(
+                title: "status.tfl.twitter.handle (Northern line)",
+                url: URL(string: "https://twitter.com/search?q=(from:TfL%20OR%20to:TfL)%20northern%20line&f=live")!
+            )
+            
+            $0.hasLoaded = true
+        }
         
         // 2. Re-appearing (load not triggered)
-        store.assert(
-            .send(.onAppear) { _ in /* No state changes */ }
-        )
+        store.send(.onAppear) { _ in /* No state changes */ }
     }
     
     func testTapTwitterLinks() throws {
@@ -51,18 +46,14 @@ class LineStatusDetailTest: XCTestCase {
         
         
         // 1. Activate twitter link
-        store.assert(
-            .send(.set(twitterLink: twitterLink, isActive: true)) {
-                $0.activeTwitterLink = twitterLink
-            }
-        )
+        store.send(.set(twitterLink: twitterLink, isActive: true)) {
+            $0.activeTwitterLink = twitterLink
+        }
         
         // 2. Deactivate twitter link
-        store.assert(
-            .send(.set(twitterLink: twitterLink, isActive: false)) {
-                $0.activeTwitterLink = nil
-            }
-        )
+        store.send(.set(twitterLink: twitterLink, isActive: false)) {
+            $0.activeTwitterLink = nil
+        }
     }
     
 }

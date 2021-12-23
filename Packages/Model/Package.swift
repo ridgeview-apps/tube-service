@@ -12,7 +12,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Model",
-            targets: ["Model"]),
+            targets: ["Model", "ModelFakes"]
+        ),
     ],
     dependencies: [
 //        .package(url: "https://github.com/pointfreeco/swift-identified-collections", from: "0.1.0")
@@ -20,11 +21,16 @@ let package = Package(
     targets: [
         .target(
             name: "Model",
-            dependencies: [
-//                .product(name: "IdentifiedCollections", package: "swift-identified-collections")
-            ]),
+            dependencies: []
+        ),
+        .target(
+            name: "ModelFakes",
+            dependencies: ["Model"],
+            resources: [.process("Resources")]
+        ),
         .testTarget(
             name: "ModelTests",
-            dependencies: ["Model"]),
+            dependencies: ["Model"]
+        ),
     ]
 )

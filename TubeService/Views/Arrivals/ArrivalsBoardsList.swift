@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import DataClients
 import Model
 import RidgeviewCore
 
@@ -36,7 +37,7 @@ enum ArrivalsBoardsList {
         case startAutoRefreshTimer
         case cancelAutoRefreshTimer
         case refresh
-        case arrivalsResponse(Result<[Arrival], TransportAPI.APIFailure>)
+        case arrivalsResponse(Result<[Arrival], TransportAPIClient.APIFailure>)
         case tapFavourite(Bool)
         case arrivalsBoard(id: ArrivalsBoard.ViewState.ID, action: ArrivalsBoard.Action)
         case setEachBoardAnimationState(to: ArrivalsBoard.ViewState.AnimationState)
@@ -98,7 +99,7 @@ enum ArrivalsBoardsList {
                 }
                 state.isRefreshing = true
                 
-                let fetchData = environment.dataServices.api
+                let fetchData = environment.dataClients.api
                     .arrivals(ArrivalsRequest(arrivalsGroup: state.arrivalsGroup))
                     .receive(on: environment.mainQueue)
                     .catchToEffect()

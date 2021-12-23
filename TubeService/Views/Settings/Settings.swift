@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import DataClients
 import DeviceKit
 import RidgeviewCore
 
@@ -7,13 +8,8 @@ enum Settings {
     // State
     struct ViewState: Equatable {
         
-        enum BrowserType: Int, Identifiable, CaseIterable, Codable {
-            var id: Int { rawValue }
-            case external, inApp
-        }
-        
         var hasLoaded = false
-        var selectedBrowserType: BrowserType = .inApp
+        var selectedBrowserType: UserPreferences.BrowserType = .inApp
         var contactUs: ContactUs = .empty
         var appVersionNumber: String = ""
         var submitAppReviewUrl: URL? = nil
@@ -26,7 +22,7 @@ enum Settings {
     enum Action: Equatable {
         case onAppear
         case done
-        case select(browserType: ViewState.BrowserType)
+        case select(browserType: UserPreferences.BrowserType)
         case global(Global.Action)
         case debug(Debug.Action)
     }

@@ -1,18 +1,18 @@
 import Foundation
 
-struct KeyValueStore {
-    typealias Key = String
-    typealias Value = Any
-    struct KeyValuePair {
+public struct KeyValueStore {
+    public typealias Key = String
+    public typealias Value = Any
+    public struct KeyValuePair {
         let key: Key
         let value: Value?
     }
-    let get: (Key) -> Value?
-    let set: (KeyValuePair) -> Void
+    public let get: (Key) -> Value?
+    public let set: (KeyValuePair) -> Void
 }
 
 // MARK: - Real instance
-extension KeyValueStore {
+public extension KeyValueStore {
     
     private static let standardDefaults = UserDefaults.standard
     static let real = KeyValueStore(
@@ -27,7 +27,7 @@ extension KeyValueStore {
 
 // MARK: - Fake instance
 #if DEBUG
-extension KeyValueStore {
+public extension KeyValueStore {
     
     private static var inMemoryStorage =  [String: Any]()
     static let fake = KeyValueStore(

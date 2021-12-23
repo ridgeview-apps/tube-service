@@ -2,6 +2,7 @@ import XCTest
 import ComposableArchitecture
 import Combine
 import Model
+import DataClients
 
 @testable import Tube_Service
 
@@ -16,26 +17,27 @@ class ArrivalsPickerTests: XCTestCase {
         
         let globalState = Global.State.fake(userPreferences: userPrefs)
         
-        let stations: [Station] = .fakes()
+        let stations: [Station] = .fakes().sortedByName()
         
         let store = TestStore(initialState: .fake(globalState: globalState),
                               reducer: ArrivalsPicker.reducer,
                               environment: .unitTest)
         
-        store.assert(
-            .send(.onAppear) {
-                $0.navigationBarTitle = "arrivals.picker.navigation.title"
-                $0.placeholderSearchText = "arrivals.picker.search.placeholder"
-                $0.selectedFilterOption = .all
-            },
-            .receive(.didLoadStations(stations)) {
-                $0.hasLoaded = true
-                $0.stations = IdentifiedArray(uniqueElements: stations)
-            },
-            .receive(.refreshStations) {
-                $0.selectableStations = $0.stations
-            }
-        )
+        store.send(.onAppear) {
+            $0.navigationBarTitle = "arrivals.picker.navigation.title"
+            $0.placeholderSearchText = "arrivals.picker.search.placeholder"
+            $0.selectedFilterOption = .all
+        }
+        
+        store.receive(.didLoadStations(stations)) {
+            $0.hasLoaded = true
+            $0.stations = IdentifiedArray(uniqueElements: stations)
+        }
+        
+        store.receive(.refreshStations) {
+            $0.selectableStations = $0.stations
+        }
+        
     }
     
     func testAppear_filteredByFavouriteStations() throws {
@@ -54,27 +56,27 @@ class ArrivalsPickerTests: XCTestCase {
         
         let globalState = Global.State.fake(userPreferences: userPrefs)
         
-        let stations: [Station] = .fakes()
+        let stations: [Station] = .fakes().sortedByName()
         
         let store = TestStore(initialState: .fake(globalState: globalState),
                               reducer: ArrivalsPicker.reducer,
                               environment: .unitTest)
         
-        store.assert(
-            
-            .send(.onAppear) {
-                $0.navigationBarTitle = "arrivals.picker.navigation.title"
-                $0.placeholderSearchText = "arrivals.picker.search.placeholder"
-                $0.selectedFilterOption = .favourites
-            },
-            .receive(.didLoadStations(stations)) {
-                $0.hasLoaded = true
-                $0.stations = IdentifiedArray(uniqueElements: stations)
-            },
-            .receive(.refreshStations) {
-                $0.selectableStations = [boundsGreen, highBarnet]
-            }
-        )
+        store.send(.onAppear) {
+            $0.navigationBarTitle = "arrivals.picker.navigation.title"
+            $0.placeholderSearchText = "arrivals.picker.search.placeholder"
+            $0.selectedFilterOption = .favourites
+        }
+        
+        store.receive(.didLoadStations(stations)) {
+            $0.hasLoaded = true
+            $0.stations = IdentifiedArray(uniqueElements: stations)
+        }
+        
+        store.receive(.refreshStations) {
+            $0.selectableStations = [boundsGreen, highBarnet]
+        }
+        
     }
     
     func testChangeFilterOption() {
@@ -94,7 +96,7 @@ class ArrivalsPickerTests: XCTestCase {
         let globalState = Global.State.fake(userPreferences: initialUserPrefs)
         
         var viewState = ArrivalsPicker.ViewState.fake()
-        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes())
+        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes().sortedByName())
         
         let store = TestStore(initialState: .fake(globalState: globalState, viewState: viewState),
                               reducer: ArrivalsPicker.reducer,
@@ -102,47 +104,47 @@ class ArrivalsPickerTests: XCTestCase {
 
         var updatedUserPrefs = initialUserPrefs
         updatedUserPrefs.lastUsedFilterOption = .favourites
-
+        
         // 1. Select "favourites" filter
-        store.assert(
-            .send(.selectFilterOption(.favourites)) {
-                $0.selectedFilterOption = .favourites
-            },
-            .receive(.global(.updateUserPreferences(updatedUserPrefs))),
-            .receive(.refreshStations) {
-                $0.selectableStations = [boundsGreen, highBarnet]
-            },
-            .receive(.global(.didUpdateUserPreferences(updatedUserPrefs))) {
-                $0.userPreferences.lastUsedFilterOption = .favourites
-            }
-        )
+        store.send(.selectFilterOption(.favourites)) {
+            $0.selectedFilterOption = .favourites
+        }
+        
+        store.receive(.global(.updateUserPreferences(updatedUserPrefs)))
+        
+        store.receive(.refreshStations) {
+            $0.selectableStations = [boundsGreen, highBarnet]
+        }
+        
+        store.receive(.global(.didUpdateUserPreferences(updatedUserPrefs))) {
+            $0.userPreferences.lastUsedFilterOption = .favourites
+        }
         
         // 2. Re-select same filter
-        store.assert(
-            .send(.selectFilterOption(.favourites)) // No changes
-        )
+        store.send(.selectFilterOption(.favourites)) // No changes
         
         updatedUserPrefs.lastUsedFilterOption = .all
         
         // 3. Select "All" again
-        store.assert(
-            .send(.selectFilterOption(.all)) {
-                $0.selectedFilterOption = .all
-            },
-            .receive(.global(.updateUserPreferences(updatedUserPrefs))),
-            .receive(.refreshStations) {
-                $0.selectableStations = $0.stations
-            },
-            .receive(.global(.didUpdateUserPreferences(updatedUserPrefs))) {
-                $0.userPreferences.lastUsedFilterOption = .all
-            }
-        )
+        store.send(.selectFilterOption(.all)) {
+            $0.selectedFilterOption = .all
+        }
+        
+        store.receive(.global(.updateUserPreferences(updatedUserPrefs)))
+        
+        store.receive(.refreshStations) {
+            $0.selectableStations = $0.stations
+        }
+        
+        store.receive(.global(.didUpdateUserPreferences(updatedUserPrefs))) {
+            $0.userPreferences.lastUsedFilterOption = .all
+        }
     }
     
     func testSearch() throws {
         
         var viewState = ArrivalsPicker.ViewState.fake()
-        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes())
+        viewState.stations = IdentifiedArrayOf(uniqueElements: Station.fakes().sortedByName())
         
         let initialState = ArrivalsPicker.State.fake(viewState: viewState)
         
@@ -154,41 +156,42 @@ class ArrivalsPickerTests: XCTestCase {
         let kingsbury = Station.fake(ofType: .kingsbury)
         
         // 1. Begin search
-        store.assert(
-            .environment {
-                $0.mainQueue = self.scheduler.eraseToAnyScheduler()
-            },
-            .send(.search(text: "Kings")) {
-                $0.searchText = "Kings"
-            },
-            .do { self.scheduler.advance(by: 0.3) },
-            .receive(.refreshStations) {
-                $0.selectableStations = [barkingside, kingsCross, kingsbury]
-                $0.searchResultsCountText = "arrivals.picker.search.results.count"
-            },
-            .send(.search(text: "Kings C")) {
-                $0.searchText = "Kings C"
-            },
-            .send(.search(text: "Kings Cr")) {
-                $0.searchText = "Kings Cr"
-            },
-            .do { self.scheduler.advance(by: 0.3) },
-            .receive(.refreshStations) {
-                $0.selectableStations = [kingsCross]
-                $0.searchResultsCountText = "arrivals.picker.search.results.count"
-            }
-        )
+        store.environment.mainQueue = scheduler.eraseToAnyScheduler()
+        
+        store.send(.search(text: "Kings")) {
+            $0.searchText = "Kings"
+        }
+        
+        scheduler.advance(by: 0.3)
+        store.receive(.refreshStations) {
+            $0.selectableStations = [barkingside, kingsCross, kingsbury]
+            $0.searchResultsCountText = "arrivals.picker.search.results.count"
+        }
+        
+        store.send(.search(text: "Kings C")) {
+            $0.searchText = "Kings C"
+        }
+        
+        store.send(.search(text: "Kings Cr")) {
+            $0.searchText = "Kings Cr"
+        }
+        
+        scheduler.advance(by: 0.3)
+        store.receive(.refreshStations) {
+            $0.selectableStations = [kingsCross]
+            $0.searchResultsCountText = "arrivals.picker.search.results.count"
+        }
+        
         
         // 2. End search
-        store.assert(
-            .send(.search(text: "")) {
-                $0.searchText = ""
-            },
-            .do { self.scheduler.advance(by: 0.3) },
-            .receive(.refreshStations) {
-                $0.selectableStations = initialState.selectableStations
-            }
-        )
+        store.send(.search(text: "")) {
+            $0.searchText = ""
+        }
+        scheduler.advance(by: 0.3)
+        store.receive(.refreshStations) {
+            $0.selectableStations = initialState.selectableStations
+        }
+        
     }
     
     func testRowSelection() {
@@ -207,49 +210,43 @@ class ArrivalsPickerTests: XCTestCase {
                               environment: .unitTest)
         
         // 1. Select arrivals group row
-        store.assert(
-            .send(.selectRow(highBarnetArrivalsListId)) {
+        store.send(.selectRow(highBarnetArrivalsListId)) {
                 $0.rowSelection.id = highBarnetArrivalsListId
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(
-                    uniqueElements: [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId))]
-                )
+                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                    .init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId))
+                ])
             }
-        )
+        
         
         // 2. Select another...
-        store.assert(
-            .send(.selectRow(finchleyCentralArrivalsListId)) {
-                $0.rowSelection.id = finchleyCentralArrivalsListId
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                        [
-                            .init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
-                            .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId))
-                        ]
-                )
-            }
-        )
+        store.send(.selectRow(finchleyCentralArrivalsListId)) {
+            $0.rowSelection.id = finchleyCentralArrivalsListId
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                .init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
+                .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId))
+            ])
+        }
+        
         
         // 2. ... and another
-        store.assert(
-            .send(.selectRow(boundsGreenArrivalsListId)) {
-                $0.rowSelection.id = boundsGreenArrivalsListId
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                    [.init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
-                     .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId)),
-                     .init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
-                )
-            }
-        )
+        store.send(.selectRow(boundsGreenArrivalsListId)) {
+            $0.rowSelection.id = boundsGreenArrivalsListId
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                .init(globalState: $0.globalState, viewState: .init(id: highBarnetArrivalsListId)),
+                .init(globalState: $0.globalState, viewState: .init(id: finchleyCentralArrivalsListId)),
+                .init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))
+            ])
+        }
+        
         
         // 2. Remove deselected row states
-        store.assert(
-            .send(.selectRow(nil)) {
-                $0.rowSelection.id = nil
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                    [.init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))]
-                )
-            }
-        )
+        store.send(.selectRow(nil)) {
+            $0.rowSelection.id = nil
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                .init(globalState: $0.globalState, viewState: .init(id: boundsGreenArrivalsListId))
+            ])
+        }
+        
         
     }
     
@@ -262,27 +259,24 @@ class ArrivalsPickerTests: XCTestCase {
                               environment: .unitTest)
         
         // 1. Expand "King's Cross", then "Paddington"
-        store.assert(
-            .send(.toggleExpandedRowState(for: kingsCross)),
-            .receive(.setExpandedRowState(to: true, for: kingsCross)) {
-                $0.expandedRows = Set([kingsCross])
-            },
-            .send(.toggleExpandedRowState(for: paddington)),
-            .receive(.setExpandedRowState(to: true, for: paddington)) {
-                $0.expandedRows = Set([kingsCross, paddington])
-            }
-        )
+        store.send(.toggleExpandedRowState(for: kingsCross))
+        store.receive(.setExpandedRowState(to: true, for: kingsCross)) {
+            $0.expandedRows = Set([kingsCross])
+        }
+        store.send(.toggleExpandedRowState(for: paddington))
+        store.receive(.setExpandedRowState(to: true, for: paddington)) {
+            $0.expandedRows = Set([kingsCross, paddington])
+        }
         
         // 2. Collapse King's Cross, then Paddington
-        store.assert(
-            .send(.toggleExpandedRowState(for: kingsCross)),
-            .receive(.setExpandedRowState(to: false, for: kingsCross)) {
-                $0.expandedRows = Set([paddington])
-            },
-            .send(.toggleExpandedRowState(for: paddington)),
-            .receive(.setExpandedRowState(to: false, for: paddington)) {
-                $0.expandedRows = Set()
-            }
-        )
+        store.send(.toggleExpandedRowState(for: kingsCross))
+        store.receive(.setExpandedRowState(to: false, for: kingsCross)) {
+            $0.expandedRows = Set([paddington])
+        }
+        store.send(.toggleExpandedRowState(for: paddington))
+        store.receive(.setExpandedRowState(to: false, for: paddington)) {
+            $0.expandedRows = Set()
+        }
+        
     }
 }

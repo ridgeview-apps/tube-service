@@ -1,14 +1,10 @@
 import ComposableArchitecture
+import DataClients
 import Model
 
 enum ArrivalsPicker: Equatable {
     
     struct ViewState: Equatable {
-        
-        enum Filter: Int, Identifiable, CaseIterable, Codable {
-            var id: Int { rawValue }
-            case all, favourites
-        }
         
         struct RowSelection: Equatable {
             var id: ArrivalsBoardsList.State.ID? = nil
@@ -29,7 +25,7 @@ enum ArrivalsPicker: Equatable {
         }
         
         var rowSelection: RowSelection = .init()
-        var selectedFilterOption: Filter = .all
+        var selectedFilterOption: UserPreferences.ArrivalsPickerFilterOption = .all
         var navigationBarTitle: String = ""
         var stations: IdentifiedArrayOf<Station> = []
         var selectableStations: IdentifiedArrayOf<Station> = []
@@ -39,8 +35,8 @@ enum ArrivalsPicker: Equatable {
         var searchResultsCountText = ""
         var hasLoaded: Bool = false
         
-        var filterOptions: [Filter] {
-            Filter.allCases
+        var filterOptions: [UserPreferences.ArrivalsPickerFilterOption] {
+            UserPreferences.ArrivalsPickerFilterOption.allCases            
         }
         
         var isSearching: Bool { !searchText.isEmpty }
@@ -73,7 +69,7 @@ enum ArrivalsPicker: Equatable {
     enum Action: Equatable {
         case onAppear
         case search(text: String)
-        case selectFilterOption(ViewState.Filter)
+        case selectFilterOption(UserPreferences.ArrivalsPickerFilterOption)
         case selectRow(ArrivalsBoardsList.State.ID?)
         case toggleExpandedRowState(for: Station)
         case setExpandedRowState(to: Bool, for: Station)
@@ -104,9 +100,10 @@ enum ArrivalsPicker: Equatable {
                 state.selectedFilterOption = state.userPreferences.lastUsedFilterOption
                 
                 if !state.hasLoaded {
-                    return env.dataServices.stations.load()
-                                .map(Action.didLoadStations)
-                                .eraseToEffect()
+                    return env.dataClients.stations.load()
+                                            .map { $0.sortedByName() }
+                                            .eraseToEffect()
+                                            .map(Action.didLoadStations)
                 }
                 return Effect(value: .refreshStations)
             case let .didLoadStations(stations):

@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import DataClients
 import Model
 import SwiftUI
 
@@ -79,7 +80,7 @@ struct ArrivalsPickerView: View {
         .background(Color(.systemBackground))
     }
     
-    private func selectedFilterOption(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<ArrivalsPicker.ViewState.Filter> {
+    private func selectedFilterOption(viewStore: ViewStore<ArrivalsPicker.State, ArrivalsPicker.Action>) -> Binding<UserPreferences.ArrivalsPickerFilterOption> {
         viewStore.binding(
             get: \.selectedFilterOption,
             send: ArrivalsPicker.Action.selectFilterOption
@@ -156,7 +157,7 @@ private extension Station {
     }
 }
 
-private extension ArrivalsPicker.ViewState.Filter {
+private extension UserPreferences.ArrivalsPickerFilterOption {
     var localizedKey: String {
         switch self {
         case .all:

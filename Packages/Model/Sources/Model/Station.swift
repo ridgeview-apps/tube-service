@@ -31,3 +31,10 @@ public extension Station {
         }
     }
 }
+
+extension Station.ArrivalsGroup: Identifiable {
+    
+    public var id: String {
+        "\(atcoCode)-\(lineIds.toId())"
+    }
+}

@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "16d6ed7c3550870ac42f95a0fdccc7235450b863",
-          "version": "4.4.0"
+          "revision": "b84bc8a39ff04bc8d5ae7b4d230c171c562891aa",
+          "version": "4.4.1"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
           "branch": null,
-          "revision": "d226d167bd4a68b51e352af5655c92bce8ee0463",
-          "version": "0.7.0"
+          "revision": "241301b67d8551c26d8f09bd2c0e52cc49f18007",
+          "version": "0.8.0"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-composable-architecture",
         "state": {
           "branch": null,
-          "revision": "23155a04fe426a5ee18befa29bd2627dbf79e653",
-          "version": "0.30.0"
+          "revision": "313dd217dcd1d0478118ec5d15225fd473c1564a",
+          "version": "0.32.0"
         }
       },
       {

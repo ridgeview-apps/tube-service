@@ -27,58 +27,55 @@ class ArrivalsBoardTests: XCTestCase {
                               reducer: ArrivalsBoard.reducer,
                               environment: .unitTest)
         
-        store.assert(
-            .environment {
-                $0.mainQueue = self.scheduler.eraseToAnyScheduler()
-            },
-            
-            // 1. Stopped
-            .send(.setAnimationState(to: .stopped)),
-            
-            // 2. Refreshing
-            .send(.setAnimationState(to: .refreshing)) {
-                $0.animationState = .refreshing
-            },
-            
-            // 3. Rotating
-            .send(.setAnimationState(to: .rotating)) {
-                $0.animationState = .rotating
-            },
-            
-            // 1st rotation
-            .do { self.scheduler.advance(by: 3) },
-            .receive(.rotateNextArrival) {
-                $0.rotatingRowIndex = 3
-                $0.rotatingRow = .init(station: finchleyCentral,
-                                       rowIndex: 3,
-                                       arrival: arrivals[3],
-                                       localizer: .fake)
-            },
-            
-            // 2nd rotation
-            .do { self.scheduler.advance(by: 3) },
-            .receive(.rotateNextArrival) {
-                $0.rotatingRowIndex = 4
-                $0.rotatingRow = .init(station: finchleyCentral,
-                                       rowIndex: 4,
-                                       arrival: arrivals[4],
-                                       localizer: .fake)
-            },
-            
-            // 3rd rotation (wraps back to start)
-            .do { self.scheduler.advance(by: 3) },
-            .receive(.rotateNextArrival) {
-                $0.rotatingRowIndex = 2
-                $0.rotatingRow = .init(station: finchleyCentral,
-                                       rowIndex: 2,
-                                       arrival: arrivals[2],
-                                       localizer: .fake)
-            },
-
-            .send(.setAnimationState(to: .stopped)) {
-                $0.animationState = .stopped
-            }
-        )
+        store.environment.mainQueue = scheduler.eraseToAnyScheduler()
+        
+        // 1. Stopped
+        store.send(.setAnimationState(to: .stopped))
+        
+        // 2. Refreshing
+        store.send(.setAnimationState(to: .refreshing)) {
+            $0.animationState = .refreshing
+        }
+        
+        // 3. Rotating
+        store.send(.setAnimationState(to: .rotating)) {
+            $0.animationState = .rotating
+        }
+        
+        // 1st rotation
+        scheduler.advance(by: 3)
+        store.receive(.rotateNextArrival) {
+            $0.rotatingRowIndex = 3
+            $0.rotatingRow = .init(station: finchleyCentral,
+                                   rowIndex: 3,
+                                   arrival: arrivals[3],
+                                   localizer: .fake)
+        }
+        
+        // 2nd rotation
+        scheduler.advance(by: 3)
+        store.receive(.rotateNextArrival) {
+            $0.rotatingRowIndex = 4
+            $0.rotatingRow = .init(station: finchleyCentral,
+                                   rowIndex: 4,
+                                   arrival: arrivals[4],
+                                   localizer: .fake)
+        }
+        
+        // 3rd rotation (wraps back to start)
+        scheduler.advance(by: 3)
+        store.receive(.rotateNextArrival) {
+            $0.rotatingRowIndex = 2
+            $0.rotatingRow = .init(station: finchleyCentral,
+                                   rowIndex: 2,
+                                   arrival: arrivals[2],
+                                   localizer: .fake)
+        }
+        
+        store.send(.setAnimationState(to: .stopped)) {
+            $0.animationState = .stopped
+        }
+        
     }
     
     func testExpandAndCollapse() {
@@ -107,25 +104,22 @@ class ArrivalsBoardTests: XCTestCase {
             .init(station: finchleyCentral, rowIndex: 4, arrival: arrivals[4], localizer: .fake),
         ]
         
-        store.assert(
-            .environment {
-                $0.mainQueue = self.scheduler.eraseToAnyScheduler()
-            },
-            
-            // 1. Expand row (stops rotating)
-            .send(.setExpanded(true)) {
-                $0.isExpanded = true
-                $0.fixedRows = fullBoardRows
-                $0.rotatingRow = nil
-            },
-            
-            // 2. Collapse row (starts rotating)
-            .send(.setExpanded(false)) {
-                $0.isExpanded = false
-                $0.fixedRows = Array(fullBoardRows[0..<2])
-                $0.rotatingRow = fullBoardRows[2]
-            }
-        )
+        store.environment.mainQueue = self.scheduler.eraseToAnyScheduler()
+        
+        // 1. Expand row (stops rotating)
+        store.send(.setExpanded(true)) {
+            $0.isExpanded = true
+            $0.fixedRows = fullBoardRows
+            $0.rotatingRow = nil
+        }
+        
+        // 2. Collapse row (starts rotating)
+        store.send(.setExpanded(false)) {
+            $0.isExpanded = false
+            $0.fixedRows = Array(fullBoardRows[0..<2])
+            $0.rotatingRow = fullBoardRows[2]
+        }
+
     }
     
 }

@@ -1,5 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
+import DataClients
 
 struct SettingsView: View {
     
@@ -26,7 +27,7 @@ struct SettingsView: View {
         }
     }
     
-    private func selectedBrowserType(viewStore: ViewStore<Settings.State, Settings.Action>) -> Binding<Settings.ViewState.BrowserType> {
+    private func selectedBrowserType(viewStore: ViewStore<Settings.State, Settings.Action>) -> Binding<UserPreferences.BrowserType> {
         viewStore.binding(
             get: \.selectedBrowserType,
             send: Settings.Action.select(browserType:)
@@ -85,7 +86,7 @@ struct SettingsView: View {
         Section(header: Text("Twitter"),
                 footer: Text("settings.links.footnote")) {
             Picker("settings.links.open.in.title", selection: selectedBrowserType(viewStore: viewStore)) {
-                ForEach(Settings.ViewState.BrowserType.allCases) { browserType in
+                ForEach(UserPreferences.BrowserType.allCases) { browserType in
                     Text(browserType.localizedKey).tag(browserType)
                 }
             }
@@ -120,7 +121,7 @@ struct SettingsView_Previews: PreviewProvider {
 }
 #endif
 
-extension Settings.ViewState.BrowserType {
+extension UserPreferences.BrowserType {
     var localizedKey: LocalizedStringKey {
         switch self {
         case .external:

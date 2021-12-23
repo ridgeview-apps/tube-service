@@ -1,5 +1,6 @@
 import Combine
 import ComposableArchitecture
+import DataClients
 import Model
 
 enum Global {
@@ -22,7 +23,7 @@ enum Global {
     static let reducer = Reducer<State, Action, Environment> { state, action, environment in
         switch action {
         case .refreshData:
-            let userPreferences = environment.dataServices.userPreferences.load()
+            let userPreferences = environment.dataClients.userPreferences.load()
             
             return userPreferences
                     .map(Action.didRefreshData)
@@ -39,8 +40,9 @@ enum Global {
             userPreferences.favourites.remove(favourite.id)
             return Effect(value: .updateUserPreferences(userPreferences))
         case let .updateUserPreferences(userPreferences):
-            return environment.dataServices.userPreferences
-                    .update(userPreferences: userPreferences)
+            return environment.dataClients.userPreferences
+                    .update(userPreferences)
+                    .eraseToEffect()
                     .map(Action.didUpdateUserPreferences)
         case let .didUpdateUserPreferences(userPreferences):
             state.userPreferences = userPreferences

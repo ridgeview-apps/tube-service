@@ -64,6 +64,36 @@
                ReferencedContainer = "container:Tube.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DataClientsTests"
+               BuildableName = "DataClientsTests"
+               BlueprintName = "DataClientsTests"
+               ReferencedContainer = "container:Packages/DataClients">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ModelTests"
+               BuildableName = "ModelTests"
+               BlueprintName = "ModelTests"
+               ReferencedContainer = "container:Packages/Model">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SharedTests"
+               BuildableName = "SharedTests"
+               BlueprintName = "SharedTests"
+               ReferencedContainer = "container:Packages/Shared">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

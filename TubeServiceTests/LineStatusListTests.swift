@@ -2,6 +2,7 @@ import XCTest
 import ComposableArchitecture
 import Combine
 import Model
+import DataClients
 
 @testable import Tube_Service
 
@@ -26,39 +27,34 @@ class LineStatusListTest: XCTestCase {
         let sixMinsLater = simulatedTimeNow.minutesLater(6)
         
         // 1. First refresh - success
-        store.assert(
-            .environment {
-                $0.date = { simulatedTimeNow }
-                $0.dataServices.api.lineStatuses = { Effect(value: rows) }
-                $0.mainQueue = self.scheduler.eraseToAnyScheduler()
-            },
-            .send(.onAppear) {
-                $0.navigationBarTitle = "status.navigation.title"
-            },
-            .receive(.autoRefreshIfNeeded) { _ in },
-            .receive(.refresh) { $0.isRefreshing = true },
-            .do { self.scheduler.advance(by: 0.1) },
-            .receive(.lineStatusesResponse(.success(rows))) {
-                $0.isRefreshing = false
-                $0.lastRefreshedAt = simulatedTimeNow
-                $0.lastRefreshedAtText = Formatter.relativeDateTime.string(for: simulatedTimeNow)!
-                $0.statuses = [
-                    .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .severeDelays)]),
-                    .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .severeDelays)]),
-                    .fake(ofType: .lineId(.metropolitan), serviceDetails: [.fake(ofType: .goodService)])
-                ]
-                $0.errorMessage = nil
-            }
-        )
+        store.environment.date = { simulatedTimeNow }
+        store.environment.dataClients.api.lineStatuses = { Result.successPublisher(rows) }
+        store.environment.mainQueue = self.scheduler.eraseToAnyScheduler()
+        
+        store.send(.onAppear) {
+            $0.navigationBarTitle = "status.navigation.title"
+        }
+        store.receive(.autoRefreshIfNeeded) { _ in }
+        store.receive(.refresh) { $0.isRefreshing = true }
+        
+        scheduler.advance(by: 0.1)
+        store.receive(.lineStatusesResponse(.success(rows))) {
+            $0.isRefreshing = false
+            $0.lastRefreshedAt = simulatedTimeNow
+            $0.lastRefreshedAtText = Formatter.relativeDateTime.string(for: simulatedTimeNow)!
+            $0.statuses = [
+                .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .severeDelays)]),
+                .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .severeDelays)]),
+                .fake(ofType: .lineId(.metropolitan), serviceDetails: [.fake(ofType: .goodService)])
+            ]
+            $0.errorMessage = nil
+        }
         
         // 2. Refresh < 5 mins later (no state changes)
-        store.assert(
-            .environment {
-                $0.date = { fourMinsLater }
-            },
-            .send(.onAppear),
-            .receive(.autoRefreshIfNeeded) { _ in }
-        )
+        store.environment.date = { fourMinsLater }
+        
+        store.send(.onAppear)
+        store.receive(.autoRefreshIfNeeded) { _ in }
         
         // 3. Refresh > 5 mins later
         let updatedRows: [LineStatus] = [
@@ -66,30 +62,28 @@ class LineStatusListTest: XCTestCase {
             .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .goodService)]),
             .fake(ofType: .lineId(.metropolitan), serviceDetails: [.fake(ofType: .goodService)])
         ]
-
-        store.assert(
-            .environment {
-                $0.date = { sixMinsLater }
-                $0.dataServices.api.lineStatuses = { Effect(value: updatedRows) }
-            },
-            .send(.onAppear),
-            .receive(.autoRefreshIfNeeded),
-            .receive(.refresh) {
-                $0.isRefreshing = true
-            },
-            .do { self.scheduler.advance(by: 0.1) },
-            .receive(.lineStatusesResponse(.success(updatedRows))) {
-                $0.isRefreshing = false
-                $0.lastRefreshedAt = sixMinsLater
-                $0.lastRefreshedAtText = Formatter.relativeDateTime.string(for: sixMinsLater)!
-                $0.statuses = [
-                    .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .goodService)]),
-                    .fake(ofType: .lineId(.metropolitan), serviceDetails: [.fake(ofType: .goodService)]),
-                    .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .goodService)])
-                ]
-                $0.errorMessage = nil
-            }
-        )
+        
+        store.environment.date = { sixMinsLater }
+        store.environment.dataClients.api.lineStatuses = { Result.successPublisher(updatedRows) }
+        
+        store.send(.onAppear)
+        store.receive(.autoRefreshIfNeeded)
+        store.receive(.refresh) {
+            $0.isRefreshing = true
+        }
+        
+        scheduler.advance(by: 0.1)
+        store.receive(.lineStatusesResponse(.success(updatedRows))) {
+            $0.isRefreshing = false
+            $0.lastRefreshedAt = sixMinsLater
+            $0.lastRefreshedAtText = Formatter.relativeDateTime.string(for: sixMinsLater)!
+            $0.statuses = [
+                .fake(ofType: .lineId(.central), serviceDetails: [.fake(ofType: .goodService)]),
+                .fake(ofType: .lineId(.metropolitan), serviceDetails: [.fake(ofType: .goodService)]),
+                .fake(ofType: .lineId(.northern), serviceDetails: [.fake(ofType: .goodService)])
+            ]
+            $0.errorMessage = nil
+        }
     }
     
     func testAutoRefresh_failure() throws {
@@ -99,27 +93,26 @@ class LineStatusListTest: XCTestCase {
                               environment: .unitTest)
         
         let timeNow = Date.UTC_1_JAN_2020_09H00
-        let noInternet = TransportAPI.APIFailure(error: NSError.fake(ofType: .noInternet))
+        let noInternet = TransportAPIClient.APIFailure(error: NSError.fake(ofType: .noInternet))
         
-        store.assert(
-            .environment {
-                $0.date = { timeNow }
-                $0.dataServices.api.lineStatuses = { Effect(error: noInternet) }
-                $0.mainQueue = self.scheduler.eraseToAnyScheduler()
-            },
-            .send(.onAppear) {
-                $0.navigationBarTitle = "status.navigation.title"
-            },
-            .receive(.autoRefreshIfNeeded),
-            .receive(.refresh) {
-                $0.isRefreshing = true
-            },
-            .do { self.scheduler.advance(by: 1) },
-            .receive(.lineStatusesResponse(.failure(noInternet))) {
-                $0.isRefreshing = false
-                $0.errorMessage = "No internet connection"
-            }
-        )
+        store.environment.date = { timeNow }
+        store.environment.dataClients.api.lineStatuses = { Result.failurePublisher(noInternet) }
+        store.environment.mainQueue = self.scheduler.eraseToAnyScheduler()
+        
+        store.send(.onAppear) {
+            $0.navigationBarTitle = "status.navigation.title"
+        }
+        store.receive(.autoRefreshIfNeeded)
+        store.receive(.refresh) {
+            $0.isRefreshing = true
+        }
+        
+        scheduler.advance(by: 1)
+        store.receive(.lineStatusesResponse(.failure(noInternet))) {
+            $0.isRefreshing = false
+            $0.errorMessage = "No internet connection"
+        }
+        
     }
     
     func testRowSelection() throws {
@@ -139,43 +132,43 @@ class LineStatusListTest: XCTestCase {
                               environment: .unitTest)
         
         // 1. Select a row
-        store.assert(
-            .environment {
-                $0.dataServices.api.lineStatuses = { Effect(value: rows) }
-            },
-            .send(.selectRow(.northern)) {
-                $0.rowSelection.id = .northern
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0]))]
-                )
-            }
-        )
+        store.environment.dataClients.api.lineStatuses = { Result.successPublisher(rows) }
+        
+        store.send(.selectRow(.northern)) {
+            $0.rowSelection.id = .northern
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0]))
+            ])
+        }
             
         // 2. Select same row (no changes)
-        store.assert(
-            .send(.selectRow(.northern))
-        )
+        store.send(.selectRow(.northern))
 
         // 3. Select a different row
-        store.assert(
-            .send(.selectRow(.central)) {
-                $0.rowSelection.id = .central
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0])),
-                     .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
-                )
-            }
-        )
+        store.send(.selectRow(.central)) {
+            $0.rowSelection.id = .central
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                        .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[0])),
+                        .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))
+                ])
+        }
+        
         
         // 4. Deselect the row
-        store.assert(
-            .send(.selectRow(nil)) {
-                $0.rowSelection.id = nil
-                $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements:
-                    [.init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))]
-                )
-            }
-        )
+        store.send(.selectRow(nil)) {
+            $0.rowSelection.id = nil
+            $0.rowSelection.navigationStates = IdentifiedArrayOf(uniqueElements: [
+                .init(globalState: $0.globalState, viewState: .init(lineStatus: rows[1]))
+            ])
+        }
+        
     }
     
+}
+
+extension Publisher {
+    
+    func todo() {
+        
+    }
 }
