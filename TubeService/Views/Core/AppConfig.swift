@@ -1,4 +1,5 @@
 import Foundation
+import RidgeviewCore
 
 struct AppConfig {
     
@@ -11,13 +12,26 @@ struct AppConfig {
 // MARK: - Real instance
 extension AppConfig {
     
-    // Load config from build settings
-    static let real = AppConfig(contactUsEmail: BuildSettings.CONTACT_US_EMAIL,
-                                appStoreProductUrl: BuildSettings.APP_STORE_PRODUCT_URL,
-                                appCenter: .init(appSecret: BuildSettings.APPCENTER_APP_SECRET),
-                                transportAPI: .init(baseURL: BuildSettings.TRANSPORT_API_URL,
-                                                    appId: BuildSettings.TRANSPORT_API_APP_ID,
-                                                    appKey: BuildSettings.TRANSPORT_API_APP_KEY))
+    // Load config from Main Info plist
+    
+    static let real: AppConfig = {
+        let infoPlistValues = Bundle.main.infoPlistValues(forKey: "appConfig")
+        
+        let appConfig = AppConfig(
+            contactUsEmail: infoPlistValues["contactUsEmail"],
+            appStoreProductUrl: infoPlistValues[url: "appStoreProductUrl"],
+            appCenter: .init(
+                appSecret: infoPlistValues["appCenterAppSecret"]
+            ),
+            transportAPI: .init(
+                baseURL: infoPlistValues[url: "transportAPIURL"],
+                appId: infoPlistValues["transportAPIAppId"],
+                appKey: infoPlistValues["transportAPIAppKey"]
+            )
+        )
+        
+        return appConfig
+    }()
 
 }
 
@@ -35,7 +49,7 @@ extension AppConfig {
 #endif
 
 private extension URL {
-    static let fake = URL(string: "https://httpbin.org")!
+    static let fake = URL(string: "https://fakeurl.com")!
 }
 
 extension AppConfig {

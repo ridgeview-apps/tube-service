@@ -52,7 +52,7 @@ struct RootView: View {
 #if DEBUG
 struct RootViewView_Previews: PreviewProvider {
     static var previews: some View {
-        RootView(store: .preview())
+        RootView(store: .fake())
     }
 }
 #endif

@@ -1,0 +1,16 @@
+"arrivals.no.data" = "Live arrivals are unavailable for this location at the moment.";
+"arrivals.check.front.of.train" = "Check front of train";
+"arrivals.board.countdown.unknown" = "unknown";
+"arrivals.board.countdown.due" = "Due";
+"arrivals.board.countdown.due.seconds %lld" = "Due (%llds)";
+
+"arrivals.picker.filterOptions.title.all" = "All";
+"arrivals.picker.filterOptions.title.favourites" = "Favourites";
+"arrivals.picker.navigation.title" = "Live arrivals";
+"arrivals.picker.search.placeholder" = "Station name";
+"arrivals.picker.search.no.results" = "No search results found";
+"arrivals.picker.search.text.empty" = "Please enter a station name";
+
+// TODO: copy somewhere later
+// "arrivals.picker.search.results.count2 %lld %lld"= "Int example %2$lld %1$lld";
+// "arrivals.picker.search.results.count2 %i"= "Int positional example %2$i %1$i";

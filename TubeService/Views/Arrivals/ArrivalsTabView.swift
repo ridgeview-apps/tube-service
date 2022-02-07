@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import LiveArrivalsFeature
 import SwiftUI
 
 struct ArrivalsTabView: View {
@@ -11,7 +12,6 @@ struct ArrivalsTabView: View {
                 ArrivalsPickerView(
                     store: self.store.arrivalsPickerStore
                 )
-                .phoneOnlyStackNavigationViewForIOS13
             }
         }
     }
@@ -21,7 +21,7 @@ struct ArrivalsTabView: View {
 #if DEBUG
 struct ArrivalsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        ArrivalsTabView(store: .preview())
+        ArrivalsTabView(store: .fake())
     }
 }
 #endif

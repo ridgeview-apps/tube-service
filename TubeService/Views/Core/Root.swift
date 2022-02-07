@@ -1,53 +1,20 @@
 import Foundation
 import ComposableArchitecture
 import Combine
+import LineStatusFeature
 
 enum Root {
     
     struct State: Equatable {
         var hasLoaded = false
         
-        var globalState: Global.State = .init()
-        
-        // Line status tab
-        private var lineStatusTabViewState: LineStatusTab.ViewState = .init()
-        var lineStatusTabState: LineStatusTab.State {
-            get {
-                .init(globalState: globalState, viewState: lineStatusTabViewState)
-            }
-            set {
-                self.globalState = newValue.globalState
-                self.lineStatusTabViewState = newValue.viewState
-            }
-        }
-        
-        // Arrivals tab
-        private var arrivalsTabViewState: ArrivalsTab.ViewState = .init()
-        var arrivalsTabState: ArrivalsTab.State {
-            get {
-                .init(globalState: globalState, viewState: arrivalsTabViewState)
-            }
-            set {
-                self.globalState = newValue.globalState
-                self.arrivalsTabViewState = newValue.viewState
-            }
-        }
-        
-        private var settingsTabViewState: SettingsTab.ViewState = .init()
-        var settingsTabState: SettingsTab.State {
-            get {
-                .init(globalState: globalState, viewState: settingsTabViewState)
-            }
-            set {
-                self.globalState = newValue.globalState
-                self.settingsTabViewState = newValue.viewState
-            }
-        }
+        var lineStatusTabState: LineStatusTab.State = .init()
+        var arrivalsTabState: ArrivalsTab.State = .init()
+        var settingsTabState: SettingsTab.State = .init()
     }
     
     enum Action: Equatable {
         case onAppear
-        case global(Global.Action)
         case lineStatusTab(LineStatusTab.Action)
         case arrivalsTab(ArrivalsTab.Action)
         case settingsTab(SettingsTab.Action)
@@ -56,10 +23,6 @@ enum Root {
     typealias Environment = BaseEnvironment<Void>
     
     static let reducer = Reducer<State, Action, Root.Environment>.combine(
-        
-        Global.reducer.pullback(state: \.globalState,
-                                action: /Action.global,
-                                environment: { $0 }),
         
         LineStatusTab.reducer.pullback(state: \.lineStatusTabState,
                                        action: /Action.lineStatusTab,
@@ -71,19 +34,6 @@ enum Root {
         
         SettingsTab.reducer.pullback(state: \.settingsTabState,
                                      action: /Action.settingsTab,
-                                     environment: { $0 }),
-        
-        Reducer { state, action, environment in
-            switch action {
-            case .onAppear:
-                if !state.hasLoaded {
-                    state.hasLoaded = true
-                    return Effect(value: .global(.refreshData))
-                }
-                return .none
-            case .global, .lineStatusTab, .arrivalsTab, .settingsTab:
-                return .none
-            }
-        }
+                                     environment: { $0 })
     )
 }

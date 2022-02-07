@@ -12,7 +12,7 @@ extension DataClients {
     
     static let real = DataClients(
         userPreferences: .real,
-        stations: .real,
+        stations: .real(),
         api: .real(appConfig: .real)
     )
 }

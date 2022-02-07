@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import SettingsFeature
 import SwiftUI
 
 struct SettingsTabView: View {
@@ -9,7 +10,6 @@ struct SettingsTabView: View {
         WithViewStore(self.store) { viewStore in
             NavigationView {
                 SettingsView(store: self.store.settingsStore)
-                    .phoneOnlyStackNavigationViewForIOS13
             }
         }
     }
@@ -19,7 +19,7 @@ struct SettingsTabView: View {
 #if DEBUG
 struct SettingsTabView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsTabView(store: .preview())
+        SettingsTabView(store: .fake())
     }
 }
 #endif

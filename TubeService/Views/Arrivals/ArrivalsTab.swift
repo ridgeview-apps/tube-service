@@ -1,17 +1,15 @@
 import ComposableArchitecture
+import LiveArrivalsFeature
 
 enum ArrivalsTab {
     
     // State
-    struct ViewState: Equatable {
-        var arrivalsPickerViewState: ArrivalsPicker.ViewState = .init(selectedFilterOption: .all)
+    struct State: Equatable {
+        var arrivalsPickerState: ArrivalsPicker.State = .init()
     }
-    
-    typealias State = BaseState<ViewState>
     
     // Action
     enum Action: Equatable {
-        case global(Global.Action)
         case arrivalsPicker(ArrivalsPicker.Action)
     }
     
@@ -20,27 +18,14 @@ enum ArrivalsTab {
     // Reducer
     static let reducer = Reducer<State, Action, Environment>.combine(
         
-        Global.reducer.pullback(state: \.globalState,
-                                action: /Action.global,
-                                environment: { $0 }),
-        
         ArrivalsPicker.reducer.pullback(state: \.arrivalsPickerState,
                                         action: /Action.arrivalsPicker,
-                                        environment: { $0 })
+                                        environment: {
+                                            .init(transportAPI: $0.dataClients.api,
+                                                  stationsClient: $0.dataClients.stations,
+                                                  userPreferencesClient: $0.dataClients.userPreferences,
+                                                  now: $0.date,
+                                                  mainQueue: $0.mainQueue)
+                                        })
     )
-}
-
-
-extension ArrivalsTab.State {
-    
-    var arrivalsPickerState: ArrivalsPicker.State {
-        get {
-            .init(globalState: globalState, viewState: self.arrivalsPickerViewState)
-        }
-        set {
-            self.globalState = newValue.globalState
-            self.arrivalsPickerViewState = newValue.viewState            
-        }
-    }
-
 }

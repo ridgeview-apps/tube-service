@@ -2,11 +2,5 @@
 
 DEVELOPMENT_TEAM = 3H5L23529U
 
-//
-// Build settings prefixed with codeConstant_<BUILD_SETTING_NAME> are added to BuildSettings.generated.swift.
-// They can then be accessed from code as BuildSettings.BUILD_SETTING_NAME
-//
-// See: https://medium.com/@hamdullahshah/generating-code-from-xcode-configurations-6fd203ec69ef
-//
-codeConstant_APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
-codeConstant_CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk
+APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
+CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

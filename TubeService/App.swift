@@ -23,10 +23,8 @@ private extension AppLaunchMode {
         switch self {
         case .normal:
             rootEnv = .real
-        case .preview:
-            rootEnv = .preview
-        case .unitTest:
-            rootEnv = .unitTest
+        case .fake:
+            rootEnv = .fake
         }
     #else
         rootEnv = .real

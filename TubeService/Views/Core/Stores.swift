@@ -1,15 +1,13 @@
 import ComposableArchitecture
+import AppLibrary
+import LineStatusFeature
+import LiveArrivalsFeature
+import SettingsFeature
 
 typealias RootStore = Store<Root.State, Root.Action>
 typealias LineStatusTabStore = Store<LineStatusTab.State, LineStatusTab.Action>
-typealias LineStatusListStore = Store<LineStatusList.State, LineStatusList.Action>
-typealias LineStatusDetailStore = Store<LineStatusDetail.State, LineStatusDetail.Action>
-typealias ArrivalsBoardsListStore = Store<ArrivalsBoardsList.State, ArrivalsBoardsList.Action>
 typealias ArrivalsTabStore = Store<ArrivalsTab.State, ArrivalsTab.Action>
-typealias ArrivalsPickerStore = Store<ArrivalsPicker.State, ArrivalsPicker.Action>
-typealias ArrivalsBoardStore = Store<ArrivalsBoard.ViewState, ArrivalsBoard.Action>
 typealias SettingsTabStore = Store<SettingsTab.State, SettingsTab.Action>
-typealias SettingsStore = Store<Settings.State, Settings.Action>
 
 extension RootStore {
     

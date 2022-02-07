@@ -2,7 +2,7 @@ import Foundation
 import ComposableArchitecture
 import DataClients
 import DeviceKit
-import RidgeviewCore
+import Shared
 
 @dynamicMemberLookup
 struct BaseEnvironment<Environment> {
@@ -14,7 +14,6 @@ struct BaseEnvironment<Environment> {
     var currentLocale: Locale
     var currentDevice: Device
     var appConfig: AppConfig
-    var stringLocalizer: StringLocalizer
     var dataClients: DataClients
     
     subscript<Dependency>(
@@ -37,7 +36,6 @@ struct BaseEnvironment<Environment> {
             currentLocale: self.currentLocale,
             currentDevice: self.currentDevice,
             appConfig: self.appConfig,
-            stringLocalizer: self.stringLocalizer,
             dataClients: self.dataClients
         )
     }
@@ -55,22 +53,20 @@ extension BaseEnvironment {
               currentLocale: Locale.current,
               currentDevice: Device.current,
               appConfig: .real,
-              stringLocalizer: .real,
               dataClients: .real)
     }
 }
 
 enum AppLaunchMode: String {
     case normal
-    case preview
-    case unitTest
+    case fake
 }
 
 // MARK: - Fake instance(s)
 #if DEBUG
 extension BaseEnvironment {
     
-    static var preview: BaseEnvironment<Void> {
+    static var fake: BaseEnvironment<Void> {
         .init(date: Date.init,
               featureEnvironment: (),
               mainQueue: DispatchQueue.immediate.eraseToAnyScheduler(),
@@ -79,20 +75,6 @@ extension BaseEnvironment {
               currentLocale: Locale.current,
               currentDevice: Device.current,
               appConfig: .fake,
-              stringLocalizer: .real, // Use NSLocalizedStrings in preview mode...
-              dataClients: .fake)
-    }
-    
-    static var unitTest: BaseEnvironment<Void> {
-        .init(date: Date.init,
-              featureEnvironment: (),
-              mainQueue: DispatchQueue.immediate.eraseToAnyScheduler(),
-              uuid: UUID.init,
-              mainBundle: Bundle.main,
-              currentLocale: Locale.current,
-              currentDevice: Device.current,
-              appConfig: .fake,
-              stringLocalizer: .fake,
               dataClients: .fake)
     }
 }

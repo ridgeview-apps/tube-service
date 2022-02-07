@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import LineStatusFeature
 import SwiftUI
 
 struct LineStatusTabView: View {
@@ -9,7 +10,6 @@ struct LineStatusTabView: View {
         WithViewStore(self.store) { viewStore in
             NavigationView {
                 LineStatusListView(store: self.store.lineStatusListStore)
-                    .phoneOnlyStackNavigationViewForIOS13
             }
         }
     }
@@ -19,7 +19,7 @@ struct LineStatusTabView: View {
 #if DEBUG
 struct LineStatusTabView_Previews: PreviewProvider {
     static var previews: some View {
-        LineStatusTabView(store: .preview())
+        LineStatusTabView(store: .fake())
     }
 }
 #endif

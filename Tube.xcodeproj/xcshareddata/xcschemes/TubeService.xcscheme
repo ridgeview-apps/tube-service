@@ -71,7 +71,27 @@
                BlueprintIdentifier = "DataClientsTests"
                BuildableName = "DataClientsTests"
                BlueprintName = "DataClientsTests"
-               ReferencedContainer = "container:Packages/DataClients">
+               ReferencedContainer = "container:..">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LineStatusFeatureTests"
+               BuildableName = "LineStatusFeatureTests"
+               BlueprintName = "LineStatusFeatureTests"
+               ReferencedContainer = "container:..">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "LiveArrivalsFeatureTests"
+               BuildableName = "LiveArrivalsFeatureTests"
+               BlueprintName = "LiveArrivalsFeatureTests"
+               ReferencedContainer = "container:..">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -81,7 +101,17 @@
                BlueprintIdentifier = "ModelTests"
                BuildableName = "ModelTests"
                BlueprintName = "ModelTests"
-               ReferencedContainer = "container:Packages/Model">
+               ReferencedContainer = "container:..">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "SettingsFeatureTests"
+               BuildableName = "SettingsFeatureTests"
+               BlueprintName = "SettingsFeatureTests"
+               ReferencedContainer = "container:..">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -91,7 +121,7 @@
                BlueprintIdentifier = "SharedTests"
                BuildableName = "SharedTests"
                BlueprintName = "SharedTests"
-               ReferencedContainer = "container:Packages/Shared">
+               ReferencedContainer = "container:..">
             </BuildableReference>
          </TestableReference>
       </Testables>

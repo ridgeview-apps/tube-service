@@ -1,41 +1,31 @@
 import ComposableArchitecture
+import SettingsFeature
 
 enum SettingsTab: Equatable {
     
-    struct ViewState: Equatable {
-        var settingsViewState: Settings.ViewState = .init()
+    // State
+    struct State: Equatable {
+        var settingsState: Settings.State = .init()
     }
-    
-    typealias State = BaseState<ViewState>
 
+    // Action
     enum Action: Equatable {
         case settings(Settings.Action)
-        case global(Global.Action)
     }
     
     typealias Environment = Root.Environment
 
     static let reducer = Reducer<State, Action, Environment>.combine(
         
-        Global.reducer.pullback(state: \.globalState,
-                                action: /Action.global,
-                                environment: { $0 }),
-
         Settings.reducer.pullback(state: \.settingsState,
                                   action: /Action.settings,
-                                  environment: { $0 })
+                                  environment: {
+                                      .init(mainBundle: $0.mainBundle,
+                                            currentLocale: $0.currentLocale,
+                                            currentDevice: $0.currentDevice,
+                                            featureConfig: .init(contactUsEmail: $0.appConfig.contactUsEmail,
+                                                                 appStoreProductUrl: $0.appConfig.appStoreProductUrl))
+                                      
+                                  })
     )
-}
-
-extension SettingsTab.State {
-    
-    var settingsState: Settings.State {
-        get {
-            .init(globalState: globalState, viewState: self.settingsViewState)
-        }
-        set {
-            self.globalState = newValue.globalState
-            self.settingsViewState = newValue.viewState
-        }
-    }
 }

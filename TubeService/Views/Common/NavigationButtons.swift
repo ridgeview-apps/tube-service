@@ -13,14 +13,5 @@ enum NavigationButton {
         }
     }
     
-    struct Done: View {
-        let action: () -> Void
-        
-        var body: some View {
-            Button(action: action) {
-                Text("navigation.done.button.title").bold()
-            }
-        }
-    }
 }
 
