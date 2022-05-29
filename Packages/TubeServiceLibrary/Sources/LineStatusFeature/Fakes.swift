@@ -5,6 +5,8 @@ import ModelFakes
 import Shared
 import DataClients
 
+#if DEBUG
+
 // MARK: - LineStatusDetail.State
 public extension LineStatusDetail.State {
     static func fake(lineStatus: LineStatus = .fake()) -> LineStatusDetail.State {
@@ -78,3 +80,6 @@ public extension LineStatusList.Environment {
         return env
     }
 }
+
+
+#endif

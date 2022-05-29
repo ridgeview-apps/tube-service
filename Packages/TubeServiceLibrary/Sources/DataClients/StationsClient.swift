@@ -10,17 +10,12 @@ public struct StationsClient {
 // MARK: - Real instance
 public extension StationsClient {
     
-    static func real(jsonBundle: Bundle = .dataClientsModule) -> StationsClient {
+    static func real() -> StationsClient {
         .init(
             load: {
-                let decodedStations: [Station] = jsonBundle.decodedJSON(from: "stations.json") ?? []
+                let decodedStations: [Station] = Bundle.module.decodedJSON(from: "stations.json") ?? []
                 return Just(decodedStations).eraseToAnyPublisher()
             }
         )
-    }
-    
-}
-
-public extension Bundle {
-    static let dataClientsModule = Bundle.module
+    }    
 }

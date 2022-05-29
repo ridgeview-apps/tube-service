@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/microsoft/appcenter-sdk-apple.git",
         "state": {
           "branch": null,
-          "revision": "b84bc8a39ff04bc8d5ae7b4d230c171c562891aa",
-          "version": "4.4.1"
+          "revision": "8354a50fe01a7e54e196d3b5493b5ab53dd5866a",
+          "version": "4.4.2"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/devicekit/DeviceKit",
         "state": {
           "branch": null,
-          "revision": "da57c444cbb7b6159aa871534d4cf2616d1d55c6",
-          "version": "4.5.2"
+          "revision": "cc49d42dafd69c96abbf695cedbefab6441f1afa",
+          "version": "4.6.0"
         }
       },
       {
@@ -51,8 +51,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
           "branch": null,
-          "revision": "241301b67d8551c26d8f09bd2c0e52cc49f18007",
-          "version": "0.8.0"
+          "revision": "ce9c0d897db8a840c39de64caaa9b60119cf4be8",
+          "version": "0.8.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-composable-architecture",
         "state": {
           "branch": null,
-          "revision": "ba9c626ab1b2b6af8cf684eebb2ab472fa5b6753",
-          "version": "0.33.1"
+          "revision": "c307541328a636b9e8e25ac868d89be54a8f8dbf",
+          "version": "0.35.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-custom-dump",
         "state": {
           "branch": null,
-          "revision": "51698ece74ecf31959d3fa81733f0a5363ef1b4e",
-          "version": "0.3.0"
+          "revision": "c4f78db9b90ca57b7b6abc2223e235242739ea3c",
+          "version": "0.4.0"
         }
       },
       {
@@ -87,8 +87,8 @@
         "repositoryURL": "https://github.com/pointfreeco/swift-identified-collections",
         "state": {
           "branch": null,
-          "revision": "680bf440178a78a627b1c2c64c0855f6523ad5b9",
-          "version": "0.3.2"
+          "revision": "2d6b7ffcc67afd9077fac5e5a29bcd6d39b71076",
+          "version": "0.4.0"
         }
       },
       {

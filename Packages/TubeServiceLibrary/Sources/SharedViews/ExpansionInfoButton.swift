@@ -20,15 +20,16 @@ public struct ExpansionInfoButton: View {
     
     public var body: some View {
         Button(action: {
-            self.isExpanded.toggle()
+            isExpanded.toggle()
         }) {
             HStack {
-                self.expansionButtonImage
+                expansionButtonImage
+                    .rotationEffect(isExpanded ? .init(degrees: 180) : .init(degrees: 0))
             }
-            .imageScale(self.imageScale)
+            .imageScale(imageScale)
             .frame(alignment: .bottom)
         }
-        .rotationEffect(isExpanded ? .init(degrees: 180) : .init(degrees: 0))
+        .buttonStyle(.borderless)
     }
     
     private var expansionButtonImage: Image {

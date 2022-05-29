@@ -10,8 +10,8 @@ public struct LineColourKeyView: View {
     public let width: CGFloat
     
     public init(lines: [TrainLine],
-                height: CGFloat = 44,
-                width: CGFloat = 44) {
+                height: CGFloat = 40,
+                width: CGFloat = 16) {
         self.lines = lines
         self.height = height
         self.width = width
@@ -24,6 +24,26 @@ public struct LineColourKeyView: View {
             }
         }
         .frame(width: width, height: height)
+        .clipShape(Capsule())
+    }
+}
+
+
+public struct LineColourKeyView2: View {
+
+    public let lines: [TrainLine]
+    
+    public init(lines: [TrainLine]) {
+        self.lines = lines
+    }
+
+    public var body: some View {
+        VStack(spacing: 0) {
+            ForEach(lines, id: \.self) { line in
+                line.backgroundColor
+            }
+        }
+//        .frame(width: width, height: height)
         .roundedBorder(.white)
     }
 }

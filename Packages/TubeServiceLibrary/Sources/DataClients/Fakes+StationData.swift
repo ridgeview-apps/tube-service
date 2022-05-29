@@ -1,3 +1,7 @@
+#if DEBUG
+
+let fakeStations =
+"""
 [
   {
     "name" : "Abbey Road",
@@ -3283,6 +3287,12 @@
         "lineIds" : [
           "elizabeth"
         ],
+        "atcoCode" : "910GPADTLL"
+      },
+      {
+        "lineIds" : [
+          "elizabeth"
+        ],
         "atcoCode" : "910GPADTON"
       }
     ]
@@ -5048,3 +5058,7 @@
     ]
   }
 ]
+""".data(using: .utf8)!
+
+
+#endif

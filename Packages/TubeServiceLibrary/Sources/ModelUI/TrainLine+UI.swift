@@ -14,6 +14,8 @@ public extension TrainLine {
             return .circleLine
         case .district:
             return .districtLine
+        case .elizabeth:
+            return .elizabethLine
         case .hammersmithAndCity:
             return .hammersmithAndCityLine
         case .jubilee:
@@ -41,7 +43,7 @@ public extension TrainLine {
     
     var textColor: Color {
         switch self {
-        case .bakerloo, .central, .district, .jubilee, .metropolitan, .northern, .piccadilly, .tram, .tflRail:
+        case .bakerloo, .central, .district, .elizabeth, .jubilee, .metropolitan, .northern, .piccadilly, .tram, .tflRail:
             return .white
         case .circle, .dlr, .hammersmithAndCity, .victoria, .waterlooAndCity, .overground:
             return .black

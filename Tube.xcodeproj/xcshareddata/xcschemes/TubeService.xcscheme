@@ -5,15 +5,6 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
-      <PreActions>
-         <ExecutionAction
-            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
-            <ActionContent
-               title = "Run Script"
-               scriptText = "# Type a script or drag a script file from your workspace to insert its path.&#10;&quot;$SRCROOT/Config/BuildSettings.sh&quot; &gt; &quot;${SRCROOT}/Config/BuildSettings.generated.swift&quot;&#10;">
-            </ActionContent>
-         </ExecutionAction>
-      </PreActions>
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -71,7 +62,7 @@
                BlueprintIdentifier = "DataClientsTests"
                BuildableName = "DataClientsTests"
                BlueprintName = "DataClientsTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -81,7 +72,7 @@
                BlueprintIdentifier = "LineStatusFeatureTests"
                BuildableName = "LineStatusFeatureTests"
                BlueprintName = "LineStatusFeatureTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -91,7 +82,7 @@
                BlueprintIdentifier = "LiveArrivalsFeatureTests"
                BuildableName = "LiveArrivalsFeatureTests"
                BlueprintName = "LiveArrivalsFeatureTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -101,7 +92,7 @@
                BlueprintIdentifier = "ModelTests"
                BuildableName = "ModelTests"
                BlueprintName = "ModelTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -111,7 +102,7 @@
                BlueprintIdentifier = "SettingsFeatureTests"
                BuildableName = "SettingsFeatureTests"
                BlueprintName = "SettingsFeatureTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -121,7 +112,7 @@
                BlueprintIdentifier = "SharedTests"
                BuildableName = "SharedTests"
                BlueprintName = "SharedTests"
-               ReferencedContainer = "container:..">
+               ReferencedContainer = "container:Packages/TubeServiceLibrary">
             </BuildableReference>
          </TestableReference>
       </Testables>

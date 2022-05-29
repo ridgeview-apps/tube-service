@@ -23,12 +23,12 @@ public struct ArrivalsBoardView: View {
         VStack(spacing: 20) {
             boardHeader
             arrivalRows
-            expansionButton
+            expansionButton            
         }
         .padding()
         .background(Color.darkGrey2)
         .roundedBorder(Color.boardText,
-                       cornerRadius: 16,
+                       cornerRadius: 12,
                        lineWidth: 4)
         .animation(.default, value: viewStore.isExpanded)
         .shadow(color: .black.opacity(0.14), radius: 4, x: 0, y: 2)
@@ -78,6 +78,7 @@ public struct ArrivalsBoardView: View {
             ExpansionInfoButton(style: .pullDown,
                                 isExpanded: isExpanded)
                 .foregroundColor(.white)
+                .padding([.top, .bottom], 4)
         }
     }
 }
@@ -91,22 +92,20 @@ private struct ArrivalsBoardRowView: View {
         HStack(alignment: .top, spacing: 12) {
             ZStack {
                 row.lineId.backgroundColor
-                    .frame(width: 35, height: 35)
+                    .frame(width: 36, height: 40)
                 Text(row.arrivalNumberText)
                     .foregroundColor(row.lineId.textColor)
             }
-            .border(Color.white)
+            .roundedBorder(.white)
             VStack(alignment: .leading, spacing: 6) {
                 HStack(alignment: .top) {
                     destinationText
-                        .font(.headline)
-                        .foregroundColor(.boardText)
                     Spacer()
                     countdownText
-                        .font(.headline)
-                        .foregroundColor(.boardText)
                 }
-                Text(row.locationText ?? "")
+                .font(.headline)
+                .foregroundColor(.boardText)
+                rowSubtitleText
                     .font(.caption2)
                     .foregroundColor(.white)
             }
@@ -123,10 +122,23 @@ private struct ArrivalsBoardRowView: View {
         }
     }
     
+    @ViewBuilder private var bottomRightIndicatorText: some View {
+        switch row.rowType {
+        case .prediction:
+            Spacer()
+        case let .arrivalDeparture(departure, _):
+            if let departureTime = departure.scheduledTimeOfDeparture {
+                Text(departureTime, formatter: ukDateFormatter)
+            } else {
+                Spacer()
+            }
+        }
+    }
+    
     @ViewBuilder private var countdownText: some View {
         switch row.countdownTime {
         case .unknown:
-            Text("arrivals.board.countdown.unknown", bundle: .module)
+            Text("", bundle: .module)
         case let .dueIn(seconds) where seconds < 30:
             Text("arrivals.board.countdown.due", bundle: .module)
         case let .dueIn(seconds) where seconds < 60:
@@ -135,6 +147,22 @@ private struct ArrivalsBoardRowView: View {
             let minutes = seconds / 60
             Text("arrivals.board.countdown.due.minutes \(minutes)", bundle: .module)
         }
+    }
+    
+    @ViewBuilder private var rowSubtitleText: some View {
+        switch row.rowType {
+        case let .prediction(arrival):
+            Text(arrival.currentLocation ?? "")
+        case let .arrivalDeparture(arrivalDeparture, _):
+            if let departureStatusLocalizedKey = arrivalDeparture.departureStatusLocalizedKey {
+                Text(departureStatusLocalizedKey, bundle: .module)
+            }
+        }
+    }
+    
+    private func departureTimeText(for date: Date) -> String {
+        // Text("status.tfl.tweets.title.line \(line.longName)", bundle: .module)
+        ukDateFormatter.string(from: date)
     }
 }
 
@@ -145,8 +173,17 @@ struct ArrivalsBoardView_Previews: PreviewProvider {
     static var previews: some View {
         let store = previewStore()
         let viewStore = ViewStore(store)
+        let elizabethStore = previewStore(
+            initialState: .fake(station: .fake(ofType: .paddington),
+                                rowTypes: ArrivalDeparture.fakeElizabethLineData().map { .arrivalDeparture($0, lineId: .elizabeth)})
+        )
+        let elizabethViewStore = ViewStore(elizabethStore)
         
         Group {
+            ArrivalsBoardView(store: elizabethStore)
+                .onAppear {
+                    elizabethViewStore.send(.setAnimationState(to: .stopped))
+                }
             ArrivalsBoardView(store: store)
                 .onAppear {
                     viewStore.send(.setAnimationState(to: .stopped))
@@ -171,3 +208,22 @@ struct ArrivalsBoardView_Previews: PreviewProvider {
     }
 }
 #endif
+
+private let ukDateFormatter: DateFormatter = {
+    let dateFormatter = DateFormatter()
+    dateFormatter.timeZone = TimeZone(identifier: "Europe/London")!
+    dateFormatter.dateFormat = "HH:mm"
+    return dateFormatter
+}()
+
+private extension ArrivalDeparture {
+    
+    var departureStatusLocalizedKey: LocalizedStringKey? {
+        guard let scheduledTime = scheduledTimeOfDeparture else {
+            return nil
+        }
+        
+        let scheduledTimeText = ukDateFormatter.string(from: scheduledTime)
+        return LocalizedStringKey("arrivals.board.departs.at \(scheduledTimeText)")        
+    }
+}

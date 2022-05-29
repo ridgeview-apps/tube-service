@@ -3,7 +3,42 @@ import Model
 import Shared
 
 public enum ArrivalsBoard {
-
+    
+    public enum RowType: Equatable, Identifiable {
+        
+        case prediction(Arrival)
+        case arrivalDeparture(ArrivalDeparture, lineId: TrainLine)
+        
+        public var id: String {
+            switch self {
+            case let .prediction(arrival):
+                return arrival.id
+            case let .arrivalDeparture(arrivalDeparture, lineId):
+                return "\(lineId.rawValue)-\(arrivalDeparture.id)"
+            }
+        }
+        
+        var platformName: String {
+            switch self {
+            case let .prediction(arrival):
+                return arrival.platformName
+            case let .arrivalDeparture(arrivalDeparture, _):
+                return arrivalDeparture.platformName ?? ""
+            }
+        }
+        
+    }
+    
+    public enum DestinationType: Equatable {
+        case destination(String)
+        case checkFrontOfTrain
+    }
+    
+    public enum CountdownTime: Equatable {
+        case unknown
+        case dueIn(seconds: Int)
+    }
+    
     // State
     public struct State: Equatable, Identifiable {
         
@@ -15,25 +50,39 @@ public enum ArrivalsBoard {
         
         public struct RowState: Identifiable, Equatable {
             public var id: String {
-                "\(arrivalNumberText)-\(arrival.id)"
+                "\(arrivalNumberText)-\(rowType.id)"
             }
 
-            public let arrival: Arrival
+            public let rowType: ArrivalsBoard.RowType
             public let lineId: TrainLine
             public let arrivalNumberText: String
-            public let destination: Arrival.DestinationType
-            public let countdownTime: Arrival.CountdownTime
-            public let locationText: String?
+            public let destination: ArrivalsBoard.DestinationType
+            public let countdownTime: ArrivalsBoard.CountdownTime
             
             public init(station: Station,
                         rowIndex: Int,
                         arrival: Arrival) {
-                self.arrival = arrival
+                self = .init(station: station,
+                             rowIndex: rowIndex,
+                             rowType: .prediction(arrival))
+            }
+            
+            public init(station: Station,
+                        rowIndex: Int,
+                        rowType: ArrivalsBoard.RowType) {
+                self.rowType = rowType
                 self.arrivalNumberText = "\(rowIndex + 1)"
-                self.destination = arrival.destination
-                self.countdownTime = arrival.countdownTime
-                self.locationText = arrival.currentLocation
-                self.lineId = arrival.lineId
+                
+                switch rowType {
+                case .prediction(let arrival):
+                    self.destination = arrival.destination
+                    self.countdownTime = arrival.countdownTime
+                    self.lineId = arrival.lineId
+                case let .arrivalDeparture(arrivalDeparture, lineId):
+                    self.destination = arrivalDeparture.destination
+                    self.countdownTime = arrivalDeparture.countdownTime
+                    self.lineId = lineId
+                }
             }
         }
         
@@ -41,7 +90,7 @@ public enum ArrivalsBoard {
             "\(station.name)-\(platformTitleText)"
         }
         
-        public var arrivals: [Arrival]
+        public var arrivals: [ArrivalsBoard.RowType]
         public var isExpanded: Bool
         public var collapsedBoardSize: Int
         
@@ -67,7 +116,7 @@ public enum ArrivalsBoard {
         private let station: Station
         
         public init(station: Station,
-                    arrivals: [Arrival],
+                    rowTypes: [ArrivalsBoard.RowType],
                     time: Date,
                     rotatingRowIndex: Int? = nil,
                     isExpanded: Bool,
@@ -79,7 +128,7 @@ public enum ArrivalsBoard {
             self.isExpanded = isExpanded
             self.animationState = animationState
             self.manualRotationTimer = manualRotationTimer
-            self.arrivals = arrivals.sortedByArrivalTime
+            self.arrivals = rowTypes.sortedByArrivalTime
             self.collapsedBoardSize = collapsedBoardSize
             self.rotatingRowIndex = rotatingRowIndex ?? (collapsedBoardSize - 1)
             self.timeText = timeFormatter.string(from: time)
@@ -94,7 +143,7 @@ public enum ArrivalsBoard {
                 fixedRows = fixedArrivals.enumerated().map { idx, arrival in
                     RowState(station: station,
                              rowIndex: idx,
-                             arrival: arrival)
+                             rowType: arrival)
                 }
                 
                 if rotate {
@@ -108,12 +157,12 @@ public enum ArrivalsBoard {
                 let rotatingArrival = arrivals[rotatingRowIndex]
                 rotatingRow = RowState(station: station,
                                        rowIndex: rotatingRowIndex,
-                                       arrival: rotatingArrival)
+                                       rowType: rotatingArrival)
             } else {
                 fixedRows = arrivals.enumerated().map { idx, arrival in
                     RowState(station: station,
                              rowIndex: idx,
-                             arrival: arrival)
+                             rowType: arrival)
                 }
                 rotatingRow = nil
             }
@@ -183,19 +232,6 @@ public enum ArrivalsBoard {
     
 }
 
-public extension Arrival {
-    
-    enum DestinationType: Equatable {
-        case destination(String)
-        case checkFrontOfTrain
-    }
-    
-    enum CountdownTime: Equatable {
-        case unknown
-        case dueIn(seconds: Int)
-    }
-}
- 
 private extension Arrival {
     var terminatesHere: Bool {
         guard let naptanId = naptanId,
@@ -205,7 +241,7 @@ private extension Arrival {
         return naptanId == destinationNaptanId
     }
     
-    var destination: DestinationType {
+    var destination: ArrivalsBoard.DestinationType {
         
         guard !terminatesHere else {
             return .checkFrontOfTrain
@@ -222,7 +258,7 @@ private extension Arrival {
         return .checkFrontOfTrain
     }
     
-    var countdownTime: Arrival.CountdownTime {
+    var countdownTime: ArrivalsBoard.CountdownTime {
         guard let timeToStation = timeToStation else {
             return .unknown
         }
@@ -231,9 +267,69 @@ private extension Arrival {
     }
 }
 
+extension ArrivalDeparture {
+    
+    var trimmedDestinationName: String? {
+        destinationName?.replacingOccurrences(of: "Rail Station", with: "").trimmed()
+    }
+    
+    var trimmedStationName: String? {
+        stationName?.replacingOccurrences(of: "Rail Station", with: "").trimmed()
+    }
+    
+    var isValidDeparture: Bool {
+        return trimmedStationName != trimmedDestinationName
+    }
+}
 
-extension Sequence where Element == Arrival {
+private extension ArrivalDeparture {
+    
+    var destination: ArrivalsBoard.DestinationType {
+        
+        if let destinationName = trimmedDestinationName, !destinationName.isEmpty {
+            return .destination(destinationName)
+        }
+        
+        return .checkFrontOfTrain
+    }
+    
+    var secondsToDeparture: Int? {
+        guard let minutesAndSecondsToDeparture = minutesAndSecondsToDeparture else {
+            return nil
+        }
+        
+        let minuteAndSecondComps = minutesAndSecondsToDeparture.components(separatedBy: ":").compactMap { Int($0) }
+        
+        guard minuteAndSecondComps.count == 2 else { return nil }
+        
+        let minutes = minuteAndSecondComps[0]
+        let seconds = minuteAndSecondComps[1]
+        
+        return (minutes * 60) + seconds
+        
+    }
+    
+    var countdownTime: ArrivalsBoard.CountdownTime {
+        guard let secondsToDeparture = secondsToDeparture else {
+            return .unknown
+        }
+
+        return .dueIn(seconds: secondsToDeparture)
+    }
+    
+}
+
+extension Sequence where Element == ArrivalsBoard.RowType {
     var sortedByArrivalTime: [Element] {
-        sorted { $0.timeToStation ?? 0 < $1.timeToStation ?? 0 }
+        sorted { lhs, rhs in
+            switch (lhs, rhs) {
+            case let (.prediction(lhsArrival), .prediction(rhsArrival)):
+                return lhsArrival.timeToStation ?? 0 < rhsArrival.timeToStation ?? 0
+            case let (.arrivalDeparture(lhsArrivalDeparture, _), .arrivalDeparture(rhsArrivalDeparture, _)):
+                return lhsArrivalDeparture.scheduledTimeOfDeparture ?? .distantPast < rhsArrivalDeparture.scheduledTimeOfDeparture ?? .distantPast
+            default:
+                return false
+            }
+        }
     }
 }

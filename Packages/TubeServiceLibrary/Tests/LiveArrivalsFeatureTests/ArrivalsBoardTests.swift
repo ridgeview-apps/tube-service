@@ -20,7 +20,7 @@ class ArrivalsBoardTests: XCTestCase {
 
         let finchleyCentral = Station.fake(ofType: .finchleyCentral)
         let initialState = ArrivalsBoard.State.fake(station: finchleyCentral,
-                                                    arrivals: arrivals)
+                                                    rowTypes: arrivals.map { .prediction($0)} )
         let store = TestStore(initialState: initialState,
                               reducer: ArrivalsBoard.reducer,
                               environment: .fake())
@@ -85,7 +85,7 @@ class ArrivalsBoardTests: XCTestCase {
         
         let finchleyCentral = Station.fake(ofType: .finchleyCentral)
         let initialState = ArrivalsBoard.State.fake(station: finchleyCentral,
-                                                    arrivals: arrivals)
+                                                    rowTypes: arrivals.map { .prediction($0) })
         let store = TestStore(initialState: initialState,
                               reducer: ArrivalsBoard.reducer,
                               environment: .fake())

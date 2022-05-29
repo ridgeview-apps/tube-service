@@ -6,6 +6,7 @@ import Shared
 public struct TransportAPIClient {
     public var lineStatuses: () -> AnyPublisher<[LineStatus], APIFailure>
     public var arrivals: (ArrivalsRequest) -> AnyPublisher<[Arrival], APIFailure>
+    public var arrivalDepartures: (ArrivalDeparturesRequest) -> AnyPublisher<[ArrivalDeparture], APIFailure>
 }
 
 public extension TransportAPIClient {
@@ -31,6 +32,14 @@ public struct ArrivalsRequest {
     }
 }
 
+public struct ArrivalDeparturesRequest {
+    public let arrivalsGroup: Station.ArrivalsGroup
+    
+    public init(arrivalsGroup: Station.ArrivalsGroup) {
+        self.arrivalsGroup = arrivalsGroup
+    }
+}
+
 // MARK: - Real instance
 public extension TransportAPIClient {
     
@@ -39,15 +48,20 @@ public extension TransportAPIClient {
         let route: String
         let appId: String
         let appKey: String
+        let queryParams: [String: String]
         
         var url: URL {
             let urlString = "\(baseURL)/\(route)".replacingOccurrences(of: "//", with: "/")
             var components = URLComponents(string: urlString)!
             
-            components.queryItems = [
+            let fixedQueryItems: [URLQueryItem] = [
                 URLQueryItem(name: "app_id", value: appId),
                 URLQueryItem(name: "app_key", value: appKey)
             ]
+            
+            let additionalQueryItems = queryParams.map { URLQueryItem.init(name: $0, value: $1) }
+            
+            components.queryItems = fixedQueryItems + additionalQueryItems
             
             return components.url!
 
@@ -58,19 +72,20 @@ public extension TransportAPIClient {
                      appId: String,
                      appKey: String,
                      urlSession: URLSession = .shared) -> TransportAPIClient {
-        func buildURL(route: String) -> URL {
+        func buildURL(route: String, queryParams: [String: String] = [:]) -> URL {
             RequestURL(
                 baseURL: baseURL,
                 route: route,
                 appId: appId,
-                appKey: appKey
+                appKey: appKey,
+                queryParams: queryParams
             )
             .url
         }
         
         return .init(
             lineStatuses: {
-                let url = buildURL(route: "/Line/Mode/tube,dlr,overground,tram,tflrail/Status")
+                let url = buildURL(route: "/Line/Mode/tube,dlr,overground,tram,tflrail,elizabeth-line/Status")
                 return urlSession.get(url: url,
                                       mappedTo: [LineStatus].self)
             },
@@ -81,6 +96,15 @@ public extension TransportAPIClient {
                 
                 let url = buildURL(route: "/Line/\(lineIds)/Arrivals/\(stationCode)")
                 return urlSession.get(url: url, mappedTo: [Arrival].self)
+            },
+            
+            arrivalDepartures: { request in
+                let lineIds = request.arrivalsGroup.lineIds.toId()
+                let stationCode = request.arrivalsGroup.atcoCode
+                
+                let url = buildURL(route: "/StopPoint/\(stationCode)/ArrivalDepartures",
+                                   queryParams: ["lineIds": lineIds])
+                return urlSession.get(url: url, mappedTo: [ArrivalDeparture].self)
             }
         )
     }
@@ -97,4 +121,8 @@ private extension URLSession {
     }
 }
 
-private let jsonDecoder: JSONDecoder = JSONDecoder()
+private let jsonDecoder: JSONDecoder = {
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .iso8601
+    return decoder
+}()

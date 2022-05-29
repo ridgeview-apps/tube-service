@@ -5,14 +5,16 @@ import ModelFakes
 import Shared
 import DataClients
 
+#if DEBUG
+
 // MARK: - ArrivalsBoard.State
 public extension ArrivalsBoard.State {
     static func fake(station: Station = .fake(ofType: .kingsCross),
-                     arrivals: [Arrival] = .fakes(ofTypes: .singleLineSouthbound),
+                     rowTypes: [ArrivalsBoard.RowType] = Arrival.fakes(ofTypes: .singleLineSouthbound).map { .prediction($0) },
                      isExpanded: Bool = false,
                      time: Date = .init()) -> Self {
         .init(station: station,
-              arrivals: arrivals,
+              rowTypes: rowTypes,
               time: time,
               isExpanded: isExpanded)
     }
@@ -33,7 +35,7 @@ public extension ArrivalsBoardsList.State {
                      arrivalsGroupIndex: Int = 0,
                      isFavourite: Bool = false,
                      boards: [ArrivalsBoard.State] = [
-                        .fake(arrivals: .fakes(ofTypes: .multiLine))
+                        .fake(rowTypes: Arrival.fakes(ofTypes: .multiLine).map { .prediction($0) })
                      ],
                      errorMessage: String? = nil) -> ArrivalsBoardsList.State {
         .init(id: .init(station: station, arrivalsGroup: station.arrivalsGroups[arrivalsGroupIndex]),
@@ -85,3 +87,5 @@ public extension ArrivalsPicker.Environment {
               mainQueue: mainQueue)
     }
 }
+
+#endif

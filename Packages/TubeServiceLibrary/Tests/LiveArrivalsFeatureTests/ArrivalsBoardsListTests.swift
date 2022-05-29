@@ -37,7 +37,7 @@ class ArrivalsBoardsListTests: XCTestCase {
         func expectedBoard(with expectedArrivals: [Arrival],
                            animationState: ArrivalsBoard.State.AnimationState) -> ArrivalsBoard.State {
             .init(station: station,
-                  arrivals: expectedArrivals,
+                  rowTypes: expectedArrivals.map { .prediction($0) },
                   time: simulatedNow,
                   isExpanded: false,
                   animationState: animationState,

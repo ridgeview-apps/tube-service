@@ -4,6 +4,8 @@ import Model
 import ModelFakes
 import Shared
 
+#if DEBUG
+
 // MARK: - KeyValueStore
 
 public extension KeyValueStore {
@@ -25,8 +27,11 @@ public extension KeyValueStore {
 public extension StationsClient {
     
     static var fake: StationsClient {
-        StationsClient.real(
-            jsonBundle: .findModuleBundle(named: "TubeService_DataClients")
+        .init(
+            load: {
+                let decodedStations: [Station] = try! JSONDecoder().decode([Station].self, from: fakeStations)
+                return Just(decodedStations).eraseToAnyPublisher()
+            }
         )
     }
 }
@@ -40,6 +45,9 @@ public extension TransportAPIClient {
         },
         arrivals: { request -> AnyPublisher<[Arrival], APIFailure> in
             Result.successPublisher(Arrival.fakes(ofTypes: .multiLine))
+        },
+        arrivalDepartures: { request -> AnyPublisher<[ArrivalDeparture], APIFailure> in
+            Result.successPublisher(ArrivalDeparture.fakeElizabethLineData())
         }
     )
 }
@@ -49,3 +57,5 @@ public extension TransportAPIClient {
 public extension UserPreferencesClient {
     static let fake = UserPreferencesClient(keyValueStore: .fake)
 }
+
+#endif

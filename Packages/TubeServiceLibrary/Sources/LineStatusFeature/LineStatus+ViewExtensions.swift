@@ -12,7 +12,8 @@ extension LineStatus {
     }
     
     var shortText: String {
-        Set(serviceDetails.compactMap { $0.statusSeverityDescription }).joined(separator: ", ")
+        let uniqueStatusDescriptions = Set(serviceDetails.compactMap { $0.statusSeverityDescription }).sorted()
+        return uniqueStatusDescriptions.joined(separator: ", ")
     }
     
     var disruptionReasonsText: [String] {
@@ -31,7 +32,7 @@ extension LineStatus {
     
     var goodServiceMessage: LocalizedStringKey {
         switch id {
-        case .bakerloo, .central, .circle, .district, .dlr, .hammersmithAndCity, .jubilee,
+        case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
              .metropolitan, .overground, .northern, .piccadilly, .victoria, .waterlooAndCity:
             return "status.detail.good.service.on.the \(id.longName)"
         case .tflRail:
@@ -55,7 +56,7 @@ private extension TrainLine {
     
     var transportType: TransportType {
         switch self {
-        case .dlr, .overground, .tflRail, .tram:
+        case .dlr, .elizabeth, .overground, .tflRail, .tram:
             return .overground
         case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee,
              .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity:

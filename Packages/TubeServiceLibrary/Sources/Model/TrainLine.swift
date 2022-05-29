@@ -5,6 +5,7 @@ public enum TrainLine: String, Codable, CaseIterable {
     case circle
     case district
     case dlr
+    case elizabeth
     case hammersmithAndCity = "hammersmith-city"
     case jubilee
     case metropolitan
@@ -31,6 +32,8 @@ public extension TrainLine {
             return "DLR"
         case .district:
             return "District"
+        case .elizabeth:
+            return "Elizabeth"
         case .hammersmithAndCity:
             return "Hammersmith & City"
         case .jubilee:
@@ -59,7 +62,7 @@ public extension TrainLine {
         switch self {
         case .dlr, .overground, .tflRail, .tram:
             return shortName
-        case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee,
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee,
              .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity:
             return "\(shortName) line"
         }

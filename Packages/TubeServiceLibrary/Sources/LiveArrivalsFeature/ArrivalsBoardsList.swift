@@ -64,6 +64,7 @@ public enum ArrivalsBoardsList {
         case cancelAutoRefreshTimer
         case refresh
         case arrivalsResponse(Result<[Arrival], TransportAPIClient.APIFailure>)
+        case arrivalDeparturesResponse(Result<[ArrivalDeparture], TransportAPIClient.APIFailure>)
         case tapFavourite(Bool)
         case arrivalsBoard(id: ArrivalsBoard.State.ID, action: ArrivalsBoard.Action)
         case setEachBoardAnimationState(to: ArrivalsBoard.State.AnimationState)
@@ -134,11 +135,23 @@ public enum ArrivalsBoardsList {
                 }
                 state.isRefreshing = true
                 
-                let fetchData = environment.transportAPI
-                    .arrivals(ArrivalsRequest(arrivalsGroup: state.arrivalsGroup))
-                    .receive(on: environment.mainQueue)
-                    .catchToEffect()
-                    .map(Action.arrivalsResponse)
+                let fetchData: Effect<Action, Never>
+                
+                switch state.arrivalsGroup.boardType {
+                case .arrivalPredictions:
+                    fetchData = environment.transportAPI
+                        .arrivals(ArrivalsRequest(arrivalsGroup: state.arrivalsGroup))
+                        .receive(on: environment.mainQueue)
+                        .catchToEffect()
+                        .map(Action.arrivalsResponse)
+                case .arrivalDepartures:
+                    fetchData = environment.transportAPI
+                        .arrivalDepartures(ArrivalDeparturesRequest(arrivalsGroup: state.arrivalsGroup))
+                        .receive(on: environment.mainQueue)
+                        .catchToEffect()
+                        .map(Action.arrivalDeparturesResponse)
+                }
+                
                 
                 return .concatenate(Effect(value: .setEachBoardAnimationState(to: .refreshing)),
                                     fetchData)
@@ -165,7 +178,7 @@ public enum ArrivalsBoardsList {
                     Effect<Action, Never>(value: Action.arrivalsBoard(id: $0.id, action: .rotateNextArrival))
                 }
                 return .concatenate(eachRotationAction)
-            case var .arrivalsResponse(.success(arrivals)):
+            case let .arrivalsResponse(.success(arrivals)):
                 let refreshTime = environment.now()
                 state.lastRefreshedAt = refreshTime
                 
@@ -181,6 +194,27 @@ public enum ArrivalsBoardsList {
                 
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
             case let .arrivalsResponse(.failure(error)):
+                state.isRefreshing = false
+                state.errorMessage = error.localizedDescription
+                return Effect(value: .setEachBoardAnimationState(to: .rotating))
+                
+            case let .arrivalDeparturesResponse(.success(arrivalDepartures)):
+                let refreshTime = environment.now()
+                state.lastRefreshedAt = refreshTime
+                
+                state.isRefreshing = false
+                state.sectionTitle = state.arrivalsGroup.title
+                if let refreshedAtText = Formatter.mediumRelativeDateTimeStyle.string(for: refreshTime) {
+                    state.sectionTitle.append(" (\(refreshedAtText))")
+                }
+                state.errorMessage = nil
+                state.boards = arrivalDepartures.asBoards(station: state.station,
+                                                          oldValues: state.boards,
+                                                          refreshTime: refreshTime,
+                                                          lineId: state.arrivalsGroup.arrivalDeparturesLineId)
+                
+                return Effect(value: .setEachBoardAnimationState(to: .rotating))
+            case let .arrivalDeparturesResponse(.failure(error)):
                 state.isRefreshing = false
                 state.errorMessage = error.localizedDescription
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
@@ -206,7 +240,7 @@ private extension Array where Element == Arrival {
         let sortedBoards = platformGroups.map { platformName, arrivals -> ArrivalsBoard.State in
             let boardId = "\(station.name)-\(platformName)"
             return ArrivalsBoard.State(station: station,
-                                       arrivals: arrivals,
+                                       rowTypes: arrivals.map { .prediction($0) },
                                        time: refreshTime,
                                        rotatingRowIndex: oldValues[id: boardId]?.rotatingRowIndex,
                                        isExpanded: oldValues[id: boardId]?.isExpanded ?? false,
@@ -221,6 +255,70 @@ private extension Array where Element == Arrival {
     func sortedByArrivalTime() -> [Arrival] {
         self.sorted { lhs, rhs in
             lhs.timeToStation ?? 0 < rhs.timeToStation ?? 0
+        }
+    }
+}
+
+private extension Array where Element == ArrivalDeparture {
+    
+    func asBoards(station: Station,
+                  oldValues: IdentifiedArrayOf<ArrivalsBoard.State>,
+                  refreshTime: Date,
+                  lineId: TrainLine?) -> IdentifiedArrayOf<ArrivalsBoard.State> {
+        guard let lineId = lineId else {
+            assertionFailure()
+            return []
+        }
+        
+        let sortedArrivals = self.filter { $0.isValidDeparture }
+                                 .sortedByArrivalTime()
+        
+        let platformGroups = Dictionary(grouping: sortedArrivals, by: { $0.platformName })
+        
+        let sortedBoards = platformGroups.map { platformName, arrivals -> ArrivalsBoard.State in
+            let boardId = "\(station.name)-\(platformName ?? "")"
+            return ArrivalsBoard.State(station: station,
+                                       rowTypes: arrivals.map { .arrivalDeparture($0, lineId: lineId) },
+                                       time: refreshTime,
+                                       rotatingRowIndex: oldValues[id: boardId]?.rotatingRowIndex,
+                                       isExpanded: oldValues[id: boardId]?.isExpanded ?? false,
+                                       manualRotationTimer: true)
+        }.sorted {
+            $0.platformTitleText < $1.platformTitleText
+        }
+        
+        return IdentifiedArrayOf(uniqueElements: sortedBoards)
+    }
+    
+    func sortedByArrivalTime() -> [ArrivalDeparture] {
+        self.sorted { lhs, rhs in
+            lhs.scheduledTimeOfDeparture ?? .distantPast < lhs.scheduledTimeOfDeparture ?? .distantPast
+        }
+    }
+}
+
+extension Station.ArrivalsGroup {
+    
+    enum BoardType {
+        case arrivalPredictions
+        case arrivalDepartures(TrainLine)
+    }
+    
+    var boardType: BoardType {
+        // For now, only the Elizabeth Line supports "ArrivalDeparture" data.
+        // Everything else (i.e. tube, dlr etc) is "Arrival" predictions data only.
+        if lineIds == [.elizabeth] {
+            return .arrivalDepartures(.elizabeth)
+        }
+        return .arrivalPredictions
+    }
+    
+    var arrivalDeparturesLineId: TrainLine? {
+        switch boardType {
+        case .arrivalPredictions:
+            return nil
+        case let .arrivalDepartures(lineId):
+            return lineId
         }
     }
 }

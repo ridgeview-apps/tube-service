@@ -5,6 +5,8 @@ import Model
 import ModelFakes
 import Shared
 
+#if DEBUG
+
 public extension Settings.State {
     static func fake(contactUs: Settings.State.ContactUs = .empty,
                      appVersionNumber: String = "1.1",
@@ -49,3 +51,5 @@ extension SettingsStore {
     }
 
 }
+
+#endif

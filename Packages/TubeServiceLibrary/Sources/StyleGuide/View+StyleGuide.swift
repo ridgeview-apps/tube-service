@@ -16,7 +16,7 @@ public extension View {
                    backgroundColor: Color = .defaultCellBackground) -> some View {
         modifier(CardStyle(cornerRadius: cornerRadius,
                           backgroundColor: backgroundColor))
-    }
+    }    
     
     func hiddenSeparatorListRowStyle(backgroundColor: Color = .defaultBackground) -> some View {
         modifier(HiddenSeparatorListRowStyle(backgroundColor: backgroundColor))

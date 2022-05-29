@@ -36,21 +36,26 @@ public struct LineStatusListView: View {
                             then: LineStatusDetailView.init(store:)
                         )
                     }
-                    .accessibility(identifier: lineStatus.id.rawValue)
+                                        .accessibility(identifier: lineStatus.id.rawValue)
                 }
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.defaultBackground)
         }
+        .listStyle(.plain)
         .navigationBarTitle(Text(LocalizedStringKey(viewStore.navigationBarTitleKey), bundle: .module))
         .refreshable {
             await viewStore.send(.refresh, while: \.isRefreshing)
         }
+        .background(Color.defaultBackground)
         .onAppear {
             viewStore.send(.onAppear)
         }
         .onSceneDidBecomeActive {
             viewStore.send(.autoRefreshIfNeeded)
         }
+        
     }
     
     private var sectionHeader: some View {
@@ -77,30 +82,34 @@ struct LineStatusRowButton<DestinationView: View>: View {
     let destinationView: () -> DestinationView
     
     var body: some View {
-        ZStack {
-            Button {
-                selection = lineStatus.id
-            } label: {
+        Button {
+            selection = lineStatus.id
+        } label: {
+            ZStack {
                 HStack(spacing: 0) {
                     
                     columnText(lineStatus.id.shortName)
                         .foregroundColor(lineStatus.id.textColor)
                         .background(lineStatus.id.backgroundColor)
+                        .multilineTextAlignment(.leading)
                     
                     columnText(lineStatus.shortText)
-                        .foregroundColor(lineStatus.isDisrupted ? .red : .primary)
+                        .multilineTextAlignment(.leading)
+                        .foregroundColor(lineStatus.isDisrupted ? .adaptiveRed : .primary)
                     
                     accessoryImage
                 }
                 
+                NavigationLink(tag: lineStatus.id,
+                               selection: $selection,
+                               destination: destinationView) { }.hidden()
             }
-            .buttonStyle(.plain)
-            
-            NavigationLink(tag: lineStatus.id,
-                           selection: $selection,
-                           destination: destinationView) { }.hidden()
+            .cardStyle()
+            .frame(minHeight: 44)
+            .padding([.top, .bottom], 6)
+            .padding([.trailing, .leading], 16)
         }
-        .frame(minHeight: 44)
+        .buttonStyle(.borderless)
     }
     
     private func columnText(_ text: String) -> some View {
@@ -118,7 +127,7 @@ struct LineStatusRowButton<DestinationView: View>: View {
     @ViewBuilder private var accessoryImage: some View {
         if lineStatus.isDisrupted {
             Image(systemName: "exclamationmark.circle.fill")
-                .foregroundColor(.red)
+                .foregroundColor(.adaptiveRed)
                 .padding(.trailing)
                 .frame(width: 30)
         } else {

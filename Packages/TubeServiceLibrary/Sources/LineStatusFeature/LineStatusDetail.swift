@@ -99,7 +99,7 @@ private extension TrainLine {
 
     var twitterSearchNameFilter: String? {
         switch self {
-        case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee, .metropolitan,
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .metropolitan,
              .northern, .piccadilly, .victoria, .waterlooAndCity:
             return "\(rawValue) line"
         case .tram, .dlr:
@@ -111,7 +111,7 @@ private extension TrainLine {
 
     var shouldShowFilteredTweets: Bool {
         switch self {
-        case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee, .metropolitan,
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .metropolitan,
              .northern, .piccadilly, .victoria, .waterlooAndCity, .tram, .dlr:
             return true
         case .tflRail, .overground:

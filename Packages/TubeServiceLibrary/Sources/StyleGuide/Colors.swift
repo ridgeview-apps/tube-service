@@ -1,4 +1,3 @@
-import Model
 import SwiftUI
 import RidgeviewCore
 
@@ -9,6 +8,7 @@ public extension Color {
     static let centralLine = Color.rgb(220, 36, 31)
     static let circleLine = Color.rgb(255, 206, 0)
     static let districtLine = Color.rgb(0, 114, 41)
+    static let elizabethLine = Color.rgb(105, 80, 161)
     static let hammersmithAndCityLine = Color.rgb(215, 173, 175)
     static let jubileeLine = Color.rgb(143, 134, 152)
     static let metropolitanLine = Color.rgb(117, 16, 86)
@@ -31,11 +31,11 @@ public extension Color {
     static let midGrey1 = Color.rgb(147, 147, 147)
     static let midGrey2 = Color.rgb(108, 108, 108)
     
-    static let darkGrey1 = Color.rgb(89, 86, 94)
+    static let darkGrey1 = Color.rgb(62, 62, 62)
     static let darkGrey2 = Color.rgb(34, 30, 40)
     
     static let darkRed1 = Color.rgb(235, 77, 61)
-    static let midRed1 = Color.rgb(239, 145, 145)
+    static let midRed1 = Color.rgb(255, 145, 145)
     
     static let adaptiveRed = Color.adaptive(lightMode: .darkRed1,
                                             darkMode: .midRed1)

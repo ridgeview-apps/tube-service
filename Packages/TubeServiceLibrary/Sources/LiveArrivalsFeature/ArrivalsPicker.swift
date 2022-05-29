@@ -173,9 +173,6 @@ public enum ArrivalsPicker: Equatable {
                 guard state.searchText != text else {
                     return .none
                 }
-                guard state.rowSelection.id == nil else {
-                    return .none
-                }
                 state.searchText = text
                 return Effect(value: .refreshStations)
                             .debounce(id: SearchTextId(), for: 0.3, scheduler: env.mainQueue)

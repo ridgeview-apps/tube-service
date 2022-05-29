@@ -6,6 +6,8 @@ import LineStatusFeature
 import LiveArrivalsFeature
 import SettingsFeature
 
+#if DEBUG
+
 // MARK: - Root fakes
 extension RootStore {
     static func fake() -> RootStore {
@@ -60,3 +62,5 @@ extension SettingsTabStore {
               environment: .fake)
     }
 }
+
+#endif

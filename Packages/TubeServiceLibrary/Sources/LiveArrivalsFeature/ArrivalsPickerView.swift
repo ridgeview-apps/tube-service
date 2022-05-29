@@ -35,8 +35,9 @@ public struct ArrivalsPickerView: View {
                     }
                 }
             }
+            .listRowBackground(Color.defaultBackground)
         }
-        .listStyle(.insetGrouped)                
+        .listStyle(.plain)
         .searchable(
             text: searchText,
             placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always),
@@ -46,6 +47,7 @@ public struct ArrivalsPickerView: View {
         .onAppear {
             viewStore.send(.onAppear)
         }
+        .background(Color.defaultBackground)
     }
     
     @ViewBuilder private var sectionHeader: some View {
@@ -65,7 +67,7 @@ public struct ArrivalsPickerView: View {
             }
         }
         .pickerStyle(.segmented)
-        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 0))
+        .padding(.bottom, 8)
     }
     
     private var selectedFilterOption: Binding<UserPreferences.ArrivalsPickerFilterOption> {
@@ -85,7 +87,7 @@ public struct ArrivalsPickerView: View {
     private var searchText: Binding<String> {
         viewStore.binding(
             get: \.searchText,
-            send: ArrivalsPicker.Action.search(text:)
+            send: { ArrivalsPicker.Action.search(text: $0) }
         )
     }
     
@@ -104,22 +106,21 @@ public struct ArrivalsPickerView: View {
                     ArrivalsBoardNavigationLink(store: store,
                                                 rowId: .init(station: station, arrivalsGroup: arrivalsGroup),
                                                 selection: selectedRowId)
-                        .padding(.zero)
                 }
             },
             label: {
-                // Use RowButton so we can tap the whole row to expand/collapse (not just the indicator)
-                RowButton {
+                Button {
                     viewStore.send(.toggleExpandedRowState(for: station), animation: .default)
                 } label: {
                     LineColourKeyTextView(
                         rowType: .collapsedRow(station: station)
                     )
-                    .foregroundColor(Color.primary)
                 }
                 .accessibilityIdentifier(station.id)
             }
         )
+        .buttonStyle(.borderless)
+        .accentColor(.clear)
     }
 }
 
@@ -133,24 +134,32 @@ private struct ArrivalsBoardNavigationLink: View {
     private var arrivalsGroup: Station.ArrivalsGroup { rowId.arrivalsGroup }
     
     var body: some View {
-        NavigationLink(
-            destination:
-                IfLetStore(
-                    store.scope(
-                        state: { $0.rowSelection.navigationStates[id: rowId] },
-                        action: { ArrivalsPicker.Action.arrivalsBoardsList(id: rowId, action: $0) }
-                    ),
-                    then: ArrivalsBoardsListView.init(store:)
+        Button  {
+            selection = rowId
+        } label: {
+            ZStack(alignment: .leading) {
+                LineColourKeyTextView(
+                    rowType: .expandedRow(station: station,
+                                          arrivalsGroup: arrivalsGroup)
                 )
-            ,
-            tag: rowId,
-            selection: $selection
-        ) {
-            LineColourKeyTextView(
-                rowType: .expandedRow(station: station,
-                                      arrivalsGroup: arrivalsGroup)
-            )
+                
+                NavigationLink(
+                    destination:
+                        IfLetStore(
+                            store.scope(
+                                state: { $0.rowSelection.navigationStates[id: rowId] },
+                                action: { ArrivalsPicker.Action.arrivalsBoardsList(id: rowId, action: $0) }
+                            ),
+                            then: ArrivalsBoardsListView.init(store:)
+                        )
+                    ,
+                    tag: rowId,
+                    selection: $selection
+                ) {}.hidden()
+                
+            }
         }
+        .buttonStyle(.borderless)
         .accessibilityIdentifier("\(station.id)-\(arrivalsGroup.id)")
     }
 }
@@ -167,7 +176,12 @@ private struct LineColourKeyTextView: View {
         HStack(spacing: 8) {
             LineColourKeyView(lines: lines)
             Text(text)
+                .multilineTextAlignment(.leading)
+            Spacer()
+            accessoryImage
         }
+        .contentShape(Rectangle())
+        .foregroundColor(Color.primary)
     }
     
     var lines: [TrainLine] {
@@ -185,6 +199,17 @@ private struct LineColourKeyTextView: View {
             return station.name
         case .expandedRow(let station, let arrivalsGroup):
             return station.hasSingleArrivalsGroup ? station.name : arrivalsGroup.title
+        }
+    }
+    
+    @ViewBuilder private var accessoryImage: some View {
+        switch rowType {
+        case .expandedRow:
+            Image(systemName: "chevron.right")
+                .foregroundColor(.adaptiveMidGrey2)
+                .frame(width: 30)
+        case .collapsedRow:
+            EmptyView()
         }
     }
 

@@ -37,7 +37,7 @@ public struct ArrivalsBoardsListView: View {
                         HStack {
                             Spacer()
                             ArrivalsBoardView(store: boardStore)
-                                .buttonStyle(PlainButtonStyle())
+                                .buttonStyle(.plain)
                                 .frame(maxWidth: 600)
                                 .padding()
                             Spacer()
@@ -45,7 +45,7 @@ public struct ArrivalsBoardsListView: View {
                     }
                     .listRowInsets(EdgeInsets())
                     .listRowSeparator(.hidden)
-                    .background(Color(UIColor.systemBackground))
+                    .listRowBackground(Color.defaultBackground)
                 }
             }
         }
@@ -56,6 +56,7 @@ public struct ArrivalsBoardsListView: View {
         .refreshable {
             await viewStore.send(.refresh, while: \.isRefreshing)
         }
+        .background(Color.defaultBackground)
         .onAppear {
             viewStore.send(.onAppear)
         }
