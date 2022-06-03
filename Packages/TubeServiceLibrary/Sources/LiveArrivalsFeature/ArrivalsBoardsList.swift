@@ -54,6 +54,22 @@ public enum ArrivalsBoardsList {
             self.errorMessage = errorMessage
             self.sectionTitle = sectionTitle
         }
+        
+        mutating func refreshSucceeded(at refreshTime: Date) {
+            lastRefreshedAt = refreshTime
+            
+            isRefreshing = false
+            sectionTitle = arrivalsGroup.title
+            if let refreshedAtText = Formatter.mediumRelativeDateTimeStyle.string(for: refreshTime) {
+                sectionTitle.append(" (\(refreshedAtText))")
+            }
+            errorMessage = nil
+        }
+        
+        mutating func refreshFailed(withError error: Error) {
+            isRefreshing = false
+            errorMessage = error.localizedDescription
+        }
     }
     
     // MARK: - Action
@@ -180,34 +196,19 @@ public enum ArrivalsBoardsList {
                 return .concatenate(eachRotationAction)
             case let .arrivalsResponse(.success(arrivals)):
                 let refreshTime = environment.now()
-                state.lastRefreshedAt = refreshTime
-                
-                state.isRefreshing = false
-                state.sectionTitle = state.arrivalsGroup.title
-                if let refreshedAtText = Formatter.mediumRelativeDateTimeStyle.string(for: refreshTime) {
-                    state.sectionTitle.append(" (\(refreshedAtText))")
-                }
-                state.errorMessage = nil
+                state.refreshSucceeded(at: environment.now())
                 state.boards = arrivals.asBoards(station: state.station,
                                                  oldValues: state.boards,
                                                  refreshTime: refreshTime)
                 
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
             case let .arrivalsResponse(.failure(error)):
-                state.isRefreshing = false
-                state.errorMessage = error.localizedDescription
+                state.refreshFailed(withError: error)
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
                 
             case let .arrivalDeparturesResponse(.success(arrivalDepartures)):
                 let refreshTime = environment.now()
-                state.lastRefreshedAt = refreshTime
-                
-                state.isRefreshing = false
-                state.sectionTitle = state.arrivalsGroup.title
-                if let refreshedAtText = Formatter.mediumRelativeDateTimeStyle.string(for: refreshTime) {
-                    state.sectionTitle.append(" (\(refreshedAtText))")
-                }
-                state.errorMessage = nil
+                state.refreshSucceeded(at: environment.now())
                 state.boards = arrivalDepartures.asBoards(station: state.station,
                                                           oldValues: state.boards,
                                                           refreshTime: refreshTime,
@@ -215,8 +216,7 @@ public enum ArrivalsBoardsList {
                 
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
             case let .arrivalDeparturesResponse(.failure(error)):
-                state.isRefreshing = false
-                state.errorMessage = error.localizedDescription
+                state.refreshFailed(withError: error)
                 return Effect(value: .setEachBoardAnimationState(to: .rotating))
             case let .tapFavourite(isFavourite):
                 let boardGroup = state.arrivalsGroup

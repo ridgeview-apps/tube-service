@@ -248,8 +248,9 @@ private extension UserPreferences.ArrivalsPickerFilterOption {
         }
     }
 }
-//
-//// MARK: - Previews
+
+// MARK: - Previews
+
 #if DEBUG
 struct ArrivalsPickerContainerView_Preview: PreviewProvider {
     static var previews: some View {

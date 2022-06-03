@@ -41,7 +41,7 @@ public struct LineStatusDetailView: View {
                 .frame(width: 20)
             VStack(alignment: .leading, spacing: 12) {
                 Text(viewStore.lineStatus.shortText)
-                    .font(.title)
+                    .font(.title2)
                 statusDetailText
             }
             .padding([.top, .bottom, .trailing])
@@ -88,7 +88,6 @@ public struct LineStatusDetailView: View {
                 Text("status.tfl.tweets.title.line \(line.longName)", bundle: .module)
             }
         }
-        .padding(.bottom, 4)
         .sheet(item: twitterLinkBinding(for: link)) { link in
             SafariView(url: link.url)
         }
