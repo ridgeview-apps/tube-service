@@ -68,10 +68,10 @@ class TubeServiceUITests: XCTestCase {
         if iPhone {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
-        
-        if iPad {
-            app.buttons["940GZZLUALP-940GZZLUALP-piccadilly"].swipeUp()
-        }
+                    
+//        if iPad {
+//            app.buttons["940GZZLUALP-940GZZLUALP-piccadilly"].swipeUp()
+//        }
         
         app.buttons["940GZZLUBBN-940GZZLUBBN-circle,hammersmith-city,metropolitan"].tap() // Barbican
                 

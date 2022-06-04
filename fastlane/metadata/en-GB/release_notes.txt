@@ -1,3 +1,1 @@
-- Pull-to-refresh is now available for Live arrivals boards & Line status screen
-- Optimized for iOS 15
-- New Northern Line stations added: Battersea & Nine Elms
+- Elizabeth line added

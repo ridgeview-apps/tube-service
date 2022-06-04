@@ -2,7 +2,7 @@ Tube Service is an app for London Underground commuters. It tells you the latest
 
 Tube Service features:
 
-- See the current status of all London Underground lines (including DLR and London Trams).
+- See the current status of all London Underground lines (including DLR, Trams and the Elizabeth line).
 - Tap to see a more detailed status for each line.
 - View the latest tweets from TfL (and check whether there really is a "good service" at the moment!).
 - Search and view the live arrivals boards for a particular tube station.
