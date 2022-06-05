@@ -43,6 +43,7 @@ public struct ArrivalsPickerView: View {
             placement: SearchFieldPlacement.navigationBarDrawer(displayMode: .always),
             prompt: Text("arrivals.picker.search.placeholder", bundle: .module)
         )
+        .disableAutocorrection(true)
         .navigationBarTitle(Text("arrivals.picker.navigation.title", bundle: .module))
         .onAppear {
             viewStore.send(.onAppear)
