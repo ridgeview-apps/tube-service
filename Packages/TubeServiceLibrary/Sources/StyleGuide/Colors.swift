@@ -18,7 +18,6 @@ public extension Color {
     static let waterlooAndCityLine = Color.rgb(118, 208, 189)
     static let dlr = Color.rgb(0, 175, 173)
     static let tram = Color.rgb(0, 189, 25)
-    static let tflRail = Color.rgb(0, 25, 168)
     static let overground = Color.rgb(239, 123, 16)
     
 }

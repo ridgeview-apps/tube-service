@@ -35,8 +35,6 @@ extension LineStatus {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
              .metropolitan, .overground, .northern, .piccadilly, .victoria, .waterlooAndCity:
             return "status.detail.good.service.on.the \(id.longName)"
-        case .tflRail:
-            return "status.detail.good.service.on.tfl.rail"
         case .tram:
             return "status.detail.good.service.on.trams"
         }
@@ -56,7 +54,7 @@ private extension TrainLine {
     
     var transportType: TransportType {
         switch self {
-        case .dlr, .elizabeth, .overground, .tflRail, .tram:
+        case .dlr, .elizabeth, .overground, .tram:
             return .overground
         case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee,
              .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity:

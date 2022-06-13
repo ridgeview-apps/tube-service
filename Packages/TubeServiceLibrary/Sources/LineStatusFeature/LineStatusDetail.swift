@@ -104,7 +104,7 @@ private extension TrainLine {
             return "\(rawValue) line"
         case .tram, .dlr:
             return rawValue
-        case .tflRail, .overground:
+        case .overground:
             return nil
         }
     }
@@ -114,7 +114,7 @@ private extension TrainLine {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .metropolitan,
              .northern, .piccadilly, .victoria, .waterlooAndCity, .tram, .dlr:
             return true
-        case .tflRail, .overground:
+        case .overground:
             return false
         }
     }

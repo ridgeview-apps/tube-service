@@ -85,7 +85,7 @@ public extension TransportAPIClient {
         
         return .init(
             lineStatuses: {
-                let url = buildURL(route: "/Line/Mode/tube,dlr,overground,tram,tflrail,elizabeth-line/Status")
+                let url = buildURL(route: "/Line/Mode/tube,dlr,overground,tram,elizabeth-line/Status")
                 return urlSession.get(url: url,
                                       mappedTo: [LineStatus].self)
             },
