@@ -1,1 +1,1 @@
-- Elizabeth line added
+- Minor bug fixes
