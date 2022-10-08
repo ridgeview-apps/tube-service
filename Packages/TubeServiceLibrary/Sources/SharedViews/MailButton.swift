@@ -125,10 +125,10 @@ private struct MailViewController: UIViewControllerRepresentable {
                 vc.setToRecipients(to)
             }
             if let cc = messageConfig.cc {
-                vc.setToRecipients(cc)
+                vc.setCcRecipients(cc)
             }
             if let bcc = messageConfig.bcc {
-                vc.setToRecipients(bcc)
+                vc.setBccRecipients(bcc)
             }
             if let subject = messageConfig.subject {
                 vc.setSubject(subject)
