@@ -1,8 +1,12 @@
-#include "Base.xcconfig"
+#include "Release.secrets.xcconfig"
 
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service
-PROVISIONING_PROFILE_SPECIFIER = match AppStore $(PRODUCT_BUNDLE_IDENTIFIER)
 CODE_SIGN_IDENTITY = Apple Distribution
 CODE_SIGN_STYLE = Manual
-SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) RELEASE_BUILD
+DEVELOPMENT_TEAM = 3H5L23529U
 EXCLUDED_SOURCE_FILE_NAMES = TubeService/Data/Debug/*
+
+// App config
+TRANSPORT_API_URL = https:/$()/api.tfl.gov.uk
+APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
+CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

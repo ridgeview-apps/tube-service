@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "29A1BDFE-70B4-407C-BD54-33067672BDBD",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "PresentationViewsTests",
+        "name" : "PresentationViewsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

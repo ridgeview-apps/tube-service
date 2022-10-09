@@ -48,8 +48,6 @@
 	<false/>
 	<key>appConfig</key>
 	<dict>
-		<key>appCenterAppSecret</key>
-		<string>$(APPCENTER_APP_SECRET)</string>
 		<key>transportAPIURL</key>
 		<string>$(TRANSPORT_API_URL)</string>
 		<key>transportAPIAppId</key>

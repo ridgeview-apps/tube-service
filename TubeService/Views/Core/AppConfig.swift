@@ -1,11 +1,9 @@
 import Foundation
-import RidgeviewCore
 
 struct AppConfig {
     
     let contactUsEmail: String
     let appStoreProductUrl: URL
-    let appCenter: AppCenter
     let transportAPI: TransportAPI
 }
 
@@ -20,12 +18,9 @@ extension AppConfig {
         let appConfig = AppConfig(
             contactUsEmail: infoPlistValues["contactUsEmail"],
             appStoreProductUrl: infoPlistValues[url: "appStoreProductUrl"],
-            appCenter: .init(
-                appSecret: infoPlistValues["appCenterAppSecret"]
-            ),
             transportAPI: .init(
                 baseURL: infoPlistValues[url: "transportAPIURL"],
-                appId: infoPlistValues["transportAPIAppId"],
+                appID: infoPlistValues["transportAPIAppId"],
                 appKey: infoPlistValues["transportAPIAppKey"]
             )
         )
@@ -35,32 +30,12 @@ extension AppConfig {
 
 }
 
-// MARK: - Fake instance
-#if DEBUG
-extension AppConfig {
-    
-    static let fake = AppConfig(contactUsEmail: "test@notanemail.com",
-                                appStoreProductUrl: .fake,
-                                appCenter: .init(appSecret: "fakeAppCenterSecret"),
-                                transportAPI: .init(baseURL: .fake,
-                                                    appId: "fakeAPIAppId",
-                                                    appKey: "fakeAPIAppKey"))
-}
-#endif
-
-private extension URL {
-    static let fake = URL(string: "https://fakeurl.com")!
-}
 
 extension AppConfig {
-    
-    struct AppCenter {
-        let appSecret: String
-    }
     
     struct TransportAPI {
         let baseURL: URL
-        let appId: String
+        let appID: String
         let appKey: String
     }
 }

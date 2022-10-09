@@ -1,6 +1,11 @@
-#include "Base.xcconfig"
+#include "Debug.secrets.xcconfig"
 
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service.debug
-PROVISIONING_PROFILE_SPECIFIER = Automatic
 CODE_SIGN_IDENTITY = Apple Development
 CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM = 3H5L23529U
+
+// App config
+TRANSPORT_API_URL = https:/$()/api.tfl.gov.uk
+APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
+CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

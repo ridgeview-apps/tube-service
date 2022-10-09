@@ -1,77 +1,31 @@
+import DataClients
 import SwiftUI
 
 @main
 struct RootScene: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
+    
+    @StateObject private var appModel = AppModel.real()
+    
     var body: some Scene {
         WindowGroup {
-            RootView(
-                store: ProcessInfo.launchMode.rootStore
-            )
-            .launchModeOverlay()
+            RootScreen()
+                .environmentObject(appModel)
+                .withEnvironmentObjects(lineStatus: appModel.lineStatus,
+                                        stations: appModel.stations,
+                                        userPreferences: appModel.userPreferences)
         }
     }
 }
 
-private extension AppLaunchMode {
+
+extension View {
     
-    var rootStore: RootStore {
-        let rootEnv: Root.Environment
-        
-    #if DEBUG
-        switch self {
-        case .normal:
-            rootEnv = .real
-        case .fake:
-            rootEnv = .fake
-        }
-    #else
-        rootEnv = .real
-    #endif
-        
-        return RootStore(initialState: .init(),
-                         reducer: Root.reducer,
-                         environment: rootEnv)
+    func withEnvironmentObjects(lineStatus: LineStatusModel,
+                                stations: StationsModel,
+                                userPreferences: UserPreferencesModel) -> some View {
+        self
+            .environmentObject(lineStatus)
+            .environmentObject(stations)
+            .environmentObject(userPreferences)
     }
-}
-
-private extension View {
-    func launchModeOverlay() -> some View {
-        #if DEBUG
-        if ProcessInfo.launchMode != .normal {
-            return self.overlay(
-                Text("\(ProcessInfo.launchMode.rawValue.uppercased()) MODE")
-                    .font(.title)
-            ).eraseToAnyView()
-        }
-        #endif
-        
-        return self.eraseToAnyView()
-    }
-}
-
-// MARK: - AppDelegate
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        startServices()
-        
-        return true
-    }
-    
-    private func startServices() {
-        
-    #if ADHOC_BUILD || RELEASE_BUILD
-        let config = AppConfig.real
-        AppCenter.start(withAppSecret: config.appCenter.appSecret, services: [Analytics.self, Crashes.self])
-    #endif
-        
-    }
-    
 }

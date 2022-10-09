@@ -1,0 +1,55 @@
+// Localizable.strings - PresentationViews bundle
+
+"arrivals.board.countdown.due" = "Due";
+"arrivals.board.countdown.due.seconds %lld" = "Due (%llds)";
+"arrivals.board.departs.at %@" = "Departure Time %@";
+"arrivals.check.front.of.train" = "Check front of train";
+"arrivals.no.data" = "Live arrivals are unavailable for this location at the moment.";
+"arrivals.picker.filterOptions.title.all" = "All";
+"arrivals.picker.filterOptions.title.favourites" = "Favourites";
+
+"mail.not.supported" = "Sorry, mail is not supported on this device.";
+
+"contact.us.body.app.version" = "App version";
+"contact.us.body.device.info" = "Device";
+"contact.us.body.diagnostic.info" = "The information below may help us to answer your questions:";
+"contact.us.body.locale.info" = "Language/Region";
+"contact.us.subject %@" = "Feedback on %@";
+
+"line.status.date.picker.please.select.title" = "Select date";
+"line.status.error.date.invalid" = "Please select a date in the future";
+
+"refresh.status.last.updated %@" = "Updated %@";
+"refresh.status.updating" = "Updating...";
+
+"settings.acknowledgements.title" = "Acknowledgements";
+"settings.app.powered.by" = "This app is powered by";
+"settings.app.version.title" = "App version";
+"settings.contact.us.title" = "Contact us";
+"settings.rate.this.app.title" = "Rate this app";
+"settings.section.about.title" = "About";
+"settings.section.support.title" = "Support";
+
+"line.status.detail.good.service.on.the %@" = "There is a good service operating on the %@.";
+"line.status.detail.good.service.on.trams" = "There is a good service operating on London Trams.";
+"line.status.filter.option.future" = "Future";
+"line.status.filter.option.this.weekend" = "Weekend";
+"line.status.filter.option.today" = "Today";
+"line.status.filter.option.tomorrow" = "Tomorrow";
+"line.status.tfl.tweets.title.allLines" = "@Tfl (All lines)";
+"line.status.tfl.tweets.title.line %@" = "@TfL (%@)";
+"line.status.service.now" = "Live status";
+"line.status.service.future" = "Future status";
+"line.status.twitterSection.title" = "Latest tweets:";
+
+"maps.elizabeth.link.title" = "Elizabeth line";
+"maps.rail.and.tube.link.title" = "Rail and tube";
+"maps.tube.day.link.title" = "Tube (Day map)";
+"maps.tube.night.link.title" = "Tube (Night map)";
+
+
+
+
+// TODO: copy somewhere later
+// "arrivals.picker.search.results.count2 %lld %lld"= "Int example %2$lld %1$lld";
+// "arrivals.picker.search.results.count2 %i"= "Int positional example %2$i %1$i";

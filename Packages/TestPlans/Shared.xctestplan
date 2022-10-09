@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "D44B623E-8F9D-462E-9FCA-632588745AED",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SharedTests",
+        "name" : "SharedTests"
+      }
+    }
+  ],
+  "version" : 1
+}

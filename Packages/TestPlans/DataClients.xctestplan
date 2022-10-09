@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "695C5AB0-8116-463E-A661-6917F2019D11",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:..\/DataClients",
+        "identifier" : "DataClientsTests",
+        "name" : "DataClientsTests"
+      }
+    }
+  ],
+  "version" : 1
+}

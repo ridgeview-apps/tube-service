@@ -93,8 +93,7 @@ BuildSettings.generated.swift
 iOSInjectionProject/
 .gitsecret/keys/random_seed
 !*.secret
-fastlane/app_store_api_key_393B4NK7BM.p8
-Config/Base.secret.xcconfig
-fastlane/config/base.secret.yml
-fastlane/config/beta.secret.yml
-fastlane/config/prod.secret.yml
+Config/CI/Beta.secrets.xcconfig
+Config/CI/Prod.secrets.xcconfig
+Config/Debug.secrets.xcconfig
+Config/Release.secrets.xcconfig

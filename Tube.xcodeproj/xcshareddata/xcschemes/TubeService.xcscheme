@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1200"
+   LastUpgradeVersion = "1500"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -36,16 +36,6 @@
       </EnvironmentVariables>
       <Testables>
          <TestableReference
-            skipped = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "315F89C62567BCB70069DD2D"
-               BuildableName = "TubeServiceUITests.xctest"
-               BlueprintName = "TubeServiceUITests"
-               ReferencedContainer = "container:Tube.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
@@ -62,47 +52,7 @@
                BlueprintIdentifier = "DataClientsTests"
                BuildableName = "DataClientsTests"
                BlueprintName = "DataClientsTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "LineStatusFeatureTests"
-               BuildableName = "LineStatusFeatureTests"
-               BlueprintName = "LineStatusFeatureTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "LiveArrivalsFeatureTests"
-               BuildableName = "LiveArrivalsFeatureTests"
-               BlueprintName = "LiveArrivalsFeatureTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "ModelTests"
-               BuildableName = "ModelTests"
-               BlueprintName = "ModelTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "SettingsFeatureTests"
-               BuildableName = "SettingsFeatureTests"
-               BlueprintName = "SettingsFeatureTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
+               ReferencedContainer = "container:Packages/DataClients">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -112,7 +62,27 @@
                BlueprintIdentifier = "SharedTests"
                BuildableName = "SharedTests"
                BlueprintName = "SharedTests"
-               ReferencedContainer = "container:Packages/TubeServiceLibrary">
+               ReferencedContainer = "container:Packages/Shared">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "ModelsTests"
+               BuildableName = "ModelsTests"
+               BlueprintName = "ModelsTests"
+               ReferencedContainer = "container:Packages/Models">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "PresentationViewsTests"
+               BuildableName = "PresentationViewsTests"
+               BlueprintName = "PresentationViewsTests"
+               ReferencedContainer = "container:Packages/PresentationViews">
             </BuildableReference>
          </TestableReference>
       </Testables>

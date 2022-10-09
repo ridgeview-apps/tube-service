@@ -1,277 +1,71 @@
-require 'pp'
-
 default_platform(:ios)
 
-platform :ios do
+##################
+#
+# Tests & Analyse
+#
+##################
 
-  #
-  # Builds the app and uploads it to App Center (beta distribution) or TestFlight (prod distribution)
-  #
-  lane :build_and_distribute do |options|
+private_lane :xcode_tests do |options|
+  scan(
+    scheme: options[:scheme],
+    configuration: "Debug",
+    device: "iPhone 15 Pro"
+  )
+end
 
-    options = merged_config_options(options)
+private_lane :read_xcconfig_file do
+  path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
+  Xcodeproj::Config.new(path)
+end
 
-    load_app_store_connect_api_key(options)
-    
-    if options["shield_colour"]
-      add_app_icon_shield(options)
-    end
-    
-    build_the_app(options)
-    
-    if options["upload_to_appcenter"]
-      appcenter_upload(
-        api_token: options["app_center_api_token"],
-        owner_name: options["app_center_owner_name"],
-        owner_type: options["app_center_owner_type"],
-        app_name: options["app_center_app_name"],
-        notify_testers: options["app_center_notify_testers"],
-        # destinations: options["app_center_destinations"],
-        release_notes: changelog
-      )
-    end
-    
-    if options["upload_to_testflight"]
-      upload_to_testflight(
-        skip_waiting_for_build_processing: true
-      )
-    end
-    
-  end
+lane :unit_tests do
+  xcode_tests(scheme: "TubeService")
+end
 
-  lane :upload_screenshots do |options|
-    
-    unless options[:config]
-      options[:config] = "prod"
-    end
+lane :ui_tests do
+  xcode_tests(scheme: "TubeServiceUITests")
+end
 
-    options = merged_config_options(options)
+lane :add_badge_overlay do
+  badge_shield_title = ENV["XCODE_CONFIG"].slice(0, 4)
+  badge_shield_date_text = Time.new.strftime("%d.%m.%y")
 
-    load_app_store_connect_api_key(options)
+  add_badge(
+    shield: "#{badge_shield_title}-#{badge_shield_date_text}-blue",
+    no_badge: true
+  )
+end
 
-    main_bundle_id = options["main_target_bundle_id"]
+lane :build_and_upload do
+  app_store_connect_api_key(duration: 1200) if is_ci
 
-    deliver(
-      app_identifier: main_bundle_id,
-      app_version: options[:app_version],
-      automatic_release: false,
-      submit_for_review: false,
-      overwrite_screenshots: true,
-      precheck_include_in_app_purchases: false,
-      force: true, # Skips the interactive preview of html file before uploading
-    )
-  end
+  xcconfig = read_xcconfig_file
+
+  main_target_bundle_id = xcconfig.attributes['MAIN_TARGET_BUNDLE_ID']
+
+  match_app_identifiers = ["#{main_target_bundle_id}"]
+
+  match(
+    readonly: false,
+    clone_branch_directly: true,
+    git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
+    app_identifier: match_app_identifiers,
+    username: "ci.ridgeview@gmail.com",
+    type: "appstore"
+  )
   
-  lane :submit_for_review do |options|
-    
-    unless options[:config]
-      options[:config] = "prod"
-    end
+  increment_build_number(build_number: ENV["BITRISE_BUILD_NUMBER"]) if is_ci
 
-    options = merged_config_options(options)
-    
-    load_app_store_connect_api_key(options)
+  gym(
+    clean: true,
+    scheme: "TubeService",
+    configuration: "Release",
+    xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
+    export_method: "app-store"
+  )
 
-    main_bundle_id = options["main_target_bundle_id"]
-    
-    testflight_build_no = options[:build_no].to_s
-    if testflight_build_no.empty?
-      testflight_build_no = latest_testflight_build_number(app_identifier: main_bundle_id).to_s
-    end
-
-    puts "Submitting #{testflight_build_no} build number for review"
-
-    # TODO: Dec 2020. Revisit privacy upload later (too new & flaky right now)
-    #
-    # upload_app_privacy_details_to_app_store(
-    #   app_identifier: main_bundle_id,
-    #   username: options["app_store_connect_user_id"],
-    #   json_path: "./fastlane/metadata/app_privacy_details.json",
-    # )
-    
-    deliver(
-      app_identifier: main_bundle_id,
-      app_version: options[:app_version],
-      automatic_release: false,
-      submit_for_review: true,
-      build_number: testflight_build_no,
-      precheck_include_in_app_purchases: false,
-      app_rating_config_path: "./fastlane/metadata/rating_config.json",
-      force: true, # Skips the interactive preview of html file before uploading
-      price_tier: 0,
-      submission_information: {
-        add_id_info_uses_idfa: true,
-        add_id_info_serves_ads: false,
-        add_id_info_tracks_action: false,
-        add_id_info_tracks_install: false,
-        add_id_info_limits_tracking: true,
-        # content_rights_contains_third_party_content: true,
-        # content_rights_has_rights: true,
-      }
-    )
-  end
-
-  # Ad-hoc / non-CI actions
-  lane :create_bundle_ids do |options|
-    options = merged_config_options(options)
-    produce_bundle_ids(options)
-  end
-
-
-  #################################################################
-  ##  Private lanes
-  #################################################################
-  private_lane :load_app_store_connect_api_key do |options|
-    app_store_connect_api_key(
-      key_id: options["app_store_connect_api_key_id"],
-      issuer_id: options["app_store_connect_api_issuer_id"],
-      key_filepath: options["app_store_connect_api_key_filepath"],
-      in_house: options["app_store_connect_api_in_house"]
-    )
-  end
-
-  private_lane :build_the_app do |options|
-
-    increment_build_number(
-      build_number: "$BITRISE_BUILD_NUMBER"
-    )
-
-    app_identifiers = all_bundle_types(options).join(",")
-    
-    match(
-      git_url: options["match_git_url"],
-      app_identifier: app_identifiers,
-      type: options["match_type"],
-      force_for_new_devices: options["match_force_for_new_devices"],
-      # username: options["app_store_connect_user_id"],
-    )
-
-    # run_tests(
-    #   scheme: options["xcode_scheme"],            
-    #   devices: options["unit_test_devices"],
-    # )
-
-    xcargs = {
-      MAIN_TARGET_BUNDLE_ID: options["main_target_bundle_id"],
-    }
-
-    xcargs_str = xcargs.map { |key, value| "#{key}='#{value}'" }
-                       .join(" ")
-
-    build_app(
-      output_name: options["output_name"],
-      export_method: options["export_method"],
-      scheme: options["xcode_scheme"],
-      configuration: options["xcode_configuration"],
-      export_options: options["export_options"],
-      xcconfig: options["additional_xcconfig"],
-      xcargs: xcargs_str,
-      # codesigning_identity: options["code_sign_identity"], # Set directly in xcode project instead (causes pod-signing issues otherwise)
-    )
-
-  end
-
-  ### Grabs the last commit message into a changelog
-  private_lane :changelog do
-    changelog_from_git_commits(
-      commits_count: 1,
-      date_format: "short"
-    )
-  end
-
-  def public_and_secret_config_from(file_name)
-    config_dir = "#{File.dirname(__FILE__)}/config"
-
-    file_path = "#{config_dir}/#{file_name}.yml"
-    loaded_values = YAML.load_file(file_path)
-
-    secret_file_path = "#{config_dir}/#{file_name}.secret.yml"
-    if File.exists?(secret_file_path)
-        secret_values = YAML.load_file(secret_file_path)
-        if secret_values
-          loaded_values = secret_values.merge(loaded_values)
-        end
-    end
-
-    loaded_values
-  end
-
-  private_lane :merged_config_options do |options|
-    config_file_name = options[:config]
-
-    unless config_file_name
-      UI.user_error!("Please specify a config YML file to load (e.g. fastlane <action_name> config:beta)")
-    end
-
-    begin
-      base_config_file_options = public_and_secret_config_from("base")        
-      config_file_options = public_and_secret_config_from(config_file_name)
-    rescue Errno::ENOENT
-      UI.user_error!("File #{config_file_name}.yml not found or invalid ***\n")
-    end
-      
-    base_config_file_options
-      .merge(config_file_options)
-      .merge(options)
-  end
-
-  private_lane :add_app_icon_shield do |options|
-    version = get_version_number
-    shield_colour = options["shield_colour"]
-    shield_prefix = options["shield_prefix"]
-    if version && shield_colour
-      puts("Adding app icon shield: #{version}-#{shield_colour}")
-      add_badge(
-        shield: "#{shield_prefix}-#{version}-#{shield_colour}",
-        no_badge: true
-      )
-    end
-  end
-
-  #
-  #  Example: if you're building an iOS with multiple targets (e.g. watch, extensions etc)
-  #
-  #  1. Set MAIN_TARGET_BUNDLE_ID to "com.example.app"
-  #  2. In Xcode, set EACH target's PRODUCT_BUNDLE_IDENTIFIER to the following:
-  #
-  #     - Main iOS target PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID)
-  #     - Watch app PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID).watchkitapp
-  #     - Watch extension PRODUCT_BUNDLE_IDENTIFIER = $(MAIN_TARGET_BUNDLE_ID).watchkitapp.extension
-  #     - etc
-  #     - (N.B. for watch targets, additionally set the WKCompanionAppId to $(MAIN_TARGET_BUNDLE_ID) in each info.plist file)
-  #
-  #  3. Add each target's bundle IDs to "all_bundle_types" below
-  #
-  private_lane :all_bundle_types do |options|
-    main_target_bundle_id = options["main_target_bundle_id"]
-
-    all_bundle_ids = [
-      "#{main_target_bundle_id}",
-      # "#{main_target_bundle_id}.watchkitapp", # See note above
-      # "#{main_target_bundle_id}.watchkitapp.extension", # See note above
-    ]
-  end
-
-  private_lane :produce_bundle_ids do |options|
-
-    all_bundle_types(options).each do |bundle_id|
-      puts("********************************")
-      puts("Creating bundle id: #{bundle_id}")
-      puts("********************************")
-
-      # See: https://docs.fastlane.tools/app-store-connect-api/
-      # "produce" action still doesn't work with App Store Connect API, hence requires flaky
-      # (unreliable) username / password / 2FA etc. Which is why it's better to run
-      # it as a one-off command rather than as part of the CI pipeline.
-      produce(
-        username: options["app_store_connect_user_id"],
-        app_identifier: "#{bundle_id}",
-        app_name: "Tube Service",
-        language: "en-GB",
-        sku: "#{bundle_id}",
-        skip_itc: true # true -> skip creation of bundle ID in App Store Connect
-      )
-    end
-  end
-
+  upload_to_testflight(
+    skip_waiting_for_build_processing: true
+  )
 end
