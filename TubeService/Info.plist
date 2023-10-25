@@ -15,9 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIApplicationSceneManifest</key>
@@ -44,20 +46,18 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>appConfig</key>
 	<dict>
-		<key>transportAPIURL</key>
-		<string>$(TRANSPORT_API_URL)</string>
+		<key>appStoreProductUrl</key>
+		<string>$(APP_STORE_PRODUCT_URL)</string>
+		<key>contactUsEmail</key>
+		<string>$(CONTACT_US_EMAIL)</string>
 		<key>transportAPIAppId</key>
 		<string>$(TRANSPORT_API_APP_ID)</string>
 		<key>transportAPIAppKey</key>
 		<string>$(TRANSPORT_API_APP_KEY)</string>
-		<key>contactUsEmail</key>
-		<string>$(CONTACT_US_EMAIL)</string>
-		<key>appStoreProductUrl</key>
-		<string>$(APP_STORE_PRODUCT_URL)</string>
+		<key>transportAPIURL</key>
+		<string>$(TRANSPORT_API_URL)</string>
 	</dict>
 </dict>
 </plist>

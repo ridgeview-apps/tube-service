@@ -861,6 +861,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_TARGET_BUNDLE_ID)";
 				PRODUCT_NAME = "Tube Service";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -881,6 +882,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_TARGET_BUNDLE_ID)";
 				PRODUCT_NAME = "Tube Service";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore $(PRODUCT_BUNDLE_IDENTIFIER)";
