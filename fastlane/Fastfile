@@ -1,10 +1,21 @@
 default_platform(:ios)
 
-##################
-#
-# Tests & Analyse
-#
-##################
+private_lane :read_xcconfig_file do
+  path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
+  Xcodeproj::Config.new(path)
+end
+
+private_lane :changelog do
+  changelog_from_git_commits(
+    commits_count: 1,
+    date_format: "short"
+  )
+end
+
+
+#######################
+# Unit tests
+#######################
 
 private_lane :xcode_tests do |options|
   scan(
@@ -14,11 +25,6 @@ private_lane :xcode_tests do |options|
   )
 end
 
-private_lane :read_xcconfig_file do
-  path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
-  Xcodeproj::Config.new(path)
-end
-
 lane :unit_tests do
   xcode_tests(scheme: "TubeService")
 end
@@ -26,6 +32,11 @@ end
 lane :ui_tests do
   xcode_tests(scheme: "TubeServiceUITests")
 end
+
+
+#######################
+# Build & distribute
+#######################
 
 lane :add_badge_overlay do
   badge_shield_title = ENV["XCODE_CONFIG"].slice(0, 4)
@@ -37,7 +48,7 @@ lane :add_badge_overlay do
   )
 end
 
-lane :build_and_upload do
+lane :build do
   app_store_connect_api_key(duration: 1200) if is_ci
 
   xcconfig = read_xcconfig_file
@@ -64,8 +75,81 @@ lane :build_and_upload do
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     export_method: "app-store"
   )
+end
 
-  upload_to_testflight(
-    skip_waiting_for_build_processing: true
+lane :distribute do
+  app_store_connect_api_key(duration: 1200) if is_ci
+
+  groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
+  distribute_external = groups.length > 0  
+
+  begin
+    pilot(
+      distribute_external: distribute_external,
+      groups: groups,
+      notify_external_testers: true,
+      skip_waiting_for_build_processing: !distribute_external,
+      changelog: "Thank you for installing our latest build"
+    )
+  rescue Exception => e
+    # See: https://github.com/fastlane/fastlane/issues/18408
+    # This recovery step is a workaround to prevent CI failures while the initial TF beta app is in review (e.g. after bumping the app version no). 
+    if e.message.include? "Another build is in review"
+      UI.important("Another build is already in external beta review. Skipping external beta review submission")
+    else
+      raise
+    end
+  end
+  
+end
+
+
+#######################
+# App Store submission
+#######################
+
+lane :upload_screenshots do |options|
+  upload_to_app_store_connect(
+    submit_for_review: false,
+    overwrite_screenshots: true
+  )
+end
+
+lane :submit_for_review do |options|
+  upload_to_app_store_connect(
+    submit_for_review: true,
+    build_number: options[:build_number]
+  )
+end
+
+private_lane :upload_to_app_store_connect do |options|
+    
+  app_store_connect_api_key(duration: 1200)
+
+  app_identifier = "com.ridgeviewapps.tube-service"
+  submit_for_review = options[:submit_for_review] || false
+  overwrite_screenshots = options[:overwrite_screenshots] || false
+  
+  if submit_for_review
+    build_number = options[:build_number] || latest_testflight_build_number(app_identifier: app_identifier).to_s
+  end
+  
+  deliver(
+    app_identifier: app_identifier,
+    automatic_release: false,
+    submit_for_review: submit_for_review,
+    overwrite_screenshots: overwrite_screenshots,
+    precheck_include_in_app_purchases: false,
+    force: true, # Skips the interactive preview of html file before uploading
+    build_number: build_number,
+    submission_information: {
+      add_id_info_uses_idfa: true,
+      add_id_info_serves_ads: false,
+      add_id_info_tracks_action: false,
+      add_id_info_tracks_install: false,
+      add_id_info_limits_tracking: true,
+      # content_rights_contains_third_party_content: true,
+      # content_rights_has_rights: true,
+    }
   )
 end

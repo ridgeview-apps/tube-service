@@ -8,6 +8,22 @@ public extension Station  {
     }
 }
 
+
+public extension Sequence where Element == Station {
+    
+    func favourites(matching favourites: Set<Station.LineGroup.ID>) -> [Station] {
+        return self.compactMap {
+            let filteredLineGroups = $0.lineGroups.filter { favourites.contains($0.id) }
+            guard !filteredLineGroups.isEmpty else {
+                return nil
+            }
+            return Station(id: $0.id,
+                           name: $0.name,
+                           lineGroups: filteredLineGroups)
+        }
+    }
+}
+
 public extension Station.LineGroup {
     
     enum ArrivalsDataType: Equatable {

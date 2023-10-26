@@ -1,5 +1,7 @@
 import SwiftUI
 
+public typealias TextShadowSettings = (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
+
 public extension View {
     
     func roundedBorder(_ color: Color,
@@ -13,11 +15,16 @@ public extension View {
     }
     
     func cardStyle(cornerRadius: CGFloat = 4,
-                   backgroundColor: Color = .defaultCellBackground) -> some View {
-        self.background(backgroundColor)
-            .cornerRadius(cornerRadius)
-            .shadow(color: .primary.opacity(0.14), radius: 4, x: 0, y: 2)
-    }    
+                   backgroundColor: Color = .defaultCellBackground,
+                   borderColor: Color = .clear,
+                   borderWidth: CGFloat = 1) -> some View {
+        self.modifier(
+            CardStyle(cornerRadius: cornerRadius,
+                                backgroundColor: backgroundColor,
+                                borderColor: borderColor,
+                                borderWidth: borderWidth)
+        )
+    }
     
     func defaultListRowStyle(edgeInsets: EdgeInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16),
                              listRowSeparator separatorVisibility: Visibility = .hidden,
@@ -50,6 +57,31 @@ public extension View {
     
     func pulsatingSymbol() -> some View {
         self.modifier(PulsatingSymbolEffectModifier())
+    }
+}
+
+private struct CardStyle: ViewModifier {
+    var cornerRadius: CGFloat = 4
+    var backgroundColor: Color = .defaultCellBackground
+    var borderColor: Color = .clear
+    var borderWidth: CGFloat = 1
+    
+    @Environment(\.colorScheme) var colorScheme
+    
+    public func body(content: Content) -> some View {
+        content
+            .background(backgroundColor)
+            .cornerRadius(cornerRadius)
+            .shadow(color: .primary.opacity(0.14),
+                    radius: colorScheme == .dark ? 0: 4,
+                    x: 0,
+                    y: colorScheme == .dark ? 0 : 2)
+            .overlay {
+                if borderColor != .clear {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(borderColor, lineWidth: borderWidth)
+                }
+            }
     }
 }
 

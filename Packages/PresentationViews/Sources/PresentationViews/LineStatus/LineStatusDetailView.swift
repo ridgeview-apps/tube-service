@@ -4,20 +4,28 @@ import SwiftUI
 public struct LineStatusDetailView: View {
     
     public let line: Line
+    @Binding public var isFavourite: Bool
     
     @State private var twitterLinkSelection: LineStatusTwitterLink?
     
-    public init(line: Line) {
+    public init(line: Line, isFavourite: Binding<Bool>) {
         self.line = line
+        self._isFavourite = isFavourite
     }
     
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                statusHeaderCard
-                twitterSection
+                Group {
+                    statusHeaderCard
+                    favouritesButton
+                    Divider()
+                    twitterSection
+                }
+                .frame(maxWidth: 600)
             }
             .padding()
+            .frame(maxWidth: .infinity)
         }
         .background(Color.defaultBackground)
     }
@@ -31,8 +39,14 @@ public struct LineStatusDetailView: View {
                 .foregroundColor(line.id.backgroundColor)
                 .frame(width: 20)
             VStack(alignment: .leading, spacing: 12) {
-                Text(line.shortText)
-                    .font(.title2)
+                Label {
+                    Text(line.shortText)
+                        .font(.title2)
+                } icon: {
+                    line.accessoryImageType.image
+                        .imageScale(.large)
+                }
+
                 ForEach(Array(line.serviceDetailTextItems.enumerated()), id: \.offset) { idx, textItem in
                     serviceDetailText(for: textItem, needsDivider: idx != 0)
                 }
@@ -91,13 +105,27 @@ public struct LineStatusDetailView: View {
         }
     }
     
-    private var twitterSection: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("line.status.twitterSection.title", bundle: .module)
-            
-            ForEach(line.twitterLinks) { link in
-                twitterLinkButton(for: link)
+    private var favouritesButton: some View {
+        VStack(alignment: .leading) {
+            FavouritesButton(style: .large, isSelected: $isFavourite)
+            if !isFavourite {
+                Text("line.status.favourites.button.footer", bundle: .module)
+                    .font(.footnote)
+                    .foregroundStyle(Color.adaptiveMidGrey2)
             }
+        }
+    }
+    
+    private var twitterSection: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 20) {
+                Text("line.status.twitterSection.title", bundle: .module)
+                
+                ForEach(line.twitterLinks) { link in
+                    twitterLinkButton(for: link)
+                }
+            }
+            Spacer()
         }
     }
     
@@ -126,14 +154,17 @@ public struct LineStatusDetailView: View {
 // MARK: - Previews
 #if DEBUG
 #Preview("Good service state") {
-    LineStatusDetailView(line: ModelStubs.lineStatusGoodService)
+    LineStatusDetailView(line: ModelStubs.lineStatusGoodService,
+                         isFavourite: .constant(false))
 }
 
 #Preview("Disrupted state") {
-    LineStatusDetailView(line: ModelStubs.lineStatusDisrupted)
+    LineStatusDetailView(line: ModelStubs.lineStatusDisrupted,
+                         isFavourite: .constant(false))
 }
 
 #Preview("Disrupted state (dups. removed)") {
-    LineStatusDetailView(line: ModelStubs.lineStatusDisruptedDuplicates)
+    LineStatusDetailView(line: ModelStubs.lineStatusDisruptedDuplicates,
+                         isFavourite: .constant(false))
 }
 #endif

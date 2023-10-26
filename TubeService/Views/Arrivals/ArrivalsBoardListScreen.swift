@@ -23,10 +23,11 @@ struct ArrivalsBoardListScreen: View {
         ArrivalsBoardListView(boardStates: boardStates,
                               lineGroupName: lineGroup.name,
                               refreshDate: refreshDate,
-                              loadingState: loadingState)
+                              loadingState: loadingState,
+                              isFavourite: isFavouriteLineGroup)
         .navigationTitle(stationName)
         .toolbar {
-            FavouritesButton(isSelected: isFavouriteLineGroup)
+            FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
         }
         .task {
             refreshData()

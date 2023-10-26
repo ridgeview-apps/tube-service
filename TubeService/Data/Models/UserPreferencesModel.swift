@@ -10,11 +10,11 @@ final class UserPreferencesModel: ObservableObject {
     let userPreferencesClient: UserPreferencesClientType
     let now: () -> Date
     
-    @Published private(set) var  data: UserPreferences = .empty
+    @Published private(set) var data: UserPreferences = .empty
     
-    var favourites: Set<Station.LineGroup.ID> { data.favourites }
-    var lastUsedFilterOption: UserPreferences.ArrivalsPickerFilterOption { data.lastUsedFilterOption }
+    var favouriteLineGroupIDs: Set<Station.LineGroup.ID> { data.favouriteLineGroupIDs }
     var recentlySelectedStations: [Station.ID] { data.recentlySelectedStations ?? [] }
+    var favouriteLineIDs: Set<LineID> { data.favouriteLineIDs ?? [] }
     
     
     // MARK: - Init
@@ -38,27 +38,40 @@ final class UserPreferencesModel: ObservableObject {
     }
     
     
-    // MARK: Favourites
+    // MARK: Favourite line groups
     
     func isFavourite(lineGroupID: Station.LineGroup.ID) -> Bool {
-        favourites.contains(lineGroupID)
+        favouriteLineGroupIDs.contains(lineGroupID)
     }
     
     func add(favouriteLineGroupID: Station.LineGroup.ID) {
-        data.favourites.insert(favouriteLineGroupID)
+        data.favouriteLineGroupIDs.insert(favouriteLineGroupID)
         save()
     }
     
     func remove(favouriteLineGroupID: Station.LineGroup.ID) {
-        data.favourites.remove(favouriteLineGroupID)
+        data.favouriteLineGroupIDs.remove(favouriteLineGroupID)
         save()
     }
     
     
-    // MARK: Filter options
+    // MARK: Favourite line IDs
     
-    func save(lastUserFilterOption: UserPreferences.ArrivalsPickerFilterOption) {
-        data.lastUsedFilterOption = lastUserFilterOption
+    func isFavourite(lineID: LineID) -> Bool {
+        favouriteLineIDs.contains(lineID)
+    }
+    
+    func add(favouriteLineID: LineID) {
+        var updatedValues = data.favouriteLineIDs ?? Set([])
+        updatedValues.insert(favouriteLineID)
+        data.favouriteLineIDs = updatedValues
+        save()
+    }
+    
+    func remove(favouriteLineID: LineID) {
+        var updatedValues = data.favouriteLineIDs ?? Set([])
+        updatedValues.remove(favouriteLineID)
+        data.favouriteLineIDs = updatedValues
         save()
     }
     

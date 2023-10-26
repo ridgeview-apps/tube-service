@@ -1,1 +1,3 @@
-- Elizabeth line added
+- New feature: you can now view the service status for tomorrow, the weekend or a specific date in the future
+- New "Maps" tab with links to TFL tube & rail maps
+- Optimised for iOS17

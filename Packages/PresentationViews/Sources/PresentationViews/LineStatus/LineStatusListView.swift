@@ -4,24 +4,34 @@ import SwiftUI
 
 public struct LineStatusListView: View {
     
+    @ScaledMetric private var dynamicTextScale: CGFloat = 1
+    
     public let loadingState: LoadingState
     public let lines: [Line]
+    public let favouriteLineIDs: Set<LineID>
     public let refreshDate: Date?
     
     @Binding var selectedLine: Line?
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
     
-    @State private var validateDateSelection = false
+    @State private var hasSelectedADate = false
     
+    private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
+    private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
+    private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
+    private var showsDatePicker: Bool { selectedFilterOption == .other }
+        
     public init(loadingState: LoadingState,
                 lines: [Line],
+                favouriteLineIDs: Set<LineID>,
                 refreshDate: Date?,
                 selectedLine: Binding<Line?>,
                 selectedFilterOption: Binding<LineStatusFilterOption>,
                 selectedDate: Binding<Date>) {
         self.loadingState = loadingState
         self.lines = lines
+        self.favouriteLineIDs = favouriteLineIDs
         self.refreshDate = refreshDate
         self._selectedLine = selectedLine
         self._selectedFilterOption = selectedFilterOption
@@ -31,9 +41,9 @@ public struct LineStatusListView: View {
     public var body: some View {
         List(selection: $selectedLine) {
             Section {
-                ForEach(lines) { line in
-                    cell(with: line)
-                }
+                datePickerView
+                    .padding(.bottom)
+                lineStatusCells
             } header: {
                 sectionHeader
             }
@@ -43,16 +53,90 @@ public struct LineStatusListView: View {
         .defaultScrollContentBackgroundColor()
     }
     
+    @ViewBuilder private var lineStatusCells: some View {
+        if shouldShowLineStatusCells {
+            tappableCells(with: favourites)
+            tappableCells(with: disruptions)
+            if showOtherLinesSummaryCell {
+                otherLinesSummaryCell
+            } else {
+                tappableCells(with: allOtherLines)
+            }
+        }
+    }
+    
+    private func tappableCells(with lines: [Line]) -> some View {
+        ForEach(lines) { line in
+            tappableCell(for: line)
+                .padding(.top, line.id == lines.first?.id ? 12 : 0)
+        }
+    }
+    
+    private func tappableCell(for line: Line) -> some View {
+        Button {
+            selectedLine = line
+        } label: {
+            cardCell(
+                title: {
+                    HStack(spacing: 4) {
+                        if favouriteLineIDs.contains(line.id) {
+                            Image(systemName: "star.fill")
+                                .imageScale(.small)
+                                .foregroundStyle(.white)
+                        }
+                        Text(line.id.name)
+                        Spacer()
+                    }
+                    .columnTextStyle(textColor: line.id.textColor)
+                    .shadow(color: line.id.textShadow.color,
+                            radius: line.id.textShadow.radius,
+                            x: line.id.textShadow.x,
+                            y: line.id.textShadow.y)
+                },
+                detail: {
+                    Text(line.shortText)
+                        .columnTextStyle(textColor: line.isDisrupted ? .adaptiveRed : .primary)
+                },
+                titleColumnColor: line.id.backgroundColor, 
+                accessoryType: line.accessoryImageType
+            )
+        }
+        .buttonStyle(.borderless)
+        .padding(.bottom, 8)
+        .accessibility(identifier: line.id.rawValue)
+        .id(line.id)
+    }
+    
+    private var shouldShowLineStatusCells: Bool {
+        switch selectedFilterOption {
+        case .today, .tomorrow, .thisWeekend:
+            return true
+        case .other:
+            return isValidFutureDate
+        }
+    }
+    
+    private var showOtherLinesSummaryCell: Bool {
+        switch selectedFilterOption {
+        case .today:
+            return false
+        case .tomorrow, .thisWeekend, .other:
+            return allOtherLines.count > 1
+        }
+    }
+    
+    private var isValidFutureDate: Bool {
+        guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
+            return true
+        }
+        return selectedDate >= startOfTomorrow
+    }
+    
     private var sectionHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
             filterOptions
-            headerTitle
-                .font(.subheadline)
-            futureDatePicker
-            RefreshStatusView(loadingState: loadingState,
-                              refreshDate: refreshDate)
-                .font(.caption)
-                .foregroundStyle(Color.adaptiveMidGrey2)
+            refreshStatusView
+            headerTitleView    
         }
         .foregroundStyle(.foreground)
         .padding(.top, 4)
@@ -64,109 +148,141 @@ public struct LineStatusListView: View {
             ForEach(LineStatusFilterOption.allCases) { filterOption in
                 Text(filterOption.localizedKey, bundle: .module)
                     .tag(filterOption)
-                
+                    .accessibilityIdentifier(filterOption.accessibilityID)
             }
         }
         .pickerStyle(.segmented)
     }
     
-    @ViewBuilder private var headerTitle: some View {
+    @ViewBuilder private var headerTitleView: some View {
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            headerTitleImage
+            headerTitleText
+        }
+        .font(.subheadline)
+    }
+    
+    @ViewBuilder private var headerTitleImage: some View {
         switch selectedFilterOption {
         case .today:
-            HStack(spacing: 4) {
-                Image(systemName: "circle.inset.filled")
-                    .pulsatingSymbol()
-                Text("line.status.service.now", bundle: .module)
-            }
+            Image(systemName: "circle.inset.filled")
+                .pulsatingSymbol()
+        case .tomorrow, .thisWeekend, .other:
+            Image(systemName: "hammer.circle.fill")
+        }
+    }
+    
+    @ViewBuilder private var headerTitleText: some View {
+        switch selectedFilterOption {
+        case .today:
+            Text("line.status.service.now", bundle: .module)
+        case .tomorrow:
+            Text("line.status.planned.status.title \(tomorrowFormatted())", bundle: .module)
         case .thisWeekend:
-            Text(weekendDatesFormatted())
-        case .future:
-            EmptyView()
-        }
-    }
-    
-    @ViewBuilder private var futureDatePicker: some View {
-        if selectedFilterOption == .future {
-            VStack(alignment: .leading) {
-                DatePicker(selection: $selectedDate,
-                           in: .now...,
-                           displayedComponents: [.date]) {
-                    Text("line.status.date.picker.please.select.title", bundle: .module)
-                        .font(.subheadline)
-                }
-               .id(selectedDate)
-               .onChange(of: selectedDate) { newValue in
-                   validateDateSelection = true
-               }
-                if !isDateSelectionValid {
-                    Text("line.status.error.date.invalid" , bundle: .module)
-                        .foregroundStyle(Color.adaptiveRed)
-                        .font(.callout)
-                }
-
+            Text("line.status.planned.status.title \(weekendDatesFormatted())", bundle: .module)
+        case .other:
+            if isValidFutureDate {
+                Text("line.status.planned.status.title \(selectedDateFormatted())", bundle: .module)
+            } else {
+                Text("line.status.select.other.date.title", bundle: .module)
+                    .foregroundStyle(hasSelectedADate ? Color.adaptiveRed : Color.primary)
             }
         }
     }
     
-    private var isDateSelectionValid: Bool {
-        guard validateDateSelection else { return true }
-        guard let tomorrow = Calendar.london.startOfTomorrow() else { return true }
-        return selectedDate >= tomorrow
-    }
-    
-    private func cell(with line: Line) -> some View {
-        Button {
-            selectedLine = line
-        } label: {
-            HStack(spacing: 0) {
-                columnText(line.id.name)
-                    .foregroundColor(line.id.textColor)
-                    .background(line.id.backgroundColor)
-                    .multilineTextAlignment(.leading)
-
-                columnText(line.shortText)
-                    .multilineTextAlignment(.leading)
-                    .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
-
-                accessoryImage(for: line)
+    @ViewBuilder private var datePickerView: some View {
+        if showsDatePicker {
+            DatePicker(selection: $selectedDate,
+                       in: .now...,
+                       displayedComponents: [.date]) {
+                Text("line.status.date.picker.title", bundle: .module)
+                    .font(.subheadline)
             }
-            .cardStyle()
-            .frame(minHeight: 44)
-        }
-        .buttonStyle(.borderless)
-        .padding(.bottom, 8)
-    }
-    
-    private func columnText(_ text: String) -> some View {
-        Text(text)
-            .font(.body)
-            .frame(maxWidth: .infinity,
-                   maxHeight: .infinity,
-                   alignment: .leading)
-            .padding(8)
-    }
-    
-    @ViewBuilder private func accessoryImage(for lineStatus: Line) -> some View {
-        if lineStatus.isDisrupted {
-            Image(systemName: "exclamationmark.circle.fill")
-                .foregroundColor(.adaptiveRed)
-                .padding(.trailing)
-                .frame(width: 30)
-        } else {
-            Image(systemName: "chevron.right")
-                .foregroundColor(.adaptiveMidGrey2)
-                .padding(.trailing)
-                .frame(width: 30)
+            .id(selectedDate)
+            .onChange(of: selectedDate) { _ in
+                hasSelectedADate = true
+            }
         }
     }
     
-    func weekendDatesFormatted() -> String {
+    @ViewBuilder private var refreshStatusView: some View {
+        if !shouldHideRefreshStatusView {
+            RefreshStatusView(loadingState: loadingState,
+                              refreshDate: refreshDate)
+            .font(.caption)
+            .foregroundStyle(Color.adaptiveMidGrey2)
+        }
+    }
+    
+    private var shouldHideRefreshStatusView: Bool {
+        selectedFilterOption == .other && !isValidFutureDate
+    }
+    
+    private func cardCell(@ViewBuilder title: () -> some View,
+                          @ViewBuilder detail: () -> some View,
+                          titleColumnColor: Color = .clear,
+                          detailColumnColor: Color = .clear,
+                          borderColor: Color = .clear,
+                          accessoryType: LineStatusAccessoryImageType?) -> some View {
+        HStack(spacing: 0) {
+            cellColumn {
+                title()
+            }
+            .background(titleColumnColor)
+            cellColumn {
+                detail()
+            }
+            .background(detailColumnColor)
+            if let accessoryType {
+                accessoryType
+                    .image
+                    .padding(.trailing)
+                    .frame(width: 30)
+            }
+        }
+        .cardStyle(borderColor: borderColor)
+        .frame(minHeight: 44 * dynamicTextScale)
+        
+    }
+    
+    private func tomorrowFormatted() -> String {
+        guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
+            return ""
+        }
+        return startOfTomorrow.formatted(date: .complete, time: .omitted)
+    }
+    
+    private func weekendDatesFormatted() -> String {
         guard let thisOrNextWeekendDateInterval = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
             return ""
         }
         let startOfSaturday = thisOrNextWeekendDateInterval.start
         let endOfSunday = thisOrNextWeekendDateInterval.end - 1 // Subtract 1 from Monday midnight (start of day)
         return DateIntervalFormatter.longDateIntervalStyle.string(from: startOfSaturday, to: endOfSunday)
+    }
+    
+    private func selectedDateFormatted() -> String {
+        selectedDate.formatted(date: .complete, time: .omitted)
+    }
+    
+    private var otherLinesSummaryCell: some View {
+        cardCell(
+            title: {
+                LineColourKeyView(lineIDs: allOtherLines.map(\.id))
+            },
+            detail: {
+                Group {
+                    if lines.allAreGoodService {
+                        Text("line.status.planned.good.service.all.lines.title", bundle: .module)
+                    } else {
+                        Text("line.status.planned.good.service.other.lines.title", bundle: .module)
+                    }
+                }
+                .columnTextStyle()
+            },
+            accessoryType: .goodService
+        )
+        .padding(.top, 12)
     }
 }
 
@@ -175,11 +291,44 @@ private extension LineStatusFilterOption {
         switch self {
         case .today:
             return "line.status.filter.option.today"
+        case .tomorrow:
+            return "line.status.filter.option.tomorrow"
         case .thisWeekend:
             return "line.status.filter.option.this.weekend"
-        case .future:
-            return "line.status.filter.option.future"
+        case .other:
+            return "line.status.filter.option.other"
         }
+    }
+    
+    var accessibilityID: String {
+        switch self {
+        case .today:
+            return "acc.id.filter.option.today"
+        case .tomorrow:
+            return "acc.id.filter.option.tomorrow"
+        case .thisWeekend:
+            return "acc.id.filter.option.thisWeekend"
+        case .other:
+            return "acc.id.filter.option.other"
+        }
+    }
+}
+
+private extension View {
+    
+    func cellColumn(_ columnContent: () -> some View) -> some View {
+        columnContent()
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .leading)
+    }
+
+    func columnTextStyle(textColor: Color = .primary) -> some View {
+        self
+            .font(.body)
+            .padding(8)
+            .multilineTextAlignment(.leading)
+            .foregroundStyle(textColor)
     }
 }
 
@@ -190,6 +339,7 @@ private extension LineStatusFilterOption {
 private struct WrapperView: View  {
     let loadingState: LoadingState
     let lines: [Line]
+    var favouriteLineIDs: Set<LineID> = []
     var refreshDate: Date? = .now
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
@@ -200,6 +350,7 @@ private struct WrapperView: View  {
             LineStatusListView(
                 loadingState: loadingState,
                 lines: lines,
+                favouriteLineIDs: favouriteLineIDs,
                 refreshDate: refreshDate,
                 selectedLine: $selectedLine,
                 selectedFilterOption: $selectedFilterOption,
@@ -218,22 +369,27 @@ private struct WrapperView: View  {
     
 #Preview("Loaded state") {
     WrapperView(loadingState: .loaded,
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity())
+                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+                favouriteLineIDs: [.jubilee, .northern])
 }
          
 #Preview("Loading state") {
     WrapperView(loadingState: .loading,
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity())
+                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+                favouriteLineIDs: [.jubilee, .northern])
 }
 
 #Preview("Error state") {
     WrapperView(loadingState: .failure(errorMessage: "Sorry, something went wrong"),
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity())
+                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+                favouriteLineIDs: [.jubilee, .northern])
 }
 
-#Preview("Future") {
+#Preview("Date picker visible") {
     WrapperView(loadingState: .loaded,
                 lines: [],
-                selectedFilterOption: .future)
+                favouriteLineIDs: [.jubilee, .northern],
+                selectedFilterOption: .other)
 }
+
 #endif

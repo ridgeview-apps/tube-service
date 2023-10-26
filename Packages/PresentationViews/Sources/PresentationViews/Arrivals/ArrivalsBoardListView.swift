@@ -12,15 +12,19 @@ public struct ArrivalsBoardListView: View {
     public let lineGroupName: String
     public let refreshDate: Date?
     public let loadingState: LoadingState
+    
+    @Binding var isFavourite: Bool
 
     public init(boardStates: [ArrivalsBoardState],
                 lineGroupName: String,
-                refreshDate: Date? = nil,
-                loadingState: LoadingState = .loaded) {
+                refreshDate: Date?,
+                loadingState: LoadingState,
+                isFavourite: Binding<Bool>) {
         self.boardStates = boardStates
         self.lineGroupName = lineGroupName
         self.refreshDate = refreshDate
         self.loadingState = loadingState
+        self._isFavourite = isFavourite
     }
     
     
@@ -45,6 +49,8 @@ public struct ArrivalsBoardListView: View {
                     }
                 } header: {
                     headerTitleView
+                } footer: {
+                    footerView
                 }
                 .padding(.horizontal)
                 .background(Color.defaultBackground)
@@ -54,13 +60,20 @@ public struct ArrivalsBoardListView: View {
     }
 
     private var noDataView: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.yellow)
-                .imageScale(.large)
-            Text("arrivals.no.data", bundle: .module)
-                .font(.subheadline)
+        HStack(spacing: 0) {
+            Spacer()
+            HStack {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .foregroundColor(.yellow)
+                    .imageScale(.large)
+                Text("arrivals.no.data", bundle: .module)
+                    .font(.subheadline)
+                Spacer()
+            }
+            .frame(maxWidth: 600)
+            Spacer()
         }
+        
     }
     
     private var headerTitleView: some View {
@@ -78,14 +91,14 @@ public struct ArrivalsBoardListView: View {
 
     private func arrivalsBoardView(with boardState: ArrivalsBoardState) -> some View {
         HStack {
-            Spacer(minLength: 0)
+            Spacer()
             ArrivalsBoardView(platformName: boardState.platformName,
                               cellItems: boardState.cellItems,
                               isExpanded: shouldShowExpandedView(forBoardID: boardState.id),
                               rotatingCellTimerPublisher: rotatingCellTimerPublisher)
                 .buttonStyle(.plain)
                 .frame(maxWidth: 600)
-            Spacer(minLength: 0)
+            Spacer()
         }
     }
     
@@ -104,38 +117,52 @@ public struct ArrivalsBoardListView: View {
         )
     }
     
-
+    @ViewBuilder private var footerView: some View {
+        HStack {
+            Spacer()
+            FavouritesButton(style: .large, isSelected: $isFavourite)
+            Spacer()
+        }
+    }
 }
 
 
 // MARK: - Previews
 
-struct ArrivalsBoardListView_Preview: PreviewProvider {
-    static var previews: some View {
+private struct WrapperView: View {
+    var boardStates: [ArrivalsBoardState]
+    var lineGroupName: String = "Northern"
+    var refreshDate: Date? = .now
+    var loadingState: LoadingState = .loaded
+    @State var isFavourite = false
+    
+    var body: some View {
         NavigationStack {
-            ArrivalsBoardListView(boardStates: northernLinePlatformBoards,
-                                  lineGroupName: "Northern",
-                                  refreshDate: .now)
+            ArrivalsBoardListView(boardStates: boardStates,
+                                  lineGroupName: lineGroupName,
+                                  refreshDate: refreshDate,
+                                  loadingState: loadingState,
+                                  isFavourite: $isFavourite)
             .navigationTitle("List preview")
-            
         }
-        .previewDisplayName("Loaded state")
-        ArrivalsBoardListView(boardStates: northernLinePlatformBoards,
-                              lineGroupName: "Northern",
-                              refreshDate: Date() - 10 * 60,
-                              loadingState: .loading)
-            .previewDisplayName("Loading state")
-        ArrivalsBoardListView(boardStates: [],
-                              lineGroupName: "Northern")
-            .previewDisplayName("No data")
-        ArrivalsBoardListView(boardStates: [],
-                              lineGroupName: "Northern",
-                              loadingState: .failure(errorMessage: "Oops, something went wrong"))
-            .previewDisplayName("Error state")
-
     }
     
-    private static var northernLinePlatformBoards: [ArrivalsBoardState] {
-        ModelStubs.northernLineBothPlatforms.toPlatformBoardStates()
-    }
+}
+
+#Preview("Loaded state") {
+    WrapperView(boardStates: ModelStubs.northernLineBothPlatforms.toPlatformBoardStates(),
+                loadingState: .loaded)
+}
+
+#Preview("Loading state") {
+    WrapperView(boardStates: ModelStubs.northernLineBothPlatforms.toPlatformBoardStates(),
+                loadingState: .loading)
+}
+
+#Preview("No data state") {
+    WrapperView(boardStates: [])
+}
+
+#Preview("Error state") {
+    WrapperView(boardStates: [], loadingState: .failure(errorMessage: "Oops, something went wrong"))
 }

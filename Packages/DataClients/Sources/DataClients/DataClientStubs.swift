@@ -38,11 +38,11 @@ public final class StubTransportAPIClient: TransportAPIClientType {
         return stubbedLineStatuses
     }
     
-    public private(set) var fetchFutureLineStatusesCallCount = 0
-    public var stubbedFutureLineStatuses: [Line] = ModelStubs.lineStatusesFuture
-    public func fetchFutureLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
-        fetchFutureLineStatusesCallCount += 1
-        return stubbedFutureLineStatuses
+    public private(set) var fetchLineStatusesForDateRangeCallCount = 0
+    public var stubbedLineStatusesForDateRange: [Line] = ModelStubs.lineStatusesFuture
+    public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
+        fetchLineStatusesForDateRangeCallCount += 1
+        return stubbedLineStatusesForDateRange
     }
     
     public private(set) var fetchArrivalPredictionsCallCount = 0

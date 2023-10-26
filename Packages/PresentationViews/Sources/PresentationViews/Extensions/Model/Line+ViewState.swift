@@ -4,9 +4,39 @@ import Models
 
 // MARK: - Data sorting
 
-public extension Array where Element == Line {
+public extension Sequence where Element == Line {
     func sortedByStatusSeverity() -> [Line] {
         sorted { $0.sortProperties < $1.sortProperties }
+    }
+    
+    var hasDisruptions: Bool {
+        !disruptionsOnly().isEmpty
+    }
+    
+    var allAreDisrupted: Bool {
+        allSatisfy { $0.isDisrupted }
+    }
+    
+    var allAreGoodService: Bool {
+        allSatisfy { $0.statusSeverity == .goodService }
+    }
+    
+    func disruptionsOnly() -> [Line] {
+        self.filter { $0.isDisrupted }.sortedByStatusSeverity()
+    }
+    
+    func goodServiceOnly() -> [Line] {
+        self.filter { !$0.isDisrupted }.sorted { $0.id.name < $1.id.name }
+    }
+    
+    func removingLineIDs(_ excludedLineIDs: Set<LineID>) -> [Line] {
+        self.filter { !excludedLineIDs.contains($0.id) }
+    }
+    
+    func favouritesOnly(matching favouriteLineIDs: Set<LineID>) -> [Line] {
+        self
+            .filter { favouriteLineIDs.contains($0.id) }
+            .sortedByStatusSeverity()
     }
 }
 
@@ -39,6 +69,10 @@ public extension Line {
 
 public extension Line {
     
+    var accessoryImageType: LineStatusAccessoryImageType {
+        isDisrupted ? .disruption : .goodService
+    }
+    
     struct ServiceDetailTextItem: Equatable {
         enum MessageType: Equatable {
             case goodService
@@ -69,8 +103,13 @@ public extension Line {
     }
 
     var shortText: String {
-        let uniqueStatusDescriptions = Set((lineStatuses ?? []).compactMap { $0.statusSeverityDescription }).sorted()
-        return uniqueStatusDescriptions.joined(separator: ", ")
+        var uniqueDescriptions = [String?]()
+        (lineStatuses ?? []).sortedByStatusSeverity().forEach { status in
+            if !uniqueDescriptions.contains(status.statusSeverityDescription) {
+                uniqueDescriptions.append(status.statusSeverityDescription)
+            }
+        }
+        return uniqueDescriptions.compactMap { $0 }.joined(separator: ", ")
     }
     
     var twitterLinks: [LineStatusTwitterLink] {

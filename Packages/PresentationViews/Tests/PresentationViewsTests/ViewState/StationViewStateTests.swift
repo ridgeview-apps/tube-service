@@ -57,4 +57,21 @@ final class StationViewStateTests: XCTestCase {
         XCTAssertEqual(.arrivalPredictions, standardLineGroupType.arrivalsDataType)
         XCTAssertEqual(.arrivalDepartures([.elizabeth]), elizabethLineGroupType.arrivalsDataType)
     }
+    
+    func testStationsFilteredByFavouriteLineGroups() {
+        let stations = ModelStubs.stations
+        
+        let favouriteLineGroupIDs = Set(["940GZZLUKSX-circle,hammersmith-city,metropolitan", // Kings X - Circle, H&C, Met lines
+                                         "940GZZLUKSX-northern",   // Kings X - Northern line
+                                         "940GZZLUKSX-piccadilly", // Kingx X - Piccadilly line
+                                         "940GZZLUPAC-bakerloo",
+                                         "940GZZLUHBT-northern"])
+                            
+        let favouriteStations = stations.favourites(matching: favouriteLineGroupIDs)
+        
+        XCTAssertEqual(3, favouriteStations.count)
+        XCTAssertTrue(favouriteStations.map(\.id).contains(ModelStubs.kingsCrossStation.id))
+        XCTAssertTrue(favouriteStations.map(\.id).contains(ModelStubs.paddingtonStation.id))
+        XCTAssertTrue(favouriteStations.map(\.id).contains(ModelStubs.highBarnetStation.id))
+    }
 }

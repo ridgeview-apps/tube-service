@@ -13,6 +13,76 @@ final class LineViewStateTests: XCTestCase {
         XCTAssertFalse(goodServiceLine.isDisrupted)
     }
     
+    func testLineDisruptionStates_mixedGoodAndDisrupted() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.with(statusSeverity: .severeDelays)])
+        ]
+        XCTAssertTrue(lines.hasDisruptions)
+        XCTAssertFalse(lines.allAreDisrupted)
+        XCTAssertEqual(1, lines.disruptionsOnly().count)
+
+        XCTAssertFalse(lines.allAreGoodService)
+        XCTAssertEqual(2, lines.goodServiceOnly().count)
+    }
+    
+    func testLineDisruptionStates_allDisrupted() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.with(statusSeverity: .severeDelays)]),
+            Line(id: .northern, lineStatuses: [.with(statusSeverity: .minorDelays)]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.with(statusSeverity: .partClosed)])
+        ]
+        XCTAssertTrue(lines.hasDisruptions)
+        XCTAssertTrue(lines.allAreDisrupted)
+        XCTAssertEqual(3, lines.disruptionsOnly().count)
+        
+        XCTAssertFalse(lines.allAreGoodService)
+        XCTAssertEqual(0, lines.goodServiceOnly().count)
+    }
+
+    func testLineDisruptionStates_allGoodService() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService])
+        ]
+        XCTAssertFalse(lines.hasDisruptions)
+        XCTAssertFalse(lines.allAreDisrupted)
+        XCTAssertEqual(0, lines.disruptionsOnly().count)
+        
+        XCTAssertTrue(lines.allAreGoodService)
+        XCTAssertEqual(3, lines.goodServiceOnly().count)
+    }
+    
+    func testLinesWithFilteredFavourites() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService])
+        ]
+        
+        let filteredValues = lines.favouritesOnly(matching: [.bakerloo])
+        
+        XCTAssertEqual(1, filteredValues.count)
+        XCTAssertEqual(.bakerloo, filteredValues.first?.id)
+    }
+    
+    func testLinesWithValuesRemoved() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService])
+        ]
+        
+        let filteredValues = lines.removingLineIDs([.bakerloo])
+        
+        XCTAssertEqual(2, filteredValues.count)
+        XCTAssertEqual(.northern, filteredValues[0].id)
+        XCTAssertEqual(.hammersmithAndCity, filteredValues[1].id)
+
+    }
+    
     func testDisruptedLinesAreSortedFirst() {
         // Given
         let goodServiceBakerloo = Line(id: .bakerloo, lineStatuses: [.with(statusSeverity: .goodService)])
@@ -76,3 +146,4 @@ final class LineViewStateTests: XCTestCase {
         )
     }
 }
+

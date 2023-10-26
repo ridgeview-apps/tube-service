@@ -18,7 +18,8 @@ extension ArrivalDeparture {
         return .init(id: cellID,
                      numberLabel: .init(value: arrivalNumber,
                                         backgroundColor: lineID.backgroundColor,
-                                        textColor: lineID.textColor),
+                                        textColor: lineID.textColor,
+                                        textShadow: lineID.textShadow),
                      destinationType: destinationType,
                      secondsToArrival: secondsToDeparture,
                      subtitleType: subtitleType)

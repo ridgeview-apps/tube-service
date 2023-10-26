@@ -4,15 +4,9 @@ import SwiftUI
 public struct LineColourKeyView: View {
 
     public let lineIDs: [LineID]
-    public let height: CGFloat
-    public let width: CGFloat
     
-    public init(lineIDs: [LineID],
-                height: CGFloat = 40,
-                width: CGFloat = 40) {
+    public init(lineIDs: [LineID]) {
         self.lineIDs = lineIDs
-        self.height = height
-        self.width = width
     }
 
     public var body: some View {
@@ -25,9 +19,7 @@ public struct LineColourKeyView: View {
                         .background(.white)
                 }
             }
-        }
-        .frame(width: width, height: height)
-        .roundedBorder(.white)
+        }        
     }
 }
 

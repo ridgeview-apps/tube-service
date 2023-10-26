@@ -25,7 +25,6 @@
 		313DCA9D2AD741F100FF4271 /* UserPreferencesModel+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA9C2AD741F100FF4271 /* UserPreferencesModel+Stub.swift */; };
 		313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA9E2AD7425600FF4271 /* View+Stub.swift */; };
 		31508D4725604A3C0047BC9C /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31508D4625604A3C0047BC9C /* AppConfig.swift */; };
-		315F89CA2567BCB70069DD2D /* TubeServiceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315F89C92567BCB70069DD2D /* TubeServiceUITests.swift */; };
 		315F8A152567EA580069DD2D /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315F8A142567EA580069DD2D /* SnapshotHelper.swift */; };
 		3168AB722AE300F70074DAD5 /* MapsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3168AB712AE300F70074DAD5 /* MapsScreen.swift */; };
 		31692E7A2AE6BD7D00E8383F /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 31692E792AE6BD7D00E8383F /* Models */; };
@@ -33,6 +32,7 @@
 		316FCDEF2577A25300328F66 /* ProcessInfo+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 316FCDEE2577A25300328F66 /* ProcessInfo+.swift */; };
 		3171480B2AD577BB001A9BAB /* DeviceKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3171480A2AD577BB001A9BAB /* DeviceKit */; };
 		317ADDEF2534745600AB34B9 /* NavigationButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 317ADDEE2534745600AB34B9 /* NavigationButtons.swift */; };
+		31833CD32AEACA3F00FE69E1 /* TubeServiceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315F89C92567BCB70069DD2D /* TubeServiceUITests.swift */; };
 		318D483024EFC4900026B5F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 318D482F24EFC4900026B5F4 /* Assets.xcassets */; };
 		318D483324EFC4900026B5F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 318D483224EFC4900026B5F4 /* Preview Assets.xcassets */; };
 		318D483624EFC4900026B5F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 318D483424EFC4900026B5F4 /* LaunchScreen.storyboard */; };
@@ -571,8 +571,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				315F89CA2567BCB70069DD2D /* TubeServiceUITests.swift in Sources */,
 				315F8A152567EA580069DD2D /* SnapshotHelper.swift in Sources */,
+				31833CD32AEACA3F00FE69E1 /* TubeServiceUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

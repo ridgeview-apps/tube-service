@@ -13,8 +13,9 @@
   },
   "testTargets" : [
     {
+      "parallelizable" : true,
       "target" : {
-        "containerPath" : "container:..\/DataClients",
+        "containerPath" : "container:",
         "identifier" : "DataClientsTests",
         "name" : "DataClientsTests"
       }

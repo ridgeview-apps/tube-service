@@ -44,7 +44,7 @@ final class LineStatusModelTests: XCTestCase {
         XCTAssertEqual(true, fetchedData?.fetchState.isSuccess)
         XCTAssertEqual(clock.currentTime, fetchedData?.fetchedAt)
         XCTAssertNotNil(fetchedData?.lines)
-        XCTAssertEqual(1, transportAPI.fetchFutureLineStatusesCallCount)
+        XCTAssertEqual(1, transportAPI.fetchLineStatusesForDateRangeCallCount)
     }
     
     func testRefreshLineStatusesFailure() async {

@@ -20,13 +20,9 @@ class TubeServiceUITests: XCTestCase {
         setupSnapshot(app)
         app.launch()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
+    
     func testGenerateAppScreenshots() throws {
-        
+                       
         var screenshotNumber = 0
         func captureScreenshot(_ name: String) {
             screenshotNumber += 1
@@ -39,20 +35,28 @@ class TubeServiceUITests: XCTestCase {
         
         XCUIDevice.shared.orientation = iPad ? .landscapeLeft : .portrait
 
-        // Status tab
         app.buttons["Status"].tap()
 
+        // Status - Today
+        
         if iPhone {
-            captureScreenshot("ServiceStatuses")
+            captureScreenshot("ServiceStatuses-Today")
         }
 
-        // Status detail
-        app.buttons["northern"].tap()
-        captureScreenshot("ServiceStatusDetail")
-
+        // Status detail - Today
+        
+        app.buttons["circle"].tapUnhittable()
+        captureScreenshot("ServiceStatusDetail-Today")
+        
         if iPhone {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
+        
+        // Status - Weekend
+        
+        app.buttons["acc.id.filter.option.thisWeekend"].tap()
+        captureScreenshot("ServiceStatuses-Weekend")
+        
         
         // Arrivals List
         app.buttons["Live arrivals"].tap()
@@ -61,20 +65,24 @@ class TubeServiceUITests: XCTestCase {
             captureScreenshot("LiveArrivalsPicker")
         }
         
-        app.buttons["940GZZLUAGL-940GZZLUAGL-northern"].tap() // Angel
+        app.buttons["910GABWDXR-elizabeth"].tapUnhittable() // Abbey Wood
         
         captureScreenshot("LiveArrivalsBoard1")
         
         if iPhone {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
-                    
-//        if iPad {
-//            app.buttons["940GZZLUALP-940GZZLUALP-piccadilly"].swipeUp()
-//        }
         
-        app.buttons["940GZZLUBBN-940GZZLUBBN-circle,hammersmith-city,metropolitan"].tap() // Barbican
-                
-        captureScreenshot("LiveArrivalsBoard2")
+        app.buttons["Maps"].tap()
+        
+        captureScreenshot("Maps")
+    }
+}
+
+extension XCUIElement {
+    func tapUnhittable() {
+        XCTContext.runActivity(named: "Tap \(self) by coordinate") { _ in
+            coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
     }
 }
