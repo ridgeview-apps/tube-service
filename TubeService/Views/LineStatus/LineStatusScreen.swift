@@ -8,7 +8,7 @@ struct LineStatusScreen: View {
     
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
-    @State private var selectedFutureDate: Date?
+    @State private var selectedDate: Date = .now
     
     var body: some View {
         NavigationSplitView {
@@ -27,7 +27,7 @@ struct LineStatusScreen: View {
                            refreshDate: refreshDate,
                            selectedLine: $selectedLine,
                            selectedFilterOption: $selectedFilterOption,
-                           selectedFutureDate: $selectedFutureDate)
+                           selectedDate: $selectedDate)
             .navigationTitle("line.status.navigation.title")
             .refreshable {
                 refreshDataForCurrentFilterOption()
@@ -40,12 +40,12 @@ struct LineStatusScreen: View {
                 selectedLine = nil
                 fetchLineStatusesIfStale(for: newValue)
             }
-            .onChange(of: selectedFutureDate) { _ in
+            .onChange(of: selectedDate) { _ in
                 fetchLineStatusesIfStale(for: selectedFilterOption)
             }
             .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
                 selectedFilterOption = .today
-                selectedFutureDate = nil
+                selectedDate = .now
             }
     }
     
@@ -100,13 +100,17 @@ struct LineStatusScreen: View {
             }
             return .range(dateInterval)
         case .future:
-            guard let selectedFutureDate,
-                  !Calendar.london.isDateInToday(selectedFutureDate),
-                  let nextDay = Calendar.london.startOfNextDay(after: selectedFutureDate) else {
+            // 1. Check it's a future date
+            guard let tomorrow = Calendar.london.startOfTomorrow(), selectedDate >= tomorrow else {
                 return nil
             }
-            let dateInterval = DateInterval(start: selectedFutureDate, end: nextDay)
-            return .range(dateInterval)
+            
+            // 2. Set the date range (selectedDate - selectedDateNextDay)
+            let startDate = selectedDate
+            guard let endDate = Calendar.london.startOfNextDay(after: selectedDate) else {
+                return nil
+            }
+            return .range(.init(start: startDate, end: endDate))
         }
     }
 }

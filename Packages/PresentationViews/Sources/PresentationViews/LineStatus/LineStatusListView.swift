@@ -10,22 +10,22 @@ public struct LineStatusListView: View {
     
     @Binding var selectedLine: Line?
     @Binding var selectedFilterOption: LineStatusFilterOption
-    @Binding var selectedFutureDate: Date?
+    @Binding var selectedDate: Date
     
-    @State private var selectedDateInternal: Date = .now
+    @State private var validateDateSelection = false
     
     public init(loadingState: LoadingState,
                 lines: [Line],
                 refreshDate: Date?,
                 selectedLine: Binding<Line?>,
                 selectedFilterOption: Binding<LineStatusFilterOption>,
-                selectedFutureDate: Binding<Date?>) {
+                selectedDate: Binding<Date>) {
         self.loadingState = loadingState
         self.lines = lines
         self.refreshDate = refreshDate
         self._selectedLine = selectedLine
         self._selectedFilterOption = selectedFilterOption
-        self._selectedFutureDate = selectedFutureDate
+        self._selectedDate = selectedDate
     }
     
     public var body: some View {
@@ -88,23 +88,30 @@ public struct LineStatusListView: View {
     @ViewBuilder private var futureDatePicker: some View {
         if selectedFilterOption == .future {
             VStack(alignment: .leading) {
-                DatePicker(selection: $selectedDateInternal,
+                DatePicker(selection: $selectedDate,
                            in: .now...,
                            displayedComponents: [.date]) {
                     Text("line.status.date.picker.please.select.title", bundle: .module)
                         .font(.subheadline)
                 }
-               .id(selectedFutureDate)
-               .onChange(of: selectedDateInternal) {
-                   selectedFutureDate = $0
+               .id(selectedDate)
+               .onChange(of: selectedDate) { newValue in
+                   validateDateSelection = true
                }
-                if let selectedFutureDate, selectedFutureDate <= .now {
+                if !isDateSelectionValid {
                     Text("line.status.error.date.invalid" , bundle: .module)
                         .foregroundStyle(Color.adaptiveRed)
                         .font(.callout)
                 }
+
             }
         }
+    }
+    
+    private var isDateSelectionValid: Bool {
+        guard validateDateSelection else { return true }
+        guard let tomorrow = Calendar.london.startOfTomorrow() else { return true }
+        return selectedDate >= tomorrow
     }
     
     private func cell(with line: Line) -> some View {
@@ -186,7 +193,7 @@ private struct WrapperView: View  {
     var refreshDate: Date? = .now
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
-    @State var selectedFutureDate: Date?
+    @State var selectedDate: Date = .now
     
     var body: some View {
         NavigationSplitView {
@@ -196,7 +203,7 @@ private struct WrapperView: View  {
                 refreshDate: refreshDate,
                 selectedLine: $selectedLine,
                 selectedFilterOption: $selectedFilterOption,
-                selectedFutureDate: $selectedFutureDate
+                selectedDate: $selectedDate
             )
             .navigationTitle("Preview")
         } detail: {
