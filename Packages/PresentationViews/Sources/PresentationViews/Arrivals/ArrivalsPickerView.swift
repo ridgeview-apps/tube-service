@@ -4,39 +4,81 @@ import Models
 
 public struct ArrivalsPickerView: View {
     
-    public let stations: [Station]
-    public let showsFilterOptions: Bool
+    public enum Style {
+        case normal(favouriteLineGroupIDs: Set<Station.LineGroup.ID>)
+        case searchResults
+    }
+    
+    public let style: Style
+    public let allStations: [Station]
 
     @Binding public var selectedLineGroup: Station.LineGroup?
-    @Binding public var selectedFilterOption: UserPreferences.ArrivalsPickerFilterOption
     
-    public init(stations: [Station],
-                selectedLineGroup: Binding<Station.LineGroup?>,
-                selectedFilterOption: Binding<UserPreferences.ArrivalsPickerFilterOption>,
-                showsFilterOptions: Bool = true) {
-        self.stations = stations
-        self.showsFilterOptions = showsFilterOptions
+    private let favourites: [Station]
+    
+    @ScaledMetric private var dynamicTextScale: CGFloat = 1
+    
+    
+    // MARK: - Init
+    
+    public init(allStations: [Station],
+                style: Style,
+                selectedLineGroup: Binding<Station.LineGroup?>) {
+        self.allStations = allStations
+        self.style = style
         self._selectedLineGroup = selectedLineGroup
-        self._selectedFilterOption = selectedFilterOption
+        
+        switch style {
+        case let .normal(favouriteLineGroupIDs):
+            self.favourites = allStations.favourites(matching: favouriteLineGroupIDs)
+        case .searchResults:
+            self.favourites = []
+        }
     }
     
     // MARK: Layout
     
     public var body: some View {
         List(selection: $selectedLineGroup) {
+            section(stations: favourites) {
+                HStack(spacing: 4) {
+                    Image(systemName: "star.fill")
+                        .imageScale(.small)
+                    Text("arrivals.picker.favourites.section.title", bundle: .module)
+                }
+            }
+            section(stations: allStations) {
+                allStationsSectionTitle
+            }
+        }
+        .listStyle(.plain)
+        .defaultScrollContentBackgroundColor()
+        .accessibilityIdentifier("acc.id.arrivals.picker.list")
+        
+    }
+    
+    @ViewBuilder private func section(stations: [Station], header: () -> some View) -> some View {
+        if !stations.isEmpty {
             Section {
                 ForEach(stations) { station in
                     cell(for: station)
                 }
             } header: {
-                filterOptions
+                header()
             }
             .listRowSeparator(.visible, edges: .bottom)
             .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowBackground(Color.defaultBackground)
         }
-        .listStyle(.plain)
-        .defaultScrollContentBackgroundColor()
+    }
+    
+    @ViewBuilder private var allStationsSectionTitle: some View {
+        switch style {
+        case .normal:
+            Text("arrivals.picker.all.stations.section.title", bundle: .module)
+        case .searchResults:
+            Text("arrivals.picker.search.results.count \(allStations.count)", bundle: .module)
+        }
     }
     
     @ViewBuilder private func cell(for station: Station) -> some View {
@@ -50,35 +92,26 @@ public struct ArrivalsPickerView: View {
                     }
                 } label: {
                     rowLabel(withLineIDs: station.sortedLineIDs, title: station.name)
+                        .accessibilityIdentifier(station.id)
                 }
                 .tint(.clear)
             }
         }
-        .frame(minHeight: 44)
-    }
-    
-    @ViewBuilder private var filterOptions: some View {
-        if showsFilterOptions {
-            Picker("", selection: $selectedFilterOption) {
-                ForEach(UserPreferences.ArrivalsPickerFilterOption.allCases) { filterOption in
-                    Text(filterOption.localizedKey, bundle: .module)
-                        .tag(filterOption)
-                }
-            }
-            .pickerStyle(.segmented)
-            .background(Color.defaultBackground)
-        }
+        .frame(minHeight: 44 * dynamicTextScale)
     }
     
     private func navigationLink(for lineGroup: Station.LineGroup, title: String) -> some View {
         NavigationLink(value: lineGroup) {
             rowLabel(withLineIDs: lineGroup.lineIds.sortedByName(), title: title)
         }
+        .accessibilityIdentifier("\(lineGroup.id)")
     }
     
     private func rowLabel(withLineIDs lineIDs: [LineID], title: String) -> some View {
         HStack(spacing: 8) {
             LineColourKeyView(lineIDs: lineIDs)
+                .frame(width: 40, height: 40)
+                .roundedBorder(.white)
             Text(title)
             Spacer()
         }
@@ -87,33 +120,20 @@ public struct ArrivalsPickerView: View {
     }
 }
 
-private extension UserPreferences.ArrivalsPickerFilterOption {
-    var localizedKey: LocalizedStringKey {
-        switch self {
-        case .all:
-            return "arrivals.picker.filterOptions.title.all"
-        case .favourites:
-            return "arrivals.picker.filterOptions.title.favourites"
-        }
-    }
-}
-
 
 // MARK: - Previews
 
 #if DEBUG
 private struct WrapperView: View  {
-    var stations: [Station] = ModelStubs.stations
+    var allStations: [Station] = ModelStubs.stations
+    var style: ArrivalsPickerView.Style
     @State var selectedLineGroup: Station.LineGroup?
-    @State var selectedFilterOption: UserPreferences.ArrivalsPickerFilterOption = .all
-    var showsFilterOptions = true
     
     var body: some View {
         NavigationSplitView {
-            ArrivalsPickerView(stations: stations,
-                               selectedLineGroup: $selectedLineGroup,
-                               selectedFilterOption: $selectedFilterOption,
-                               showsFilterOptions: showsFilterOptions)
+            ArrivalsPickerView(allStations: allStations,
+                               style: style,
+                               selectedLineGroup: $selectedLineGroup)
             .navigationTitle("Picker preview")
         } detail: {
             if let selectedLineGroup {
@@ -126,17 +146,28 @@ private struct WrapperView: View  {
 }
 
 
-#Preview("Filter options") {
-    WrapperView()
+#Preview("Normal mode (favourites)") {
+    WrapperView(
+        style: .normal(favouriteLineGroupIDs: [
+            "940GZZLUKSX-circle,hammersmith-city,metropolitan", // Kings X - Circle, H&C, Met lines
+            "940GZZLUKSX-northern",   // Kings X - Northern line
+            "940GZZLUKSX-piccadilly", // Kingx X - Piccadilly line
+            "940GZZLUPAC-bakerloo",
+            "940GZZLUHBT-northern"
+        ])
+    )
 }
 
-#Preview("No filter options") {
-    WrapperView(showsFilterOptions: false)
+#Preview("Normal mode (no favourites)") {
+    WrapperView(style: .normal(favouriteLineGroupIDs: []))
 }
 
-#Preview("With search bar") {
-    WrapperView()
-        .searchable(text: .constant(""), placement: .navigationBarDrawer(displayMode: .always))
-        .previewDisplayName("With search bar")
+#Preview("Search results mode") {
+    WrapperView(
+        allStations: Array(ModelStubs.stations.prefix(4)),
+        style: .searchResults
+    )
+    .searchable(text: .constant(""), placement: .navigationBarDrawer(displayMode: .always))
+    .previewDisplayName("With search bar")
 }
 #endif

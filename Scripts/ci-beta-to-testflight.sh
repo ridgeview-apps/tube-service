@@ -13,4 +13,5 @@ bundle install
 bundle update fastlane
 bundle exec fastlane unit_tests
 bundle exec fastlane add_badge_overlay
-bundle exec fastlane build_and_upload
+bundle exec fastlane build
+bundle exec fastlane distribute

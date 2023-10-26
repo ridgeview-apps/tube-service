@@ -28,7 +28,7 @@ final class TransportAPIRouteTests: XCTestCase {
         let startDate = dayMonthYear(1, 2, 2023, in: .london)
         let endDate = dayMonthYear(2, 2, 2023, in: .london)
         let dateInterval = DateInterval(start: startDate, end: endDate)
-        let route: TransportAPIRoute = .getFutureLineStatuses(LineID.allCases, dateInterval)
+        let route: TransportAPIRoute = .getLineStatusesForDateRange(LineID.allCases, dateInterval)
         
         // When
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)

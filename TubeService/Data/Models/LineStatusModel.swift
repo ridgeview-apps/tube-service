@@ -5,8 +5,8 @@ import Shared
 
 @MainActor
 public final class LineStatusModel: ObservableObject {
-        
-    // MARK: - Properties / outputs
+    
+    // MARK: - Data types
     
     public enum FetchType: Hashable {
         case today
@@ -23,11 +23,15 @@ public final class LineStatusModel: ObservableObject {
         }
     }
     
+    
+    // MARK: - Properties / outputs
+
     public let transportAPI: TransportAPIClientType
     public let now: () -> Date
     public let calendar: Calendar
     
     @Published private var fetchedData: [FetchType: FetchedData] = [:]
+    
     
     // MARK: - Init
     
@@ -43,10 +47,11 @@ public final class LineStatusModel: ObservableObject {
         let data = self.fetchedData[fetchType]
         return data
     }
-        
+    
+    
     // MARK: - Actions / inputs
     
-    public func refreshLineStatusesIfStale(for fetchType: FetchType = .today) async {
+    public func refreshLineStatusesIfStale(for fetchType: FetchType) async {
         let fiveMinutes = TimeInterval(5 * 60)
         let fiveMinutesAgo = now() - fiveMinutes
         
@@ -82,7 +87,32 @@ public final class LineStatusModel: ObservableObject {
         case .today:
             return try await transportAPI.fetchCurrentLineStatuses().sortedByStatusSeverity()
         case let .range(dateInterval):
-            return try await transportAPI.fetchFutureLineStatuses(for: dateInterval).sortedByStatusSeverity()
+            let lines = try await transportAPI.fetchLineStatuses(for: dateInterval)
+            let isFutureDateRange = dateInterval.start > now()
+            return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses().sortedByStatusSeverity() : lines.sortedByStatusSeverity()
         }
+    }
+}
+
+private extension Sequence where Element == Line {
+    func removingRealtimeDisruptionStatuses() -> [Line] {
+        self.map { $0.removingRealtimeDisruption() }
+    }
+}
+
+private extension Line {
+    
+    // Workaround for the fact the TFL API sometimes returns "realtime" statuses when querying a future date (i.e. typically
+    // when querying tomorrow). For example: it's currently Friday and the Jubilee line has severe delays. If you query for
+    // Saturday's status, it will also include Friday's (realtime) delays.
+    
+    func removingRealtimeDisruption() -> Line {
+        var updatedStatuses = lineStatuses?.filter { $0.disruption?.category != .realTime } ?? []
+        
+        if updatedStatuses.isEmpty {
+            updatedStatuses.append(.goodService)
+        }
+        
+        return .init(id: id, lineStatuses: updatedStatuses)
     }
 }

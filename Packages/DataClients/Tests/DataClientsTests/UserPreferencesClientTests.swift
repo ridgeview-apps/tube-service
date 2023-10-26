@@ -11,8 +11,8 @@ final class UserPreferencesClientTests: XCTestCase {
         
         // When
         let initialValue = userPreferencesClient.load()
-        let newValue = UserPreferences(favourites: ["ExampleID1","ExampleID2"],
-                                       lastUsedFilterOption: .favourites,
+        let newValue = UserPreferences(favouriteLineGroupIDs: ["ExampleID1","ExampleID2"],
+                                       favouriteLineIDs: nil,
                                        recentlySelectedStations: [])
         userPreferencesClient.save(newValue)
         

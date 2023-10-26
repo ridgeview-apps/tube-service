@@ -5,7 +5,7 @@ import Models
 
 public protocol TransportAPIClientType {
     func fetchCurrentLineStatuses() async throws -> [Line]
-    func fetchFutureLineStatuses(for dateInterval: DateInterval) async throws -> [Line]
+    func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line]
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalPrediction]
     func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture]
 }
@@ -48,8 +48,8 @@ public struct TransportAPIClient: TransportAPIClientType {
         return try await fetchData(for: .getCurrentLineStatuses(TransportMode.allCases), mappedTo: [Line].self)
     }
     
-    public func fetchFutureLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
-        return try await fetchData(for: .getFutureLineStatuses(LineID.allCases, dateInterval),
+    public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
+        return try await fetchData(for: .getLineStatusesForDateRange(LineID.allCases, dateInterval),
                                    mappedTo: [Line].self)
     }
     

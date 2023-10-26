@@ -1,6 +1,9 @@
 import SwiftUI
 
 public struct MapsListView: View {
+    
+    @ScaledMetric private var dynamicTextScale: CGFloat = 1
+    
     @State private var selectedValue: MapLink?
     
     public init() {}
@@ -22,18 +25,19 @@ public struct MapsListView: View {
     }
     
     @ViewBuilder private func link(for mapLink: MapLink) -> some View {
-        Button(action: {
+        Button {
             selectedValue = mapLink
-        }) {
+        } label: {
             Text(mapLink.title, bundle: .module)
-                .frame(maxWidth: 600, minHeight: 44)
         }
+        .buttonStyle(.primary)
         .sheet(item: $selectedValue) { selectedValue in
             SafariView(url: selectedValue.url)
         }
-        .buttonStyle(.bordered)
+        
     }
 }
+
 
 private struct MapLink: Identifiable {
     var id: String { url.absoluteString }

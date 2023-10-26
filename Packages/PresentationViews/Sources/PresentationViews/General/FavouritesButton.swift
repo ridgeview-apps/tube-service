@@ -1,41 +1,71 @@
 import SwiftUI
 
 public struct FavouritesButton: View {
-    enum Style {
-        case barButton
-        case full
+    public enum Style: String {
+        case small
+        case large
     }
     
     @Binding public var isSelected: Bool
-    public var accessibilityID: String
+    public let style: Style
     
-    public init(isSelected: Binding<Bool>,
-                accessibilityID: String = "favourites.button") {
+    public init(style: Style,
+                isSelected: Binding<Bool>) {
+        self.style = style
         self._isSelected = isSelected
-        self.accessibilityID = accessibilityID
     }
 
     public var body: some View {
         Button {
-            isSelected.toggle()
+            withAnimation {
+                isSelected.toggle()
+            }
         } label: {
-            Image(systemName: isSelected ? "star.fill" : "star")
-                .imageScale(.large)
+            switch style {
+            case .small:
+                Image(systemName: isSelected ? "star.fill" : "star")
+                    .imageScale(.large)
+            case .large:
+                HStack {
+                    Image(systemName: isSelected ? "minus.circle" : "plus.circle")
+                        .imageScale(.large)
+                    if isSelected {
+                        Text("favourites.button.title.remove", bundle: .module)
+                    } else {
+                        Text("favourites.button.title.add", bundle: .module)
+                    }
+                }
+            }
         }
-        .accessibility(identifier: accessibilityID)
+        .accessibility(identifier: "acc.id.favourites.button.\(style.rawValue)")
+        .applyingStyle(style)
+    }
+}
+
+private extension View {
+
+    @ViewBuilder func applyingStyle(_ style: FavouritesButton.Style) -> some View {
+        switch style {
+        case .small:
+            self.buttonStyle(.borderless)
+        case .large:
+            self.buttonStyle(.primary)
+        }
     }
 }
 
 #Preview {
     struct WrapperView: View {
         @State var isSelected = false
+        let style: FavouritesButton.Style
         
         var body: some View {
-            FavouritesButton(isSelected: $isSelected)
+            FavouritesButton(style: style, isSelected: $isSelected)
         }
     }
     
     return Group {
-        WrapperView()
+        WrapperView(style: .small)
+        WrapperView(style: .large)
     }
 }

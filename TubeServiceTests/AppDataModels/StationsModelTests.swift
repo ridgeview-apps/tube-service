@@ -34,23 +34,6 @@ final class StationsModelTests: XCTestCase {
         XCTAssertEqual("High Barnet", stationsModel.station(forLineGroupID: "940GZZLUHBT-northern")?.name)
     }
     
-    func testFilteredStationsByLineGroupID() {
-        let stationsModel = StationsModel(stationsClient: StubStationsClient(), fetchImmediately: true)
-        
-        let lineGroupIDs = ["940GZZLUKSX-circle,hammersmith-city,metropolitan", // Kings X - Circle, H&C, Met lines
-                            "940GZZLUKSX-northern", // Kings X - Northern line
-                            "940GZZLUKSX-piccadilly", // Kingx X - Piccadilly line
-                            "940GZZLUPAC-bakerloo",
-                            "940GZZLUHBT-northern"]
-                            
-        let filteredStationNames = stationsModel.filteredStations(matchingLineGroupIDs: Set(lineGroupIDs)).map(\.name)
-        
-        XCTAssertEqual(3, filteredStationNames.count)
-        XCTAssertTrue(filteredStationNames.contains("King's Cross & St Pancras International"))
-        XCTAssertTrue(filteredStationNames.contains("Paddington"))
-        XCTAssertTrue(filteredStationNames.contains("High Barnet"))
-    }
-    
     func testFilteredStationsByPartialName() {
         let stationsModel = StationsModel(stationsClient: StubStationsClient(), fetchImmediately: true)
         

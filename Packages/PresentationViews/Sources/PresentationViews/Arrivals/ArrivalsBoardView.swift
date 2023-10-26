@@ -119,6 +119,10 @@ struct ArrivalsBoardView: View {
                     .frame(width: 36, height: 40)
                 Text(cellItem.numberLabel.valueText)
                     .foregroundColor(cellItem.numberLabel.textColor)
+                    .shadow(color: cellItem.numberLabel.textShadow.color,
+                            radius: cellItem.numberLabel.textShadow.radius,
+                            x: cellItem.numberLabel.textShadow.x, 
+                            y: cellItem.numberLabel.textShadow.y)
             }
             .roundedBorder(.white)
             VStack(alignment: .leading, spacing: 6) {

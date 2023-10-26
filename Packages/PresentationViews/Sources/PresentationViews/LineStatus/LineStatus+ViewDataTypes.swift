@@ -3,7 +3,24 @@ import SwiftUI
 
 public enum LineStatusFilterOption: Int, Identifiable, CaseIterable {
     public var id: Int { rawValue }
-    case today, thisWeekend, future
+    case today, tomorrow, thisWeekend, other
+}
+
+public enum LineStatusAccessoryImageType {
+    case goodService, disruption
+}
+
+public extension LineStatusAccessoryImageType {
+    @ViewBuilder var image: some View {
+        switch self {
+        case .disruption:
+            Image(systemName: "exclamationmark.circle.fill")
+                .foregroundColor(.adaptiveRed)
+        case .goodService:
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundColor(.green)
+        }
+    }
 }
 
 

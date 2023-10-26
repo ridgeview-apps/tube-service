@@ -9,10 +9,12 @@ struct ArrivalsPickerScreen: View {
     
     @State private var selectedLineGroup: Station.LineGroup?
     @State private var searchTerm: String = ""
-    @State private var selectedFilterOption: UserPreferences.ArrivalsPickerFilterOption = .all
     @State private var selectableStations: [Station] = []
     
     private var isSearching: Bool { !searchTerm.isEmpty }
+    private var pickerViewStyle: ArrivalsPickerView.Style {
+        isSearching ? .searchResults : .normal(favouriteLineGroupIDs: userPreferences.favouriteLineGroupIDs)
+    }
     
     
     // MARK: - Layout
@@ -35,6 +37,9 @@ struct ArrivalsPickerScreen: View {
         .onSubmit(of: .search) {
             reloadStations()
         }
+        .onChange(of: userPreferences.favouriteLineGroupIDs) { _ in
+            reloadStations()
+        }
         .onChange(of: selectedLineGroup) { newValue in
             saveRecentSelection(for: newValue)
         }
@@ -44,18 +49,12 @@ struct ArrivalsPickerScreen: View {
         if isSearching && selectableStations.isEmpty {
             Text("arrivals.picker.search.no.results")
         } else {
-            ArrivalsPickerView(stations: selectableStations,
-                               selectedLineGroup: $selectedLineGroup,
-                               selectedFilterOption: $selectedFilterOption,
-                               showsFilterOptions: searchTerm.isEmpty)
+            ArrivalsPickerView(allStations: selectableStations,
+                               style: pickerViewStyle,
+                               selectedLineGroup: $selectedLineGroup)
                 .navigationTitle("arrivals.picker.navigation.title")
                 .withSettingsToolbarButton()
                 .onAppear {
-                    selectedFilterOption = userPreferences.lastUsedFilterOption
-                    reloadStations()
-                }
-                .onChange(of: selectedFilterOption) { newValue in
-                    userPreferences.save(lastUserFilterOption: newValue)
                     reloadStations()
                 }
         }
@@ -77,12 +76,7 @@ struct ArrivalsPickerScreen: View {
         if isSearching {
             selectableStations = stations.filteredStations(matchingName: searchTerm)
         } else {
-            switch selectedFilterOption {
-            case .all:
-                selectableStations = stations.allStations
-            case .favourites:
-                selectableStations = stations.filteredStations(matchingLineGroupIDs: userPreferences.favourites)
-            }
+            selectableStations = stations.allStations
         }
     }
     
@@ -101,7 +95,7 @@ struct ArrivalsPickerScreen: View {
         if searchTerm.isEmpty {
             Group {
                 if userPreferences.recentlySelectedStations.isEmpty {
-                    Text("") // Prevents the list from showing through before a search is performed
+                    Text("") // Workaround: prevents the results list from showing before a search is performed
                 } else {
                     Section {
                         ForEach(userPreferences.recentlySelectedStations, id: \.self) { stationID in

@@ -46,6 +46,15 @@ public extension LineID {
             return .black
         }
     }
+    
+    var textShadow: TextShadowSettings {
+        switch self {
+        case .bakerloo, .central, .district, .elizabeth, .jubilee, .metropolitan, .northern, .piccadilly, .tram:
+            return (color: .clear, radius: 0, x: 0, y: 0)
+        case .circle, .dlr, .hammersmithAndCity, .victoria, .waterlooAndCity, .overground:
+            return (color: .white, radius: 0.5, x: 0, y: 0.5)
+        }
+    }
         
     var longName: String {
         switch self {

@@ -9,8 +9,8 @@ final class UserPreferencesModelTests: XCTestCase {
     
     func testLoadUserPreferences() {
         // Given
-        let stubbedPreferences = UserPreferences(favourites: ["foo1", "foo2"],
-                                                 lastUsedFilterOption: .favourites,
+        let stubbedPreferences = UserPreferences(favouriteLineGroupIDs: ["foo1", "foo2"],
+                                                 favouriteLineIDs: [.bakerloo],
                                                  recentlySelectedStations: [ModelStubs.kingsCrossStation.id])
         
         let userPreferencesClient = StubUserPreferencesClient()
@@ -21,16 +21,18 @@ final class UserPreferencesModelTests: XCTestCase {
         
         // Then
         XCTAssertEqual(userPreferencesModel.recentlySelectedStations, [ModelStubs.kingsCrossStation.id])
-        XCTAssertEqual(userPreferencesModel.lastUsedFilterOption, .favourites)
-        XCTAssertEqual(userPreferencesModel.favourites, ["foo1", "foo2"])
+        XCTAssertEqual(userPreferencesModel.favouriteLineGroupIDs, ["foo1", "foo2"])
+        XCTAssertEqual(userPreferencesModel.favouriteLineIDs, [.bakerloo])
         XCTAssertTrue(userPreferencesModel.isFavourite(lineGroupID: "foo1"))
         XCTAssertFalse(userPreferencesModel.isFavourite(lineGroupID: "bar"))
+        XCTAssertTrue(userPreferencesModel.isFavourite(lineID: .bakerloo))
+        XCTAssertFalse(userPreferencesModel.isFavourite(lineID: .circle))
     }
     
-    func testAddingAndRemovingFavourites() {
+    func testAddingAndRemovingFavouriteLineGroups() {
         // Given
-        let stubbedPreferences = UserPreferences(favourites: ["foo1", "foo2"],
-                                                 lastUsedFilterOption: .favourites,
+        let stubbedPreferences = UserPreferences(favouriteLineGroupIDs: ["foo1", "foo2"],
+                                                 favouriteLineIDs: [.bakerloo],
                                                  recentlySelectedStations: [ModelStubs.kingsCrossStation.id])
         
         let userPreferencesClient = StubUserPreferencesClient()
@@ -49,10 +51,33 @@ final class UserPreferencesModelTests: XCTestCase {
         XCTAssertFalse(userPreferencesModel.isFavourite(lineGroupID: "bar1"))
     }
     
+    func testAddingAndRemovingFavouriteLineIDs() {
+        // Given
+        let stubbedPreferences = UserPreferences(favouriteLineGroupIDs: [],
+                                                 favouriteLineIDs: nil,
+                                                 recentlySelectedStations: [])
+        
+        let userPreferencesClient = StubUserPreferencesClient()
+        userPreferencesClient.stubbedPreferences = stubbedPreferences
+        
+        // Not yet added
+        let userPreferencesModel = UserPreferencesModel(userPreferencesClient: userPreferencesClient)
+        XCTAssertFalse(userPreferencesModel.isFavourite(lineID: .bakerloo))
+        
+        // Added
+        userPreferencesModel.add(favouriteLineID: .bakerloo)
+        XCTAssertTrue(userPreferencesModel.isFavourite(lineID: .bakerloo))
+        
+        // Removed
+        userPreferencesModel.remove(favouriteLineID: .bakerloo)
+        XCTAssertFalse(userPreferencesModel.isFavourite(lineID: .bakerloo))
+    }
+    
+    
     func testSaveRecentlyUsedStations() {
         // Given
-        let stubbedPreferences = UserPreferences(favourites: ["foo1", "foo2"],
-                                                 lastUsedFilterOption: .favourites,
+        let stubbedPreferences = UserPreferences(favouriteLineGroupIDs: ["foo1", "foo2"],
+                                                 favouriteLineIDs: [.bakerloo],
                                                  recentlySelectedStations: [])
         
         let userPreferencesClient = StubUserPreferencesClient()
@@ -86,6 +111,7 @@ final class UserPreferencesModelTests: XCTestCase {
                                                                        ModelStubs.kingsCrossStation.id])
 
     }
+    
     
 }
 

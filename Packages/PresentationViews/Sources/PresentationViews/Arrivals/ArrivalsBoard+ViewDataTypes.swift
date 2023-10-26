@@ -18,6 +18,7 @@ struct ArrivalsBoardCellItem: Identifiable {
         let value: Int
         let backgroundColor: Color
         let textColor: Color
+        let textShadow: TextShadowSettings
         
         var valueText: String { String(value) }
     }

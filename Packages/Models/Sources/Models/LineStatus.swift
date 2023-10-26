@@ -37,6 +37,12 @@ extension LineStatus: Identifiable {
     }
 }
 
+public extension LineStatus {
+    static var goodService: LineStatus {
+        .init(statusSeverity: .goodService, statusSeverityDescription: "Good Service", reason: nil, disruption: nil)
+    }
+}
+
 public enum LineStatusSeverity: Int, Codable {
     
     case specialService = 0

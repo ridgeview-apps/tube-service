@@ -4,7 +4,7 @@ import Models
 enum TransportAPIRoute {
     
     case getCurrentLineStatuses([TransportMode])
-    case getFutureLineStatuses([LineID], DateInterval)
+    case getLineStatusesForDateRange([LineID], DateInterval)
     case getArrivalPredictions(stationCode: String, [LineID]) // Tube lines only
     case getArrivalDepartures(stationCode: String, [LineID])  // Overground, Thameslink & Elizabeth line
     
@@ -42,7 +42,7 @@ enum TransportAPIRoute {
         case let .getCurrentLineStatuses(modes):
             let modesParam = modes.toURLPathParam()
             return try makeURLComponents("/Line/Mode/\(modesParam)/Status")
-        case let .getFutureLineStatuses(lineIDs, dateInterval):
+        case let .getLineStatusesForDateRange(lineIDs, dateInterval):
             let lineIDsParam = lineIDs.toURLPathParam()
             let fromDateParam = try dateInterval.start.toAPIYearMonthDayParam()
             let toDateParam = try dateInterval.end.toAPIYearMonthDayParam()

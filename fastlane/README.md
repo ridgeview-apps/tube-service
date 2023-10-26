@@ -13,36 +13,58 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## iOS
-
-### ios build_and_distribute
+### unit_tests
 
 ```sh
-[bundle exec] fastlane ios build_and_distribute
+[bundle exec] fastlane unit_tests
 ```
 
 
 
-### ios upload_screenshots
+### ui_tests
 
 ```sh
-[bundle exec] fastlane ios upload_screenshots
+[bundle exec] fastlane ui_tests
 ```
 
 
 
-### ios submit_for_review
+### add_badge_overlay
 
 ```sh
-[bundle exec] fastlane ios submit_for_review
+[bundle exec] fastlane add_badge_overlay
 ```
 
 
 
-### ios create_bundle_ids
+### build
 
 ```sh
-[bundle exec] fastlane ios create_bundle_ids
+[bundle exec] fastlane build
+```
+
+
+
+### distribute
+
+```sh
+[bundle exec] fastlane distribute
+```
+
+
+
+### upload_screenshots
+
+```sh
+[bundle exec] fastlane upload_screenshots
+```
+
+
+
+### submit_for_review
+
+```sh
+[bundle exec] fastlane submit_for_review
 ```
 
 

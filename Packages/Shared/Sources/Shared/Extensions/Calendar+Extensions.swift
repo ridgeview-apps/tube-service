@@ -27,4 +27,14 @@ public extension Calendar {
     func startOfTomorrow() -> Date? {
         startOfNextDay(after: .now)
     }
+    
+    func weekdayDateComponent(for date: Date) -> Int? {
+        dateComponents([.weekday], from: date).weekday
+    }
+    
+    func isDateInSunday(_ date: Date) -> Bool {
+        // See https://developer.apple.com/documentation/foundation/nsdatecomponents/1410442-weekday
+        // 1 = Sunday, 7 = Saturday
+        weekdayDateComponent(for: date) == 1
+    }
 }
