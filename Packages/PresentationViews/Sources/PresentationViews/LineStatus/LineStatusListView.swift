@@ -55,51 +55,33 @@ public struct LineStatusListView: View {
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            tappableCells(with: favourites)
-            tappableCells(with: disruptions)
+            tappableStatusCells(with: favourites)
+            tappableStatusCells(with: disruptions)
             if showOtherLinesSummaryCell {
                 otherLinesSummaryCell
             } else {
-                tappableCells(with: allOtherLines)
+                tappableStatusCells(with: allOtherLines)
             }
         }
     }
     
-    private func tappableCells(with lines: [Line]) -> some View {
+    private func tappableStatusCells(with lines: [Line]) -> some View {
         ForEach(lines) { line in
-            tappableCell(for: line)
+            tappableStatusCell(for: line)
                 .padding(.top, line.id == lines.first?.id ? 12 : 0)
         }
     }
     
-    private func tappableCell(for line: Line) -> some View {
+    private func tappableStatusCell(for line: Line) -> some View {
         Button {
             selectedLine = line
         } label: {
-            cardCell(
-                title: {
-                    HStack(spacing: 4) {
-                        if favouriteLineIDs.contains(line.id) {
-                            Image(systemName: "star.fill")
-                                .imageScale(.small)
-                                .foregroundStyle(.white)
-                        }
-                        Text(line.id.name)
-                        Spacer()
-                    }
-                    .columnTextStyle(textColor: line.id.textColor)
-                    .shadow(color: line.id.textShadow.color,
-                            radius: line.id.textShadow.radius,
-                            x: line.id.textShadow.x,
-                            y: line.id.textShadow.y)
-                },
-                detail: {
-                    Text(line.shortText)
-                        .columnTextStyle(textColor: line.isDisrupted ? .adaptiveRed : .primary)
-                },
-                titleColumnColor: line.id.backgroundColor, 
-                accessoryType: line.accessoryImageType
+            LineStatusCell(
+                style: .singleLine(line, showFavouriteImage: favouriteLineIDs.contains(line.id)),
+                showsAccessory: true
             )
+            .cardStyle()
+            .frame(minHeight: 44 * dynamicTextScale)
         }
         .buttonStyle(.borderless)
         .padding(.bottom, 8)
@@ -218,33 +200,6 @@ public struct LineStatusListView: View {
         selectedFilterOption == .other && !isValidFutureDate
     }
     
-    private func cardCell(@ViewBuilder title: () -> some View,
-                          @ViewBuilder detail: () -> some View,
-                          titleColumnColor: Color = .clear,
-                          detailColumnColor: Color = .clear,
-                          borderColor: Color = .clear,
-                          accessoryType: LineStatusAccessoryImageType?) -> some View {
-        HStack(spacing: 0) {
-            cellColumn {
-                title()
-            }
-            .background(titleColumnColor)
-            cellColumn {
-                detail()
-            }
-            .background(detailColumnColor)
-            if let accessoryType {
-                accessoryType
-                    .image
-                    .padding(.trailing)
-                    .frame(width: 30)
-            }
-        }
-        .cardStyle(borderColor: borderColor)
-        .frame(minHeight: 44 * dynamicTextScale)
-        
-    }
-    
     private func tomorrowFormatted() -> String {
         guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
             return ""
@@ -266,22 +221,12 @@ public struct LineStatusListView: View {
     }
     
     private var otherLinesSummaryCell: some View {
-        cardCell(
-            title: {
-                LineColourKeyView(lineIDs: allOtherLines.map(\.id))
-            },
-            detail: {
-                Group {
-                    if lines.allAreGoodService {
-                        Text("line.status.planned.good.service.all.lines.title", bundle: .module)
-                    } else {
-                        Text("line.status.planned.good.service.other.lines.title", bundle: .module)
-                    }
-                }
-                .columnTextStyle()
-            },
-            accessoryType: .goodService
+        LineStatusCell(
+            style: .multiLine(allOtherLines),
+            showsAccessory: true
         )
+        .cardStyle()
+        .frame(minHeight: 44 * dynamicTextScale)
         .padding(.top, 12)
     }
 }
@@ -311,24 +256,6 @@ private extension LineStatusFilterOption {
         case .other:
             return "acc.id.filter.option.other"
         }
-    }
-}
-
-private extension View {
-    
-    func cellColumn(_ columnContent: () -> some View) -> some View {
-        columnContent()
-            .frame(maxWidth: .infinity,
-                   maxHeight: .infinity,
-                   alignment: .leading)
-    }
-
-    func columnTextStyle(textColor: Color = .primary) -> some View {
-        self
-            .font(.body)
-            .padding(8)
-            .multilineTextAlignment(.leading)
-            .foregroundStyle(textColor)
     }
 }
 

@@ -14,6 +14,11 @@ struct RootScreen: View {
                                title: "arrivals.tab.title",
                                accessibilityID: "acc.id.arrivals.tab.title")
             
+            NearbyStationsScreen()
+                .styledTabItem(imageName: "location.fill",
+                               title: "nearby.stations.tab.title",
+                               accessibilityID: "acc.id.nearby.stations.tab.title")
+            
             MapsScreen()
                 .styledTabItem(imageName: "map.fill",
                                title: "maps.tab.title", 
@@ -29,10 +34,8 @@ struct RootScreen: View {
 
 struct RootScreen_Previews: PreviewProvider {
     static var previews: some View {
-        let appModel = AppModel.stub()
         
         return RootScreen()
-                .environmentObject(appModel)
                 .withStubbedEnvironment()
     }
 }

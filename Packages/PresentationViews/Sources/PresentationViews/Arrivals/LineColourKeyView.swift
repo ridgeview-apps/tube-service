@@ -19,7 +19,7 @@ public struct LineColourKeyView: View {
                         .background(.white)
                 }
             }
-        }        
+        }
     }
 }
 

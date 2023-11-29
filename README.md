@@ -1,10 +1,10 @@
 ## Tube Service
 
-Welcome to Tube Service iOS app!  This app is a 100% SwiftUI app and is [available on the app store](https://apps.apple.com/app/id1540626286#?platform=iphone).
+Welcome to Tube Service iOS app!  This is a SwiftUI app and is [available on the app store](https://apps.apple.com/app/id1540626286#?platform=iphone).
 
-I decided to make the app open-source as a way of knowledge sharing and demonstrating how to build a production-ready SwiftUI app.
+I chose to write the app using the [MV architecture](https://azamsharp.com/2023/02/28/building-large-scale-apps-swiftui.html). This is my preferred method of developing SwiftUI apps(having previously used both MVVM and the [Swift Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture). One of my favourite points about MV (mentioned in the above article) is the fact it helps reduce test-induced damage (mentioned above - this is when we over-abstract our logic just to satisfy unit tests, thus adding unnecessary complexity which provides little or no value). Also, note that MV does NOT discourage unit testing, it just makes you focus more on what actually *should* be tested.
 
-The app uses the [Swift Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture). This is a relatively new and interesting way of building SwiftUI apps in a Redux-like way.
+> The source code for the original version of the app (using The Composable Architecture) is available [here](https://github.com/ridgeview-apps/tube-service/tree/tca).
 
 ## Screenshots
 

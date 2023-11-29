@@ -58,6 +58,14 @@ public extension View {
     func pulsatingSymbol() -> some View {
         self.modifier(PulsatingSymbolEffectModifier())
     }
+    
+    func withDefaultMaxWidth() -> some View {
+        self.frame(maxWidth: 600)
+    }
+}
+
+public extension EdgeInsets {
+    static let zero = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
 }
 
 private struct CardStyle: ViewModifier {

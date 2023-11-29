@@ -7,12 +7,12 @@ struct ArrivalsPickerScreen: View {
     @EnvironmentObject var stations: StationsModel
     @EnvironmentObject var userPreferences: UserPreferencesModel
     
-    @State private var selectedLineGroup: Station.LineGroup?
+    @State private var selection: Station.LineGroup?
     @State private var searchTerm: String = ""
     @State private var selectableStations: [Station] = []
     
     private var isSearching: Bool { !searchTerm.isEmpty }
-    private var pickerViewStyle: ArrivalsPickerView.Style {
+    private var pickerStyle: ArrivalsPickerStyle {
         isSearching ? .searchResults : .normal(favouriteLineGroupIDs: userPreferences.favouriteLineGroupIDs)
     }
     
@@ -23,7 +23,7 @@ struct ArrivalsPickerScreen: View {
         NavigationSplitView {
             pickerListView
         } detail: {
-            arrivalsBoardsDetailView
+            detailView
         }
         .searchable(text: $searchTerm,
                     placement: .navigationBarDrawer(displayMode: .always),
@@ -40,9 +40,7 @@ struct ArrivalsPickerScreen: View {
         .onChange(of: userPreferences.favouriteLineGroupIDs) { _ in
             reloadStations()
         }
-        .onChange(of: selectedLineGroup) { newValue in
-            saveRecentSelection(for: newValue)
-        }
+        .onChange(of: selection, perform: saveRecentSelection)
     }
     
     @ViewBuilder private var pickerListView: some View {
@@ -50,8 +48,8 @@ struct ArrivalsPickerScreen: View {
             Text("arrivals.picker.search.no.results")
         } else {
             ArrivalsPickerView(allStations: selectableStations,
-                               style: pickerViewStyle,
-                               selectedLineGroup: $selectedLineGroup)
+                               style: pickerStyle,
+                               selection: $selection)
                 .navigationTitle("arrivals.picker.navigation.title")
                 .withSettingsToolbarButton()
                 .onAppear {
@@ -60,12 +58,12 @@ struct ArrivalsPickerScreen: View {
         }
     }
     
-    private var arrivalsBoardsDetailView: some View {
+    private var detailView: some View {
         NavigationStack {
-            if let selectedLineGroup {
-                ArrivalsBoardListScreen(stationName: stationName(for: selectedLineGroup),
-                                        lineGroup: selectedLineGroup)
-                    .id(selectedLineGroup.id)
+            if let selection {
+                ArrivalsBoardListScreen(stationName: stationName(for: selection),
+                                        lineGroup: selection)
+                .id(selection.id)
             } else {
                 Text("arrivals.picker.no.selection")
             }

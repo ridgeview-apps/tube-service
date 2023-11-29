@@ -11,4 +11,4 @@ languages([
 
 clear_previous_screenshots(true)
 override_status_bar(true)
-erase_simulator(true)
+# erase_simulator(true)

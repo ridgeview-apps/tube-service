@@ -8,6 +8,7 @@ public protocol TransportAPIClientType {
     func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line]
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalPrediction]
     func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture]
+    func fetchStationDisruptions() async throws -> [DisruptedPoint]
 }
 
 public enum TransportAPIError: Error {
@@ -61,6 +62,11 @@ public struct TransportAPIClient: TransportAPIClientType {
     public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture] {
         return try await fetchData(for: .getArrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
                                    mappedTo: [ArrivalDeparture].self)
+    }
+    
+    public func fetchStationDisruptions() async throws -> [DisruptedPoint] {
+        return try await fetchData(for: .getStationDisruptions(TransportMode.allCases),
+                                   mappedTo: [DisruptedPoint].self)
     }
     
     private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> T {

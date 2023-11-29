@@ -9,14 +9,17 @@ final class AppModel: ObservableObject {
     private(set) var lineStatus: LineStatusModel
     private(set) var stations: StationsModel
     private(set) var userPreferences: UserPreferencesModel
+    private(set) var location: LocationModel
     
     init(dataClients: DataClients,
          now: @escaping () -> Date = { Date() }) {
         self.dataClients = dataClients
         
         self.lineStatus = LineStatusModel(transportAPI: dataClients.transportAPI, now: now)
-        self.stations = StationsModel(stationsClient: dataClients.stations)
+        self.stations = StationsModel(stationsClient: dataClients.stations,
+                                      transportAPI: dataClients.transportAPI)
         self.userPreferences = UserPreferencesModel(userPreferencesClient: dataClients.userPreferences)
+        self.location = LocationModel(locationManager: dataClients.location )
     }
 }
 
@@ -26,3 +29,11 @@ extension AppModel {
         .init(dataClients: .real)
     }
 }
+
+#if DEBUG
+extension AppModel {
+    static func stub() -> AppModel {
+        .init(dataClients: .stub)
+    }
+}
+#endif

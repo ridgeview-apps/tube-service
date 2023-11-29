@@ -11,8 +11,6 @@ struct LineStatusScreen: View {
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
     
-    @State private var updatedFavouriteID: LineID?
-    
     var body: some View {
         NavigationSplitView {
             statusListView
@@ -25,47 +23,38 @@ struct LineStatusScreen: View {
     }
     
     private var statusListView: some View {
-        ScrollViewReader { scrollReader in
-            LineStatusListView(loadingState: loadingState,
-                               lines: lines,
-                               favouriteLineIDs: userPreferences.favouriteLineIDs,
-                               refreshDate: refreshDate,
-                               selectedLine: $selectedLine,
-                               selectedFilterOption: $selectedFilterOption,
-                               selectedDate: $selectedDate)
-            .navigationTitle("line.status.navigation.title")
-            .refreshable {
-                refreshDataForCurrentFilterOption()
-            }
-            .withSettingsToolbarButton()
-            .onAppear {
-                fetchLineStatusesIfStale(for: selectedFilterOption)
-            }
-            .onChange(of: selectedFilterOption) { newValue in
-                selectedLine = nil
-                fetchLineStatusesIfStale(for: newValue)
-            }
-            .onChange(of: selectedDate) { _ in
-                fetchLineStatusesIfStale(for: selectedFilterOption)
-            }
-            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
-                selectedFilterOption = .today
-                selectedDate = .now
-            }
-            .onChange(of: updatedFavouriteID) { modifiedFavouriteLineID in
-                scrollReader.scrollTo(modifiedFavouriteLineID)
-            }
+        LineStatusListView(loadingState: loadingState,
+                           lines: lines,
+                           favouriteLineIDs: userPreferences.favouriteLineIDs,
+                           refreshDate: refreshDate,
+                           selectedLine: $selectedLine,
+                           selectedFilterOption: $selectedFilterOption,
+                           selectedDate: $selectedDate)
+        .navigationTitle("line.status.navigation.title")
+        .refreshable {
+            refreshDataForCurrentFilterOption()
+        }
+        .withSettingsToolbarButton()
+        .onAppear {
+            fetchLineStatusesIfStale(for: selectedFilterOption)
+        }
+        .onChange(of: selectedFilterOption) { newValue in
+            selectedLine = nil
+            fetchLineStatusesIfStale(for: newValue)
+        }
+        .onChange(of: selectedDate) { _ in
+            fetchLineStatusesIfStale(for: selectedFilterOption)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            selectedFilterOption = .today
+            selectedDate = .now
         }
     }
     
     private var statusDetailView: some View {
         NavigationStack {
             if let selectedLine {
-                LineStatusDetailView(line: selectedLine, isFavourite: isFavouriteLine(for: selectedLine.id))
-                    .navigationTitle(selectedLine.id.name)
-                    .toolbar {
-                        FavouritesButton(style: .small, isSelected: isFavouriteLine(for: selectedLine.id))
-                    }
+                LineStatusDetailScreen(line: selectedLine)
             } else {
                 if selectedFilterOption == .today || lines.hasDisruptions {
                     Text("line.status.no.selection")
@@ -125,19 +114,6 @@ struct LineStatusScreen: View {
                     return .today
                 }
                 return .range(.init(start: startDate, end: endDate))
-            }
-        }
-    }
-    
-    private func isFavouriteLine(for lineID: LineID) -> Binding<Bool> {
-        .init {
-            userPreferences.isFavourite(lineID: lineID)
-        } set: { isFavourite in
-            updatedFavouriteID = lineID
-            if isFavourite {
-                userPreferences.add(favouriteLineID: lineID)
-            } else {
-                userPreferences.remove(favouriteLineID: lineID)
             }
         }
     }

@@ -7,7 +7,8 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
-            .frame(maxWidth: 600, minHeight: 44 * dynamicTextScale)
+            .withDefaultMaxWidth()
+            .frame(minHeight: 44 * dynamicTextScale)
             .background(.blue)
             .foregroundColor(.white)
             .cornerRadius(10)

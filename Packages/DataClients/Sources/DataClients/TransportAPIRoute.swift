@@ -7,6 +7,7 @@ enum TransportAPIRoute {
     case getLineStatusesForDateRange([LineID], DateInterval)
     case getArrivalPredictions(stationCode: String, [LineID]) // Tube lines only
     case getArrivalDepartures(stationCode: String, [LineID])  // Overground, Thameslink & Elizabeth line
+    case getStationDisruptions([TransportMode])
     
     func toURL(relativeTo baseURL: URL, appID: String, appKey: String) throws -> URL {
         var urlComponents = try self.toURLComponents()
@@ -54,6 +55,9 @@ enum TransportAPIRoute {
             let lineIDsParam = lineIDs.toURLPathParam()
             return try makeURLComponents("/StopPoint/\(stationCode)/ArrivalDepartures",
                                      queryParams: ["lineIds": lineIDsParam])
+        case let .getStationDisruptions(modes):
+            let modesParam = modes.toURLPathParam()
+            return try makeURLComponents("/StopPoint/Mode/\(modesParam)/Disruption")
         }
     }
 }

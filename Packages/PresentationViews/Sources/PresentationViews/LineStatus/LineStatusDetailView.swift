@@ -22,7 +22,7 @@ public struct LineStatusDetailView: View {
                     Divider()
                     twitterSection
                 }
-                .frame(maxWidth: 600)
+                .withDefaultMaxWidth()
             }
             .padding()
             .frame(maxWidth: .infinity)

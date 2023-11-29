@@ -67,6 +67,21 @@ final class TransportAPIRouteTests: XCTestCase {
             url.absoluteString
         )
     }
+    
+    
+    func testStationDisruptionsEndpoint() throws {
+        // Given
+        let route: TransportAPIRoute = .getStationDisruptions(TransportMode.allCases)
+        
+        // When
+        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        
+        // Then
+        XCTAssertEqual(
+            "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_id=testAppID&app_key=testAppKey",
+            url.absoluteString
+        )
+    }
 }
 
 

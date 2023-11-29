@@ -4,7 +4,7 @@ import SwiftUI
 @main
 struct RootScene: App {
     
-    @StateObject private var appModel = AppModel.real()
+    @StateObject private var appModel = makeAppModel()
     
     var body: some Scene {
         WindowGroup {
@@ -12,8 +12,17 @@ struct RootScene: App {
                 .environmentObject(appModel)
                 .withEnvironmentObjects(lineStatus: appModel.lineStatus,
                                         stations: appModel.stations,
-                                        userPreferences: appModel.userPreferences)
+                                        userPreferences: appModel.userPreferences,
+                                        location: appModel.location)
         }
+    }
+    
+    private static func makeAppModel() -> AppModel {
+#if DEBUG
+        if ProcessInfo.isRunningUITests { return .stub() }
+#endif
+        
+        return .real()
     }
 }
 
@@ -22,10 +31,12 @@ extension View {
     
     func withEnvironmentObjects(lineStatus: LineStatusModel,
                                 stations: StationsModel,
-                                userPreferences: UserPreferencesModel) -> some View {
+                                userPreferences: UserPreferencesModel,
+                                location: LocationModel) -> some View {
         self
             .environmentObject(lineStatus)
             .environmentObject(stations)
             .environmentObject(userPreferences)
+            .environmentObject(location)
     }
 }

@@ -8,7 +8,9 @@ import XCTest
 final class StationsModelTests: XCTestCase {
     
     func testLoadStationsByID() {
-        let stationsModel = StationsModel(stationsClient: StubStationsClient(), fetchImmediately: true)
+        let stationsModel = StationsModel(stationsClient: StubStationsClient(),
+                                          transportAPI: StubTransportAPIClient(),
+                                          fetchImmediately: true)
         
         XCTAssertEqual(ModelStubs.kingsCrossStation, stationsModel.station(forID: "HUBKGX"))
         XCTAssertEqual(ModelStubs.paddingtonStation, stationsModel.station(forID: "HUBPAD"))
@@ -16,7 +18,9 @@ final class StationsModelTests: XCTestCase {
     }
     
     func testLoadStationsByLineGroup() {
-        let stationsModel = StationsModel(stationsClient: StubStationsClient(), fetchImmediately: true)
+        let stationsModel = StationsModel(stationsClient: StubStationsClient(),
+                                          transportAPI: StubTransportAPIClient(),
+                                          fetchImmediately: true)
         
         // King's X
         XCTAssertEqual(ModelStubs.kingsCrossStation, stationsModel.station(forLineGroupID: "940GZZLUKSX-circle,hammersmith-city,metropolitan"))
@@ -35,7 +39,9 @@ final class StationsModelTests: XCTestCase {
     }
     
     func testFilteredStationsByPartialName() {
-        let stationsModel = StationsModel(stationsClient: StubStationsClient(), fetchImmediately: true)
+        let stationsModel = StationsModel(stationsClient: StubStationsClient(),
+                                          transportAPI: StubTransportAPIClient(),
+                                          fetchImmediately: true)
         
         func assertStationMatchesKingsCross(forPartialText partialName: String,
                                             file: StaticString = #file,

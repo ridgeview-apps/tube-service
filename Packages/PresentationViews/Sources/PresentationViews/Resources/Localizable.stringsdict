@@ -18,7 +18,7 @@
 			<string>%lld mins</string>
 		</dict>
 	</dict>
-	<key>arrivals.picker.search.results.count %lld</key>
+	<key>stations.search.results.count %lld</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@num_results@</string>
