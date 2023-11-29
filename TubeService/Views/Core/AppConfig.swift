@@ -5,6 +5,14 @@ struct AppConfig {
     let contactUsEmail: String
     let appStoreProductUrl: URL
     let transportAPI: TransportAPI
+    
+    public var appReviewURL: URL {
+        guard var urlComponents = URLComponents(string: appStoreProductUrl.absoluteString) else {
+            return appStoreProductUrl
+        }
+        urlComponents.queryItems = [.init(name: "action", value: "write-review")]
+        return urlComponents.url ?? appStoreProductUrl
+    }
 }
 
 // MARK: - Real instance

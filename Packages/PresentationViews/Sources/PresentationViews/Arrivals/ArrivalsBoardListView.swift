@@ -38,39 +38,38 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 16, pinnedViews: [.sectionHeaders]) {
+            LazyVStack(alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
                 Section {
-                    if boardStates.isEmpty && loadingState == .loaded {
-                        noDataView
-                    } else {
-                        ForEach(boardStates) { boardState in
-                            arrivalsBoardView(with: boardState)
+                    Group {
+                        if boardStates.isEmpty && loadingState == .loaded {
+                            noDataView
+                        } else {
+                            ForEach(boardStates) { boardState in
+                                arrivalsBoardView(with: boardState)
+                            }
                         }
                     }
+                    .withDefaultMaxWidth()
                 } header: {
                     headerTitleView
                 } footer: {
                     footerView
                 }
-                .padding(.horizontal)
+                .padding(.horizontal, 20)
                 .background(Color.defaultBackground)
             }
         }
+        .frame(maxWidth: .infinity)
         .background(Color.defaultBackground)
     }
 
     private var noDataView: some View {
-        HStack(spacing: 0) {
-            Spacer()
-            HStack {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.yellow)
-                    .imageScale(.large)
-                Text("arrivals.no.data", bundle: .module)
-                    .font(.subheadline)
-                Spacer()
-            }
-            .frame(maxWidth: 600)
+        HStack {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundColor(.yellow)
+                .imageScale(.large)
+            Text("arrivals.no.data", bundle: .module)
+                .font(.subheadline)
             Spacer()
         }
         
@@ -90,16 +89,11 @@ public struct ArrivalsBoardListView: View {
     }
 
     private func arrivalsBoardView(with boardState: ArrivalsBoardState) -> some View {
-        HStack {
-            Spacer()
-            ArrivalsBoardView(platformName: boardState.platformName,
-                              cellItems: boardState.cellItems,
-                              isExpanded: shouldShowExpandedView(forBoardID: boardState.id),
-                              rotatingCellTimerPublisher: rotatingCellTimerPublisher)
-                .buttonStyle(.plain)
-                .frame(maxWidth: 600)
-            Spacer()
-        }
+        ArrivalsBoardView(platformName: boardState.platformName,
+                          cellItems: boardState.cellItems,
+                          isExpanded: shouldShowExpandedView(forBoardID: boardState.id),
+                          rotatingCellTimerPublisher: rotatingCellTimerPublisher)
+        .buttonStyle(.plain)
     }
     
     private func shouldShowExpandedView(forBoardID boardID: String) -> Binding<Bool> {
@@ -118,11 +112,7 @@ public struct ArrivalsBoardListView: View {
     }
     
     @ViewBuilder private var footerView: some View {
-        HStack {
-            Spacer()
-            FavouritesButton(style: .large, isSelected: $isFavourite)
-            Spacer()
-        }
+        FavouritesButton(style: .large, isSelected: $isFavourite)
     }
 }
 

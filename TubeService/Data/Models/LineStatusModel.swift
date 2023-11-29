@@ -92,6 +92,10 @@ public final class LineStatusModel: ObservableObject {
             return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses().sortedByStatusSeverity() : lines.sortedByStatusSeverity()
         }
     }
+    
+    public func liveDisruptions() -> [Line] {
+        (fetchedData[.today]?.lines ?? []).filter(\.isDisrupted)
+    }
 }
 
 private extension Sequence where Element == Line {

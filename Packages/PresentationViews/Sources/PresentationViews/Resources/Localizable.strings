@@ -8,6 +8,8 @@
 
 "arrivals.picker.favourites.section.title" = "Favourites";
 "arrivals.picker.all.stations.section.title" = "All stations";
+"arrivals.picker.nearby.stations.cell.title" = "Find stations nearby";
+"arrivals.picker.nearby.stations.section.title" = "Location";
 
 "favourites.button.title.add" = "Add to favourites";
 "favourites.button.title.remove" = "Remove from favourites";
@@ -53,8 +55,26 @@
 "maps.tube.day.link.title" = "Tube (Day map)";
 "maps.tube.night.link.title" = "Tube (Night map)";
 
+"nearby.stations.access.denied.message.title" = "This feature needs access to your current location. Please allow access in App Settings";
+"nearby.stations.allow.access.button.title" = "Current location";
+"nearby.stations.allow.access.header.title" = "Tap the button below to allow access to your current location";
+"nearby.stations.allow.access.footer.title" = "Your location will be used to detect stations nearby";
+"nearby.stations.load.failure.title" = "Sorry, there was a problem getting your current location. Tap refresh to try again.";
+"nearby.stations.loading.title" = "Finding stations nearby";
+"nearby.stations.more.results.button.title" = "Show more";
+"nearby.stations.no.results" = "No stations found";
 
+"open.app.settings.button.title" = "Open App Settings";
 
+"refresh.button.title" = "Refresh";
+
+"station.arrivals.section.header.title" = "Live Arrivals";
+"station.disruptions.section.header.title" = "Disruptions";
+"station.disruptions.reported.disclosure.title" = "There are disruptions at this station";
+"station.location.directions.button.title" = "Get directions";
+"station.location.section.header.title" = "Location";
+"station.location.show.button.title" = "Show in Maps";
+"station.status.section.header.title" = "Line status";
 
 // TODO: copy somewhere later
 // "arrivals.picker.search.results.count2 %lld %lld"= "Int example %2$lld %1$lld";

@@ -4,5046 +4,6556 @@
 let allStationsRawJSON = """
 [
   {
-    "name" : "Abbey Road",
     "id" : "940GZZDLABR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLABR",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLABR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.531926,
+      "lon" : 0.003737
+    },
+    "name" : "Abbey Road"
   },
   {
-    "name" : "Abbey Wood",
     "id" : "HUBABW",
     "lineGroups" : [
       {
+        "atcoCode" : "910GABWDXR",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GABWDXR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.491225,
+      "lon" : 0.12084
+    },
+    "name" : "Abbey Wood"
   },
   {
-    "name" : "Acton Main Line",
     "id" : "910GACTONML",
     "lineGroups" : [
       {
+        "atcoCode" : "910GACTONML",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GACTONML"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51718,
+      "lon" : -0.266756
+    },
+    "name" : "Acton Main Line"
   },
   {
-    "name" : "Acton Town",
     "id" : "940GZZLUACT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUACT",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUACT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUACT",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUACT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503057,
+      "lon" : -0.280462
+    },
+    "name" : "Acton Town"
   },
   {
-    "name" : "Addington Village",
     "id" : "940GZZCRADV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRADV",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRADV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.356599,
+      "lon" : -0.032607
+    },
+    "name" : "Addington Village"
   },
   {
-    "name" : "Addiscombe",
     "id" : "940GZZCRADD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRADD",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRADD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.37981,
+      "lon" : -0.073242
+    },
+    "name" : "Addiscombe"
   },
   {
-    "name" : "Aldgate",
     "id" : "940GZZLUALD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUALD",
         "lineIds" : [
           "circle"
-        ],
-        "atcoCode" : "940GZZLUALD"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUALD",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUALD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.514246,
+      "lon" : -0.075689
+    },
+    "name" : "Aldgate"
   },
   {
-    "name" : "Aldgate East",
     "id" : "940GZZLUADE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUADE",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUADE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.515037,
+      "lon" : -0.072384
+    },
+    "name" : "Aldgate East"
   },
   {
-    "name" : "All Saints",
     "id" : "940GZZDLALL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLALL",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLALL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511,
+      "lon" : -0.013135
+    },
+    "name" : "All Saints"
   },
   {
-    "name" : "Alperton",
     "id" : "940GZZLUALP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUALP",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUALP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.540627,
+      "lon" : -0.29961
+    },
+    "name" : "Alperton"
   },
   {
-    "name" : "Amersham",
     "id" : "HUBAMR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUAMS",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUAMS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.674126,
+      "lon" : -0.607714
+    },
+    "name" : "Amersham"
   },
   {
-    "name" : "Ampere Way",
     "id" : "940GZZCRAMP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRAMP",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRAMP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.382238,
+      "lon" : -0.123654
+    },
+    "name" : "Ampere Way"
   },
   {
-    "name" : "Angel",
     "id" : "940GZZLUAGL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUAGL",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUAGL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.532624,
+      "lon" : -0.105898
+    },
+    "name" : "Angel"
   },
   {
-    "name" : "Archway",
     "id" : "940GZZLUACY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUACY",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUACY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.565478,
+      "lon" : -0.134819
+    },
+    "name" : "Archway"
   },
   {
-    "name" : "Arena",
     "id" : "940GZZCRARA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRARA",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRARA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.391525,
+      "lon" : -0.058347
+    },
+    "name" : "Arena"
   },
   {
-    "name" : "Arnos Grove",
     "id" : "940GZZLUASG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUASG",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUASG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.616446,
+      "lon" : -0.133062
+    },
+    "name" : "Arnos Grove"
   },
   {
-    "name" : "Arsenal",
     "id" : "940GZZLUASL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUASL",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUASL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.558655,
+      "lon" : -0.107457
+    },
+    "name" : "Arsenal"
   },
   {
-    "name" : "Avenue Road",
     "id" : "940GZZCRAVE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRAVE",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRAVE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.407037,
+      "lon" : -0.049092
+    },
+    "name" : "Avenue Road"
   },
   {
-    "name" : "Baker Street",
     "id" : "940GZZLUBST",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBST",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUBST"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBST",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUBST"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBST",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUBST"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBST",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUBST"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.522883,
+      "lon" : -0.15713
+    },
+    "name" : "Baker Street"
   },
   {
-    "name" : "Balham",
     "id" : "HUBBAL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBLM",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBLM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.443288,
+      "lon" : -0.152997
+    },
+    "name" : "Balham"
   },
   {
-    "name" : "Bank",
     "id" : "HUBBAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBNK",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUBNK"
+        ]
       },
       {
+        "atcoCode" : "940GZZDLBNK",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLBNK"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBNK",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBNK"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBNK",
         "lineIds" : [
           "waterloo-city"
-        ],
-        "atcoCode" : "940GZZLUBNK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.513585,
+      "lon" : -0.08814
+    },
+    "name" : "Bank"
   },
   {
-    "name" : "Barbican",
     "id" : "940GZZLUBBN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBBN",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUBBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.520275,
+      "lon" : -0.097993
+    },
+    "name" : "Barbican"
   },
   {
-    "name" : "Barking",
     "id" : "HUBBKG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBKG",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUBKG"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBKG",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUBKG"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBKG",
         "lineIds" : [
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUBKG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.539321,
+      "lon" : 0.081053
+    },
+    "name" : "Barking"
   },
   {
-    "name" : "Barkingside",
     "id" : "940GZZLUBKE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBKE",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUBKE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.585689,
+      "lon" : 0.088585
+    },
+    "name" : "Barkingside"
   },
   {
-    "name" : "Barons Court",
     "id" : "940GZZLUBSC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBSC",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUBSC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBSC",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUBSC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.490311,
+      "lon" : -0.213427
+    },
+    "name" : "Barons Court"
   },
   {
-    "name" : "Battersea Power Station",
     "id" : "940GZZBPSUST",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZBPSUST",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZBPSUST"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.479932,
+      "lon" : -0.142142
+    },
+    "name" : "Battersea Power Station"
   },
   {
-    "name" : "Bayswater",
     "id" : "940GZZLUBWT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBWT",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUBWT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.512284,
+      "lon" : -0.187938
+    },
+    "name" : "Bayswater"
   },
   {
-    "name" : "Beckenham Junction",
     "id" : "HUBBEK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBEK",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBEK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.410952,
+      "lon" : -0.02619
+    },
+    "name" : "Beckenham Junction"
   },
   {
-    "name" : "Beckenham Road",
     "id" : "940GZZCRBRD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBRD",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBRD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.409532,
+      "lon" : -0.043421
+    },
+    "name" : "Beckenham Road"
   },
   {
-    "name" : "Beckton",
     "id" : "940GZZDLBEC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLBEC",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLBEC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.514362,
+      "lon" : 0.061453
+    },
+    "name" : "Beckton"
   },
   {
-    "name" : "Beckton Park",
     "id" : "940GZZDLBPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLBPK",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLBPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508793,
+      "lon" : 0.054932
+    },
+    "name" : "Beckton Park"
   },
   {
-    "name" : "Becontree",
     "id" : "940GZZLUBEC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBEC",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUBEC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.540331,
+      "lon" : 0.127016
+    },
+    "name" : "Becontree"
   },
   {
-    "name" : "Beddington Lane",
     "id" : "940GZZCRBED",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBED",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBED"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.389242,
+      "lon" : -0.142167
+    },
+    "name" : "Beddington Lane"
   },
   {
-    "name" : "Belgrave Walk",
     "id" : "940GZZCRBGV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBGV",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBGV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.40133,
+      "lon" : -0.177806
+    },
+    "name" : "Belgrave Walk"
   },
   {
-    "name" : "Belsize Park",
     "id" : "940GZZLUBZP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBZP",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBZP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.550529,
+      "lon" : -0.164783
+    },
+    "name" : "Belsize Park"
   },
   {
-    "name" : "Bermondsey",
     "id" : "940GZZLUBMY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBMY",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUBMY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.49775,
+      "lon" : -0.063993
+    },
+    "name" : "Bermondsey"
   },
   {
-    "name" : "Bethnal Green",
     "id" : "940GZZLUBLG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBLG",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUBLG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.527222,
+      "lon" : -0.055506
+    },
+    "name" : "Bethnal Green"
   },
   {
-    "name" : "Birkbeck",
     "id" : "HUBBIR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBIR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBIR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.40405,
+      "lon" : -0.056063
+    },
+    "name" : "Birkbeck"
   },
   {
-    "name" : "Blackfriars",
     "id" : "HUBBFR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBKF",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUBKF"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511581,
+      "lon" : -0.103659
+    },
+    "name" : "Blackfriars"
   },
   {
-    "name" : "Blackhorse Lane",
     "id" : "940GZZCRBLA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRBLA",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRBLA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.384757,
+      "lon" : -0.070562
+    },
+    "name" : "Blackhorse Lane"
   },
   {
-    "name" : "Blackhorse Road",
     "id" : "HUBBHO",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBLR",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUBLR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.586919,
+      "lon" : -0.04115
+    },
+    "name" : "Blackhorse Road"
   },
   {
-    "name" : "Blackwall",
     "id" : "940GZZDLBLA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLBLA",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLBLA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.507991,
+      "lon" : -0.006969
+    },
+    "name" : "Blackwall"
   },
   {
-    "name" : "Bond Street",
     "id" : "HUBBDS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBND",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUBND"
+        ]
       },
       {
+        "atcoCode" : "910GBONDST",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GBONDST"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUBND",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUBND"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.514304,
+      "lon" : -0.149723
+    },
+    "name" : "Bond Street"
   },
   {
-    "name" : "Borough",
     "id" : "940GZZLUBOR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBOR",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBOR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.501199,
+      "lon" : -0.09337
+    },
+    "name" : "Borough"
   },
   {
-    "name" : "Boston Manor",
     "id" : "940GZZLUBOS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBOS",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUBOS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.495635,
+      "lon" : -0.324939
+    },
+    "name" : "Boston Manor"
   },
   {
-    "name" : "Bounds Green",
     "id" : "940GZZLUBDS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBDS",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUBDS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.607034,
+      "lon" : -0.124235
+    },
+    "name" : "Bounds Green"
   },
   {
-    "name" : "Bow Church",
     "id" : "940GZZDLBOW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLBOW",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLBOW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.527858,
+      "lon" : -0.020936
+    },
+    "name" : "Bow Church"
   },
   {
-    "name" : "Bow Road",
     "id" : "940GZZLUBWR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBWR",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUBWR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.52694,
+      "lon" : -0.025128
+    },
+    "name" : "Bow Road"
   },
   {
-    "name" : "Brent Cross",
     "id" : "940GZZLUBTX",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBTX",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBTX"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.57665,
+      "lon" : -0.213622
+    },
+    "name" : "Brent Cross"
   },
   {
-    "name" : "Brentwood",
     "id" : "910GBRTWOOD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GBRTWOOD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GBRTWOOD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.613605,
+      "lon" : 0.299586
+    },
+    "name" : "Brentwood"
   },
   {
-    "name" : "Brixton",
     "id" : "HUBBRX",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBXN",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUBXN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.462618,
+      "lon" : -0.114888
+    },
+    "name" : "Brixton"
   },
   {
-    "name" : "Bromley-by-Bow",
     "id" : "940GZZLUBBB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBBB",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUBBB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.524839,
+      "lon" : -0.011538
+    },
+    "name" : "Bromley-by-Bow"
   },
   {
-    "name" : "Buckhurst Hill",
     "id" : "940GZZLUBKH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBKH",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUBKH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.626605,
+      "lon" : 0.046757
+    },
+    "name" : "Buckhurst Hill"
   },
   {
-    "name" : "Burnham (Berks)",
     "id" : "910GBNHAM",
     "lineGroups" : [
       {
+        "atcoCode" : "910GBNHAM",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GBNHAM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523506,
+      "lon" : -0.646374
+    },
+    "name" : "Burnham (Berks)"
   },
   {
-    "name" : "Burnt Oak",
     "id" : "940GZZLUBTK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUBTK",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUBTK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.602774,
+      "lon" : -0.264048
+    },
+    "name" : "Burnt Oak"
   },
   {
-    "name" : "Caledonian Road",
     "id" : "940GZZLUCAR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCAR",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUCAR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.548519,
+      "lon" : -0.118493
+    },
+    "name" : "Caledonian Road"
   },
   {
-    "name" : "Camden Town",
     "id" : "940GZZLUCTN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCTN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCTN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.539292,
+      "lon" : -0.14274
+    },
+    "name" : "Camden Town"
   },
   {
-    "name" : "Canada Water",
     "id" : "HUBZCW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCWR",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUCWR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.497931,
+      "lon" : -0.049405
+    },
+    "name" : "Canada Water"
   },
   {
-    "name" : "Canary Wharf",
     "id" : "HUBCAW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCAN",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCAN"
+        ]
       },
       {
+        "atcoCode" : "910GCANWHRF",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GCANWHRF"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUCYF",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUCYF"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.504838,
+      "lon" : -0.020997
+    },
+    "name" : "Canary Wharf"
   },
   {
-    "name" : "Canning Town",
     "id" : "HUBCAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCGT",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCGT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUCGT",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUCGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.514127,
+      "lon" : 0.008101
+    },
+    "name" : "Canning Town"
   },
   {
-    "name" : "Cannon Street",
     "id" : "HUBCST",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCST",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUCST"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51151,
+      "lon" : -0.090432
+    },
+    "name" : "Cannon Street"
   },
   {
-    "name" : "Canons Park",
     "id" : "940GZZLUCPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCPK",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUCPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.607701,
+      "lon" : -0.294693
+    },
+    "name" : "Canons Park"
   },
   {
-    "name" : "Centrale",
     "id" : "940GZZCRCTR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRCTR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRCTR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.375769,
+      "lon" : -0.103917
+    },
+    "name" : "Centrale"
   },
   {
-    "name" : "Chadwell Heath",
     "id" : "910GCHDWLHT",
     "lineGroups" : [
       {
+        "atcoCode" : "910GCHDWLHT",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GCHDWLHT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.568039,
+      "lon" : 0.128958
+    },
+    "name" : "Chadwell Heath"
   },
   {
-    "name" : "Chalfont & Latimer",
     "id" : "HUBCFO",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCAL",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUCAL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.667985,
+      "lon" : -0.560689
+    },
+    "name" : "Chalfont & Latimer"
   },
   {
-    "name" : "Chalk Farm",
     "id" : "940GZZLUCFM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCFM",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCFM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.544118,
+      "lon" : -0.153388
+    },
+    "name" : "Chalk Farm"
   },
   {
-    "name" : "Chancery Lane",
     "id" : "940GZZLUCHL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCHL",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUCHL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.518247,
+      "lon" : -0.111583
+    },
+    "name" : "Chancery Lane"
   },
   {
-    "name" : "Charing Cross",
     "id" : "HUBCHX",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCHX",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUCHX"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUCHX",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCHX"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50741,
+      "lon" : -0.127277
+    },
+    "name" : "Charing Cross"
   },
   {
-    "name" : "Chesham",
     "id" : "940GZZLUCSM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCSM",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUCSM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.705208,
+      "lon" : -0.611247
+    },
+    "name" : "Chesham"
   },
   {
-    "name" : "Chigwell",
     "id" : "940GZZLUCWL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCWL",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUCWL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.617916,
+      "lon" : 0.075041
+    },
+    "name" : "Chigwell"
   },
   {
-    "name" : "Chiswick Park",
     "id" : "940GZZLUCWP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCWP",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUCWP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494627,
+      "lon" : -0.267972
+    },
+    "name" : "Chiswick Park"
   },
   {
-    "name" : "Chorleywood",
     "id" : "HUBCLW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCYD",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUCYD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.654358,
+      "lon" : -0.518461
+    },
+    "name" : "Chorleywood"
   },
   {
-    "name" : "Church Street",
     "id" : "940GZZCRCHR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRCHR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRCHR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.373774,
+      "lon" : -0.103985
+    },
+    "name" : "Church Street"
   },
   {
-    "name" : "Clapham Common",
     "id" : "940GZZLUCPC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCPC",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCPC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.461742,
+      "lon" : -0.138317
+    },
+    "name" : "Clapham Common"
   },
   {
-    "name" : "Clapham North",
     "id" : "940GZZLUCPN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCPN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCPN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.465135,
+      "lon" : -0.130016
+    },
+    "name" : "Clapham North"
   },
   {
-    "name" : "Clapham South",
     "id" : "940GZZLUCPS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCPS",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCPS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.452654,
+      "lon" : -0.147582
+    },
+    "name" : "Clapham South"
   },
   {
-    "name" : "Cockfosters",
     "id" : "940GZZLUCKS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCKS",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUCKS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.65152,
+      "lon" : -0.149171
+    },
+    "name" : "Cockfosters"
   },
   {
-    "name" : "Colindale",
     "id" : "940GZZLUCND",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCND",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCND"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.595424,
+      "lon" : -0.249919
+    },
+    "name" : "Colindale"
   },
   {
-    "name" : "Colliers Wood",
     "id" : "940GZZLUCSD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCSD",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUCSD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.41816,
+      "lon" : -0.178086
+    },
+    "name" : "Colliers Wood"
   },
   {
-    "name" : "Coombe Lane",
     "id" : "940GZZCRCOO",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRCOO",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRCOO"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.359791,
+      "lon" : -0.05956
+    },
+    "name" : "Coombe Lane"
   },
   {
-    "name" : "Covent Garden",
     "id" : "940GZZLUCGN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCGN",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUCGN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.513093,
+      "lon" : -0.124436
+    },
+    "name" : "Covent Garden"
   },
   {
-    "name" : "Crossharbour",
     "id" : "940GZZDLCLA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCLA",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCLA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.495728,
+      "lon" : -0.014606
+    },
+    "name" : "Crossharbour"
   },
   {
-    "name" : "Croxley",
     "id" : "940GZZLUCXY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUCXY",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUCXY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.647044,
+      "lon" : -0.441718
+    },
+    "name" : "Croxley"
   },
   {
-    "name" : "Custom House",
     "id" : "HUBCUS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCUS",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCUS"
+        ]
       },
       {
+        "atcoCode" : "910GCSTMHSXR",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GCSTMHSXR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509716,
+      "lon" : 0.026699
+    },
+    "name" : "Custom House"
   },
   {
-    "name" : "Cutty Sark",
     "id" : "HUBCUT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCUT",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCUT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.481671,
+      "lon" : -0.01081
+    },
+    "name" : "Cutty Sark"
   },
   {
-    "name" : "Cyprus",
     "id" : "940GZZDLCYP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLCYP",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLCYP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508473,
+      "lon" : 0.063925
+    },
+    "name" : "Cyprus"
   },
   {
-    "name" : "Dagenham East",
     "id" : "940GZZLUDGE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUDGE",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUDGE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.544096,
+      "lon" : 0.166017
+    },
+    "name" : "Dagenham East"
   },
   {
-    "name" : "Dagenham Heathway",
     "id" : "940GZZLUDGY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUDGY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUDGY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.541639,
+      "lon" : 0.147527
+    },
+    "name" : "Dagenham Heathway"
   },
   {
-    "name" : "Debden",
     "id" : "940GZZLUDBN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUDBN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUDBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.645386,
+      "lon" : 0.083782
+    },
+    "name" : "Debden"
   },
   {
-    "name" : "Deptford Bridge",
     "id" : "940GZZDLDEP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLDEP",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLDEP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.474215,
+      "lon" : -0.022438
+    },
+    "name" : "Deptford Bridge"
   },
   {
-    "name" : "Devons Road",
     "id" : "940GZZDLDEV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLDEV",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLDEV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.522667,
+      "lon" : -0.017615
+    },
+    "name" : "Devons Road"
   },
   {
-    "name" : "Dollis Hill",
     "id" : "940GZZLUDOH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUDOH",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUDOH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.551955,
+      "lon" : -0.239068
+    },
+    "name" : "Dollis Hill"
   },
   {
-    "name" : "Dundonald Road",
     "id" : "940GZZCRDDR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRDDR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRDDR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.417555,
+      "lon" : -0.207679
+    },
+    "name" : "Dundonald Road"
   },
   {
-    "name" : "Ealing Broadway",
     "id" : "HUBEAL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEBY",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUEBY"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUEBY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUEBY"
+        ]
       },
       {
+        "atcoCode" : "910GEALINGB",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GEALINGB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.515017,
+      "lon" : -0.301457
+    },
+    "name" : "Ealing Broadway"
   },
   {
-    "name" : "Ealing Common",
     "id" : "940GZZLUECM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUECM",
         "lineIds" : [
           "district",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUECM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51014,
+      "lon" : -0.288265
+    },
+    "name" : "Ealing Common"
   },
   {
-    "name" : "Earl's Court",
     "id" : "940GZZLUECT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUECT",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUECT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUECT",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUECT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.492063,
+      "lon" : -0.193378
+    },
+    "name" : "Earl's Court"
   },
   {
-    "name" : "East Acton",
     "id" : "940GZZLUEAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEAN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUEAN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.516612,
+      "lon" : -0.247248
+    },
+    "name" : "East Acton"
   },
   {
-    "name" : "East Croydon",
     "id" : "HUBECY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRECR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRECR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.374854,
+      "lon" : -0.092417
+    },
+    "name" : "East Croydon"
   },
   {
-    "name" : "East Finchley",
     "id" : "940GZZLUEFY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEFY",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUEFY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.587131,
+      "lon" : -0.165012
+    },
+    "name" : "East Finchley"
   },
   {
-    "name" : "East Ham",
     "id" : "940GZZLUEHM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEHM",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUEHM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.538948,
+      "lon" : 0.051186
+    },
+    "name" : "East Ham"
   },
   {
-    "name" : "East India",
     "id" : "940GZZDLEIN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLEIN",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLEIN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509359,
+      "lon" : -0.002326
+    },
+    "name" : "East India"
   },
   {
-    "name" : "East Putney",
     "id" : "940GZZLUEPY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEPY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUEPY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.459205,
+      "lon" : -0.211
+    },
+    "name" : "East Putney"
   },
   {
-    "name" : "Eastcote",
     "id" : "940GZZLUEAE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEAE",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUEAE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.576506,
+      "lon" : -0.397373
+    },
+    "name" : "Eastcote"
   },
   {
-    "name" : "Edgware",
     "id" : "940GZZLUEGW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEGW",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUEGW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.613653,
+      "lon" : -0.274928
+    },
+    "name" : "Edgware"
   },
   {
-    "name" : "Edgware Road (Bakerloo)",
     "id" : "940GZZLUERB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUERB",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUERB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.520299,
+      "lon" : -0.17015
+    },
+    "name" : "Edgware Road (Bakerloo)"
   },
   {
-    "name" : "Edgware Road (Circle Line)",
     "id" : "940GZZLUERC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUERC",
         "lineIds" : [
           "circle"
-        ],
-        "atcoCode" : "940GZZLUERC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUERC",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUERC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUERC",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUERC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.519858,
+      "lon" : -0.167832
+    },
+    "name" : "Edgware Road (Circle Line)"
   },
   {
-    "name" : "Elephant & Castle",
     "id" : "HUBEPH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEAC",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUEAC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUEAC",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUEAC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494536,
+      "lon" : -0.100606
+    },
+    "name" : "Elephant & Castle"
   },
   {
-    "name" : "Elm Park",
     "id" : "940GZZLUEPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEPK",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUEPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.549775,
+      "lon" : 0.19864
+    },
+    "name" : "Elm Park"
   },
   {
-    "name" : "Elmers End",
     "id" : "HUBELM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRELM",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRELM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.39851,
+      "lon" : -0.049555
+    },
+    "name" : "Elmers End"
   },
   {
-    "name" : "Elverson Road",
     "id" : "940GZZDLELV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLELV",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLELV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.469074,
+      "lon" : -0.016728
+    },
+    "name" : "Elverson Road"
   },
   {
-    "name" : "Embankment",
     "id" : "940GZZLUEMB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEMB",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUEMB"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUEMB",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUEMB"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUEMB",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUEMB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.507058,
+      "lon" : -0.122666
+    },
+    "name" : "Embankment"
   },
   {
-    "name" : "Epping",
     "id" : "940GZZLUEPG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEPG",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUEPG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.69368,
+      "lon" : 0.113767
+    },
+    "name" : "Epping"
   },
   {
-    "name" : "Euston",
     "id" : "HUBEUS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUEUS",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUEUS"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUEUS",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUEUS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.527999,
+      "lon" : -0.133785
+    },
+    "name" : "Euston"
   },
   {
-    "name" : "Euston Square",
     "id" : "940GZZLUESQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUESQ",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUESQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.525604,
+      "lon" : -0.135829
+    },
+    "name" : "Euston Square"
   },
   {
-    "name" : "Fairlop",
     "id" : "940GZZLUFLP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFLP",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUFLP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.595618,
+      "lon" : 0.091004
+    },
+    "name" : "Fairlop"
   },
   {
-    "name" : "Farringdon",
     "id" : "HUBZFD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFCN",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUFCN"
+        ]
       },
       {
+        "atcoCode" : "910GFRNDXR",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GFRNDXR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.520252,
+      "lon" : -0.104913
+    },
+    "name" : "Farringdon"
   },
   {
-    "name" : "Fieldway",
     "id" : "940GZZCRFLD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRFLD",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRFLD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.351305,
+      "lon" : -0.024245
+    },
+    "name" : "Fieldway"
   },
   {
-    "name" : "Finchley Central",
     "id" : "940GZZLUFYC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFYC",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUFYC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.600921,
+      "lon" : -0.192527
+    },
+    "name" : "Finchley Central"
   },
   {
-    "name" : "Finchley Road",
     "id" : "940GZZLUFYR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFYR",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUFYR"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUFYR",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUFYR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.546825,
+      "lon" : -0.179845
+    },
+    "name" : "Finchley Road"
   },
   {
-    "name" : "Finsbury Park",
     "id" : "HUBFPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFPK",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUFPK"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUFPK",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUFPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.564158,
+      "lon" : -0.106825
+    },
+    "name" : "Finsbury Park"
   },
   {
-    "name" : "Forest Gate",
     "id" : "910GFRSTGT",
     "lineGroups" : [
       {
+        "atcoCode" : "910GFRSTGT",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GFRSTGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.549432,
+      "lon" : 0.024353
+    },
+    "name" : "Forest Gate"
   },
   {
-    "name" : "Fulham Broadway",
     "id" : "940GZZLUFBY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUFBY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUFBY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.480081,
+      "lon" : -0.195422
+    },
+    "name" : "Fulham Broadway"
   },
   {
-    "name" : "Gallions Reach",
     "id" : "940GZZDLGAL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLGAL",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLGAL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508941,
+      "lon" : 0.071555
+    },
+    "name" : "Gallions Reach"
   },
   {
-    "name" : "Gants Hill",
     "id" : "940GZZLUGTH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGTH",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUGTH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.576544,
+      "lon" : 0.066185
+    },
+    "name" : "Gants Hill"
   },
   {
-    "name" : "George Street",
     "id" : "940GZZCRCEN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRCEN",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRCEN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.373977,
+      "lon" : -0.098746
+    },
+    "name" : "George Street"
   },
   {
-    "name" : "Gidea Park",
     "id" : "910GGIDEAPK",
     "lineGroups" : [
       {
+        "atcoCode" : "910GGIDEAPK",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GGIDEAPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.581904,
+      "lon" : 0.205964
+    },
+    "name" : "Gidea Park"
   },
   {
-    "name" : "Gloucester Road",
     "id" : "940GZZLUGTR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGTR",
         "lineIds" : [
           "circle"
-        ],
-        "atcoCode" : "940GZZLUGTR"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUGTR",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUGTR"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUGTR",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUGTR"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUGTR",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUGTR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494316,
+      "lon" : -0.182658
+    },
+    "name" : "Gloucester Road"
   },
   {
-    "name" : "Golders Green",
     "id" : "940GZZLUGGN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGGN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUGGN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.572259,
+      "lon" : -0.194039
+    },
+    "name" : "Golders Green"
   },
   {
-    "name" : "Goldhawk Road",
     "id" : "940GZZLUGHK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGHK",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUGHK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.502005,
+      "lon" : -0.226715
+    },
+    "name" : "Goldhawk Road"
   },
   {
-    "name" : "Goodge Street",
     "id" : "940GZZLUGDG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGDG",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUGDG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.520599,
+      "lon" : -0.134361
+    },
+    "name" : "Goodge Street"
   },
   {
-    "name" : "Goodmayes",
     "id" : "910GGODMAYS",
     "lineGroups" : [
       {
+        "atcoCode" : "910GGODMAYS",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GGODMAYS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.565579,
+      "lon" : 0.110807
+    },
+    "name" : "Goodmayes"
   },
   {
-    "name" : "Grange Hill",
     "id" : "940GZZLUGGH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGGH",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUGGH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.613378,
+      "lon" : 0.092066
+    },
+    "name" : "Grange Hill"
   },
   {
-    "name" : "Gravel Hill",
     "id" : "940GZZCRGRA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRGRA",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRGRA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.354676,
+      "lon" : -0.042355
+    },
+    "name" : "Gravel Hill"
   },
   {
-    "name" : "Great Portland Street",
     "id" : "940GZZLUGPS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGPS",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUGPS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.52384,
+      "lon" : -0.144262
+    },
+    "name" : "Great Portland Street"
   },
   {
-    "name" : "Green Park",
     "id" : "940GZZLUGPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGPK",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUGPK"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUGPK",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUGPK"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUGPK",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUGPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.506947,
+      "lon" : -0.142787
+    },
+    "name" : "Green Park"
   },
   {
-    "name" : "Greenford",
     "id" : "HUBGFD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGFD",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUGFD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.542424,
+      "lon" : -0.34605
+    },
+    "name" : "Greenford"
   },
   {
-    "name" : "Greenwich",
     "id" : "HUBGNW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLGRE",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLGRE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.478087,
+      "lon" : -0.013673
+    },
+    "name" : "Greenwich"
   },
   {
-    "name" : "Gunnersbury",
     "id" : "HUBGUN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUGBY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUGBY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.491803,
+      "lon" : -0.275267
+    },
+    "name" : "Gunnersbury"
   },
   {
-    "name" : "Hainault",
     "id" : "940GZZLUHLT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHLT",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUHLT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.603659,
+      "lon" : 0.093482
+    },
+    "name" : "Hainault"
   },
   {
-    "name" : "Hammersmith",
     "id" : "HUBHMS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHSC",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUHSC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHSD",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUHSD"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHSD",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHSD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.493535,
+      "lon" : -0.225013
+    },
+    "name" : "Hammersmith"
   },
   {
-    "name" : "Hampstead",
     "id" : "940GZZLUHTD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHTD",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUHTD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.556239,
+      "lon" : -0.177464
+    },
+    "name" : "Hampstead"
   },
   {
-    "name" : "Hanger Lane",
     "id" : "940GZZLUHGR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHGR",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUHGR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.530177,
+      "lon" : -0.292704
+    },
+    "name" : "Hanger Lane"
   },
   {
-    "name" : "Hanwell",
     "id" : "910GHANWELL",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHANWELL",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHANWELL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511835,
+      "lon" : -0.338583
+    },
+    "name" : "Hanwell"
   },
   {
-    "name" : "Harlesden",
     "id" : "HUBHDN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHSN",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUHSN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.53631,
+      "lon" : -0.257883
+    },
+    "name" : "Harlesden"
   },
   {
-    "name" : "Harold Wood",
     "id" : "910GHRLDWOD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHRLDWOD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHRLDWOD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.592766,
+      "lon" : 0.233129
+    },
+    "name" : "Harold Wood"
   },
   {
-    "name" : "Harrington Road",
     "id" : "940GZZCRHAR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRHAR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRHAR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.399609,
+      "lon" : -0.060478
+    },
+    "name" : "Harrington Road"
   },
   {
-    "name" : "Harrow & Wealdstone",
     "id" : "HUBHRW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHAW",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUHAW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.592268,
+      "lon" : -0.335217
+    },
+    "name" : "Harrow & Wealdstone"
   },
   {
-    "name" : "Harrow-on-the-Hill",
     "id" : "HUBHOH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHOH",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUHOH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.579195,
+      "lon" : -0.337225
+    },
+    "name" : "Harrow-on-the-Hill"
   },
   {
-    "name" : "Hatton Cross",
     "id" : "940GZZLUHNX",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHNX",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHNX"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.466747,
+      "lon" : -0.423191
+    },
+    "name" : "Hatton Cross"
   },
   {
-    "name" : "Hayes & Harlington",
     "id" : "910GHAYESAH",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHAYESAH",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHAYESAH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503096,
+      "lon" : -0.420683
+    },
+    "name" : "Hayes & Harlington"
   },
   {
-    "name" : "Heathrow Airport Terminal 4",
     "id" : "HUBHX4",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHTRWTM4",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHTRWTM4"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHR4",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHR4"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.458268,
+      "lon" : -0.445463
+    },
+    "name" : "Heathrow Airport Terminal 4"
   },
   {
-    "name" : "Heathrow Airport Terminal 5",
     "id" : "HUBHX5",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHTRWTM5",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHTRWTM5"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHR5",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHR5"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.470053,
+      "lon" : -0.490589
+    },
+    "name" : "Heathrow Airport Terminal 5"
   },
   {
-    "name" : "Heathrow Terminals 2 & 3",
     "id" : "HUBH13",
     "lineGroups" : [
       {
+        "atcoCode" : "910GHTRWAPT",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GHTRWAPT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHRC",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHRC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.470976,
+      "lon" : -0.458033
+    },
+    "name" : "Heathrow Terminals 2 & 3"
   },
   {
-    "name" : "Hendon Central",
     "id" : "940GZZLUHCL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHCL",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUHCL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.583301,
+      "lon" : -0.226424
+    },
+    "name" : "Hendon Central"
   },
   {
-    "name" : "Heron Quays",
     "id" : "940GZZDLHEQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLHEQ",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLHEQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503379,
+      "lon" : -0.021421
+    },
+    "name" : "Heron Quays"
   },
   {
-    "name" : "High Barnet",
     "id" : "940GZZLUHBT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHBT",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUHBT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.650541,
+      "lon" : -0.194298
+    },
+    "name" : "High Barnet"
   },
   {
-    "name" : "High Street Kensington",
     "id" : "940GZZLUHSK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHSK",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUHSK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.501055,
+      "lon" : -0.192792
+    },
+    "name" : "High Street Kensington"
   },
   {
-    "name" : "Highbury & Islington",
     "id" : "HUBHHY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHAI",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUHAI"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.54635,
+      "lon" : -0.103324
+    },
+    "name" : "Highbury & Islington"
   },
   {
-    "name" : "Highgate",
     "id" : "940GZZLUHGT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHGT",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUHGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.577532,
+      "lon" : -0.145857
+    },
+    "name" : "Highgate"
   },
   {
-    "name" : "Hillingdon",
     "id" : "940GZZLUHGD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHGD",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHGD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.553715,
+      "lon" : -0.449828
+    },
+    "name" : "Hillingdon"
   },
   {
-    "name" : "Holborn",
     "id" : "940GZZLUHBN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHBN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUHBN"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUHBN",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51758,
+      "lon" : -0.120475
+    },
+    "name" : "Holborn"
   },
   {
-    "name" : "Holland Park",
     "id" : "940GZZLUHPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHPK",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUHPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.507143,
+      "lon" : -0.205679
+    },
+    "name" : "Holland Park"
   },
   {
-    "name" : "Holloway Road",
     "id" : "940GZZLUHWY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHWY",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHWY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.552697,
+      "lon" : -0.113244
+    },
+    "name" : "Holloway Road"
   },
   {
-    "name" : "Hornchurch",
     "id" : "940GZZLUHCH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHCH",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUHCH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.554093,
+      "lon" : 0.219116
+    },
+    "name" : "Hornchurch"
   },
   {
-    "name" : "Hounslow Central",
     "id" : "940GZZLUHWC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHWC",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHWC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.471295,
+      "lon" : -0.366578
+    },
+    "name" : "Hounslow Central"
   },
   {
-    "name" : "Hounslow East",
     "id" : "940GZZLUHWE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHWE",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHWE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.473213,
+      "lon" : -0.356474
+    },
+    "name" : "Hounslow East"
   },
   {
-    "name" : "Hounslow West",
     "id" : "940GZZLUHWT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHWT",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHWT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.473469,
+      "lon" : -0.386544
+    },
+    "name" : "Hounslow West"
   },
   {
-    "name" : "Hyde Park Corner",
     "id" : "940GZZLUHPC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUHPC",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUHPC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503035,
+      "lon" : -0.152441
+    },
+    "name" : "Hyde Park Corner"
   },
   {
-    "name" : "Ickenham",
     "id" : "940GZZLUICK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUICK",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUICK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.562025,
+      "lon" : -0.441899
+    },
+    "name" : "Ickenham"
   },
   {
-    "name" : "Ilford",
     "id" : "910GILFORD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GILFORD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GILFORD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.559118,
+      "lon" : 0.06968
+    },
+    "name" : "Ilford"
   },
   {
-    "name" : "Island Gardens",
     "id" : "940GZZDLISL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLISL",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLISL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.487811,
+      "lon" : -0.010139
+    },
+    "name" : "Island Gardens"
   },
   {
-    "name" : "Iver",
     "id" : "910GIVER",
     "lineGroups" : [
       {
+        "atcoCode" : "910GIVER",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GIVER"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508503,
+      "lon" : -0.506726
+    },
+    "name" : "Iver"
   },
   {
-    "name" : "Kennington",
     "id" : "940GZZLUKNG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKNG",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUKNG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.488337,
+      "lon" : -0.105963
+    },
+    "name" : "Kennington"
   },
   {
-    "name" : "Kensal Green",
     "id" : "HUBKNL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKSL",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUKSL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.530539,
+      "lon" : -0.225016
+    },
+    "name" : "Kensal Green"
   },
   {
-    "name" : "Kensington (Olympia)",
     "id" : "HUBKPA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKOY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUKOY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.497624,
+      "lon" : -0.210015
+    },
+    "name" : "Kensington (Olympia)"
   },
   {
-    "name" : "Kentish Town",
     "id" : "HUBKTN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKSH",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUKSH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.550312,
+      "lon" : -0.140733
+    },
+    "name" : "Kentish Town"
   },
   {
-    "name" : "Kenton",
     "id" : "HUBKNT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKEN",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUKEN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.581756,
+      "lon" : -0.31691
+    },
+    "name" : "Kenton"
   },
   {
-    "name" : "Kew Gardens",
     "id" : "HUBKWG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKWG",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUKWG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.477058,
+      "lon" : -0.285241
+    },
+    "name" : "Kew Gardens"
   },
   {
-    "name" : "Kilburn",
     "id" : "940GZZLUKBN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKBN",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUKBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.547183,
+      "lon" : -0.204248
+    },
+    "name" : "Kilburn"
   },
   {
-    "name" : "Kilburn Park",
     "id" : "940GZZLUKPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKPK",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUKPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.534979,
+      "lon" : -0.194232
+    },
+    "name" : "Kilburn Park"
   },
   {
-    "name" : "King George V",
     "id" : "940GZZDLKGV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLKGV",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLKGV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.502003,
+      "lon" : 0.062624
+    },
+    "name" : "King George V"
   },
   {
-    "name" : "King Henry's Drive",
     "id" : "940GZZCRKGH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRKGH",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRKGH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.346138,
+      "lon" : -0.020849
+    },
+    "name" : "King Henry's Drive"
   },
   {
-    "name" : "King's Cross & St Pancras International",
     "id" : "HUBKGX",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKSX",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUKSX"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUKSX",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUKSX"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUKSX",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUKSX"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUKSX",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUKSX"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.530663,
+      "lon" : -0.123194
+    },
+    "name" : "King's Cross & St Pancras International"
   },
   {
-    "name" : "Kingsbury",
     "id" : "940GZZLUKBY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKBY",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUKBY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.584845,
+      "lon" : -0.27879
+    },
+    "name" : "Kingsbury"
   },
   {
-    "name" : "Knightsbridge",
     "id" : "940GZZLUKNB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUKNB",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUKNB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.501669,
+      "lon" : -0.160508
+    },
+    "name" : "Knightsbridge"
   },
   {
-    "name" : "Ladbroke Grove",
     "id" : "940GZZLULAD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULAD",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLULAD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.517449,
+      "lon" : -0.210391
+    },
+    "name" : "Ladbroke Grove"
   },
   {
-    "name" : "Lambeth North",
     "id" : "940GZZLULBN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULBN",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLULBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.498808,
+      "lon" : -0.112315
+    },
+    "name" : "Lambeth North"
   },
   {
-    "name" : "Lancaster Gate",
     "id" : "940GZZLULGT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULGT",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLULGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511723,
+      "lon" : -0.175494
+    },
+    "name" : "Lancaster Gate"
   },
   {
-    "name" : "Langdon Park",
     "id" : "940GZZDLLDP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLLDP",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLLDP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.515172,
+      "lon" : -0.01415
+    },
+    "name" : "Langdon Park"
   },
   {
-    "name" : "Langley (Berks)",
     "id" : "910GLANGLEY",
     "lineGroups" : [
       {
+        "atcoCode" : "910GLANGLEY",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GLANGLEY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508062,
+      "lon" : -0.541756
+    },
+    "name" : "Langley (Berks)"
   },
   {
-    "name" : "Latimer Road",
     "id" : "940GZZLULRD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULRD",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLULRD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.513389,
+      "lon" : -0.217799
+    },
+    "name" : "Latimer Road"
   },
   {
-    "name" : "Lebanon Road",
     "id" : "940GZZCRLEB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRLEB",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRLEB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.375075,
+      "lon" : -0.084418
+    },
+    "name" : "Lebanon Road"
   },
   {
-    "name" : "Leicester Square",
     "id" : "940GZZLULSQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULSQ",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLULSQ"
+        ]
       },
       {
+        "atcoCode" : "940GZZLULSQ",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLULSQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511386,
+      "lon" : -0.128426
+    },
+    "name" : "Leicester Square"
   },
   {
-    "name" : "Lewisham",
     "id" : "HUBLEW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLLEW",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLLEW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.464665,
+      "lon" : -0.012874
+    },
+    "name" : "Lewisham"
   },
   {
-    "name" : "Leyton",
     "id" : "940GZZLULYN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULYN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLULYN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.556589,
+      "lon" : -0.005523
+    },
+    "name" : "Leyton"
   },
   {
-    "name" : "Leytonstone",
     "id" : "940GZZLULYS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULYS",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLULYS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.568324,
+      "lon" : 0.008194
+    },
+    "name" : "Leytonstone"
   },
   {
-    "name" : "Limehouse",
     "id" : "HUBLHS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLLIM",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLLIM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.512393,
+      "lon" : -0.039809
+    },
+    "name" : "Limehouse"
   },
   {
-    "name" : "Liverpool Street",
     "id" : "HUBLST",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULVT",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLULVT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLULVT",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLULVT"
+        ]
       },
       {
+        "atcoCode" : "910GLIVST",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GLIVST"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.517372,
+      "lon" : -0.083182
+    },
+    "name" : "Liverpool Street"
   },
   {
-    "name" : "Lloyd Park",
     "id" : "940GZZCRLOY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRLOY",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRLOY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.364278,
+      "lon" : -0.080775
+    },
+    "name" : "Lloyd Park"
   },
   {
-    "name" : "London Bridge",
     "id" : "HUBLBG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULNB",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLULNB"
+        ]
       },
       {
+        "atcoCode" : "940GZZLULNB",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLULNB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.505721,
+      "lon" : -0.088873
+    },
+    "name" : "London Bridge"
   },
   {
-    "name" : "London City Airport",
     "id" : "HUBLCY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLLCA",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLLCA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503416,
+      "lon" : 0.048739
+    },
+    "name" : "London City Airport"
   },
   {
-    "name" : "Loughton",
     "id" : "940GZZLULGN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLULGN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLULGN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.641443,
+      "lon" : 0.055476
+    },
+    "name" : "Loughton"
   },
   {
-    "name" : "Maida Vale",
     "id" : "940GZZLUMVL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMVL",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUMVL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.529777,
+      "lon" : -0.185758
+    },
+    "name" : "Maida Vale"
   },
   {
-    "name" : "Maidenhead",
     "id" : "910GMDNHEAD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GMDNHEAD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GMDNHEAD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.518669,
+      "lon" : -0.72266
+    },
+    "name" : "Maidenhead"
   },
   {
-    "name" : "Manor House",
     "id" : "940GZZLUMRH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMRH",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUMRH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.570738,
+      "lon" : -0.096118
+    },
+    "name" : "Manor House"
   },
   {
-    "name" : "Manor Park",
     "id" : "910GMANRPK",
     "lineGroups" : [
       {
+        "atcoCode" : "910GMANRPK",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GMANRPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.552477,
+      "lon" : 0.046342
+    },
+    "name" : "Manor Park"
   },
   {
-    "name" : "Mansion House",
     "id" : "940GZZLUMSH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMSH",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUMSH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.512117,
+      "lon" : -0.094009
+    },
+    "name" : "Mansion House"
   },
   {
-    "name" : "Marble Arch",
     "id" : "940GZZLUMBA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMBA",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUMBA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.513424,
+      "lon" : -0.158953
+    },
+    "name" : "Marble Arch"
   },
   {
-    "name" : "Maryland",
     "id" : "910GMRYLAND",
     "lineGroups" : [
       {
+        "atcoCode" : "910GMRYLAND",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GMRYLAND"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.546081,
+      "lon" : 0.005815
+    },
+    "name" : "Maryland"
   },
   {
-    "name" : "Marylebone",
     "id" : "HUBMYB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMYB",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUMYB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.522322,
+      "lon" : -0.163207
+    },
+    "name" : "Marylebone"
   },
   {
-    "name" : "Merton Park",
     "id" : "940GZZCRMTP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRMTP",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRMTP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.413589,
+      "lon" : -0.201219
+    },
+    "name" : "Merton Park"
   },
   {
-    "name" : "Mile End",
     "id" : "940GZZLUMED",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMED",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUMED"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUMED",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUMED"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.525122,
+      "lon" : -0.03364
+    },
+    "name" : "Mile End"
   },
   {
-    "name" : "Mill Hill East",
     "id" : "940GZZLUMHL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMHL",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUMHL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.608229,
+      "lon" : -0.209986
+    },
+    "name" : "Mill Hill East"
   },
   {
-    "name" : "Mitcham",
     "id" : "940GZZCRMCH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRMCH",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRMCH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.39749,
+      "lon" : -0.1709
+    },
+    "name" : "Mitcham"
   },
   {
-    "name" : "Mitcham Junction",
     "id" : "HUBMJT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRMJT",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRMJT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.392859,
+      "lon" : -0.158795
+    },
+    "name" : "Mitcham Junction"
   },
   {
-    "name" : "Monument",
     "id" : "940GZZLUMMT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMMT",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUMMT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.5107,
+      "lon" : -0.085969
+    },
+    "name" : "Monument"
   },
   {
-    "name" : "Moor Park",
     "id" : "940GZZLUMPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMPK",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUMPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.629845,
+      "lon" : -0.432454
+    },
+    "name" : "Moor Park"
   },
   {
-    "name" : "Moorgate",
     "id" : "HUBZMG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMGT",
         "lineIds" : [
           "circle",
           "hammersmith-city",
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUMGT"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUMGT",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUMGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.518176,
+      "lon" : -0.088322
+    },
+    "name" : "Moorgate"
   },
   {
-    "name" : "Morden",
     "id" : "940GZZLUMDN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMDN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUMDN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.402142,
+      "lon" : -0.194839
+    },
+    "name" : "Morden"
   },
   {
-    "name" : "Morden Road",
     "id" : "940GZZCRMDN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRMDN",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRMDN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.40905,
+      "lon" : -0.192597
+    },
+    "name" : "Morden Road"
   },
   {
-    "name" : "Mornington Crescent",
     "id" : "940GZZLUMTC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUMTC",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUMTC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.534679,
+      "lon" : -0.138789
+    },
+    "name" : "Mornington Crescent"
   },
   {
-    "name" : "Mudchute",
     "id" : "940GZZDLMUD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLMUD",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLMUD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.490704,
+      "lon" : -0.014738
+    },
+    "name" : "Mudchute"
   },
   {
-    "name" : "Neasden",
     "id" : "940GZZLUNDN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNDN",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUNDN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.553986,
+      "lon" : -0.249837
+    },
+    "name" : "Neasden"
   },
   {
-    "name" : "New Addington",
     "id" : "940GZZCRNWA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRNWA",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRNWA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.342593,
+      "lon" : -0.017412
+    },
+    "name" : "New Addington"
   },
   {
-    "name" : "Newbury Park",
     "id" : "940GZZLUNBP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNBP",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUNBP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.575726,
+      "lon" : 0.090004
+    },
+    "name" : "Newbury Park"
   },
   {
-    "name" : "Nine Elms",
     "id" : "940GZZNEUGST",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZNEUGST",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZNEUGST"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.479912,
+      "lon" : -0.128476
+    },
+    "name" : "Nine Elms"
   },
   {
-    "name" : "North Acton",
     "id" : "940GZZLUNAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNAN",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUNAN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523524,
+      "lon" : -0.259755
+    },
+    "name" : "North Acton"
   },
   {
-    "name" : "North Ealing",
     "id" : "940GZZLUNEN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNEN",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUNEN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.517505,
+      "lon" : -0.288868
+    },
+    "name" : "North Ealing"
   },
   {
-    "name" : "North Greenwich",
     "id" : "HUBNGW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNGW",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUNGW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50047,
+      "lon" : 0.004287
+    },
+    "name" : "North Greenwich"
   },
   {
-    "name" : "North Harrow",
     "id" : "940GZZLUNHA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNHA",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUNHA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.584872,
+      "lon" : -0.362408
+    },
+    "name" : "North Harrow"
   },
   {
-    "name" : "North Wembley",
     "id" : "HUBNWB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNWY",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUNWY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.562551,
+      "lon" : -0.304
+    },
+    "name" : "North Wembley"
   },
   {
-    "name" : "Northfields",
     "id" : "940GZZLUNFD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNFD",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUNFD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.499319,
+      "lon" : -0.314719
+    },
+    "name" : "Northfields"
   },
   {
-    "name" : "Northolt",
     "id" : "940GZZLUNHT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNHT",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUNHT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.548236,
+      "lon" : -0.368699
+    },
+    "name" : "Northolt"
   },
   {
-    "name" : "Northwick Park",
     "id" : "940GZZLUNKP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNKP",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUNKP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.578481,
+      "lon" : -0.318056
+    },
+    "name" : "Northwick Park"
   },
   {
-    "name" : "Northwood",
     "id" : "940GZZLUNOW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNOW",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUNOW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.611053,
+      "lon" : -0.423829
+    },
+    "name" : "Northwood"
   },
   {
-    "name" : "Northwood Hills",
     "id" : "940GZZLUNWH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNWH",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUNWH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.600572,
+      "lon" : -0.409464
+    },
+    "name" : "Northwood Hills"
   },
   {
-    "name" : "Notting Hill Gate",
     "id" : "940GZZLUNHG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUNHG",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUNHG"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUNHG",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUNHG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509128,
+      "lon" : -0.196104
+    },
+    "name" : "Notting Hill Gate"
   },
   {
-    "name" : "Oakwood",
     "id" : "940GZZLUOAK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUOAK",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUOAK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.647726,
+      "lon" : -0.132182
+    },
+    "name" : "Oakwood"
   },
   {
-    "name" : "Old Street",
     "id" : "HUBOLD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUODS",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUODS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.525864,
+      "lon" : -0.08777
+    },
+    "name" : "Old Street"
   },
   {
-    "name" : "Osterley",
     "id" : "940GZZLUOSY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUOSY",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUOSY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.481274,
+      "lon" : -0.352224
+    },
+    "name" : "Osterley"
   },
   {
-    "name" : "Oval",
     "id" : "940GZZLUOVL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUOVL",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUOVL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.48185,
+      "lon" : -0.112439
+    },
+    "name" : "Oval"
   },
   {
-    "name" : "Oxford Circus",
     "id" : "940GZZLUOXC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUOXC",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUOXC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUOXC",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUOXC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUOXC",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUOXC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.515224,
+      "lon" : -0.141903
+    },
+    "name" : "Oxford Circus"
   },
   {
-    "name" : "Paddington",
     "id" : "HUBPAD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPAC",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUPAC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUPAC",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUPAC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUPAH",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUPAH"
+        ]
       },
       {
+        "atcoCode" : "910GPADTON",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GPADTON"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.516581,
+      "lon" : -0.175689
+    },
+    "name" : "Paddington"
   },
   {
-    "name" : "Park Royal",
     "id" : "940GZZLUPKR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPKR",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUPKR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.527123,
+      "lon" : -0.284341
+    },
+    "name" : "Park Royal"
   },
   {
-    "name" : "Parsons Green",
     "id" : "940GZZLUPSG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPSG",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUPSG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.475277,
+      "lon" : -0.20117
+    },
+    "name" : "Parsons Green"
   },
   {
-    "name" : "Perivale",
     "id" : "940GZZLUPVL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPVL",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUPVL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.536717,
+      "lon" : -0.323446
+    },
+    "name" : "Perivale"
   },
   {
-    "name" : "Phipps Bridge",
     "id" : "940GZZCRPHI",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRPHI",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRPHI"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.40423,
+      "lon" : -0.182249
+    },
+    "name" : "Phipps Bridge"
   },
   {
-    "name" : "Piccadilly Circus",
     "id" : "940GZZLUPCC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPCC",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUPCC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUPCC",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUPCC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51005,
+      "lon" : -0.133798
+    },
+    "name" : "Piccadilly Circus"
   },
   {
-    "name" : "Pimlico",
     "id" : "940GZZLUPCO",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPCO",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUPCO"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.489097,
+      "lon" : -0.133761
+    },
+    "name" : "Pimlico"
   },
   {
-    "name" : "Pinner",
     "id" : "940GZZLUPNR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPNR",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUPNR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.592901,
+      "lon" : -0.381161
+    },
+    "name" : "Pinner"
   },
   {
-    "name" : "Plaistow",
     "id" : "940GZZLUPLW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPLW",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUPLW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.531341,
+      "lon" : 0.017451
+    },
+    "name" : "Plaistow"
   },
   {
-    "name" : "Pontoon Dock",
     "id" : "940GZZDLPDK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLPDK",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLPDK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.502212,
+      "lon" : 0.032115
+    },
+    "name" : "Pontoon Dock"
   },
   {
-    "name" : "Poplar",
     "id" : "940GZZDLPOP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLPOP",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLPOP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.507744,
+      "lon" : -0.017384
+    },
+    "name" : "Poplar"
   },
   {
-    "name" : "Preston Road",
     "id" : "940GZZLUPRD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPRD",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUPRD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.571972,
+      "lon" : -0.295107
+    },
+    "name" : "Preston Road"
   },
   {
-    "name" : "Prince Regent",
     "id" : "940GZZDLPRE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLPRE",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLPRE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509263,
+      "lon" : 0.034158
+    },
+    "name" : "Prince Regent"
   },
   {
-    "name" : "Pudding Mill Lane",
     "id" : "940GZZDLPUD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLPUD",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLPUD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.534302,
+      "lon" : -0.012755
+    },
+    "name" : "Pudding Mill Lane"
   },
   {
-    "name" : "Putney Bridge",
     "id" : "940GZZLUPYB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUPYB",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUPYB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.468262,
+      "lon" : -0.208731
+    },
+    "name" : "Putney Bridge"
   },
   {
-    "name" : "Queen's Park",
     "id" : "HUBQPW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUQPS",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUQPS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.534158,
+      "lon" : -0.204574
+    },
+    "name" : "Queen's Park"
   },
   {
-    "name" : "Queensbury",
     "id" : "940GZZLUQBY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUQBY",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUQBY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.594188,
+      "lon" : -0.286219
+    },
+    "name" : "Queensbury"
   },
   {
-    "name" : "Queensway",
     "id" : "940GZZLUQWY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUQWY",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUQWY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.510312,
+      "lon" : -0.187152
+    },
+    "name" : "Queensway"
   },
   {
-    "name" : "Ravenscourt Park",
     "id" : "940GZZLURVP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURVP",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLURVP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494122,
+      "lon" : -0.235881
+    },
+    "name" : "Ravenscourt Park"
   },
   {
-    "name" : "Rayners Lane",
     "id" : "940GZZLURYL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURYL",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLURYL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.575147,
+      "lon" : -0.371127
+    },
+    "name" : "Rayners Lane"
   },
   {
-    "name" : "Reading",
     "id" : "910GRDNGSTN",
     "lineGroups" : [
       {
+        "atcoCode" : "910GRDNGSTN",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GRDNGSTN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.458786,
+      "lon" : -0.971863
+    },
+    "name" : "Reading"
   },
   {
-    "name" : "Redbridge",
     "id" : "940GZZLURBG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURBG",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLURBG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.576243,
+      "lon" : 0.04536
+    },
+    "name" : "Redbridge"
   },
   {
-    "name" : "Reeves Corner",
     "id" : "940GZZCRRVC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRRVC",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRRVC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.37527,
+      "lon" : -0.10638
+    },
+    "name" : "Reeves Corner"
   },
   {
-    "name" : "Regent's Park",
     "id" : "940GZZLURGP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURGP",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLURGP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523344,
+      "lon" : -0.146444
+    },
+    "name" : "Regent's Park"
   },
   {
-    "name" : "Richmond",
     "id" : "HUBRMD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURMD",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLURMD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.463237,
+      "lon" : -0.301336
+    },
+    "name" : "Richmond"
   },
   {
-    "name" : "Rickmansworth",
     "id" : "HUBRIC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURKW",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLURKW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.640207,
+      "lon" : -0.473703
+    },
+    "name" : "Rickmansworth"
   },
   {
-    "name" : "Roding Valley",
     "id" : "940GZZLURVY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURVY",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLURVY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.617199,
+      "lon" : 0.043647
+    },
+    "name" : "Roding Valley"
   },
   {
-    "name" : "Romford",
     "id" : "910GROMFORD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GROMFORD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GROMFORD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.574829,
+      "lon" : 0.183237
+    },
+    "name" : "Romford"
   },
   {
-    "name" : "Royal Albert",
     "id" : "940GZZDLRAL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLRAL",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLRAL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.508357,
+      "lon" : 0.045935
+    },
+    "name" : "Royal Albert"
   },
   {
-    "name" : "Royal Oak",
     "id" : "940GZZLURYO",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURYO",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLURYO"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.519113,
+      "lon" : -0.188748
+    },
+    "name" : "Royal Oak"
   },
   {
-    "name" : "Royal Victoria",
     "id" : "HUBRVC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLRVC",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLRVC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509336,
+      "lon" : 0.018497
+    },
+    "name" : "Royal Victoria"
   },
   {
-    "name" : "Ruislip",
     "id" : "940GZZLURSP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURSP",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLURSP"
+        ]
       },
       {
+        "atcoCode" : "940GZZLURSP",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLURSP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.571354,
+      "lon" : -0.421898
+    },
+    "name" : "Ruislip"
   },
   {
-    "name" : "Ruislip Gardens",
     "id" : "940GZZLURSG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURSG",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLURSG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.560736,
+      "lon" : -0.41071
+    },
+    "name" : "Ruislip Gardens"
   },
   {
-    "name" : "Ruislip Manor",
     "id" : "940GZZLURSM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURSM",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLURSM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.573202,
+      "lon" : -0.412973
+    },
+    "name" : "Ruislip Manor"
   },
   {
-    "name" : "Russell Square",
     "id" : "940GZZLURSQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLURSQ",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLURSQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523073,
+      "lon" : -0.124285
+    },
+    "name" : "Russell Square"
   },
   {
-    "name" : "Sandilands",
     "id" : "940GZZCRSAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRSAN",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRSAN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.375024,
+      "lon" : -0.078041
+    },
+    "name" : "Sandilands"
   },
   {
-    "name" : "Seven Kings",
     "id" : "910GSVNKNGS",
     "lineGroups" : [
       {
+        "atcoCode" : "910GSVNKNGS",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GSVNKNGS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.564026,
+      "lon" : 0.0971
+    },
+    "name" : "Seven Kings"
   },
   {
-    "name" : "Seven Sisters",
     "id" : "HUBSVS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSVS",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUSVS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.58333,
+      "lon" : -0.072584
+    },
+    "name" : "Seven Sisters"
   },
   {
-    "name" : "Shadwell",
     "id" : "HUBSDE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLSHA",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSHA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511693,
+      "lon" : -0.056643
+    },
+    "name" : "Shadwell"
   },
   {
-    "name" : "Shenfield",
     "id" : "910GSHENFLD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GSHENFLD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GSHENFLD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.630877,
+      "lon" : 0.329851
+    },
+    "name" : "Shenfield"
   },
   {
-    "name" : "Shepherd's Bush",
     "id" : "HUBSPB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSBC",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSBC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.504376,
+      "lon" : -0.218813
+    },
+    "name" : "Shepherd's Bush"
   },
   {
-    "name" : "Shepherd's Bush Market",
     "id" : "940GZZLUSBM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSBM",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUSBM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.505579,
+      "lon" : -0.226375
+    },
+    "name" : "Shepherd's Bush Market"
   },
   {
-    "name" : "Sloane Square",
     "id" : "940GZZLUSSQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSSQ",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUSSQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.49227,
+      "lon" : -0.156377
+    },
+    "name" : "Sloane Square"
   },
   {
-    "name" : "Slough",
     "id" : "910GSLOUGH",
     "lineGroups" : [
       {
+        "atcoCode" : "910GSLOUGH",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GSLOUGH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.51188,
+      "lon" : -0.59151
+    },
+    "name" : "Slough"
   },
   {
-    "name" : "Snaresbrook",
     "id" : "940GZZLUSNB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSNB",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSNB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.580678,
+      "lon" : 0.02144
+    },
+    "name" : "Snaresbrook"
   },
   {
-    "name" : "South Ealing",
     "id" : "940GZZLUSEA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSEA",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSEA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.501003,
+      "lon" : -0.307424
+    },
+    "name" : "South Ealing"
   },
   {
-    "name" : "South Harrow",
     "id" : "940GZZLUSHH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSHH",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSHH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.564888,
+      "lon" : -0.352492
+    },
+    "name" : "South Harrow"
   },
   {
-    "name" : "South Kensington",
     "id" : "940GZZLUSKS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSKS",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUSKS"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUSKS",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSKS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494094,
+      "lon" : -0.174138
+    },
+    "name" : "South Kensington"
   },
   {
-    "name" : "South Kenton",
     "id" : "HUBSOK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSKT",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUSKT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.570232,
+      "lon" : -0.308433
+    },
+    "name" : "South Kenton"
   },
   {
-    "name" : "South Quay",
     "id" : "940GZZDLSOQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLSOQ",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSOQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50005,
+      "lon" : -0.015975
+    },
+    "name" : "South Quay"
   },
   {
-    "name" : "South Ruislip",
     "id" : "HUBSRU",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSRP",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSRP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.556853,
+      "lon" : -0.398915
+    },
+    "name" : "South Ruislip"
   },
   {
-    "name" : "South Wimbledon",
     "id" : "940GZZLUSWN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSWN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUSWN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.415309,
+      "lon" : -0.192005
+    },
+    "name" : "South Wimbledon"
   },
   {
-    "name" : "South Woodford",
     "id" : "940GZZLUSWF",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSWF",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSWF"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.591907,
+      "lon" : 0.027338
+    },
+    "name" : "South Woodford"
   },
   {
-    "name" : "Southall",
     "id" : "910GSTHALL",
     "lineGroups" : [
       {
+        "atcoCode" : "910GSTHALL",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GSTHALL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.505957,
+      "lon" : -0.37861
+    },
+    "name" : "Southall"
   },
   {
-    "name" : "Southfields",
     "id" : "940GZZLUSFS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSFS",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUSFS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.445073,
+      "lon" : -0.206602
+    },
+    "name" : "Southfields"
   },
   {
-    "name" : "Southgate",
     "id" : "940GZZLUSGT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSGT",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSGT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.632315,
+      "lon" : -0.127816
+    },
+    "name" : "Southgate"
   },
   {
-    "name" : "Southwark",
     "id" : "940GZZLUSWK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSWK",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUSWK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50427,
+      "lon" : -0.105331
+    },
+    "name" : "Southwark"
   },
   {
-    "name" : "St. James's Park",
     "id" : "940GZZLUSJP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSJP",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUSJP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.499544,
+      "lon" : -0.133608
+    },
+    "name" : "St. James's Park"
   },
   {
-    "name" : "St. John's Wood",
     "id" : "940GZZLUSJW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSJW",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUSJW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.534521,
+      "lon" : -0.173948
+    },
+    "name" : "St. John's Wood"
   },
   {
-    "name" : "St. Paul's",
     "id" : "940GZZLUSPU",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSPU",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSPU"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.514936,
+      "lon" : -0.097567
+    },
+    "name" : "St. Paul's"
   },
   {
-    "name" : "Stamford Brook",
     "id" : "940GZZLUSFB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSFB",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUSFB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.494917,
+      "lon" : -0.245704
+    },
+    "name" : "Stamford Brook"
   },
   {
-    "name" : "Stanmore",
     "id" : "940GZZLUSTM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSTM",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUSTM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.619839,
+      "lon" : -0.303266
+    },
+    "name" : "Stanmore"
   },
   {
-    "name" : "Star Lane",
     "id" : "940GZZDLSTL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLSTL",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSTL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.520786,
+      "lon" : 0.004156
+    },
+    "name" : "Star Lane"
   },
   {
-    "name" : "Stepney Green",
     "id" : "940GZZLUSGN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSGN",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUSGN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.521858,
+      "lon" : -0.046596
+    },
+    "name" : "Stepney Green"
   },
   {
-    "name" : "Stockwell",
     "id" : "940GZZLUSKW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSKW",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUSKW"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUSKW",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUSKW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.472184,
+      "lon" : -0.122644
+    },
+    "name" : "Stockwell"
   },
   {
-    "name" : "Stonebridge Park",
     "id" : "HUBSBP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSGP",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUSGP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.543959,
+      "lon" : -0.275892
+    },
+    "name" : "Stonebridge Park"
   },
   {
-    "name" : "Stratford",
     "id" : "HUBSRA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSTD",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUSTD"
+        ]
       },
       {
+        "atcoCode" : "940GZZDLSTD",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSTD"
+        ]
       },
       {
+        "atcoCode" : "910GSTFD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GSTFD"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUSTD",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUSTD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.541806,
+      "lon" : -0.003458
+    },
+    "name" : "Stratford"
   },
   {
-    "name" : "Stratford High Street",
     "id" : "940GZZDLSHS",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLSHS",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSHS"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.538196,
+      "lon" : -0.001078
+    },
+    "name" : "Stratford High Street"
   },
   {
-    "name" : "Stratford International",
     "id" : "940GZZDLSIT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLSIT",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLSIT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.545265,
+      "lon" : -0.009638
+    },
+    "name" : "Stratford International"
   },
   {
-    "name" : "Sudbury Hill",
     "id" : "940GZZLUSUH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSUH",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSUH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.556946,
+      "lon" : -0.336435
+    },
+    "name" : "Sudbury Hill"
   },
   {
-    "name" : "Sudbury Town",
     "id" : "940GZZLUSUT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSUT",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUSUT"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.550815,
+      "lon" : -0.315745
+    },
+    "name" : "Sudbury Town"
   },
   {
-    "name" : "Swiss Cottage",
     "id" : "940GZZLUSWC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUSWC",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUSWC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.543681,
+      "lon" : -0.174894
+    },
+    "name" : "Swiss Cottage"
   },
   {
-    "name" : "Taplow",
     "id" : "910GTAPLOW",
     "lineGroups" : [
       {
+        "atcoCode" : "910GTAPLOW",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GTAPLOW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523562,
+      "lon" : -0.68137
+    },
+    "name" : "Taplow"
   },
   {
-    "name" : "Temple",
     "id" : "940GZZLUTMP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTMP",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUTMP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511006,
+      "lon" : -0.11426
+    },
+    "name" : "Temple"
   },
   {
-    "name" : "Therapia Lane",
     "id" : "940GZZCRTPA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRTPA",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRTPA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.385697,
+      "lon" : -0.129045
+    },
+    "name" : "Therapia Lane"
   },
   {
-    "name" : "Theydon Bois",
     "id" : "940GZZLUTHB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTHB",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUTHB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.671759,
+      "lon" : 0.103085
+    },
+    "name" : "Theydon Bois"
   },
   {
-    "name" : "Tooting Bec",
     "id" : "940GZZLUTBC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTBC",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUTBC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.435678,
+      "lon" : -0.159736
+    },
+    "name" : "Tooting Bec"
   },
   {
-    "name" : "Tooting Broadway",
     "id" : "940GZZLUTBY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTBY",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUTBY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.42763,
+      "lon" : -0.168374
+    },
+    "name" : "Tooting Broadway"
   },
   {
-    "name" : "Tottenham Court Road",
     "id" : "HUBTCR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTCR",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUTCR"
+        ]
       },
       {
+        "atcoCode" : "910GTOTCTRD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GTOTCTRD"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUTCR",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUTCR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.516426,
+      "lon" : -0.13041
+    },
+    "name" : "Tottenham Court Road"
   },
   {
-    "name" : "Tottenham Hale",
     "id" : "HUBTOM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTMH",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUTMH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.588108,
+      "lon" : -0.060241
+    },
+    "name" : "Tottenham Hale"
   },
   {
-    "name" : "Totteridge & Whetstone",
     "id" : "940GZZLUTAW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTAW",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUTAW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.630597,
+      "lon" : -0.17921
+    },
+    "name" : "Totteridge & Whetstone"
   },
   {
-    "name" : "Tower Gateway",
     "id" : "HUBTOG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLTWG",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLTWG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.510617,
+      "lon" : -0.074818
+    },
+    "name" : "Tower Gateway"
   },
   {
-    "name" : "Tower Hill",
     "id" : "940GZZLUTWH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTWH",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUTWH"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509971,
+      "lon" : -0.076546
+    },
+    "name" : "Tower Hill"
   },
   {
-    "name" : "Tufnell Park",
     "id" : "940GZZLUTFP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTFP",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUTFP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.556822,
+      "lon" : -0.138433
+    },
+    "name" : "Tufnell Park"
   },
   {
-    "name" : "Turnham Green",
     "id" : "940GZZLUTNG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTNG",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUTNG"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUTNG",
         "lineIds" : [
           "district",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUTNG"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUTNG",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUTNG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.495148,
+      "lon" : -0.254555
+    },
+    "name" : "Turnham Green"
   },
   {
-    "name" : "Turnpike Lane",
     "id" : "940GZZLUTPN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUTPN",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUTPN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.590272,
+      "lon" : -0.102953
+    },
+    "name" : "Turnpike Lane"
   },
   {
-    "name" : "Twyford",
     "id" : "910GTWYFORD",
     "lineGroups" : [
       {
+        "atcoCode" : "910GTWYFORD",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GTWYFORD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.475534,
+      "lon" : -0.863293
+    },
+    "name" : "Twyford"
   },
   {
-    "name" : "Upminster",
     "id" : "HUBUPM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUUPM",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUUPM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.559063,
+      "lon" : 0.250882
+    },
+    "name" : "Upminster"
   },
   {
-    "name" : "Upminster Bridge",
     "id" : "940GZZLUUPB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUUPB",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUUPB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.55856,
+      "lon" : 0.235809
+    },
+    "name" : "Upminster Bridge"
   },
   {
-    "name" : "Upney",
     "id" : "940GZZLUUPY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUUPY",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUUPY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.538372,
+      "lon" : 0.10153
+    },
+    "name" : "Upney"
   },
   {
-    "name" : "Upton Park",
     "id" : "940GZZLUUPK",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUUPK",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUUPK"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.53534,
+      "lon" : 0.035263
+    },
+    "name" : "Upton Park"
   },
   {
-    "name" : "Uxbridge",
     "id" : "940GZZLUUXB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUUXB",
         "lineIds" : [
           "metropolitan",
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUUXB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.546565,
+      "lon" : -0.477949
+    },
+    "name" : "Uxbridge"
   },
   {
-    "name" : "Vauxhall",
     "id" : "HUBVXH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUVXL",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUVXL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.485743,
+      "lon" : -0.124204
+    },
+    "name" : "Vauxhall"
   },
   {
-    "name" : "Victoria",
     "id" : "HUBVIC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUVIC",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUVIC"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUVIC",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUVIC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.496359,
+      "lon" : -0.143102
+    },
+    "name" : "Victoria"
   },
   {
-    "name" : "Waddon Marsh",
     "id" : "940GZZCRWAD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRWAD",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWAD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.377076,
+      "lon" : -0.118016
+    },
+    "name" : "Waddon Marsh"
   },
   {
-    "name" : "Walthamstow Central",
     "id" : "HUBWHC",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWWL",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUWWL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.582965,
+      "lon" : -0.019885
+    },
+    "name" : "Walthamstow Central"
   },
   {
-    "name" : "Wandle Park",
     "id" : "940GZZCRWAN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRWAN",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWAN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.373022,
+      "lon" : -0.113082
+    },
+    "name" : "Wandle Park"
   },
   {
-    "name" : "Wanstead",
     "id" : "940GZZLUWSD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWSD",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUWSD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.575501,
+      "lon" : 0.028527
+    },
+    "name" : "Wanstead"
   },
   {
-    "name" : "Warren Street",
     "id" : "940GZZLUWRR",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWRR",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUWRR"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWRR",
         "lineIds" : [
           "victoria"
-        ],
-        "atcoCode" : "940GZZLUWRR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.524951,
+      "lon" : -0.138321
+    },
+    "name" : "Warren Street"
   },
   {
-    "name" : "Warwick Avenue",
     "id" : "940GZZLUWKA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWKA",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUWKA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.523263,
+      "lon" : -0.183783
+    },
+    "name" : "Warwick Avenue"
   },
   {
-    "name" : "Waterloo",
     "id" : "HUBWAT",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWLO",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUWLO"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWLO",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWLO"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWLO",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUWLO"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWLO",
         "lineIds" : [
           "waterloo-city"
-        ],
-        "atcoCode" : "940GZZLUWLO"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.503299,
+      "lon" : -0.11478
+    },
+    "name" : "Waterloo"
   },
   {
-    "name" : "Watford",
     "id" : "940GZZLUWAF",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWAF",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUWAF"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.657446,
+      "lon" : -0.417377
+    },
+    "name" : "Watford"
   },
   {
-    "name" : "Wellesley Road",
     "id" : "940GZZCRWEL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRWEL",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWEL"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.375369,
+      "lon" : -0.097539
+    },
+    "name" : "Wellesley Road"
   },
   {
-    "name" : "Wembley Central",
     "id" : "HUBWMB",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWYC",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUWYC"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.552304,
+      "lon" : -0.296852
+    },
+    "name" : "Wembley Central"
   },
   {
-    "name" : "Wembley Park",
     "id" : "940GZZLUWYP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWYP",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWYP"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWYP",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUWYP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.563198,
+      "lon" : -0.279262
+    },
+    "name" : "Wembley Park"
   },
   {
-    "name" : "West Acton",
     "id" : "940GZZLUWTA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWTA",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUWTA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.518001,
+      "lon" : -0.28098
+    },
+    "name" : "West Acton"
   },
   {
-    "name" : "West Brompton",
     "id" : "HUBWBP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWBN",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUWBN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.487268,
+      "lon" : -0.195599
+    },
+    "name" : "West Brompton"
   },
   {
-    "name" : "West Croydon",
     "id" : "HUBWCY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRWCR",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWCR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.379083,
+      "lon" : -0.101984
+    },
+    "name" : "West Croydon"
   },
   {
-    "name" : "West Drayton",
     "id" : "910GWDRYTON",
     "lineGroups" : [
       {
+        "atcoCode" : "910GWDRYTON",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GWDRYTON"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.510055,
+      "lon" : -0.472234
+    },
+    "name" : "West Drayton"
   },
   {
-    "name" : "West Ealing",
     "id" : "910GWEALING",
     "lineGroups" : [
       {
+        "atcoCode" : "910GWEALING",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GWEALING"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.513506,
+      "lon" : -0.320133
+    },
+    "name" : "West Ealing"
   },
   {
-    "name" : "West Finchley",
     "id" : "940GZZLUWFN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWFN",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUWFN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.609426,
+      "lon" : -0.188362
+    },
+    "name" : "West Finchley"
   },
   {
-    "name" : "West Ham",
     "id" : "HUBWEH",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWHM",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUWHM"
+        ]
       },
       {
+        "atcoCode" : "940GZZDLWHM",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLWHM"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWHM",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWHM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.528136,
+      "lon" : 0.005055
+    },
+    "name" : "West Ham"
   },
   {
-    "name" : "West Hampstead",
     "id" : "HUBWHD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWHP",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWHP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.546638,
+      "lon" : -0.191059
+    },
+    "name" : "West Hampstead"
   },
   {
-    "name" : "West Harrow",
     "id" : "940GZZLUWHW",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWHW",
         "lineIds" : [
           "metropolitan"
-        ],
-        "atcoCode" : "940GZZLUWHW"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.57971,
+      "lon" : -0.3534
+    },
+    "name" : "West Harrow"
   },
   {
-    "name" : "West India Quay",
     "id" : "940GZZDLWIQ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLWIQ",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLWIQ"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50703,
+      "lon" : -0.020311
+    },
+    "name" : "West India Quay"
   },
   {
-    "name" : "West Kensington",
     "id" : "940GZZLUWKN",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWKN",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUWKN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.490459,
+      "lon" : -0.206636
+    },
+    "name" : "West Kensington"
   },
   {
-    "name" : "West Ruislip",
     "id" : "HUBWRU",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWRP",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUWRP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.569688,
+      "lon" : -0.437886
+    },
+    "name" : "West Ruislip"
   },
   {
-    "name" : "West Silvertown",
     "id" : "940GZZDLWSV",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLWSV",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLWSV"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.502838,
+      "lon" : 0.02246
+    },
+    "name" : "West Silvertown"
   },
   {
-    "name" : "Westbourne Park",
     "id" : "940GZZLUWSP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWSP",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUWSP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.52111,
+      "lon" : -0.201065
+    },
+    "name" : "Westbourne Park"
   },
   {
-    "name" : "Westferry",
     "id" : "940GZZDLWFE",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLWFE",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLWFE"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509431,
+      "lon" : -0.02675
+    },
+    "name" : "Westferry"
   },
   {
-    "name" : "Westminster",
     "id" : "HUBWSM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWSM",
         "lineIds" : [
           "circle",
           "district"
-        ],
-        "atcoCode" : "940GZZLUWSM"
+        ]
       },
       {
+        "atcoCode" : "940GZZLUWSM",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWSM"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.50132,
+      "lon" : -0.124861
+    },
+    "name" : "Westminster"
   },
   {
-    "name" : "White City",
     "id" : "940GZZLUWCY",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWCY",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUWCY"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.511959,
+      "lon" : -0.224297
+    },
+    "name" : "White City"
   },
   {
-    "name" : "Whitechapel",
     "id" : "HUBZWL",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWPL",
         "lineIds" : [
           "district",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUWPL"
+        ]
       },
       {
+        "atcoCode" : "910GWCHAPXR",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GWCHAPXR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.519518,
+      "lon" : -0.059971
+    },
+    "name" : "Whitechapel"
   },
   {
-    "name" : "Willesden Green",
     "id" : "940GZZLUWIG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWIG",
         "lineIds" : [
           "jubilee"
-        ],
-        "atcoCode" : "940GZZLUWIG"
+        ]
+      },
+      {
+        "atcoCode" : "940GZZLUWIG",
+        "lineIds" : [
+          "metropolitan"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.549146,
+      "lon" : -0.221537
+    },
+    "name" : "Willesden Green"
   },
   {
-    "name" : "Willesden Junction",
     "id" : "HUBWIJ",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWJN",
         "lineIds" : [
           "bakerloo"
-        ],
-        "atcoCode" : "940GZZLUWJN"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.532259,
+      "lon" : -0.244283
+    },
+    "name" : "Willesden Junction"
   },
   {
-    "name" : "Wimbledon",
     "id" : "HUBWIM",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWIM",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUWIM"
+        ]
       },
       {
+        "atcoCode" : "940GZZCRWMB",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWMB"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.421207,
+      "lon" : -0.206573
+    },
+    "name" : "Wimbledon"
   },
   {
-    "name" : "Wimbledon Park",
     "id" : "940GZZLUWIP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWIP",
         "lineIds" : [
           "district"
-        ],
-        "atcoCode" : "940GZZLUWIP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.434573,
+      "lon" : -0.199719
+    },
+    "name" : "Wimbledon Park"
   },
   {
-    "name" : "Wood Green",
     "id" : "940GZZLUWOG",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWOG",
         "lineIds" : [
           "piccadilly"
-        ],
-        "atcoCode" : "940GZZLUWOG"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.597479,
+      "lon" : -0.109886
+    },
+    "name" : "Wood Green"
   },
   {
-    "name" : "Wood Lane",
     "id" : "940GZZLUWLA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWLA",
         "lineIds" : [
           "circle",
           "hammersmith-city"
-        ],
-        "atcoCode" : "940GZZLUWLA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.509669,
+      "lon" : -0.22453
+    },
+    "name" : "Wood Lane"
   },
   {
-    "name" : "Woodford",
     "id" : "940GZZLUWOF",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWOF",
         "lineIds" : [
           "central"
-        ],
-        "atcoCode" : "940GZZLUWOF"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.606899,
+      "lon" : 0.03397
+    },
+    "name" : "Woodford"
   },
   {
-    "name" : "Woodside",
     "id" : "940GZZCRWOD",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZCRWOD",
         "lineIds" : [
           "tram"
-        ],
-        "atcoCode" : "940GZZCRWOD"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.38732,
+      "lon" : -0.064576
+    },
+    "name" : "Woodside"
   },
   {
-    "name" : "Woodside Park",
     "id" : "940GZZLUWOP",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZLUWOP",
         "lineIds" : [
           "northern"
-        ],
-        "atcoCode" : "940GZZLUWOP"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.618014,
+      "lon" : -0.18542
+    },
+    "name" : "Woodside Park"
   },
   {
-    "name" : "Woolwich",
     "id" : "910GWOLWXR",
     "lineGroups" : [
       {
+        "atcoCode" : "910GWOLWXR",
         "lineIds" : [
           "elizabeth"
-        ],
-        "atcoCode" : "910GWOLWXR"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.491851,
+      "lon" : 0.070737
+    },
+    "name" : "Woolwich"
   },
   {
-    "name" : "Woolwich Arsenal",
     "id" : "HUBWWA",
     "lineGroups" : [
       {
+        "atcoCode" : "940GZZDLWLA",
         "lineIds" : [
           "dlr"
-        ],
-        "atcoCode" : "940GZZDLWLA"
+        ]
       }
-    ]
+    ],
+    "location" : {
+      "lat" : 51.490009,
+      "lon" : 0.069127
+    },
+    "name" : "Woolwich Arsenal"
   }
 ]
 """

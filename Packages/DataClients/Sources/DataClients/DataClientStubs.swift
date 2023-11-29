@@ -20,6 +20,10 @@ public extension DataClientStubs {
     static var userPreferences: UserPreferencesClientType {
         StubUserPreferencesClient()
     }
+    
+    static var location: LocationClientType {
+        StubLocationClient()
+    }
 }
 
 
@@ -59,6 +63,12 @@ public final class StubTransportAPIClient: TransportAPIClientType {
         return stubbedArrivalDepartures
     }
 
+    public private(set) var fetchStationDisruptionsCallCount = 0
+    public var stubbedDisruptedPoints: [DisruptedPoint] = ModelStubs.disruptedStations
+    public func fetchStationDisruptions() async throws -> [DisruptedPoint] {
+        fetchStationDisruptionsCallCount += 1
+        return stubbedDisruptedPoints
+    }
 }
 
 

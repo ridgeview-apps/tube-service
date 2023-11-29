@@ -2,31 +2,33 @@ import Shared
 import SwiftUI
 import Models
 
+// MARK: - Data types
+
+public enum ArrivalsPickerStyle: Equatable {
+    case normal(favouriteLineGroupIDs: Set<Station.LineGroup.ID>)
+    case searchResults
+}
+
+
+// MARK: - ArrivalsPickerView
+
 public struct ArrivalsPickerView: View {
     
-    public enum Style {
-        case normal(favouriteLineGroupIDs: Set<Station.LineGroup.ID>)
-        case searchResults
-    }
-    
-    public let style: Style
+    public let style: ArrivalsPickerStyle
     public let allStations: [Station]
 
-    @Binding public var selectedLineGroup: Station.LineGroup?
+    @Binding public var selection: Station.LineGroup?
     
     private let favourites: [Station]
-    
-    @ScaledMetric private var dynamicTextScale: CGFloat = 1
-    
     
     // MARK: - Init
     
     public init(allStations: [Station],
-                style: Style,
-                selectedLineGroup: Binding<Station.LineGroup?>) {
+                style: ArrivalsPickerStyle,
+                selection: Binding<Station.LineGroup?>) {
         self.allStations = allStations
         self.style = style
-        self._selectedLineGroup = selectedLineGroup
+        self._selection = selection
         
         switch style {
         case let .normal(favouriteLineGroupIDs):
@@ -39,59 +41,77 @@ public struct ArrivalsPickerView: View {
     // MARK: Layout
     
     public var body: some View {
-        List(selection: $selectedLineGroup) {
-            section(stations: favourites) {
-                HStack(spacing: 4) {
-                    Image(systemName: "star.fill")
-                        .imageScale(.small)
-                    Text("arrivals.picker.favourites.section.title", bundle: .module)
-                }
+        List(selection: $selection) {
+            if case .normal = style {
+                favouritesSection
             }
-            section(stations: allStations) {
-                allStationsSectionTitle
-            }
+            allStationsSection
         }
         .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
-        
     }
     
-    @ViewBuilder private func section(stations: [Station], header: () -> some View) -> some View {
-        if !stations.isEmpty {
-            Section {
-                ForEach(stations) { station in
-                    cell(for: station)
-                }
-            } header: {
-                header()
-            }
-            .listRowSeparator(.visible, edges: .bottom)
-            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
-            .listRowBackground(Color.defaultBackground)
+    @ViewBuilder private var favouritesSection: some View {
+        if !favourites.isEmpty {
+            stationsSection(with: favourites,
+                            header: .init(title: "arrivals.picker.favourites.section.title",
+                                          imageName: "star.fill"))
         }
     }
     
-    @ViewBuilder private var allStationsSectionTitle: some View {
+    private var allStationsSection: some View {
+        stationsSection(with: allStations,
+                        header: .init(title: allStationsSectionHeaderTitle))
+    }
+    
+    private func stationsSection(with stations: [Station],
+                                 header: LineGroupSectionHeader) -> some View {
+        Section {
+            ForEach(stations) { station in
+                ArrivalsPickerExpandableCell(style: .plain, station: station)
+            }
+        } header: {
+            header
+        }
+        .lineGroupListRowStyle()
+    }
+    
+    private var allStationsSectionHeaderTitle: LocalizedStringKey {
         switch style {
         case .normal:
-            Text("arrivals.picker.all.stations.section.title", bundle: .module)
+            LocalizedStringKey("arrivals.picker.all.stations.section.title")
         case .searchResults:
-            Text("arrivals.picker.search.results.count \(allStations.count)", bundle: .module)
+            LocalizedStringKey("stations.search.results.count \(allStations.count)")
         }
     }
+}
+
+
+private struct ArrivalsPickerExpandableCell: View {
     
-    @ViewBuilder private func cell(for station: Station) -> some View {
+    @ScaledMetric private var dynamicTextScale: CGFloat = 1
+    
+    let style: LineGroupCell.Style
+    let station: Station
+    
+    var body: some View {
         Group {
             if station.lineGroups.count == 1 {
-                navigationLink(for: station.lineGroups[0], title: station.name)
+                lineGroupCellLink(for: station.lineGroups[0],
+                                  title: station.name,
+                                  showsDistance: true)
             } else {
                 DisclosureGroup {
                     ForEach(station.lineGroups.sortedByName()) { lineGroup in
-                        navigationLink(for: lineGroup, title: lineGroup.name)
+                        lineGroupCellLink(for: lineGroup,
+                                          title: lineGroup.name,
+                                          showsDistance: false)
                     }
                 } label: {
-                    rowLabel(withLineIDs: station.sortedLineIDs, title: station.name)
+                    lineGroupCell(withLineIDs: station.sortedLineIDs,
+                                  title: station.name,
+                                  showsDistance: true)
                         .accessibilityIdentifier(station.id)
                 }
                 .tint(.clear)
@@ -100,25 +120,27 @@ public struct ArrivalsPickerView: View {
         .frame(minHeight: 44 * dynamicTextScale)
     }
     
-    private func navigationLink(for lineGroup: Station.LineGroup, title: String) -> some View {
+    
+    private func lineGroupCellLink(for lineGroup: Station.LineGroup,
+                                   title: String,
+                                   showsDistance: Bool) -> some View {
         NavigationLink(value: lineGroup) {
-            rowLabel(withLineIDs: lineGroup.lineIds.sortedByName(), title: title)
+            lineGroupCell(withLineIDs: lineGroup.lineIds.sortedByName(),
+                          title: title,
+                          showsDistance: showsDistance)
         }
         .accessibilityIdentifier("\(lineGroup.id)")
     }
     
-    private func rowLabel(withLineIDs lineIDs: [LineID], title: String) -> some View {
-        HStack(spacing: 8) {
-            LineColourKeyView(lineIDs: lineIDs)
-                .frame(width: 40, height: 40)
-                .roundedBorder(.white)
-            Text(title)
-            Spacer()
-        }
-        .contentShape(Rectangle())
-        .foregroundColor(Color.primary)
+    private func lineGroupCell(withLineIDs lineIDs: [LineID],
+                               title: String,
+                               showsDistance: Bool) -> some View {
+        LineGroupCell(style: style,
+                      lineIDs: lineIDs,
+                      title: title)
     }
 }
+
 
 
 // MARK: - Previews
@@ -126,18 +148,18 @@ public struct ArrivalsPickerView: View {
 #if DEBUG
 private struct WrapperView: View  {
     var allStations: [Station] = ModelStubs.stations
-    var style: ArrivalsPickerView.Style
-    @State var selectedLineGroup: Station.LineGroup?
+    var style: ArrivalsPickerStyle
+    @State var selection: Station.LineGroup?
     
     var body: some View {
         NavigationSplitView {
             ArrivalsPickerView(allStations: allStations,
                                style: style,
-                               selectedLineGroup: $selectedLineGroup)
+                               selection: $selection)
             .navigationTitle("Picker preview")
         } detail: {
-            if let selectedLineGroup {
-                Text("\(selectedLineGroup.name) selected")
+            if let selection {
+                Text("\(String(describing: selection)) selected")
             } else {
                 Text("No value selected")
             }

@@ -1,9 +1,11 @@
+import CoreLocation
 import DataClients
 
 struct DataClients {
     var userPreferences: UserPreferencesClientType
     var stations: StationsClientType
     var transportAPI: TransportAPIClientType
+    var location: LocationClientType
 }
 
 // MARK: - Real instance
@@ -15,7 +17,8 @@ extension DataClients {
         stations: StationsClient(),
         transportAPI: TransportAPIClient(baseURL: AppConfig.real.transportAPI.baseURL,
                                          appID: AppConfig.real.transportAPI.appID,
-                                         appKey: AppConfig.real.transportAPI.appKey)
+                                         appKey: AppConfig.real.transportAPI.appKey),
+        location: CLLocationManager()
     )
 }
 
@@ -28,7 +31,8 @@ extension DataClients {
     static let stub = DataClients(
         userPreferences: DataClientStubs.userPreferences,
         stations: DataClientStubs.stations,
-        transportAPI: DataClientStubs.transportAPI
+        transportAPI: DataClientStubs.transportAPI,
+        location: DataClientStubs.location
     )
 }
 #endif

@@ -80,7 +80,22 @@ public extension ModelStubs {
 public extension ModelStubs {
     static var stations: [Station] { Station.allValues() }
     
+    static var angelStation: Station { stations.first { $0.id == "940GZZLUAGL" }! }
+    static var eastFinchleyStation: Station { stations.first { $0.id == "940GZZLUEFY" }! }
+    static var finchleyCentralStation: Station { stations.first { $0.id == "940GZZLUFYC" }! }
+    static var highBarnetStation: Station { stations.first { $0.id == "940GZZLUHBT" }! }
     static var kingsCrossStation: Station { stations.first { $0.id == "HUBKGX" }! }
     static var paddingtonStation: Station { stations.first { $0.id == "HUBPAD" }! }
-    static var highBarnetStation: Station { stations.first { $0.id == "940GZZLUHBT" }! }
+    static var russellSquareStation: Station { stations.first { $0.id == "940GZZLURSQ" }! }
+    static var totteridgeAndWhetstoneStation: Station { stations.first { $0.id == "940GZZLUTAW" }! }
+    static var westFinchleyStation: Station { stations.first { $0.id == "940GZZLUWFN" }! }
+    static var woodsideParkStation: Station { stations.first { $0.id == "940GZZLUWOP" }! }
+}
+
+
+// MARK: - Disrupted points
+
+public extension ModelStubs {
+    
+    static var disruptedStations: [DisruptedPoint] { decodedValue(for: disruptedStationsJSON) }
 }

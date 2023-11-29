@@ -12,7 +12,7 @@ struct SettingsScreen: View {
     var body: some View {
         NavigationStack {
             SettingsView(appVersionNumber: Bundle.main.appVersionNumber,
-                         appReviewURL: appConfig.appStoreProductUrl,
+                         appReviewURL: appConfig.appReviewURL,
                          contactUs: .init(emailAddress: appConfig.contactUsEmail,
                                           appVersion: Bundle.main.appVersionNumber,
                                           appName: Bundle.main.appName,

@@ -8,6 +8,7 @@
 
 import XCTest
 
+@MainActor
 class TubeServiceUITests: XCTestCase {
     
     private var app: XCUIApplication!
@@ -15,10 +16,22 @@ class TubeServiceUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         
+        
         app = XCUIApplication()
         app.launchArguments = ["UITests"]
         setupSnapshot(app)
         app.launch()
+        
+        // Handle location permisssions alert
+        addUIInterruptionMonitor(withDescription: "Allow \"Tube Service\" to use your location?") { (alert) -> Bool in
+            let button = alert.buttons["Allow While Using App"]
+            if button.exists {
+                button.tap()
+                return true
+            }
+
+            return false
+        }
     }
     
     func testGenerateAppScreenshots() throws {
@@ -35,16 +48,17 @@ class TubeServiceUITests: XCTestCase {
         
         XCUIDevice.shared.orientation = iPad ? .landscapeLeft : .portrait
 
+        //----------------------------------------------
+        // Status Tab
+                
         app.buttons["Status"].tap()
-
-        // Status - Today
-        
+                
         if iPhone {
             captureScreenshot("ServiceStatuses-Today")
         }
 
-        // Status detail - Today
-        
+        // Status - today
+        _ = app.buttons["circle"].waitForExistence(timeout: 10)
         app.buttons["circle"].tapUnhittable()
         captureScreenshot("ServiceStatusDetail-Today")
         
@@ -52,13 +66,15 @@ class TubeServiceUITests: XCTestCase {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
         
-        // Status - Weekend
+        // Status - weekend
         
         app.buttons["acc.id.filter.option.thisWeekend"].tap()
         captureScreenshot("ServiceStatuses-Weekend")
         
         
-        // Arrivals List
+        //----------------------------------------------
+        // Arrivals tab
+        
         app.buttons["Live arrivals"].tap()
         
         if iPhone {
@@ -72,6 +88,29 @@ class TubeServiceUITests: XCTestCase {
         if iPhone {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
+        
+        
+        //----------------------------------------------
+        // Location tab
+
+        app.buttons["Nearby"].tap()
+        
+        if iPhone {
+            captureScreenshot("NearbyStations-List")
+        }
+        
+        if app.buttons["King's Cross & St Pancras International, 200 yd"].waitForExistence(timeout: 20) {
+            app.buttons["King's Cross & St Pancras International, 200 yd"].tapUnhittable()
+        } else {
+            XCTFail()
+            return
+        }
+        
+        captureScreenshot("NearbyStations-Detail")
+        
+        
+        //----------------------------------------------
+        // Maps tab
         
         app.buttons["Maps"].tap()
         

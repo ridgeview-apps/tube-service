@@ -19,6 +19,7 @@ public extension Sequence where Element == Station {
             }
             return Station(id: $0.id,
                            name: $0.name,
+                           location: $0.location,
                            lineGroups: filteredLineGroups)
         }
     }

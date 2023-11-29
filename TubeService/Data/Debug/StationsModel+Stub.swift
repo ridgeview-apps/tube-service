@@ -5,8 +5,10 @@ import Foundation
 
 extension StationsModel {
     
-    static func stub(stationsClient: StationsClientType = StubStationsClient()) -> StationsModel {
-        return .init(stationsClient: stationsClient)
+    static func stub(stationsClient: StationsClientType = StubStationsClient(),
+                     transportAPI: TransportAPIClientType = StubTransportAPIClient()) -> StationsModel {
+        return .init(stationsClient: stationsClient,
+                     transportAPI: transportAPI)
     }
 }
 
