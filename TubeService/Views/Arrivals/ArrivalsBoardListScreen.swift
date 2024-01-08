@@ -1,4 +1,5 @@
 import Combine
+import DataStores
 import Models
 import PresentationViews
 import SwiftUI
@@ -14,7 +15,7 @@ struct ArrivalsBoardListScreen: View {
     @State private var autoRefreshEnabled = false
         
     @Environment(\.transportAPI) var transportAPI
-    @EnvironmentObject var userPreferences: UserPreferencesModel
+    @EnvironmentObject var userPreferences: UserPreferencesDataStore
     
     private let autoRefreshTimer: AnyPublisher<Date, Never> = Timer.autoconnectedPublisher(every: 20)
     

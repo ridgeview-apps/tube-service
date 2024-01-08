@@ -54,10 +54,6 @@ public extension Line {
         (lineStatuses ?? []).sortedByStatusSeverity()
     }
     
-    var isDisrupted: Bool {
-        (lineStatuses ?? []).contains { $0.isDisrupted }
-    }
-    
     var sortProperties: SortProperties {
         (isDisrupted ? 0 : 1,
          lineName: id.name)

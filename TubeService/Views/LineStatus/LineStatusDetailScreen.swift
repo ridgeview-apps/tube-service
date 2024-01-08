@@ -1,3 +1,4 @@
+import DataStores
 import Models
 import PresentationViews
 import Shared
@@ -5,7 +6,7 @@ import SwiftUI
 
 struct LineStatusDetailScreen: View {
     
-    @EnvironmentObject var userPreferences: UserPreferencesModel
+    @EnvironmentObject var userPreferences: UserPreferencesDataStore
     
     let line: Line
     

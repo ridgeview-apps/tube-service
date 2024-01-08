@@ -1,38 +1,38 @@
-import DataClients
+import DataStores
 import SwiftUI
 
 @main
 struct RootScene: App {
     
-    @StateObject private var appModel = makeAppModel()
+    @StateObject private var appData = makeAppDataStore()
     
     var body: some Scene {
         WindowGroup {
             RootScreen()
-                .environmentObject(appModel)
-                .withEnvironmentObjects(lineStatus: appModel.lineStatus,
-                                        stations: appModel.stations,
-                                        userPreferences: appModel.userPreferences,
-                                        location: appModel.location)
+                .environmentObject(appData)
+                .withEnvironmentDataStores(lineStatus: appData.lineStatus,
+                                           stations: appData.stations,
+                                           userPreferences: appData.userPreferences,
+                                           location: appData.location)
         }
     }
     
-    private static func makeAppModel() -> AppModel {
+    private static func makeAppDataStore() -> AppDataStore {
 #if DEBUG
         if ProcessInfo.isRunningUITests { return .stub() }
 #endif
         
-        return .real()
+        return .real
     }
 }
 
 
 extension View {
     
-    func withEnvironmentObjects(lineStatus: LineStatusModel,
-                                stations: StationsModel,
-                                userPreferences: UserPreferencesModel,
-                                location: LocationModel) -> some View {
+    func withEnvironmentDataStores(lineStatus: LineStatusDataStore,
+                                   stations: StationsDataStore,
+                                   userPreferences: UserPreferencesDataStore,
+                                   location: LocationDataStore) -> some View {
         self
             .environmentObject(lineStatus)
             .environmentObject(stations)

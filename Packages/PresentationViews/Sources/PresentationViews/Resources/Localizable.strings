@@ -55,7 +55,7 @@
 "maps.tube.day.link.title" = "Tube (Day map)";
 "maps.tube.night.link.title" = "Tube (Night map)";
 
-"nearby.stations.access.denied.message.title" = "This feature needs access to your current location. Please allow access in App Settings";
+"nearby.stations.access.denied.message.title" = "This feature needs access to your current location. Please allow access in App Settings.";
 "nearby.stations.allow.access.button.title" = "Current location";
 "nearby.stations.allow.access.header.title" = "Tap the button below to allow access to your current location";
 "nearby.stations.allow.access.footer.title" = "Your location will be used to detect stations nearby";

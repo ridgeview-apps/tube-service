@@ -1,11 +1,5 @@
 import Foundation
-import DataClients
-
-public enum DataFetchState {
-    case fetching
-    case success
-    case failure(Error)
-}
+import DataStores
 
 extension Error {
     

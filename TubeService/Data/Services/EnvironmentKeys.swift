@@ -1,10 +1,11 @@
 import SwiftUI
-import DataClients
+import DataStores
 
 // MARK: - TransportAPI environment key
 
 private struct TransportAPIEnvironmentKey: EnvironmentKey {
-    static let defaultValue: TransportAPIClientType = DataClients.real.transportAPI
+    @MainActor
+    static let defaultValue: TransportAPIClientType = AppDataStore.real.transportAPI
 }
 
 extension EnvironmentValues {

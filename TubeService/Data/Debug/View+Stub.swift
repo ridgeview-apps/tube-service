@@ -1,4 +1,4 @@
-import DataClients
+import DataStores
 import SwiftUI
 
 #if DEBUG
@@ -7,12 +7,12 @@ extension View {
     
     @MainActor 
     func withStubbedEnvironment() -> some View {
-        withEnvironmentObjects(lineStatus: LineStatusModel.stub(),
-                               stations: StationsModel.stub(),
-                               userPreferences: UserPreferencesModel.stub(),
-                               location: LocationModel.stub())
-        .environment(\.transportAPI, StubTransportAPIClient())
-        .environment(\.appConfig, AppConfig.stub)
+        withEnvironmentDataStores(lineStatus: LineStatusDataStore.stub(),
+                                  stations: StationsDataStore.stub(),
+                                  userPreferences: UserPreferencesDataStore.stub(),
+                                  location: LocationDataStore.stub())
+            .environment(\.transportAPI, StubTransportAPIClient())
+            .environment(\.appConfig, AppConfig.stub)
     }
 }
 

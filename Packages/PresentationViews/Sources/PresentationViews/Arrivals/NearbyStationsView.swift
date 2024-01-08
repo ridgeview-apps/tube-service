@@ -36,6 +36,7 @@ public struct NearbyStationsView: View {
         self.pagedResultsSize = pagedResultsSize
     }
     
+    
     // MARK: Layout
     
     public var body: some View {
@@ -226,7 +227,7 @@ private struct WrapperView: View  {
                                selection: $selection,
                                currentPageNo: $currentPageNo,
                                pagedResultsSize: pagedResultsSize)
-              .navigationTitle("Nearby stations preview")
+              .navigationTitle("Nearby stations")
         } detail: {
             if let selection {
                 Text("\(String(describing: selection)) selected")

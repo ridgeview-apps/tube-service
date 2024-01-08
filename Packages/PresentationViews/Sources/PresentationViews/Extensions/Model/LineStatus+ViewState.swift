@@ -8,10 +8,3 @@ extension Sequence where Element == LineStatus {
         }
     }
 }
-
-extension LineStatus {
-    
-    var isDisrupted: Bool {
-        self.statusSeverity != .goodService
-    }
-}

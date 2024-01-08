@@ -83,7 +83,7 @@ public struct LineStatusCell: View {
     
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
         Group {
-            if lines.allAreGoodService {
+            if lines.count == LineID.allCases.count {
                 Text("line.status.planned.good.service.all.lines.title", bundle: .module)
             } else {
                 Text("line.status.planned.good.service.other.lines.title", bundle: .module)

@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "695C5AB0-8116-463E-A661-6917F2019D11",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "DataStoresTests",
+        "name" : "DataStoresTests"
+      }
+    }
+  ],
+  "version" : 1
+}

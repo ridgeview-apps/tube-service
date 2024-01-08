@@ -1,12 +1,12 @@
-import DataClients
+import DataStores
 import Foundation
 
 #if DEBUG
 
-extension LocationModel {
+extension LocationDataStore {
     
-    static func stub() -> LocationModel {
-        return .init(locationManager: StubLocationClient())
+    static func stub() -> LocationDataStore {
+        return .init(locationManager: StubLocationManager())
     }
 }
 

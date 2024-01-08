@@ -49,16 +49,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DataClientsTests"
-               BuildableName = "DataClientsTests"
-               BlueprintName = "DataClientsTests"
-               ReferencedContainer = "container:Packages/DataClients">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "SharedTests"
                BuildableName = "SharedTests"
                BlueprintName = "SharedTests"
@@ -83,6 +73,16 @@
                BuildableName = "PresentationViewsTests"
                BlueprintName = "PresentationViewsTests"
                ReferencedContainer = "container:Packages/PresentationViews">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "DataStoresTests"
+               BuildableName = "DataStoresTests"
+               BlueprintName = "DataStoresTests"
+               ReferencedContainer = "container:Packages/DataStores">
             </BuildableReference>
          </TestableReference>
       </Testables>

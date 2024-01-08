@@ -1,11 +1,12 @@
+import DataStores
 import Models
 import PresentationViews
 import SwiftUI
 
 struct NearbyStationsScreen: View {
 
-    @EnvironmentObject var stations: StationsModel
-    @EnvironmentObject var location: LocationModel
+    @EnvironmentObject var stations: StationsDataStore
+    @EnvironmentObject var location: LocationDataStore
     
     @State private var selectedStation: NearbyStation?
     @State private var selectedStationViewItem: StationView.Selection?
@@ -122,7 +123,7 @@ struct NearbyStationsScreen: View {
     }
 }
 
-private extension LocationModel.DetectionState {
+private extension LocationDataStore.DetectionState {
     
     func toLoadingState() -> LoadingState {
         switch self {

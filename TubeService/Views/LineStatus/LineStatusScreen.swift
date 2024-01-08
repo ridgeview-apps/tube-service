@@ -1,11 +1,12 @@
+import DataStores
 import Models
 import PresentationViews
 import Shared
 import SwiftUI
 
 struct LineStatusScreen: View {
-    @EnvironmentObject var model: LineStatusModel
-    @EnvironmentObject var userPreferences: UserPreferencesModel
+    @EnvironmentObject var model: LineStatusDataStore
+    @EnvironmentObject var userPreferences: UserPreferencesDataStore
     
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
@@ -68,7 +69,7 @@ struct LineStatusScreen: View {
     }
     
     private var lines: [Line] {
-        return model.fetchedData(for: currentFetchType)?.lines ?? []
+        return (model.fetchedData(for: currentFetchType)?.lines ?? []).sortedByStatusSeverity()
     }
     
     private var refreshDate: Date? {
@@ -87,7 +88,7 @@ struct LineStatusScreen: View {
         }
     }
     
-    private var currentFetchType: LineStatusModel.FetchType {
+    private var currentFetchType: LineStatusDataStore.FetchType {
         switch selectedFilterOption {
         case .today:
             return .today
