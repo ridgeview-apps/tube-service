@@ -19,7 +19,7 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 
 The app uses the [MV architecture](https://azamsharp.com/2023/02/28/building-large-scale-apps-swiftui.html) but I have previously used both MVVM and the [Swift Composable Architecture](https://github.com/pointfreeco/swift-composable-architecture).
 
-> The original app's source code (developed using The Composable Architecture) is available [here](https://github.com/ridgeview-apps/tube-service/tree/tca).
+> The original app's source code (developed using The Composable Architecture) is available [here](https://github.com/ridgeview-apps/tube-service/tree/legacy/tca).
 
 Swift Package Manager is used to modularize the app as follows:
 
@@ -34,7 +34,7 @@ The main app target itself is predominantly just composed of "screens" (which do
 
 The current tube line statuses are a good example of data used in more than one part of the app. The feature is set up as follows:
 
-* The data objects objects (e.g. `Line`, `LineStatus`) are defined in the `Models` package.
+* The data objects (e.g. `Line`, `LineStatus`) are defined in the `Models` package.
 * The `LineStatusDataStore` (in the `DataStores` package) is responsible for loading and storing line status data (as an `ObservableObject` / `EnvironmentObject` which can then be used globally across the app). The `ObservableObject` resides here rather than in the the main app target as this makes it more reusable across other targets (for example, widget extensions, watch etc).
 * The `PresentationViews` package uses the model objects to build reusable / previewable components (i.e. so has access to the `Models` package but NOT the `DataStores` package)
 * In the main app target, `LineStatusDataStore` is used in a couple of places (`LineStatusScreen` and `NearbyStationsScreen`). These are completely separate screens and assembled with different presentation views but both share the same `LineStatusDataStore` object as their source of truth (hence any updates on one screen will automatically reflect on the other).
@@ -70,7 +70,7 @@ Note that the Xcconfig files themselves contain two "kinds" of config:
 1. Build settings (e.g. code signing settings, compilation settings, bundle ID)
 1. Environment settings (API urls etc)
 
-The environment settings are exposed in the `Info.plist` and are loaded / referenced from Swift code as `AppConfig`.
+The environment settings are exposed in the `Info.plist` file and are loaded / referenced from Swift code as `AppConfig`.
 
 
 ## Fastlane / CI
