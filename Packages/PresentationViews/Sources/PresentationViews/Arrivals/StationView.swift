@@ -206,7 +206,6 @@ private struct WrapperView: View {
 }
 
 
-
 struct StationMapView: View {
     let station: Station
     
@@ -269,7 +268,7 @@ private struct LegacyStationMapView: View {
             coordinateRegion: $mapRegion,
             showsUserLocation: true,
             annotationItems: [station.location]
-        ) { location in
+        ) { _ in
             MapMarker(coordinate: stationCoordinate)
         }
         .task {

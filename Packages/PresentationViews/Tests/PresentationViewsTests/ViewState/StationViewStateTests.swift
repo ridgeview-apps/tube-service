@@ -11,7 +11,7 @@ final class StationViewStateTests: XCTestCase {
             ModelStubs.kingsCrossStation.sortedLineIDs
         )
         XCTAssertEqual(
-            [.bakerloo, .circle, .district,  .elizabeth, .hammersmithAndCity],
+            [.bakerloo, .circle, .district, .elizabeth, .hammersmithAndCity],
             ModelStubs.paddingtonStation.sortedLineIDs
         )
         XCTAssertEqual([.northern], ModelStubs.highBarnetStation.sortedLineIDs)

@@ -5,7 +5,7 @@ import RidgeviewCore
 @MainActor
 public final class StationsDataStore: ObservableObject {
     
-    //  MARK: - Data types
+    // MARK: - Data types
     
     struct FetchedDisruptionData {
         var messagesByStationID: [Station.ID: [String]]
@@ -112,7 +112,7 @@ private extension String {
 
 private extension Sequence where Element == DisruptedPoint {
     
-    func toMessagesGroupedByStationID(stationsByAtcoCode: [String: Station]) ->  [Station.ID: [String]] {
+    func toMessagesGroupedByStationID(stationsByAtcoCode: [String: Station]) -> [Station.ID: [String]] {
         
         var messagesByStationID = [Station.ID: [String]]()
                                    

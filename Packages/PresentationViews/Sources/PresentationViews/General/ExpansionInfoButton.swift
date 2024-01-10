@@ -19,9 +19,9 @@ public struct ExpansionInfoButton: View {
     }
     
     public var body: some View {
-        Button(action: {
+        Button {
             isExpanded.toggle()
-        }) {
+        } label: {
             HStack {
                 expansionButtonImage
                     .rotationEffect(isExpanded ? .init(degrees: 180) : .init(degrees: 0))

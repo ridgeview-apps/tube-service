@@ -146,4 +146,3 @@ final class LineViewStateTests: XCTestCase {
         )
     }
 }
-

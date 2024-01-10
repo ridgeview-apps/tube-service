@@ -79,9 +79,9 @@ private extension Sequence where Element == TransportMode {
 
 private extension Date {
     func toAPIYearMonthDayParam() throws -> String {
-        let df = DateFormatter()
-        df.dateFormat = "yyyy-MM-dd"
-        df.timeZone = .london
-        return df.string(from: self)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        formatter.timeZone = .london
+        return formatter.string(from: self)
     }
 }

@@ -27,8 +27,6 @@ enum NavigationButton {
 }
 
 
-// TODO - refactor this later to show other common toolbar items
-
 struct SettingsToolBarButton: ViewModifier {
     @State private var showSettings: Bool = false
     

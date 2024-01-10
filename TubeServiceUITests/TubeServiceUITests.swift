@@ -48,7 +48,7 @@ class TubeServiceUITests: XCTestCase {
         
         XCUIDevice.shared.orientation = iPad ? .landscapeLeft : .portrait
 
-        //----------------------------------------------
+        // ----------------------------------------------
         // Status Tab
                 
         app.buttons["Status"].tap()
@@ -72,7 +72,7 @@ class TubeServiceUITests: XCTestCase {
         captureScreenshot("ServiceStatuses-Weekend")
         
         
-        //----------------------------------------------
+        // ----------------------------------------------
         // Arrivals tab
         
         app.buttons["Live arrivals"].tap()
@@ -90,7 +90,7 @@ class TubeServiceUITests: XCTestCase {
         }
         
         
-        //----------------------------------------------
+        // ----------------------------------------------
         // Location tab
 
         app.buttons["Nearby"].tap()
@@ -109,7 +109,7 @@ class TubeServiceUITests: XCTestCase {
         captureScreenshot("NearbyStations-Detail")
         
         
-        //----------------------------------------------
+        // ----------------------------------------------
         // Maps tab
         
         app.buttons["Maps"].tap()

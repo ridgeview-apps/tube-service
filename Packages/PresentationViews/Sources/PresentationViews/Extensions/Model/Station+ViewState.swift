@@ -1,7 +1,7 @@
 import Models
 import Foundation
 
-public extension Station  {
+public extension Station {
     
     var sortedLineIDs: [LineID] {
         Set(lineGroups.flatMap { $0.lineIds }).sortedByName()

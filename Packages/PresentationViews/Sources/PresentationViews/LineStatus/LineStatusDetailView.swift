@@ -130,9 +130,9 @@ public struct LineStatusDetailView: View {
     }
     
     @ViewBuilder private func twitterLinkButton(for link: LineStatusTwitterLink) -> some View {
-        Button(action: {
+        Button {
             twitterLinkSelection = link
-        }) {
+        } label: {
             Group {
                 switch link.style {
                 case .tflAllTweets:

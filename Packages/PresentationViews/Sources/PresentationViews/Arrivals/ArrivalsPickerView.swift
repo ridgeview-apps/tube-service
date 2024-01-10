@@ -142,11 +142,10 @@ private struct ArrivalsPickerExpandableCell: View {
 }
 
 
-
 // MARK: - Previews
 
 #if DEBUG
-private struct WrapperView: View  {
+private struct WrapperView: View {
     var allStations: [Station] = ModelStubs.stations
     var style: ArrivalsPickerStyle
     @State var selection: Station.LineGroup?

@@ -220,7 +220,7 @@ extension ArrivalsBoardView {
 
 struct ArrivalsBoardView_Previews: PreviewProvider {
     
-    struct WrapperView: View  {
+    struct WrapperView: View {
         var boardState: ArrivalsBoardState
         @State var isExpanded: Bool = false
         

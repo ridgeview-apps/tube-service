@@ -263,7 +263,7 @@ private extension LineStatusFilterOption {
 // MARK: - Previews
 
 #if DEBUG
-private struct WrapperView: View  {
+private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
     var favouriteLineIDs: Set<LineID> = []

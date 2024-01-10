@@ -5,7 +5,7 @@ extension View {
     func lineGroupListRowStyle() -> some View {
         self
             .listRowSeparator(.visible, edges: .bottom)
-            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing:  16))
+            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowBackground(Color.defaultCellBackground)
     }
 }

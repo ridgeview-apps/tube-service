@@ -208,7 +208,7 @@ public struct NearbyStationsView: View {
 // MARK: - Previews
 
 #if DEBUG
-private struct WrapperView: View  {
+private struct WrapperView: View {
     var mode: NearbyStationsView.Mode
     var onAction: (NearbyStationsView.Action) -> Void = {
         switch $0 {

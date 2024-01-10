@@ -1,16 +1,3 @@
-//{
-//    "$type": "Tfl.Api.Presentation.Entities.ArrivalDeparture, Tfl.Api.Presentation.Entities",
-//    "platformName": "Platform Unknown",
-//    "destinationName": "Abbey Wood",
-//    "naptanId": "910GPADTON",
-//    "stationName": "London Paddington Rail Station",
-//    "estimatedTimeOfDeparture": "2022-06-01T18:28:00Z",
-//    "scheduledTimeOfDeparture": "2022-06-01T18:28:00Z",
-//    "minutesAndSecondsToArrival": "",
-//    "minutesAndSecondsToDeparture": "12:43",
-//    "departureStatus": "OnTime"
-//},
-
 import Foundation
 
 public struct ArrivalDeparture: Equatable, Codable {

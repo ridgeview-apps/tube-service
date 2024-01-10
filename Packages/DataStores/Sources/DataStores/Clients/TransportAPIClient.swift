@@ -80,6 +80,7 @@ public struct TransportAPIClient: TransportAPIClientType {
 
 private extension URLSession {
     
+    // swiftlint:disable identifier_name
     func get<T: Decodable>(url: URL, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> T {
         do {
             var request = URLRequest(url: url)
@@ -90,4 +91,5 @@ private extension URLSession {
             throw TransportAPIError.requestFailure(error)
         }
     }
+    // swiftlint:enable identifier_name
 }

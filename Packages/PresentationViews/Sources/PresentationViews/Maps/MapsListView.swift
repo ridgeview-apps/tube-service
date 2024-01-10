@@ -55,12 +55,12 @@ private struct MapLink: Identifiable {
     )
     
     static let railAndTubeMap = MapLink(
-        title:  "maps.rail.and.tube.link.title",
+        title: "maps.rail.and.tube.link.title",
         url: URL(string: "https://content.tfl.gov.uk/london-rail-and-tube-services-map.pdf")!
     )
     
     static let elizabethLineMap = MapLink(
-        title:  "maps.elizabeth.link.title",
+        title: "maps.elizabeth.link.title",
         url: URL(string: "https://content.tfl.gov.uk/elizabeth-line-map.pdf")!
     )
 }

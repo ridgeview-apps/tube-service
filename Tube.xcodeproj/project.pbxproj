@@ -441,6 +441,7 @@
 				318D482224EFC4900026B5F4 /* Sources */,
 				318D482324EFC4900026B5F4 /* Frameworks */,
 				318D482424EFC4900026B5F4 /* Resources */,
+				3145BA7F2B4EBF9900AE1DDE /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -533,6 +534,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3145BA7F2B4EBF9900AE1DDE /* Swiftlint */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Swiftlint;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		315F89C32567BCB70069DD2D /* Sources */ = {
@@ -818,6 +841,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TubeService/Preview Content\"";
 				DEVELOPMENT_TEAM = 3H5L23529U;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = TubeService/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -839,6 +863,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"TubeService/Preview Content\"";
 				DEVELOPMENT_TEAM = 3H5L23529U;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				INFOPLIST_FILE = TubeService/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

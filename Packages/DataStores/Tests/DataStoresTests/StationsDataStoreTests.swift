@@ -54,6 +54,3 @@ final class StationsModelTests: XCTestCase {
     }
     
 }
-
-
-

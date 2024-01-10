@@ -85,7 +85,7 @@ extension Sequence where Element == ArrivalDeparture {
         let arrivalDeparturesPerPlatform = Dictionary(grouping: self, by: \.platformName)
         
         return arrivalDeparturesPerPlatform
-            .map { platformName, arrivalDepartures in
+            .map { _, arrivalDepartures in
                 singlePlatformBoardState(for: arrivalDepartures, with: lineID)
             }
             .sorted { $0.platformName < $1.platformName }

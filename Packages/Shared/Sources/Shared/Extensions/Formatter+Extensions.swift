@@ -34,9 +34,9 @@ public extension Formatter {
 
 public extension DateIntervalFormatter {
     static let longDateIntervalStyle: DateIntervalFormatter = {
-        let df = DateIntervalFormatter()
-        df.dateStyle = .long
-        df.timeStyle = .none
-        return df
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .long
+        formatter.timeStyle = .none
+        return formatter
     }()
 }

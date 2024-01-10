@@ -5,9 +5,10 @@ import MessageUI
 //
 // Adapted from: https://stackoverflow.com/questions/56784722/swiftui-send-email
 //
+// swiftlint:disable identifier_name
 public struct MailButton<Label: View>: View {
     
-    @State private var result: Result<MFMailComposeResult, Error>? = nil
+    @State private var result: Result<MFMailComposeResult, Error>?
     @State private var showMailComposer = false
     @State private var showMailUnsupported = false
     
@@ -77,7 +78,7 @@ private struct MailViewController: UIViewControllerRepresentable {
 
     @Environment(\.presentationMode) var presentation
     @Binding var result: Result<MFMailComposeResult, Error>?
-    private(set) var messageConfig: MailViewConfig? = nil
+    private(set) var messageConfig: MailViewConfig?
     
     class Coordinator: NSObject, MFMailComposeViewControllerDelegate {
 
@@ -145,3 +146,4 @@ private struct MailViewController: UIViewControllerRepresentable {
     }
 
 }
+// swiftlint:enable identifier_name
