@@ -1,4 +1,3 @@
-import Combine
 import Shared
 import SwiftUI
 import Models
@@ -12,8 +11,7 @@ struct ArrivalsBoardView: View {
     
     @Binding var isExpanded: Bool
     
-    var rotatingCellTimerPublisher: AnyPublisher<Date, Never> = Timer.autoconnectedPublisher(every: 3)
-    
+    var rotatingCellTimer: ObservableTimer = .repeating(every: 3.0)
     
     // MARK: Private state
     
@@ -69,7 +67,7 @@ struct ArrivalsBoardView: View {
         .task {
             rotateToNextArrivalIfNeeded(animated: false)
         }
-        .onReceive(rotatingCellTimerPublisher) { _ in
+        .onChange(of: rotatingCellTimer.firedAt) {
             rotateToNextArrivalIfNeeded(animated: true)
         }
     }
@@ -207,11 +205,11 @@ extension ArrivalsBoardView {
     
     init(boardState: ArrivalsBoardState,
          isExpanded: Binding<Bool>,
-         rotatingCellTimerPublisher: AnyPublisher<Date, Never> = Timer.autoconnectedPublisher(every: 3)) {
+         rotatingCellTimer: ObservableTimer = .repeating(every: 3.0)) {
         self.init(platformName: boardState.platformName,
                   cellItems: boardState.cellItems,
                   isExpanded: isExpanded,
-                  rotatingCellTimerPublisher: rotatingCellTimerPublisher)
+                  rotatingCellTimer: rotatingCellTimer)
     }
 }
 

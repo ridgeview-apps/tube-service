@@ -4,12 +4,16 @@ import SwiftUI
 @main
 struct RootScene: App {
     
-    @StateObject private var appData = makeAppDataStore()
+    @State private var appData: AppDataStore
+    
+    init() {
+        appData = Self.makeAppDataStore()
+    }
     
     var body: some Scene {
         WindowGroup {
             RootScreen()
-                .environmentObject(appData)
+                .environment(appData)
                 .withEnvironmentDataStores(lineStatus: appData.lineStatus,
                                            stations: appData.stations,
                                            userPreferences: appData.userPreferences,
@@ -17,6 +21,7 @@ struct RootScene: App {
         }
     }
     
+    @MainActor
     private static func makeAppDataStore() -> AppDataStore {
 #if DEBUG
         if ProcessInfo.isRunningUITests { return .stub() }
@@ -34,9 +39,9 @@ extension View {
                                    userPreferences: UserPreferencesDataStore,
                                    location: LocationDataStore) -> some View {
         self
-            .environmentObject(lineStatus)
-            .environmentObject(stations)
-            .environmentObject(userPreferences)
-            .environmentObject(location)
+            .environment(lineStatus)
+            .environment(stations)
+            .environment(userPreferences)
+            .environment(location)
     }
 }

@@ -2,7 +2,8 @@ import Foundation
 import Models
 
 @MainActor
-public final class UserPreferencesDataStore: ObservableObject {
+@Observable
+public final class UserPreferencesDataStore {
     
 
     // MARK: - Properties / outputs
@@ -10,7 +11,7 @@ public final class UserPreferencesDataStore: ObservableObject {
     public let userDefaults: UserDefaults
     public let now: () -> Date
     
-    @Published public private(set) var value: UserPreferences = .empty
+    public private(set) var value: UserPreferences = .empty
     
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID> { value.favouriteLineGroupIDs }
     public var recentlySelectedStations: [Station.ID] { value.recentlySelectedStations ?? [] }

@@ -3,7 +3,8 @@ import Models
 import Shared
 
 @MainActor
-public final class LineStatusDataStore: ObservableObject {
+@Observable 
+public final class LineStatusDataStore {
     
     // MARK: - Data types
     
@@ -29,7 +30,7 @@ public final class LineStatusDataStore: ObservableObject {
     public let now: () -> Date
     public let calendar: Calendar
     
-    @Published private var fetchedData: [FetchType: FetchedData] = [:]
+    private var fetchedData: [FetchType: FetchedData] = [:]
     
     
     // MARK: - Init

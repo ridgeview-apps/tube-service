@@ -1,11 +1,10 @@
-import Combine
 import CoreLocation
 import Models
 import Foundation
 
-
 @MainActor
-public final class LocationDataStore: NSObject, ObservableObject {
+@Observable
+public final class LocationDataStore: NSObject {
     
     private let locationManager: LocationManagerType
     
@@ -15,9 +14,9 @@ public final class LocationDataStore: NSObject, ObservableObject {
         case detected
     }
     
-    @Published public private(set) var authorizationStatus: CLAuthorizationStatus
-    @Published public private(set) var currentLocation: Location?
-    @Published public private(set) var detectionState: DetectionState = .detecting
+    public private(set) var authorizationStatus: CLAuthorizationStatus
+    public private(set) var currentLocation: Location?
+    public private(set) var detectionState: DetectionState = .detecting
     
     public var isAuthorized: Bool {
         locationManager.isAuthorized

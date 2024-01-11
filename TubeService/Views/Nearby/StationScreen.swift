@@ -3,10 +3,11 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct StationScreen: View {
 
-    @EnvironmentObject var lineStatus: LineStatusDataStore
-    @EnvironmentObject var stations: StationsDataStore
+    @Environment(LineStatusDataStore.self) var lineStatus: LineStatusDataStore
+    @Environment(StationsDataStore.self) var stations: StationsDataStore
     
     let station: Station
     

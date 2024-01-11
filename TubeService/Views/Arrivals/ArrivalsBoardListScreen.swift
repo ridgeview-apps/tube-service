@@ -1,9 +1,10 @@
-import Combine
 import DataStores
 import Models
 import PresentationViews
+import Shared
 import SwiftUI
 
+@MainActor
 struct ArrivalsBoardListScreen: View {
     let stationName: String
     let lineGroup: Station.LineGroup
@@ -15,9 +16,9 @@ struct ArrivalsBoardListScreen: View {
     @State private var autoRefreshEnabled = false
         
     @Environment(\.transportAPI) var transportAPI
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(UserPreferencesDataStore.self) var userPreferences: UserPreferencesDataStore
     
-    private let autoRefreshTimer: AnyPublisher<Date, Never> = Timer.autoconnectedPublisher(every: 20)
+    private let autoRefreshTimer: ObservableTimer = .repeating(every: 20)
     
     
     var body: some View {
@@ -36,7 +37,7 @@ struct ArrivalsBoardListScreen: View {
         .refreshable {
             refreshData()
         }
-        .onReceive(autoRefreshTimer) { _ in
+        .onChange(of: autoRefreshTimer.firedAt) {
             autoRefresh()
         }
         .onAppear {

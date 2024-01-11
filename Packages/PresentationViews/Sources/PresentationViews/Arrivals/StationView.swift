@@ -208,21 +208,6 @@ private struct WrapperView: View {
 
 struct StationMapView: View {
     let station: Station
-    
-    var body: some View {
-        if #available(iOS 17.0, *) {
-            DefaultStationMapView(station: station)
-        } else {
-            LegacyStationMapView(station: station)
-        }
-    }
-}
-
-// MARK: - iOS 17 Map view
-
-@available(iOS 17.0, *)
-private struct DefaultStationMapView: View {
-    let station: Station
     @State private var position: MapCameraPosition = .automatic
     
     private var stationCoordinate: CLLocationCoordinate2D {
@@ -242,37 +227,6 @@ private struct DefaultStationMapView: View {
         .task {
             position = .camera(.init(centerCoordinate: stationCoordinate,
                                      distance: 1500))
-        }
-    }
-}
-
-
-// MARK: - iOS 16 / Legacy Map view
-
-private struct LegacyStationMapView: View {
-    let station: Station
-    
-    @State private var mapRegion = MKCoordinateRegion()
-    
-    private var stationCoordinate: CLLocationCoordinate2D {
-        station.location.toCLLocation().coordinate
-    }
-    
-    private var defaultMapRegion: MKCoordinateRegion {
-        .init(center: stationCoordinate,
-              span: .init(latitudeDelta: 0.01, longitudeDelta: 0.01))
-    }
-    
-    var body: some View {
-        Map(
-            coordinateRegion: $mapRegion,
-            showsUserLocation: true,
-            annotationItems: [station.location]
-        ) { _ in
-            MapMarker(coordinate: stationCoordinate)
-        }
-        .task {
-            mapRegion = defaultMapRegion
         }
     }
 }

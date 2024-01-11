@@ -3,10 +3,11 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct ArrivalsPickerScreen: View {
 
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(StationsDataStore.self) var stations: StationsDataStore
+    @Environment(UserPreferencesDataStore.self) var userPreferences: UserPreferencesDataStore
     
     @State private var selection: Station.LineGroup?
     @State private var searchTerm: String = ""
@@ -32,16 +33,18 @@ struct ArrivalsPickerScreen: View {
             searchSuggestionsView
         }
         .autocorrectionDisabled()
-        .onChange(of: searchTerm) { _ in
+        .onChange(of: searchTerm) {
             reloadStations()
         }
         .onSubmit(of: .search) {
             reloadStations()
         }
-        .onChange(of: userPreferences.favouriteLineGroupIDs) { _ in
+        .onChange(of: userPreferences.favouriteLineGroupIDs) {
             reloadStations()
         }
-        .onChange(of: selection, perform: saveRecentSelection)
+        .onChange(of: selection) { _, newValue in
+            saveRecentSelection(for: newValue)
+        }
     }
     
     @ViewBuilder private var pickerListView: some View {

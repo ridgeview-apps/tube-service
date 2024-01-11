@@ -121,7 +121,7 @@ public struct NearbyStationsView: View {
                     showMoreButton
                 }
                 .lineGroupListRowStyle()
-                .onChange(of: currentPageNo) { newValue in
+                .onChange(of: currentPageNo) { _, newValue in
                     withAnimation {
                         reader.scrollTo("showMoreButtonID_\(newValue)")
                     }

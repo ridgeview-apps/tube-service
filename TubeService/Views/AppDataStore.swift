@@ -1,10 +1,10 @@
-import Combine
 import CoreLocation
 import DataStores
 import Foundation
 
 @MainActor
-final class AppDataStore: ObservableObject {
+@Observable
+final class AppDataStore {
     
     let transportAPI: TransportAPIClientType
     let userDefaults: UserDefaults

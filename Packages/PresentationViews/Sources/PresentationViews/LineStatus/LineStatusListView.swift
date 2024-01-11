@@ -181,7 +181,7 @@ public struct LineStatusListView: View {
                     .font(.subheadline)
             }
             .id(selectedDate)
-            .onChange(of: selectedDate) { _ in
+            .onChange(of: selectedDate) {
                 hasSelectedADate = true
             }
         }

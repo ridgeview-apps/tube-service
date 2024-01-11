@@ -1,4 +1,3 @@
-import Combine
 import Shared
 import SwiftUI
 import Models
@@ -30,7 +29,7 @@ public struct ArrivalsBoardListView: View {
     
     // MARK: Private properties
     
-    private let rotatingCellTimerPublisher: AnyPublisher<Date, Never> = Timer.autoconnectedPublisher(every: 3)
+    private let rotatingCellTimer: ObservableTimer = .repeating(every: 3.0)
     @State private var expandedBoardIDs = Set<String>()
     
     
@@ -92,7 +91,7 @@ public struct ArrivalsBoardListView: View {
         ArrivalsBoardView(platformName: boardState.platformName,
                           cellItems: boardState.cellItems,
                           isExpanded: shouldShowExpandedView(forBoardID: boardState.id),
-                          rotatingCellTimerPublisher: rotatingCellTimerPublisher)
+                          rotatingCellTimer: rotatingCellTimer)
         .buttonStyle(.plain)
     }
     

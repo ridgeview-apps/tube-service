@@ -4,9 +4,10 @@ import PresentationViews
 import Shared
 import SwiftUI
 
+@MainActor
 struct LineStatusScreen: View {
-    @EnvironmentObject var model: LineStatusDataStore
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(LineStatusDataStore.self) var model: LineStatusDataStore
+    @Environment(UserPreferencesDataStore.self) var userPreferences: UserPreferencesDataStore
     
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
@@ -39,11 +40,11 @@ struct LineStatusScreen: View {
         .onAppear {
             fetchLineStatusesIfStale(for: selectedFilterOption)
         }
-        .onChange(of: selectedFilterOption) { newValue in
+        .onChange(of: selectedFilterOption) { _, newValue in
             selectedLine = nil
             fetchLineStatusesIfStale(for: newValue)
         }
-        .onChange(of: selectedDate) { _ in
+        .onChange(of: selectedDate) {
             fetchLineStatusesIfStale(for: selectedFilterOption)
         }
         .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in

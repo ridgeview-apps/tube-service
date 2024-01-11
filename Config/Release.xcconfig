@@ -1,4 +1,5 @@
 #include "Release.secrets.xcconfig"
+#include "Global.xcconfig"
 
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service
 CODE_SIGN_IDENTITY = Apple Distribution

@@ -3,7 +3,8 @@ import Models
 import RidgeviewCore
 
 @MainActor
-public final class StationsDataStore: ObservableObject {
+@Observable 
+public final class StationsDataStore {
     
     // MARK: - Data types
     
@@ -23,14 +24,13 @@ public final class StationsDataStore: ObservableObject {
     public let transportAPI: TransportAPIClientType
     public let now: () -> Date
     
-    // Private
+    // Properties
+    public private(set) var allStations: [Station] = []
+    private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
+
     private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
-    
-    // Published
-    @Published public private(set) var allStations: [Station] = []
-    @Published private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
     
     // MARK: - Init
     

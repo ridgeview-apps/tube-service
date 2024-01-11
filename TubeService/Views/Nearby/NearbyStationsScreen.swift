@@ -3,10 +3,11 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct NearbyStationsScreen: View {
 
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var location: LocationDataStore
+    @Environment(StationsDataStore.self) var stations: StationsDataStore
+    @Environment(LocationDataStore.self) var location: LocationDataStore
     
     @State private var selectedStation: NearbyStation?
     @State private var selectedStationViewItem: StationView.Selection?
@@ -26,7 +27,7 @@ struct NearbyStationsScreen: View {
         .onDisappear { location.stopDetectingCurrentLocation() }
         .onSceneDidBecomeActive { resumeLocationDetection() }
         .onSceneDidBecomeInactive { location.stopDetectingCurrentLocation() }
-        .onChange(of: location.currentLocation) { _ in
+        .onChange(of: location.currentLocation) {
             reloadNearbyStations()
         }
         .task {
