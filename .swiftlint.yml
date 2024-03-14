@@ -8,6 +8,7 @@ excluded:
   - TubeServiceUITests/SnapshotHelper.swift
   - Packages/Models/Sources/Models/Stubs
   - Packages/Models/Sources/Models/Extensions/StationsJSON.swift
+  - Packages/Models/Sources/Models/Extensions/StationsNationalRailJSON.swift
   
 disabled_rules:
 #  - type_name

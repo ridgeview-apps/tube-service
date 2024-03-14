@@ -14,6 +14,11 @@ struct RootScreen: View {
                                title: "arrivals.tab.title",
                                accessibilityID: "acc.id.arrivals.tab.title")
             
+            JourneyPlannerScreen()
+                .styledTabItem(imageName: "app.connected.to.app.below.fill",
+                               title: "journey.planner.tab.title",
+                               accessibilityID: "acc.id.journey.planner.tab.title")
+            
             NearbyStationsScreen()
                 .styledTabItem(imageName: "location.fill",
                                title: "nearby.stations.tab.title",

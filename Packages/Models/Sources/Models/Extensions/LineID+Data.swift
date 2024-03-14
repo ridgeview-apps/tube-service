@@ -1,4 +1,4 @@
-public extension LineID {
+public extension TrainLineID {
     
     var name: String {
         switch self {

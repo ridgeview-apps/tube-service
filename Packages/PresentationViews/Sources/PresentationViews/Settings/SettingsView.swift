@@ -4,25 +4,29 @@ import SwiftUI
 public struct SettingsView: View {
     
     public typealias ContactUs = Settings.ContactUs
+    public typealias EditableValues = Settings.EditableValues
     
     public let appVersionNumber: String
     public let appReviewURL: URL
     public let contactUs: ContactUs
     
+    @Binding var editableValues: EditableValues
+    
     public init(appVersionNumber: String,
                 appReviewURL: URL,
-                contactUs: ContactUs) {
+                contactUs: ContactUs,
+                editableValues: Binding<EditableValues>) {
         self.appVersionNumber = appVersionNumber
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
+        self._editableValues = editableValues
     }
         
     public var body: some View {
         Form {
-            List {
-                aboutSection
-                supportSection
-            }
+            journeyPlannerSection
+            supportSection
+            aboutSection
         }
     }
         
@@ -74,6 +78,34 @@ public struct SettingsView: View {
             }
         }
     }
+
+    private var journeyPlannerSection: some View {
+        Section(
+            header: Text("settings.journey.planner.title", bundle: .module)
+        ) {
+            NavigationLink {
+                JourneyModePickerView(
+                    selection: $editableValues.journeyPlannerModesSelection
+                )
+                .navigationTitle(Text("settings.journey.mode.picker.navigation.title", bundle: .module))
+            } label: {
+                HStack {
+                    Text("settings.journey.planner.transport.modes", bundle: .module)
+                    Spacer()
+                    modesDetailLabelTitle
+                }
+            }
+        }
+    }
+    
+    private var modesDetailLabelTitle: some View {
+        if editableValues.allJourneyPlannerModesSelected {
+            Text("journey.planner.travel.options.modes.detail.all", bundle: .module)
+        } else {
+            Text("settings.journey.planner.modes.selection.count \(editableValues.journeyPlannerModesSelection.count)", bundle: .module)
+        }
+    }
+    
     
     private var emailSubject: String {
         String(format: localizedString("contact.us.subject %@"), contactUs.appName)
@@ -86,7 +118,12 @@ public struct SettingsView: View {
             \(localizedString("contact.us.body.app.version")): \(contactUs.appVersion)
             \(localizedString("contact.us.body.device.info")): \(contactUs.deviceInfo)
             \(localizedString("contact.us.body.locale.info")): \(contactUs.localeInfo)
+            \(localizedString("contact.us.body.os.version")): \(osNameAndVersion)
             """
+    }
+    
+    private var osNameAndVersion: String {
+        "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
     }
     
     private func localizedString(_ key: String) -> String {
@@ -96,20 +133,21 @@ public struct SettingsView: View {
 
 
 // MARK: - Previews
-#if DEBUG
-struct Settings_Previews: PreviewProvider {
+private struct Previewer: View {
+    @State var editableValues: Settings.EditableValues = .default
     
-    
-    static var previews: some View {
+    var body: some View {
         NavigationStack {
             SettingsView(
                 appVersionNumber: "1.1.1",
                 appReviewURL: URL(string: "https://www.google.com")!,
-                contactUs: .empty
+                contactUs: .empty,
+                editableValues: $editableValues
             )
         }
-
     }
 }
 
-#endif
+#Preview {
+    Previewer()
+}

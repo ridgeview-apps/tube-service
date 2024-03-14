@@ -13,7 +13,7 @@ public protocol LocationManagerType {
 
 public extension LocationManagerType {
     
-    var isAuthorized: Bool {
+    @MainActor var isAuthorized: Bool {
         switch authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse, .authorized:
             return true

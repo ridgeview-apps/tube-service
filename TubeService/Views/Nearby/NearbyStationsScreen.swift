@@ -10,9 +10,7 @@ struct NearbyStationsScreen: View {
     
     @State private var selectedStation: NearbyStation?
     @State private var selectedStationViewItem: StationView.Selection?
-    @State private var nearbyStations: [NearbyStation] = []
-    
-    @State private var currentPageNo: Int = 1
+    @State private var sectionState: NearbyStationsResultsSectionState = .empty
     
     // MARK: - Layout
     
@@ -22,58 +20,50 @@ struct NearbyStationsScreen: View {
         } detail: {
             detailView
         }
-        .onAppear { resumeLocationDetection() }
-        .onDisappear { location.stopDetectingCurrentLocation() }
-        .onSceneDidBecomeActive { resumeLocationDetection() }
-        .onSceneDidBecomeInactive { location.stopDetectingCurrentLocation() }
-        .onChange(of: location.currentLocation) { _ in
-            reloadNearbyStations()
+        .detectsLocationChanges {
+            handleLocationChangeAction($0)
         }
         .task {
-            reloadNearbyStations()
+            updateResultsSectionState()
         }
     }
     
     private var nearbyStationsListView: some View {
-        NearbyStationsView(
-            mode: mode,
-            onAction: handleNearbyStationsViewAction,
-            selection: $selectedStation,
-            currentPageNo: $currentPageNo
-            
+        NearbyStationsView(locationUIStatus: locationUIStatus,
+                           onAction: handleNearbyStationsViewAction,
+                           sectionState: $sectionState,
+                           selection: $selectedStation)
+            .withSettingsToolbarButton()
+            .navigationTitle("nearby.stations.navigation.title")
+            .refreshable {
+                resetPageNo()
+                location.refreshCurrentLocation()
+            }
+    }
+    
+    private var locationUIStatus: LocationUIStatus {
+        .init(
+            style: location.locationUIStyle(), 
+            onRequestPermissions: {
+                location.promptForPermissions()
+            }
         )
-        .withSettingsToolbarButton()
-        .navigationTitle("nearby.stations.navigation.title")
-        .refreshable {
-            resetPageNo()
-            location.refreshCurrentLocation()
+    }
+    
+    private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
+        switch action {
+        case .coordinateChanged, .nameChanged:
+            updateResultsSectionState(reset: true)
+        case .authorizationStatusChanged:
+            return
         }
     }
     
     private func handleNearbyStationsViewAction(_ action: NearbyStationsView.Action) {
         switch action {
-        case .tappedLocationButton:
-            location.promptForPermissions()
-        case .tappedRetryButton:
+        case .tappedRefresh:
             location.refreshCurrentLocation()
         }
-    }
-    
-    private var mode: NearbyStationsView.Mode {
-        switch location.authorizationStatus {
-        case .notDetermined:
-            return .setUp
-        case .restricted, .denied:
-            return .permissionDenied
-        case .authorizedAlways, .authorizedWhenInUse, .authorized:
-            return .permissionGranted(location.detectionState.toLoadingState(), nearbyStations)
-        @unknown default:
-            return .permissionGranted(location.detectionState.toLoadingState(), nearbyStations)
-        }
-    }
-    
-    private func nearestStations(to detectedLocation: Location) -> [NearbyStation] {
-        location.nearestStations(to: detectedLocation, in: stations.allStations)
     }
     
     private var detailView: some View {
@@ -83,7 +73,7 @@ struct NearbyStationsScreen: View {
                     StationScreen(station: selectedStation.station,
                                   selection: $selectedStationViewItem)
                 } else {
-                    if case .permissionGranted = mode {
+                    if location.isAuthorized {
                         Text("nearby.stations.no.selection")
                     }
                 }
@@ -113,30 +103,22 @@ struct NearbyStationsScreen: View {
     }
     
     private func resetPageNo() {
-        currentPageNo = 1
+        sectionState.resetPageNo()
     }
     
-    private func reloadNearbyStations() {
-        if let currentLocation = location.currentLocation {
-            nearbyStations = location.nearestStations(to: currentLocation, in: stations.allStations)
+    private func updateResultsSectionState(reset: Bool = false) {
+        let loadingState = location.detectionState.toLoadingState()
+        let nearbyStations = location.nearbyStations
+        
+        if reset {
+            sectionState = .init(loadingState: loadingState,
+                                 nearbyStations: nearbyStations)
+        } else {
+            sectionState.loadingState = loadingState
+            sectionState.nearbyStations = nearbyStations
         }
     }
 }
-
-private extension LocationDataStore.DetectionState {
-    
-    func toLoadingState() -> LoadingState {
-        switch self {
-        case .detecting:
-            return .loading
-        case .failed(let error):
-            return .failure(errorMessage: error.toUIErrorMessage())
-        case .detected:
-            return .loaded
-        }
-    }
-}
-
 
 // MARK: - Previews
 

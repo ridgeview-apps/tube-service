@@ -1,4 +1,4 @@
-import Foundation
+import Models
 
 public enum Settings {} // Namespace
 
@@ -30,4 +30,18 @@ public extension Settings {
                                                    localeInfo: "")
     }
     
+    struct EditableValues: Equatable {
+        public var journeyPlannerModesSelection: Set<ModeID>
+        
+        var allJourneyPlannerModesSelected: Bool {
+            journeyPlannerModesSelection.count == ModeID.journeyPlannerModeIDs.count
+        }
+        
+        public init(journeyPlannerModesSelection: Set<ModeID>) {
+            self.journeyPlannerModesSelection = journeyPlannerModesSelection
+        }
+        
+        public static let `default` = EditableValues(journeyPlannerModesSelection: Set(ModeID.journeyPlannerModeIDs))
+    }
+
 }

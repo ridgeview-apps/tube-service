@@ -84,9 +84,9 @@ public final class LineStatusDataStore: ObservableObject {
     private func fetchLineStatuses(for fetchType: FetchType) async throws -> [Line] {
         switch fetchType {
         case .today:
-            return try await transportAPI.fetchCurrentLineStatuses()
+            return try await transportAPI.fetchCurrentLineStatuses().decodedModel
         case let .range(dateInterval):
-            let lines = try await transportAPI.fetchLineStatuses(for: dateInterval)
+            let lines = try await transportAPI.fetchLineStatuses(for: dateInterval).decodedModel
             let isFutureDateRange = dateInterval.start > now()
             return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses() : lines
         }

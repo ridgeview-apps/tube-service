@@ -39,6 +39,7 @@ public struct StopPoint: Hashable, Codable {
     public let modes: [String]
     public let hubNaptanCode: String?
     public let stationNaptan: String?
+    public let icsCode: String
     public let lat: Double
     public let lon: Double
     
@@ -79,18 +80,22 @@ public extension Sequence where Element == StopPoint {
             if let hubNaptanCode = stopPoint.hubNaptanCode, !hubNaptanCode.isBlank {
                 if let hubStopPoint = hubStopPoints.first(where: { $0.hubNaptanCode == hubNaptanCode }) {
                     stopPointStationIDAndName = .init(id: hubStopPoint.naptanId,
+                                                      icsCode: hubStopPoint.icsCode,
                                                       name: hubStopPoint.commonName)
                 } else {
                     fatalError("Cannot find find hub name for \(hubNaptanCode)")
                 }
             } else {
                 let naptanID: String
+                let icsCode: String
                 if let stationNaptan = stopPoint.stationNaptan, stationNaptan != stopPoint.naptanId {
                     naptanID = stationNaptan // Workaround for dodgy trams
                 } else {
                     naptanID = stopPoint.naptanId
                 }
-                stopPointStationIDAndName = .init(id: naptanID, name: stopPoint.commonName)
+                stopPointStationIDAndName = .init(id: naptanID, 
+                                                  icsCode: stopPoint.icsCode,
+                                                  name: stopPoint.commonName)
             }
             
             stopPoint.lineGroup.forEach {
@@ -128,9 +133,11 @@ public extension Sequence where Element == StopPoint {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             
             let stationID = stationKey.id
+            let icsCode = stationKey.icsCode
             
             let station =  Station(name: stationName,
                                    id: stationID,
+                                   icsCode: icsCode,
                                    location: .init(lat: properties.lat,
                                                    lon: properties.lon),
                                    lineGroups: uniqueSortedArrivalsLineGroups).patchedValue()
@@ -153,6 +160,7 @@ public extension Sequence where Element == StopPoint {
 
 public struct StationIDAndName: Hashable {
     let id: String
+    let icsCode: String
     let name: String
 }
 
@@ -173,6 +181,7 @@ public struct Station: Codable, Hashable, Equatable {
     
     public let name: String
     public let id: String
+    public let icsCode: String
     public let location: Location
     public var lineGroups: [LineGroup]
     

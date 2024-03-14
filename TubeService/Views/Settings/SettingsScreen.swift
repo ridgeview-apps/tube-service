@@ -1,3 +1,4 @@
+import DataStores
 import DeviceKit
 import Models
 import PresentationViews
@@ -9,6 +10,9 @@ struct SettingsScreen: View {
     @Environment(\.locale) var locale
     @Environment(\.dismiss) var dismiss
     
+    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @State private var editableValues: Settings.EditableValues = .default
+    
     var body: some View {
         NavigationStack {
             SettingsView(appVersionNumber: Bundle.main.appVersionNumber,
@@ -17,10 +21,17 @@ struct SettingsScreen: View {
                                           appVersion: Bundle.main.appVersionNumber,
                                           appName: Bundle.main.appName,
                                           deviceInfo: Device.current.safeDescription,
-                                          localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")"))
+                                          localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")"),
+                         editableValues: $editableValues)
             .navigationTitle("settings.navigation.title")
             .toolbar {
                 NavigationButton.Close { dismiss() }
+            }
+            .onChange(of: editableValues) { newValue in
+                userPreferences.save(journeyPlannerModeIDs: newValue.journeyPlannerModesSelection)
+            }
+            .task {
+                editableValues = .init(journeyPlannerModesSelection: userPreferences.journeyPlannerModeIDs)
             }
         }
     }

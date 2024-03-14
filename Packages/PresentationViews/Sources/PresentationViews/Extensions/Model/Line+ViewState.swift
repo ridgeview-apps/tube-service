@@ -29,11 +29,11 @@ public extension Sequence where Element == Line {
         self.filter { !$0.isDisrupted }.sorted { $0.id.name < $1.id.name }
     }
     
-    func removingLineIDs(_ excludedLineIDs: Set<LineID>) -> [Line] {
+    func removingLineIDs(_ excludedLineIDs: Set<TrainLineID>) -> [Line] {
         self.filter { !excludedLineIDs.contains($0.id) }
     }
     
-    func favouritesOnly(matching favouriteLineIDs: Set<LineID>) -> [Line] {
+    func favouritesOnly(matching favouriteLineIDs: Set<TrainLineID>) -> [Line] {
         self
             .filter { favouriteLineIDs.contains($0.id) }
             .sortedByStatusSeverity()

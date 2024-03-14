@@ -1,7 +1,7 @@
 import SwiftUI
 import Models
 
-public extension LineID {
+public extension TrainLineID {
     
     var backgroundColor: Color {
         switch self {
@@ -89,8 +89,8 @@ public extension LineID {
     }
 }
 
-public extension Sequence where Element == LineID {
-    func sortedByName() -> [LineID] {
+public extension Sequence where Element == TrainLineID {
+    func sortedByName() -> [TrainLineID] {
         self.sorted(by: { $0.name < $1.name })
     }
 }
