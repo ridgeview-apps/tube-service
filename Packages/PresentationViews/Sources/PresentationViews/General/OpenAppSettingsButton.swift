@@ -8,11 +8,10 @@ struct OpenSettingsButton: View {
         Button {
             openSettings()
         } label: {
-            Label {
-                Text("open.app.settings.button.title", bundle: .module)
-            } icon: {
+            HStack(spacing: 4) {
                 Image(systemName: "gear")
                     .imageScale(.large)
+                Text("open.app.settings.button.title", bundle: .module)
             }
         }        
     }

@@ -3,9 +3,9 @@
 import Models
 import XCTest
 
-@MainActor
 final class StationsModelTests: XCTestCase {
-    
+
+    @MainActor
     func testLoadStationsByID() {
         let stationsModel = StationsDataStore(transportAPI: StubTransportAPIClient())
         
@@ -14,6 +14,7 @@ final class StationsModelTests: XCTestCase {
         XCTAssertEqual(ModelStubs.highBarnetStation, stationsModel.station(forID: "940GZZLUHBT"))
     }
     
+    @MainActor
     func testLoadStationsByLineGroup() {
         let stations = StationsDataStore(transportAPI: StubTransportAPIClient())
         
@@ -33,6 +34,7 @@ final class StationsModelTests: XCTestCase {
         XCTAssertEqual("High Barnet", stations.station(forLineGroupID: "940GZZLUHBT-northern")?.name)
     }
     
+    @MainActor
     func testFilteredStationsByPartialName() {
         let stations = StationsDataStore(transportAPI: StubTransportAPIClient())
         

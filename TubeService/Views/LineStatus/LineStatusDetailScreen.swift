@@ -18,7 +18,7 @@ struct LineStatusDetailScreen: View {
             }
     }
     
-    private func isFavouriteLine(for lineID: LineID) -> Binding<Bool> {
+    private func isFavouriteLine(for lineID: TrainLineID) -> Binding<Bool> {
         .init {
             userPreferences.isFavourite(lineID: lineID)
         } set: { isFavourite in

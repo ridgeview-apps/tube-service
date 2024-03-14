@@ -19,7 +19,7 @@ public struct ArrivalPrediction: Identifiable, Equatable, Codable {
     public let currentLocation: String?
     public let destinationName: String?
     public let destinationNaptanID: String?
-    public let lineID: LineID?
+    public let lineID: TrainLineID?
     public let naptanID: String?
     public let platformName: String?
     public let timeToStation: Int?
@@ -32,7 +32,7 @@ public struct ArrivalPrediction: Identifiable, Equatable, Codable {
                 currentLocation: String?,
                 destinationName: String?,
                 destinationNaptanID: String?,
-                lineID: LineID?,
+                lineID: TrainLineID?,
                 naptanID: String?,
                 platformName: String?,
                 timeToStation: Int?,

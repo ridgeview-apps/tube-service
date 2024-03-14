@@ -45,6 +45,13 @@ public final class StubTransportAPIClient: TransportAPIClientType {
         fetchStationDisruptionsCallCount += 1
         return stubbedDisruptedPoints
     }
+    
+    public private(set) var fetchJourneyItineraryCallCount = 0
+    public var stubbedJourneyItinerary: JourneyItinerary = ModelStubs.journeyItineraryKingsXToWaterloo
+    public func fetchJourneyItinerary(for params: JourneyItineraryParams) async throws -> JourneyItinerary {
+        fetchJourneyItineraryCallCount += 1
+        return stubbedJourneyItinerary
+    }
 }
 
 #endif

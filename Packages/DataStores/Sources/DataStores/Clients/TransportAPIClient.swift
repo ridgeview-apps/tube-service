@@ -9,6 +9,7 @@ public protocol TransportAPIClientType {
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalPrediction]
     func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture]
     func fetchStationDisruptions() async throws -> [DisruptedPoint]
+    func fetchJourneyItinerary(for params: JourneyItineraryParams) async throws -> JourneyItinerary
 }
 
 public enum TransportAPIError: Error {
@@ -46,11 +47,11 @@ public struct TransportAPIClient: TransportAPIClientType {
     // MARK: - Data fetching
     
     public func fetchCurrentLineStatuses() async throws -> [Line] {
-        return try await fetchData(for: .getCurrentLineStatuses(TransportMode.allCases), mappedTo: [Line].self)
+        return try await fetchData(for: .getCurrentLineStatuses(ModeID.trains), mappedTo: [Line].self)
     }
     
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
-        return try await fetchData(for: .getLineStatusesForDateRange(LineID.allCases, dateInterval),
+        return try await fetchData(for: .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval),
                                    mappedTo: [Line].self)
     }
     
@@ -65,8 +66,13 @@ public struct TransportAPIClient: TransportAPIClientType {
     }
     
     public func fetchStationDisruptions() async throws -> [DisruptedPoint] {
-        return try await fetchData(for: .getStationDisruptions(TransportMode.allCases),
+        return try await fetchData(for: .getStationDisruptions(ModeID.trains),
                                    mappedTo: [DisruptedPoint].self)
+    }
+    
+    public func fetchJourneyItinerary(for params: JourneyItineraryParams) async throws -> JourneyItinerary {
+        return try await fetchData(for: .getJourneyItinerary(params),
+                                   mappedTo: JourneyItinerary.self)
     }
     
     private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> T {

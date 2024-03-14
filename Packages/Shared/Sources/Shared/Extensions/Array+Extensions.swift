@@ -1,7 +1,7 @@
 import Foundation
 
 
-extension Array where Element: Hashable {
+public extension Array where Element: Hashable {
     
     // See: https://stackoverflow.com/questions/25738817/removing-duplicate-elements-from-an-array-in-swift
     // Convenient way of removing duplicates from an array (AND preserve the order)

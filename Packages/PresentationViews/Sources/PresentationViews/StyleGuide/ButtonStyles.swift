@@ -2,21 +2,18 @@ import SwiftUI
 
 public struct PrimaryActionButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) var isEnabled
-    @ScaledMetric private var dynamicTextScale: CGFloat = 1
     
     public func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .padding()
+        configuration
+            .label
+            .padding(12)
             .withDefaultMaxWidth()
-            .frame(minHeight: 44 * dynamicTextScale)
-            .background(.blue)
+            .background(.blue.opacity(isEnabled ? 1 : 0.4))
             .foregroundColor(.white)
-            .cornerRadius(10)
-            .saturation(isEnabled ? 1 : 0)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
             .opacity(configuration.isPressed ? 0.5 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
-                    
     }
 }
 
@@ -36,5 +33,6 @@ private struct WrapperView: View {
     VStack {
         Button("Standard") { }
         Button("Disabled") { }.disabled(true)
-    }.buttonStyle(.primary)
+    }
+    .buttonStyle(.primary)
 }

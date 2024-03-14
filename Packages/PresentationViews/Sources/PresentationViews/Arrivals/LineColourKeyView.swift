@@ -3,9 +3,9 @@ import SwiftUI
  
 public struct LineColourKeyView: View {
 
-    public let lineIDs: [LineID]
+    public let lineIDs: [TrainLineID]
     
-    public init(lineIDs: [LineID]) {
+    public init(lineIDs: [TrainLineID]) {
         self.lineIDs = lineIDs
     }
 

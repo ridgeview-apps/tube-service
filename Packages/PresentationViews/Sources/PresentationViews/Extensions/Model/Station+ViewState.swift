@@ -3,7 +3,7 @@ import Foundation
 
 public extension Station {
     
-    var sortedLineIDs: [LineID] {
+    var sortedLineIDs: [TrainLineID] {
         Set(lineGroups.flatMap { $0.lineIds }).sortedByName()
     }
 }
@@ -18,6 +18,7 @@ public extension Sequence where Element == Station {
                 return nil
             }
             return Station(id: $0.id,
+                           icsCode: $0.icsCode,
                            name: $0.name,
                            location: $0.location,
                            lineGroups: filteredLineGroups)
@@ -29,7 +30,7 @@ public extension Station.LineGroup {
     
     enum ArrivalsDataType: Equatable {
         case arrivalPredictions
-        case arrivalDepartures([LineID])
+        case arrivalDepartures([TrainLineID])
     }
     
     var name: String {

@@ -2,13 +2,21 @@ import SwiftUI
 
 public struct ExpansionInfoButton: View {
     
+    public enum Title {
+        case leading(LocalizedStringKey)
+        case trailing(LocalizedStringKey)
+    }
+    
     public let style: Style
+    public let title: Title?
     @Binding public var isExpanded: Bool
     
     
     public init(style: Style,
+                title: Title? = nil,
                 isExpanded: Binding<Bool>) {
         self.style = style
+        self.title = title
         self._isExpanded = isExpanded
     }
     
@@ -20,11 +28,19 @@ public struct ExpansionInfoButton: View {
     
     public var body: some View {
         Button {
-            isExpanded.toggle()
+            withAnimation {
+                isExpanded.toggle()
+            }
         } label: {
-            HStack {
+            HStack(spacing: 4) {
+                if case let .leading(title) = title {
+                    Text(title, bundle: .module)
+                }
                 expansionButtonImage
                     .rotationEffect(isExpanded ? .init(degrees: 180) : .init(degrees: 0))
+                if case let .trailing(title) = title {
+                    Text(title, bundle: .module)
+                }
             }
             .imageScale(imageScale)
             .frame(alignment: .bottom)

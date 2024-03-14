@@ -27,6 +27,7 @@ public final class StationsDataStore: ObservableObject {
     private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
+    private var allNationalRailStations: [StopPoint] = []
     
     // Published
     @Published public private(set) var allStations: [Station] = []
@@ -44,6 +45,7 @@ public final class StationsDataStore: ObservableObject {
     
     private func loadStations() {
         allStations = Station.allValues()
+        allNationalRailStations = Station.allNationalRailStopPoints()
         assert(!allStations.isEmpty)
         saveStationsByID()
     }
@@ -97,6 +99,10 @@ public final class StationsDataStore: ObservableObject {
     
     public func filteredStations(matchingName name: String) -> [Station] {
         allStations.filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
+    }
+    
+    public func filteredNationalRailStations(matching name: String) -> [StopPoint] {
+        allNationalRailStations.filter { ($0.commonName ?? "").alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
     }
     
     public func disruptions(forStationID stationID: Station.ID) -> [String] {

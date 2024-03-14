@@ -132,7 +132,7 @@ private struct ArrivalsPickerExpandableCell: View {
         .accessibilityIdentifier("\(lineGroup.id)")
     }
     
-    private func lineGroupCell(withLineIDs lineIDs: [LineID],
+    private func lineGroupCell(withLineIDs lineIDs: [TrainLineID],
                                title: String,
                                showsDistance: Bool) -> some View {
         LineGroupCell(style: style,

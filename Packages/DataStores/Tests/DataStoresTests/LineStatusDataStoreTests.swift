@@ -3,9 +3,9 @@
 import DataStores
 import XCTest
 
-@MainActor
 final class LineStatusModelTests: XCTestCase {
     
+    @MainActor
     func testRefreshLineStatusesForToday() async {
         // Given
         let clock = FakeClock(initialTime: .now)
@@ -26,6 +26,7 @@ final class LineStatusModelTests: XCTestCase {
         XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount)
     }
     
+    @MainActor
     func testRefreshLineStatusesForDateRange() async {
         // Given
         let clock = FakeClock(initialTime: .now)
@@ -47,6 +48,7 @@ final class LineStatusModelTests: XCTestCase {
         XCTAssertEqual(1, transportAPI.fetchLineStatusesForDateRangeCallCount)
     }
     
+    @MainActor
     func testRefreshLineStatusesFailure() async {
         // Given
         let clock = FakeClock(initialTime: .now)
@@ -67,7 +69,7 @@ final class LineStatusModelTests: XCTestCase {
         XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount)
     }
     
-    
+    @MainActor
     func testRefreshStaleLineStatuses() async {
         // Given
         var clock = FakeClock(initialTime: .now)

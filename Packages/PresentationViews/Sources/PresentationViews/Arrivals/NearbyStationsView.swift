@@ -4,154 +4,102 @@ import Models
 
 public struct NearbyStationsView: View {
     
-    public enum Mode: Equatable {
-        case setUp
-        case permissionDenied
-        case permissionGranted(LoadingState, [NearbyStation])
-    }
-    
     public enum Action {
-        case tappedLocationButton
-        case tappedRetryButton
+        case tappedRefresh
     }
     
-    let mode: Mode
-    let pagedResultsSize: Int
+    let locationUIStatus: LocationUIStatus
     let onAction: (Action) -> Void
-    @Binding var selection: NearbyStation?
-    @Binding var currentPageNo: Int
     
+    @Binding var sectionState: NearbyStationsResultsSectionState
+    @Binding var selection: NearbyStation?
     
     // MARK: - Init
     
-    public init(mode: Mode,
+    public init(locationUIStatus: LocationUIStatus,
                 onAction: @escaping (Action) -> Void,
-                selection: Binding<NearbyStation?>,
-                currentPageNo: Binding<Int>,
-                pagedResultsSize: Int = 5) {
-        self.mode = mode
+                sectionState: Binding<NearbyStationsResultsSectionState>,
+                selection: Binding<NearbyStation?>) {
+        self.locationUIStatus = locationUIStatus
         self.onAction = onAction
+        self._sectionState = sectionState
         self._selection = selection
-        self._currentPageNo = currentPageNo
-        self.pagedResultsSize = pagedResultsSize
     }
     
     
     // MARK: Layout
     
     public var body: some View {
-        Group {
-            switch mode {
-            case .setUp:
-                setupView
-            case .permissionDenied:
-                permissionDeniedView
-            case let .permissionGranted(loadingState, _):
-                resultsView(with: loadingState)
-            }
-        }
-        .withDefaultMaxWidth()
-        .frame(maxHeight: .infinity)
-        .background(Color.defaultBackground)
-        .accessibilityIdentifier("acc.id.nearby.stations")
+        nearbyStationsListView
+            .locationUIStatus(locationUIStatus)
+            .withDefaultMaxWidth()
+            .frame(maxHeight: .infinity)
+            .background(Color.defaultBackground)
+            .accessibilityIdentifier("acc.id.nearby.stations")
     }
     
-    private var setupView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text("nearby.stations.allow.access.header.title", bundle: .module)
-            Button {
-                onAction(.tappedLocationButton)
-            } label: {
-                Label {
-                    Text("nearby.stations.allow.access.button.title", bundle: .module)
-                } icon: {
-                    Image(systemName: "location.fill")
-                }
-            }
-            .buttonStyle(.primary)
-            Text("nearby.stations.allow.access.footer.title", bundle: .module)
-                .font(.caption)
-        }
-        .padding(.horizontal)
-    }
-    
-    private var permissionDeniedView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Label {
-                Text("nearby.stations.access.denied.message.title", bundle: .module)
-            } icon: {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.yellow)
-                    .imageScale(.large)
-            }
-            OpenSettingsButton()
-                .buttonStyle(.primary)
-        }
-        .padding(.horizontal)
-    }
-    
-    private var loadingView: some View {
-        HStack {
-            ProgressView {
-                Text("nearby.stations.loading.title", bundle: .module)
-            }
-        }
-    }
-    
-    @ViewBuilder private func resultsView(with loadingState: LoadingState) -> some View {
+    @ViewBuilder private var nearbyStationsListView: some View {
         ScrollViewReader { reader in
             List(selection: $selection) {
-                Section {
-                    if loadingState == .loaded && visibleStations.isEmpty {
-                        emptyResultsView()
-                    }
-                    if case .failure = loadingState {
-                        errorView
-                    }
-                    ForEach(visibleStations, id: \.station.id) { nearbyStation in
-                        NavigationLink(value: nearbyStation) {
-                            LineGroupCell(style: .distance(metres: nearbyStation.distance),
-                                          lineIDs: nearbyStation.station.sortedLineIDs,
-                                          title: nearbyStation.station.name)
+                resultsSectionView
+                    .onChange(of: sectionState.currentPageNo) { newValue in
+                        withAnimation {
+                            reader.scrollTo("showMoreButtonID_\(newValue)")
                         }
                     }
-                } header: {
-                    resultsHeaderView(with: loadingState)
-                } footer: {
-                    showMoreButton
-                }
-                .lineGroupListRowStyle()
-                .onChange(of: currentPageNo) { newValue in
-                    withAnimation {
-                        reader.scrollTo("showMoreButtonID_\(newValue)")
-                    }
-                }
             }
             .listStyle(.plain)
             .defaultScrollContentBackgroundColor()
             .accessibilityIdentifier("acc.id.nearby.stations.list")
-            .animation(.default, value: currentPageNo)
+            .animation(.default, value: sectionState.currentPageNo)
         }
     }
     
-    @ViewBuilder private func resultsHeaderView(with loadingState: LoadingState) -> some View {
-        switch loadingState {
+    @ViewBuilder private var resultsSectionView: some View {
+        Section {
+            if sectionState.loadingState == .loaded && visibleStations.isEmpty {
+                emptyResultsView()
+            }
+            if case .failure = sectionState.loadingState {
+                errorView
+            }
+            ForEach(visibleStations, id: \.station.id) { nearbyStation in
+                NavigationLink(value: nearbyStation) {
+                    StationLineGroupCell(
+                        style: .distance(metres: nearbyStation.distance),
+                        station: nearbyStation.station
+                    )
+                }
+            }
+        } header: {
+            resultsHeaderView
+        } footer: {
+            resultsFooterView
+        }
+        .lineGroupListRowStyle()
+    }
+    
+    @ViewBuilder private var resultsHeaderView: some View {
+        switch sectionState.loadingState {
         case .loading, .failure:
-            RefreshStatusView(loadingState: loadingState, refreshDate: nil)
-                .font(.footnote)
-                .foregroundStyle(Color.adaptiveMidGrey2)
+            VStack {
+                if let headerTitle = sectionState.headerTitle {
+                    Text(headerTitle)
+                }
+                RefreshStatusView(loadingState: sectionState.loadingState, refreshDate: nil)
+                    .font(.footnote)
+                    .foregroundStyle(Color.adaptiveMidGrey2)
+            }
         case .loaded:
             EmptyView()
         }
     }
     
     private var visibleStations: [NearbyStation] {
-        switch mode {
-        case .setUp, .permissionDenied:
-            return []
-        case .permissionGranted(_, let allStations):
-            return Array(allStations.prefix(currentPageNo * pagedResultsSize))
-        }
+        let currentPageNo = sectionState.currentPageNo
+        let pageSize = sectionState.pageSize
+        
+        return Array(sectionState.nearbyStations.prefix(currentPageNo * pageSize))
     }
     
     private func emptyResultsView() -> some View {
@@ -170,63 +118,60 @@ public struct NearbyStationsView: View {
     
     private var refreshButton: some View {
         Button {
-            onAction(.tappedRetryButton)
+            onAction(.tappedRefresh)
         } label: {
-            Label {
-                Text("refresh.button.title", bundle: .module)
-            } icon: {
+            HStack(spacing: 4) {
                 Image(systemName: "arrow.clockwise")
+                Text("refresh.button.title", bundle: .module)
             }
         }
         .buttonStyle(.primary)
     }
     
-    @ViewBuilder private var showMoreButton: some View {
+    @ViewBuilder private var resultsFooterView: some View {
         if canShowMoreResults {
             Button {
-                currentPageNo += 1
+                sectionState.currentPageNo += 1
             } label: {
                 Text("nearby.stations.more.results.button.title", bundle: .module)
             }
             .buttonStyle(.primary)
-            .id("showMoreButtonID_\(currentPageNo)")
+            .id("showMoreButtonID_\(sectionState.currentPageNo)")
             
         }
-
     }
     
     private var canShowMoreResults: Bool {
-        guard case let .permissionGranted(.loaded, stations) = mode else {
-            return false
-        }
-
-        return stations.count > (currentPageNo * pagedResultsSize)
+        let currentPageNo = sectionState.currentPageNo
+        let pageSize = sectionState.pageSize
+        
+        return sectionState.nearbyStations.count > (currentPageNo * pageSize)
     }
 }
-
 
 // MARK: - Previews
 
 #if DEBUG
-private struct WrapperView: View {
-    var mode: NearbyStationsView.Mode
-    var onAction: (NearbyStationsView.Action) -> Void = {
-        switch $0 {
-        case .tappedLocationButton: print("Permissions prompt tapped")
-        case .tappedRetryButton: print("Retry button tapped")
-        }
-    }
+private struct Previewer: View {
+    var locationUIStyle: LocationUIStatus.Style
+    var onAction: (NearbyStationsView.Action) -> Void = { print($0) }
     @State var selection: NearbyStation?
     @State var currentPageNo = 1
+    @State var sectionState: NearbyStationsResultsSectionState = .init(loadingState: .loaded, nearbyStations: [])
     var pagedResultsSize: Int = 5
+    
+    var locationUIStatus: LocationUIStatus {
+        .init(style: locationUIStyle) {
+            print("Location allowed")
+        }
+    }
     
     var body: some View {
         NavigationSplitView {
-            NearbyStationsView(mode: mode,
+            NearbyStationsView(locationUIStatus: locationUIStatus,
                                onAction: onAction,
-                               selection: $selection,
-                               currentPageNo: $currentPageNo,
-                               pagedResultsSize: pagedResultsSize)
+                               sectionState: $sectionState,
+                               selection: $selection)
               .navigationTitle("Nearby stations")
         } detail: {
             if let selection {
@@ -240,35 +185,47 @@ private struct WrapperView: View {
 
 
 #Preview("Setup") {
-    WrapperView(mode: .setUp)
+    Previewer(locationUIStyle: .setUp(showsHeader: true))
 }
 
 #Preview("Permission denied") {
-    WrapperView(mode: .permissionDenied)
-}
-
-#Preview("Error") {
-    WrapperView(mode: .permissionGranted(.failure(errorMessage: "Oops something went wrong"), []))
+    Previewer(locationUIStyle: .openSettingsToAllowLocation)
 }
 
 #Preview("Loading") {
-    WrapperView(mode: .permissionGranted(.loading, []))
+    Previewer(locationUIStyle: .locationAllowed,
+              sectionState: .init(loadingState: .loading,
+                                  nearbyStations: []))
 }
 
 #Preview("Loaded - stations found") {
-    WrapperView(
-        mode: .permissionGranted(.loaded, [
-            .init(distance: 606.16, station: ModelStubs.woodsideParkStation),
-            .init(distance: 1270.45, station: ModelStubs.westFinchleyStation),
-            .init(distance: 1387.44, station: ModelStubs.totteridgeAndWhetstoneStation),
-            .init(distance: 2216.50, station: ModelStubs.finchleyCentralStation)
-        ]),
+    Previewer(
+        locationUIStyle: .locationAllowed,
+        sectionState: .init(
+            loadingState: .loaded,
+            nearbyStations: [
+                .init(distance: 606.16, station: ModelStubs.woodsideParkStation),
+                .init(distance: 1270.45, station: ModelStubs.westFinchleyStation),
+                .init(distance: 1387.44, station: ModelStubs.totteridgeAndWhetstoneStation),
+                .init(distance: 2216.50, station: ModelStubs.finchleyCentralStation)
+            ],
+            pageSize: 2
+        ),
         pagedResultsSize: 1
     )
 }
 
+#Preview("Error") {
+    Previewer(locationUIStyle: .locationAllowed,
+              sectionState: .init(loadingState: .failure(errorMessage: "Oops something went wrong"),
+                                  nearbyStations: []))
+}
+
+
 #Preview("Loaded - zero results") {
-    WrapperView(mode: .permissionGranted(.loaded, []))
+    Previewer(locationUIStyle: .locationAllowed,
+              sectionState: .init(loadingState: .loaded,
+                                  nearbyStations: []))
 }
 
 #endif

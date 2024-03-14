@@ -6,5 +6,6 @@ final class StationDataTests: XCTestCase {
 
     func testStationCount() throws {
         XCTAssertEqual(376, Station.allValues().count)
+        XCTAssertEqual(575, Station.allNationalRailStopPoints().count)
     }
 }

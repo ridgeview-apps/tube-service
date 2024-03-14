@@ -28,7 +28,7 @@ public extension LineStatusAccessoryImageType {
 
 extension URL {
     
-    static func latestTflTweets(filteredBy filteredLine: LineID? = nil) -> URL {
+    static func latestTflTweets(filteredBy filteredLine: TrainLineID? = nil) -> URL {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
         urlComponents.host = "twitter.com"
@@ -55,7 +55,7 @@ extension URL {
 public struct LineStatusTwitterLink: Equatable, Identifiable {
     public enum Style: Equatable {
         case tflAllTweets
-        case lineTweets(lineId: LineID)
+        case lineTweets(lineId: TrainLineID)
     }
     
     public var id: URL { url }

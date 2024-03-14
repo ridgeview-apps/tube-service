@@ -12,4 +12,15 @@ public extension Station {
         
         return decodedValue
     }
+    
+    static func allNationalRailStopPoints() -> [StopPoint] {
+        let jsonDecoder = JSONDecoder.defaultModelDecoder
+        
+        guard let jsonData = allStationsNationalRailRawJSON.data(using: .utf8),
+              let decodedValue = try? jsonDecoder.decode([StopPoint].self, from: jsonData) else {
+            return []
+        }
+        
+        return decodedValue
+    }
 }

@@ -3,9 +3,9 @@
 import Models
 import XCTest
 
-@MainActor
 final class UserPreferencesDataStoreTests: XCTestCase {
     
+    @MainActor
     func testLoadUserPreferences_initiallyEmpty() throws {
         // Given
         let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
@@ -17,6 +17,7 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertEqual(initialValue, .empty)
     }
     
+    @MainActor
     func testLoadUserPreferences_initiallyPopulated() throws {
         // Given
         let userDefaults = UserDefaults.singleTestUserDefaults()
@@ -34,6 +35,7 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertEqual(initialValue, initialPopulatedValue)
     }
     
+    @MainActor
     func testAddingAndRemovingFavouriteLineIDs() throws {
         let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
         
@@ -50,6 +52,7 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertFalse(userPreferences.isFavourite(lineID: .bakerloo))
     }
     
+    @MainActor
     func testAddingAndRemovingFavouriteLineGroupIDs() throws {
         let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
         let fakeID = "FakeLineGroupID"
@@ -67,6 +70,7 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertFalse(userPreferences.isFavourite(lineGroupID: fakeID))
     }
     
+    @MainActor
     func testSaveRecentlyUsedStationID() throws {
         let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
         

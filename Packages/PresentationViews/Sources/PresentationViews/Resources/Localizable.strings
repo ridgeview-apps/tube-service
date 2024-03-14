@@ -22,6 +22,35 @@
 "contact.us.body.locale.info" = "Language/Region";
 "contact.us.subject %@" = "Feedback on %@";
 
+"journey.location.picker.nearby.stations.section.title" = "Stations nearby";
+"journey.location.picker.recents.section.title" = "Recents";
+
+"journey.results.from.label.title" = "From:";
+"journey.results.loading.title" = "Loading journeys...";
+"journey.results.to.label.title" = "To:";
+"journey.results.zero.results.title" = "No journeys found";
+
+"journey.planner.from.button.title" = "From";
+"journey.planner.location.value.current.location" = "Current location";
+"journey.planner.location.value.unselected" = "Select location";
+"journey.planner.to.button.title" = "To";
+"journey.planner.mode.value.all" = "All modes";
+"journey.planner.mode.value.bus" = "Bus";
+"journey.planner.mode.value.cable.car" = "Cable car";
+"journey.planner.mode.value.dlr" = "DLR";
+"journey.planner.mode.value.elizabeth" = "Elizabeth line";
+"journey.planner.mode.value.national.rail" = "National rail";
+"journey.planner.mode.value.overground" = "Overground";
+"journey.planner.mode.value.river.bus" = "River bus";
+"journey.planner.mode.value.selected.count %lld" = "%lld selected";
+"journey.planner.mode.value.tram" = "Tram";
+"journey.planner.mode.value.tube" = "Tube";
+"journey.planner.show.journeys.button.title" = "Show journeys";
+"journey.planner.when.button.title" = "When";
+"journey.planner.when.value.leave.now" = "Leave now";
+"journey.planner.when.value.leave.at %@" = "Leave %@";
+"journey.planner.when.value.arrive.at %@" = "Arrive %@";
+
 "refresh.status.last.updated %@" = "Updated %@";
 "refresh.status.updating" = "Updating...";
 
@@ -50,15 +79,16 @@
 "line.status.service.now" = "Live status";
 "line.status.twitterSection.title" = "Latest tweets:";
 
+"location.services.access.denied.message.title" = "Open App Settings to allow access to your current location";
+"location.services.allow.access.button.title" = "Current location";
+"location.services.allow.access.header.title" = "Tap the button below to allow access to your current location";
+"location.services.allow.access.footer.title" = "Your location will be used for journey planning and to detect stations nearby";
+
 "maps.elizabeth.link.title" = "Elizabeth line";
 "maps.rail.and.tube.link.title" = "Rail and tube";
 "maps.tube.day.link.title" = "Tube (Day map)";
 "maps.tube.night.link.title" = "Tube (Night map)";
 
-"nearby.stations.access.denied.message.title" = "This feature needs access to your current location. Please allow access in App Settings.";
-"nearby.stations.allow.access.button.title" = "Current location";
-"nearby.stations.allow.access.header.title" = "Tap the button below to allow access to your current location";
-"nearby.stations.allow.access.footer.title" = "Your location will be used to detect stations nearby";
 "nearby.stations.load.failure.title" = "Sorry, there was a problem getting your current location. Tap refresh to try again.";
 "nearby.stations.loading.title" = "Finding stations nearby";
 "nearby.stations.more.results.button.title" = "Show more";

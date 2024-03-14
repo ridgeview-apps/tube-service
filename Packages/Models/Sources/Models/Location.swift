@@ -9,3 +9,15 @@ public struct Location: Codable, Hashable {
         self.lon = lon
     }
 }
+
+public struct LocationSearchResult: Hashable, Identifiable {
+    public var id: Self { self }
+    
+    public let title: String
+    public let subtitle: String
+    
+    public init(title: String, subtitle: String) {
+        self.title = title
+        self.subtitle = subtitle
+    }
+}

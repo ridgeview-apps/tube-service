@@ -2,11 +2,11 @@ import Models
 import SwiftUI
 
 extension View {
-    func lineGroupListRowStyle() -> some View {
+    func lineGroupListRowStyle(backgroundColor: Color = .defaultCellBackground) -> some View {
         self
             .listRowSeparator(.visible, edges: .bottom)
             .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
-            .listRowBackground(Color.defaultCellBackground)
+            .listRowBackground(backgroundColor)
     }
 }
 
@@ -36,7 +36,7 @@ struct LineGroupCell: View {
     }
     
     let style: Style
-    let lineIDs: [LineID]
+    let lineIDs: [TrainLineID]
     let title: String
 
     var body: some View {
@@ -51,7 +51,6 @@ struct LineGroupCell: View {
             }
         }
         .contentShape(Rectangle())
-        .foregroundColor(Color.primary)
     }
     
     private func formattedDistanceText(for metres: Double) -> some View {
@@ -72,12 +71,6 @@ struct LineGroupCell: View {
     NavigationStack {
         List {
             Section {
-                LineGroupCell(style: .plain,
-                              lineIDs: ModelStubs.eastFinchleyStation.sortedLineIDs,
-                              title: ModelStubs.eastFinchleyStation.name)
-                LineGroupCell(style: .plain,
-                              lineIDs: ModelStubs.kingsCrossStation.sortedLineIDs,
-                              title: ModelStubs.kingsCrossStation.name)
                 LineGroupCell(style: .plain,
                               lineIDs: [.circle, .hammersmithAndCity, .district],
                               title: "Mixed line group")

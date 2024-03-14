@@ -14,6 +14,7 @@ final class AppDataStore: ObservableObject {
     private(set) var stations: StationsDataStore
     private(set) var userPreferences: UserPreferencesDataStore
     private(set) var location: LocationDataStore
+    private(set) var localSearchCompleter: LocalSearchCompleter
     
     init(transportAPI: TransportAPIClientType,
          userDefaults: UserDefaults,
@@ -26,7 +27,9 @@ final class AppDataStore: ObservableObject {
         self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)
         self.stations = StationsDataStore(transportAPI: transportAPI)
         self.userPreferences = UserPreferencesDataStore(userDefaults: userDefaults)
-        self.location = LocationDataStore(locationManager: locationManager)
+        self.location = LocationDataStore(locationManager: locationManager,
+                                          stations: stations)
+        self.localSearchCompleter = LocalSearchCompleter()
     }
 }
 

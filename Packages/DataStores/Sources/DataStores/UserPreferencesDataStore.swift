@@ -14,7 +14,7 @@ public final class UserPreferencesDataStore: ObservableObject {
     
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID> { value.favouriteLineGroupIDs }
     public var recentlySelectedStations: [Station.ID] { value.recentlySelectedStations ?? [] }
-    public var favouriteLineIDs: Set<LineID> { value.favouriteLineIDs ?? [] }
+    public var favouriteLineIDs: Set<TrainLineID> { value.favouriteLineIDs ?? [] }
     
     
     // MARK: - Init
@@ -51,18 +51,18 @@ public final class UserPreferencesDataStore: ObservableObject {
     
     // MARK: Favourite line IDs
     
-    public func isFavourite(lineID: LineID) -> Bool {
+    public func isFavourite(lineID: TrainLineID) -> Bool {
         favouriteLineIDs.contains(lineID)
     }
     
-    public func add(favouriteLineID: LineID) {
+    public func add(favouriteLineID: TrainLineID) {
         var updatedLineIDs = value.favouriteLineIDs ?? Set([])
         updatedLineIDs.insert(favouriteLineID)
         value.favouriteLineIDs = updatedLineIDs
         persist()
     }
     
-    public func remove(favouriteLineID: LineID) {
+    public func remove(favouriteLineID: TrainLineID) {
         var updatedLineIDs = value.favouriteLineIDs ?? Set([])
         updatedLineIDs.remove(favouriteLineID)
         value.favouriteLineIDs = updatedLineIDs

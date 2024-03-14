@@ -8,7 +8,7 @@ public struct LineStatusListView: View {
     
     public let loadingState: LoadingState
     public let lines: [Line]
-    public let favouriteLineIDs: Set<LineID>
+    public let favouriteLineIDs: Set<TrainLineID>
     public let refreshDate: Date?
     
     @Binding var selectedLine: Line?
@@ -24,7 +24,7 @@ public struct LineStatusListView: View {
         
     public init(loadingState: LoadingState,
                 lines: [Line],
-                favouriteLineIDs: Set<LineID>,
+                favouriteLineIDs: Set<TrainLineID>,
                 refreshDate: Date?,
                 selectedLine: Binding<Line?>,
                 selectedFilterOption: Binding<LineStatusFilterOption>,
@@ -266,7 +266,7 @@ private extension LineStatusFilterOption {
 private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
-    var favouriteLineIDs: Set<LineID> = []
+    var favouriteLineIDs: Set<TrainLineID> = []
     var refreshDate: Date? = .now
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today

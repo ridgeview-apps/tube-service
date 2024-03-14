@@ -4,6 +4,7 @@
 let allStationsRawJSON = """
 [
   {
+    "icsCode" : "1003006",
     "id" : "940GZZDLABR",
     "lineGroups" : [
       {
@@ -20,6 +21,7 @@ let allStationsRawJSON = """
     "name" : "Abbey Road"
   },
   {
+    "icsCode" : "1001001",
     "id" : "HUBABW",
     "lineGroups" : [
       {
@@ -30,12 +32,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.491225,
-      "lon" : 0.12084
+      "lat" : 51.491241,
+      "lon" : 0.121374
     },
     "name" : "Abbey Wood"
   },
   {
+    "icsCode" : "1001003",
     "id" : "910GACTONML",
     "lineGroups" : [
       {
@@ -52,6 +55,7 @@ let allStationsRawJSON = """
     "name" : "Acton Main Line"
   },
   {
+    "icsCode" : "1000002",
     "id" : "940GZZLUACT",
     "lineGroups" : [
       {
@@ -74,6 +78,7 @@ let allStationsRawJSON = """
     "name" : "Acton Town"
   },
   {
+    "icsCode" : "1002001",
     "id" : "940GZZCRADV",
     "lineGroups" : [
       {
@@ -84,12 +89,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.356599,
-      "lon" : -0.032607
+      "lat" : 51.356241,
+      "lon" : -0.032694
     },
     "name" : "Addington Village"
   },
   {
+    "icsCode" : "1002002",
     "id" : "940GZZCRADD",
     "lineGroups" : [
       {
@@ -100,12 +106,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.37981,
-      "lon" : -0.073242
+      "lat" : 51.379753,
+      "lon" : -0.073058
     },
     "name" : "Addiscombe"
   },
   {
+    "icsCode" : "1000003",
     "id" : "940GZZLUALD",
     "lineGroups" : [
       {
@@ -128,6 +135,7 @@ let allStationsRawJSON = """
     "name" : "Aldgate"
   },
   {
+    "icsCode" : "1000004",
     "id" : "940GZZLUADE",
     "lineGroups" : [
       {
@@ -145,6 +153,7 @@ let allStationsRawJSON = """
     "name" : "Aldgate East"
   },
   {
+    "icsCode" : "1002003",
     "id" : "940GZZDLALL",
     "lineGroups" : [
       {
@@ -161,6 +170,7 @@ let allStationsRawJSON = """
     "name" : "All Saints"
   },
   {
+    "icsCode" : "1000005",
     "id" : "940GZZLUALP",
     "lineGroups" : [
       {
@@ -177,6 +187,7 @@ let allStationsRawJSON = """
     "name" : "Alperton"
   },
   {
+    "icsCode" : "1000006",
     "id" : "HUBAMR",
     "lineGroups" : [
       {
@@ -193,6 +204,7 @@ let allStationsRawJSON = """
     "name" : "Amersham"
   },
   {
+    "icsCode" : "1002004",
     "id" : "940GZZCRAMP",
     "lineGroups" : [
       {
@@ -209,6 +221,7 @@ let allStationsRawJSON = """
     "name" : "Ampere Way"
   },
   {
+    "icsCode" : "1000007",
     "id" : "940GZZLUAGL",
     "lineGroups" : [
       {
@@ -225,6 +238,7 @@ let allStationsRawJSON = """
     "name" : "Angel"
   },
   {
+    "icsCode" : "1000008",
     "id" : "940GZZLUACY",
     "lineGroups" : [
       {
@@ -241,6 +255,7 @@ let allStationsRawJSON = """
     "name" : "Archway"
   },
   {
+    "icsCode" : "1002005",
     "id" : "940GZZCRARA",
     "lineGroups" : [
       {
@@ -251,12 +266,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.391525,
-      "lon" : -0.058347
+      "lat" : 51.391362,
+      "lon" : -0.058297
     },
     "name" : "Arena"
   },
   {
+    "icsCode" : "1000009",
     "id" : "940GZZLUASG",
     "lineGroups" : [
       {
@@ -273,6 +289,7 @@ let allStationsRawJSON = """
     "name" : "Arnos Grove"
   },
   {
+    "icsCode" : "1000010",
     "id" : "940GZZLUASL",
     "lineGroups" : [
       {
@@ -289,6 +306,7 @@ let allStationsRawJSON = """
     "name" : "Arsenal"
   },
   {
+    "icsCode" : "1002006",
     "id" : "940GZZCRAVE",
     "lineGroups" : [
       {
@@ -299,12 +317,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.407037,
-      "lon" : -0.049092
+      "lat" : 51.4068,
+      "lon" : -0.049476
     },
     "name" : "Avenue Road"
   },
   {
+    "icsCode" : "1000011",
     "id" : "940GZZLUBST",
     "lineGroups" : [
       {
@@ -340,6 +359,7 @@ let allStationsRawJSON = """
     "name" : "Baker Street"
   },
   {
+    "icsCode" : "1000012",
     "id" : "HUBBAL",
     "lineGroups" : [
       {
@@ -356,6 +376,7 @@ let allStationsRawJSON = """
     "name" : "Balham"
   },
   {
+    "icsCode" : "1000013",
     "id" : "HUBBAN",
     "lineGroups" : [
       {
@@ -384,12 +405,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.513585,
-      "lon" : -0.08814
+      "lat" : 51.513552,
+      "lon" : -0.088919
     },
     "name" : "Bank"
   },
   {
+    "icsCode" : "1000014",
     "id" : "940GZZLUBBN",
     "lineGroups" : [
       {
@@ -408,6 +430,7 @@ let allStationsRawJSON = """
     "name" : "Barbican"
   },
   {
+    "icsCode" : "1000015",
     "id" : "HUBBKG",
     "lineGroups" : [
       {
@@ -437,6 +460,7 @@ let allStationsRawJSON = """
     "name" : "Barking"
   },
   {
+    "icsCode" : "1000016",
     "id" : "940GZZLUBKE",
     "lineGroups" : [
       {
@@ -453,6 +477,7 @@ let allStationsRawJSON = """
     "name" : "Barkingside"
   },
   {
+    "icsCode" : "1000017",
     "id" : "940GZZLUBSC",
     "lineGroups" : [
       {
@@ -475,6 +500,7 @@ let allStationsRawJSON = """
     "name" : "Barons Court"
   },
   {
+    "icsCode" : "1002195",
     "id" : "940GZZBPSUST",
     "lineGroups" : [
       {
@@ -491,6 +517,7 @@ let allStationsRawJSON = """
     "name" : "Battersea Power Station"
   },
   {
+    "icsCode" : "1000018",
     "id" : "940GZZLUBWT",
     "lineGroups" : [
       {
@@ -508,6 +535,7 @@ let allStationsRawJSON = """
     "name" : "Bayswater"
   },
   {
+    "icsCode" : "1001018",
     "id" : "HUBBEK",
     "lineGroups" : [
       {
@@ -524,6 +552,7 @@ let allStationsRawJSON = """
     "name" : "Beckenham Junction"
   },
   {
+    "icsCode" : "1002010",
     "id" : "940GZZCRBRD",
     "lineGroups" : [
       {
@@ -534,12 +563,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.409532,
-      "lon" : -0.043421
+      "lat" : 51.409639,
+      "lon" : -0.042855
     },
     "name" : "Beckenham Road"
   },
   {
+    "icsCode" : "1002011",
     "id" : "940GZZDLBEC",
     "lineGroups" : [
       {
@@ -556,6 +586,7 @@ let allStationsRawJSON = """
     "name" : "Beckton"
   },
   {
+    "icsCode" : "1002012",
     "id" : "940GZZDLBPK",
     "lineGroups" : [
       {
@@ -572,6 +603,7 @@ let allStationsRawJSON = """
     "name" : "Beckton Park"
   },
   {
+    "icsCode" : "1000019",
     "id" : "940GZZLUBEC",
     "lineGroups" : [
       {
@@ -588,6 +620,7 @@ let allStationsRawJSON = """
     "name" : "Becontree"
   },
   {
+    "icsCode" : "1002013",
     "id" : "940GZZCRBED",
     "lineGroups" : [
       {
@@ -598,12 +631,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.389242,
-      "lon" : -0.142167
+      "lat" : 51.3893,
+      "lon" : -0.142409
     },
     "name" : "Beddington Lane"
   },
   {
+    "icsCode" : "1002014",
     "id" : "940GZZCRBGV",
     "lineGroups" : [
       {
@@ -614,12 +648,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.40133,
-      "lon" : -0.177806
+      "lat" : 51.399722,
+      "lon" : -0.180256
     },
     "name" : "Belgrave Walk"
   },
   {
+    "icsCode" : "1000020",
     "id" : "940GZZLUBZP",
     "lineGroups" : [
       {
@@ -630,12 +665,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.550529,
-      "lon" : -0.164783
+      "lat" : 51.550311,
+      "lon" : -0.164648
     },
     "name" : "Belsize Park"
   },
   {
+    "icsCode" : "1000021",
     "id" : "940GZZLUBMY",
     "lineGroups" : [
       {
@@ -652,6 +688,7 @@ let allStationsRawJSON = """
     "name" : "Bermondsey"
   },
   {
+    "icsCode" : "1000022",
     "id" : "940GZZLUBLG",
     "lineGroups" : [
       {
@@ -668,6 +705,7 @@ let allStationsRawJSON = """
     "name" : "Bethnal Green"
   },
   {
+    "icsCode" : "1001027",
     "id" : "HUBBIR",
     "lineGroups" : [
       {
@@ -684,6 +722,7 @@ let allStationsRawJSON = """
     "name" : "Birkbeck"
   },
   {
+    "icsCode" : "1000023",
     "id" : "HUBBFR",
     "lineGroups" : [
       {
@@ -701,6 +740,7 @@ let allStationsRawJSON = """
     "name" : "Blackfriars"
   },
   {
+    "icsCode" : "1002017",
     "id" : "940GZZCRBLA",
     "lineGroups" : [
       {
@@ -711,12 +751,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.384757,
-      "lon" : -0.070562
+      "lat" : 51.384748,
+      "lon" : -0.070563
     },
     "name" : "Blackhorse Lane"
   },
   {
+    "icsCode" : "1000024",
     "id" : "HUBBHO",
     "lineGroups" : [
       {
@@ -733,6 +774,7 @@ let allStationsRawJSON = """
     "name" : "Blackhorse Road"
   },
   {
+    "icsCode" : "1002018",
     "id" : "940GZZDLBLA",
     "lineGroups" : [
       {
@@ -749,6 +791,7 @@ let allStationsRawJSON = """
     "name" : "Blackwall"
   },
   {
+    "icsCode" : "1000025",
     "id" : "HUBBDS",
     "lineGroups" : [
       {
@@ -777,6 +820,7 @@ let allStationsRawJSON = """
     "name" : "Bond Street"
   },
   {
+    "icsCode" : "1000026",
     "id" : "940GZZLUBOR",
     "lineGroups" : [
       {
@@ -793,6 +837,7 @@ let allStationsRawJSON = """
     "name" : "Borough"
   },
   {
+    "icsCode" : "1000027",
     "id" : "940GZZLUBOS",
     "lineGroups" : [
       {
@@ -809,6 +854,7 @@ let allStationsRawJSON = """
     "name" : "Boston Manor"
   },
   {
+    "icsCode" : "1000028",
     "id" : "940GZZLUBDS",
     "lineGroups" : [
       {
@@ -825,6 +871,7 @@ let allStationsRawJSON = """
     "name" : "Bounds Green"
   },
   {
+    "icsCode" : "1002019",
     "id" : "940GZZDLBOW",
     "lineGroups" : [
       {
@@ -841,6 +888,7 @@ let allStationsRawJSON = """
     "name" : "Bow Church"
   },
   {
+    "icsCode" : "1000029",
     "id" : "940GZZLUBWR",
     "lineGroups" : [
       {
@@ -858,6 +906,7 @@ let allStationsRawJSON = """
     "name" : "Bow Road"
   },
   {
+    "icsCode" : "1000030",
     "id" : "940GZZLUBTX",
     "lineGroups" : [
       {
@@ -874,6 +923,7 @@ let allStationsRawJSON = """
     "name" : "Brent Cross"
   },
   {
+    "icsCode" : "1000292",
     "id" : "910GBRTWOOD",
     "lineGroups" : [
       {
@@ -890,6 +940,7 @@ let allStationsRawJSON = """
     "name" : "Brentwood"
   },
   {
+    "icsCode" : "1000031",
     "id" : "HUBBRX",
     "lineGroups" : [
       {
@@ -906,6 +957,7 @@ let allStationsRawJSON = """
     "name" : "Brixton"
   },
   {
+    "icsCode" : "1000032",
     "id" : "940GZZLUBBB",
     "lineGroups" : [
       {
@@ -923,6 +975,7 @@ let allStationsRawJSON = """
     "name" : "Bromley-by-Bow"
   },
   {
+    "icsCode" : "1000033",
     "id" : "940GZZLUBKH",
     "lineGroups" : [
       {
@@ -939,6 +992,7 @@ let allStationsRawJSON = """
     "name" : "Buckhurst Hill"
   },
   {
+    "icsCode" : "1000860",
     "id" : "910GBNHAM",
     "lineGroups" : [
       {
@@ -955,6 +1009,7 @@ let allStationsRawJSON = """
     "name" : "Burnham (Berks)"
   },
   {
+    "icsCode" : "1000034",
     "id" : "940GZZLUBTK",
     "lineGroups" : [
       {
@@ -971,6 +1026,7 @@ let allStationsRawJSON = """
     "name" : "Burnt Oak"
   },
   {
+    "icsCode" : "1000035",
     "id" : "940GZZLUCAR",
     "lineGroups" : [
       {
@@ -987,6 +1043,7 @@ let allStationsRawJSON = """
     "name" : "Caledonian Road"
   },
   {
+    "icsCode" : "1000036",
     "id" : "940GZZLUCTN",
     "lineGroups" : [
       {
@@ -1003,6 +1060,7 @@ let allStationsRawJSON = """
     "name" : "Camden Town"
   },
   {
+    "icsCode" : "1000037",
     "id" : "HUBZCW",
     "lineGroups" : [
       {
@@ -1019,6 +1077,7 @@ let allStationsRawJSON = """
     "name" : "Canada Water"
   },
   {
+    "icsCode" : "1000038",
     "id" : "HUBCAW",
     "lineGroups" : [
       {
@@ -1047,6 +1106,7 @@ let allStationsRawJSON = """
     "name" : "Canary Wharf"
   },
   {
+    "icsCode" : "1000039",
     "id" : "HUBCAN",
     "lineGroups" : [
       {
@@ -1069,6 +1129,7 @@ let allStationsRawJSON = """
     "name" : "Canning Town"
   },
   {
+    "icsCode" : "1000040",
     "id" : "HUBCST",
     "lineGroups" : [
       {
@@ -1086,6 +1147,7 @@ let allStationsRawJSON = """
     "name" : "Cannon Street"
   },
   {
+    "icsCode" : "1000041",
     "id" : "940GZZLUCPK",
     "lineGroups" : [
       {
@@ -1102,6 +1164,7 @@ let allStationsRawJSON = """
     "name" : "Canons Park"
   },
   {
+    "icsCode" : "1002042",
     "id" : "940GZZCRCTR",
     "lineGroups" : [
       {
@@ -1112,12 +1175,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375769,
-      "lon" : -0.103917
+      "lat" : 51.376229,
+      "lon" : -0.103424
     },
     "name" : "Centrale"
   },
   {
+    "icsCode" : "1001055",
     "id" : "910GCHDWLHT",
     "lineGroups" : [
       {
@@ -1134,6 +1198,7 @@ let allStationsRawJSON = """
     "name" : "Chadwell Heath"
   },
   {
+    "icsCode" : "1000042",
     "id" : "HUBCFO",
     "lineGroups" : [
       {
@@ -1150,6 +1215,7 @@ let allStationsRawJSON = """
     "name" : "Chalfont & Latimer"
   },
   {
+    "icsCode" : "1000043",
     "id" : "940GZZLUCFM",
     "lineGroups" : [
       {
@@ -1166,6 +1232,7 @@ let allStationsRawJSON = """
     "name" : "Chalk Farm"
   },
   {
+    "icsCode" : "1000044",
     "id" : "940GZZLUCHL",
     "lineGroups" : [
       {
@@ -1182,6 +1249,7 @@ let allStationsRawJSON = """
     "name" : "Chancery Lane"
   },
   {
+    "icsCode" : "1000045",
     "id" : "HUBCHX",
     "lineGroups" : [
       {
@@ -1204,6 +1272,7 @@ let allStationsRawJSON = """
     "name" : "Charing Cross"
   },
   {
+    "icsCode" : "1000046",
     "id" : "940GZZLUCSM",
     "lineGroups" : [
       {
@@ -1220,6 +1289,7 @@ let allStationsRawJSON = """
     "name" : "Chesham"
   },
   {
+    "icsCode" : "1000047",
     "id" : "940GZZLUCWL",
     "lineGroups" : [
       {
@@ -1236,6 +1306,7 @@ let allStationsRawJSON = """
     "name" : "Chigwell"
   },
   {
+    "icsCode" : "1000048",
     "id" : "940GZZLUCWP",
     "lineGroups" : [
       {
@@ -1252,6 +1323,7 @@ let allStationsRawJSON = """
     "name" : "Chiswick Park"
   },
   {
+    "icsCode" : "1000049",
     "id" : "HUBCLW",
     "lineGroups" : [
       {
@@ -1268,6 +1340,7 @@ let allStationsRawJSON = """
     "name" : "Chorleywood"
   },
   {
+    "icsCode" : "1002023",
     "id" : "940GZZCRCHR",
     "lineGroups" : [
       {
@@ -1278,12 +1351,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.373774,
-      "lon" : -0.103985
+      "lat" : 51.373708,
+      "lon" : -0.104361
     },
     "name" : "Church Street"
   },
   {
+    "icsCode" : "1000050",
     "id" : "940GZZLUCPC",
     "lineGroups" : [
       {
@@ -1300,6 +1374,7 @@ let allStationsRawJSON = """
     "name" : "Clapham Common"
   },
   {
+    "icsCode" : "1000051",
     "id" : "940GZZLUCPN",
     "lineGroups" : [
       {
@@ -1316,6 +1391,7 @@ let allStationsRawJSON = """
     "name" : "Clapham North"
   },
   {
+    "icsCode" : "1000052",
     "id" : "940GZZLUCPS",
     "lineGroups" : [
       {
@@ -1332,6 +1408,7 @@ let allStationsRawJSON = """
     "name" : "Clapham South"
   },
   {
+    "icsCode" : "1000053",
     "id" : "940GZZLUCKS",
     "lineGroups" : [
       {
@@ -1348,6 +1425,7 @@ let allStationsRawJSON = """
     "name" : "Cockfosters"
   },
   {
+    "icsCode" : "1000054",
     "id" : "940GZZLUCND",
     "lineGroups" : [
       {
@@ -1364,6 +1442,7 @@ let allStationsRawJSON = """
     "name" : "Colindale"
   },
   {
+    "icsCode" : "1000055",
     "id" : "940GZZLUCSD",
     "lineGroups" : [
       {
@@ -1380,6 +1459,7 @@ let allStationsRawJSON = """
     "name" : "Colliers Wood"
   },
   {
+    "icsCode" : "1002024",
     "id" : "940GZZCRCOO",
     "lineGroups" : [
       {
@@ -1390,12 +1470,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.359791,
-      "lon" : -0.05956
+      "lat" : 51.359875,
+      "lon" : -0.058623
     },
     "name" : "Coombe Lane"
   },
   {
+    "icsCode" : "1000056",
     "id" : "940GZZLUCGN",
     "lineGroups" : [
       {
@@ -1412,6 +1493,7 @@ let allStationsRawJSON = """
     "name" : "Covent Garden"
   },
   {
+    "icsCode" : "1002025",
     "id" : "940GZZDLCLA",
     "lineGroups" : [
       {
@@ -1428,6 +1510,7 @@ let allStationsRawJSON = """
     "name" : "Crossharbour"
   },
   {
+    "icsCode" : "1000057",
     "id" : "940GZZLUCXY",
     "lineGroups" : [
       {
@@ -1444,6 +1527,7 @@ let allStationsRawJSON = """
     "name" : "Croxley"
   },
   {
+    "icsCode" : "1001079",
     "id" : "HUBCUS",
     "lineGroups" : [
       {
@@ -1466,6 +1550,7 @@ let allStationsRawJSON = """
     "name" : "Custom House"
   },
   {
+    "icsCode" : "1002027",
     "id" : "HUBCUT",
     "lineGroups" : [
       {
@@ -1482,6 +1567,7 @@ let allStationsRawJSON = """
     "name" : "Cutty Sark"
   },
   {
+    "icsCode" : "1002028",
     "id" : "940GZZDLCYP",
     "lineGroups" : [
       {
@@ -1498,6 +1584,7 @@ let allStationsRawJSON = """
     "name" : "Cyprus"
   },
   {
+    "icsCode" : "1000058",
     "id" : "940GZZLUDGE",
     "lineGroups" : [
       {
@@ -1514,6 +1601,7 @@ let allStationsRawJSON = """
     "name" : "Dagenham East"
   },
   {
+    "icsCode" : "1000059",
     "id" : "940GZZLUDGY",
     "lineGroups" : [
       {
@@ -1530,6 +1618,7 @@ let allStationsRawJSON = """
     "name" : "Dagenham Heathway"
   },
   {
+    "icsCode" : "1000060",
     "id" : "940GZZLUDBN",
     "lineGroups" : [
       {
@@ -1546,6 +1635,7 @@ let allStationsRawJSON = """
     "name" : "Debden"
   },
   {
+    "icsCode" : "1002029",
     "id" : "940GZZDLDEP",
     "lineGroups" : [
       {
@@ -1562,6 +1652,7 @@ let allStationsRawJSON = """
     "name" : "Deptford Bridge"
   },
   {
+    "icsCode" : "1002030",
     "id" : "940GZZDLDEV",
     "lineGroups" : [
       {
@@ -1578,6 +1669,7 @@ let allStationsRawJSON = """
     "name" : "Devons Road"
   },
   {
+    "icsCode" : "1000061",
     "id" : "940GZZLUDOH",
     "lineGroups" : [
       {
@@ -1594,6 +1686,7 @@ let allStationsRawJSON = """
     "name" : "Dollis Hill"
   },
   {
+    "icsCode" : "1002031",
     "id" : "940GZZCRDDR",
     "lineGroups" : [
       {
@@ -1604,12 +1697,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.417555,
-      "lon" : -0.207679
+      "lat" : 51.417608,
+      "lon" : -0.207648
     },
     "name" : "Dundonald Road"
   },
   {
+    "icsCode" : "1000062",
     "id" : "HUBEAL",
     "lineGroups" : [
       {
@@ -1638,6 +1732,7 @@ let allStationsRawJSON = """
     "name" : "Ealing Broadway"
   },
   {
+    "icsCode" : "1000063",
     "id" : "940GZZLUECM",
     "lineGroups" : [
       {
@@ -1655,6 +1750,7 @@ let allStationsRawJSON = """
     "name" : "Ealing Common"
   },
   {
+    "icsCode" : "1000064",
     "id" : "940GZZLUECT",
     "lineGroups" : [
       {
@@ -1677,6 +1773,7 @@ let allStationsRawJSON = """
     "name" : "Earl's Court"
   },
   {
+    "icsCode" : "1000065",
     "id" : "940GZZLUEAN",
     "lineGroups" : [
       {
@@ -1693,6 +1790,7 @@ let allStationsRawJSON = """
     "name" : "East Acton"
   },
   {
+    "icsCode" : "1001089",
     "id" : "HUBECY",
     "lineGroups" : [
       {
@@ -1709,6 +1807,7 @@ let allStationsRawJSON = """
     "name" : "East Croydon"
   },
   {
+    "icsCode" : "1000067",
     "id" : "940GZZLUEFY",
     "lineGroups" : [
       {
@@ -1725,6 +1824,7 @@ let allStationsRawJSON = """
     "name" : "East Finchley"
   },
   {
+    "icsCode" : "1000068",
     "id" : "940GZZLUEHM",
     "lineGroups" : [
       {
@@ -1742,6 +1842,7 @@ let allStationsRawJSON = """
     "name" : "East Ham"
   },
   {
+    "icsCode" : "1002033",
     "id" : "940GZZDLEIN",
     "lineGroups" : [
       {
@@ -1758,6 +1859,7 @@ let allStationsRawJSON = """
     "name" : "East India"
   },
   {
+    "icsCode" : "1000069",
     "id" : "940GZZLUEPY",
     "lineGroups" : [
       {
@@ -1774,6 +1876,7 @@ let allStationsRawJSON = """
     "name" : "East Putney"
   },
   {
+    "icsCode" : "1000066",
     "id" : "940GZZLUEAE",
     "lineGroups" : [
       {
@@ -1791,6 +1894,7 @@ let allStationsRawJSON = """
     "name" : "Eastcote"
   },
   {
+    "icsCode" : "1000070",
     "id" : "940GZZLUEGW",
     "lineGroups" : [
       {
@@ -1807,6 +1911,7 @@ let allStationsRawJSON = """
     "name" : "Edgware"
   },
   {
+    "icsCode" : "1000071",
     "id" : "940GZZLUERB",
     "lineGroups" : [
       {
@@ -1823,6 +1928,7 @@ let allStationsRawJSON = """
     "name" : "Edgware Road (Bakerloo)"
   },
   {
+    "icsCode" : "1000072",
     "id" : "940GZZLUERC",
     "lineGroups" : [
       {
@@ -1853,6 +1959,7 @@ let allStationsRawJSON = """
     "name" : "Edgware Road (Circle Line)"
   },
   {
+    "icsCode" : "1000073",
     "id" : "HUBEPH",
     "lineGroups" : [
       {
@@ -1875,6 +1982,7 @@ let allStationsRawJSON = """
     "name" : "Elephant & Castle"
   },
   {
+    "icsCode" : "1000074",
     "id" : "940GZZLUEPK",
     "lineGroups" : [
       {
@@ -1891,6 +1999,7 @@ let allStationsRawJSON = """
     "name" : "Elm Park"
   },
   {
+    "icsCode" : "1001094",
     "id" : "HUBELM",
     "lineGroups" : [
       {
@@ -1907,6 +2016,7 @@ let allStationsRawJSON = """
     "name" : "Elmers End"
   },
   {
+    "icsCode" : "1002035",
     "id" : "940GZZDLELV",
     "lineGroups" : [
       {
@@ -1923,6 +2033,7 @@ let allStationsRawJSON = """
     "name" : "Elverson Road"
   },
   {
+    "icsCode" : "1000075",
     "id" : "940GZZLUEMB",
     "lineGroups" : [
       {
@@ -1952,6 +2063,7 @@ let allStationsRawJSON = """
     "name" : "Embankment"
   },
   {
+    "icsCode" : "1000076",
     "id" : "940GZZLUEPG",
     "lineGroups" : [
       {
@@ -1968,6 +2080,7 @@ let allStationsRawJSON = """
     "name" : "Epping"
   },
   {
+    "icsCode" : "1000077",
     "id" : "HUBEUS",
     "lineGroups" : [
       {
@@ -1984,12 +2097,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.527999,
-      "lon" : -0.133785
+      "lat" : 51.528055,
+      "lon" : -0.132182
     },
     "name" : "Euston"
   },
   {
+    "icsCode" : "1000078",
     "id" : "940GZZLUESQ",
     "lineGroups" : [
       {
@@ -2008,6 +2122,7 @@ let allStationsRawJSON = """
     "name" : "Euston Square"
   },
   {
+    "icsCode" : "1000079",
     "id" : "940GZZLUFLP",
     "lineGroups" : [
       {
@@ -2024,6 +2139,7 @@ let allStationsRawJSON = """
     "name" : "Fairlop"
   },
   {
+    "icsCode" : "1000080",
     "id" : "HUBZFD",
     "lineGroups" : [
       {
@@ -2048,6 +2164,7 @@ let allStationsRawJSON = """
     "name" : "Farringdon"
   },
   {
+    "icsCode" : "1002038",
     "id" : "940GZZCRFLD",
     "lineGroups" : [
       {
@@ -2064,6 +2181,7 @@ let allStationsRawJSON = """
     "name" : "Fieldway"
   },
   {
+    "icsCode" : "1000081",
     "id" : "940GZZLUFYC",
     "lineGroups" : [
       {
@@ -2080,6 +2198,7 @@ let allStationsRawJSON = """
     "name" : "Finchley Central"
   },
   {
+    "icsCode" : "1000082",
     "id" : "940GZZLUFYR",
     "lineGroups" : [
       {
@@ -2102,6 +2221,7 @@ let allStationsRawJSON = """
     "name" : "Finchley Road"
   },
   {
+    "icsCode" : "1000083",
     "id" : "HUBFPK",
     "lineGroups" : [
       {
@@ -2124,6 +2244,7 @@ let allStationsRawJSON = """
     "name" : "Finsbury Park"
   },
   {
+    "icsCode" : "1001111",
     "id" : "910GFRSTGT",
     "lineGroups" : [
       {
@@ -2140,6 +2261,7 @@ let allStationsRawJSON = """
     "name" : "Forest Gate"
   },
   {
+    "icsCode" : "1000084",
     "id" : "940GZZLUFBY",
     "lineGroups" : [
       {
@@ -2156,6 +2278,7 @@ let allStationsRawJSON = """
     "name" : "Fulham Broadway"
   },
   {
+    "icsCode" : "1002039",
     "id" : "940GZZDLGAL",
     "lineGroups" : [
       {
@@ -2172,6 +2295,7 @@ let allStationsRawJSON = """
     "name" : "Gallions Reach"
   },
   {
+    "icsCode" : "1000085",
     "id" : "940GZZLUGTH",
     "lineGroups" : [
       {
@@ -2188,6 +2312,7 @@ let allStationsRawJSON = """
     "name" : "Gants Hill"
   },
   {
+    "icsCode" : "1002040",
     "id" : "940GZZCRCEN",
     "lineGroups" : [
       {
@@ -2204,6 +2329,7 @@ let allStationsRawJSON = """
     "name" : "George Street"
   },
   {
+    "icsCode" : "1001115",
     "id" : "910GGIDEAPK",
     "lineGroups" : [
       {
@@ -2220,6 +2346,7 @@ let allStationsRawJSON = """
     "name" : "Gidea Park"
   },
   {
+    "icsCode" : "1000086",
     "id" : "940GZZLUGTR",
     "lineGroups" : [
       {
@@ -2255,6 +2382,7 @@ let allStationsRawJSON = """
     "name" : "Gloucester Road"
   },
   {
+    "icsCode" : "1000087",
     "id" : "940GZZLUGGN",
     "lineGroups" : [
       {
@@ -2271,6 +2399,7 @@ let allStationsRawJSON = """
     "name" : "Golders Green"
   },
   {
+    "icsCode" : "1000088",
     "id" : "940GZZLUGHK",
     "lineGroups" : [
       {
@@ -2288,6 +2417,7 @@ let allStationsRawJSON = """
     "name" : "Goldhawk Road"
   },
   {
+    "icsCode" : "1000089",
     "id" : "940GZZLUGDG",
     "lineGroups" : [
       {
@@ -2304,6 +2434,7 @@ let allStationsRawJSON = """
     "name" : "Goodge Street"
   },
   {
+    "icsCode" : "1001117",
     "id" : "910GGODMAYS",
     "lineGroups" : [
       {
@@ -2320,6 +2451,7 @@ let allStationsRawJSON = """
     "name" : "Goodmayes"
   },
   {
+    "icsCode" : "1000090",
     "id" : "940GZZLUGGH",
     "lineGroups" : [
       {
@@ -2336,6 +2468,7 @@ let allStationsRawJSON = """
     "name" : "Grange Hill"
   },
   {
+    "icsCode" : "1002041",
     "id" : "940GZZCRGRA",
     "lineGroups" : [
       {
@@ -2352,6 +2485,7 @@ let allStationsRawJSON = """
     "name" : "Gravel Hill"
   },
   {
+    "icsCode" : "1000091",
     "id" : "940GZZLUGPS",
     "lineGroups" : [
       {
@@ -2370,6 +2504,7 @@ let allStationsRawJSON = """
     "name" : "Great Portland Street"
   },
   {
+    "icsCode" : "1000093",
     "id" : "940GZZLUGPK",
     "lineGroups" : [
       {
@@ -2398,6 +2533,7 @@ let allStationsRawJSON = """
     "name" : "Green Park"
   },
   {
+    "icsCode" : "1000092",
     "id" : "HUBGFD",
     "lineGroups" : [
       {
@@ -2414,6 +2550,7 @@ let allStationsRawJSON = """
     "name" : "Greenford"
   },
   {
+    "icsCode" : "1001123",
     "id" : "HUBGNW",
     "lineGroups" : [
       {
@@ -2430,6 +2567,7 @@ let allStationsRawJSON = """
     "name" : "Greenwich"
   },
   {
+    "icsCode" : "1000094",
     "id" : "HUBGUN",
     "lineGroups" : [
       {
@@ -2446,6 +2584,7 @@ let allStationsRawJSON = """
     "name" : "Gunnersbury"
   },
   {
+    "icsCode" : "1000095",
     "id" : "940GZZLUHLT",
     "lineGroups" : [
       {
@@ -2462,6 +2601,7 @@ let allStationsRawJSON = """
     "name" : "Hainault"
   },
   {
+    "icsCode" : "1000096",
     "id" : "HUBHMS",
     "lineGroups" : [
       {
@@ -2491,6 +2631,7 @@ let allStationsRawJSON = """
     "name" : "Hammersmith"
   },
   {
+    "icsCode" : "1000098",
     "id" : "940GZZLUHTD",
     "lineGroups" : [
       {
@@ -2507,6 +2648,7 @@ let allStationsRawJSON = """
     "name" : "Hampstead"
   },
   {
+    "icsCode" : "1000099",
     "id" : "940GZZLUHGR",
     "lineGroups" : [
       {
@@ -2523,6 +2665,7 @@ let allStationsRawJSON = """
     "name" : "Hanger Lane"
   },
   {
+    "icsCode" : "1001135",
     "id" : "910GHANWELL",
     "lineGroups" : [
       {
@@ -2539,6 +2682,7 @@ let allStationsRawJSON = """
     "name" : "Hanwell"
   },
   {
+    "icsCode" : "1000100",
     "id" : "HUBHDN",
     "lineGroups" : [
       {
@@ -2555,6 +2699,7 @@ let allStationsRawJSON = """
     "name" : "Harlesden"
   },
   {
+    "icsCode" : "1001137",
     "id" : "910GHRLDWOD",
     "lineGroups" : [
       {
@@ -2571,6 +2716,7 @@ let allStationsRawJSON = """
     "name" : "Harold Wood"
   },
   {
+    "icsCode" : "1002045",
     "id" : "940GZZCRHAR",
     "lineGroups" : [
       {
@@ -2581,12 +2727,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.399609,
-      "lon" : -0.060478
+      "lat" : 51.399793,
+      "lon" : -0.060729
     },
     "name" : "Harrington Road"
   },
   {
+    "icsCode" : "1000101",
     "id" : "HUBHRW",
     "lineGroups" : [
       {
@@ -2603,6 +2750,7 @@ let allStationsRawJSON = """
     "name" : "Harrow & Wealdstone"
   },
   {
+    "icsCode" : "1000102",
     "id" : "HUBHOH",
     "lineGroups" : [
       {
@@ -2619,6 +2767,7 @@ let allStationsRawJSON = """
     "name" : "Harrow-on-the-Hill"
   },
   {
+    "icsCode" : "1000103",
     "id" : "940GZZLUHNX",
     "lineGroups" : [
       {
@@ -2635,6 +2784,7 @@ let allStationsRawJSON = """
     "name" : "Hatton Cross"
   },
   {
+    "icsCode" : "1001144",
     "id" : "910GHAYESAH",
     "lineGroups" : [
       {
@@ -2651,6 +2801,7 @@ let allStationsRawJSON = """
     "name" : "Hayes & Harlington"
   },
   {
+    "icsCode" : "1000104",
     "id" : "HUBHX4",
     "lineGroups" : [
       {
@@ -2673,6 +2824,7 @@ let allStationsRawJSON = """
     "name" : "Heathrow Airport Terminal 4"
   },
   {
+    "icsCode" : "1016430",
     "id" : "HUBHX5",
     "lineGroups" : [
       {
@@ -2695,6 +2847,7 @@ let allStationsRawJSON = """
     "name" : "Heathrow Airport Terminal 5"
   },
   {
+    "icsCode" : "1000105",
     "id" : "HUBH13",
     "lineGroups" : [
       {
@@ -2717,6 +2870,7 @@ let allStationsRawJSON = """
     "name" : "Heathrow Terminals 2 & 3"
   },
   {
+    "icsCode" : "1000106",
     "id" : "940GZZLUHCL",
     "lineGroups" : [
       {
@@ -2733,6 +2887,7 @@ let allStationsRawJSON = """
     "name" : "Hendon Central"
   },
   {
+    "icsCode" : "1002046",
     "id" : "940GZZDLHEQ",
     "lineGroups" : [
       {
@@ -2749,6 +2904,7 @@ let allStationsRawJSON = """
     "name" : "Heron Quays"
   },
   {
+    "icsCode" : "1000107",
     "id" : "940GZZLUHBT",
     "lineGroups" : [
       {
@@ -2765,6 +2921,7 @@ let allStationsRawJSON = """
     "name" : "High Barnet"
   },
   {
+    "icsCode" : "1000110",
     "id" : "940GZZLUHSK",
     "lineGroups" : [
       {
@@ -2782,6 +2939,7 @@ let allStationsRawJSON = """
     "name" : "High Street Kensington"
   },
   {
+    "icsCode" : "1000108",
     "id" : "HUBHHY",
     "lineGroups" : [
       {
@@ -2798,6 +2956,7 @@ let allStationsRawJSON = """
     "name" : "Highbury & Islington"
   },
   {
+    "icsCode" : "1000109",
     "id" : "940GZZLUHGT",
     "lineGroups" : [
       {
@@ -2814,6 +2973,7 @@ let allStationsRawJSON = """
     "name" : "Highgate"
   },
   {
+    "icsCode" : "1000111",
     "id" : "940GZZLUHGD",
     "lineGroups" : [
       {
@@ -2831,6 +2991,7 @@ let allStationsRawJSON = """
     "name" : "Hillingdon"
   },
   {
+    "icsCode" : "1000112",
     "id" : "940GZZLUHBN",
     "lineGroups" : [
       {
@@ -2853,6 +3014,7 @@ let allStationsRawJSON = """
     "name" : "Holborn"
   },
   {
+    "icsCode" : "1000113",
     "id" : "940GZZLUHPK",
     "lineGroups" : [
       {
@@ -2869,6 +3031,7 @@ let allStationsRawJSON = """
     "name" : "Holland Park"
   },
   {
+    "icsCode" : "1000114",
     "id" : "940GZZLUHWY",
     "lineGroups" : [
       {
@@ -2885,6 +3048,7 @@ let allStationsRawJSON = """
     "name" : "Holloway Road"
   },
   {
+    "icsCode" : "1000115",
     "id" : "940GZZLUHCH",
     "lineGroups" : [
       {
@@ -2901,6 +3065,7 @@ let allStationsRawJSON = """
     "name" : "Hornchurch"
   },
   {
+    "icsCode" : "1000116",
     "id" : "940GZZLUHWC",
     "lineGroups" : [
       {
@@ -2917,6 +3082,7 @@ let allStationsRawJSON = """
     "name" : "Hounslow Central"
   },
   {
+    "icsCode" : "1000117",
     "id" : "940GZZLUHWE",
     "lineGroups" : [
       {
@@ -2933,6 +3099,7 @@ let allStationsRawJSON = """
     "name" : "Hounslow East"
   },
   {
+    "icsCode" : "1000118",
     "id" : "940GZZLUHWT",
     "lineGroups" : [
       {
@@ -2949,6 +3116,7 @@ let allStationsRawJSON = """
     "name" : "Hounslow West"
   },
   {
+    "icsCode" : "1000119",
     "id" : "940GZZLUHPC",
     "lineGroups" : [
       {
@@ -2965,6 +3133,7 @@ let allStationsRawJSON = """
     "name" : "Hyde Park Corner"
   },
   {
+    "icsCode" : "1000120",
     "id" : "940GZZLUICK",
     "lineGroups" : [
       {
@@ -2982,6 +3151,7 @@ let allStationsRawJSON = """
     "name" : "Ickenham"
   },
   {
+    "icsCode" : "1001157",
     "id" : "910GILFORD",
     "lineGroups" : [
       {
@@ -2998,6 +3168,7 @@ let allStationsRawJSON = """
     "name" : "Ilford"
   },
   {
+    "icsCode" : "1002048",
     "id" : "940GZZDLISL",
     "lineGroups" : [
       {
@@ -3014,6 +3185,7 @@ let allStationsRawJSON = """
     "name" : "Island Gardens"
   },
   {
+    "icsCode" : "1000955",
     "id" : "910GIVER",
     "lineGroups" : [
       {
@@ -3030,6 +3202,7 @@ let allStationsRawJSON = """
     "name" : "Iver"
   },
   {
+    "icsCode" : "1000121",
     "id" : "940GZZLUKNG",
     "lineGroups" : [
       {
@@ -3046,6 +3219,7 @@ let allStationsRawJSON = """
     "name" : "Kennington"
   },
   {
+    "icsCode" : "1000122",
     "id" : "HUBKNL",
     "lineGroups" : [
       {
@@ -3062,6 +3236,7 @@ let allStationsRawJSON = """
     "name" : "Kensal Green"
   },
   {
+    "icsCode" : "1000170",
     "id" : "HUBKPA",
     "lineGroups" : [
       {
@@ -3078,6 +3253,7 @@ let allStationsRawJSON = """
     "name" : "Kensington (Olympia)"
   },
   {
+    "icsCode" : "1000123",
     "id" : "HUBKTN",
     "lineGroups" : [
       {
@@ -3094,6 +3270,7 @@ let allStationsRawJSON = """
     "name" : "Kentish Town"
   },
   {
+    "icsCode" : "1000124",
     "id" : "HUBKNT",
     "lineGroups" : [
       {
@@ -3110,6 +3287,7 @@ let allStationsRawJSON = """
     "name" : "Kenton"
   },
   {
+    "icsCode" : "1000125",
     "id" : "HUBKWG",
     "lineGroups" : [
       {
@@ -3126,6 +3304,7 @@ let allStationsRawJSON = """
     "name" : "Kew Gardens"
   },
   {
+    "icsCode" : "1000126",
     "id" : "940GZZLUKBN",
     "lineGroups" : [
       {
@@ -3142,6 +3321,7 @@ let allStationsRawJSON = """
     "name" : "Kilburn"
   },
   {
+    "icsCode" : "1000127",
     "id" : "940GZZLUKPK",
     "lineGroups" : [
       {
@@ -3158,6 +3338,7 @@ let allStationsRawJSON = """
     "name" : "Kilburn Park"
   },
   {
+    "icsCode" : "1002009",
     "id" : "940GZZDLKGV",
     "lineGroups" : [
       {
@@ -3174,6 +3355,7 @@ let allStationsRawJSON = """
     "name" : "King George V"
   },
   {
+    "icsCode" : "1002050",
     "id" : "940GZZCRKGH",
     "lineGroups" : [
       {
@@ -3184,12 +3366,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.346138,
+      "lat" : 51.34614,
       "lon" : -0.020849
     },
     "name" : "King Henry's Drive"
   },
   {
+    "icsCode" : "1000129",
     "id" : "HUBKGX",
     "lineGroups" : [
       {
@@ -3226,6 +3409,7 @@ let allStationsRawJSON = """
     "name" : "King's Cross & St Pancras International"
   },
   {
+    "icsCode" : "1000128",
     "id" : "940GZZLUKBY",
     "lineGroups" : [
       {
@@ -3242,6 +3426,7 @@ let allStationsRawJSON = """
     "name" : "Kingsbury"
   },
   {
+    "icsCode" : "1000130",
     "id" : "940GZZLUKNB",
     "lineGroups" : [
       {
@@ -3258,6 +3443,7 @@ let allStationsRawJSON = """
     "name" : "Knightsbridge"
   },
   {
+    "icsCode" : "1000131",
     "id" : "940GZZLULAD",
     "lineGroups" : [
       {
@@ -3275,6 +3461,7 @@ let allStationsRawJSON = """
     "name" : "Ladbroke Grove"
   },
   {
+    "icsCode" : "1000132",
     "id" : "940GZZLULBN",
     "lineGroups" : [
       {
@@ -3291,6 +3478,7 @@ let allStationsRawJSON = """
     "name" : "Lambeth North"
   },
   {
+    "icsCode" : "1000133",
     "id" : "940GZZLULGT",
     "lineGroups" : [
       {
@@ -3307,6 +3495,7 @@ let allStationsRawJSON = """
     "name" : "Lancaster Gate"
   },
   {
+    "icsCode" : "1002034",
     "id" : "940GZZDLLDP",
     "lineGroups" : [
       {
@@ -3323,6 +3512,7 @@ let allStationsRawJSON = """
     "name" : "Langdon Park"
   },
   {
+    "icsCode" : "1000957",
     "id" : "910GLANGLEY",
     "lineGroups" : [
       {
@@ -3339,6 +3529,7 @@ let allStationsRawJSON = """
     "name" : "Langley (Berks)"
   },
   {
+    "icsCode" : "1000134",
     "id" : "940GZZLULRD",
     "lineGroups" : [
       {
@@ -3356,6 +3547,7 @@ let allStationsRawJSON = """
     "name" : "Latimer Road"
   },
   {
+    "icsCode" : "1002052",
     "id" : "940GZZCRLEB",
     "lineGroups" : [
       {
@@ -3372,6 +3564,7 @@ let allStationsRawJSON = """
     "name" : "Lebanon Road"
   },
   {
+    "icsCode" : "1000135",
     "id" : "940GZZLULSQ",
     "lineGroups" : [
       {
@@ -3394,6 +3587,7 @@ let allStationsRawJSON = """
     "name" : "Leicester Square"
   },
   {
+    "icsCode" : "1001177",
     "id" : "HUBLEW",
     "lineGroups" : [
       {
@@ -3410,6 +3604,7 @@ let allStationsRawJSON = """
     "name" : "Lewisham"
   },
   {
+    "icsCode" : "1000136",
     "id" : "940GZZLULYN",
     "lineGroups" : [
       {
@@ -3426,6 +3621,7 @@ let allStationsRawJSON = """
     "name" : "Leyton"
   },
   {
+    "icsCode" : "1000137",
     "id" : "940GZZLULYS",
     "lineGroups" : [
       {
@@ -3442,6 +3638,7 @@ let allStationsRawJSON = """
     "name" : "Leytonstone"
   },
   {
+    "icsCode" : "1001180",
     "id" : "HUBLHS",
     "lineGroups" : [
       {
@@ -3458,6 +3655,7 @@ let allStationsRawJSON = """
     "name" : "Limehouse"
   },
   {
+    "icsCode" : "1000138",
     "id" : "HUBLST",
     "lineGroups" : [
       {
@@ -3488,6 +3686,7 @@ let allStationsRawJSON = """
     "name" : "Liverpool Street"
   },
   {
+    "icsCode" : "1002055",
     "id" : "940GZZCRLOY",
     "lineGroups" : [
       {
@@ -3498,12 +3697,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.364278,
-      "lon" : -0.080775
+      "lat" : 51.364193,
+      "lon" : -0.082229
     },
     "name" : "Lloyd Park"
   },
   {
+    "icsCode" : "1000139",
     "id" : "HUBLBG",
     "lineGroups" : [
       {
@@ -3526,6 +3726,7 @@ let allStationsRawJSON = """
     "name" : "London Bridge"
   },
   {
+    "icsCode" : "1002000",
     "id" : "HUBLCY",
     "lineGroups" : [
       {
@@ -3542,6 +3743,7 @@ let allStationsRawJSON = """
     "name" : "London City Airport"
   },
   {
+    "icsCode" : "1000140",
     "id" : "940GZZLULGN",
     "lineGroups" : [
       {
@@ -3558,6 +3760,7 @@ let allStationsRawJSON = """
     "name" : "Loughton"
   },
   {
+    "icsCode" : "1000141",
     "id" : "940GZZLUMVL",
     "lineGroups" : [
       {
@@ -3574,6 +3777,7 @@ let allStationsRawJSON = """
     "name" : "Maida Vale"
   },
   {
+    "icsCode" : "1000964",
     "id" : "910GMDNHEAD",
     "lineGroups" : [
       {
@@ -3590,6 +3794,7 @@ let allStationsRawJSON = """
     "name" : "Maidenhead"
   },
   {
+    "icsCode" : "1000142",
     "id" : "940GZZLUMRH",
     "lineGroups" : [
       {
@@ -3606,6 +3811,7 @@ let allStationsRawJSON = """
     "name" : "Manor House"
   },
   {
+    "icsCode" : "1001189",
     "id" : "910GMANRPK",
     "lineGroups" : [
       {
@@ -3622,6 +3828,7 @@ let allStationsRawJSON = """
     "name" : "Manor Park"
   },
   {
+    "icsCode" : "1000143",
     "id" : "940GZZLUMSH",
     "lineGroups" : [
       {
@@ -3639,6 +3846,7 @@ let allStationsRawJSON = """
     "name" : "Mansion House"
   },
   {
+    "icsCode" : "1000144",
     "id" : "940GZZLUMBA",
     "lineGroups" : [
       {
@@ -3655,6 +3863,7 @@ let allStationsRawJSON = """
     "name" : "Marble Arch"
   },
   {
+    "icsCode" : "1001190",
     "id" : "910GMRYLAND",
     "lineGroups" : [
       {
@@ -3671,6 +3880,7 @@ let allStationsRawJSON = """
     "name" : "Maryland"
   },
   {
+    "icsCode" : "1000145",
     "id" : "HUBMYB",
     "lineGroups" : [
       {
@@ -3687,6 +3897,7 @@ let allStationsRawJSON = """
     "name" : "Marylebone"
   },
   {
+    "icsCode" : "1002057",
     "id" : "940GZZCRMTP",
     "lineGroups" : [
       {
@@ -3703,6 +3914,7 @@ let allStationsRawJSON = """
     "name" : "Merton Park"
   },
   {
+    "icsCode" : "1000146",
     "id" : "940GZZLUMED",
     "lineGroups" : [
       {
@@ -3726,6 +3938,7 @@ let allStationsRawJSON = """
     "name" : "Mile End"
   },
   {
+    "icsCode" : "1000147",
     "id" : "940GZZLUMHL",
     "lineGroups" : [
       {
@@ -3742,6 +3955,7 @@ let allStationsRawJSON = """
     "name" : "Mill Hill East"
   },
   {
+    "icsCode" : "1002058",
     "id" : "940GZZCRMCH",
     "lineGroups" : [
       {
@@ -3752,12 +3966,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.39749,
-      "lon" : -0.1709
+      "lat" : 51.397787,
+      "lon" : -0.172585
     },
     "name" : "Mitcham"
   },
   {
+    "icsCode" : "1001194",
     "id" : "HUBMJT",
     "lineGroups" : [
       {
@@ -3774,6 +3989,7 @@ let allStationsRawJSON = """
     "name" : "Mitcham Junction"
   },
   {
+    "icsCode" : "1000148",
     "id" : "940GZZLUMMT",
     "lineGroups" : [
       {
@@ -3791,6 +4007,7 @@ let allStationsRawJSON = """
     "name" : "Monument"
   },
   {
+    "icsCode" : "1000150",
     "id" : "940GZZLUMPK",
     "lineGroups" : [
       {
@@ -3807,6 +4024,7 @@ let allStationsRawJSON = """
     "name" : "Moor Park"
   },
   {
+    "icsCode" : "1000149",
     "id" : "HUBZMG",
     "lineGroups" : [
       {
@@ -3831,6 +4049,7 @@ let allStationsRawJSON = """
     "name" : "Moorgate"
   },
   {
+    "icsCode" : "1000151",
     "id" : "940GZZLUMDN",
     "lineGroups" : [
       {
@@ -3847,6 +4066,7 @@ let allStationsRawJSON = """
     "name" : "Morden"
   },
   {
+    "icsCode" : "1002060",
     "id" : "940GZZCRMDN",
     "lineGroups" : [
       {
@@ -3857,12 +4077,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.40905,
-      "lon" : -0.192597
+      "lat" : 51.408874,
+      "lon" : -0.192834
     },
     "name" : "Morden Road"
   },
   {
+    "icsCode" : "1000152",
     "id" : "940GZZLUMTC",
     "lineGroups" : [
       {
@@ -3879,6 +4100,7 @@ let allStationsRawJSON = """
     "name" : "Mornington Crescent"
   },
   {
+    "icsCode" : "1002061",
     "id" : "940GZZDLMUD",
     "lineGroups" : [
       {
@@ -3895,6 +4117,7 @@ let allStationsRawJSON = """
     "name" : "Mudchute"
   },
   {
+    "icsCode" : "1000153",
     "id" : "940GZZLUNDN",
     "lineGroups" : [
       {
@@ -3911,6 +4134,7 @@ let allStationsRawJSON = """
     "name" : "Neasden"
   },
   {
+    "icsCode" : "1002062",
     "id" : "940GZZCRNWA",
     "lineGroups" : [
       {
@@ -3921,12 +4145,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.342593,
-      "lon" : -0.017412
+      "lat" : 51.34313,
+      "lon" : -0.017805
     },
     "name" : "New Addington"
   },
   {
+    "icsCode" : "1000154",
     "id" : "940GZZLUNBP",
     "lineGroups" : [
       {
@@ -3943,6 +4168,7 @@ let allStationsRawJSON = """
     "name" : "Newbury Park"
   },
   {
+    "icsCode" : "1002196",
     "id" : "940GZZNEUGST",
     "lineGroups" : [
       {
@@ -3959,6 +4185,7 @@ let allStationsRawJSON = """
     "name" : "Nine Elms"
   },
   {
+    "icsCode" : "1000157",
     "id" : "940GZZLUNAN",
     "lineGroups" : [
       {
@@ -3975,6 +4202,7 @@ let allStationsRawJSON = """
     "name" : "North Acton"
   },
   {
+    "icsCode" : "1000158",
     "id" : "940GZZLUNEN",
     "lineGroups" : [
       {
@@ -3991,6 +4219,7 @@ let allStationsRawJSON = """
     "name" : "North Ealing"
   },
   {
+    "icsCode" : "1000160",
     "id" : "HUBNGW",
     "lineGroups" : [
       {
@@ -4007,6 +4236,7 @@ let allStationsRawJSON = """
     "name" : "North Greenwich"
   },
   {
+    "icsCode" : "1000161",
     "id" : "940GZZLUNHA",
     "lineGroups" : [
       {
@@ -4023,6 +4253,7 @@ let allStationsRawJSON = """
     "name" : "North Harrow"
   },
   {
+    "icsCode" : "1000163",
     "id" : "HUBNWB",
     "lineGroups" : [
       {
@@ -4039,6 +4270,7 @@ let allStationsRawJSON = """
     "name" : "North Wembley"
   },
   {
+    "icsCode" : "1000159",
     "id" : "940GZZLUNFD",
     "lineGroups" : [
       {
@@ -4055,6 +4287,7 @@ let allStationsRawJSON = """
     "name" : "Northfields"
   },
   {
+    "icsCode" : "1000162",
     "id" : "940GZZLUNHT",
     "lineGroups" : [
       {
@@ -4071,6 +4304,7 @@ let allStationsRawJSON = """
     "name" : "Northolt"
   },
   {
+    "icsCode" : "1000164",
     "id" : "940GZZLUNKP",
     "lineGroups" : [
       {
@@ -4087,6 +4321,7 @@ let allStationsRawJSON = """
     "name" : "Northwick Park"
   },
   {
+    "icsCode" : "1000165",
     "id" : "940GZZLUNOW",
     "lineGroups" : [
       {
@@ -4103,6 +4338,7 @@ let allStationsRawJSON = """
     "name" : "Northwood"
   },
   {
+    "icsCode" : "1000166",
     "id" : "940GZZLUNWH",
     "lineGroups" : [
       {
@@ -4119,6 +4355,7 @@ let allStationsRawJSON = """
     "name" : "Northwood Hills"
   },
   {
+    "icsCode" : "1000167",
     "id" : "940GZZLUNHG",
     "lineGroups" : [
       {
@@ -4142,6 +4379,7 @@ let allStationsRawJSON = """
     "name" : "Notting Hill Gate"
   },
   {
+    "icsCode" : "1000168",
     "id" : "940GZZLUOAK",
     "lineGroups" : [
       {
@@ -4158,6 +4396,7 @@ let allStationsRawJSON = """
     "name" : "Oakwood"
   },
   {
+    "icsCode" : "1000169",
     "id" : "HUBOLD",
     "lineGroups" : [
       {
@@ -4174,6 +4413,7 @@ let allStationsRawJSON = """
     "name" : "Old Street"
   },
   {
+    "icsCode" : "1000171",
     "id" : "940GZZLUOSY",
     "lineGroups" : [
       {
@@ -4190,6 +4430,7 @@ let allStationsRawJSON = """
     "name" : "Osterley"
   },
   {
+    "icsCode" : "1000172",
     "id" : "940GZZLUOVL",
     "lineGroups" : [
       {
@@ -4206,6 +4447,7 @@ let allStationsRawJSON = """
     "name" : "Oval"
   },
   {
+    "icsCode" : "1000173",
     "id" : "940GZZLUOXC",
     "lineGroups" : [
       {
@@ -4234,6 +4476,7 @@ let allStationsRawJSON = """
     "name" : "Oxford Circus"
   },
   {
+    "icsCode" : "1000174",
     "id" : "HUBPAD",
     "lineGroups" : [
       {
@@ -4270,6 +4513,7 @@ let allStationsRawJSON = """
     "name" : "Paddington"
   },
   {
+    "icsCode" : "1000176",
     "id" : "940GZZLUPKR",
     "lineGroups" : [
       {
@@ -4286,6 +4530,7 @@ let allStationsRawJSON = """
     "name" : "Park Royal"
   },
   {
+    "icsCode" : "1000177",
     "id" : "940GZZLUPSG",
     "lineGroups" : [
       {
@@ -4302,6 +4547,7 @@ let allStationsRawJSON = """
     "name" : "Parsons Green"
   },
   {
+    "icsCode" : "1000178",
     "id" : "940GZZLUPVL",
     "lineGroups" : [
       {
@@ -4318,6 +4564,7 @@ let allStationsRawJSON = """
     "name" : "Perivale"
   },
   {
+    "icsCode" : "1002063",
     "id" : "940GZZCRPHI",
     "lineGroups" : [
       {
@@ -4334,6 +4581,7 @@ let allStationsRawJSON = """
     "name" : "Phipps Bridge"
   },
   {
+    "icsCode" : "1000179",
     "id" : "940GZZLUPCC",
     "lineGroups" : [
       {
@@ -4356,6 +4604,7 @@ let allStationsRawJSON = """
     "name" : "Piccadilly Circus"
   },
   {
+    "icsCode" : "1000180",
     "id" : "940GZZLUPCO",
     "lineGroups" : [
       {
@@ -4372,6 +4621,7 @@ let allStationsRawJSON = """
     "name" : "Pimlico"
   },
   {
+    "icsCode" : "1000181",
     "id" : "940GZZLUPNR",
     "lineGroups" : [
       {
@@ -4388,6 +4638,7 @@ let allStationsRawJSON = """
     "name" : "Pinner"
   },
   {
+    "icsCode" : "1000182",
     "id" : "940GZZLUPLW",
     "lineGroups" : [
       {
@@ -4405,6 +4656,7 @@ let allStationsRawJSON = """
     "name" : "Plaistow"
   },
   {
+    "icsCode" : "1002099",
     "id" : "940GZZDLPDK",
     "lineGroups" : [
       {
@@ -4421,6 +4673,7 @@ let allStationsRawJSON = """
     "name" : "Pontoon Dock"
   },
   {
+    "icsCode" : "1002064",
     "id" : "940GZZDLPOP",
     "lineGroups" : [
       {
@@ -4437,6 +4690,7 @@ let allStationsRawJSON = """
     "name" : "Poplar"
   },
   {
+    "icsCode" : "1000183",
     "id" : "940GZZLUPRD",
     "lineGroups" : [
       {
@@ -4453,6 +4707,7 @@ let allStationsRawJSON = """
     "name" : "Preston Road"
   },
   {
+    "icsCode" : "1002065",
     "id" : "940GZZDLPRE",
     "lineGroups" : [
       {
@@ -4469,6 +4724,7 @@ let allStationsRawJSON = """
     "name" : "Prince Regent"
   },
   {
+    "icsCode" : "1002066",
     "id" : "940GZZDLPUD",
     "lineGroups" : [
       {
@@ -4485,6 +4741,7 @@ let allStationsRawJSON = """
     "name" : "Pudding Mill Lane"
   },
   {
+    "icsCode" : "1000184",
     "id" : "940GZZLUPYB",
     "lineGroups" : [
       {
@@ -4501,6 +4758,7 @@ let allStationsRawJSON = """
     "name" : "Putney Bridge"
   },
   {
+    "icsCode" : "1000186",
     "id" : "HUBQPW",
     "lineGroups" : [
       {
@@ -4517,6 +4775,7 @@ let allStationsRawJSON = """
     "name" : "Queen's Park"
   },
   {
+    "icsCode" : "1000185",
     "id" : "940GZZLUQBY",
     "lineGroups" : [
       {
@@ -4533,6 +4792,7 @@ let allStationsRawJSON = """
     "name" : "Queensbury"
   },
   {
+    "icsCode" : "1000187",
     "id" : "940GZZLUQWY",
     "lineGroups" : [
       {
@@ -4549,6 +4809,7 @@ let allStationsRawJSON = """
     "name" : "Queensway"
   },
   {
+    "icsCode" : "1000188",
     "id" : "940GZZLURVP",
     "lineGroups" : [
       {
@@ -4565,6 +4826,7 @@ let allStationsRawJSON = """
     "name" : "Ravenscourt Park"
   },
   {
+    "icsCode" : "1000189",
     "id" : "940GZZLURYL",
     "lineGroups" : [
       {
@@ -4582,6 +4844,7 @@ let allStationsRawJSON = """
     "name" : "Rayners Lane"
   },
   {
+    "icsCode" : "1000972",
     "id" : "910GRDNGSTN",
     "lineGroups" : [
       {
@@ -4598,6 +4861,7 @@ let allStationsRawJSON = """
     "name" : "Reading"
   },
   {
+    "icsCode" : "1000190",
     "id" : "940GZZLURBG",
     "lineGroups" : [
       {
@@ -4614,6 +4878,7 @@ let allStationsRawJSON = """
     "name" : "Redbridge"
   },
   {
+    "icsCode" : "1002068",
     "id" : "940GZZCRRVC",
     "lineGroups" : [
       {
@@ -4624,12 +4889,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.37527,
-      "lon" : -0.10638
+      "lat" : 51.375279,
+      "lon" : -0.106408
     },
     "name" : "Reeves Corner"
   },
   {
+    "icsCode" : "1000191",
     "id" : "940GZZLURGP",
     "lineGroups" : [
       {
@@ -4646,6 +4912,7 @@ let allStationsRawJSON = """
     "name" : "Regent's Park"
   },
   {
+    "icsCode" : "1000192",
     "id" : "HUBRMD",
     "lineGroups" : [
       {
@@ -4662,6 +4929,7 @@ let allStationsRawJSON = """
     "name" : "Richmond"
   },
   {
+    "icsCode" : "1000193",
     "id" : "HUBRIC",
     "lineGroups" : [
       {
@@ -4678,6 +4946,7 @@ let allStationsRawJSON = """
     "name" : "Rickmansworth"
   },
   {
+    "icsCode" : "1000194",
     "id" : "940GZZLURVY",
     "lineGroups" : [
       {
@@ -4694,6 +4963,7 @@ let allStationsRawJSON = """
     "name" : "Roding Valley"
   },
   {
+    "icsCode" : "1001243",
     "id" : "910GROMFORD",
     "lineGroups" : [
       {
@@ -4710,6 +4980,7 @@ let allStationsRawJSON = """
     "name" : "Romford"
   },
   {
+    "icsCode" : "1002070",
     "id" : "940GZZDLRAL",
     "lineGroups" : [
       {
@@ -4726,6 +4997,7 @@ let allStationsRawJSON = """
     "name" : "Royal Albert"
   },
   {
+    "icsCode" : "1000196",
     "id" : "940GZZLURYO",
     "lineGroups" : [
       {
@@ -4743,6 +5015,7 @@ let allStationsRawJSON = """
     "name" : "Royal Oak"
   },
   {
+    "icsCode" : "1002071",
     "id" : "HUBRVC",
     "lineGroups" : [
       {
@@ -4759,6 +5032,7 @@ let allStationsRawJSON = """
     "name" : "Royal Victoria"
   },
   {
+    "icsCode" : "1000197",
     "id" : "940GZZLURSP",
     "lineGroups" : [
       {
@@ -4781,6 +5055,7 @@ let allStationsRawJSON = """
     "name" : "Ruislip"
   },
   {
+    "icsCode" : "1000198",
     "id" : "940GZZLURSG",
     "lineGroups" : [
       {
@@ -4797,6 +5072,7 @@ let allStationsRawJSON = """
     "name" : "Ruislip Gardens"
   },
   {
+    "icsCode" : "1000199",
     "id" : "940GZZLURSM",
     "lineGroups" : [
       {
@@ -4814,6 +5090,7 @@ let allStationsRawJSON = """
     "name" : "Ruislip Manor"
   },
   {
+    "icsCode" : "1000200",
     "id" : "940GZZLURSQ",
     "lineGroups" : [
       {
@@ -4830,6 +5107,7 @@ let allStationsRawJSON = """
     "name" : "Russell Square"
   },
   {
+    "icsCode" : "1002072",
     "id" : "940GZZCRSAN",
     "lineGroups" : [
       {
@@ -4840,12 +5118,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375024,
-      "lon" : -0.078041
+      "lat" : 51.375006,
+      "lon" : -0.078027
     },
     "name" : "Sandilands"
   },
   {
+    "icsCode" : "1001246",
     "id" : "910GSVNKNGS",
     "lineGroups" : [
       {
@@ -4862,6 +5141,7 @@ let allStationsRawJSON = """
     "name" : "Seven Kings"
   },
   {
+    "icsCode" : "1000201",
     "id" : "HUBSVS",
     "lineGroups" : [
       {
@@ -4878,6 +5158,7 @@ let allStationsRawJSON = """
     "name" : "Seven Sisters"
   },
   {
+    "icsCode" : "1000202",
     "id" : "HUBSDE",
     "lineGroups" : [
       {
@@ -4894,6 +5175,7 @@ let allStationsRawJSON = """
     "name" : "Shadwell"
   },
   {
+    "icsCode" : "1006448",
     "id" : "910GSHENFLD",
     "lineGroups" : [
       {
@@ -4910,6 +5192,7 @@ let allStationsRawJSON = """
     "name" : "Shenfield"
   },
   {
+    "icsCode" : "1000203",
     "id" : "HUBSPB",
     "lineGroups" : [
       {
@@ -4926,6 +5209,7 @@ let allStationsRawJSON = """
     "name" : "Shepherd's Bush"
   },
   {
+    "icsCode" : "1000204",
     "id" : "940GZZLUSBM",
     "lineGroups" : [
       {
@@ -4943,6 +5227,7 @@ let allStationsRawJSON = """
     "name" : "Shepherd's Bush Market"
   },
   {
+    "icsCode" : "1000206",
     "id" : "940GZZLUSSQ",
     "lineGroups" : [
       {
@@ -4960,6 +5245,7 @@ let allStationsRawJSON = """
     "name" : "Sloane Square"
   },
   {
+    "icsCode" : "1000951",
     "id" : "910GSLOUGH",
     "lineGroups" : [
       {
@@ -4976,6 +5262,7 @@ let allStationsRawJSON = """
     "name" : "Slough"
   },
   {
+    "icsCode" : "1000207",
     "id" : "940GZZLUSNB",
     "lineGroups" : [
       {
@@ -4992,6 +5279,7 @@ let allStationsRawJSON = """
     "name" : "Snaresbrook"
   },
   {
+    "icsCode" : "1000208",
     "id" : "940GZZLUSEA",
     "lineGroups" : [
       {
@@ -5008,6 +5296,7 @@ let allStationsRawJSON = """
     "name" : "South Ealing"
   },
   {
+    "icsCode" : "1000211",
     "id" : "940GZZLUSHH",
     "lineGroups" : [
       {
@@ -5024,6 +5313,7 @@ let allStationsRawJSON = """
     "name" : "South Harrow"
   },
   {
+    "icsCode" : "1000212",
     "id" : "940GZZLUSKS",
     "lineGroups" : [
       {
@@ -5047,6 +5337,7 @@ let allStationsRawJSON = """
     "name" : "South Kensington"
   },
   {
+    "icsCode" : "1000213",
     "id" : "HUBSOK",
     "lineGroups" : [
       {
@@ -5063,6 +5354,7 @@ let allStationsRawJSON = """
     "name" : "South Kenton"
   },
   {
+    "icsCode" : "1002074",
     "id" : "940GZZDLSOQ",
     "lineGroups" : [
       {
@@ -5079,6 +5371,7 @@ let allStationsRawJSON = """
     "name" : "South Quay"
   },
   {
+    "icsCode" : "1000214",
     "id" : "HUBSRU",
     "lineGroups" : [
       {
@@ -5095,6 +5388,7 @@ let allStationsRawJSON = """
     "name" : "South Ruislip"
   },
   {
+    "icsCode" : "1000216",
     "id" : "940GZZLUSWN",
     "lineGroups" : [
       {
@@ -5111,6 +5405,7 @@ let allStationsRawJSON = """
     "name" : "South Wimbledon"
   },
   {
+    "icsCode" : "1000217",
     "id" : "940GZZLUSWF",
     "lineGroups" : [
       {
@@ -5127,6 +5422,7 @@ let allStationsRawJSON = """
     "name" : "South Woodford"
   },
   {
+    "icsCode" : "1001255",
     "id" : "910GSTHALL",
     "lineGroups" : [
       {
@@ -5143,6 +5439,7 @@ let allStationsRawJSON = """
     "name" : "Southall"
   },
   {
+    "icsCode" : "1000209",
     "id" : "940GZZLUSFS",
     "lineGroups" : [
       {
@@ -5159,6 +5456,7 @@ let allStationsRawJSON = """
     "name" : "Southfields"
   },
   {
+    "icsCode" : "1000210",
     "id" : "940GZZLUSGT",
     "lineGroups" : [
       {
@@ -5175,6 +5473,7 @@ let allStationsRawJSON = """
     "name" : "Southgate"
   },
   {
+    "icsCode" : "1000215",
     "id" : "940GZZLUSWK",
     "lineGroups" : [
       {
@@ -5191,6 +5490,7 @@ let allStationsRawJSON = """
     "name" : "Southwark"
   },
   {
+    "icsCode" : "1000221",
     "id" : "940GZZLUSJP",
     "lineGroups" : [
       {
@@ -5208,6 +5508,7 @@ let allStationsRawJSON = """
     "name" : "St. James's Park"
   },
   {
+    "icsCode" : "1000222",
     "id" : "940GZZLUSJW",
     "lineGroups" : [
       {
@@ -5224,6 +5525,7 @@ let allStationsRawJSON = """
     "name" : "St. John's Wood"
   },
   {
+    "icsCode" : "1000225",
     "id" : "940GZZLUSPU",
     "lineGroups" : [
       {
@@ -5240,6 +5542,7 @@ let allStationsRawJSON = """
     "name" : "St. Paul's"
   },
   {
+    "icsCode" : "1000218",
     "id" : "940GZZLUSFB",
     "lineGroups" : [
       {
@@ -5256,6 +5559,7 @@ let allStationsRawJSON = """
     "name" : "Stamford Brook"
   },
   {
+    "icsCode" : "1000219",
     "id" : "940GZZLUSTM",
     "lineGroups" : [
       {
@@ -5272,6 +5576,7 @@ let allStationsRawJSON = """
     "name" : "Stanmore"
   },
   {
+    "icsCode" : "1003005",
     "id" : "940GZZDLSTL",
     "lineGroups" : [
       {
@@ -5288,6 +5593,7 @@ let allStationsRawJSON = """
     "name" : "Star Lane"
   },
   {
+    "icsCode" : "1000220",
     "id" : "940GZZLUSGN",
     "lineGroups" : [
       {
@@ -5305,6 +5611,7 @@ let allStationsRawJSON = """
     "name" : "Stepney Green"
   },
   {
+    "icsCode" : "1000223",
     "id" : "940GZZLUSKW",
     "lineGroups" : [
       {
@@ -5327,6 +5634,7 @@ let allStationsRawJSON = """
     "name" : "Stockwell"
   },
   {
+    "icsCode" : "1000224",
     "id" : "HUBSBP",
     "lineGroups" : [
       {
@@ -5343,6 +5651,7 @@ let allStationsRawJSON = """
     "name" : "Stonebridge Park"
   },
   {
+    "icsCode" : "1000226",
     "id" : "HUBSRA",
     "lineGroups" : [
       {
@@ -5377,6 +5686,7 @@ let allStationsRawJSON = """
     "name" : "Stratford"
   },
   {
+    "icsCode" : "1003007",
     "id" : "940GZZDLSHS",
     "lineGroups" : [
       {
@@ -5393,6 +5703,7 @@ let allStationsRawJSON = """
     "name" : "Stratford High Street"
   },
   {
+    "icsCode" : "1003009",
     "id" : "940GZZDLSIT",
     "lineGroups" : [
       {
@@ -5409,6 +5720,7 @@ let allStationsRawJSON = """
     "name" : "Stratford International"
   },
   {
+    "icsCode" : "1000227",
     "id" : "940GZZLUSUH",
     "lineGroups" : [
       {
@@ -5425,6 +5737,7 @@ let allStationsRawJSON = """
     "name" : "Sudbury Hill"
   },
   {
+    "icsCode" : "1000228",
     "id" : "940GZZLUSUT",
     "lineGroups" : [
       {
@@ -5441,6 +5754,7 @@ let allStationsRawJSON = """
     "name" : "Sudbury Town"
   },
   {
+    "icsCode" : "1000230",
     "id" : "940GZZLUSWC",
     "lineGroups" : [
       {
@@ -5457,6 +5771,7 @@ let allStationsRawJSON = """
     "name" : "Swiss Cottage"
   },
   {
+    "icsCode" : "1000960",
     "id" : "910GTAPLOW",
     "lineGroups" : [
       {
@@ -5473,6 +5788,7 @@ let allStationsRawJSON = """
     "name" : "Taplow"
   },
   {
+    "icsCode" : "1000231",
     "id" : "940GZZLUTMP",
     "lineGroups" : [
       {
@@ -5490,6 +5806,7 @@ let allStationsRawJSON = """
     "name" : "Temple"
   },
   {
+    "icsCode" : "1002075",
     "id" : "940GZZCRTPA",
     "lineGroups" : [
       {
@@ -5500,12 +5817,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.385697,
-      "lon" : -0.129045
+      "lat" : 51.385296,
+      "lon" : -0.128702
     },
     "name" : "Therapia Lane"
   },
   {
+    "icsCode" : "1000232",
     "id" : "940GZZLUTHB",
     "lineGroups" : [
       {
@@ -5522,6 +5840,7 @@ let allStationsRawJSON = """
     "name" : "Theydon Bois"
   },
   {
+    "icsCode" : "1000233",
     "id" : "940GZZLUTBC",
     "lineGroups" : [
       {
@@ -5538,6 +5857,7 @@ let allStationsRawJSON = """
     "name" : "Tooting Bec"
   },
   {
+    "icsCode" : "1000234",
     "id" : "940GZZLUTBY",
     "lineGroups" : [
       {
@@ -5554,6 +5874,7 @@ let allStationsRawJSON = """
     "name" : "Tooting Broadway"
   },
   {
+    "icsCode" : "1000235",
     "id" : "HUBTCR",
     "lineGroups" : [
       {
@@ -5582,6 +5903,7 @@ let allStationsRawJSON = """
     "name" : "Tottenham Court Road"
   },
   {
+    "icsCode" : "1000236",
     "id" : "HUBTOM",
     "lineGroups" : [
       {
@@ -5598,6 +5920,7 @@ let allStationsRawJSON = """
     "name" : "Tottenham Hale"
   },
   {
+    "icsCode" : "1000237",
     "id" : "940GZZLUTAW",
     "lineGroups" : [
       {
@@ -5614,6 +5937,7 @@ let allStationsRawJSON = """
     "name" : "Totteridge & Whetstone"
   },
   {
+    "icsCode" : "1002076",
     "id" : "HUBTOG",
     "lineGroups" : [
       {
@@ -5630,6 +5954,7 @@ let allStationsRawJSON = """
     "name" : "Tower Gateway"
   },
   {
+    "icsCode" : "1000238",
     "id" : "940GZZLUTWH",
     "lineGroups" : [
       {
@@ -5647,6 +5972,7 @@ let allStationsRawJSON = """
     "name" : "Tower Hill"
   },
   {
+    "icsCode" : "1000239",
     "id" : "940GZZLUTFP",
     "lineGroups" : [
       {
@@ -5663,6 +5989,7 @@ let allStationsRawJSON = """
     "name" : "Tufnell Park"
   },
   {
+    "icsCode" : "1000240",
     "id" : "940GZZLUTNG",
     "lineGroups" : [
       {
@@ -5692,6 +6019,7 @@ let allStationsRawJSON = """
     "name" : "Turnham Green"
   },
   {
+    "icsCode" : "1000241",
     "id" : "940GZZLUTPN",
     "lineGroups" : [
       {
@@ -5708,6 +6036,7 @@ let allStationsRawJSON = """
     "name" : "Turnpike Lane"
   },
   {
+    "icsCode" : "1000969",
     "id" : "910GTWYFORD",
     "lineGroups" : [
       {
@@ -5724,6 +6053,7 @@ let allStationsRawJSON = """
     "name" : "Twyford"
   },
   {
+    "icsCode" : "1000242",
     "id" : "HUBUPM",
     "lineGroups" : [
       {
@@ -5740,6 +6070,7 @@ let allStationsRawJSON = """
     "name" : "Upminster"
   },
   {
+    "icsCode" : "1000243",
     "id" : "940GZZLUUPB",
     "lineGroups" : [
       {
@@ -5756,6 +6087,7 @@ let allStationsRawJSON = """
     "name" : "Upminster Bridge"
   },
   {
+    "icsCode" : "1000244",
     "id" : "940GZZLUUPY",
     "lineGroups" : [
       {
@@ -5772,6 +6104,7 @@ let allStationsRawJSON = """
     "name" : "Upney"
   },
   {
+    "icsCode" : "1000245",
     "id" : "940GZZLUUPK",
     "lineGroups" : [
       {
@@ -5789,6 +6122,7 @@ let allStationsRawJSON = """
     "name" : "Upton Park"
   },
   {
+    "icsCode" : "1000246",
     "id" : "940GZZLUUXB",
     "lineGroups" : [
       {
@@ -5806,6 +6140,7 @@ let allStationsRawJSON = """
     "name" : "Uxbridge"
   },
   {
+    "icsCode" : "1000247",
     "id" : "HUBVXH",
     "lineGroups" : [
       {
@@ -5822,6 +6157,7 @@ let allStationsRawJSON = """
     "name" : "Vauxhall"
   },
   {
+    "icsCode" : "1000248",
     "id" : "HUBVIC",
     "lineGroups" : [
       {
@@ -5845,6 +6181,7 @@ let allStationsRawJSON = """
     "name" : "Victoria"
   },
   {
+    "icsCode" : "1002078",
     "id" : "940GZZCRWAD",
     "lineGroups" : [
       {
@@ -5861,6 +6198,7 @@ let allStationsRawJSON = """
     "name" : "Waddon Marsh"
   },
   {
+    "icsCode" : "1000249",
     "id" : "HUBWHC",
     "lineGroups" : [
       {
@@ -5877,6 +6215,7 @@ let allStationsRawJSON = """
     "name" : "Walthamstow Central"
   },
   {
+    "icsCode" : "1002079",
     "id" : "940GZZCRWAN",
     "lineGroups" : [
       {
@@ -5893,6 +6232,7 @@ let allStationsRawJSON = """
     "name" : "Wandle Park"
   },
   {
+    "icsCode" : "1000250",
     "id" : "940GZZLUWSD",
     "lineGroups" : [
       {
@@ -5909,6 +6249,7 @@ let allStationsRawJSON = """
     "name" : "Wanstead"
   },
   {
+    "icsCode" : "1000252",
     "id" : "940GZZLUWRR",
     "lineGroups" : [
       {
@@ -5931,6 +6272,7 @@ let allStationsRawJSON = """
     "name" : "Warren Street"
   },
   {
+    "icsCode" : "1000253",
     "id" : "940GZZLUWKA",
     "lineGroups" : [
       {
@@ -5947,6 +6289,7 @@ let allStationsRawJSON = """
     "name" : "Warwick Avenue"
   },
   {
+    "icsCode" : "1000254",
     "id" : "HUBWAT",
     "lineGroups" : [
       {
@@ -5981,6 +6324,7 @@ let allStationsRawJSON = """
     "name" : "Waterloo"
   },
   {
+    "icsCode" : "1000255",
     "id" : "940GZZLUWAF",
     "lineGroups" : [
       {
@@ -5997,6 +6341,7 @@ let allStationsRawJSON = """
     "name" : "Watford"
   },
   {
+    "icsCode" : "1002081",
     "id" : "940GZZCRWEL",
     "lineGroups" : [
       {
@@ -6007,12 +6352,13 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375369,
-      "lon" : -0.097539
+      "lat" : 51.37537,
+      "lon" : -0.097554
     },
     "name" : "Wellesley Road"
   },
   {
+    "icsCode" : "1000256",
     "id" : "HUBWMB",
     "lineGroups" : [
       {
@@ -6029,6 +6375,7 @@ let allStationsRawJSON = """
     "name" : "Wembley Central"
   },
   {
+    "icsCode" : "1000257",
     "id" : "940GZZLUWYP",
     "lineGroups" : [
       {
@@ -6051,6 +6398,7 @@ let allStationsRawJSON = """
     "name" : "Wembley Park"
   },
   {
+    "icsCode" : "1000258",
     "id" : "940GZZLUWTA",
     "lineGroups" : [
       {
@@ -6067,6 +6415,7 @@ let allStationsRawJSON = """
     "name" : "West Acton"
   },
   {
+    "icsCode" : "1000260",
     "id" : "HUBWBP",
     "lineGroups" : [
       {
@@ -6083,6 +6432,7 @@ let allStationsRawJSON = """
     "name" : "West Brompton"
   },
   {
+    "icsCode" : "1001324",
     "id" : "HUBWCY",
     "lineGroups" : [
       {
@@ -6099,6 +6449,7 @@ let allStationsRawJSON = """
     "name" : "West Croydon"
   },
   {
+    "icsCode" : "1001325",
     "id" : "910GWDRYTON",
     "lineGroups" : [
       {
@@ -6115,6 +6466,7 @@ let allStationsRawJSON = """
     "name" : "West Drayton"
   },
   {
+    "icsCode" : "1001327",
     "id" : "910GWEALING",
     "lineGroups" : [
       {
@@ -6131,6 +6483,7 @@ let allStationsRawJSON = """
     "name" : "West Ealing"
   },
   {
+    "icsCode" : "1000261",
     "id" : "940GZZLUWFN",
     "lineGroups" : [
       {
@@ -6147,6 +6500,7 @@ let allStationsRawJSON = """
     "name" : "West Finchley"
   },
   {
+    "icsCode" : "1000262",
     "id" : "HUBWEH",
     "lineGroups" : [
       {
@@ -6176,6 +6530,7 @@ let allStationsRawJSON = """
     "name" : "West Ham"
   },
   {
+    "icsCode" : "1000263",
     "id" : "HUBWHD",
     "lineGroups" : [
       {
@@ -6192,6 +6547,7 @@ let allStationsRawJSON = """
     "name" : "West Hampstead"
   },
   {
+    "icsCode" : "1000264",
     "id" : "940GZZLUWHW",
     "lineGroups" : [
       {
@@ -6208,6 +6564,7 @@ let allStationsRawJSON = """
     "name" : "West Harrow"
   },
   {
+    "icsCode" : "1002084",
     "id" : "940GZZDLWIQ",
     "lineGroups" : [
       {
@@ -6224,6 +6581,7 @@ let allStationsRawJSON = """
     "name" : "West India Quay"
   },
   {
+    "icsCode" : "1000265",
     "id" : "940GZZLUWKN",
     "lineGroups" : [
       {
@@ -6240,6 +6598,7 @@ let allStationsRawJSON = """
     "name" : "West Kensington"
   },
   {
+    "icsCode" : "1000267",
     "id" : "HUBWRU",
     "lineGroups" : [
       {
@@ -6256,6 +6615,7 @@ let allStationsRawJSON = """
     "name" : "West Ruislip"
   },
   {
+    "icsCode" : "1002098",
     "id" : "940GZZDLWSV",
     "lineGroups" : [
       {
@@ -6272,6 +6632,7 @@ let allStationsRawJSON = """
     "name" : "West Silvertown"
   },
   {
+    "icsCode" : "1000259",
     "id" : "940GZZLUWSP",
     "lineGroups" : [
       {
@@ -6289,6 +6650,7 @@ let allStationsRawJSON = """
     "name" : "Westbourne Park"
   },
   {
+    "icsCode" : "1002083",
     "id" : "940GZZDLWFE",
     "lineGroups" : [
       {
@@ -6305,6 +6667,7 @@ let allStationsRawJSON = """
     "name" : "Westferry"
   },
   {
+    "icsCode" : "1000266",
     "id" : "HUBWSM",
     "lineGroups" : [
       {
@@ -6328,6 +6691,7 @@ let allStationsRawJSON = """
     "name" : "Westminster"
   },
   {
+    "icsCode" : "1000269",
     "id" : "940GZZLUWCY",
     "lineGroups" : [
       {
@@ -6344,6 +6708,7 @@ let allStationsRawJSON = """
     "name" : "White City"
   },
   {
+    "icsCode" : "1000268",
     "id" : "HUBZWL",
     "lineGroups" : [
       {
@@ -6367,6 +6732,7 @@ let allStationsRawJSON = """
     "name" : "Whitechapel"
   },
   {
+    "icsCode" : "1000270",
     "id" : "940GZZLUWIG",
     "lineGroups" : [
       {
@@ -6389,6 +6755,7 @@ let allStationsRawJSON = """
     "name" : "Willesden Green"
   },
   {
+    "icsCode" : "1000271",
     "id" : "HUBWIJ",
     "lineGroups" : [
       {
@@ -6405,6 +6772,7 @@ let allStationsRawJSON = """
     "name" : "Willesden Junction"
   },
   {
+    "icsCode" : "1000272",
     "id" : "HUBWIM",
     "lineGroups" : [
       {
@@ -6427,6 +6795,7 @@ let allStationsRawJSON = """
     "name" : "Wimbledon"
   },
   {
+    "icsCode" : "1000273",
     "id" : "940GZZLUWIP",
     "lineGroups" : [
       {
@@ -6443,6 +6812,7 @@ let allStationsRawJSON = """
     "name" : "Wimbledon Park"
   },
   {
+    "icsCode" : "1000275",
     "id" : "940GZZLUWOG",
     "lineGroups" : [
       {
@@ -6459,6 +6829,7 @@ let allStationsRawJSON = """
     "name" : "Wood Green"
   },
   {
+    "icsCode" : "1000278",
     "id" : "940GZZLUWLA",
     "lineGroups" : [
       {
@@ -6476,6 +6847,7 @@ let allStationsRawJSON = """
     "name" : "Wood Lane"
   },
   {
+    "icsCode" : "1000274",
     "id" : "940GZZLUWOF",
     "lineGroups" : [
       {
@@ -6492,6 +6864,7 @@ let allStationsRawJSON = """
     "name" : "Woodford"
   },
   {
+    "icsCode" : "1002086",
     "id" : "940GZZCRWOD",
     "lineGroups" : [
       {
@@ -6508,6 +6881,7 @@ let allStationsRawJSON = """
     "name" : "Woodside"
   },
   {
+    "icsCode" : "1000276",
     "id" : "940GZZLUWOP",
     "lineGroups" : [
       {
@@ -6524,6 +6898,7 @@ let allStationsRawJSON = """
     "name" : "Woodside Park"
   },
   {
+    "icsCode" : "1002162",
     "id" : "910GWOLWXR",
     "lineGroups" : [
       {
@@ -6540,6 +6915,7 @@ let allStationsRawJSON = """
     "name" : "Woolwich"
   },
   {
+    "icsCode" : "1001344",
     "id" : "HUBWWA",
     "lineGroups" : [
       {

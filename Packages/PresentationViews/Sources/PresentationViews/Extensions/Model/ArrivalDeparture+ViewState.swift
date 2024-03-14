@@ -4,7 +4,7 @@ import Models
 extension ArrivalDeparture {
     
     func toArrivalsBoardCellItem(withArrivalNumber arrivalNumber: Int,
-                                 lineID: LineID) -> ArrivalsBoardCellItem {
+                                 lineID: TrainLineID) -> ArrivalsBoardCellItem {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
@@ -81,7 +81,7 @@ extension Sequence where Element == ArrivalDeparture {
         }
     }
 
-    public func toPlatformBoardStates(forLineID lineID: LineID) -> [ArrivalsBoardState] {
+    public func toPlatformBoardStates(forLineID lineID: TrainLineID) -> [ArrivalsBoardState] {
         let arrivalDeparturesPerPlatform = Dictionary(grouping: self, by: \.platformName)
         
         return arrivalDeparturesPerPlatform
@@ -92,7 +92,7 @@ extension Sequence where Element == ArrivalDeparture {
     }
     
     private func singlePlatformBoardState(for arrivalDepartures: [ArrivalDeparture],
-                                          with lineID: LineID) -> ArrivalsBoardState {
+                                          with lineID: TrainLineID) -> ArrivalsBoardState {
         let sortedArrivalDepartures = arrivalDepartures.sortedByArrivalOrDepartureTime()
         
         let cellItems = sortedArrivalDepartures.enumerated().compactMap { idx, element in
