@@ -8,6 +8,11 @@ struct RootScreen: View {
                 .styledTabItem(imageName: "exclamationmark.circle",
                                title: "line.status.tab.title",
                                accessibilityID: "acc.id.line.status.tab.title")
+            
+            JourneyPlannerScreen()
+                .styledTabItem(imageName: "app.connected.to.app.below.fill",
+                               title: "journey.planner.tab.title",
+                               accessibilityID: "acc.id.journey.planner.tab.title")
 
             ArrivalsPickerScreen()
                 .styledTabItem(imageName: "tram.fill",

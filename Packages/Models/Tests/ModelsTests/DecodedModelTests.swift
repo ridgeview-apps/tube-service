@@ -35,7 +35,24 @@ final class ModelDecoderTests: XCTestCase {
         
         XCTAssertNotNil(disruptedPoints)
     }
+    
+    func testDecodedTubeJourneyItinerary() throws {
+        let journey = try decodeRawJSONString(journeyByTubeJSON, asType: Journey.self)
+        
+        XCTAssertNotNil(journey)
+        
+        XCTAssertEqual(journey.legs?[0].modeID, .walking)
+        
+        XCTAssertEqual(journey.legs?[1].trainLineID, .piccadilly)
+        XCTAssertEqual(journey.legs?[1].modeID, .tube)
+        XCTAssertEqual(journey.legs?[1].stopPoints[0].name, "Russell Square Underground Station")
+        XCTAssertEqual(journey.legs?[1].stopPoints[1].name, "Holborn Underground Station")
+        XCTAssertEqual(journey.legs?[1].stopPoints[2].name, "Covent Garden Underground Station")
+        XCTAssertEqual(journey.legs?[1].departurePoint?.commonName, "King's Cross St. Pancras Underground Station")
+        XCTAssertEqual(journey.legs?[1].arrivalPoint?.commonName, "Leicester Square Underground Station")
+    }
 }
+
 
 enum ModelDecoderTestError: Error {
     case invalidJSON

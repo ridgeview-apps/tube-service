@@ -1,21 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "devicekit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/devicekit/DeviceKit",
-      "state" : {
-        "revision" : "66837ecf1516e41fd4251bbb684dc4b1997f08ab",
-        "version" : "5.1.0"
-      }
-    },
-    {
       "identity" : "ridgeview-core",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ridgeview-apps/ridgeview-core",
       "state" : {
-        "branch" : "main",
-        "revision" : "f17a3a9f93f7fdc66c903db8574985c19224600d"
+        "revision" : "4b3f097756af53844e75cac333fddcdeb36c99cf",
+        "version" : "1.0.0"
       }
     }
   ],

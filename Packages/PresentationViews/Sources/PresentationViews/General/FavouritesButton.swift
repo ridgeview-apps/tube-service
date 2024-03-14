@@ -28,7 +28,6 @@ public struct FavouritesButton: View {
             case .large:
                 HStack {
                     Image(systemName: isSelected ? "minus.circle" : "plus.circle")
-                        .imageScale(.large)
                     if isSelected {
                         Text("favourites.button.title.remove", bundle: .module)
                     } else {

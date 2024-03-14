@@ -27,6 +27,8 @@ public final class StationsDataStore: ObservableObject {
     private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
+    private var nationRailStations: [StopPoint] = []
+    private var nationRailStationsByICSCode: [String: StopPoint] = [:]
     
     // Published
     @Published public private(set) var allStations: [Station] = []
@@ -44,15 +46,17 @@ public final class StationsDataStore: ObservableObject {
     
     private func loadStations() {
         allStations = Station.allValues()
+        nationRailStations = Station.nationRailStopPoints()
         assert(!allStations.isEmpty)
         saveStationsByID()
+        saveNationalRailStationsByICSCode()
     }
     
     public func refreshStationDisruptions() async {
         fetchedDisruptionData.fetchState = .fetching
 
         do {
-            let disruptedPoints = try await transportAPI.fetchStationDisruptions()
+            let disruptedPoints = try await transportAPI.fetchStationDisruptions().decodedModel
             fetchedDisruptionData.messagesByStationID = disruptedPoints.toMessagesGroupedByStationID(stationsByAtcoCode: stationsByAtcoCode)
             fetchedDisruptionData.fetchState = .success
             fetchedDisruptionData.fetchedAt = .now
@@ -87,6 +91,16 @@ public final class StationsDataStore: ObservableObject {
         }
     }
     
+    private func saveNationalRailStationsByICSCode() {
+        nationRailStationsByICSCode = [:]
+        
+        nationRailStations.forEach {
+            if let icsCode = $0.icsCode {
+                nationRailStationsByICSCode[icsCode] = $0
+            }
+        }
+    }
+    
     public func station(forID stationID: Station.ID) -> Station? {
         stationsByID[stationID]
     }
@@ -95,8 +109,26 @@ public final class StationsDataStore: ObservableObject {
         stationsByLineGroupID[lineGroupID]
     }
     
-    public func filteredStations(matchingName name: String) -> [Station] {
-        allStations.filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
+    public func filteredStations(matchingName name: String, limit: Int = 30) -> [Station] {
+        Array(
+            allStations
+                .lazy
+                .filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
+                .prefix(limit)
+        )
+    }
+    
+    public func filteredNationalRailStations(matching name: String, limit: Int = 30) -> [StopPoint] {
+        Array(
+            nationRailStations
+                .lazy
+                .filter { ($0.commonName ?? "").alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
+                .prefix(limit)
+        )
+    }
+    
+    public func nationalRailStation(forICSCode icsCode: String) -> StopPoint? {
+        nationRailStationsByICSCode[icsCode]
     }
     
     public func disruptions(forStationID stationID: Station.ID) -> [String] {

@@ -1,3 +1,3 @@
-- New feature: nearby stations
+- New feature: journey planner
 
-Allow the app to access your current location and it will show all the stations currently near you (including directions on how to get there - handy for when you're in an unfamiliar location!).
+Plan your entire journey across London with the new journey planner. Select where you want go and the app will show you the quickest routes to get there (on ALL modes of transport, including London buses).

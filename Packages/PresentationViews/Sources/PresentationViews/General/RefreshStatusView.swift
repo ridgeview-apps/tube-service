@@ -10,17 +10,27 @@ public struct RefreshStatusView: View {
     
     public let loadingState: LoadingState
     public let refreshDate: Date?
+    public let loadingMessageTitle: LocalizedStringKey
+    public let showsText: Bool
+    
+    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .full, timeStyle: .short)
     
     public init(loadingState: LoadingState, 
-                refreshDate: Date?) {
+                refreshDate: Date? = nil,
+                loadingMessageTitle: LocalizedStringKey = "refresh.status.loading",
+                showsText: Bool = true) {
         self.loadingState = loadingState
         self.refreshDate = refreshDate
+        self.loadingMessageTitle = loadingMessageTitle
+        self.showsText = showsText
     }
     
     public var body: some View {
         HStack(spacing: 4) {
             statusImage
-            statusText
+            if showsText {
+                statusText
+            }
         }
     }
     
@@ -32,7 +42,7 @@ public struct RefreshStatusView: View {
             EmptyView()
         case .failure:
             Image(systemName: "exclamationmark.circle.fill")
-                .foregroundColor(.red)
+                .foregroundColor(.adaptiveRed)
                 .imageScale(.small)
         }
     }
@@ -40,10 +50,10 @@ public struct RefreshStatusView: View {
     @ViewBuilder private var statusText: some View {
         switch loadingState {
         case .loading:
-            Text("refresh.status.updating", bundle: .module)
+            Text(loadingMessageTitle, bundle: .module)
         case let .failure(errorMessage):
             Text(errorMessage)
-                .foregroundStyle(.red)
+                .foregroundStyle(.adaptiveRed)
         case .loaded:
             if let refreshDate {
                 Text("refresh.status.last.updated \(timestampFormatter.string(from: refreshDate))",
@@ -61,13 +71,7 @@ public struct RefreshStatusView: View {
         RefreshStatusView(loadingState: .loaded, refreshDate: Calendar.current.date(byAdding: .day, value: -7, to: Date())!)
         RefreshStatusView(loadingState: .loaded, refreshDate: nil)
         RefreshStatusView(loadingState: .failure(errorMessage: "Sorry, something went wrong"), refreshDate: nil)
+        RefreshStatusView(loadingState: .failure(errorMessage: "Sorry, something went wrong"), refreshDate: nil,
+                          showsText: false)
     }
 }
-
-private let timestampFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .full
-    formatter.timeStyle = .short
-    formatter.doesRelativeDateFormatting = true
-    return formatter
-}()

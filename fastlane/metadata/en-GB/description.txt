@@ -7,5 +7,6 @@ Tube Service features:
 - Search and view the live arrivals boards for a particular tube station.
 - Save your favourite arrivals boards for easy access in future.
 - Find stations nearby (including directions on how to get there)
+- Plan your journeys across London with the Journey Planner
 - Quick links to train maps
 - View the latest TfL posts on X (formerly Twitter)

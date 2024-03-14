@@ -2,13 +2,14 @@ import Foundation
 
 public extension Formatter {
     
-    static let mediumRelativeDateTimeStyle: DateFormatter = {
+    static func relative(dateStyle: DateFormatter.Style,
+                         timeStyle: DateFormatter.Style) -> DateFormatter {
         let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .medium
+        formatter.dateStyle = dateStyle
+        formatter.timeStyle = timeStyle
         formatter.doesRelativeDateFormatting = true
         return formatter
-    }()
+    }
     
     static let fullDateStyle: DateFormatter = {
         let formatter = DateFormatter()
@@ -37,6 +38,13 @@ public extension DateIntervalFormatter {
         let formatter = DateIntervalFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
+        return formatter
+    }()
+    
+    static let timeIntervalStyle: DateIntervalFormatter = {
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
         return formatter
     }()
 }

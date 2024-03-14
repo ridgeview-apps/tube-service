@@ -79,6 +79,7 @@ public extension ModelStubs {
 
 public extension ModelStubs {
     static var stations: [Station] { Station.allValues() }
+    static var nationRailStopPoints: [StopPoint] { Station.nationRailStopPoints() }
     
     static var angelStation: Station { stations.first { $0.id == "940GZZLUAGL" }! }
     static var eastFinchleyStation: Station { stations.first { $0.id == "940GZZLUEFY" }! }
@@ -90,6 +91,9 @@ public extension ModelStubs {
     static var totteridgeAndWhetstoneStation: Station { stations.first { $0.id == "940GZZLUTAW" }! }
     static var westFinchleyStation: Station { stations.first { $0.id == "940GZZLUWFN" }! }
     static var woodsideParkStation: Station { stations.first { $0.id == "940GZZLUWOP" }! }
+    
+    static var twickenhamRailStation: StopPoint { nationRailStopPoints.first { $0.icsCode == "1001300" }! }
+    static var oakleighParkRailStation: StopPoint { nationRailStopPoints.first { $0.icsCode == "1001218" }! }
 }
 
 
@@ -98,4 +102,25 @@ public extension ModelStubs {
 public extension ModelStubs {
     
     static var disruptedStations: [DisruptedPoint] { decodedValue(for: disruptedStationsJSON) }
+}
+
+
+// MARK: - Journey planner
+
+public extension ModelStubs {
+    
+    static var journeyByBike: Journey { decodedValue(for: journeyByBikeJSON ) }
+    static var journeyByBoat: Journey { decodedValue(for: journeyByBoatJSON ) }
+    static var journeyByBusLong: Journey { decodedValue(for: journeyByBusLongJSON ) }
+    static var journeyByBusShort: Journey { decodedValue(for: journeyByBusShortJSON) }
+    static var journeyByCableCar: Journey { decodedValue(for: journeyByCableCarJSON) }
+    static var journeyByNationalRail: Journey { decodedValue(for: journeyByNationalRailJSON) }
+    static var journeyByOverground: Journey { decodedValue(for: journeyByOvergroundJSON) }
+    static var journeyByTube: Journey { decodedValue(for: journeyByTubeJSON) }
+    static var journeyByWalking: Journey { decodedValue(for: journeyByWalkingJSON) }
+    static var journeyWithLongDisruptionMessage: Journey { decodedValue(for: journeyWithLongDisruptionMessageJSON) }
+    
+    static var journeyWithLongTitleName: Journey { decodedValue(for: journeyWithLongTitleNameJSON) }
+    
+    static var journeyItineraryKingsXToWaterloo: JourneyItinerary { decodedValue(for: journeyItineraryKingsXToWaterlooJSON) }
 }

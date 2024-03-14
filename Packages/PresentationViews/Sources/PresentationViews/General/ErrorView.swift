@@ -1,6 +1,12 @@
 import SwiftUI
 
 public struct ErrorView: View {
+    
+    enum Style {
+        case form
+        case `default`
+    }
+    
     public let errorMessage: String
     
     public init(errorMessage: String) {

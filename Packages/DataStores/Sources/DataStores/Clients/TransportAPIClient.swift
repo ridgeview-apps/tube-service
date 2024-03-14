@@ -4,18 +4,20 @@ import Models
 // MARK: - Data types
 
 public protocol TransportAPIClientType {
-    func fetchCurrentLineStatuses() async throws -> [Line]
-    func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line]
-    func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalPrediction]
-    func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture]
-    func fetchStationDisruptions() async throws -> [DisruptedPoint]
+    func fetchCurrentLineStatuses() async throws -> APIResponse<[Line]>
+    func fetchLineStatuses(for dateInterval: DateInterval) async throws -> APIResponse<[Line]>
+    func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> APIResponse<[ArrivalPrediction]>
+    func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> APIResponse<[ArrivalDeparture]>
+    func fetchStationDisruptions() async throws -> APIResponse<[DisruptedPoint]>
+    func fetchJourneyItinerary(for params: JourneyRequestParams) async throws -> APIResponse<JourneyItinerary>
 }
 
 public enum TransportAPIError: Error {
     case invalidRequestURL
-    case requestFailure(Error)
+    case httpStatusCodeMissing
+    case connection(Error)
+    case httpStatusCode(Int, APIResponseErrorModel?)
 }
-
 
 // MARK: - TransportAPIClient
 
@@ -45,31 +47,36 @@ public struct TransportAPIClient: TransportAPIClientType {
     
     // MARK: - Data fetching
     
-    public func fetchCurrentLineStatuses() async throws -> [Line] {
-        return try await fetchData(for: .getCurrentLineStatuses(TransportMode.allCases), mappedTo: [Line].self)
+    public func fetchCurrentLineStatuses() async throws -> APIResponse<[Line]> {
+        return try await fetchData(for: .getCurrentLineStatuses(ModeID.trains), mappedTo: [Line].self)
     }
     
-    public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> [Line] {
-        return try await fetchData(for: .getLineStatusesForDateRange(LineID.allCases, dateInterval),
+    public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> APIResponse<[Line]> {
+        return try await fetchData(for: .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval),
                                    mappedTo: [Line].self)
     }
     
-    public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalPrediction] {
+    public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> APIResponse<[ArrivalPrediction]> {
         return try await fetchData(for: .getArrivalPredictions(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
                                    mappedTo: [ArrivalPrediction].self)
     }
     
-    public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> [ArrivalDeparture] {
+    public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> APIResponse<[ArrivalDeparture]> {
         return try await fetchData(for: .getArrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
                                    mappedTo: [ArrivalDeparture].self)
     }
     
-    public func fetchStationDisruptions() async throws -> [DisruptedPoint] {
-        return try await fetchData(for: .getStationDisruptions(TransportMode.allCases),
+    public func fetchStationDisruptions() async throws -> APIResponse<[DisruptedPoint]> {
+        return try await fetchData(for: .getStationDisruptions(ModeID.trains),
                                    mappedTo: [DisruptedPoint].self)
     }
     
-    private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> T {
+    public func fetchJourneyItinerary(for params: JourneyRequestParams) async throws -> APIResponse<JourneyItinerary> {
+        return try await fetchData(for: .getJourneyItinerary(params),
+                                   mappedTo: JourneyItinerary.self)
+    }
+    
+    private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> APIResponse<T> {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         return try await urlSession.get(url: url, decodedBy: jsonDecoder, as: model)
     }
@@ -81,15 +88,30 @@ public struct TransportAPIClient: TransportAPIClientType {
 private extension URLSession {
     
     // swiftlint:disable identifier_name
-    func get<T: Decodable>(url: URL, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> T {
+    func get<T: Decodable>(url: URL, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> APIResponse<T> {
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        let response: (data: Data, urlResponse: URLResponse)
         do {
-            var request = URLRequest(url: url)
-            request.setValue("application/json", forHTTPHeaderField: "Accept")
-            let (data, _) = try await self.data(for: request)
-            return try jsonDecoder.decode(T.self, from: data)
+            response = try await self.data(for: request)
         } catch {
-            throw TransportAPIError.requestFailure(error)
+            throw TransportAPIError.connection(error)
         }
+        
+        guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
+            throw TransportAPIError.httpStatusCodeMissing
+        }
+        
+        let isClientOrServerError = (400..<600).contains(statusCode)
+        
+        guard !isClientOrServerError else {
+            let errorModel = try? jsonDecoder.decode(APIResponseErrorModel.self, from: response.data)
+            throw TransportAPIError.httpStatusCode(statusCode, errorModel)
+        }
+        
+        let decodedModel: T = try jsonDecoder.decode(T.self, from: response.data)
+        return APIResponse(httpStatusCode: statusCode, decodedModel: decodedModel)
     }
     // swiftlint:enable identifier_name
 }

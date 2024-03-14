@@ -3,16 +3,15 @@
 import Models
 import XCTest
 
-@MainActor
 final class LocationDataStoreTests: XCTestCase {
-    
+
+    @MainActor
     func testNearestStation_Pentonville() throws {
         // Given
-        let location = LocationDataStore(locationManager: StubLocationManager())
-        let pentonville = Location(lat: 51.531504, lon: -0.113384)
+        let pentonville = LocationCoordinate(lat: 51.531504, lon: -0.113384)
         
         // When
-        let nearestStations = location.nearestStations(to: pentonville, in: Station.allValues())
+        let nearestStations = Station.allValues().nearestStations(to: pentonville)
         
         // Then
         XCTAssertEqual(ModelStubs.angelStation, nearestStations[0].station)
@@ -23,13 +22,13 @@ final class LocationDataStoreTests: XCTestCase {
         XCTAssertEqual(1205.0274, nearestStations[2].distance, accuracy: 0.1)
     }
     
+    @MainActor
     func testNearestStation_NorthFinchley() throws {
         // Given
-        let location = LocationDataStore(locationManager: StubLocationManager())
-        let northFinchleyHighRoad = Location(lat: 51.618227, lon: -0.176675)
+        let northFinchleyHighRoad = LocationCoordinate(lat: 51.618227, lon: -0.176675)
         
         // When
-        let nearestStations = location.nearestStations(to: northFinchleyHighRoad, in: Station.allValues())
+        let nearestStations = Station.allValues().nearestStations(to: northFinchleyHighRoad)
         
         // Then
         XCTAssertEqual(ModelStubs.woodsideParkStation, nearestStations[0].station)

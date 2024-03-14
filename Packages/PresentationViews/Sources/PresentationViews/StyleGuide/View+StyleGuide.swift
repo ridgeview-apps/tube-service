@@ -64,6 +64,46 @@ public extension View {
     func withDefaultMaxWidth() -> some View {
         self.frame(maxWidth: 600)
     }
+
+    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
+        background(
+            GeometryReader { geometryProxy in
+                Color.clear.preference(key: SizePreferenceKey.self, value: geometryProxy.size)
+            }
+        )
+        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+    }
+    
+    func resetAlert(isPresented: Binding<Bool>,
+                    alertTitle: LocalizedStringKey,
+                    onConfirm: @escaping () -> Void,
+                    alertMessage: @escaping () -> some View = { EmptyView() }) -> some View {
+        self.modifier(ResetAlertViewModifier(
+            isPresented: isPresented,
+            alertTitle: alertTitle,
+            onConfirm: onConfirm,
+            alertMessage: alertMessage)
+        )
+    }
+}
+
+extension ForEach where Content: View {
+    
+    func onDeleteItem<Element>(in array: [Element],
+                               action: @escaping (Element) -> Void) -> some View {
+        onDelete { offsets in
+            let index = offsets[offsets.startIndex]
+            if array.indices.contains(index) {
+                let itemToDelete = array[index]
+                action(itemToDelete)
+            }
+        }
+    }
+}
+
+private struct SizePreferenceKey: PreferenceKey {
+  static var defaultValue: CGSize = .zero
+  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 public extension EdgeInsets {
@@ -95,6 +135,23 @@ private struct CardStyle: ViewModifier {
     }
 }
 
+struct HLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.minX, y: rect.midY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        }
+    }
+}
+
+struct VLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+        }
+    }
+}
 
 private struct PulsatingSymbolEffectModifier: ViewModifier {
     
@@ -110,5 +167,58 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
         } else {
             content
         }
+    }
+}
+
+private struct ResetAlertViewModifier<Message: View>: ViewModifier {
+    @Binding var isPresented: Bool
+    let alertTitle: LocalizedStringKey
+    let onConfirm: () -> Void
+    let alertMessage: () -> Message
+    
+    func body(content: Content) -> some View {
+        content
+            .alert(Text(alertTitle, bundle: .module),
+                   isPresented: $isPresented) {
+                Button(role: .destructive) {
+                    onConfirm()
+                } label: {
+                    Text("global.button.title.reset", bundle: .module)
+                }
+                Button(role: .cancel) {
+                    isPresented = false
+                } label: {
+                    Text("global.button.title.cancel", bundle: .module)
+                }
+            } message: {
+                alertMessage()
+            }
+
+    }
+}
+
+struct ClearButton: ViewModifier {
+    @Binding var text: String
+    
+    func body(content: Content) -> some View {
+        HStack {
+            content
+            
+            if !text.isEmpty {
+                Button {
+                    text = ""
+                } label: {
+                    Image(systemName: "multiply.circle.fill")
+                        .foregroundStyle(.gray)
+                }
+                .buttonStyle(.borderless)
+            }
+        }
+    }
+}
+
+extension View {
+    func clearButton(text: Binding<String>) -> some View {
+        modifier(ClearButton(text: text))
     }
 }

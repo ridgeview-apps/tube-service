@@ -13,7 +13,8 @@ struct RootScene: App {
                 .withEnvironmentDataStores(lineStatus: appData.lineStatus,
                                            stations: appData.stations,
                                            userPreferences: appData.userPreferences,
-                                           location: appData.location)
+                                           location: appData.location,
+                                           localSearchCompleter: appData.localSearchCompleter)
         }
     }
     
@@ -32,11 +33,13 @@ extension View {
     func withEnvironmentDataStores(lineStatus: LineStatusDataStore,
                                    stations: StationsDataStore,
                                    userPreferences: UserPreferencesDataStore,
-                                   location: LocationDataStore) -> some View {
+                                   location: LocationDataStore,
+                                   localSearchCompleter: LocalSearchCompleter) -> some View {
         self
             .environmentObject(lineStatus)
             .environmentObject(stations)
             .environmentObject(userPreferences)
             .environmentObject(location)
+            .environmentObject(localSearchCompleter)
     }
 }

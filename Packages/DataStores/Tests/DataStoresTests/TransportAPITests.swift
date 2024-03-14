@@ -11,7 +11,7 @@ final class TransportAPIRouteTests: XCTestCase {
     
     func testGetCurrentLineStatusesEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getCurrentLineStatuses(TransportMode.allCases)
+        let route: TransportAPIRoute = .getCurrentLineStatuses(ModeID.trains)
         
         // When
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
@@ -28,7 +28,7 @@ final class TransportAPIRouteTests: XCTestCase {
         let startDate = dayMonthYear(1, 2, 2023, in: .london)
         let endDate = dayMonthYear(2, 2, 2023, in: .london)
         let dateInterval = DateInterval(start: startDate, end: endDate)
-        let route: TransportAPIRoute = .getLineStatusesForDateRange(LineID.allCases, dateInterval)
+        let route: TransportAPIRoute = .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval)
         
         // When
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
@@ -71,7 +71,7 @@ final class TransportAPIRouteTests: XCTestCase {
     
     func testStationDisruptionsEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getStationDisruptions(TransportMode.allCases)
+        let route: TransportAPIRoute = .getStationDisruptions(ModeID.trains)
         
         // When
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)

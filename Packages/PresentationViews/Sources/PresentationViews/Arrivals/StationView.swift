@@ -82,18 +82,7 @@ public struct StationView: View {
     @ViewBuilder private var disruptionsSection: some View {
         if !disruptionMessages.isEmpty {
             Section {
-                DisclosureGroup {
-                    ForEach(disruptionMessages, id: \.self) { message in
-                        Text(message)
-                    }
-                } label: {
-                    HStack {
-                        LineStatusAccessoryImageType.disruption.image
-                        Text("station.disruptions.reported.disclosure.title", bundle: .module)
-                        Spacer()
-                    }
-                }
-                .foregroundStyle(Color.adaptiveRed)
+                DisruptionsCell(disruptionMessages: disruptionMessages)
             } header: {
                 Text("station.disruptions.section.header.title", bundle: .module)
             }
@@ -154,7 +143,7 @@ public struct StationView: View {
     }
 }
 
-extension Location: Identifiable {
+extension LocationCoordinate: Identifiable {
     public var id: Double { lat + lon }
 }
 

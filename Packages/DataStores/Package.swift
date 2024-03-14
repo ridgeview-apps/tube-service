@@ -6,14 +6,14 @@ import PackageDescription
 let package = Package(
     name: "DataStores",
     platforms: [
-        .iOS(.v16)
+        .iOS("16.4")
     ],
     products: [
         .library(name: "DataStores", targets: ["DataStores"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(url: "https://github.com/ridgeview-apps/ridgeview-core", branch: "main"),
+        .package(url: "https://github.com/ridgeview-apps/ridgeview-core", from: "1.0.0"),
         .package(path: "Models"),
         .package(path: "Shared")
     ],

@@ -18,14 +18,14 @@ enum NavigationButton {
         
         var body: some View {
             Button(action: action) {
-                Image(systemName: "xmark")
+                Image(systemName: "xmark.circle.fill")
                     .imageScale(.large)
             }
+            .foregroundStyle(.secondary)
         }
     }
     
 }
-
 
 struct SettingsToolBarButton: ViewModifier {
     @State private var showSettings: Bool = false

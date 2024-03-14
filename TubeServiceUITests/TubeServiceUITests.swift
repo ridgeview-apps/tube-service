@@ -8,11 +8,16 @@
 
 import XCTest
 
-@MainActor
 class TubeServiceUITests: XCTestCase {
     
     private var app: XCUIApplication!
+    
+    private var iPhone: Bool { UIDevice.current.userInterfaceIdiom == .phone }
+    private var iPad: Bool { UIDevice.current.userInterfaceIdiom == .pad }
+    
+    var screenshotNumber = 0
 
+    @MainActor
     override func setUpWithError() throws {
         continueAfterFailure = false
         
@@ -34,29 +39,26 @@ class TubeServiceUITests: XCTestCase {
         }
     }
     
+    @MainActor
     func testGenerateAppScreenshots() throws {
                        
-        var screenshotNumber = 0
-        func captureScreenshot(_ name: String) {
-            screenshotNumber += 1
-            let numPrefix = String(format: "%02d", screenshotNumber)
-            snapshot("\(numPrefix)-\(name)")
-        }
-        
-        let iPhone = UIDevice.current.userInterfaceIdiom == .phone
-        let iPad = UIDevice.current.userInterfaceIdiom == .pad
-        
         XCUIDevice.shared.orientation = iPad ? .landscapeLeft : .portrait
 
-        // ----------------------------------------------
-        // Status Tab
-                
+        captureStatusTab()
+        captureJourneyPlannerTab()
+        captureArrivalsTab()
+        captureNearbyStationsTab()
+        captureMapsTab()
+    }
+    
+    @MainActor
+    private func captureStatusTab() {
         app.buttons["Status"].tap()
-                
+        
         if iPhone {
             captureScreenshot("ServiceStatuses-Today")
         }
-
+        
         // Status - today
         _ = app.buttons["circle"].waitForExistence(timeout: 10)
         app.buttons["circle"].tapUnhittable()
@@ -70,11 +72,46 @@ class TubeServiceUITests: XCTestCase {
         
         app.buttons["acc.id.filter.option.thisWeekend"].tap()
         captureScreenshot("ServiceStatuses-Weekend")
+    }
+    
+    @MainActor
+    private func captureJourneyPlannerTab() {
+        app.buttons["Journey planner"].tap()
         
+        app.buttons["Departure location"].tap()
+        app.textFields.firstMatch.typeText("King's Cross & St Pancras International")
         
-        // ----------------------------------------------
-        // Arrivals tab
+        if app.buttons["King's Cross & St Pancras International"].waitForExistence(timeout: 5) {
+            app.buttons["King's Cross & St Pancras International"].tapUnhittable()
+        }
         
+        app.buttons["Arrival location"].tap()
+        app.textFields.firstMatch.typeText("Waterloo")
+        
+        if app.buttons["Waterloo"].waitForExistence(timeout: 5) {
+            app.buttons["Waterloo"].tapUnhittable()
+        }
+        
+        captureScreenshot("JourneyPlannerForm")
+        
+        app.buttons["Show journeys"].tap()
+        
+        if app.buttons["journey.start.time.info"].firstMatch.waitForExistence(timeout: 5) {
+            app.buttons["journey.start.time.info"].firstMatch.tap()
+        } else {
+            XCTFail()
+            return
+        }
+        
+        if app.buttons["3 stops"].firstMatch.waitForExistence(timeout: 5) {
+            app.buttons["3 stops"].firstMatch.tap()
+        }
+        
+        captureScreenshot("JourneyPlannerResults")
+    }
+    
+    @MainActor
+    private func captureArrivalsTab() {
         app.buttons["Live arrivals"].tap()
         
         if iPhone {
@@ -88,11 +125,10 @@ class TubeServiceUITests: XCTestCase {
         if iPhone {
             app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         }
-        
-        
-        // ----------------------------------------------
-        // Location tab
-
+    }
+    
+    @MainActor
+    private func captureNearbyStationsTab() {
         app.buttons["Nearby"].tap()
         
         if iPhone {
@@ -107,14 +143,20 @@ class TubeServiceUITests: XCTestCase {
         }
         
         captureScreenshot("NearbyStations-Detail")
-        
-        
-        // ----------------------------------------------
-        // Maps tab
-        
+    }
+    
+    @MainActor
+    private func captureMapsTab() {
         app.buttons["Maps"].tap()
         
         captureScreenshot("Maps")
+    }
+    
+    @MainActor
+    private func captureScreenshot(_ name: String) {
+        screenshotNumber += 1
+        let numPrefix = String(format: "%02d", screenshotNumber)
+        snapshot("\(numPrefix)-\(name)")
     }
 }
 

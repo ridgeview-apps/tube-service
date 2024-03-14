@@ -19,8 +19,17 @@ public extension Color {
     static let dlr = Color.rgb(0, 175, 173)
     static let tram = Color.rgb(0, 189, 25)
     static let overground = Color.rgb(239, 123, 16)
-}
+    
+    // As per "Colour standards": https://tfl.gov.uk/info-for/suppliers-and-contractors/design-standards
 
+    static let bus = Color.adaptive(lightMode: rgb(225, 37, 27),
+                                    darkMode: Color.midRed1)
+    static let cableCar = Color.rgb(115, 79, 160)
+    static let cycleHire = Color.rgb(239, 56, 36)
+    static let coach = Color.rgb(251, 168, 0)
+    static let nationalRail = Color.rgb(230, 0, 0)
+    static let riverBus = Color.rgb(0, 160, 223)
+}
 
 // MARK: - Color
 public extension Color {
@@ -42,6 +51,9 @@ public extension Color {
     static let adaptiveMidGrey2 = Color.adaptive(lightMode: .midGrey2,
                                                  darkMode: .lightGrey1)
     
+    static let adaptiveDarkGrey1 = Color.adaptive(lightMode: .darkGrey1,
+                                                 darkMode: .lightGrey2)
+    
     static let defaultBackground = Color.adaptive(lightMode: .lightGrey2,
                                                   darkMode: .darkGrey2)
     
@@ -56,6 +68,54 @@ public extension Color {
                               darkMode: .init(darkMode))
         return Color(uiColor: uiColor)
     }
+}
+
+public extension ShapeStyle where Self == Color {
+    
+    static var bakerlooLine: Color { .bakerlooLine }
+    static var centralLine: Color { .centralLine }
+    static var circleLine: Color { .circleLine }
+    static var districtLine: Color { .districtLine }
+    static var elizabethLine: Color { .elizabethLine }
+    static var hammersmithAndCityLine: Color { .hammersmithAndCityLine }
+    static var jubileeLine: Color { .jubileeLine }
+    static var metropolitanLine: Color { .metropolitanLine }
+    static var northernLine: Color { .northernLine }
+    static var piccadillyLine: Color { .piccadillyLine }
+    static var victoriaLine: Color { .victoriaLine }
+    static var waterlooAndCityLine: Color { .waterlooAndCityLine }
+    static var dlr: Color { .dlr }
+    static var tram: Color { .tram }
+    static var overground: Color { .overground }
+    
+    static var bus: Color { .bus }
+    static var cableCar: Color { .cableCar }
+    static var cycleHire: Color { .cycleHire }
+    static var coach: Color { .coach }
+    static var nationalRail: Color { .nationalRail }
+    static var riverBus: Color { .riverBus }
+    
+    static var lightGrey1: Color { .lightGrey1 }
+    static var lightGrey2: Color { .lightGrey2 }
+    
+    static var midGrey1: Color { .midGrey1 }
+    static var midGrey2: Color { .midGrey2 }
+    
+    static var darkGrey1: Color { .darkGrey1 }
+    static var darkGrey2: Color { .darkGrey2 }
+    
+    static var darkRed1: Color { .darkRed1 }
+    static var midRed1: Color { .midRed1 }
+    
+    static var adaptiveRed: Color { .adaptiveRed }
+    
+    static var adaptiveMidGrey2: Color { .adaptiveMidGrey2 }
+    
+    static var adaptiveDarkGrey1: Color { .adaptiveDarkGrey1 }
+    
+    static var defaultBackground: Color { .defaultBackground }
+    
+    static var defaultCellBackground: Color { .defaultCellBackground }
 }
 
 extension UIColor {
