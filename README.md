@@ -8,6 +8,8 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 ![](Docs/Images/02-ServiceStatuses-Weekend.png)
 ![](Docs/Images/03-LiveArrivalsBoard.png)
 ![](Docs/Images/04-NearbyStations-Detail.png)
+![](Docs/Images/05-JourneyPlanner-Form.png)
+![](Docs/Images/06-JourneyPlanner-Results.png)
 
 ## Getting Started
 
