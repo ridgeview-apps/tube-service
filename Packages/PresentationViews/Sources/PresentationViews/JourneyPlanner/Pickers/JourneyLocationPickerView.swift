@@ -147,6 +147,8 @@ private extension JourneyLocationPicker.SectionState {
 
 // MARK: - Previews
 
+import ModelStubs
+
 private struct Previewer: View {
     @State var searchTerm: String = ""
     var sections: [JourneyLocationPicker.SectionState]

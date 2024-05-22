@@ -86,6 +86,8 @@ private extension Sequence where Element == Line {
 
 // MARK: - Previews
 
+import ModelStubs
+
 private struct WrapperView: View {
     var station: Station = ModelStubs.kingsCrossStation
     @State var selection: StationView.Selection?

@@ -88,6 +88,9 @@ struct JourneyPlannerFromToSelectionView: View {
 
 
 // MARK: - Previews
+
+import ModelStubs
+
 private struct Previewer: View {
     @State var form: JourneyPlannerForm = .init()
     var locationAccessoryStatus: JourneyLocationTitleLabel.AccessoryStatus = .loadingState(.loaded)

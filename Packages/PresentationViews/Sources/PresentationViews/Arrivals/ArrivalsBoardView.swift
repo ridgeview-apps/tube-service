@@ -218,6 +218,8 @@ extension ArrivalsBoardView {
 
 // MARK: - Previews
 
+import ModelStubs
+
 struct ArrivalsBoardView_Previews: PreviewProvider {
     
     struct WrapperView: View {

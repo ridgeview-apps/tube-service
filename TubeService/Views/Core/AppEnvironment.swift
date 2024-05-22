@@ -1,6 +1,6 @@
 import Foundation
 
-struct AppConfig {
+struct AppEnvironment {
     
     let contactUsEmail: String
     let appStoreProductUrl: URL
@@ -16,14 +16,14 @@ struct AppConfig {
 }
 
 // MARK: - Real instance
-extension AppConfig {
+extension AppEnvironment {
     
     // Load config from Main Info plist
     
-    static let real: AppConfig = {
-        let infoPlistValues = Bundle.main.infoPlistValues(forKey: "appConfig")
+    static let real: AppEnvironment = {
+        let infoPlistValues = Bundle.main.infoPlistValues(forKey: "appEnvironment")
         
-        let appConfig = AppConfig(
+        let appEnvironment = AppEnvironment(
             contactUsEmail: infoPlistValues["contactUsEmail"],
             appStoreProductUrl: infoPlistValues[url: "appStoreProductUrl"],
             transportAPI: .init(
@@ -33,13 +33,13 @@ extension AppConfig {
             )
         )
         
-        return appConfig
+        return appEnvironment
     }()
 
 }
 
 
-extension AppConfig {
+extension AppEnvironment {
     
     struct TransportAPI {
         let baseURL: URL

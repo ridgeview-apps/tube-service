@@ -105,7 +105,7 @@ public struct JourneyResultsView: View {
                          valueB: $toLocation)
             .disabled(loadingState == .loading)
             .frame(width: 44, height: 44)
-            .onChange(of: hasSwappedLocations) { _ in
+            .onChange(of: hasSwappedLocations) {
                 refreshData()
             }
     }
@@ -160,6 +160,11 @@ public struct JourneyResultsView: View {
         onRefresh()
     }
 }
+
+
+// MARK: - Previews
+
+import ModelStubs
 
 private struct Previewer: View {
     var loadingState: LoadingState

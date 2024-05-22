@@ -152,7 +152,9 @@ public struct LineStatusDetailView: View {
 
 
 // MARK: - Previews
-#if DEBUG
+
+import ModelStubs
+
 #Preview("Good service state") {
     LineStatusDetailView(line: ModelStubs.lineStatusGoodService,
                          isFavourite: .constant(false))
@@ -167,4 +169,3 @@ public struct LineStatusDetailView: View {
     LineStatusDetailView(line: ModelStubs.lineStatusDisruptedDuplicates,
                          isFavourite: .constant(false))
 }
-#endif

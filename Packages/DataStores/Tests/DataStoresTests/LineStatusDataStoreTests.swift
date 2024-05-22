@@ -1,6 +1,4 @@
-@testable import Tube_Service
-
-import DataStores
+@testable import DataStores
 import XCTest
 
 final class LineStatusModelTests: XCTestCase {

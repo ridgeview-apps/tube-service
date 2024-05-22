@@ -24,7 +24,7 @@ struct LineDiagramView: View {
             }
         }
         .background(Color.defaultCellBackground)
-        .onChange(of: orientation) { _ in
+        .onChange(of: orientation) {
             expandedStopJourneyItemIDs.removeAll()
         }
     }
@@ -227,7 +227,10 @@ private extension String {
     }
 }
 
+
 // MARK: - Previews
+
+import ModelStubs
 
 private struct Previewer: View {
     

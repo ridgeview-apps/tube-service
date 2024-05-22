@@ -119,6 +119,8 @@ public struct ArrivalsBoardListView: View {
 
 // MARK: - Previews
 
+import ModelStubs
+
 private struct WrapperView: View {
     var boardStates: [ArrivalsBoardState]
     var lineGroupName: String = "Northern"

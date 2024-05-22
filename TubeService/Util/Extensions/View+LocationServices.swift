@@ -33,13 +33,13 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
             .onSceneDidBecomeInactive {
                 location.stopDetectingCurrentLocation()
             }
-            .onChange(of: location.currentLocationCoordinate) { updatedValue in
+            .onChange(of: location.currentLocationCoordinate) { _, updatedValue in
                 action(.coordinateChanged(updatedValue))
             }
-            .onChange(of: location.currentLocationName) { updatedValue in
+            .onChange(of: location.currentLocationName) { _, updatedValue in
                 action(.nameChanged(updatedValue))
             }
-            .onChange(of: location.authorizationStatus) { updatedValue in
+            .onChange(of: location.authorizationStatus) { _, updatedValue in
                 action(.authorizationStatusChanged(updatedValue))
             }
     }

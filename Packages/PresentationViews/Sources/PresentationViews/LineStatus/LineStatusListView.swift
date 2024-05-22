@@ -181,7 +181,7 @@ public struct LineStatusListView: View {
                     .font(.subheadline)
             }
             .id(selectedDate)
-            .onChange(of: selectedDate) { _ in
+            .onChange(of: selectedDate) {
                 hasSelectedADate = true
             }
         }
@@ -262,7 +262,8 @@ private extension LineStatusFilterOption {
 
 // MARK: - Previews
 
-#if DEBUG
+import ModelStubs
+
 private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
@@ -318,5 +319,3 @@ private struct WrapperView: View {
                 favouriteLineIDs: [.jubilee, .northern],
                 selectedFilterOption: .other)
 }
-
-#endif

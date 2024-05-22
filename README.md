@@ -25,23 +25,27 @@ The app uses the [MV architecture](https://azamsharp.com/2023/02/28/building-lar
 
 Swift Package Manager is used to modularize the app as follows:
 
-* `Models` - the main data structures / models used globally across the app (e.g. API models)
-* `DataStores` - this covers the main data requirements / business logic for the app (including networking logic and also Observable objects).
-* `PresentationViews` - these are plain ("dumb") views / reusable components. As the name suggests, they are purely for presentation purposes (hence perfect for SwiftUI previews). The components are typically just parts of a screen and contain no business logic.
+* `Models` - the main objects / models used globally across the app (e.g. `Station`, `LineStatus` etc)
+* `DataStores` - the main data / business logic for the app
+* `PresentationViews` - plain ("dumb") views / reusable components. These are purely for presentation purposes (hence perfect for SwiftUI previews). The components are typically just parts of a screen and contain no business logic.
 * `Shared` - shared logic that can be used by ANY part of the app (i.e. any package or target - for example, `String`, `Date` extensions etc)
 
-The main app target itself is predominantly just composed of "screens" (which do all the heavy lifting and wire everything together - see example below).
+![](Docs/Images/swift-package-dependencies.png)
 
-### Line status feature example
+The main point to note is that the `PresentationViews` and `DataStores` packages are completely isolated from one another. The main app target itself is predominantly just composed of "screens" (which do all the heavy lifting and wire everything together - see example below).
 
-The current tube line statuses are a good example of data used in more than one part of the app. The feature is set up as follows:
+> There are many ways to modularize an app, and I strongly recommend splitting up larger apps further into [bounded contexts](https://azamsharp.com/2023/02/28/building-large-scale-apps-swiftui.html#multiple-aggregate-models). The above structure, however, is a pretty good starting point and the packages themselves can be further subdivided as the app grows.
+
+### Line Status feature example
+
+Line statuses are a good example of data used in multiple parts of the app. The feature is set up as follows:
 
 * The data objects (e.g. `Line`, `LineStatus`) are defined in the `Models` package.
-* The `LineStatusDataStore` (in the `DataStores` package) is responsible for loading and storing line status data (as an `ObservableObject` / `EnvironmentObject` which can then be used globally across the app). The `ObservableObject` resides here rather than in the the main app target as this makes it more reusable across other targets (for example, widget extensions, watch etc).
-* The `PresentationViews` package uses the model objects to build reusable / previewable components (i.e. so has access to the `Models` package but NOT the `DataStores` package)
+* The `PresentationViews` package uses these models to build reusable / previewable components
+* The `LineStatusDataStore` (in the `DataStores` package) is responsible for loading and storing line status data (as an `Observable` / `Environment` object) which can then be used globally across the app). The `Observable` resides here rather than in the the main app target as this makes it more reusable across other targets (for example, widget extensions, watch etc).
 * In the main app target, `LineStatusDataStore` is used in a couple of places (`LineStatusScreen` and `NearbyStationsScreen`). These are completely separate screens and assembled with different presentation views but both share the same `LineStatusDataStore` object as their source of truth (hence any updates on one screen will automatically reflect on the other).
 
-> Note: The `PresentationViews` package used to be a completely standalone package (and I have developed other apps in this way before). However, by isolating it completely in this way, I found myself constantly duplicating data structures that were already inside the `Models` package (and I found the extra transformation from `Models` object -> `PresentationViews` object to be unnecessary in the vast majority of cases).
+> Note: The `PresentationViews` package used to be a completely standalone package with its own separate models. However I found myself frequently transforming from a `Models` "model" -> `PresentationViews` "model". So I found it much simpler to cut out the middle man and gave `PresentationViews` direct access to the `Models` package (any "presentation"-specific properties could simply be added via Swift extensions). This also makes data stubbing much simpler (for example `ModelStubs` contains lots of pre-configured data models which are perfect for SwiftUI previews and unit testing).
 
 ## Previews
 

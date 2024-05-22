@@ -36,9 +36,9 @@ final class AppDataStore: ObservableObject {
 
 extension AppDataStore {
     static var real: AppDataStore {
-        .init(transportAPI: TransportAPIClient(baseURL: AppConfig.real.transportAPI.baseURL,
-                                               appID: AppConfig.real.transportAPI.appID,
-                                               appKey: AppConfig.real.transportAPI.appKey),
+        .init(transportAPI: TransportAPIClient(baseURL: AppEnvironment.real.transportAPI.baseURL,
+                                               appID: AppEnvironment.real.transportAPI.appID,
+                                               appKey: AppEnvironment.real.transportAPI.appKey),
               userDefaults: .standard,
               locationManager: CLLocationManager())
     }

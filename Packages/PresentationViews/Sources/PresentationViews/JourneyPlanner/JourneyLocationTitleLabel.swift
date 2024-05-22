@@ -46,6 +46,8 @@ public struct JourneyLocationTitleLabel: View {
 
 // MARK: - Previews
 
+import ModelStubs
+
 #Preview {
     VStack {
         JourneyLocationTitleLabel(value: .unknownCurrentLocation)

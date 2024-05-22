@@ -130,6 +130,8 @@ extension View {
 
 // MARK: - Previews
 
+import ModelStubs
+
 private struct Previewer: View {
     @State var form: JourneyPlannerForm
     @State var recentJourneys: [RecentJourneyItem] = []

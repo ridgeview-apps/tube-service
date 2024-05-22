@@ -13,7 +13,7 @@ extension View {
                                   location: LocationDataStore.stub(),
                                   localSearchCompleter: LocalSearchCompleter())
             .environment(\.transportAPI, StubTransportAPIClient())
-            .environment(\.appConfig, AppConfig.stub)
+            .environment(\.appEnvironment, AppEnvironment.stub)
     }
 }
 

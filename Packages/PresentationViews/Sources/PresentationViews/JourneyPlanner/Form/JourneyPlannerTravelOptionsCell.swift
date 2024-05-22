@@ -97,7 +97,11 @@ private extension String {
 }
 
 
-// MARK: - Preview
+// MARK: - Previews
+
+import ModelStubs
+
+
 private struct Previewer: View {
     @State var isExpanded = false
     @State var timeSelection: JourneyTimePickerSelection = .leaveNow()

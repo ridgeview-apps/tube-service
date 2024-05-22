@@ -1,6 +1,7 @@
 @testable import DataStores
 
 import Models
+import ModelStubs
 import XCTest
 
 final class LocationDataStoreTests: XCTestCase {

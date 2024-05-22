@@ -1,4 +1,5 @@
 import Models
+import ModelStubs
 import XCTest
 
 @testable import PresentationViews

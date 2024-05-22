@@ -1,4 +1,5 @@
 import Foundation
+import Models
 
 public enum ModelStubs {} // Namespace
 

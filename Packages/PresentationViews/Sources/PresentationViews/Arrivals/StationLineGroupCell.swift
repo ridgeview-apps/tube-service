@@ -13,6 +13,11 @@ struct StationLineGroupCell: View {
     }
 }
 
+
+// MARK: - Previews
+
+import ModelStubs
+
 #Preview {
     List {
         StationLineGroupCell(station: ModelStubs.kingsCrossStation)

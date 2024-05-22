@@ -1,9 +1,8 @@
 #include "../Release.xcconfig"
 #include "Prod.secrets.xcconfig"
 
+// Build/archive settings
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service
 
-// App config
+// App environment / Info.plist values
 TRANSPORT_API_URL = https:/$()/api.tfl.gov.uk
-APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
-CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

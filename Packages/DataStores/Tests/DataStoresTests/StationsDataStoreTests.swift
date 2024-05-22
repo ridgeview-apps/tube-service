@@ -1,7 +1,8 @@
-@testable import DataStores
-
 import Models
+import ModelStubs
 import XCTest
+
+@testable import DataStores
 
 final class StationsModelTests: XCTestCase {
 

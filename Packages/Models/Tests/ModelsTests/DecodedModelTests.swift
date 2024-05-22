@@ -1,6 +1,7 @@
 import XCTest
 
 @testable import Models
+@testable import ModelStubs
 
 final class ModelDecoderTests: XCTestCase {
 

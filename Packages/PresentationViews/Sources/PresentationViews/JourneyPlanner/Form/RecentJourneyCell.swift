@@ -92,6 +92,9 @@ struct RecentJourneyCell: View {
 
 
 // MARK: - Previews
+
+import ModelStubs
+
 private struct Previewer: View {
     
     @State var recentJourneyItems: [RecentJourneyItem]

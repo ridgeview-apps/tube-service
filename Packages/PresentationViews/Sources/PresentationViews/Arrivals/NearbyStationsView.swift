@@ -42,7 +42,7 @@ public struct NearbyStationsView: View {
         ScrollViewReader { reader in
             List(selection: $selection) {
                 resultsSectionView
-                    .onChange(of: sectionState.currentPageNo) { newValue in
+                    .onChange(of: sectionState.currentPageNo) { _, newValue in
                         withAnimation {
                             reader.scrollTo("showMoreButtonID_\(newValue)")
                         }
@@ -151,7 +151,8 @@ public struct NearbyStationsView: View {
 
 // MARK: - Previews
 
-#if DEBUG
+import ModelStubs
+
 private struct Previewer: View {
     var locationUIStyle: LocationUIStatus.Style
     var onAction: (NearbyStationsView.Action) -> Void = { print($0) }
@@ -227,5 +228,3 @@ private struct Previewer: View {
               sectionState: .init(loadingState: .loaded,
                                   nearbyStations: []))
 }
-
-#endif

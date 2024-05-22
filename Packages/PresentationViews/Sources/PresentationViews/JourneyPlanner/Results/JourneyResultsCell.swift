@@ -107,6 +107,11 @@ private extension Journey {
     }
 }
 
+
+// MARK: - Previews
+
+import ModelStubs
+
 private struct Previewer: View {
     @State var item: JourneyResultsCellItem
     

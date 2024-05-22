@@ -67,6 +67,8 @@ struct LineGroupCell: View {
 
 // MARK: - Previews
 
+import ModelStubs
+
 #Preview {
     NavigationStack {
         List {

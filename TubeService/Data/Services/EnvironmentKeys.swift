@@ -16,15 +16,15 @@ extension EnvironmentValues {
 }
 
 
-// MARK: - AppConfig environment key
+// MARK: - AppEnvironment environment key
 
-private struct AppConfigEnvironmentKey: EnvironmentKey {
-    static let defaultValue: AppConfig = .real
+private struct AppEnvironmentKey: EnvironmentKey {
+    static let defaultValue: AppEnvironment = .real
 }
 
 extension EnvironmentValues {
-    var appConfig: AppConfig {
-        get { self[AppConfigEnvironmentKey.self] }
-        set { self[AppConfigEnvironmentKey.self] = newValue }
+    var appEnvironment: AppEnvironment {
+        get { self[AppEnvironmentKey.self] }
+        set { self[AppEnvironmentKey.self] = newValue }
     }
 }

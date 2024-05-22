@@ -67,10 +67,10 @@ struct JourneyPlannerScreen: View {
             .withSettingsToolbarButton()
             .onSceneDidBecomeActive { restoreUIState() }
             .onSceneDidBecomeInactive { saveUIState() }
-            .onChange(of: userPreferences.recentlySavedJourneys) { _ in
+            .onChange(of: userPreferences.recentlySavedJourneys) {
                 refreshRecentJourneys(sortByLastUsedDate: false) // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
             }
-            .onChange(of: localSearchCompleter.results) { newValue in
+            .onChange(of: localSearchCompleter.results) { _, newValue in
                 resultsAggregator.localSearchResults = newValue
             }
             .navigationTitle("journey.planner.navigation.title")

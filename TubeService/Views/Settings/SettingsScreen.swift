@@ -6,7 +6,7 @@ import SwiftUI
 
 struct SettingsScreen: View {
     
-    @Environment(\.appConfig) var appConfig
+    @Environment(\.appEnvironment) var appEnvironment
     @Environment(\.locale) var locale
     @Environment(\.dismiss) var dismiss
     
@@ -16,8 +16,8 @@ struct SettingsScreen: View {
     var body: some View {
         NavigationStack {
             SettingsView(appVersionNumber: Bundle.main.appVersionNumber,
-                         appReviewURL: appConfig.appReviewURL,
-                         contactUs: .init(emailAddress: appConfig.contactUsEmail,
+                         appReviewURL: appEnvironment.appReviewURL,
+                         contactUs: .init(emailAddress: appEnvironment.contactUsEmail,
                                           appVersion: Bundle.main.appVersionNumber,
                                           appName: Bundle.main.appName,
                                           deviceInfo: Device.current.modelName,
@@ -27,7 +27,7 @@ struct SettingsScreen: View {
             .toolbar {
                 NavigationButton.Close { dismiss() }
             }
-            .onChange(of: editableValues) { newValue in
+            .onChange(of: editableValues) { _, newValue in
                 userPreferences.save(journeyPlannerModeIDs: newValue.journeyPlannerModesSelection)
             }
             .task {

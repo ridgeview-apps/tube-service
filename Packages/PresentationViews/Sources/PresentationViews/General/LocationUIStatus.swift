@@ -82,7 +82,6 @@ public extension View {
 
 // MARK: - Previews
 
-#if DEBUG
 private struct Previewer: View {
     var style: LocationUIStatus.Style
     var onRequestPermissions: () -> Void = { print("Permissions requested") }
@@ -110,4 +109,3 @@ private struct Previewer: View {
 #Preview("Permission granted") {
     Previewer(style: .locationAllowed)
 }
-#endif

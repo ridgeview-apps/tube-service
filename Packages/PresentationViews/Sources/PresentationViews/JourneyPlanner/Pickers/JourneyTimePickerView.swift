@@ -62,7 +62,7 @@ struct JourneyTimePickerView: View {
         .onAppear {
             updateDatePickerVisibility()
         }
-        .onChange(of: selection) { _ in
+        .onChange(of: selection) {
             updateDatePickerVisibility()
         }
     }

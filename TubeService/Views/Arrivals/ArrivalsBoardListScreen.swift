@@ -111,6 +111,8 @@ struct ArrivalsBoardListScreen: View {
 
 // MARK: - Previews
 
+import ModelStubs
+
 #if DEBUG
 struct ArrivalsBoardListScreen_Previews: PreviewProvider {
     static var previews: some View {
