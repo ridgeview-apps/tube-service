@@ -15,11 +15,6 @@ struct RootScene: App {
                                            userPreferences: appData.userPreferences,
                                            location: appData.location,
                                            localSearchCompleter: appData.localSearchCompleter)
-                .task {
-                    if ProcessInfo.isRunningUITests {
-                        appData = .stub()
-                    }
-                }
         }
     }
 }

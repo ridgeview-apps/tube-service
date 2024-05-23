@@ -38,11 +38,20 @@ final class AppDataStore {
 
 extension AppDataStore {
     static var shared: AppDataStore {
-        .init(transportAPI: TransportAPIClient(baseURL: AppEnvironment.shared.transportAPI.baseURL,
-                                               appID: AppEnvironment.shared.transportAPI.appID,
-                                               appKey: AppEnvironment.shared.transportAPI.appKey),
-              userDefaults: .standard,
-              locationManager: CLLocationManager())
+        #if DEBUG
+        if ProcessInfo.isRunningUITests {
+            return .stub()
+        }
+        #endif
+        
+        return .init(
+            transportAPI: TransportAPIClient(
+                baseURL: AppEnvironment.shared.transportAPI.baseURL,
+                appID: AppEnvironment.shared.transportAPI.appID,
+                appKey: AppEnvironment.shared.transportAPI.appKey
+            ),
+            userDefaults: .standard,
+            locationManager: CLLocationManager())
     }
 }
 

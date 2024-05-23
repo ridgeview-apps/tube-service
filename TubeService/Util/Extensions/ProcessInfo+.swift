@@ -4,10 +4,6 @@ import Foundation
 extension ProcessInfo {
     
     static var isRunningUITests: Bool {
-        #if DEBUG
-            return ProcessInfo.processInfo.arguments.contains("UITests")
-        #else
-            return false
-        #endif
+        return ProcessInfo.processInfo.arguments.contains("UITests")
     }
 }
