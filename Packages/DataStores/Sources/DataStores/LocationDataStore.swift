@@ -1,11 +1,11 @@
-import Combine
 import CoreLocation
 import Models
 import Foundation
 
 
+@Observable
 @MainActor
-public final class LocationDataStore: NSObject, ObservableObject {
+public final class LocationDataStore: NSObject {
     
     private let locationManager: LocationManagerType
     private let stations: StationsDataStore
@@ -17,11 +17,11 @@ public final class LocationDataStore: NSObject, ObservableObject {
         case detected
     }
     
-    @Published public private(set) var authorizationStatus: CLAuthorizationStatus
-    @Published public private(set) var currentLocationCoordinate: LocationCoordinate?
-    @Published public private(set) var currentLocationName: LocationName?
-    @Published public private(set) var detectionState: DetectionState = .detected
-    @Published public private(set) var nearbyStations: [NearbyStation] = []
+    public private(set) var authorizationStatus: CLAuthorizationStatus
+    public private(set) var currentLocationCoordinate: LocationCoordinate?
+    public private(set) var currentLocationName: LocationName?
+    public private(set) var detectionState: DetectionState = .detected
+    public private(set) var nearbyStations: [NearbyStation] = []
     
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false

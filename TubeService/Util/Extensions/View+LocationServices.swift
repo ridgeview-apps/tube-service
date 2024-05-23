@@ -9,8 +9,9 @@ enum DetectLocationChangesAction {
     case authorizationStatusChanged(CLAuthorizationStatus)
 }
 
+@MainActor
 struct DetectsLocationChangesViewModifier: ViewModifier {
-    @EnvironmentObject var location: LocationDataStore
+    @Environment(LocationDataStore.self) var location
     @State var isVisible: Bool = false
     
     let action: (DetectLocationChangesAction) -> Void

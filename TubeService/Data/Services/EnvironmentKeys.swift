@@ -5,7 +5,7 @@ import DataStores
 
 private struct TransportAPIEnvironmentKey: EnvironmentKey {
     @MainActor
-    static let defaultValue: TransportAPIClientType = AppDataStore.real.transportAPI
+    static let defaultValue: TransportAPIClientType = AppDataStore.shared.transportAPI
 }
 
 extension EnvironmentValues {
@@ -19,7 +19,7 @@ extension EnvironmentValues {
 // MARK: - AppEnvironment environment key
 
 private struct AppEnvironmentKey: EnvironmentKey {
-    static let defaultValue: AppEnvironment = .real
+    static let defaultValue: AppEnvironment = .shared
 }
 
 extension EnvironmentValues {

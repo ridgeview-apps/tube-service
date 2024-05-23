@@ -36,7 +36,6 @@ public struct JourneyPlannerFormView: View {
                 formSection
                 recentJourneysSection
             }
-            
         }
         .buttonStyle(.plain)
         .listStyle(.plain)
@@ -51,7 +50,7 @@ public struct JourneyPlannerFormView: View {
                                               locationAccessoryStatus: locationAccessoryStatus,
                                               animationNamespace: animationNamespace,
                                               onAction: onAction)
-                .padding(.top, 4)
+                .padding(.vertical, 4)
 
             JourneyPlannerTravelOptionsCell(
                 isExpanded: $isTravelOptionsExpanded,
@@ -59,6 +58,7 @@ public struct JourneyPlannerFormView: View {
                 viaLocation: $form.via,
                 onAction: handleTravelOptionsAction
             )
+            .frame(minHeight: 44)
         } footer: {
             submitButton
                 .padding(.top, 12)
@@ -102,7 +102,6 @@ public struct JourneyPlannerFormView: View {
                 }
             } header: {
                 Text("journey.planner.recent.journeys.section.title", bundle: .module)
-                    .font(.footnote)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)

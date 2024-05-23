@@ -6,7 +6,7 @@ public struct LocationUIStatus {
     public enum Style: Hashable {
         case setUp(showsHeader: Bool)
         case openSettingsToAllowLocation
-        case locationAllowed
+        case locationAllowed(LoadingState)
     }
     
     public let style: Style
@@ -19,6 +19,15 @@ public struct LocationUIStatus {
         self.style = style
         self.onRequestPermissions = onRequestPermissions
         self.horizontalPadding = horizontalPadding
+    }
+    
+    var loadingState: LoadingState? {
+        switch style {
+        case .setUp, .openSettingsToAllowLocation:
+            return nil
+        case let .locationAllowed(loadingState):
+            return loadingState
+        }
     }
 }
 
@@ -107,5 +116,5 @@ private struct Previewer: View {
 }
 
 #Preview("Permission granted") {
-    Previewer(style: .locationAllowed)
+    Previewer(style: .locationAllowed(.loaded))
 }

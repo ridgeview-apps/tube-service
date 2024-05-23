@@ -2,28 +2,25 @@ import DataStores
 import SwiftUI
 
 @main
+@MainActor
 struct RootScene: App {
-    
-    @StateObject private var appData = makeAppDataStore()
+    @State private var appData = AppDataStore.shared
     
     var body: some Scene {
         WindowGroup {
             RootScreen()
-                .environmentObject(appData)
+                .environment(appData)
                 .withEnvironmentDataStores(lineStatus: appData.lineStatus,
                                            stations: appData.stations,
                                            userPreferences: appData.userPreferences,
                                            location: appData.location,
                                            localSearchCompleter: appData.localSearchCompleter)
+                .task {
+                    if ProcessInfo.isRunningUITests {
+                        appData = .stub()
+                    }
+                }
         }
-    }
-    
-    private static func makeAppDataStore() -> AppDataStore {
-#if DEBUG
-        if ProcessInfo.isRunningUITests { return .stub() }
-#endif
-        
-        return .real
     }
 }
 
@@ -36,10 +33,10 @@ extension View {
                                    location: LocationDataStore,
                                    localSearchCompleter: LocalSearchCompleter) -> some View {
         self
-            .environmentObject(lineStatus)
-            .environmentObject(stations)
-            .environmentObject(userPreferences)
-            .environmentObject(location)
-            .environmentObject(localSearchCompleter)
+            .environment(lineStatus)
+            .environment(stations)
+            .environment(userPreferences)
+            .environment(location)
+            .environment(localSearchCompleter)
     }
 }

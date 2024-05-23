@@ -4,9 +4,10 @@ import PresentationViews
 import Shared
 import SwiftUI
 
+@MainActor
 struct LineStatusScreen: View {
-    @EnvironmentObject var model: LineStatusDataStore
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(LineStatusDataStore.self) var model
+    @Environment(UserPreferencesDataStore.self) var userPreferences
     
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
@@ -38,6 +39,9 @@ struct LineStatusScreen: View {
         .withSettingsToolbarButton()
         .onAppear {
             fetchLineStatusesIfStale(for: selectedFilterOption)
+        }
+        .onChange(of: lines) {
+            refreshSelectedLine()
         }
         .onChange(of: selectedFilterOption) { _, newValue in
             selectedLine = nil
@@ -79,6 +83,12 @@ struct LineStatusScreen: View {
     private func fetchLineStatusesIfStale(for filterOption: LineStatusFilterOption) {
         Task {
             await model.refreshLineStatusesIfStale(for: currentFetchType)
+        }
+    }
+    
+    private func refreshSelectedLine() {
+        if let selectedLine {
+            self.selectedLine = lines.first { $0.id == selectedLine .id }
         }
     }
     

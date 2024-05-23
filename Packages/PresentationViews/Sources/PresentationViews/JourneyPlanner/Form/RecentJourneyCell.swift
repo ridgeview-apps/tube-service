@@ -30,12 +30,13 @@ struct RecentJourneyCell: View {
     @State private var isSwapped = false
         
     var body: some View {
-        HStack {
+        HStack(spacing: 0) {
             SwapValuesButton(isSwapped: $isSwapped,
                              valueA: $item.fromLocation,
                              valueB: $item.toLocation)
                 .imageScale(.small)
                 .foregroundStyle(Color.accentColor)
+                .padding()
             Button {
                 withAnimation {
                     onAction()
@@ -44,6 +45,7 @@ struct RecentJourneyCell: View {
                 buttonLabel
             }
         }
+        .cardStyle(cornerRadius: 8)
     }
     
     var buttonLabel: some View {
@@ -59,8 +61,8 @@ struct RecentJourneyCell: View {
                 .foregroundStyle(Color.accentColor)
         }
         .contentShape(Rectangle())
-        .padding()
-        .cardStyle(cornerRadius: 8)
+        .padding(.vertical)
+        .padding(.trailing)
     }
     
     private var journeyFromToLocation: some View {

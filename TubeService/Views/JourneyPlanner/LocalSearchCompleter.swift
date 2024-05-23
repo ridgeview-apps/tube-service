@@ -1,6 +1,7 @@
 import Foundation
 import MapKit
 import Models
+import Observation
 
 enum LocalSearchError: Error {
     case coordinateNotFound
@@ -14,10 +15,11 @@ extension LocationName {
 }
 
 @MainActor
-final class LocalSearchCompleter: NSObject, ObservableObject {
+@Observable
+final class LocalSearchCompleter: NSObject {
     
-    @Published private(set) var results: [LocationName] = []
-    @Published private(set) var errorMessage: String?
+    private(set) var results: [LocationName] = []
+    private(set) var errorMessage: String?
     
     private let searchCompleter: MKLocalSearchCompleter = MKLocalSearchCompleter()
     

@@ -20,16 +20,16 @@ extension AppEnvironment {
     
     // Load config from Main Info plist
     
-    static let real: AppEnvironment = {
-        let infoPlistValues = Bundle.main.infoPlistValues(forKey: "appEnvironment")
+    static let shared: AppEnvironment = {
+        let config = Bundle.main.loadInfoPlistConfig(forKey: "appEnvironment")
         
         let appEnvironment = AppEnvironment(
-            contactUsEmail: infoPlistValues["contactUsEmail"],
-            appStoreProductUrl: infoPlistValues[url: "appStoreProductUrl"],
+            contactUsEmail: config["contactUsEmail"],
+            appStoreProductUrl: config[url: "appStoreProductUrl"],
             transportAPI: .init(
-                baseURL: infoPlistValues[url: "transportAPIURL"],
-                appID: infoPlistValues["transportAPIAppId"],
-                appKey: infoPlistValues["transportAPIAppKey"]
+                baseURL: config[url: "transportAPIURL"],
+                appID: config["transportAPIAppId"],
+                appKey: config["transportAPIAppKey"]
             )
         )
         

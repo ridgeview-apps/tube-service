@@ -3,12 +3,15 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct JourneyPlannerScreen: View {
     
-    private final class ResultsAggregator: ObservableObject {
-        @Published var stations: [Station] = []
-        @Published var nationalRailStations: [StopPoint] = []
-        @Published var localSearchResults: [LocationName] = []
+    @Observable
+    @MainActor
+    final class ResultsAggregator {
+        var stations: [Station] = []
+        var nationalRailStations: [StopPoint] = []
+        var localSearchResults: [LocationName] = []
         
         func all() -> [JourneyLocationPicker.Value] {
             
@@ -37,14 +40,14 @@ struct JourneyPlannerScreen: View {
 
     @State private var navigationState = NavigationState<DestinationID>.root
     
-    @ObservedObject private var resultsAggregator = ResultsAggregator()
+    @State private var resultsAggregator = ResultsAggregator()
 
     @Environment(\.openURL) var openURL
     @Environment(\.transportAPI) var transportAPI
-    @EnvironmentObject var location: LocationDataStore
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
-    @EnvironmentObject var localSearchCompleter: LocalSearchCompleter
+    @Environment(LocationDataStore.self) var location
+    @Environment(StationsDataStore.self) var stations
+    @Environment(UserPreferencesDataStore.self) var userPreferences
+    @Environment(LocalSearchCompleter.self) var localSearchCompleter
     
     private var locationPickerSections: [JourneyLocationPicker.SectionState] {
         if !searchTerm.isEmpty {
@@ -168,7 +171,8 @@ struct JourneyPlannerScreen: View {
     
     private var locationUIStatus: LocationUIStatus {
         .init(
-            style: location.locationUIStyle(showsSetUpHeader: false),
+            style: location.locationUIStyle(showsSetUpHeader: false,
+                                            loadingState: location.detectionState.toLoadingState()),
             onRequestPermissions: {
                 handleSelectedLocationValue(.unknownCurrentLocation)
                 location.promptForPermissions()

@@ -3,6 +3,7 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct JourneyResultsScreen: View {
     
     @State private var loadingState: LoadingState = .loaded
@@ -10,10 +11,10 @@ struct JourneyResultsScreen: View {
     @State private var hasFetchedData = false
     
     @Environment(\.transportAPI) var transportAPI
-    @EnvironmentObject var location: LocationDataStore
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var localSearchCompleter: LocalSearchCompleter
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(LocationDataStore.self) var location
+    @Environment(StationsDataStore.self) var stations
+    @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    @Environment(UserPreferencesDataStore.self) var userPreferences
 
     @Binding var form: JourneyPlannerForm
     

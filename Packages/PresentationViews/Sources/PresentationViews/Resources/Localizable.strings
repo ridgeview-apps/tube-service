@@ -56,7 +56,7 @@
 "journey.planner.location.button.select.location" = "Select location";
 "journey.planner.location.picker.placeholder.text" = "Station or place";
 "journey.planner.location.value.current.location" = "Current location";
-"journey.planner.recent.journeys.section.title" = "Recent journeys";
+"journey.planner.recent.journeys.section.title" = "Recent";
 "journey.planner.show.journeys.button.title" = "Show journeys";
 "journey.planner.time.picker.option.arrive.by" = "Arrive by";
 "journey.planner.time.picker.option.leave.later" = "Leave later";

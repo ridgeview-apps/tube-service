@@ -152,7 +152,7 @@ import ModelStubs
 private struct Previewer: View {
     @State var searchTerm: String = ""
     var sections: [JourneyLocationPicker.SectionState]
-    var locationUIStatus: LocationUIStatus = .init(style: .locationAllowed) {
+    var locationUIStatus: LocationUIStatus = .init(style: .locationAllowed(.loaded)) {
         print("Location allowed")
     }
     

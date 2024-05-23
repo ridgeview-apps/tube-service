@@ -18,7 +18,6 @@ public struct JourneyPlannerTravelOptionsCell: View {
             expandedItemsView
         } label: {
             labelView
-                .padding(.vertical, 8)
         }
         .listRowSeparator(.hidden)
     }
@@ -27,10 +26,10 @@ public struct JourneyPlannerTravelOptionsCell: View {
         VStack(alignment: .leading) {
             Text("journey.planner.travel.options.main.label.title",
                  bundle: .module)
-                .font(.footnote)
+                .font(.subheadline)
                 if !travelOptionSubtitle.isEmpty {
                     Text(travelOptionSubtitle)
-                        .font(.caption)
+                        .font(.footnote)
                         .foregroundStyle(Color.accentColor)
                         .lineLimit(2)
                 }

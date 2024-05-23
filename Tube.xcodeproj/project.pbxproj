@@ -44,7 +44,6 @@
 		31DA583F2BB5D04E00EB568E /* JourneyResultsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DA583E2BB5D04E00EB568E /* JourneyResultsScreen.swift */; };
 		31DE50C12AD0002900FC3407 /* ArrivalsPickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DE50C02AD0002900FC3407 /* ArrivalsPickerScreen.swift */; };
 		31DE50C32AD009F200FC3407 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DE50C22AD009F200FC3407 /* EnvironmentKeys.swift */; };
-		31F172B527D52A5000606A97 /* InfoPlistReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31F172B427D52A5000606A97 /* InfoPlistReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -121,7 +120,6 @@
 		31DE50C22AD009F200FC3407 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
 		31E8F8432BFCEE9100603359 /* Defaults.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Defaults.xcconfig; sourceTree = "<group>"; };
 		31EE93512AE6BD0200AB20ED /* Models */ = {isa = PBXFileReference; lastKnownFileType = text; name = Models; path = Packages/Models; sourceTree = SOURCE_ROOT; };
-		31F172B427D52A5000606A97 /* InfoPlistReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistReader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -337,7 +335,6 @@
 			isa = PBXGroup;
 			children = (
 				318D486024EFCD720026B5F4 /* Extensions */,
-				31F172B427D52A5000606A97 /* InfoPlistReader.swift */,
 				31D072CC2BD138AC003286E1 /* NavigationState.swift */,
 			);
 			path = Util;
@@ -602,7 +599,6 @@
 				313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */,
 				31DE50C32AD009F200FC3407 /* EnvironmentKeys.swift in Sources */,
 				3168AB722AE300F70074DAD5 /* MapsScreen.swift in Sources */,
-				31F172B527D52A5000606A97 /* InfoPlistReader.swift in Sources */,
 				316FCDEF2577A25300328F66 /* ProcessInfo+.swift in Sources */,
 				3137D6B42BAC75C300AF3A35 /* LocalSearchCompleter.swift in Sources */,
 				310BBA782AD456B30097BAD8 /* SettingsScreen.swift in Sources */,

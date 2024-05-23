@@ -3,10 +3,11 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct ArrivalsPickerScreen: View {
 
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(StationsDataStore.self) var stations
+    @Environment(UserPreferencesDataStore.self) var userPreferences
     
     @State private var selection: Station.LineGroup?
     @State private var searchTerm: String = ""

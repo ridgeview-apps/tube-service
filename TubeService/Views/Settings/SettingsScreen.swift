@@ -10,7 +10,7 @@ struct SettingsScreen: View {
     @Environment(\.locale) var locale
     @Environment(\.dismiss) var dismiss
     
-    @EnvironmentObject var userPreferences: UserPreferencesDataStore
+    @Environment(UserPreferencesDataStore.self) var userPreferences
     @State private var editableValues: Settings.EditableValues = .default
     
     var body: some View {

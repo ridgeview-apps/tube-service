@@ -3,10 +3,11 @@ import Models
 import PresentationViews
 import SwiftUI
 
+@MainActor
 struct NearbyStationsScreen: View {
 
-    @EnvironmentObject var stations: StationsDataStore
-    @EnvironmentObject var location: LocationDataStore
+    @Environment(StationsDataStore.self) var stations
+    @Environment(LocationDataStore.self) var location
     
     @State private var selectedStation: NearbyStation?
     @State private var selectedStationViewItem: StationView.Selection?
@@ -20,30 +21,30 @@ struct NearbyStationsScreen: View {
         } detail: {
             detailView
         }
-        .detectsLocationChanges {
-            handleLocationChangeAction($0)
-        }
+        .detectsLocationChanges(action: handleLocationChangeAction)
         .task {
             updateResultsSectionState()
         }
     }
     
     private var nearbyStationsListView: some View {
-        NearbyStationsView(locationUIStatus: locationUIStatus,
-                           onAction: handleNearbyStationsViewAction,
-                           sectionState: $sectionState,
-                           selection: $selectedStation)
-            .withSettingsToolbarButton()
-            .navigationTitle("nearby.stations.navigation.title")
-            .refreshable {
-                resetPageNo()
-                location.refreshCurrentLocation()
-            }
+        NearbyStationsView(
+            locationUIStatus: locationUIStatus,
+            onAction: handleNearbyStationsViewAction,
+            sectionState: $sectionState,
+            selection: $selectedStation
+        )
+        .withSettingsToolbarButton()
+        .navigationTitle("nearby.stations.navigation.title")
+        .refreshable {
+            resetPageNo()
+            location.refreshCurrentLocation()
+        }
     }
     
     private var locationUIStatus: LocationUIStatus {
         .init(
-            style: location.locationUIStyle(), 
+            style: location.locationUIStyle(loadingState: location.detectionState.toLoadingState()),
             onRequestPermissions: {
                 location.promptForPermissions()
             }
@@ -107,14 +108,11 @@ struct NearbyStationsScreen: View {
     }
     
     private func updateResultsSectionState(reset: Bool = false) {
-        let loadingState = location.detectionState.toLoadingState()
         let nearbyStations = location.nearbyStations
         
         if reset {
-            sectionState = .init(loadingState: loadingState,
-                                 nearbyStations: nearbyStations)
+            sectionState = .init(nearbyStations: nearbyStations)
         } else {
-            sectionState.loadingState = loadingState
             sectionState.nearbyStations = nearbyStations
         }
     }

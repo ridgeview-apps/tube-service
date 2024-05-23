@@ -2,18 +2,13 @@ import SwiftUI
 
 public struct ExpansionInfoButton: View {
     
-    public enum Title {
-        case leading(LocalizedStringKey)
-        case trailing(LocalizedStringKey)
-    }
-    
     public let style: Style
-    public let title: Title?
+    public let title: LocalizedStringKey?
+    public var titleAlignment: Alignment = .leading
     @Binding public var isExpanded: Bool
     
-    
     public init(style: Style,
-                title: Title? = nil,
+                title: LocalizedStringKey? = nil,
                 isExpanded: Binding<Bool>) {
         self.style = style
         self.title = title
@@ -40,13 +35,11 @@ public struct ExpansionInfoButton: View {
             }
         } label: {
             HStack(spacing: 4) {
-                if case let .leading(title) = title {
-                    Text(title, bundle: .module)
-                }
                 expansionButtonImage
                     .rotationEffect(isExpanded ? .init(degrees: style.expandedRotationAngle) : .init(degrees: 0))
-                if case let .trailing(title) = title {
+                if let title {
                     Text(title, bundle: .module)
+                        .frame(maxWidth: .infinity, alignment: titleAlignment)
                 }
             }
             .imageScale(imageScale)
@@ -81,9 +74,12 @@ struct ExpansionInfoButton_Previews: PreviewProvider {
     struct ExpansionInfoButtonPreview: View {
         @State private(set) var style: ExpansionInfoButton.Style
         @State private(set) var isExpanded = false
+        var title: LocalizedStringKey?
         
         var body: some View {
-            ExpansionInfoButton(style: style, isExpanded: $isExpanded)
+            ExpansionInfoButton(style: style,
+                                title: title,
+                                isExpanded: $isExpanded)
         }
     }
     
@@ -93,6 +89,8 @@ struct ExpansionInfoButton_Previews: PreviewProvider {
                                        isExpanded: true)
             ExpansionInfoButtonPreview(style: .pullDown,
                                        isExpanded: false)
+            ExpansionInfoButtonPreview(style: .pullDown,
+                                       title: "Show more")
         }
     }
 }

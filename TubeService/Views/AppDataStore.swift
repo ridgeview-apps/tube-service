@@ -1,10 +1,10 @@
-import Combine
 import CoreLocation
 import DataStores
 import Foundation
 
 @MainActor
-final class AppDataStore: ObservableObject {
+@Observable
+final class AppDataStore {
     
     let transportAPI: TransportAPIClientType
     let userDefaults: UserDefaults
@@ -24,8 +24,10 @@ final class AppDataStore: ObservableObject {
         self.userDefaults = userDefaults
         self.locationManager = locationManager
         
-        self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)
-        self.stations = StationsDataStore(transportAPI: transportAPI)
+        let stations = StationsDataStore(transportAPI: transportAPI)
+        self.stations = stations
+        
+        self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
         self.userPreferences = UserPreferencesDataStore(userDefaults: userDefaults)
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
@@ -35,10 +37,10 @@ final class AppDataStore: ObservableObject {
 
 
 extension AppDataStore {
-    static var real: AppDataStore {
-        .init(transportAPI: TransportAPIClient(baseURL: AppEnvironment.real.transportAPI.baseURL,
-                                               appID: AppEnvironment.real.transportAPI.appID,
-                                               appKey: AppEnvironment.real.transportAPI.appKey),
+    static var shared: AppDataStore {
+        .init(transportAPI: TransportAPIClient(baseURL: AppEnvironment.shared.transportAPI.baseURL,
+                                               appID: AppEnvironment.shared.transportAPI.appID,
+                                               appKey: AppEnvironment.shared.transportAPI.appKey),
               userDefaults: .standard,
               locationManager: CLLocationManager())
     }

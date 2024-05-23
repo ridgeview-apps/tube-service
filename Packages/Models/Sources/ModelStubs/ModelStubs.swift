@@ -79,8 +79,8 @@ public extension ModelStubs {
 // MARK: - Stations
 
 public extension ModelStubs {
-    static var stations: [Station] { Station.allValues() }
-    static var nationRailStopPoints: [StopPoint] { Station.nationRailStopPoints() }
+    static var stations: [Station] { Station.all }
+    static var nationRailStopPoints: [StopPoint] { Station.allNationalRail }
     
     static var angelStation: Station { stations.first { $0.id == "940GZZLUAGL" }! }
     static var eastFinchleyStation: Station { stations.first { $0.id == "940GZZLUEFY" }! }

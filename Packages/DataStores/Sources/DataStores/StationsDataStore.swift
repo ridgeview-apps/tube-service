@@ -3,7 +3,8 @@ import Models
 import RidgeviewCore
 
 @MainActor
-public final class StationsDataStore: ObservableObject {
+@Observable
+public final class StationsDataStore {
     
     // MARK: - Data types
     
@@ -24,15 +25,15 @@ public final class StationsDataStore: ObservableObject {
     public let now: () -> Date
     
     // Private
+    private var nationRailStations: [StopPoint] { Station.allNationalRail }
     private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
-    private var nationRailStations: [StopPoint] = []
     private var nationRailStationsByICSCode: [String: StopPoint] = [:]
     
-    // Published
-    @Published public private(set) var allStations: [Station] = []
-    @Published private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
+    // Public
+    public var allStations: [Station] { Station.all }
+    private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
     
     // MARK: - Init
     
@@ -45,9 +46,8 @@ public final class StationsDataStore: ObservableObject {
     
     
     private func loadStations() {
-        allStations = Station.allValues()
-        nationRailStations = Station.nationRailStopPoints()
         assert(!allStations.isEmpty)
+        assert(!nationRailStations.isEmpty)
         saveStationsByID()
         saveNationalRailStationsByICSCode()
     }

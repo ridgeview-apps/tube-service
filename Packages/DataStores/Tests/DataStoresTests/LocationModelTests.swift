@@ -12,7 +12,7 @@ final class LocationDataStoreTests: XCTestCase {
         let pentonville = LocationCoordinate(lat: 51.531504, lon: -0.113384)
         
         // When
-        let nearestStations = Station.allValues().nearestStations(to: pentonville)
+        let nearestStations = Station.all.nearestStations(to: pentonville)
         
         // Then
         XCTAssertEqual(ModelStubs.angelStation, nearestStations[0].station)
@@ -29,7 +29,7 @@ final class LocationDataStoreTests: XCTestCase {
         let northFinchleyHighRoad = LocationCoordinate(lat: 51.618227, lon: -0.176675)
         
         // When
-        let nearestStations = Station.allValues().nearestStations(to: northFinchleyHighRoad)
+        let nearestStations = Station.all.nearestStations(to: northFinchleyHighRoad)
         
         // Then
         XCTAssertEqual(ModelStubs.woodsideParkStation, nearestStations[0].station)

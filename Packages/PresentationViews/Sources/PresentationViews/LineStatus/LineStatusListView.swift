@@ -180,7 +180,7 @@ public struct LineStatusListView: View {
                 Text("line.status.date.picker.title", bundle: .module)
                     .font(.subheadline)
             }
-            .id(selectedDate)
+            .withAutoDismissID(of: selectedDate)
             .onChange(of: selectedDate) {
                 hasSelectedADate = true
             }
@@ -228,6 +228,17 @@ public struct LineStatusListView: View {
         .cardStyle()
         .frame(minHeight: 44 * dynamicTextScale)
         .padding(.top, 12)
+    }
+}
+
+private extension DatePicker {
+    
+    func withAutoDismissID(of date: Date) -> some View {
+        // On iOS, setting an ID makes a date picker auto-dismiss on selection ✅
+        // On macOS (Silicon), setting an ID causes a date picker to freeze 🙄
+        #if !os(macOS)
+            id(date)
+        #endif
     }
 }
 

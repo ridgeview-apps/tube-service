@@ -6,18 +6,15 @@ import SwiftUI
 
 public struct NearbyStationsResultsSectionState {
 
-    public var loadingState: LoadingState
     public var nearbyStations: [NearbyStation]
     public let headerTitle: LocalizedStringKey?
     public let pageSize: Int
     public var currentPageNo: Int
     
-    public init(loadingState: LoadingState,
-                nearbyStations: [NearbyStation],
+    public init(nearbyStations: [NearbyStation],
                 headerTitle: LocalizedStringKey? = nil,
                 pageSize: Int = 5,
                 currentPageNo: Int = 1) {
-        self.loadingState = loadingState
         self.nearbyStations = nearbyStations
         self.headerTitle = headerTitle
         self.pageSize = pageSize
@@ -25,7 +22,7 @@ public struct NearbyStationsResultsSectionState {
     }
     
     public static var empty: Self {
-        .init(loadingState: .loaded, nearbyStations: [])
+        .init(nearbyStations: [])
     }
     
     public mutating func resetPageNo() {
