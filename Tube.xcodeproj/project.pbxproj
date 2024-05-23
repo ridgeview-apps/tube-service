@@ -19,6 +19,7 @@
 		3137D6B42BAC75C300AF3A35 /* LocalSearchCompleter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3137D6B32BAC75C300AF3A35 /* LocalSearchCompleter.swift */; };
 		313DCA952AD740E000FF4271 /* AppEnvironment+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA942AD740E000FF4271 /* AppEnvironment+Stub.swift */; };
 		313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA9E2AD7425600FF4271 /* View+Stub.swift */; };
+		3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314029492BFFAA3900200776 /* View+PublishedEvents.swift */; };
 		314D614C2B4C1F1600C08D67 /* DataStores in Frameworks */ = {isa = PBXBuildFile; productRef = 314D614B2B4C1F1600C08D67 /* DataStores */; };
 		31508D4725604A3C0047BC9C /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31508D4625604A3C0047BC9C /* AppEnvironment.swift */; };
 		3151E8752B1E411E00D0046C /* LocationModel+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3151E8742B1E411E00D0046C /* LocationModel+Stub.swift */; };
@@ -82,6 +83,7 @@
 		313DCA932AD6FC8C00FF4271 /* Release.secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.secrets.xcconfig; sourceTree = "<group>"; };
 		313DCA942AD740E000FF4271 /* AppEnvironment+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppEnvironment+Stub.swift"; sourceTree = "<group>"; };
 		313DCA9E2AD7425600FF4271 /* View+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Stub.swift"; sourceTree = "<group>"; };
+		314029492BFFAA3900200776 /* View+PublishedEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PublishedEvents.swift"; sourceTree = "<group>"; };
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
 		31508D4625604A3C0047BC9C /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
@@ -372,6 +374,7 @@
 				316FCDEE2577A25300328F66 /* ProcessInfo+.swift */,
 				3137D6B12BAC4FDF00AF3A35 /* LocationDataStore+.swift */,
 				315693C52BC3F380002F43BC /* View+LocationServices.swift */,
+				314029492BFFAA3900200776 /* View+PublishedEvents.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				315693C62BC3F380002F43BC /* View+LocationServices.swift in Sources */,
 				3107A8142ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift in Sources */,
 				3137D6B22BAC4FDF00AF3A35 /* LocationDataStore+.swift in Sources */,
+				3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */,
 				313DCA952AD740E000FF4271 /* AppEnvironment+Stub.swift in Sources */,
 				317ADDEF2534745600AB34B9 /* NavigationButtons.swift in Sources */,
 				316CAAC824F0090300481DC1 /* LineStatusScreen.swift in Sources */,

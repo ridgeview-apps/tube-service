@@ -83,7 +83,7 @@ struct JourneyPlannerScreen: View {
             .detectsLocationChanges {
                 handleLocationChangeAction($0)
             }
-            .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+            .onCalendarDayChanged {
                 resetTimeSelection()
             }
             .task { initialLoad() }

@@ -50,7 +50,7 @@ struct LineStatusScreen: View {
         .onChange(of: selectedDate) {
             fetchLineStatusesIfStale(for: selectedFilterOption)
         }
-        .onReceive(NotificationCenter.default.publisher(for: .NSCalendarDayChanged)) { _ in
+        .onCalendarDayChanged {
             selectedFilterOption = .today
             selectedDate = .now
         }
