@@ -5,7 +5,7 @@ import XCTest
 
 final class LineIDViewStateTests: XCTestCase {
 
-    func testLineUDShortNames() {
+    func testLineIDShortNames() {
         XCTAssertEqual("Bakerloo", TrainLineID.bakerloo.name)
         XCTAssertEqual("Central", TrainLineID.central.name)
         XCTAssertEqual("Circle", TrainLineID.circle.name)
