@@ -20,7 +20,7 @@ struct LineStatusScreen: View {
             statusDetailView
         }
         .onSceneDidBecomeActive {
-            fetchLineStatusesIfStale(for: selectedFilterOption)
+            fetchLineStatusesIfStale()
         }
     }
     
@@ -38,17 +38,17 @@ struct LineStatusScreen: View {
         }
         .withSettingsToolbarButton()
         .onAppear {
-            fetchLineStatusesIfStale(for: selectedFilterOption)
+            fetchLineStatusesIfStale()
         }
         .onChange(of: lines) {
             refreshSelectedLine()
         }
-        .onChange(of: selectedFilterOption) { _, newValue in
+        .onChange(of: selectedFilterOption) {
             selectedLine = nil
-            fetchLineStatusesIfStale(for: newValue)
+            fetchLineStatusesIfStale()
         }
         .onChange(of: selectedDate) {
-            fetchLineStatusesIfStale(for: selectedFilterOption)
+            fetchLineStatusesIfStale()
         }
         .onCalendarDayChanged {
             selectedFilterOption = .today
@@ -59,7 +59,7 @@ struct LineStatusScreen: View {
     private var statusDetailView: some View {
         NavigationStack {
             if let selectedLine {
-                LineStatusDetailScreen(line: selectedLine)
+                LineStatusDetailScreen(line: selectedLine, fetchType: currentFetchType)
             } else {
                 if selectedFilterOption == .today || lines.hasDisruptions {
                     Text(.lineStatusNoSelection)
@@ -80,7 +80,7 @@ struct LineStatusScreen: View {
         return model.fetchedData(for: currentFetchType)?.fetchedAt
     }
     
-    private func fetchLineStatusesIfStale(for filterOption: LineStatusFilterOption) {
+    private func fetchLineStatusesIfStale() {
         Task {
             await model.refreshLineStatusesIfStale(for: currentFetchType)
         }
@@ -130,7 +130,7 @@ struct LineStatusScreen: View {
     }
 }
 
-private extension DataFetchState {
+extension DataFetchState {
     
     var loadingState: LoadingState {
         switch self {

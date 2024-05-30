@@ -4,34 +4,51 @@ import SwiftUI
 public struct LineStatusDetailView: View {
     
     public let line: Line
+    public let loadingState: LoadingState
+    public let refreshDate: Date?
     @Binding public var isFavourite: Bool
     
     @State private var twitterLinkSelection: LineStatusTwitterLink?
     
-    public init(line: Line, isFavourite: Binding<Bool>) {
+    public init(
+        line: Line,
+        isFavourite: Binding<Bool>,
+        loadingState: LoadingState,
+        refreshDate: Date?
+    ) {
         self.line = line
+        self.loadingState = loadingState
+        self.refreshDate = refreshDate
         self._isFavourite = isFavourite
     }
     
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
-                Group {
+            VStack(alignment: .leading) {
+                refreshStatus
+                VStack(alignment: .leading, spacing: 20) {
                     statusHeaderCard
                     favouritesButton
                     Divider()
                     twitterSection
                 }
-                .withDefaultMaxWidth()
             }
+            .withDefaultMaxWidth()
             .padding()
             .frame(maxWidth: .infinity)
         }
         .background(Color.defaultBackground)
+        .scrollBounceBehavior(.basedOnSize)
     }
     
     
     // MARK: - Layout views
+    
+    private var refreshStatus: some View {
+        RefreshStatusView(loadingState: loadingState, refreshDate: refreshDate)
+            .font(.caption)
+            .foregroundStyle(Color.adaptiveMidGrey2)
+    }
     
     private var statusHeaderCard: some View {
         HStack(spacing: 12) {
@@ -147,19 +164,40 @@ public struct LineStatusDetailView: View {
 
 // MARK: - Previews
 
+private struct Previewer: View {
+    let line: Line
+    var loadingState: LoadingState = .loaded
+    var refreshDate: Date? = .now
+    @State var isFavourite = false
+    
+    var body: some View {
+        LineStatusDetailView(
+            line: line,
+            isFavourite: $isFavourite,
+            loadingState: loadingState,
+            refreshDate: refreshDate
+        )
+    }
+}
+
 import ModelStubs
 
 #Preview("Good service state") {
-    LineStatusDetailView(line: ModelStubs.lineStatusGoodService,
-                         isFavourite: .constant(false))
+    Previewer(line: ModelStubs.lineStatusGoodService)
 }
 
 #Preview("Disrupted state") {
-    LineStatusDetailView(line: ModelStubs.lineStatusDisrupted,
-                         isFavourite: .constant(false))
+    Previewer(line: ModelStubs.lineStatusDisrupted)
 }
 
 #Preview("Disrupted state (dups. removed)") {
-    LineStatusDetailView(line: ModelStubs.lineStatusDisruptedDuplicates,
-                         isFavourite: .constant(false))
+    Previewer(line: ModelStubs.lineStatusDisruptedDuplicates)
+}
+
+#Preview("Loading state") {
+    Previewer(line: ModelStubs.lineStatusGoodService, loadingState: .loading)
+}
+
+#Preview("Error state") {
+    Previewer(line: ModelStubs.lineStatusGoodService, loadingState: .failure(errorMessage: "Oops"))
 }

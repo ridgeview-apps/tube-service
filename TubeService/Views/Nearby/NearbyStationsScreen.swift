@@ -88,7 +88,7 @@ struct NearbyStationsScreen: View {
     @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
         switch selection {
         case let .line(line):
-            LineStatusDetailScreen(line: line)
+            LineStatusDetailScreen(line: line, fetchType: .today)
         case let .lineGroup(lineGroup):
             ArrivalsBoardListScreen(stationName: selectedStation?.station.name ?? "",
                                     lineGroup: lineGroup)
