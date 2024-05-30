@@ -117,14 +117,7 @@ public struct LineStatusDetailView: View {
     }
     
     private var favouritesButton: some View {
-        VStack(alignment: .leading) {
-            FavouritesButton(style: .large, isSelected: $isFavourite)
-            if !isFavourite {
-                Text(.lineStatusFavouritesButtonFooter)
-                    .font(.footnote)
-                    .foregroundStyle(Color.adaptiveMidGrey2)
-            }
-        }
+        FavouritesButton(style: .large, isSelected: $isFavourite)
     }
     
     private var twitterSection: some View {

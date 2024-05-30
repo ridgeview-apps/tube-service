@@ -931,17 +931,6 @@
         }
       }
     },
-    "line.status.favourites.button.footer" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favourites are displayed at the top of status lists"
-          }
-        }
-      }
-    },
     "line.status.filter.option.other" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -408,10 +408,6 @@ public extension LocalizedStringResource {
         moduleResource("line.status.detail.good.service.on.trams")
     }
     
-    static var lineStatusFavouritesButtonFooter: LocalizedStringResource {
-        moduleResource("line.status.favourites.button.footer")
-    }
-    
     static var lineStatusFilterOptionOther: LocalizedStringResource {
         moduleResource("line.status.filter.option.other")
     }
