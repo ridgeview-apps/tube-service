@@ -12,7 +12,7 @@ extension View {
 
 
 struct LineGroupSectionHeader: View {
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     var imageName: String?
     
     var body: some View {
@@ -21,7 +21,7 @@ struct LineGroupSectionHeader: View {
                 Image(systemName: imageName)
                     .imageScale(.small)
             }
-            Text(title, bundle: .module)
+            Text(title)
         }
     }
 }

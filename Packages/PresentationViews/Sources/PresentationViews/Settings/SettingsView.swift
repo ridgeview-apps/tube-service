@@ -35,10 +35,10 @@ public struct SettingsView: View {
     
     private var aboutSection: some View {
         Section(
-            header: Text("settings.section.about.title", bundle: .module)
+            header: Text(.settingsSectionAboutTitle)
         ) {
             HStack {
-                Text("settings.app.version.title", bundle: .module)
+                Text(.settingsAppVersionTitle)
                 Spacer()
                 Text(appVersionNumber)
             }
@@ -46,7 +46,7 @@ public struct SettingsView: View {
             NavigationLink {
                 acknowledgements
             } label: {
-                Text("settings.acknowledgements.title", bundle: .module)
+                Text(.settingsAcknowledgementsTitle)
             }
         }
     }
@@ -54,7 +54,7 @@ public struct SettingsView: View {
     @ViewBuilder private var acknowledgements: some View {
         if let acknowledgementsURL = URL(string: "https://tfl.gov.uk/info-for/open-data-users/") {
             HStack {
-                Text("settings.app.powered.by", bundle: .module)
+                Text(.settingsAppPoweredBy)
                 Link("TfL Open Data",
                      destination: acknowledgementsURL)
                 
@@ -65,69 +65,65 @@ public struct SettingsView: View {
     }
     
     private var supportSection: some View {
-        Section(
-            header: Text("settings.section.support.title", bundle: .module)
-        ) {
+        Section {
             MailButton(to: [contactUs.emailAddress],
                        subject: emailSubject,
                        body: emailBody) {
-                Text("settings.contact.us.title", bundle: .module)
+                Text(.settingsContactUsTitle)
             }
             Link(destination: appReviewURL) {
-                Text("settings.rate.this.app.title", bundle: .module)
+                Text(.settingsRateThisAppTitle)
             }
+        } header: {
+            Text(.settingsSectionSupportTitle)
         }
     }
 
     private var journeyPlannerSection: some View {
-        Section(
-            header: Text("settings.journey.planner.title", bundle: .module)
-        ) {
+        Section {
             NavigationLink {
                 JourneyModePickerView(
                     selection: $editableValues.journeyPlannerModesSelection
                 )
-                .navigationTitle(Text("settings.journey.mode.picker.navigation.title", bundle: .module))
+                .navigationTitle(Text(.settingsJourneyModePickerNavigationTitle))
             } label: {
                 HStack {
-                    Text("settings.journey.planner.transport.modes", bundle: .module)
+                    Text(.settingsJourneyPlannerTransportModes)
                     Spacer()
                     modesDetailLabelTitle
                 }
             }
+        } header: {
+            Text(.settingsJourneyPlannerTitle)
         }
     }
     
     private var modesDetailLabelTitle: some View {
         if editableValues.allJourneyPlannerModesSelected {
-            Text("journey.planner.travel.options.modes.detail.all", bundle: .module)
+            Text(.journeyPlannerTravelOptionsModesDetailAll)
         } else {
-            Text("journey.planner.travel.options.modes.selection.count \(editableValues.journeyPlannerModesSelection.count)", bundle: .module)
+            Text(.journeyPlannerTravelOptionsModesSelectionCount(editableValues.journeyPlannerModesSelection.count))
         }
     }
     
     
     private var emailSubject: String {
-        String(format: localizedString("contact.us.subject %@"), contactUs.appName)
+        String(localized: .contactUsSubject(contactUs.appName))
     }
     
     private var emailBody: String {
             """
-            \(localizedString("contact.us.body.diagnostic.info"))
+            \(String(localized: .contactUsBodyDiagnosticInfo))
             
-            \(localizedString("contact.us.body.app.version")): \(contactUs.appVersion)
-            \(localizedString("contact.us.body.device.info")): \(contactUs.deviceInfo)
-            \(localizedString("contact.us.body.locale.info")): \(contactUs.localeInfo)
-            \(localizedString("contact.us.body.os.version")): \(osNameAndVersion)
+            \(String(localized: .contactUsBodyAppVersion)): \(contactUs.appVersion)
+            \(String(localized: .contactUsBodyDeviceInfo)): \(contactUs.deviceInfo)
+            \(String(localized: .contactUsBodyLocaleInfo)): \(contactUs.localeInfo)
+            \(String(localized: .contactUsBodyOsVersion)): \(osNameAndVersion)
             """
     }
     
     private var osNameAndVersion: String {
         "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
-    }
-    
-    private func localizedString(_ key: String) -> String {
-        NSLocalizedString(key, bundle: .module, comment: "")
     }
 }
 

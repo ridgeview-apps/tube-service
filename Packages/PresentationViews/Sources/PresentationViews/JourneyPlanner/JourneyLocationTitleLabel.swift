@@ -14,12 +14,12 @@ public struct JourneyLocationTitleLabel: View {
     public var body: some View {
         switch value {
         case .station, .nationalRail:
-            Text(value.localizedTitle)
+            Text(value.name)
         case let .namedLocation(locationValue):
             if locationValue.isCurrentLocation {
                 currentLocationLabel
             } else {
-                Text(value.localizedTitle)
+                Text(value.name)
             }
         }
     }
@@ -28,7 +28,7 @@ public struct JourneyLocationTitleLabel: View {
     private var currentLocationLabel: some View {
         HStack(spacing: 4) {
             Text(Image(systemName: "location.fill"))
-            Text(value.localizedTitle)
+            Text(value.name)
             if let accessoryStatus {
                 switch accessoryStatus {
                 case .warning:

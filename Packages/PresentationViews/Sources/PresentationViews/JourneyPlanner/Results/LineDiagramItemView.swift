@@ -228,7 +228,7 @@ struct LineDiagramItemView: View {
             
             if detail.shouldShowStopPointsToggle {
                 ExpansionInfoButton(style: .pullDown,
-                                    title: "journey.planner.stops.count \(detail.stopPointsCount)",
+                                    title: .journeyPlannerStopsCount(detail.stopPointsCount),
                                     isExpanded: $showExpandedStopPoints)
                 .font(.subheadline)
             }

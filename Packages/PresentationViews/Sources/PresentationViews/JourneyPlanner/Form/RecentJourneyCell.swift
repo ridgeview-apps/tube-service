@@ -67,12 +67,12 @@ struct RecentJourneyCell: View {
     
     private var journeyFromToLocation: some View {
         VStack(alignment: .leading) {
-            Text(item.fromLocation.localizedTitle)
+            Text(item.fromLocation.name)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(.firstPairItem("\(item.id)"), isSwapped: isSwapped, in: animationNamespace)
-            Text("recent.journey.cell.to", bundle: .module)
+            Text(.recentJourneyCellTo)
                 .font(.caption)
-            Text(item.toLocation.localizedTitle)
+            Text(item.toLocation.name)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(.secondPairItem("\(item.id)"), isSwapped: isSwapped, in: animationNamespace)
         }
@@ -84,7 +84,7 @@ struct RecentJourneyCell: View {
     private var journeyViaLocation: some View {
         if let viaLocation = item.viaLocation {
             HStack {
-                Text("recent.journey.cell.via \(viaLocation.localizedTitle)", bundle: .module)
+                Text(.recentJourneyCellVia(viaLocation.name))
                 Spacer()
             }
             .font(.caption)

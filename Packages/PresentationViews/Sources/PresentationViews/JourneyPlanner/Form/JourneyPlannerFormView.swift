@@ -79,7 +79,7 @@ public struct JourneyPlannerFormView: View {
         Button {
             submitForm()
         } label: {
-            Text("journey.planner.show.journeys.button.title", bundle: .module)
+            Text(.journeyPlannerShowJourneysButtonTitle)
         }
         .buttonStyle(.primary)
         .disabled(!form.canSubmit)
@@ -101,7 +101,7 @@ public struct JourneyPlannerFormView: View {
                     onAction(.swipedToDelete(recentJourney))
                 }
             } header: {
-                Text("journey.planner.recent.journeys.section.title", bundle: .module)
+                Text(.journeyPlannerRecentJourneysSectionTitle)
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)

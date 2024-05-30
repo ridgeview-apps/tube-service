@@ -29,7 +29,7 @@ struct ArrivalsPickerScreen: View {
         }
         .searchable(text: $searchTerm,
                     placement: .navigationBarDrawer(displayMode: .always),
-                    prompt: "arrivals.picker.search.placeholder") {
+                    prompt: Text(.arrivalsPickerSearchPlaceholder)) {
             searchSuggestionsView
         }
         .autocorrectionDisabled()
@@ -49,12 +49,12 @@ struct ArrivalsPickerScreen: View {
     
     @ViewBuilder private var pickerListView: some View {
         if isSearching && selectableStations.isEmpty {
-            Text("arrivals.picker.search.no.results")
+            Text(.arrivalsPickerSearchNoResults)
         } else {
             ArrivalsPickerView(allStations: selectableStations,
                                style: pickerStyle,
                                selection: $selection)
-                .navigationTitle("arrivals.picker.navigation.title")
+                .navigationTitle(Text(.arrivalsPickerNavigationTitle))
                 .withSettingsToolbarButton()
                 .onAppear {
                     reloadStations()
@@ -106,7 +106,7 @@ struct ArrivalsPickerScreen: View {
                             }
                         }
                     } header: {
-                        Text("search.suggestions.section.title")
+                        Text(.searchSuggestionsSectionTitle)
                     }
                 }
             }

@@ -67,7 +67,7 @@ public struct ArrivalsBoardListView: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundColor(.yellow)
                 .imageScale(.large)
-            Text("arrivals.no.data", bundle: .module)
+            Text(.arrivalsNoData)
                 .font(.subheadline)
             Spacer()
         }

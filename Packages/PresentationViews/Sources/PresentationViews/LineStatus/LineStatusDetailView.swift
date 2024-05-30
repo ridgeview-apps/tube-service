@@ -72,13 +72,7 @@ public struct LineStatusDetailView: View {
         Group {
             switch textItem.messageType {
             case .goodService:
-                switch line.id {
-                case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
-                     .metropolitan, .overground, .northern, .piccadilly, .victoria, .waterlooAndCity:
-                    Text("line.status.detail.good.service.on.the \(line.id.longName)", bundle: .module)
-                case .tram:
-                    Text("line.status.detail.good.service.on.trams", bundle: .module)
-                }
+                goodServiceText
             case let .disrupted(reason):
                 if let reason {
                     Text(reason)
@@ -92,9 +86,9 @@ public struct LineStatusDetailView: View {
         switch line.id {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
              .metropolitan, .overground, .northern, .piccadilly, .victoria, .waterlooAndCity:
-            Text("line.status.detail.good.service.on.the \(line.id.longName)", bundle: .module)
+            Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
         case .tram:
-            Text("line.status.detail.good.service.on.trams", bundle: .module)
+            Text(.lineStatusDetailGoodServiceOnTrams)
         }
     }
     
@@ -109,7 +103,7 @@ public struct LineStatusDetailView: View {
         VStack(alignment: .leading) {
             FavouritesButton(style: .large, isSelected: $isFavourite)
             if !isFavourite {
-                Text("line.status.favourites.button.footer", bundle: .module)
+                Text(.lineStatusFavouritesButtonFooter)
                     .font(.footnote)
                     .foregroundStyle(Color.adaptiveMidGrey2)
             }
@@ -119,7 +113,7 @@ public struct LineStatusDetailView: View {
     private var twitterSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 20) {
-                Text("line.status.twitterSection.title", bundle: .module)
+                Text(.lineStatusTwitterSectionTitle)
                 
                 ForEach(line.twitterLinks) { link in
                     twitterLinkButton(for: link)
@@ -136,9 +130,9 @@ public struct LineStatusDetailView: View {
             Group {
                 switch link.style {
                 case .tflAllTweets:
-                    Text("line.status.tfl.tweets.title.allLines", bundle: .module)
+                    Text(.lineStatusTflTweetsTitleAllLines)
                 case let .lineTweets(line):
-                    Text("line.status.tfl.tweets.title.line \(line.longName)", bundle: .module)
+                    Text(.lineStatusTflTweetsTitleLine(line.longName))
                 }
             }
         }

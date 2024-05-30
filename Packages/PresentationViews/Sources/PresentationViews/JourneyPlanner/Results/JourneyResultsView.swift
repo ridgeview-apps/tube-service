@@ -67,7 +67,7 @@ public struct JourneyResultsView: View {
                             .swapValuesGeometryEffectID(.firstPairItem("locationsPair"), isSwapped: hasSwappedLocations, in: animationNamespace)
                     }
                     
-                    Text("journey.results.to.label.title", bundle: .module)
+                    Text(.journeyResultsToLabelTitle)
                         .font(.caption)
                     
                     if let toLocation {
@@ -87,7 +87,7 @@ public struct JourneyResultsView: View {
             
             if let viaLocation {
                 HStack(spacing: 0) {
-                    Text("journey.results.via.title", bundle: .module)
+                    Text(.journeyResultsViaTitle)
                     JourneyLocationTitleLabel(value: viaLocation)
                         .lineLimit(1)
                         .bold()
@@ -113,7 +113,7 @@ public struct JourneyResultsView: View {
     @ViewBuilder
     private var loadedView: some View {
         if cellItems.isEmpty {
-            Text("journey.results.zero.results.title", bundle: .module)
+            Text(.journeyResultsZeroResultsTitle)
                 .foregroundStyle(Color.adaptiveMidGrey2)
                 .padding(.top, 12)
         } else {
@@ -133,8 +133,7 @@ public struct JourneyResultsView: View {
     
     private var resultsSectionHeader: some View {
         HStack(spacing: 0) {
-            Text("journey.planner.results.count \(cellItems.count)",
-                 bundle: .module)
+            Text(.journeyPlannerResultsCount(cellItems.count))
             Text(", ")
             timeOptionText
             Spacer()
@@ -150,9 +149,9 @@ public struct JourneyResultsView: View {
     private var timeOptionText: some View {
         switch timeOption.option {
         case .leaveNow, .leaveAt:
-            Text("journey.results.time.option.leaving.at \(timeOption.formattedDate)", bundle: .module)
+            Text(.journeyResultsTimeOptionLeavingAt(timeOption.formattedDate))
         case .arriveBy:
-            Text("journey.results.time.option.arriving.by \(timeOption.formattedDate)", bundle: .module)
+            Text(.journeyResultsTimeOptionArrivingBy(timeOption.formattedDate))
         }
     }
     

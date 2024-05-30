@@ -28,7 +28,7 @@ public struct MapsListView: View {
         Button {
             selectedValue = mapLink
         } label: {
-            Text(mapLink.title, bundle: .module)
+            Text(mapLink.title)
         }
         .buttonStyle(.primary)
         .sheet(item: $selectedValue) { selectedValue in
@@ -41,26 +41,26 @@ public struct MapsListView: View {
 
 private struct MapLink: Identifiable {
     var id: String { url.absoluteString }
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     let url: URL
     
     static let dayTubeMap = MapLink(
-        title: "maps.tube.day.link.title",
+        title: .mapsTubeDayLinkTitle,
         url: URL(string: "https://content.tfl.gov.uk/standard-tube-map.pdf")!
     )
     
     static let nightTubeMap = MapLink(
-        title: "maps.tube.night.link.title",
+        title: .mapsTubeNightLinkTitle,
         url: URL(string: "https://content.tfl.gov.uk/standard-night-tube-map.pdf")!
     )
     
     static let railAndTubeMap = MapLink(
-        title: "maps.rail.and.tube.link.title",
+        title: .mapsRailAndTubeLinkTitle,
         url: URL(string: "https://content.tfl.gov.uk/london-rail-and-tube-services-map.pdf")!
     )
     
     static let elizabethLineMap = MapLink(
-        title: "maps.elizabeth.link.title",
+        title: .mapsElizabethLinkTitle,
         url: URL(string: "https://content.tfl.gov.uk/elizabeth-line-map.pdf")!
     )
 }

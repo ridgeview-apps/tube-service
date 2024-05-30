@@ -23,7 +23,7 @@ struct SettingsScreen: View {
                                           deviceInfo: Device.current.modelName,
                                           localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")"),
                          editableValues: $editableValues)
-            .navigationTitle("settings.navigation.title")
+            .navigationTitle(Text(.settingsNavigationTitle))
             .toolbar {
                 NavigationButton.Close { dismiss() }
             }

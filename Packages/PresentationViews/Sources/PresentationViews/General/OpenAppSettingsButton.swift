@@ -11,7 +11,7 @@ struct OpenSettingsButton: View {
             HStack(spacing: 4) {
                 Image(systemName: "gear")
                     .imageScale(.large)
-                Text("open.app.settings.button.title", bundle: .module)
+                Text(.openAppSettingsButtonTitle)
             }
         }        
     }

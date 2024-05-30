@@ -49,18 +49,18 @@ public struct LocationUIStatusViewModifier: ViewModifier {
     private func setupView(showsHeader: Bool) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if showsHeader {
-                Text("location.services.allow.access.header.title", bundle: .module)
+                Text(.locationServicesAllowAccessHeaderTitle)
             }
             Button {
                 status.onRequestPermissions()
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "location.fill")
-                    Text("location.services.allow.access.button.title", bundle: .module)
+                    Text(.locationServicesAllowAccessButtonTitle)
                 }
             }
             .buttonStyle(.primary)
-            Text("location.services.allow.access.footer.title", bundle: .module)
+            Text(.locationServicesAllowAccessFooterTitle)
                 .font(.caption)
         }
         .padding(.horizontal, status.horizontalPadding)
@@ -72,7 +72,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundColor(.yellow)
                     .imageScale(.large)
-                Text("location.services.access.denied.message.title", bundle: .module)
+                Text(.locationServicesAccessDeniedMessageTitle)
             }
             OpenSettingsButton()
                 .buttonStyle(.primary)

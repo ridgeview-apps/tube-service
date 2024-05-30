@@ -55,7 +55,7 @@ public struct ArrivalsPickerView: View {
     @ViewBuilder private var favouritesSection: some View {
         if !favourites.isEmpty {
             stationsSection(with: favourites,
-                            header: .init(title: "arrivals.picker.favourites.section.title",
+                            header: .init(title: .arrivalsPickerFavouritesSectionTitle,
                                           imageName: "star.fill"))
         }
     }
@@ -77,12 +77,12 @@ public struct ArrivalsPickerView: View {
         .lineGroupListRowStyle()
     }
     
-    private var allStationsSectionHeaderTitle: LocalizedStringKey {
+    private var allStationsSectionHeaderTitle: LocalizedStringResource {
         switch style {
         case .normal:
-            LocalizedStringKey("arrivals.picker.all.stations.section.title")
+            .arrivalsPickerAllStationsSectionTitle
         case .searchResults:
-            LocalizedStringKey("stations.search.results.count \(allStations.count)")
+            .stationsSearchResultsCount(allStations.count)
         }
     }
 }

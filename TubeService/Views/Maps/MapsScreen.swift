@@ -6,7 +6,7 @@ struct MapsScreen: View {
     var body: some View {
         NavigationStack {
             MapsListView()
-                .navigationTitle("maps.navigation.title")
+                .navigationTitle(Text(.mapsNavigationTitle))
                 .withSettingsToolbarButton()
         }
     }

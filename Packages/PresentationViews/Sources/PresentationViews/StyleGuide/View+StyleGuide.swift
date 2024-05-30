@@ -39,7 +39,7 @@ public extension View {
     }
     
     func styledTabItem(imageName: String,
-                       title: LocalizedStringKey,
+                       title: LocalizedStringResource,
                        accessibilityID: String) -> some View {
         tabItem {
             VStack {
@@ -75,7 +75,7 @@ public extension View {
     }
     
     func resetAlert(isPresented: Binding<Bool>,
-                    alertTitle: LocalizedStringKey,
+                    alertTitle: LocalizedStringResource,
                     onConfirm: @escaping () -> Void,
                     alertMessage: @escaping () -> some View = { EmptyView() }) -> some View {
         self.modifier(ResetAlertViewModifier(
@@ -172,13 +172,13 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
 
 private struct ResetAlertViewModifier<Message: View>: ViewModifier {
     @Binding var isPresented: Bool
-    let alertTitle: LocalizedStringKey
+    let alertTitle: LocalizedStringResource
     let onConfirm: () -> Void
     let alertMessage: () -> Message
     
     func body(content: Content) -> some View {
         content
-            .alert(Text(alertTitle, bundle: .module),
+            .alert(Text(alertTitle),
                    isPresented: $isPresented) {
                 Button(role: .destructive) {
                     onConfirm()

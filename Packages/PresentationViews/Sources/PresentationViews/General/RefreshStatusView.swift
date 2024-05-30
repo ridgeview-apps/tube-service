@@ -10,14 +10,18 @@ public struct RefreshStatusView: View {
     
     public let loadingState: LoadingState
     public let refreshDate: Date?
-    public let loadingMessageTitle: LocalizedStringKey
+    public let loadingMessageTitle: LocalizedStringResource
     public let showsText: Bool
     
     private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .full, timeStyle: .short)
+    private var refreshDateFormatted: String? {
+        guard let refreshDate else { return nil }
+        return timestampFormatter.string(from: refreshDate)
+    }
     
     public init(loadingState: LoadingState, 
                 refreshDate: Date? = nil,
-                loadingMessageTitle: LocalizedStringKey = "refresh.status.loading",
+                loadingMessageTitle: LocalizedStringResource = .refreshStatusLoading,
                 showsText: Bool = true) {
         self.loadingState = loadingState
         self.refreshDate = refreshDate
@@ -50,14 +54,13 @@ public struct RefreshStatusView: View {
     @ViewBuilder private var statusText: some View {
         switch loadingState {
         case .loading:
-            Text(loadingMessageTitle, bundle: .module)
+            Text(loadingMessageTitle)
         case let .failure(errorMessage):
             Text(errorMessage)
                 .foregroundStyle(.adaptiveRed)
         case .loaded:
-            if let refreshDate {
-                Text("refresh.status.last.updated \(timestampFormatter.string(from: refreshDate))",
-                     bundle: .module)
+            if let refreshDateFormatted {
+                Text(.refreshStatusLastUpdated(refreshDateFormatted))
             }
         }
     }

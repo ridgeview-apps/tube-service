@@ -24,8 +24,7 @@ public struct JourneyPlannerTravelOptionsCell: View {
     
     private var labelView: some View {
         VStack(alignment: .leading) {
-            Text("journey.planner.travel.options.main.label.title",
-                 bundle: .module)
+            Text(.journeyPlannerTravelOptionsMainLabelTitle)
                 .font(.subheadline)
                 if !travelOptionSubtitle.isEmpty {
                     Text(travelOptionSubtitle)
@@ -46,15 +45,15 @@ public struct JourneyPlannerTravelOptionsCell: View {
 
     private var viaLocationCell: some View {
         JourneyLocationFormButton(value: $viaLocation,
-                                  placeholderText: "journey.planner.travel.options.via.placeholder.title") {
+                                  placeholderText: .journeyPlannerTravelOptionsViaPlaceholderTitle) {
             onAction(.tappedViaLocationButton)
         }
-        .formDetailCell(title: "journey.planner.via.label.title")
+        .formDetailCell(title: .journeyPlannerViaLabelTitle)
     }
     
     private var timePickerCell: some View {
         JourneyTimePickerView(selection: $timeSelection)
-            .formDetailCell(title: "journey.planner.travel.options.when.label.title")
+            .formDetailCell(title: .journeyPlannerTravelOptionsWhenLabelTitle)
     }
     
     private var travelOptionSubtitle: String {
@@ -72,11 +71,9 @@ public struct JourneyPlannerTravelOptionsCell: View {
         case .leaveNow:
             return nil
         case .leaveAt:
-            let format = NSLocalizedString("journey.planner.travel.options.detail.leave.at %@", bundle: .module, comment: "")
-            return String(format: format, timeSelection.formattedDate)
+            return String(localized: .journeyPlannerTravelOptionsDetailLeaveAt(timeSelection.formattedDate))
         case .arriveBy:
-            let format = NSLocalizedString("journey.planner.travel.options.detail.arrive.by %@", bundle: .module, comment: "")
-            return String(format: format, timeSelection.formattedDate)
+            return String(localized: .journeyPlannerTravelOptionsDetailArriveBy(timeSelection.formattedDate))
         }
     }
     
@@ -84,8 +81,8 @@ public struct JourneyPlannerTravelOptionsCell: View {
         guard let viaLocation else {
             return nil
         }
-        let format = NSLocalizedString("journey.planner.travel.options.via %@", bundle: .module, comment: "")
-        return String(format: format, viaLocation.localizedTitle)
+        return String(localized: .journeyPlannerTravelOptionsVia(viaLocation.name))
+        
     }
 }
 

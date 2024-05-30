@@ -146,12 +146,12 @@ struct ArrivalsBoardView: View {
     
     @ViewBuilder private func arrivalTimeText(for secondsRemaining: Int) -> some View {
         if secondsRemaining < 30 {
-            Text("arrivals.board.countdown.due", bundle: .module)
+            Text(.arrivalsBoardCountdownDue)
         } else if secondsRemaining < 60 {
-            Text("arrivals.board.countdown.due.seconds \(secondsRemaining)", bundle: .module)
+            Text(.arrivalsBoardCountdownDueSeconds(secondsRemaining))
         } else {
             let minutes = secondsRemaining / 60
-            Text("arrivals.board.countdown.due.minutes \(minutes)", bundle: .module)
+            Text(.arrivalsBoardCountdownDueMinutes(minutes))
         }
     }
     
@@ -160,7 +160,7 @@ struct ArrivalsBoardView: View {
         case let .destination(name):
             Text(name)
         case .checkFrontOfTrain:
-            Text("arrivals.check.front.of.train", bundle: .module)
+            Text(.arrivalsCheckFrontOfTrain)
         }
     }
     
@@ -170,7 +170,7 @@ struct ArrivalsBoardView: View {
             case let .currentLocationName(name):
                 Text(name)
             case let .depatureTime(time):
-                Text("arrivals.board.departs.at \(time)", bundle: .module)
+                Text(.arrivalsBoardDepartsAt(time))
             }
         }
         .font(.caption2)

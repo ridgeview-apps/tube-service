@@ -6,27 +6,27 @@ struct RootScreen: View {
         TabView {
             LineStatusScreen()
                 .styledTabItem(imageName: "exclamationmark.circle",
-                               title: "line.status.tab.title",
+                               title: .lineStatusTabTitle,
                                accessibilityID: "acc.id.line.status.tab.title")
             
             JourneyPlannerScreen()
                 .styledTabItem(imageName: "app.connected.to.app.below.fill",
-                               title: "journey.planner.tab.title",
+                               title: .journeyPlannerTabTitle,
                                accessibilityID: "acc.id.journey.planner.tab.title")
 
             ArrivalsPickerScreen()
                 .styledTabItem(imageName: "tram.fill",
-                               title: "arrivals.tab.title",
+                               title: .arrivalsTabTitle,
                                accessibilityID: "acc.id.arrivals.tab.title")
             
             NearbyStationsScreen()
                 .styledTabItem(imageName: "location.fill",
-                               title: "nearby.stations.tab.title",
+                               title: .nearbyStationsTabTitle,
                                accessibilityID: "acc.id.nearby.stations.tab.title")
             
             MapsScreen()
                 .styledTabItem(imageName: "map.fill",
-                               title: "maps.tab.title", 
+                               title: .mapsTabTitle, 
                                accessibilityID: "acc.id.maps.tab.title")
         }
     }

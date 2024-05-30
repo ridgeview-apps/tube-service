@@ -128,7 +128,7 @@ public struct LineStatusListView: View {
     private var filterOptions: some View {
         Picker("", selection: $selectedFilterOption) {
             ForEach(LineStatusFilterOption.allCases) { filterOption in
-                Text(filterOption.localizedKey, bundle: .module)
+                Text(filterOption.localized)
                     .tag(filterOption)
                     .accessibilityIdentifier(filterOption.accessibilityID)
             }
@@ -157,16 +157,16 @@ public struct LineStatusListView: View {
     @ViewBuilder private var headerTitleText: some View {
         switch selectedFilterOption {
         case .today:
-            Text("line.status.service.now", bundle: .module)
+            Text(.lineStatusServiceNow)
         case .tomorrow:
-            Text("line.status.planned.status.title \(tomorrowFormatted())", bundle: .module)
+            Text(.lineStatusPlannedStatusTitle(tomorrowFormatted()))
         case .thisWeekend:
-            Text("line.status.planned.status.title \(weekendDatesFormatted())", bundle: .module)
+            Text(.lineStatusPlannedStatusTitle(weekendDatesFormatted()))
         case .other:
             if isValidFutureDate {
-                Text("line.status.planned.status.title \(selectedDateFormatted())", bundle: .module)
+                Text(.lineStatusPlannedStatusTitle(selectedDateFormatted()))
             } else {
-                Text("line.status.select.other.date.title", bundle: .module)
+                Text(.lineStatusSelectOtherDateTitle)
                     .foregroundStyle(hasSelectedADate ? Color.adaptiveRed : Color.primary)
             }
         }
@@ -177,7 +177,7 @@ public struct LineStatusListView: View {
             DatePicker(selection: $selectedDate,
                        in: .now...,
                        displayedComponents: [.date]) {
-                Text("line.status.date.picker.title", bundle: .module)
+                Text(.lineStatusDatePickerTitle)
                     .font(.subheadline)
             }
             .withAutoDismissID(of: selectedDate)
@@ -243,29 +243,29 @@ private extension DatePicker {
 }
 
 private extension LineStatusFilterOption {
-    var localizedKey: LocalizedStringKey {
+    var localized: LocalizedStringResource {
         switch self {
         case .today:
-            return "line.status.filter.option.today"
+            .lineStatusFilterOptionToday
         case .tomorrow:
-            return "line.status.filter.option.tomorrow"
+            .lineStatusFilterOptionTomorrow
         case .thisWeekend:
-            return "line.status.filter.option.this.weekend"
+            .lineStatusFilterOptionThisWeekend
         case .other:
-            return "line.status.filter.option.other"
+            .lineStatusFilterOptionOther
         }
     }
     
     var accessibilityID: String {
         switch self {
         case .today:
-            return "acc.id.filter.option.today"
+            "acc.id.filter.option.today"
         case .tomorrow:
-            return "acc.id.filter.option.tomorrow"
+            "acc.id.filter.option.tomorrow"
         case .thisWeekend:
-            return "acc.id.filter.option.thisWeekend"
+            "acc.id.filter.option.thisWeekend"
         case .other:
-            return "acc.id.filter.option.other"
+            "acc.id.filter.option.other"
         }
     }
 }

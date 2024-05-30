@@ -3,12 +3,12 @@ import SwiftUI
 public struct ExpansionInfoButton: View {
     
     public let style: Style
-    public let title: LocalizedStringKey?
+    public let title: LocalizedStringResource?
     public var titleAlignment: Alignment = .leading
     @Binding public var isExpanded: Bool
     
     public init(style: Style,
-                title: LocalizedStringKey? = nil,
+                title: LocalizedStringResource? = nil,
                 isExpanded: Binding<Bool>) {
         self.style = style
         self.title = title
@@ -38,7 +38,7 @@ public struct ExpansionInfoButton: View {
                 expansionButtonImage
                     .rotationEffect(isExpanded ? .init(degrees: style.expandedRotationAngle) : .init(degrees: 0))
                 if let title {
-                    Text(title, bundle: .module)
+                    Text(title)
                         .frame(maxWidth: .infinity, alignment: titleAlignment)
                 }
             }
@@ -74,7 +74,7 @@ struct ExpansionInfoButton_Previews: PreviewProvider {
     struct ExpansionInfoButtonPreview: View {
         @State private(set) var style: ExpansionInfoButton.Style
         @State private(set) var isExpanded = false
-        var title: LocalizedStringKey?
+        var title: LocalizedStringResource?
         
         var body: some View {
             ExpansionInfoButton(style: style,

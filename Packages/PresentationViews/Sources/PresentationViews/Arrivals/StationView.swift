@@ -62,16 +62,16 @@ public struct StationView: View {
                 .listRowInsets(.zero)
             if let mapURL {
                 Link(destination: mapURL) {
-                    Text("station.location.show.button.title", bundle: .module)
+                    Text(.stationLocationShowInMapsButtonTitle)
                 }
             }
             if let directionsURL {
                 Link(destination: directionsURL) {
-                    Text("station.location.directions.button.title", bundle: .module)
+                    Text(.stationLocationDirectionsButtonTitle)
                 }
             }
         } header: {
-            Text("station.location.section.header.title", bundle: .module)
+            Text(.stationLocationSectionHeaderTitle)
                 .listRowInsets(.zero)
         }
     }
@@ -84,7 +84,7 @@ public struct StationView: View {
             Section {
                 DisruptionsCell(disruptionMessages: disruptionMessages)
             } header: {
-                Text("station.disruptions.section.header.title", bundle: .module)
+                Text(.stationDisruptionsSectionHeaderTitle)
             }
         }
     }
@@ -112,7 +112,7 @@ public struct StationView: View {
     
     private var statusSectionHeader: some View {
         HStack(spacing: 8) {
-            Text("station.status.section.header.title", bundle: .module)
+            Text(.stationStatusSectionHeaderTitle)
             Spacer()
             RefreshStatusView(loadingState: loadingState, refreshDate: nil)
                 .font(.footnote)
@@ -135,7 +135,7 @@ public struct StationView: View {
             }
             .listRowInsets(.init(top: 12, leading: 16, bottom: 12, trailing: 16))
         } header: {
-            Text("station.arrivals.section.header.title", bundle: .module)
+            Text(.stationArrivalsSectionHeaderTitle)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
         

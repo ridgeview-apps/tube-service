@@ -35,7 +35,7 @@ struct NearbyStationsScreen: View {
             selection: $selectedStation
         )
         .withSettingsToolbarButton()
-        .navigationTitle("nearby.stations.navigation.title")
+        .navigationTitle(Text(.nearbyStationsNavigationTitle))
         .refreshable {
             resetPageNo()
             location.refreshCurrentLocation()
@@ -75,7 +75,7 @@ struct NearbyStationsScreen: View {
                                   selection: $selectedStationViewItem)
                 } else {
                     if location.isAuthorized {
-                        Text("nearby.stations.no.selection")
+                        Text(.nearbyStationsNoSelection)
                     }
                 }
             }

@@ -35,7 +35,7 @@ struct JourneyResultsScreen: View {
             }
         )
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle("journey.results.navigation.title")
+        .navigationTitle(Text(.journeyResultsNavigationTitle))
         .task {
             if !hasFetchedData {
                 await fetchData()

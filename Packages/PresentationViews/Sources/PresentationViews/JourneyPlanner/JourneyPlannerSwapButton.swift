@@ -24,7 +24,7 @@ struct SwapValuesButton<Value>: View {
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
-                .accessibilityLabel(Text("swap.button.accessibility.title", bundle: .module))
+                .accessibilityLabel(Text(.swapButtonAccessibilityTitle))
         }
     }
 }

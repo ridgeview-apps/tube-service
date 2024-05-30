@@ -29,9 +29,9 @@ public struct FavouritesButton: View {
                 HStack {
                     Image(systemName: isSelected ? "minus.circle" : "plus.circle")
                     if isSelected {
-                        Text("favourites.button.title.remove", bundle: .module)
+                        Text(.favouritesButtonTitleRemove)
                     } else {
-                        Text("favourites.button.title.add", bundle: .module)
+                        Text(.favouritesButtonTitleAdd)
                     }
                 }
             }

@@ -42,7 +42,7 @@ public struct MailButton<Label: View>: View {
             MailViewController(result: $result, messageConfig: config)
         }
         .alert(isPresented: $showMailUnsupported) {
-            Alert(title: Text("mail.not.supported", bundle: .module))
+            Alert(title: Text(.mailNotSupported))
         }
     }
 }

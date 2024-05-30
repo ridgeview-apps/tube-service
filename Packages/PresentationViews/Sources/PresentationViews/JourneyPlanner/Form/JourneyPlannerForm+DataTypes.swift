@@ -25,12 +25,11 @@ public struct JourneyPlannerForm: Hashable {
         var success: Bool { errors.values.flatMap { $0 }.isEmpty }
         
         mutating func append(error: String, for fieldID: FieldID) {
-            let error = NSLocalizedString(error, bundle: .module, comment: "")
             errors[fieldID, default: []].append(error)
         }
         
         mutating func requiredField(_ fieldID: FieldID) {
-            append(error: "journey.planner.form.error.field.required",
+            append(error: String(localized: .journeyPlannerFormErrorFieldRequired),
                    for: fieldID)
         }
     }
@@ -107,7 +106,7 @@ public struct JourneyPlannerForm: Hashable {
         }
         
         if let from, let to, from == to {
-            result.append(error: "journey.planner.form.error.to.field.invalid",
+            result.append(error: String(localized: .journeyPlannerFormErrorToFieldInvalid),
                           for: .location(.to))
         }
         

@@ -9,14 +9,14 @@ public struct JourneyTimePickerSelection: Hashable {
     public enum Option: CaseIterable {
         case leaveNow, leaveAt, arriveBy
         
-        var title: LocalizedStringKey {
+        var title: LocalizedStringResource {
             switch self {
             case .leaveNow:
-                "journey.planner.time.picker.option.leave.now"
+                    .journeyPlannerTimePickerOptionLeaveNow
             case .leaveAt:
-                "journey.planner.time.picker.option.leave.later"
+                    .journeyPlannerTimePickerOptionLeaveLater
             case .arriveBy:
-                "journey.planner.time.picker.option.arrive.by"
+                    .journeyPlannerTimePickerOptionArriveBy
             }
         }
     }
@@ -46,7 +46,7 @@ struct JourneyTimePickerView: View {
         VStack(alignment: .trailing) {
             Picker("", selection: $selection.option) {
                 ForEach(JourneyTimePickerSelection.Option.allCases, id: \.self) { option in
-                    Text(option.title, bundle: .module).tag(option)
+                    Text(option.title).tag(option)
                 }
             }
             .pickerStyle(.segmented)

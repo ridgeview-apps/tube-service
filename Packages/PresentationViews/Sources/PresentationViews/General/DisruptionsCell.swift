@@ -22,7 +22,7 @@ struct DisruptionsCell: View {
         } label: {
             HStack {
                 LineStatusAccessoryImageType.disruption.image
-                Text("disruptions.cell.default.title", bundle: .module)
+                Text(.disruptionsCellDefaultTitle)
                 Spacer()
             }
         }

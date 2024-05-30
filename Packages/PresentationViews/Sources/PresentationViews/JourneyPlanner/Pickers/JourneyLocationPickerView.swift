@@ -3,7 +3,6 @@ import SwiftUI
 
 public struct JourneyLocationPickerView: View {
     
-    public let placeholder: LocalizedStringKey
     public let sections: [JourneyLocationPicker.SectionState]
     public let locationUIStatus: LocationUIStatus
     public let onAction: (JourneyLocationPicker.Action) -> Void
@@ -12,12 +11,10 @@ public struct JourneyLocationPickerView: View {
     @FocusState private var showKeyboard
     
     public init(searchTerm: Binding<String>,
-                placeholder: LocalizedStringKey,
                 sections: [JourneyLocationPicker.SectionState],
                 locationUIStatus: LocationUIStatus,
                 onAction: @escaping (JourneyLocationPicker.Action) -> Void) {
         self._searchTerm = searchTerm
-        self.placeholder = placeholder
         self.sections = sections
         self.locationUIStatus = locationUIStatus
         self.onAction = onAction
@@ -48,7 +45,7 @@ public struct JourneyLocationPickerView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             TextField(text: $searchTerm) {
-                Text("journey.planner.location.picker.placeholder.text", bundle: .module)
+                Text(.journeyPlannerLocationPickerPlaceholderText)
             }
             .clearButton(text: $searchTerm)
             .focused($showKeyboard)
@@ -73,7 +70,7 @@ public struct JourneyLocationPickerView: View {
                     selectableRow(for: value)
                 }
             } header: {
-                Text(sectionState.sectionTitle, bundle: .module)
+                Text(sectionState.sectionTitle)
             }
             .lineGroupListRowStyle()
         }
@@ -107,8 +104,7 @@ public struct JourneyLocationPickerView: View {
                     Group {
                         Text(Image(systemName: "location.fill"))
                         VStack(alignment: .leading) {
-                            Text("journey.planner.location.value.current.location",
-                                 bundle: .module)
+                            Text(.journeyPlannerLocationValueCurrentLocation)
                             if let locationTitle = location.name?.formattedSingleLineTitle, !locationTitle.isEmpty {
                                 Text(locationTitle)
                                     .font(.footnote)
@@ -132,14 +128,14 @@ public struct JourneyLocationPickerView: View {
 
 private extension JourneyLocationPicker.SectionState {
     
-    var sectionTitle: LocalizedStringKey {
+    var sectionTitle: LocalizedStringResource {
         switch sectionID {
-        case .suggestions:
-            return "journey.location.picker.suggestions.section.title"
+        case .suggestions: 
+            .journeyLocationPickerSuggestionsSectionTitle
         case .nearbyStations:
-            return "journey.location.picker.nearby.stations.section.title"
+            .journeyLocationPickerNearbyStationsSectionTitle
         case let .searchResults(count):
-            return "journey.location.search.results.count \(count)"
+            .journeyLocationSearchResultsCount(count)
         }
     }
 }
@@ -159,7 +155,6 @@ private struct Previewer: View {
     var body: some View {
         JourneyLocationPickerView(
             searchTerm: $searchTerm,
-            placeholder: "journey.planner.location.picker.placeholder.text",
             sections: sections,
             locationUIStatus: locationUIStatus
         ) {

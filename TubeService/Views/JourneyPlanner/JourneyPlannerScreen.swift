@@ -76,7 +76,7 @@ struct JourneyPlannerScreen: View {
             .onChange(of: localSearchCompleter.results) { _, newValue in
                 resultsAggregator.localSearchResults = newValue
             }
-            .navigationTitle("journey.planner.navigation.title")
+            .navigationTitle(Text(.journeyPlannerNavigationTitle))
             .withNavigationState($navigationState) { destinationID in
                 destinationScreen(for: destinationID)
             }
@@ -161,12 +161,11 @@ struct JourneyPlannerScreen: View {
     private func locationPicker(for fieldID: JourneyPlannerForm.FieldID.LocationID) -> some View {
         JourneyLocationPickerView(
             searchTerm: $searchTerm,
-            placeholder: fieldID.navigationTitle,
             sections: locationPickerSections,
             locationUIStatus: locationUIStatus,
             onAction: handleLocationPickerAction
         )
-        .navigationTitle(fieldID.navigationTitle)
+        .navigationTitle(Text(fieldID.navigationTitle))
     }
     
     private var locationUIStatus: LocationUIStatus {
@@ -276,25 +275,14 @@ struct JourneyPlannerScreen: View {
 
 private extension JourneyPlannerForm.FieldID.LocationID {
     
-    var placeholderText: LocalizedStringKey {
+    var navigationTitle: LocalizedStringResource {
         switch self {
         case .from:
-            "location.picker.screen.from.placeholder.text"
+            .journeyPlannerLocationPickerScreenFromNavigationTitle
         case .to:
-            "location.picker.screen.to.placeholder.text"
+            .journeyPlannerLocationPickerScreenToNavigationTitle
         case .via:
-            "location.picker.screen.via.placeholder.text"
-        }
-    }
-    
-    var navigationTitle: LocalizedStringKey {
-        switch self {
-        case .from:
-            "location.picker.screen.from.navigation.title"
-        case .to:
-            "location.picker.screen.to.navigation.title"
-        case .via:
-            "location.picker.screen.via.navigation.title"
+            .journeyPlannerLocationPickerScreenViaNavigationTitle
         }
     }
 }

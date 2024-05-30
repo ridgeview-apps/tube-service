@@ -2,14 +2,14 @@ import Foundation
 import SwiftUI
 
 struct FormDetailCellViewModifier: ViewModifier {
-    let title: LocalizedStringKey?
+    let title: LocalizedStringResource?
     let alignment: VerticalAlignment
     let errors: [String]?
     
     func body(content: Content) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             if let title {
-                Text(title, bundle: .module)
+                Text(title)
                     .font(.caption)
             }
             content
@@ -31,7 +31,7 @@ struct FormDetailCellViewModifier: ViewModifier {
 }
 
 extension View {
-    func formDetailCell(title: LocalizedStringKey? = nil,
+    func formDetailCell(title: LocalizedStringResource? = nil,
                         alignment: VerticalAlignment = .firstTextBaseline,
                         errors: [String]? = nil) -> some View {
         modifier(FormDetailCellViewModifier(title: title,

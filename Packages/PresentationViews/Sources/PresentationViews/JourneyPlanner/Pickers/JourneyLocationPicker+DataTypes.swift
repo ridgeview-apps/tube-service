@@ -62,7 +62,7 @@ public enum JourneyLocationPicker {
 
 extension JourneyLocationPicker.Value {
     
-    var localizedTitle: String {
+    var name: String {
         switch self {
         case .station(let station):
             return station.name
@@ -70,7 +70,7 @@ extension JourneyLocationPicker.Value {
             return stopPoint.commonName ?? ""
         case .namedLocation(let location):
             if location.isCurrentLocation {
-                return location.name?.formattedSingleLineTitle ?? NSLocalizedString("journey.planner.location.value.current.location", bundle: .module, comment: "")
+                return location.name?.formattedSingleLineTitle ?? String(localized: .journeyPlannerLocationValueCurrentLocation)
             } else {
                 return location.name?.formattedSingleLineTitle ?? ""
             }

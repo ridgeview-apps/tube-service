@@ -39,7 +39,7 @@ struct JourneyPlannerFromToSelectionView: View {
         JourneyLocationFormButton(style: buttonStyle(forFieldID: .from),
                                   value: $form.from,
                                   accessoryStatus: locationAccessoryStatus,
-                                  placeholderText: "journey.planner.from.placeholder.title") {
+                                  placeholderText: .journeyPlannerFromPlaceholderTitle) {
             onAction(.tappedLocationField(.from))
         }
         .swapValuesGeometryEffectID(.firstPairItem("fromToFormFields"), isSwapped: isSwapped, in: animationNamespace)
@@ -50,11 +50,11 @@ struct JourneyPlannerFromToSelectionView: View {
         JourneyLocationFormButton(style: buttonStyle(forFieldID: .to),
                                   value: $form.to,
                                   accessoryStatus: locationAccessoryStatus,
-                                  placeholderText: "journey.planner.to.placeholder.title") {
+                                  placeholderText: .journeyPlannerToPlaceholderTitle) {
             onAction(.tappedLocationField(.to))
         }
         .swapValuesGeometryEffectID(.secondPairItem("fromToFormFields"), isSwapped: isSwapped, in: animationNamespace)
-        .formDetailCell(title: "journey.planner.to.label.title",
+        .formDetailCell(title: .journeyPlannerToLabelTitle,
                         errors: inlineErrors(forFieldID: .to))
     }
     

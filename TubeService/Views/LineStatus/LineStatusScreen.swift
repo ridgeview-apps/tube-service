@@ -32,7 +32,7 @@ struct LineStatusScreen: View {
                            selectedLine: $selectedLine,
                            selectedFilterOption: $selectedFilterOption,
                            selectedDate: $selectedDate)
-        .navigationTitle("line.status.navigation.title")
+        .navigationTitle(Text(.lineStatusNavigationTitle))
         .refreshable {
             refreshDataForCurrentFilterOption()
         }
@@ -62,7 +62,7 @@ struct LineStatusScreen: View {
                 LineStatusDetailScreen(line: selectedLine)
             } else {
                 if selectedFilterOption == .today || lines.hasDisruptions {
-                    Text("line.status.no.selection")
+                    Text(.lineStatusNoSelection)
                 }
             }
         }

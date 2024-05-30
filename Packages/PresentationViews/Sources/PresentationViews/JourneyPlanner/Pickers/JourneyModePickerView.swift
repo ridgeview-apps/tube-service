@@ -26,15 +26,8 @@ public struct JourneyModePickerView: View {
     
     private var sectionHeader: some View {
         VStack(alignment: .leading) {
-            Text("journey.mode.picker.instruction.title", bundle: .module)
-            HStack {
-                Spacer()
-                Button {
-                    selectAll()
-                } label: {
-                    Text("journey.mode.picker.select.all.button.title", bundle: .module)
-                }
-            }
+            Text(.journeyModePickerInstructionTitle)
+            selectAllButton
         }
     }
     
@@ -49,12 +42,12 @@ public struct JourneyModePickerView: View {
                 VStack(alignment: .leading) {
                     if minimumSelectionWarningID == modeID {
                         HStack(alignment: .top, spacing: 4) {
-                            Text("journey.mode.picker.minimum.selection.warning", bundle: .module)
+                            Text(.journeyModePickerMinimumSelectionWarning)
                         }
                         .font(.footnote)
                         .foregroundStyle(Color.adaptiveRed)
                     }
-                    Text(modeID.localizedStringKey, bundle: .module)
+                    Text(modeID.localized)
                 }
                 Spacer()
                 if selection.contains(modeID) {
@@ -119,7 +112,7 @@ public struct JourneyModePickerView: View {
             Button {
                 selectAll()
             } label: {
-                Text("journey.mode.picker.select.all.button.title", bundle: .module)
+                Text(.journeyModePickerSelectAllButtonTitle)
             }
         }
     }
@@ -143,35 +136,40 @@ private extension TrainLineID {
 
 private extension ModeID {
     
-    var localizedStringKey: LocalizedStringKey {
-        switch self {
+    var localized: LocalizedStringResource {
+        let resource: LocalizedStringResource = switch self {
         case .bus:
-            return "journey.mode.picker.value.bus"
+            .journeyModePickerValueBus
         case .cableCar:
-            return "journey.mode.picker.value.cable.car"
+            .journeyModePickerValueCableCar
         case .dlr:
-            return "journey.mode.picker.value.dlr"
+            .journeyModePickerValueDlr
         case .elizabethLine:
-            return "journey.mode.picker.value.elizabeth"
+            .journeyModePickerValueElizabeth
         case .nationalRail:
-            return "journey.mode.picker.value.national.rail"
+            .journeyModePickerValueNationalRail
         case .overground:
-            return "journey.mode.picker.value.overground"
+            .journeyModePickerValueOverground
         case .riverBus:
-            return "journey.mode.picker.value.river.bus"
+            .journeyModePickerValueRiverBus
         case .tram:
-            return "journey.mode.picker.value.tram"
+            .journeyModePickerValueTram
         case .tube:
-            return "journey.mode.picker.value.tube"
+            .journeyModePickerValueTube
         case .walking:
-            return "journey.mode.picker.value.walk"
+            .journeyModePickerValueWalk
         case .cycle:
-            return "journey.mode.picker.value.cycle"
+            .journeyModePickerValueCycle
         case .coach, .cycleHire, .interchangeKeepSitting, .interchangeSecure, .replacementBus,
              .riverTour, .taxi:
-            assertionFailure("Missing string localization \(self)?")
-            return ""
+            .journeyModePickerValueInvalid
         }
+        
+        if resource == .journeyModePickerValueInvalid {
+            assertionFailure("Missing string localization for mode: \(self)?")
+        }
+        
+        return resource
     }
     
     var sortValue: Int {

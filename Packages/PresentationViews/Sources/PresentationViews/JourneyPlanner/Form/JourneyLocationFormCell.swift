@@ -10,7 +10,7 @@ public struct JourneyLocationFormButton: View {
     var style: Style = .normal
     @Binding var value: JourneyLocationPicker.Value?
     var accessoryStatus: JourneyLocationTitleLabel.AccessoryStatus?
-    var placeholderText: LocalizedStringKey = "journey.planner.location.button.select.location"
+    var placeholderText: LocalizedStringResource = .journeyPlannerLocationButtonSelectLocation
     let action: () -> Void
     
     public var body: some View {
@@ -60,7 +60,7 @@ public struct JourneyLocationFormButton: View {
                     .imageScale(.small)
             } else {
                 HStack {
-                    Text(placeholderText, bundle: .module)
+                    Text(placeholderText)
                         .foregroundStyle(Color.secondary)
                 }
             }
@@ -85,7 +85,7 @@ public struct JourneyLocationFormButton: View {
 private struct Previewer: View {
     
     var style: JourneyLocationFormButton.Style = .normal
-    let title: LocalizedStringKey
+    let title: LocalizedStringResource
     @State var value: JourneyLocationPicker.Value? = .unknownCurrentLocation
     var accessoryStatus: JourneyLocationTitleLabel.AccessoryStatus?
     var action: () -> Void = { print("Tapped") }

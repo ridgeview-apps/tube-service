@@ -84,14 +84,9 @@ public struct NearbyStationsView: View {
     
     @ViewBuilder private var resultsHeaderView: some View {
         if let loadingState = locationUIStatus.loadingState, loadingState != .loaded {
-            VStack {
-                if let headerTitle = sectionState.headerTitle {
-                    Text(headerTitle)
-                }
-                RefreshStatusView(loadingState: loadingState, refreshDate: nil)
-                    .font(.footnote)
-                    .foregroundStyle(Color.adaptiveMidGrey2)
-            }
+            RefreshStatusView(loadingState: loadingState, refreshDate: nil)
+                .font(.footnote)
+                .foregroundStyle(Color.adaptiveMidGrey2)
         }
     }
     
@@ -104,14 +99,14 @@ public struct NearbyStationsView: View {
     
     private func zeroResultsView() -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("nearby.stations.no.results", bundle: .module)
+            Text(.nearbyStationsNoResults)
             refreshButton
         }
     }
     
     private var errorView: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text("nearby.stations.load.failure.title", bundle: .module)
+            Text(.nearbyStationsLoadFailureTitle)
             refreshButton
         }
     }
@@ -122,7 +117,7 @@ public struct NearbyStationsView: View {
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: "arrow.clockwise")
-                Text("refresh.button.title", bundle: .module)
+                Text(.refreshButtonTitle)
             }
         }
         .buttonStyle(.primary)
@@ -133,7 +128,7 @@ public struct NearbyStationsView: View {
             Button {
                 sectionState.currentPageNo += 1
             } label: {
-                Text("nearby.stations.more.results.button.title", bundle: .module)
+                Text(.nearbyStationsMoreResultsButtonTitle)
             }
             .buttonStyle(.primary)
             .id("showMoreButtonID_\(sectionState.currentPageNo)")
