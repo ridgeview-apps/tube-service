@@ -73,18 +73,6 @@ public extension View {
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
-    
-    func resetAlert(isPresented: Binding<Bool>,
-                    alertTitle: LocalizedStringResource,
-                    onConfirm: @escaping () -> Void,
-                    alertMessage: @escaping () -> some View = { EmptyView() }) -> some View {
-        self.modifier(ResetAlertViewModifier(
-            isPresented: isPresented,
-            alertTitle: alertTitle,
-            onConfirm: onConfirm,
-            alertMessage: alertMessage)
-        )
-    }
 }
 
 extension ForEach where Content: View {
@@ -167,33 +155,6 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
         } else {
             content
         }
-    }
-}
-
-private struct ResetAlertViewModifier<Message: View>: ViewModifier {
-    @Binding var isPresented: Bool
-    let alertTitle: LocalizedStringResource
-    let onConfirm: () -> Void
-    let alertMessage: () -> Message
-    
-    func body(content: Content) -> some View {
-        content
-            .alert(Text(alertTitle),
-                   isPresented: $isPresented) {
-                Button(role: .destructive) {
-                    onConfirm()
-                } label: {
-                    Text("global.button.title.reset", bundle: .module)
-                }
-                Button(role: .cancel) {
-                    isPresented = false
-                } label: {
-                    Text("global.button.title.cancel", bundle: .module)
-                }
-            } message: {
-                alertMessage()
-            }
-
     }
 }
 
