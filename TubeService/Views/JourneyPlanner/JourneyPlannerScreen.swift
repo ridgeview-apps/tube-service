@@ -46,8 +46,10 @@ struct JourneyPlannerScreen: View {
     @Environment(\.transportAPI) var transportAPI
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
-    @Environment(UserPreferencesDataStore.self) var userPreferences
     @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
     
     private var locationPickerSections: [JourneyLocationPicker.SectionState] {
         if !searchTerm.isEmpty {
@@ -99,7 +101,7 @@ struct JourneyPlannerScreen: View {
     }
     
     private func saveUIState() {
-        userPreferences.refreshAndRepairSavedJourneyData()
+        userPreferences.cleanUpSavedJourneys()
     }
     
     private func restoreUIState() {
@@ -187,7 +189,7 @@ struct JourneyPlannerScreen: View {
         case let .tappedLocationField(locationFieldID):
             showModalLocationPicker(for: locationFieldID)
         case let .swipedToDelete(recentJourneyItem):
-            userPreferences.remove(recentJourneyID: recentJourneyItem.id)
+            userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
             form.populate(with: recentJourneyItem)
             showResults()

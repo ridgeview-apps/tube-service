@@ -5,6 +5,7 @@ struct AppEnvironment {
     let contactUsEmail: String
     let appStoreProductUrl: URL
     let transportAPI: TransportAPI
+    let userDefaults: UserDefaults
     
     public var appReviewURL: URL {
         guard var urlComponents = URLComponents(string: appStoreProductUrl.absoluteString) else {
@@ -30,7 +31,8 @@ extension AppEnvironment {
                 baseURL: config[url: "transportAPIURL"],
                 appID: config["transportAPIAppId"],
                 appKey: config["transportAPIAppKey"]
-            )
+            ),
+            userDefaults: .standard
         )
         
         return appEnvironment

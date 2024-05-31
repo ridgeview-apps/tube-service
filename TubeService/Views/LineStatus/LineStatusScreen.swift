@@ -7,7 +7,9 @@ import SwiftUI
 @MainActor
 struct LineStatusScreen: View {
     @Environment(LineStatusDataStore.self) var model
-    @Environment(UserPreferencesDataStore.self) var userPreferences
+
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
     
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today

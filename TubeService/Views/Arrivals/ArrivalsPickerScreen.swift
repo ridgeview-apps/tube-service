@@ -7,7 +7,9 @@ import SwiftUI
 struct ArrivalsPickerScreen: View {
 
     @Environment(StationsDataStore.self) var stations
-    @Environment(UserPreferencesDataStore.self) var userPreferences
+    
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
     
     @State private var selection: Station.LineGroup?
     @State private var searchTerm: String = ""
@@ -88,7 +90,7 @@ struct ArrivalsPickerScreen: View {
     
     private func saveRecentSelection(for lineGroup: Station.LineGroup?) {
         if let lineGroup, let station = stations.station(forLineGroupID: lineGroup.id) {
-            userPreferences.save(recentlySelectedStationID: station.id)
+            userPreferences.saveRecentlySelectedStation(station.id)
         }
     }
     

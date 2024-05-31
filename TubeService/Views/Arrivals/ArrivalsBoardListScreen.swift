@@ -16,7 +16,9 @@ struct ArrivalsBoardListScreen: View {
     @State private var autoRefreshEnabled = false
         
     @Environment(\.transportAPI) var transportAPI
-    @Environment(UserPreferencesDataStore.self) var userPreferences
+
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
     
     private let autoRefreshTimer: ObservableTimer = .repeating(every: 20)
     
@@ -98,12 +100,12 @@ struct ArrivalsBoardListScreen: View {
     
     private var isFavouriteLineGroup: Binding<Bool> {
         .init {
-            userPreferences.isFavourite(lineGroupID: lineGroup.id)
+            userPreferences.containsFavouriteLineGroup(lineGroup.id)
         } set: { isFavourite in
             if isFavourite {
-                userPreferences.add(favouriteLineGroupID: lineGroup.id)
+                userPreferences.addFavouriteLineGroup(lineGroup.id)
             } else {
-                userPreferences.remove(favouriteLineGroupID: lineGroup.id)
+                userPreferences.removeFavouriteLineGroup(lineGroup.id)
             }
         }
     }    

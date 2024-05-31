@@ -12,7 +12,6 @@ final class AppDataStore {
     
     private(set) var lineStatus: LineStatusDataStore
     private(set) var stations: StationsDataStore
-    private(set) var userPreferences: UserPreferencesDataStore
     private(set) var location: LocationDataStore
     private(set) var localSearchCompleter: LocalSearchCompleter
     
@@ -28,7 +27,6 @@ final class AppDataStore {
         self.stations = stations
         
         self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
-        self.userPreferences = UserPreferencesDataStore(userDefaults: userDefaults)
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
         self.localSearchCompleter = LocalSearchCompleter()
@@ -37,7 +35,7 @@ final class AppDataStore {
 
 
 extension AppDataStore {
-    static var shared: AppDataStore {
+    static let shared: AppDataStore = {
         #if DEBUG
         if ProcessInfo.isRunningUITests {
             return .stub()
@@ -52,7 +50,7 @@ extension AppDataStore {
             ),
             userDefaults: .standard,
             locationManager: CLLocationManager())
-    }
+    }()
 }
 
 #if DEBUG

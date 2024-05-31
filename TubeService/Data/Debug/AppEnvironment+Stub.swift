@@ -8,7 +8,8 @@ extension AppEnvironment {
         appStoreProductUrl: .stub,
         transportAPI: .init(baseURL: .stub,
                             appID: "fakeAPIAppId",
-                            appKey: "fakeAPIAppKey")
+                            appKey: "fakeAPIAppKey"),
+        userDefaults: .standard
     )
 }
 

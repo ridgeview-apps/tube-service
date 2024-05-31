@@ -2,13 +2,13 @@ import Models
 import SwiftUI
 
 public struct RecentJourneyItem: Hashable, Identifiable {
-    public let id: SavedJourney.ID
+    public let id: UUID
     public var fromLocation: JourneyLocationPicker.Value
     public var toLocation: JourneyLocationPicker.Value
     public let viaLocation: JourneyLocationPicker.Value?
     public var lastUsed: Date
     
-    public init(id: SavedJourney.ID,
+    public init(id: UUID,
                 fromLocation: JourneyLocationPicker.Value,
                 toLocation: JourneyLocationPicker.Value,
                 viaLocation: JourneyLocationPicker.Value?,

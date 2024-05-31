@@ -4,82 +4,43 @@ import Models
 import ModelStubs
 import XCTest
 
-final class UserPreferencesDataStoreTests: XCTestCase {
+final class UserPreferencesTests: XCTestCase {
     
-    @MainActor
-    func testLoadUserPreferences_initiallyEmpty() throws {
-        // Given
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
-        
-        // When
-        let initialValue = userPreferences.value
-
-        // Then
-        XCTAssertEqual(initialValue, .default)
-    }
-    
-    @MainActor
-    func testLoadUserPreferences_initiallyPopulated() throws {
-        // Given
-        let userDefaults = UserDefaults.singleTestUserDefaults()
-        let initialPopulatedValue = UserPreferences(favouriteLineGroupIDs: ["ExampleID1", "ExampleID2"],
-                                                    favouriteLineIDs: [.bakerloo, .northern],
-                                                    recentlySelectedStations: ["ExampleID1"],
-                                                    journeyPlannerModeIDs: Set(ModeID.defaultJourneyPlannerModeIDs),
-                                                    recentlySavedJourneys: [.init(id: UUID(),
-                                                                                  fromLocation: .station(id: ModelStubs.eastFinchleyStation.id),
-                                                                                  toLocation: .station(id: ModelStubs.angelStation.id),
-                                                                                  viaLocation: nil,
-                                                                                  lastUsed: .now)])
-        userDefaults.userPreferences = initialPopulatedValue
-        
-        let userPreferences = UserPreferencesDataStore(userDefaults: userDefaults)
-        
-        // When
-        let initialValue = userPreferences.value
-
-        // Then
-        XCTAssertEqual(initialValue, initialPopulatedValue)
-    }
-    
-    @MainActor
     func testAddingAndRemovingFavouriteLineIDs() throws {
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         
         // 1. Initially empty
         XCTAssertTrue(userPreferences.favouriteLineIDs.isEmpty)
-        XCTAssertFalse(userPreferences.isFavourite(lineID: .bakerloo))
+        XCTAssertFalse(userPreferences.containsFavouriteLine(.bakerloo))
         
         // 2. Add a line ID
-        userPreferences.add(favouriteLineID: .bakerloo)
-        XCTAssertTrue(userPreferences.isFavourite(lineID: .bakerloo))
+        userPreferences.addFavouriteLine(.bakerloo)
+        XCTAssertTrue(userPreferences.containsFavouriteLine(.bakerloo))
         
         // 3. Remove the line ID
-        userPreferences.remove(favouriteLineID: .bakerloo)
-        XCTAssertFalse(userPreferences.isFavourite(lineID: .bakerloo))
+        userPreferences.removeFavouriteLine(.bakerloo)
+        XCTAssertFalse(userPreferences.containsFavouriteLine(.bakerloo))
     }
     
-    @MainActor
     func testAddingAndRemovingFavouriteLineGroupIDs() throws {
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         let fakeID = "FakeLineGroupID"
         
         // 1. Initially empty
         XCTAssertTrue(userPreferences.favouriteLineGroupIDs.isEmpty)
-        XCTAssertFalse(userPreferences.isFavourite(lineGroupID: fakeID))
+        XCTAssertFalse(userPreferences.containsFavouriteLineGroup(fakeID))
         
         // 2. Add a line group ID
-        userPreferences.add(favouriteLineGroupID: fakeID)
-        XCTAssertTrue(userPreferences.isFavourite(lineGroupID: fakeID))
+        userPreferences.addFavouriteLineGroup(fakeID)
+        XCTAssertTrue(userPreferences.containsFavouriteLineGroup(fakeID))
         
         // 3. Remove the line group ID
-        userPreferences.remove(favouriteLineGroupID: fakeID)
-        XCTAssertFalse(userPreferences.isFavourite(lineGroupID: fakeID))
+        userPreferences.removeFavouriteLineGroup(fakeID)
+        XCTAssertFalse(userPreferences.containsFavouriteLineGroup(fakeID))
     }
     
-    @MainActor
     func testSaveRecentlyUsedStationID() throws {
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         
         let eastFinchleyStationID = ModelStubs.eastFinchleyStation.id
         let angelStationID = ModelStubs.angelStation.id
@@ -88,27 +49,25 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertTrue(userPreferences.recentlySelectedStations.isEmpty)
         
         // 2. Select Angel THEN East Finchley (twice)
-        userPreferences.save(recentlySelectedStationID: angelStationID)
-        userPreferences.save(recentlySelectedStationID: eastFinchleyStationID)
-        userPreferences.save(recentlySelectedStationID: eastFinchleyStationID) // Duplicate save (ignored)
+        userPreferences.saveRecentlySelectedStation(angelStationID)
+        userPreferences.saveRecentlySelectedStation(eastFinchleyStationID)
+        userPreferences.saveRecentlySelectedStation(eastFinchleyStationID) // Duplicate save (ignored)
         
         // 3. Verify most recent selection is East Finchley
         XCTAssertEqual(userPreferences.recentlySelectedStations, [eastFinchleyStationID, angelStationID])
     }
     
-    @MainActor
     func testSaveModeIDs() throws {
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         
-        userPreferences.save(journeyPlannerModeIDs: Set([.tube, .walking]))
+        userPreferences.saveJourneyPlannerModes([.tube, .walking])
         
         XCTAssertEqual(userPreferences.journeyPlannerModeIDs, [.tube, .walking])
     }
     
-    @MainActor
-    func testAddingAndRemovingASavedJourney() throws {
+    func testAddingAndRemovingARecentJourney() throws {
         // Given
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         
         let kingsCrossStationID = ModelStubs.kingsCrossStation.id
         let angelStationID = ModelStubs.angelStation.id
@@ -121,9 +80,9 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         
         // When
         let initialValue = userPreferences.recentlySavedJourneys
-        userPreferences.insertOrReplace(journey: journey) // Add a journey
+        userPreferences.saveRecentJourney(journey)
         let firstSavedValue = userPreferences.recentlySavedJourneys
-        userPreferences.remove(recentJourneyID: journey.id) // Remove the journey
+        userPreferences.removeRecentJourney(journey.id)
         let finalSavedValue = userPreferences.recentlySavedJourneys
         
         // Then
@@ -132,10 +91,9 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertTrue(finalSavedValue.isEmpty)
     }
     
-    @MainActor
     func testSaveDuplicateJourneys_savesMostRecentValueOnly() throws {
         // Given
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         let wasInitiallyEmpty = userPreferences.recentlySavedJourneys.isEmpty
         
         let kingsCrossStationID = ModelStubs.kingsCrossStation.id
@@ -163,9 +121,9 @@ final class UserPreferencesDataStoreTests: XCTestCase {
                                              lastUsed: timestamp3)
         
         // When
-        userPreferences.insertOrReplace(journey: duplicateJourney1)
-        userPreferences.insertOrReplace(journey: duplicateJourney2)
-        userPreferences.insertOrReplace(journey: duplicateJourney3)
+        userPreferences.saveRecentJourney(duplicateJourney1)
+        userPreferences.saveRecentJourney(duplicateJourney2)
+        userPreferences.saveRecentJourney(duplicateJourney3)
         
         // Then
         XCTAssertTrue(wasInitiallyEmpty)
@@ -174,9 +132,9 @@ final class UserPreferencesDataStoreTests: XCTestCase {
     }
     
     @MainActor
-    func testRepairSavedJourneys_sortsMostRecentlyUsedFirst() throws {
+    func testCleanUpSavedJourneys_sortsMostRecentlyUsedFirst() throws {
         // Given
-        let userPreferences = UserPreferencesDataStore(userDefaults: .singleTestUserDefaults())
+        var userPreferences = UserPreferences.default
         
         let kingsCrossStationID = ModelStubs.kingsCrossStation.id
         let angelStationID = ModelStubs.angelStation.id
@@ -197,11 +155,11 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         
         // When
         let journeyCountBeforeInitialSave = userPreferences.recentlySavedJourneys.count
-        userPreferences.insertOrReplace(journey: outboundJourney)
-        userPreferences.insertOrReplace(journey: returnJourney)
+        userPreferences.saveRecentJourney(outboundJourney)
+        userPreferences.saveRecentJourney(returnJourney)
         let journeyCountAfterInitialSave = userPreferences.recentlySavedJourneys.count
         
-        userPreferences.refreshAndRepairSavedJourneyData() // Remove duplicate / reverse journeys
+        userPreferences.cleanUpSavedJourneys() // Remove duplicate / reverse journeys
         let journeyCountAfterSanitize = userPreferences.recentlySavedJourneys.count
         
         // Then
@@ -209,15 +167,5 @@ final class UserPreferencesDataStoreTests: XCTestCase {
         XCTAssertEqual(2, journeyCountAfterInitialSave) //
         XCTAssertEqual(1, journeyCountAfterSanitize)
         XCTAssertEqual(userPreferences.recentlySavedJourneys.first, returnJourney) // N.B. Journey with most recent timestamp saved
-    }
-}
-
-
-// MARK: - Private helpers
-
-private extension UserDefaults {
-    
-    static func singleTestUserDefaults() -> UserDefaults {
-        .init(suiteName: UUID().uuidString)!
     }
 }

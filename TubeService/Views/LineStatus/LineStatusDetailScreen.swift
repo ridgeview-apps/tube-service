@@ -7,8 +7,10 @@ import SwiftUI
 @MainActor
 struct LineStatusDetailScreen: View {
     
-    @Environment(UserPreferencesDataStore.self) var userPreferences
     @Environment(LineStatusDataStore.self) var model
+    
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
     
     let line: Line
     let fetchType: LineStatusDataStore.FetchType
@@ -28,20 +30,20 @@ struct LineStatusDetailScreen: View {
             loadingState: loadingState,
             refreshDate: refreshDate
         )
-            .navigationTitle(line.id.name)
-            .toolbar {
-                FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
-            }
+        .navigationTitle(line.id.name)
+        .toolbar {
+            FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
+        }
     }
     
     private func isFavouriteLine(for lineID: TrainLineID) -> Binding<Bool> {
         .init {
-            userPreferences.isFavourite(lineID: lineID)
+            userPreferences.containsFavouriteLine(lineID)
         } set: { isFavourite in
             if isFavourite {
-                userPreferences.add(favouriteLineID: lineID)
+                userPreferences.addFavouriteLine(lineID)
             } else {
-                userPreferences.remove(favouriteLineID: lineID)
+                userPreferences.removeFavouriteLine(lineID)
             }
         }
     }

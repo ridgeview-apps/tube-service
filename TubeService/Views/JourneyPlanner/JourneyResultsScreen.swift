@@ -14,7 +14,9 @@ struct JourneyResultsScreen: View {
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchCompleter.self) var localSearchCompleter
-    @Environment(UserPreferencesDataStore.self) var userPreferences
+    
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
 
     @Binding var form: JourneyPlannerForm
     
@@ -58,7 +60,7 @@ struct JourneyResultsScreen: View {
         }
         
         if let savedJourney = form.toNewSavedJourney() {
-            userPreferences.insertOrReplace(journey: savedJourney)
+            userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")
         }

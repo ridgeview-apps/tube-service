@@ -10,7 +10,9 @@ struct SettingsScreen: View {
     @Environment(\.locale) var locale
     @Environment(\.dismiss) var dismiss
     
-    @Environment(UserPreferencesDataStore.self) var userPreferences
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    private var userPreferences: UserPreferences = .default
+    
     @State private var editableValues: Settings.EditableValues = .default
     
     var body: some View {
@@ -28,7 +30,7 @@ struct SettingsScreen: View {
                 NavigationButton.Close { dismiss() }
             }
             .onChange(of: editableValues) { _, newValue in
-                userPreferences.save(journeyPlannerModeIDs: newValue.journeyPlannerModesSelection)
+                userPreferences.saveJourneyPlannerModes(newValue.journeyPlannerModesSelection)
             }
             .task {
                 editableValues = .init(journeyPlannerModesSelection: userPreferences.journeyPlannerModeIDs)

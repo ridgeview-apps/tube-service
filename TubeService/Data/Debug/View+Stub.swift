@@ -9,7 +9,6 @@ extension View {
     func withStubbedEnvironment() -> some View {
         withEnvironmentDataStores(lineStatus: LineStatusDataStore.stub(),
                                   stations: StationsDataStore.stub(),
-                                  userPreferences: UserPreferencesDataStore.stub(),
                                   location: LocationDataStore.stub(),
                                   localSearchCompleter: LocalSearchCompleter())
             .environment(\.transportAPI, StubTransportAPIClient())
