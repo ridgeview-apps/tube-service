@@ -1,3 +1,1 @@
-- New feature: journey planner
-
-Plan your entire journey across London with the new journey planner. Select where you want go and the app will show you the quickest routes to get there (on ALL modes of transport, including London buses).
+- Minor bug fixes
