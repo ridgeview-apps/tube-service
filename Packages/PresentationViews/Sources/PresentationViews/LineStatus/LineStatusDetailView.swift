@@ -24,17 +24,19 @@ public struct LineStatusDetailView: View {
     
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                refreshStatus
-                VStack(alignment: .leading, spacing: 20) {
+            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
+                Section {
                     statusHeaderCard
                     favouritesButton
                     Divider()
                     twitterSection
+                } header: {
+                    refreshStatus
                 }
+                .background(Color.defaultBackground)
             }
             .withDefaultMaxWidth()
-            .padding()
+            .padding(.horizontal)
             .frame(maxWidth: .infinity)
         }
         .background(Color.defaultBackground)
@@ -45,9 +47,13 @@ public struct LineStatusDetailView: View {
     // MARK: - Layout views
     
     private var refreshStatus: some View {
-        RefreshStatusView(loadingState: loadingState, refreshDate: refreshDate)
+        RefreshStatusView(loadingState: loadingState, 
+                          refreshDate: refreshDate)
             .font(.caption)
             .foregroundStyle(Color.adaptiveMidGrey2)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color.defaultBackground)
+            .padding(.vertical, 4)
     }
     
     private var statusHeaderCard: some View {
@@ -164,12 +170,15 @@ private struct Previewer: View {
     @State var isFavourite = false
     
     var body: some View {
-        LineStatusDetailView(
-            line: line,
-            isFavourite: $isFavourite,
-            loadingState: loadingState,
-            refreshDate: refreshDate
-        )
+        NavigationStack {
+            LineStatusDetailView(
+                line: line,
+                isFavourite: $isFavourite,
+                loadingState: loadingState,
+                refreshDate: refreshDate
+            )
+            .navigationTitle("Preview")
+        }
     }
 }
 

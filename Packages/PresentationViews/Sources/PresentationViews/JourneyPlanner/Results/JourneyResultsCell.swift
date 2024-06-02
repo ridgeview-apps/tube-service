@@ -61,13 +61,27 @@ struct JourneyResultsCell: View {
     
     private var journeyTimeInfo: some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(journey.formattedStartEndTime)
-                .font(.headline)
-                .accessibilityIdentifier("journey.start.time.info")
+            startAndEndTime
             Spacer()
             Text(journey.formattedDuration)
                 .font(.subheadline)
         }
+    }
+    
+    private var startAndEndTime: some View {
+        HStack(spacing: 8) {
+            if let startDateTime = journey.startDateTime {
+                Text(startDateTime.formatted(date: .omitted, time: .shortened))
+            }
+            Image(systemName: "arrow.right")
+                .imageScale(.small)
+                .foregroundStyle(.secondary)
+            if let arrivalDateTime = journey.arrivalDateTime {
+                Text(arrivalDateTime.formatted(date: .omitted, time: .shortened))
+            }
+        }
+        .font(.headline)
+        .accessibilityIdentifier("journey.start.time.info")
     }
     
     private var lineDiagram: some View {
@@ -93,11 +107,6 @@ private extension Journey {
             .filter { $0.category == .realTime }
             .removingDuplicates()
             .compactMap { $0.description }
-    }
-    
-    var formattedStartEndTime: String {
-        guard let startDateTime, let arrivalDateTime else { return "" }
-        return DateIntervalFormatter.timeIntervalStyle.string(from: startDateTime, to: arrivalDateTime)
     }
     
     var formattedDuration: String {

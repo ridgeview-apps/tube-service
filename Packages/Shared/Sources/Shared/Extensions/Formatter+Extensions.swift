@@ -40,11 +40,4 @@ public extension DateIntervalFormatter {
         formatter.timeStyle = .none
         return formatter
     }()
-    
-    static let timeIntervalStyle: DateIntervalFormatter = {
-        let formatter = DateIntervalFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        return formatter
-    }()
 }
