@@ -143,7 +143,7 @@ private_lane :upload_to_app_store_connect do |options|
     force: true, # Skips the interactive preview of html file before uploading
     build_number: build_number,
     submission_information: {
-      add_id_info_uses_idfa: true,
+      add_id_info_uses_idfa: false,
       add_id_info_serves_ads: false,
       add_id_info_tracks_action: false,
       add_id_info_tracks_install: false,
