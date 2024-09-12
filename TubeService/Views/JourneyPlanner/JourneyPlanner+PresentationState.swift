@@ -166,32 +166,6 @@ extension JourneyPlannerForm {
                      lastUsed: timestamp)
     }
     
-    func resolvingLocations(
-        findLocationCoordinate: (LocationName) async throws -> LocationCoordinate
-    ) async throws -> JourneyPlannerForm {
-        // Resolve location coordinates for selections (e.g. current or named location)
-        async let resolveFrom = from?.resolvingLocationCoordinate(findLocationCoordinate: findLocationCoordinate)
-        
-        async let resolveTo = to?.resolvingLocationCoordinate(findLocationCoordinate: findLocationCoordinate)
-        
-        async let resolveVia = via?.resolvingLocationCoordinate(findLocationCoordinate: findLocationCoordinate)
-        
-        let (resolvedFromValue, resolvedToValue, resolvedViaValue) = try await (resolveFrom, resolveTo, resolveVia)
-        
-        var updatedForm = self
-        if let resolvedFromValue {
-            updatedForm.from = resolvedFromValue
-        }
-        if let resolvedToValue {
-            updatedForm.to = resolvedToValue
-        }
-        if let resolvedViaValue {
-            updatedForm.via = resolvedViaValue
-        }
-        
-        return updatedForm
-    }
-    
     mutating func updateCurrentLocationInfo(name: LocationName?,
                                             coordinate: LocationCoordinate?,
                                             updatesAllowed: Bool) {
@@ -301,31 +275,6 @@ extension JourneyLocationPicker.Value {
                 return nil
             }
             return .specific(locationName, locationCoordinate)
-        }
-    }
-    
-    func resolvingLocationCoordinate(
-        findLocationCoordinate: (LocationName) async throws -> LocationCoordinate
-    ) async throws -> JourneyLocationPicker.Value {
-        switch self {
-        case .station, .nationalRail:
-            return self
-        case .namedLocation(let value):
-            guard !value.isResolved else {
-                return self
-            }
-            
-            if value.isCurrentLocation {
-                assertionFailure("Current location should already be resolved")
-            }
-            
-            guard let locationName = value.name else {
-                throw JourneyPlannerError.coordinateUnknown
-            }
-            let resolvedCoordinate = try await findLocationCoordinate(locationName)
-            return .namedLocation(.init(name: locationName,
-                                        coordinate: resolvedCoordinate,
-                                        isCurrentLocation: value.isCurrentLocation))
         }
     }
 }

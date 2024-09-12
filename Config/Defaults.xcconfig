@@ -1,6 +1,6 @@
 // Default build/archive settings
 APP_VERSION_NUMBER=1.9.0
 
-// Default app environment / Info.plist values
+// Default app config / Info.plist values
 APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
 CONTACT_US_EMAIL = feedback@ridgeviewconsulting.co.uk

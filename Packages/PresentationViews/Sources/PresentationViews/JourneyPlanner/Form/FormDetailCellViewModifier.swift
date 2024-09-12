@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 struct FormDetailCellViewModifier: ViewModifier {
+    
     let title: LocalizedStringResource?
     let alignment: VerticalAlignment
     let errors: [String]?

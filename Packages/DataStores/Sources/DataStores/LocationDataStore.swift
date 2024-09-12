@@ -8,6 +8,7 @@ import Foundation
 public final class LocationDataStore: NSObject {
     
     private let locationManager: LocationManagerType
+    private let locationManagerDelegate = LocationManagerDelegate()
     private let stations: StationsDataStore
     private let geocoder: CLGeocoder
     
@@ -41,11 +42,11 @@ public final class LocationDataStore: NSObject {
         self.stations = stations
         self.geocoder = CLGeocoder()
         super.init()
-        (locationManager as? CLLocationManager)?.delegate = self
         
-        if let location = locationManager.location {
-            updateCurrentLocation(to: location.toLocation())
+        locationManagerDelegate.onAction = { [weak self] action in
+            self?.handleLocationManagerDelegateAction(action)
         }
+        (locationManager as? CLLocationManager)?.delegate = locationManagerDelegate
     }
     
     public func promptForPermissions() {
@@ -169,29 +170,47 @@ private extension CLPlacemark {
 
 // MARK: - CLLocationManagerDelegate
 
-// N.B. I could've moved the delegate to a separate NSObject (to prevent LocationModel from having to conform to NSObject
-// but it added unnecesssary complexity for no added benefit).
-
-extension LocationDataStore: CLLocationManagerDelegate {
+private class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
+    enum Action {
+        case didChangeAuthorization(CLLocationManager)
+        case didFailWithError(CLLocationManager, Error)
+        case didUpdateLocations(CLLocationManager, [CLLocation])
+    }
+    
+    var onAction: ((Action) -> Void)?
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
-        startDetectingCurrentLocationIfAuthorized() // i.e. CHANGED to authorized (e.g. so permissions have just been granted)
-        
-        if !isAuthorized {
-            clearAllLocationValues()
-        }
+        onAction?(.didChangeAuthorization(manager))
     }
     
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        detectionState = .failed(error)
+        onAction?(.didFailWithError(manager, error))
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last?.toLocation() else {
-            return
+        onAction?(.didUpdateLocations(manager, locations))
+    }
+}
+
+private extension LocationDataStore {
+    
+    func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
+        switch action {
+        case .didChangeAuthorization(let manager):
+            authorizationStatus = manager.authorizationStatus
+            startDetectingCurrentLocationIfAuthorized() // i.e. CHANGED to authorized (e.g. so permissions have just been granted)
+            
+            if !isAuthorized {
+                clearAllLocationValues()
+            }
+        case .didFailWithError(_, let error):
+            detectionState = .failed(error)
+        case .didUpdateLocations(_, let locations):
+            guard let location = locations.last?.toLocation() else {
+                return
+            }
+            detectionState = .detected
+            updateCurrentLocation(to: location)
         }
-        detectionState = .detected
-        updateCurrentLocation(to: location)
     }
 }

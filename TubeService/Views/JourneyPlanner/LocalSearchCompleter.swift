@@ -22,6 +22,7 @@ final class LocalSearchCompleter: NSObject {
     private(set) var errorMessage: String?
     
     private let searchCompleter: MKLocalSearchCompleter = MKLocalSearchCompleter()
+    private let searchCompleterDelegate = LocalSearchCompleterDelegate()
     
     static let london = MKCoordinateRegion(center: .init(latitude: 51.5007282,
                                                          longitude: -0.1246263),
@@ -34,7 +35,11 @@ final class LocalSearchCompleter: NSObject {
         self.searchRegion = searchRegion ?? Self.london
         super.init()
         searchCompleter.resultTypes = [.pointOfInterest, .address]
-        searchCompleter.delegate = self
+
+        searchCompleterDelegate.onAction = { [weak self] action in
+            self?.handleLocalSearchCompleterDelegateAction(action)
+        }
+        searchCompleter.delegate = searchCompleterDelegate
     }
     
     func searchForPlaces(matching searchTerm: String) {
@@ -61,18 +66,41 @@ final class LocalSearchCompleter: NSObject {
     }    
 }
 
-extension LocalSearchCompleter: MKLocalSearchCompleterDelegate {
+// MARK: - MKLocalSearchCompleterDelegate
+
+private class LocalSearchCompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
+    enum Action {
+        case didUpdateResults(MKLocalSearchCompleter)
+        case didFailWithError(MKLocalSearchCompleter, Error)
+    }
+    
+    var onAction: ((Action) -> Void)?
+    
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        errorMessage = nil
-        
-        results = completer.results
-                           .map {
-                               LocationName(title: $0.title, subtitle: $0.subtitle)
-                            }
-                           .removingDuplicates()
+        onAction?(.didUpdateResults(completer))
     }
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        errorMessage = error.localizedDescription
+        onAction?(.didFailWithError(completer, error))
+    }
+}
+
+private extension LocalSearchCompleter {
+    
+    func handleLocalSearchCompleterDelegateAction(_ action: LocalSearchCompleterDelegate.Action) {
+        switch action {
+        case .didUpdateResults(let completer):
+            errorMessage = nil
+            
+            results = completer
+                        .results
+                        .map {
+                            LocationName(title: $0.title, subtitle: $0.subtitle)
+                        }
+                        .removingDuplicates()
+            
+        case .didFailWithError(_, let error):
+            errorMessage = error.localizedDescription
+        }
     }
 }

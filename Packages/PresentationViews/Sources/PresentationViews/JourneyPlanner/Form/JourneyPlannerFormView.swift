@@ -5,7 +5,6 @@ public struct JourneyPlannerFormView: View {
     
     @Binding var form: JourneyPlannerForm
     @Binding var recentJourneys: [RecentJourneyItem]
-    @Binding var isTravelOptionsExpanded: Bool
     
     let locationAccessoryStatus: JourneyLocationTitleLabel.AccessoryStatus
     
@@ -17,12 +16,10 @@ public struct JourneyPlannerFormView: View {
         
     public init(form: Binding<JourneyPlannerForm>,
                 recentJourneys: Binding<[RecentJourneyItem]>,
-                isTravelOptionsExpanded: Binding<Bool>,
                 locationAccessoryStatus: JourneyLocationTitleLabel.AccessoryStatus,
                 onAction: @escaping (JourneyPlannerForm.Action) -> Void) {
         self._form = form
         self._recentJourneys = recentJourneys
-        self._isTravelOptionsExpanded = isTravelOptionsExpanded
         self.locationAccessoryStatus = locationAccessoryStatus
         self.onAction = onAction
     }
@@ -32,10 +29,8 @@ public struct JourneyPlannerFormView: View {
     
     public var body: some View {
         List {
-            Group {
-                formSection
-                recentJourneysSection
-            }
+            formSection
+            recentJourneysSection
         }
         .buttonStyle(.plain)
         .listStyle(.plain)
@@ -46,31 +41,39 @@ public struct JourneyPlannerFormView: View {
     
     private var formSection: some View {
         Section {
-            JourneyPlannerFromToSelectionView(form: $form,
-                                              locationAccessoryStatus: locationAccessoryStatus,
-                                              animationNamespace: animationNamespace,
-                                              onAction: onAction)
+            fromToSelectionView
                 .padding(.vertical, 4)
-
-            JourneyPlannerTravelOptionsCell(
-                isExpanded: $isTravelOptionsExpanded,
-                timeSelection: $form.timeSelection,
-                viaLocation: $form.via,
-                onAction: handleTravelOptionsAction
-            )
-            .frame(minHeight: 44)
-        } footer: {
-            submitButton
-                .padding(.top, 12)
+            Group {
+                timePickerCell
+                viaLocationCell
+                submitButton
+            }
+            .listRowBackground(Color.clear)
         }
-        .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
         .listRowBackground(Color.defaultCellBackground)
-        .listSectionSeparator(.hidden)
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
     }
     
-    private func handleTravelOptionsAction(_ action: JourneyPlannerTravelOptionsCell.Action) {
-        switch action {
-        case .tappedViaLocationButton:
+    private var fromToSelectionView: some View {
+        JourneyPlannerFromToSelectionView(
+            form: $form,
+            locationAccessoryStatus: locationAccessoryStatus,
+            animationNamespace: animationNamespace,
+            onAction: onAction
+        )
+    }
+    
+    private var timePickerCell: some View {
+        JourneyTimePickerView(selection: $form.timeSelection)
+    }
+    
+    private var viaLocationCell: some View {
+        JourneyLocationFormButton(
+            value: $form.via,
+            placeholderText: .journeyPlannerTravelOptionsViaPlaceholderTitle,
+            prefixLabelTitle: form.via == nil ? nil : .journeyPlannerViaLabelTitle
+        ) {
             onAction(.tappedLocationField(.via))
         }
     }
@@ -83,7 +86,6 @@ public struct JourneyPlannerFormView: View {
         }
         .buttonStyle(.primary)
         .disabled(!form.canSubmit)
-        .listRowBackground(Color.clear)
     }
     
     @ViewBuilder
@@ -134,7 +136,6 @@ import ModelStubs
 private struct Previewer: View {
     @State var form: JourneyPlannerForm
     @State var recentJourneys: [RecentJourneyItem] = []
-    @State var isTravelOptionsExpanded = false
     var locationAccessoryStatus: JourneyLocationTitleLabel.AccessoryStatus = .loadingState(.loaded)
     
     var body: some View {
@@ -142,7 +143,6 @@ private struct Previewer: View {
             JourneyPlannerFormView(
                 form: $form,
                 recentJourneys: $recentJourneys,
-                isTravelOptionsExpanded: $isTravelOptionsExpanded,
                 locationAccessoryStatus: locationAccessoryStatus,
                 onAction: { print("Action \($0)") }
             )

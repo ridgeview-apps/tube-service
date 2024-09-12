@@ -1,15 +1,14 @@
 import Foundation
 
 #if DEBUG
-extension AppEnvironment {
+extension AppConfig {
     
-    static let stub = AppEnvironment(
+    static let stub = AppConfig(
         contactUsEmail: "test@notanemail.com",
-        appStoreProductUrl: .stub,
+        appStoreProductURL: .stub,
         transportAPI: .init(baseURL: .stub,
                             appID: "fakeAPIAppId",
-                            appKey: "fakeAPIAppKey"),
-        userDefaults: .standard
+                            appKey: "fakeAPIAppKey")
     )
 }
 

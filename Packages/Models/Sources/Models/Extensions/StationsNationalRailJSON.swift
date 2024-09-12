@@ -1,7 +1,7 @@
 //
 // National rail stations source of truth
 //
-// Generated (with tweaks) from: https://api.tfl.gov.uk/StopPoint/Type/NaptanRailStation?page=1
+// Generated (with tweaks) from: https://api.tfl.gov.uk/StopPoint/Type/NaptanRailStation/page/1
 //
 let nationalRailStations = """
 [

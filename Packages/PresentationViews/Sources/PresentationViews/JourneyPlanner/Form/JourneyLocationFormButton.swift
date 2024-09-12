@@ -11,6 +11,7 @@ public struct JourneyLocationFormButton: View {
     @Binding var value: JourneyLocationPicker.Value?
     var accessoryStatus: JourneyLocationTitleLabel.AccessoryStatus?
     var placeholderText: LocalizedStringResource = .journeyPlannerLocationButtonSelectLocation
+    var prefixLabelTitle: LocalizedStringResource?
     let action: () -> Void
     
     public var body: some View {
@@ -19,7 +20,10 @@ public struct JourneyLocationFormButton: View {
                 action()
             }
         } label: {
-            HStack {
+            HStack(spacing: 4) {
+                if let prefixLabelTitle {
+                    Text(prefixLabelTitle)
+                }
                 locationValueLabel(for: value)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .contentShape(Rectangle())

@@ -43,14 +43,18 @@ extension AppDataStore {
         #endif
         
         return .init(
-            transportAPI: TransportAPIClient(
-                baseURL: AppEnvironment.shared.transportAPI.baseURL,
-                appID: AppEnvironment.shared.transportAPI.appID,
-                appKey: AppEnvironment.shared.transportAPI.appKey
-            ),
+            transportAPI: TransportAPIClient.shared,
             userDefaults: .standard,
             locationManager: CLLocationManager())
     }()
+}
+
+extension TransportAPIClient {
+    static let shared = TransportAPIClient(
+        baseURL: AppConfig.shared.transportAPI.baseURL,
+        appID: AppConfig.shared.transportAPI.appID,
+        appKey: AppConfig.shared.transportAPI.appKey
+    )
 }
 
 #if DEBUG

@@ -233,12 +233,15 @@ public struct LineStatusListView: View {
 
 private extension DatePicker {
     
+    @ViewBuilder
     func withAutoDismissID(of date: Date) -> some View {
         // On iOS, setting an ID makes a date picker auto-dismiss on selection ✅
         // On macOS (Silicon), setting an ID causes a date picker to freeze 🙄
-        #if !os(macOS)
+        if !ProcessInfo.processInfo.isiOSAppOnMac {
             id(date)
-        #endif
+        } else {
+            self
+        }
     }
 }
 

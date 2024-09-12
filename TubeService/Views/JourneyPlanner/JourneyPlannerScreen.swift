@@ -35,7 +35,6 @@ struct JourneyPlannerScreen: View {
     @State private var suggestionsSection: JourneyLocationPicker.SectionState = .suggestions([])
     @State private var nearbyStationsSection: JourneyLocationPicker.SectionState = .nearbyStations([])
     @State private var searchTerm = ""
-    @State private var isTravelOptionsExpanded = false
     @State private var hasLoaded = false
 
     @State private var navigationState = NavigationState<DestinationID>.root
@@ -48,7 +47,7 @@ struct JourneyPlannerScreen: View {
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchCompleter.self) var localSearchCompleter
     
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
     
     private var locationPickerSections: [JourneyLocationPicker.SectionState] {
@@ -65,7 +64,6 @@ struct JourneyPlannerScreen: View {
             JourneyPlannerFormView(
                 form: $form,
                 recentJourneys: $recentJourneys,
-                isTravelOptionsExpanded: $isTravelOptionsExpanded,
                 locationAccessoryStatus: .loadingState(location.detectionState.toLoadingState()),
                 onAction: handleFormAction
             )
@@ -205,7 +203,6 @@ struct JourneyPlannerScreen: View {
     }
     
     private func showResults() {
-        isTravelOptionsExpanded = false
         form.adjustCurrentTimeIfNeeded()
         navigationState.push(to: .results)
     }

@@ -6,11 +6,11 @@ import SwiftUI
 
 struct SettingsScreen: View {
     
-    @Environment(\.appEnvironment) var appEnvironment
+    @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
     @Environment(\.dismiss) var dismiss
     
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
     
     @State private var editableValues: Settings.EditableValues = .default
@@ -18,8 +18,8 @@ struct SettingsScreen: View {
     var body: some View {
         NavigationStack {
             SettingsView(appVersionNumber: Bundle.main.appVersionNumber,
-                         appReviewURL: appEnvironment.appReviewURL,
-                         contactUs: .init(emailAddress: appEnvironment.contactUsEmail,
+                         appReviewURL: appConfig.appReviewURL,
+                         contactUs: .init(emailAddress: appConfig.contactUsEmail,
                                           appVersion: Bundle.main.appVersionNumber,
                                           appName: Bundle.main.appName,
                                           deviceInfo: Device.current.modelName,

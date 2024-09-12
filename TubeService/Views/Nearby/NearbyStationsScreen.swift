@@ -37,7 +37,6 @@ struct NearbyStationsScreen: View {
         .withSettingsToolbarButton()
         .navigationTitle(Text(.nearbyStationsNavigationTitle))
         .refreshable {
-            resetPageNo()
             location.refreshCurrentLocation()
         }
     }
@@ -101,10 +100,6 @@ struct NearbyStationsScreen: View {
     
     private func resumeLocationDetection() {
         location.startDetectingCurrentLocationIfAuthorized()
-    }
-    
-    private func resetPageNo() {
-        sectionState.resetPageNo()
     }
     
     private func updateResultsSectionState(reset: Bool = false) {

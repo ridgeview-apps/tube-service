@@ -4,5 +4,5 @@
 // Build/archive settings
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service.beta
 
-// App environment / Info.plist values
+// App config / Info.plist values
 TRANSPORT_API_URL = https:/$()/api.tfl.gov.uk

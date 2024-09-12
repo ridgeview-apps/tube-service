@@ -21,7 +21,7 @@
 		313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA9E2AD7425600FF4271 /* View+Stub.swift */; };
 		3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314029492BFFAA3900200776 /* View+PublishedEvents.swift */; };
 		314D614C2B4C1F1600C08D67 /* DataStores in Frameworks */ = {isa = PBXBuildFile; productRef = 314D614B2B4C1F1600C08D67 /* DataStores */; };
-		31508D4725604A3C0047BC9C /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31508D4625604A3C0047BC9C /* AppEnvironment.swift */; };
+		31508D4725604A3C0047BC9C /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31508D4625604A3C0047BC9C /* AppConfig.swift */; };
 		3151E8752B1E411E00D0046C /* LocationModel+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3151E8742B1E411E00D0046C /* LocationModel+Stub.swift */; };
 		3151E8772B1F4C2D00D0046C /* NearbyStationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3151E8762B1F4C2D00D0046C /* NearbyStationsScreen.swift */; };
 		315693C22BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315693C12BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift */; };
@@ -43,7 +43,7 @@
 		31D072CD2BD138AC003286E1 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D072CC2BD138AC003286E1 /* NavigationState.swift */; };
 		31DA583F2BB5D04E00EB568E /* JourneyResultsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DA583E2BB5D04E00EB568E /* JourneyResultsScreen.swift */; };
 		31DE50C12AD0002900FC3407 /* ArrivalsPickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DE50C02AD0002900FC3407 /* ArrivalsPickerScreen.swift */; };
-		31DE50C32AD009F200FC3407 /* EnvironmentKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DE50C22AD009F200FC3407 /* EnvironmentKeys.swift */; };
+		31DE50C32AD009F200FC3407 /* EnvironmentValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31DE50C22AD009F200FC3407 /* EnvironmentValues.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,7 +85,7 @@
 		314029492BFFAA3900200776 /* View+PublishedEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PublishedEvents.swift"; sourceTree = "<group>"; };
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
-		31508D4625604A3C0047BC9C /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		31508D4625604A3C0047BC9C /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		3151E8742B1E411E00D0046C /* LocationModel+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationModel+Stub.swift"; sourceTree = "<group>"; };
 		3151E8762B1F4C2D00D0046C /* NearbyStationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyStationsScreen.swift; sourceTree = "<group>"; };
 		315693C12BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JourneyPlanner+PresentationState.swift"; sourceTree = "<group>"; };
@@ -117,7 +117,7 @@
 		31D072CC2BD138AC003286E1 /* NavigationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationState.swift; sourceTree = "<group>"; };
 		31DA583E2BB5D04E00EB568E /* JourneyResultsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyResultsScreen.swift; sourceTree = "<group>"; };
 		31DE50C02AD0002900FC3407 /* ArrivalsPickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsPickerScreen.swift; sourceTree = "<group>"; };
-		31DE50C22AD009F200FC3407 /* EnvironmentKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentKeys.swift; sourceTree = "<group>"; };
+		31DE50C22AD009F200FC3407 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
 		31E8F8432BFCEE9100603359 /* Defaults.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Defaults.xcconfig; sourceTree = "<group>"; };
 		31EE93512AE6BD0200AB20ED /* Models */ = {isa = PBXFileReference; lastKnownFileType = text; name = Models; path = Packages/Models; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -334,7 +334,7 @@
 		318D485724EFC9E30026B5F4 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				31508D4625604A3C0047BC9C /* AppEnvironment.swift */,
+				31508D4625604A3C0047BC9C /* AppConfig.swift */,
 				3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */,
 			);
 			path = Core;
@@ -400,7 +400,7 @@
 		31E329B3251B5BBE00E35EF3 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				31DE50C22AD009F200FC3407 /* EnvironmentKeys.swift */,
+				31DE50C22AD009F200FC3407 /* EnvironmentValues.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -588,7 +588,7 @@
 			files = (
 				31260614256542A900358CA2 /* App.swift in Sources */,
 				313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */,
-				31DE50C32AD009F200FC3407 /* EnvironmentKeys.swift in Sources */,
+				31DE50C32AD009F200FC3407 /* EnvironmentValues.swift in Sources */,
 				3168AB722AE300F70074DAD5 /* MapsScreen.swift in Sources */,
 				316FCDEF2577A25300328F66 /* ProcessInfo+.swift in Sources */,
 				3137D6B42BAC75C300AF3A35 /* LocalSearchCompleter.swift in Sources */,
@@ -608,7 +608,7 @@
 				31D072CD2BD138AC003286E1 /* NavigationState.swift in Sources */,
 				31CE9EB32BA4B8230038FBD4 /* JourneyPlannerScreen.swift in Sources */,
 				31DA583F2BB5D04E00EB568E /* JourneyResultsScreen.swift in Sources */,
-				31508D4725604A3C0047BC9C /* AppEnvironment.swift in Sources */,
+				31508D4725604A3C0047BC9C /* AppConfig.swift in Sources */,
 				3107A8052ACC84EA009AFDB9 /* RootScreen.swift in Sources */,
 				31DE50C12AD0002900FC3407 /* ArrivalsPickerScreen.swift in Sources */,
 				3151E8772B1F4C2D00D0046C /* NearbyStationsScreen.swift in Sources */,

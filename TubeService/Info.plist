@@ -22,8 +22,8 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Your current location will be used to find stations nearby</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your current location will be used to find stations nearby</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -48,7 +48,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>appEnvironment</key>
+	<key>appConfig</key>
 	<dict>
 		<key>appStoreProductUrl</key>
 		<string>$(APP_STORE_PRODUCT_URL)</string>
@@ -58,7 +58,7 @@
 		<string>$(TRANSPORT_API_APP_ID)</string>
 		<key>transportAPIAppKey</key>
 		<string>$(TRANSPORT_API_APP_KEY)</string>
-		<key>transportAPIURL</key>
+		<key>transportAPIUrl</key>
 		<string>$(TRANSPORT_API_URL)</string>
 	</dict>
 </dict>

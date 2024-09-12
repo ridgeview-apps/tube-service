@@ -143,11 +143,6 @@ public struct StationView: View {
     }
 }
 
-extension LocationCoordinate: Identifiable {
-    public var id: Double { lat + lon }
-}
-
-
 // MARK: - Previews
 
 import ModelStubs

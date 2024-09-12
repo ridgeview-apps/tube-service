@@ -21,8 +21,4 @@ public struct NearbyStationsResultsSectionState {
     public static var empty: Self {
         .init(nearbyStations: [])
     }
-    
-    public mutating func resetPageNo() {
-        currentPageNo = 1
-    }
 }

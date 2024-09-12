@@ -17,7 +17,7 @@ struct ArrivalsBoardListScreen: View {
         
     @Environment(\.transportAPI) var transportAPI
 
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
     
     private let autoRefreshTimer: ObservableTimer = .repeating(every: 20)
@@ -74,7 +74,7 @@ struct ArrivalsBoardListScreen: View {
             loadingState = .loading
             
             do {
-                boardStates = try await fetchBoards(for: lineGroup)
+                boardStates = try await fetchBoards()
                 refreshDate = .now
                 loadedBoardID = lineGroup.id
                 loadingState = .loaded
@@ -84,8 +84,8 @@ struct ArrivalsBoardListScreen: View {
         }
     }
     
-    private func fetchBoards(for lineGroup: Station.LineGroup) async throws -> [ArrivalsBoardState] {
-        switch lineGroup.arrivalsDataType {
+    nonisolated private func fetchBoards() async throws -> [ArrivalsBoardState] {
+        switch await lineGroup.arrivalsDataType {
         case let .arrivalDepartures(lineIDs):
             guard let lineID = lineIDs.first else { return [] } // ArrivalDepartures are only for a single line
             return try await transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)

@@ -15,7 +15,7 @@ struct JourneyResultsScreen: View {
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchCompleter.self) var localSearchCompleter
     
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
 
     @Binding var form: JourneyPlannerForm
@@ -48,7 +48,7 @@ struct JourneyResultsScreen: View {
     private func fetchData() async {
         do {
             loadingState = .loading
-            let itinerary = try await fetchItineraryWithResolvedLocations()
+            let itinerary = try await resolveLocationCoordinatesAndFetchItinerary()
             makeCellItems(for: itinerary)
             loadingState = .loaded
             hasFetchedData = true
@@ -66,12 +66,15 @@ struct JourneyResultsScreen: View {
         }
     }
     
-    private func fetchItineraryWithResolvedLocations() async throws -> JourneyItinerary {
-        form = try await form.resolvingLocations(
-            findLocationCoordinate: localSearchCompleter.locationCoordinate(for:)
-        )
-        let requestParams = try form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
+    private func resolveLocationCoordinatesAndFetchItinerary() async throws -> JourneyItinerary {
+        form = try await localSearchCompleter.resolveLocationCoordinates(forForm: form)
+        return try await fetchItinerary()
+    }
+    
+    nonisolated private func fetchItinerary() async throws -> JourneyItinerary {
+        let requestParams = try await form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
         return try await transportAPI.fetchJourneyItinerary(for: requestParams).decodedModel
+
     }
     
     private func makeCellItems(for itinerary: JourneyItinerary) {
@@ -83,5 +86,57 @@ struct JourneyResultsScreen: View {
                                        journeyDiagramID: String(index),
                                        isExpanded: false)
             }
+    }
+}
+
+private extension LocalSearchCompleter {
+
+    func resolveLocationCoordinates(forForm form: JourneyPlannerForm) async throws -> JourneyPlannerForm {
+
+        async let resolveFrom = resolveLocationCoordinate(for: form.from)
+        async let resolveTo = resolveLocationCoordinate(for: form.to)
+        async let resolveVia = resolveLocationCoordinate(for: form.via)
+        
+        let (resolvedFromValue, resolvedToValue, resolvedViaValue) = try await (resolveFrom, resolveTo, resolveVia)
+        
+        var updatedForm = form
+        if let resolvedFromValue {
+            updatedForm.from = resolvedFromValue
+        }
+        if let resolvedToValue {
+            updatedForm.to = resolvedToValue
+        }
+        if let resolvedViaValue {
+            updatedForm.via = resolvedViaValue
+        }
+        
+        return updatedForm
+    }
+    
+    private func resolveLocationCoordinate(for pickerValue: JourneyLocationPicker.Value?) async throws -> JourneyLocationPicker.Value? {
+        guard let pickerValue else {
+            return nil
+        }
+
+        switch pickerValue {
+        case .station, .nationalRail:
+            return pickerValue
+        case .namedLocation(let value):
+            guard !value.isResolved else {
+                return pickerValue
+            }
+            
+            if value.isCurrentLocation {
+                assertionFailure("Current location should already be resolved")
+            }
+            
+            guard let locationName = value.name else {
+                throw JourneyPlannerError.coordinateUnknown
+            }
+            let resolvedCoordinate = try await locationCoordinate(for: locationName)
+            return .namedLocation(.init(name: locationName,
+                                        coordinate: resolvedCoordinate,
+                                        isCurrentLocation: value.isCurrentLocation))
+        }
     }
 }

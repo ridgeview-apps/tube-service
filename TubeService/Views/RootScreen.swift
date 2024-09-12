@@ -15,17 +15,17 @@ struct RootScreen: View {
                                accessibilityID: "acc.id.journey.planner.tab.title")
 
             ArrivalsPickerScreen()
-                .styledTabItem(imageName: "tram.fill",
+                .styledTabItem(imageName: "tram",
                                title: .arrivalsTabTitle,
                                accessibilityID: "acc.id.arrivals.tab.title")
             
             NearbyStationsScreen()
-                .styledTabItem(imageName: "location.fill",
+                .styledTabItem(imageName: "location",
                                title: .nearbyStationsTabTitle,
                                accessibilityID: "acc.id.nearby.stations.tab.title")
             
             MapsScreen()
-                .styledTabItem(imageName: "map.fill",
+                .styledTabItem(imageName: "map",
                                title: .mapsTabTitle, 
                                accessibilityID: "acc.id.maps.tab.title")
         }

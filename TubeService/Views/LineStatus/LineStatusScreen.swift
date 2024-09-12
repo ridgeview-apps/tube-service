@@ -8,7 +8,7 @@ import SwiftUI
 struct LineStatusScreen: View {
     @Environment(LineStatusDataStore.self) var model
 
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: AppEnvironment.shared.userDefaults)
+    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
     
     @State private var selectedLine: Line?

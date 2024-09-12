@@ -190,5 +190,4 @@ private struct WrapperView: View {
         style: .searchResults
     )
     .searchable(text: .constant(""), placement: .navigationBarDrawer(displayMode: .always))
-    .previewDisplayName("With search bar")
 }

@@ -10,6 +10,10 @@ public struct LocationCoordinate: Codable, Hashable {
     }
 }
 
+extension LocationCoordinate: Identifiable {
+    public var id: Double { lat + lon }
+}
+
 public struct LocationName: Codable, Hashable, Identifiable {
     public var id: Self { self }
     

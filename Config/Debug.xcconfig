@@ -7,5 +7,5 @@ CODE_SIGN_IDENTITY = Apple Development
 CODE_SIGN_STYLE = Automatic
 DEVELOPMENT_TEAM = 3H5L23529U
 
-// App environment / Info.plist values
+// App config / Info.plist values
 TRANSPORT_API_URL = https:/$()/api.tfl.gov.uk
