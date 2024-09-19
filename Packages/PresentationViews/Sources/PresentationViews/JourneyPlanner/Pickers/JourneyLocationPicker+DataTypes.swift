@@ -1,9 +1,9 @@
 import Foundation
 import Models
 
-public enum JourneyLocationPicker {
+public enum JourneyLocationPicker: Sendable {
     
-    public struct NamedLocationValue: Hashable {
+    public struct NamedLocationValue: Hashable, Sendable {
         public let name: LocationName?
         public let coordinate: LocationCoordinate?
         public let isCurrentLocation: Bool
@@ -19,7 +19,7 @@ public enum JourneyLocationPicker {
         }
     }
     
-    public enum Value: Hashable {
+    public enum Value: Hashable, Sendable {
         case station(Station)
         case nationalRail(StopPoint)
         case namedLocation(NamedLocationValue)

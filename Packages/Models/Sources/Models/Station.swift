@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Station: Identifiable, Hashable, Codable {
+public struct Station: Identifiable, Hashable, Codable, Sendable {
     public let id: String
     public let icsCode: String
     public let name: String
@@ -24,7 +24,7 @@ public struct Station: Identifiable, Hashable, Codable {
 
 public extension Station {
     
-    struct LineGroup: Hashable, Equatable, Codable {
+    struct LineGroup: Hashable, Equatable, Codable, Sendable {
         public let atcoCode: String
         public let lineIds: [TrainLineID]
         

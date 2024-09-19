@@ -5,8 +5,8 @@ import Foundation
 
 extension LocationDataStore {
     
-    static func stub() -> LocationDataStore {
-        return .init(locationManager: StubLocationManager(), stations: .stub())
+    static func stub(stations: StationsDataStore) -> LocationDataStore {
+        return .init(locationManager: StubLocationManager(), stations: stations)
     }
 }
 

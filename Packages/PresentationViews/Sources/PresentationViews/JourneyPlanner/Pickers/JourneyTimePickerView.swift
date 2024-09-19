@@ -4,9 +4,9 @@ import SwiftUI
 private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .medium,
                                                                    timeStyle: .short)
 
-public struct JourneyTimePickerSelection: Hashable {
+public struct JourneyTimePickerSelection: Hashable, Sendable {
     
-    public enum Option: CaseIterable {
+    public enum Option: CaseIterable, Sendable {
         case leaveNow, leaveAt, arriveBy
         
         var title: LocalizedStringResource {

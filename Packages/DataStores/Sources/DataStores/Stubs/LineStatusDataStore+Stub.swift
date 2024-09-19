@@ -4,7 +4,7 @@ import Foundation
 
 public extension LineStatusDataStore {
     
-    static func stub(transportAPI: TransportAPIClientType = StubTransportAPIClient(),
+    static func stub(transportAPI: TransportAPIClientType,
                      now: @escaping () -> Date = { Date() }) -> LineStatusDataStore {
         return .init(transportAPI: transportAPI, now: now)
     }    

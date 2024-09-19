@@ -1,4 +1,4 @@
-public enum TrainLineID: String, Codable, CaseIterable, Hashable {
+public enum TrainLineID: String, Codable, CaseIterable, Hashable, Sendable {
     
     case bakerloo
     case central
@@ -17,7 +17,7 @@ public enum TrainLineID: String, Codable, CaseIterable, Hashable {
     case overground = "london-overground"
 }
 
-public enum ModeID: String, Codable {
+public enum ModeID: String, Codable, Sendable {
     case bus
     case cableCar = "cable-car"
     case coach

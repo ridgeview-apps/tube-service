@@ -3,7 +3,7 @@ import Models
 
 // MARK: - Data types
 
-public protocol TransportAPIClientType {
+public protocol TransportAPIClientType: Sendable {
     func fetchCurrentLineStatuses() async throws -> APIResponse<[Line]>
     func fetchLineStatuses(for dateInterval: DateInterval) async throws -> APIResponse<[Line]>
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> APIResponse<[ArrivalPrediction]>

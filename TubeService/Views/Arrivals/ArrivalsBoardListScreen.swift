@@ -4,7 +4,6 @@ import PresentationViews
 import Shared
 import SwiftUI
 
-@MainActor
 struct ArrivalsBoardListScreen: View {
     let stationName: String
     let lineGroup: Station.LineGroup
@@ -85,7 +84,7 @@ struct ArrivalsBoardListScreen: View {
     }
     
     nonisolated private func fetchBoards() async throws -> [ArrivalsBoardState] {
-        switch await lineGroup.arrivalsDataType {
+        switch lineGroup.arrivalsDataType {
         case let .arrivalDepartures(lineIDs):
             guard let lineID = lineIDs.first else { return [] } // ArrivalDepartures are only for a single line
             return try await transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)

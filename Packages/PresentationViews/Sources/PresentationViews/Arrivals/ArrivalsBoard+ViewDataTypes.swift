@@ -4,7 +4,7 @@ import SwiftUI
 
 // MARK: - Data types
 
-public struct ArrivalsBoardState: Identifiable {
+public struct ArrivalsBoardState: Identifiable, Sendable {
     
     public var id: String { platformName }
     
@@ -12,7 +12,7 @@ public struct ArrivalsBoardState: Identifiable {
     let cellItems: [ArrivalsBoardCellItem]
 }
 
-struct ArrivalsBoardCellItem: Identifiable {
+struct ArrivalsBoardCellItem: Identifiable, Sendable {
 
     struct NumberLabel {
         let value: Int
@@ -29,12 +29,12 @@ struct ArrivalsBoardCellItem: Identifiable {
     let subtitleType: ArrivalsBoardSubtitleType?
 }
 
-enum ArrivalsBoardDestinationType {
+enum ArrivalsBoardDestinationType: Sendable {
     case destination(String)
     case checkFrontOfTrain
 }
 
-enum ArrivalsBoardSubtitleType {
+enum ArrivalsBoardSubtitleType: Sendable {
     case currentLocationName(String)
     case depatureTime(String)
 }

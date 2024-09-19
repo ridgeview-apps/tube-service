@@ -6,13 +6,20 @@ import SwiftUI
 extension View {
     
     @MainActor 
-    func withStubbedEnvironment() -> some View {
-        withEnvironmentDataStores(lineStatus: LineStatusDataStore.stub(),
-                                  stations: StationsDataStore.stub(),
-                                  location: LocationDataStore.stub(),
-                                  localSearchCompleter: LocalSearchCompleter())
-            .environment(\.transportAPI, StubTransportAPIClient())
-            .environment(\.appConfig, AppConfig.stub)
+    func withStubbedEnvironment(transportAPI: StubTransportAPIClient = StubTransportAPIClient()) -> some View {
+        let lineStatus = LineStatusDataStore.stub(transportAPI: transportAPI)
+        let stations = StationsDataStore.stub(transportAPI: transportAPI)
+        let location = LocationDataStore.stub(stations: stations)
+        let localSearchCompleter = LocalSearchCompleter()
+        
+        return withEnvironmentDataStores(
+            lineStatus: lineStatus,
+            stations: stations,
+            location: location,
+            localSearchCompleter: localSearchCompleter
+        )
+        .environment(\.transportAPI, transportAPI)
+        .environment(\.appConfig, AppConfig.stub)
     }
 }
 

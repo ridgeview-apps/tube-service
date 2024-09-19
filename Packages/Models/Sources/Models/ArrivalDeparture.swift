@@ -1,7 +1,7 @@
 import Foundation
 
-public struct ArrivalDeparture: Equatable, Codable {
-    public enum DepartureStatus: String, Codable, Equatable {
+public struct ArrivalDeparture: Equatable, Codable, Sendable {
+    public enum DepartureStatus: String, Codable, Equatable, Sendable {
         case onTime = "OnTime"
         case delayed = "Delayed"
         case cancelled = "Cancelled"

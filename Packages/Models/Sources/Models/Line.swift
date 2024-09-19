@@ -1,4 +1,4 @@
-public struct Line: Codable, Identifiable, Hashable {
+public struct Line: Codable, Identifiable, Hashable, Sendable {
     public let id: TrainLineID
     public let lineStatuses: [LineStatus]?
     

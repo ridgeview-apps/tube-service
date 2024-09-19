@@ -1,10 +1,10 @@
 import Foundation
 
-public struct JourneyItinerary: Codable, Hashable {
+public struct JourneyItinerary: Codable, Hashable, Sendable {
     public let journeys: [Journey]?
 }
 
-public struct Journey: Codable, Hashable {
+public struct Journey: Codable, Hashable, Sendable {
     public let startDateTime: Date?
     public let duration: Int?
     public let arrivalDateTime: Date?
@@ -13,7 +13,7 @@ public struct Journey: Codable, Hashable {
     public let fare: JourneyFare?
 }
 
-public struct JourneyLeg: Codable, Hashable {
+public struct JourneyLeg: Codable, Hashable, Sendable {
     
     public let duration: Int?
     public let instruction: JourneyInstruction?
@@ -27,20 +27,20 @@ public struct JourneyLeg: Codable, Hashable {
     public let disruptions: [Disruption]?
 }
 
-public struct JourneyInstruction: Codable, Hashable {
+public struct JourneyInstruction: Codable, Hashable, Sendable {
     public let summary: String?
     public let detailed: String?
 }
 
-public struct JourneyRouteOption: Codable, Hashable {
+public struct JourneyRouteOption: Codable, Hashable, Sendable {
     public let lineIdentifier: TflIdentifierType?
 }
 
-public struct JourneyPath: Codable, Hashable {
+public struct JourneyPath: Codable, Hashable, Sendable {
     public let stopPoints: [TflIdentifier]?
 }
 
-public struct StopPoint: Codable, Hashable {
+public struct StopPoint: Codable, Hashable, Sendable {
     public let naptanId: String?
     public let platformName: String?
     public let icsCode: String?
@@ -49,12 +49,12 @@ public struct StopPoint: Codable, Hashable {
     public let lon: Double?
 }
 
-public struct TflIdentifier: Codable, Hashable {
+public struct TflIdentifier: Codable, Hashable, Sendable {
     public let id: String?
     public let name: String?
 }
 
-public enum TflIdentifierType: Hashable, Codable {
+public enum TflIdentifierType: Hashable, Codable, Sendable {
     
     case modeID(ModeID)
     case trainLineID(TrainLineID)
@@ -112,12 +112,12 @@ public enum TflIdentifierType: Hashable, Codable {
     }
 }
 
-public struct JourneyFare: Codable, Hashable {
+public struct JourneyFare: Codable, Hashable, Sendable {
     public let totalCost: Int? // In pence
     public let fares: [Fare]?
 }
 
-public struct Fare: Codable, Hashable {
+public struct Fare: Codable, Hashable, Sendable {
     let chargeLevel: String?
     let peak: Int?
     let offPeak: Int?

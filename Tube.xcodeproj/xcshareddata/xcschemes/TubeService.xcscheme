@@ -39,7 +39,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "316DE034256ECFC8003D4B2A"
+               BlueprintIdentifier = "31E6EEEC2C9DB4980042A66A"
                BuildableName = "TubeServiceTests.xctest"
                BlueprintName = "TubeServiceTests"
                ReferencedContainer = "container:Tube.xcodeproj">

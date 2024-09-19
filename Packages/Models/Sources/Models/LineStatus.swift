@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LineStatus: Codable, Hashable {
+public struct LineStatus: Codable, Hashable, Sendable {
     public let statusSeverity: LineStatusSeverity?
     public let statusSeverityDescription: String?
     public let reason: String?
@@ -43,7 +43,7 @@ public extension LineStatus {
     }
 }
 
-public enum LineStatusSeverity: Int, Codable {
+public enum LineStatusSeverity: Int, Codable, Sendable {
     
     case specialService = 0
     case closed = 1
@@ -69,7 +69,7 @@ public enum LineStatusSeverity: Int, Codable {
     case undefined = 999
 }
 
-public struct Disruption: Codable, Hashable {
+public struct Disruption: Codable, Hashable, Sendable {
     public let category: DisruptionCategory?
     public let description: String?
     public let additionalInfo: String?
@@ -86,7 +86,7 @@ public struct Disruption: Codable, Hashable {
     }
 }
 
-public enum DisruptionCategory: String, Codable {
+public enum DisruptionCategory: String, Codable, Sendable {
     case undefined = "Undefined"
     case realTime = "RealTime"
     case plannedWork = "PlannedWork"

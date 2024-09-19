@@ -1,4 +1,4 @@
-public struct DisruptedPoint: Codable, Identifiable, Hashable {
+public struct DisruptedPoint: Codable, Identifiable, Hashable, Sendable {
     public var id: String? { atcoCode }
     
     public let atcoCode: String?

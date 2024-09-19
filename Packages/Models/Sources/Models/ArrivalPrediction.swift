@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ArrivalPrediction: Identifiable, Equatable, Codable {
+public struct ArrivalPrediction: Identifiable, Equatable, Codable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case id

@@ -2,7 +2,7 @@ import Foundation
 import Models
 
 // swiftlint:disable identifier_name
-public struct JourneyPlannerForm: Hashable {
+public struct JourneyPlannerForm: Hashable, Sendable {
     
     public enum CurrentLocationAccessoryStatus {
         case warning

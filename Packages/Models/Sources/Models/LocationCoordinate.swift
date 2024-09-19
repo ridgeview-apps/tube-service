@@ -1,6 +1,6 @@
 import Foundation
 
-public struct LocationCoordinate: Codable, Hashable {
+public struct LocationCoordinate: Codable, Hashable, Sendable {
     public let lat: Double
     public let lon: Double
     
@@ -14,7 +14,7 @@ extension LocationCoordinate: Identifiable {
     public var id: Double { lat + lon }
 }
 
-public struct LocationName: Codable, Hashable, Identifiable {
+public struct LocationName: Codable, Hashable, Identifiable, Sendable {
     public var id: Self { self }
     
     public let title: String

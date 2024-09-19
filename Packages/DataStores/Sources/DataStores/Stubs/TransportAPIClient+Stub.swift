@@ -5,6 +5,7 @@ import Shared
 
 #if DEBUG
 
+@MainActor
 public final class StubTransportAPIClient: TransportAPIClientType {
     
     public init() {}

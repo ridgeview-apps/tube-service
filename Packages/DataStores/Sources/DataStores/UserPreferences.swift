@@ -1,7 +1,7 @@
 import Foundation
 import Models
 
-public struct UserPreferences: Equatable, Codable {
+public struct UserPreferences: Equatable, Codable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case favouriteLineGroupIDs = "favourites"
@@ -90,8 +90,8 @@ extension UserPreferences: RawRepresentable {
     }
 }
 
-public struct SavedJourney: Identifiable, Hashable, Codable {
-    public enum LocationType: Hashable, Codable {
+public struct SavedJourney: Identifiable, Hashable, Codable, Sendable {
+    public enum LocationType: Hashable, Codable, Sendable {
         case station(id: Station.ID)
         case nationalRail(icsCode: String)
         case specific(LocationName, LocationCoordinate)

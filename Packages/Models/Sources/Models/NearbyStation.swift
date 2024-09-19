@@ -1,6 +1,6 @@
 import Foundation
 
-public struct NearbyStation: Hashable {
+public struct NearbyStation: Hashable, Sendable {
     public let distance: Double
     public let station: Station
     

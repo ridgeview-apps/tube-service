@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -54,7 +54,7 @@
 			remoteGlobalIDString = 318D482524EFC4900026B5F4;
 			remoteInfo = TubeService;
 		};
-		316DE03A256ECFC8003D4B2A /* PBXContainerItemProxy */ = {
+		31E6EEF12C9DB4980042A66A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 318D481E24EFC4900026B5F4 /* Project object */;
 			proxyType = 1;
@@ -98,8 +98,6 @@
 		315F8A142567EA580069DD2D /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		3168AB712AE300F70074DAD5 /* MapsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapsScreen.swift; sourceTree = "<group>"; };
 		316CAAC724F0090300481DC1 /* LineStatusScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStatusScreen.swift; sourceTree = "<group>"; };
-		316DE035256ECFC8003D4B2A /* TubeServiceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		316DE039256ECFC8003D4B2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		316FCDEE2577A25300328F66 /* ProcessInfo+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcessInfo+.swift"; sourceTree = "<group>"; };
 		316FCEC7257FDBEA0052AF52 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		317ADDEE2534745600AB34B9 /* NavigationButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtons.swift; sourceTree = "<group>"; };
@@ -118,19 +116,17 @@
 		31DA583E2BB5D04E00EB568E /* JourneyResultsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyResultsScreen.swift; sourceTree = "<group>"; };
 		31DE50C02AD0002900FC3407 /* ArrivalsPickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsPickerScreen.swift; sourceTree = "<group>"; };
 		31DE50C22AD009F200FC3407 /* EnvironmentValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentValues.swift; sourceTree = "<group>"; };
+		31E6EEED2C9DB4980042A66A /* TubeServiceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31E8F8432BFCEE9100603359 /* Defaults.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Defaults.xcconfig; sourceTree = "<group>"; };
 		31EE93512AE6BD0200AB20ED /* Models */ = {isa = PBXFileReference; lastKnownFileType = text; name = Models; path = Packages/Models; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31E6EEEE2C9DB4980042A66A /* TubeServiceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TubeServiceTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		315F89C42567BCB70069DD2D /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		316DE032256ECFC8003D4B2A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -145,6 +141,13 @@
 				314D614C2B4C1F1600C08D67 /* DataStores in Frameworks */,
 				310BBAAF2AD574D70097BAD8 /* Shared in Frameworks */,
 				310BBAAD2AD574D70097BAD8 /* PresentationViews in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31E6EEEA2C9DB4980042A66A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,14 +251,6 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
-		316DE036256ECFC8003D4B2A /* TubeServiceTests */ = {
-			isa = PBXGroup;
-			children = (
-				316DE039256ECFC8003D4B2A /* Info.plist */,
-			);
-			path = TubeServiceTests;
-			sourceTree = "<group>";
-		};
 		318D481D24EFC4900026B5F4 = {
 			isa = PBXGroup;
 			children = (
@@ -263,7 +258,7 @@
 				3168C3902538A0330094CAF9 /* Config */,
 				318D482824EFC4900026B5F4 /* TubeService */,
 				315F89C82567BCB70069DD2D /* TubeServiceUITests */,
-				316DE036256ECFC8003D4B2A /* TubeServiceTests */,
+				31E6EEEE2C9DB4980042A66A /* TubeServiceTests */,
 				318D482724EFC4900026B5F4 /* Products */,
 				31ACDBE32700E6E500C33CF3 /* Frameworks */,
 			);
@@ -274,7 +269,7 @@
 			children = (
 				318D482624EFC4900026B5F4 /* Tube Service.app */,
 				315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */,
-				316DE035256ECFC8003D4B2A /* TubeServiceTests.xctest */,
+				31E6EEED2C9DB4980042A66A /* TubeServiceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -426,24 +421,6 @@
 			productReference = 315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		316DE034256ECFC8003D4B2A /* TubeServiceTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 316DE03F256ECFC8003D4B2A /* Build configuration list for PBXNativeTarget "TubeServiceTests" */;
-			buildPhases = (
-				316DE031256ECFC8003D4B2A /* Sources */,
-				316DE032256ECFC8003D4B2A /* Frameworks */,
-				316DE033256ECFC8003D4B2A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				316DE03B256ECFC8003D4B2A /* PBXTargetDependency */,
-			);
-			name = TubeServiceTests;
-			productName = TubeServiceTests;
-			productReference = 316DE035256ECFC8003D4B2A /* TubeServiceTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		318D482524EFC4900026B5F4 /* TubeService */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 318D483A24EFC4900026B5F4 /* Build configuration list for PBXNativeTarget "TubeService" */;
@@ -468,6 +445,29 @@
 			productReference = 318D482624EFC4900026B5F4 /* Tube Service.app */;
 			productType = "com.apple.product-type.application";
 		};
+		31E6EEEC2C9DB4980042A66A /* TubeServiceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 31E6EEF32C9DB4980042A66A /* Build configuration list for PBXNativeTarget "TubeServiceTests" */;
+			buildPhases = (
+				31E6EEE92C9DB4980042A66A /* Sources */,
+				31E6EEEA2C9DB4980042A66A /* Frameworks */,
+				31E6EEEB2C9DB4980042A66A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				31E6EEF22C9DB4980042A66A /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31E6EEEE2C9DB4980042A66A /* TubeServiceTests */,
+			);
+			name = TubeServiceTests;
+			packageProductDependencies = (
+			);
+			productName = TubeServiceTests;
+			productReference = 31E6EEED2C9DB4980042A66A /* TubeServiceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -475,7 +475,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1220;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "Shilan Patel";
 				TargetAttributes = {
@@ -483,13 +483,12 @@
 						CreatedOnToolsVersion = 12.0;
 						TestTargetID = 318D482524EFC4900026B5F4;
 					};
-					316DE034256ECFC8003D4B2A = {
-						CreatedOnToolsVersion = 12.2;
-						LastSwiftMigration = 1500;
-						TestTargetID = 318D482524EFC4900026B5F4;
-					};
 					318D482524EFC4900026B5F4 = {
 						CreatedOnToolsVersion = 11.5;
+					};
+					31E6EEEC2C9DB4980042A66A = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 318D482524EFC4900026B5F4;
 					};
 				};
 			};
@@ -509,7 +508,7 @@
 			projectRoot = "";
 			targets = (
 				318D482524EFC4900026B5F4 /* TubeService */,
-				316DE034256ECFC8003D4B2A /* TubeServiceTests */,
+				31E6EEEC2C9DB4980042A66A /* TubeServiceTests */,
 				315F89C62567BCB70069DD2D /* TubeServiceUITests */,
 			);
 		};
@@ -517,13 +516,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		315F89C52567BCB70069DD2D /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		316DE033256ECFC8003D4B2A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -538,6 +530,13 @@
 				318D483324EFC4900026B5F4 /* Preview Assets.xcassets in Resources */,
 				31D072CB2BCFEB20003286E1 /* PrivacyInfo.xcprivacy in Resources */,
 				318D483024EFC4900026B5F4 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31E6EEEB2C9DB4980042A66A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,13 +574,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		316DE031256ECFC8003D4B2A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		318D482224EFC4900026B5F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -616,6 +608,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		31E6EEE92C9DB4980042A66A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -624,10 +623,10 @@
 			target = 318D482524EFC4900026B5F4 /* TubeService */;
 			targetProxy = 315F89CC2567BCB70069DD2D /* PBXContainerItemProxy */;
 		};
-		316DE03B256ECFC8003D4B2A /* PBXTargetDependency */ = {
+		31E6EEF22C9DB4980042A66A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 318D482524EFC4900026B5F4 /* TubeService */;
-			targetProxy = 316DE03A256ECFC8003D4B2A /* PBXContainerItemProxy */;
+			targetProxy = 31E6EEF12C9DB4980042A66A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -676,47 +675,6 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = TubeService;
-			};
-			name = Release;
-		};
-		316DE03C256ECFC8003D4B2A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = TubeServiceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ridgeviewapps.TubeServiceTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tube Service.app/Tube Service";
-			};
-			name = Debug;
-		};
-		316DE03D256ECFC8003D4B2A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = TubeServiceTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ridgeviewapps.TubeServiceTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tube Service.app/Tube Service";
 			};
 			name = Release;
 		};
@@ -867,7 +825,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_TARGET_BUNDLE_ID)";
 				PRODUCT_NAME = "Tube Service";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -889,8 +847,51 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "$(MAIN_TARGET_BUNDLE_ID)";
 				PRODUCT_NAME = "Tube Service";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore $(PRODUCT_BUNDLE_IDENTIFIER)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		31E6EEF42C9DB4980042A66A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ridgeviewapps.TubeServiceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tube Service.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tube Service";
+			};
+			name = Debug;
+		};
+		31E6EEF52C9DB4980042A66A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ridgeviewapps.TubeServiceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tube Service.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tube Service";
 			};
 			name = Release;
 		};
@@ -902,15 +903,6 @@
 			buildConfigurations = (
 				315F89CF2567BCB70069DD2D /* Debug */,
 				315F89D02567BCB70069DD2D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		316DE03F256ECFC8003D4B2A /* Build configuration list for PBXNativeTarget "TubeServiceTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				316DE03C256ECFC8003D4B2A /* Debug */,
-				316DE03D256ECFC8003D4B2A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -929,6 +921,15 @@
 			buildConfigurations = (
 				318D483B24EFC4900026B5F4 /* Debug */,
 				318D483C24EFC4900026B5F4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		31E6EEF32C9DB4980042A66A /* Build configuration list for PBXNativeTarget "TubeServiceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				31E6EEF42C9DB4980042A66A /* Debug */,
+				31E6EEF52C9DB4980042A66A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
