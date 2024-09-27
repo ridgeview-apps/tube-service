@@ -1,7 +1,7 @@
 @testable import DataStores
 import XCTest
 
-final class LineStatusModelTests: XCTestCase {
+final class LineStatusDataStoreTests: XCTestCase {
     
     @MainActor
     func testRefreshLineStatusesForToday() async {
@@ -56,7 +56,7 @@ final class LineStatusModelTests: XCTestCase {
                                         calendar: .london)
         
         // When
-        transportAPI.fetchCurrentLineStatusesError = TransportAPIError.invalidRequestURL
+        transportAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
         await model.refreshLineStatuses(for: .today)
         let fetchedData = model.fetchedData(for: .today)
         

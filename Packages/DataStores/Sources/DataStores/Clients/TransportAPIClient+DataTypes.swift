@@ -1,23 +1,6 @@
 import Foundation
 import Models
 
-// MARK: - Network API models
-
-public struct APIResponseErrorModel: Decodable {
-    public let message: String?
-}
-
-public struct APIResponse<T: Decodable> {
-    public let httpStatusCode: Int
-    public let decodedModel: T
-        
-    public init(httpStatusCode: Int,
-                decodedModel: T) {
-        self.decodedModel = decodedModel
-        self.httpStatusCode = httpStatusCode
-    }
-}
-
 // MARK: - Journey API models
 
 // swiftlint:disable identifier_name

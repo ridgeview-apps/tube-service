@@ -15,7 +15,8 @@ struct RootScene: App {
                 .withEnvironmentDataStores(lineStatus: appData.lineStatus,
                                            stations: appData.stations,
                                            location: appData.location,
-                                           localSearchCompleter: appData.localSearchCompleter)
+                                           localSearchCompleter: appData.localSearchCompleter,
+                                           systemStatus: appData.systemStatus)
         }
     }
 }
@@ -35,14 +36,18 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension View {
     
-    func withEnvironmentDataStores(lineStatus: LineStatusDataStore,
-                                   stations: StationsDataStore,
-                                   location: LocationDataStore,
-                                   localSearchCompleter: LocalSearchCompleter) -> some View {
+    func withEnvironmentDataStores(
+        lineStatus: LineStatusDataStore,
+        stations: StationsDataStore,
+        location: LocationDataStore,
+        localSearchCompleter: LocalSearchCompleter,
+        systemStatus: SystemStatusDataStore
+    ) -> some View {
         self
             .environment(lineStatus)
             .environment(stations)
             .environment(location)
             .environment(localSearchCompleter)
+            .environment(systemStatus)
     }
 }

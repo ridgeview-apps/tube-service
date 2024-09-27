@@ -279,6 +279,17 @@
         }
       }
     },
+    "global.ok" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        }
+      }
+    },
     "journey.location.picker.nearby.stations.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1487,6 +1498,28 @@
         }
       }
     },
+    "settings.system.status.detail.unable.to.load" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to load system status - please try later"
+          }
+        }
+      }
+    },
+    "settings.system.status.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System status"
+          }
+        }
+      }
+    },
     "station.arrivals.section.header.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1583,6 +1616,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swap"
+          }
+        }
+      }
+    },
+    "system.status.banner.more.info.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More info"
+          }
+        }
+      }
+    },
+    "system.status.banner.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System status"
+          }
+        }
+      }
+    },
+    "system.status.ok.default.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All systems operational"
+          }
+        }
+      }
+    },
+    "system.status.outage.default.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problems reported"
           }
         }
       }

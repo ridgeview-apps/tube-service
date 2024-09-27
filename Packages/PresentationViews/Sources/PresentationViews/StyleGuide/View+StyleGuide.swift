@@ -61,8 +61,8 @@ public extension View {
         self.modifier(PulsatingSymbolEffectModifier())
     }
     
-    func withDefaultMaxWidth() -> some View {
-        self.frame(maxWidth: 600)
+    func withDefaultMaxWidth(alignment: Alignment = .center) -> some View {
+        self.frame(maxWidth: 600, alignment: alignment)
     }
 
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {

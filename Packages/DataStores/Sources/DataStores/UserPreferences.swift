@@ -9,6 +9,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         case favouriteLineIDs
         case journeyPlannerModeIDs
         case recentlySavedJourneys
+        case readSystemStatusMessage
     }
     
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
@@ -16,6 +17,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var recentlySelectedStations: [Station.ID]
     public var journeyPlannerModeIDs: Set<ModeID>
     public var recentlySavedJourneys: [SavedJourney]
+    public var readSystemStatusMessage: SystemStatus.ID?
 
     // N.B. Codable conformance needs to be implemented manually to play nicely with `RawRepresentable`
     // and prevent infinite recursion. It also makes it easier to add new properties (with default values)
@@ -32,6 +34,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.favouriteLineIDs = (try? container.decodeIfPresent(Set<Line.ID>.self, forKey: .favouriteLineIDs)) ?? []
         self.journeyPlannerModeIDs = (try? container.decode(Set<ModeID>.self, forKey: .journeyPlannerModeIDs)) ?? ModeID.defaultJourneyPlannerModeIDs
         self.recentlySavedJourneys = (try? container.decode([SavedJourney].self, forKey: .recentlySavedJourneys)) ?? []
+        self.readSystemStatusMessage = (try? container.decodeIfPresent(SystemStatus.ID.self, forKey: .readSystemStatusMessage))
     }
     
     public func encode(to encoder: any Encoder) throws {
@@ -41,26 +44,30 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         try container.encode(self.favouriteLineIDs, forKey: .favouriteLineIDs)
         try container.encode(self.journeyPlannerModeIDs, forKey: .journeyPlannerModeIDs)
         try container.encode(self.recentlySavedJourneys, forKey: .recentlySavedJourneys)
+        try container.encode(self.readSystemStatusMessage, forKey: .readSystemStatusMessage)
     }
     
     public static let `default`: UserPreferences = .init(favouriteLineGroupIDs: [],
                                                          favouriteLineIDs: [],
                                                          recentlySelectedStations: [],
                                                          journeyPlannerModeIDs: ModeID.defaultJourneyPlannerModeIDs,
-                                                         recentlySavedJourneys: [])
+                                                         recentlySavedJourneys: [],
+                                                         readSystemStatusMessage: nil)
     
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
         favouriteLineIDs: Set<Line.ID> = [],
         recentlySelectedStations: [Station.ID] = [],
         journeyPlannerModeIDs: Set<ModeID>,
-        recentlySavedJourneys: [SavedJourney]
+        recentlySavedJourneys: [SavedJourney],
+        readSystemStatusMessage: SystemStatus.ID?
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
         self.favouriteLineIDs = favouriteLineIDs
         self.recentlySelectedStations = recentlySelectedStations
         self.journeyPlannerModeIDs = journeyPlannerModeIDs
         self.recentlySavedJourneys = recentlySavedJourneys
+        self.readSystemStatusMessage = readSystemStatusMessage
     }
 }
 
@@ -231,6 +238,17 @@ public extension UserPreferences {
     
     mutating func saveJourneyPlannerModes(_ modeIDs: Set<ModeID>) {
         self.journeyPlannerModeIDs = modeIDs
+    }
+    
+    
+    // MARK: Read system status messages
+    
+    func hasReadSystemStatusMessage(id: SystemStatus.ID) -> Bool {
+        readSystemStatusMessage == id
+    }
+    
+    mutating func markAsRead(systemStatusMessageID: SystemStatus.ID) {
+        readSystemStatusMessage = systemStatusMessageID
     }
 }
 

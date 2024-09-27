@@ -125,3 +125,13 @@ public extension ModelStubs {
     
     static var journeyItineraryKingsXToWaterloo: JourneyItinerary { decodedValue(for: journeyItineraryKingsXToWaterlooJSON) }
 }
+
+
+// MARK: - System status
+
+public extension ModelStubs {
+    
+    static var systemStatusOK: SystemStatus { decodedValue(for: systemStatusOKJSON) }
+    static var systemStatusOutage: SystemStatus { decodedValue(for: systemStatusOutageJSON)}
+    static var systemStatusResolved: SystemStatus { decodedValue(for: systemStatusResolvedJSON)}
+}

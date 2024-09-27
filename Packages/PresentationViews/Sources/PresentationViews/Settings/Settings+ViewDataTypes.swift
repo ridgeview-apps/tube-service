@@ -4,6 +4,8 @@ public enum Settings {} // Namespace
 
 public extension Settings {
     
+    // MARK: - Contact us
+    
     struct ContactUs: Equatable {
         public let emailAddress: String
         public let appVersion: String
@@ -30,6 +32,9 @@ public extension Settings {
                                                    localeInfo: "")
     }
     
+    
+    // MARK: - Editable values
+    
     struct EditableValues: Equatable {
         public var journeyPlannerModesSelection: Set<ModeID>
         
@@ -43,5 +48,11 @@ public extension Settings {
         
         public static let `default` = EditableValues(journeyPlannerModesSelection: Set(ModeID.defaultJourneyPlannerModeIDs))
     }
+    
+    
+    // MARK: - Debug state
 
+    enum DebugAction {
+        case resetUserDefaults
+    }
 }
