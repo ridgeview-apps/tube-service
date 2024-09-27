@@ -26,15 +26,6 @@ struct JourneyPlannerFromToSelectionView: View {
         }
     }
     
-    private func errorView(message: String) -> some View {
-        HStack {
-            Image(systemName: "exclamationmark.circle.fill")
-            Text(message)
-        }
-        .foregroundColor(.adaptiveRed)
-    }
-    
-    
     private var fromLocationField: some View {
         JourneyLocationFormButton(style: buttonStyle(forFieldID: .from),
                                   value: $form.from,

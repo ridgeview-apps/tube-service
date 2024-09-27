@@ -168,4 +168,23 @@ final class UserPreferencesTests: XCTestCase {
         XCTAssertEqual(1, journeyCountAfterSanitize)
         XCTAssertEqual(userPreferences.recentlySavedJourneys.first, returnJourney) // N.B. Journey with most recent timestamp saved
     }
+    
+    func testMarkingASystemStatusMessageAsRead() throws {
+        var userPreferences = UserPreferences.default
+        
+        let messageID1 = "messageID1"
+        let messageID2 = "messageID2"
+        
+        // 1. Check message 1 is unread
+        XCTAssertNil(userPreferences.readSystemStatusMessage)
+        XCTAssertFalse(userPreferences.hasReadSystemStatusMessage(id: messageID1))
+        
+        // 2. Mark message 1 as read
+        userPreferences.markAsRead(systemStatusMessageID: messageID1)
+        XCTAssertTrue(userPreferences.hasReadSystemStatusMessage(id: messageID1))
+        
+        // 3. Check new message 2 is unread
+        XCTAssertFalse(userPreferences.hasReadSystemStatusMessage(id: messageID2))
+        
+    }
 }

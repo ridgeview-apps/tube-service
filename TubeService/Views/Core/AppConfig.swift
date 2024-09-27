@@ -5,6 +5,7 @@ struct AppConfig {
     let contactUsEmail: String
     let appStoreProductURL: URL
     let transportAPI: TransportAPIConfig
+    let systemStatusAPI: SystemStatusAPIConfig
     
     public var appReviewURL: URL {
         guard var urlComponents = URLComponents(string: appStoreProductURL.absoluteString) else {
@@ -28,9 +29,13 @@ extension AppConfig {
             contactUsEmail: config["contactUsEmail"],
             appStoreProductURL: config[url: "appStoreProductUrl"],
             transportAPI: .init(
-                baseURL: config[url: "transportAPIUrl"],
+                baseURL: config[url: "transportAPIBaseUrl"],
                 appID: config["transportAPIAppId"],
                 appKey: config["transportAPIAppKey"]
+            ),
+            systemStatusAPI: .init(
+                baseURL: config[url: "systemStatusAPIBaseUrl"],
+                fileName: config["systemStatusAPIFileName"]
             )
         )
         
@@ -45,5 +50,10 @@ extension AppConfig {
         let baseURL: URL
         let appID: String
         let appKey: String
+    }
+    
+    struct SystemStatusAPIConfig {
+        let baseURL: URL
+        let fileName: String
     }
 }

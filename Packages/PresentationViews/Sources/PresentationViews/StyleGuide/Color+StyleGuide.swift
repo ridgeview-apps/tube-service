@@ -59,6 +59,9 @@ public extension Color {
     
     static let defaultCellBackground = Color.adaptive(lightMode: .lightGrey1,
                                                       darkMode: .darkGrey1)
+    
+    static let systemBannerOK = Color.rgb(55, 122, 0)
+    static let systemBannerOutage = Color.darkRed1
 }
 
 public extension Color {

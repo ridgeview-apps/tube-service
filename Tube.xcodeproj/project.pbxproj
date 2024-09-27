@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		310562B92CAEBEE800A55CCC /* SystemStatusRefreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */; };
 		3107A8052ACC84EA009AFDB9 /* RootScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A8042ACC84EA009AFDB9 /* RootScreen.swift */; };
 		3107A8072ACD5C8C009AFDB9 /* AppDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A8062ACD5C8C009AFDB9 /* AppDataStore.swift */; };
 		3107A80B2ACECFCA009AFDB9 /* DataFetchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */; };
@@ -64,6 +65,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemStatusRefreshable.swift; sourceTree = "<group>"; };
 		3107A8042ACC84EA009AFDB9 /* RootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScreen.swift; sourceTree = "<group>"; };
 		3107A8062ACD5C8C009AFDB9 /* AppDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStore.swift; sourceTree = "<group>"; };
 		3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchState.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 		318D485724EFC9E30026B5F4 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */,
 				31508D4625604A3C0047BC9C /* AppConfig.swift */,
 				3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */,
 			);
@@ -578,6 +581,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				310562B92CAEBEE800A55CCC /* SystemStatusRefreshable.swift in Sources */,
 				31260614256542A900358CA2 /* App.swift in Sources */,
 				313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */,
 				31DE50C32AD009F200FC3407 /* EnvironmentValues.swift in Sources */,

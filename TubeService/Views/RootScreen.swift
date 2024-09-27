@@ -29,20 +29,14 @@ struct RootScreen: View {
                                title: .mapsTabTitle, 
                                accessibilityID: "acc.id.maps.tab.title")
         }
+        .systemStatusRefreshable()
     }
 }
 
 
 // MARK: - Previews
 
-#if DEBUG
-
-struct RootScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        return RootScreen()
-                .withStubbedEnvironment()
-    }
+#Preview {
+    return RootScreen()
+        .withStubbedEnvironment()
 }
-
-#endif

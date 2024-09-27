@@ -7,15 +7,15 @@ extension Error {
         let defaultErrorMessage = String(localized: .errorSomethingWentWrong)
         
         switch self {
-        case let apiError as TransportAPIError:
-            return apiError.toUIErrorMessage() ?? defaultErrorMessage
+        case let httpError as HTTPError:
+            return httpError.toUIErrorMessage() ?? defaultErrorMessage
         default:
             return defaultErrorMessage
         }
     }
 }
 
-private extension TransportAPIError {
+private extension HTTPError {
     
     func toUIErrorMessage() -> String? {
         switch self {
