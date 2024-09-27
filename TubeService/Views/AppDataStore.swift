@@ -14,11 +14,15 @@ final class AppDataStore {
     private(set) var stations: StationsDataStore
     private(set) var location: LocationDataStore
     private(set) var localSearchCompleter: LocalSearchCompleter
+    private(set) var systemStatus: SystemStatusDataStore
     
-    init(transportAPI: TransportAPIClientType,
-         userDefaults: UserDefaults,
-         locationManager: LocationManagerType,
-         now: @escaping () -> Date = { Date() }) {
+    init(
+        transportAPI: TransportAPIClientType,
+        systemStatusAPI: SystemStatusAPIClientType,
+        userDefaults: UserDefaults,
+        locationManager: LocationManagerType,
+        now: @escaping () -> Date = { Date() }
+    ) {
         self.transportAPI = transportAPI
         self.userDefaults = userDefaults
         self.locationManager = locationManager
@@ -30,6 +34,7 @@ final class AppDataStore {
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
         self.localSearchCompleter = LocalSearchCompleter()
+        self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
     }
 }
 
@@ -44,6 +49,7 @@ extension AppDataStore {
         
         return .init(
             transportAPI: TransportAPIClient.shared,
+            systemStatusAPI: SystemStatusAPIClient.shared,
             userDefaults: .standard,
             locationManager: CLLocationManager())
     }()
@@ -57,10 +63,18 @@ extension TransportAPIClient {
     )
 }
 
+extension SystemStatusAPIClient {
+    static let shared = SystemStatusAPIClient(
+        baseURL: AppConfig.shared.systemStatusAPI.baseURL,
+        fileName: AppConfig.shared.systemStatusAPI.fileName
+    )
+}
+
 #if DEBUG
 extension AppDataStore {
     static func stub() -> AppDataStore {
         .init(transportAPI: StubTransportAPIClient(),
+              systemStatusAPI: StubSystemStatusAPIClient(),
               userDefaults: .standard,
               locationManager: StubLocationManager())
     }

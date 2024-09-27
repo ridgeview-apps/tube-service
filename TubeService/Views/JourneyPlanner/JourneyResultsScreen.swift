@@ -52,7 +52,7 @@ struct JourneyResultsScreen: View {
             makeCellItems(for: itinerary)
             loadingState = .loaded
             hasFetchedData = true
-        } catch TransportAPIError.httpStatusCode(404, _) {
+        } catch HTTPError.statusCode(404, _) {
             cellItems = []
             loadingState = .loaded
         } catch {

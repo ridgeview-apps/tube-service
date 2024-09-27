@@ -1586,6 +1586,39 @@
           }
         }
       }
+    },
+    "system.status.banner.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System status"
+          }
+        }
+      }
+    },
+    "system.status.ok.default.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All systems operational"
+          }
+        }
+      }
+    },
+    "system.status.outage.default.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Problems reported"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

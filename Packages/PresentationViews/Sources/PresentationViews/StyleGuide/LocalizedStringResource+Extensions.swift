@@ -307,7 +307,6 @@ public extension LocalizedStringResource {
         moduleResource("journey.planner.travel.options.modes.selection.count \(count)")
     }
     
-    
     static func journeyPlannerTravelOptionsVia(_ viaLocation: String) -> LocalizedStringResource {
         moduleResource("journey.planner.travel.options.via \(viaLocation)")
     }
@@ -326,74 +325,6 @@ public extension LocalizedStringResource {
     
     static var journeyResultsNavigationTitle: LocalizedStringResource {
         moduleResource("journey.results.navigation.title")
-    }
-    
-    static var recentJourneyCellTo: LocalizedStringResource {
-        moduleResource("recent.journey.cell.to")
-    }
-    
-    static func recentJourneyCellVia(_ viaLocation: String) -> LocalizedStringResource {
-        moduleResource("recent.journey.cell.via \(viaLocation)")
-    }
-    
-    static func refreshStatusLastUpdated(_ date: String) -> LocalizedStringResource {
-        moduleResource("refresh.status.last.updated \(date)")
-    }
-    
-    static var refreshStatusLoading: LocalizedStringResource {
-        moduleResource("refresh.status.loading")
-    }
-    
-    static var searchSuggestionsSectionTitle: LocalizedStringResource {
-        moduleResource("search.suggestions.section.title")
-    }
-    
-    static var settingsAcknowledgementsTitle: LocalizedStringResource {
-        moduleResource("settings.acknowledgements.title")
-    }
-    
-    static var settingsAppPoweredBy: LocalizedStringResource {
-        moduleResource("settings.app.powered.by")
-    }
-    
-    static var settingsAppVersionTitle: LocalizedStringResource {
-        moduleResource("settings.app.version.title")
-    }
-    
-    static var settingsContactUsTitle: LocalizedStringResource {
-        moduleResource("settings.contact.us.title")
-    }
-    
-    static var settingsJourneyPlannerTitle: LocalizedStringResource {
-        moduleResource("settings.journey.planner.title")
-    }
-    
-    static var settingsJourneyPlannerTransportModes: LocalizedStringResource {
-        moduleResource("settings.journey.planner.transport.modes")
-    }
-    
-    static var settingsJourneyModePickerNavigationTitle: LocalizedStringResource {
-        moduleResource("settings.journey.mode.picker.navigation.title")
-    }
-    
-    static var settingsNavigationTitle: LocalizedStringResource {
-        moduleResource("settings.navigation.title")
-    }
-    
-    static var settingsRateThisAppTitle: LocalizedStringResource {
-        moduleResource("settings.rate.this.app.title")
-    }
-    
-    static var settingsSectionAboutTitle: LocalizedStringResource {
-        moduleResource("settings.section.about.title")
-    }
-    
-    static var settingsSectionSupportTitle: LocalizedStringResource {
-        moduleResource("settings.section.support.title")
-    }
-    
-    static var swapButtonAccessibilityTitle: LocalizedStringResource {
-        moduleResource("swap.button.accessibility.title")
     }
     
     static var lineStatusDatePickerTitle: LocalizedStringResource {
@@ -536,8 +467,72 @@ public extension LocalizedStringResource {
         moduleResource("open.app.settings.button.title")
     }
     
+    static var recentJourneyCellTo: LocalizedStringResource {
+        moduleResource("recent.journey.cell.to")
+    }
+    
+    static func recentJourneyCellVia(_ viaLocation: String) -> LocalizedStringResource {
+        moduleResource("recent.journey.cell.via \(viaLocation)")
+    }
+    
     static var refreshButtonTitle: LocalizedStringResource {
         moduleResource("refresh.button.title")
+    }
+    
+    static func refreshStatusLastUpdated(_ date: String) -> LocalizedStringResource {
+        moduleResource("refresh.status.last.updated \(date)")
+    }
+    
+    static var refreshStatusLoading: LocalizedStringResource {
+        moduleResource("refresh.status.loading")
+    }
+    
+    static var searchSuggestionsSectionTitle: LocalizedStringResource {
+        moduleResource("search.suggestions.section.title")
+    }
+    
+    static var settingsAcknowledgementsTitle: LocalizedStringResource {
+        moduleResource("settings.acknowledgements.title")
+    }
+    
+    static var settingsAppPoweredBy: LocalizedStringResource {
+        moduleResource("settings.app.powered.by")
+    }
+    
+    static var settingsAppVersionTitle: LocalizedStringResource {
+        moduleResource("settings.app.version.title")
+    }
+    
+    static var settingsContactUsTitle: LocalizedStringResource {
+        moduleResource("settings.contact.us.title")
+    }
+    
+    static var settingsJourneyPlannerTitle: LocalizedStringResource {
+        moduleResource("settings.journey.planner.title")
+    }
+    
+    static var settingsJourneyPlannerTransportModes: LocalizedStringResource {
+        moduleResource("settings.journey.planner.transport.modes")
+    }
+    
+    static var settingsJourneyModePickerNavigationTitle: LocalizedStringResource {
+        moduleResource("settings.journey.mode.picker.navigation.title")
+    }
+    
+    static var settingsNavigationTitle: LocalizedStringResource {
+        moduleResource("settings.navigation.title")
+    }
+    
+    static var settingsRateThisAppTitle: LocalizedStringResource {
+        moduleResource("settings.rate.this.app.title")
+    }
+    
+    static var settingsSectionAboutTitle: LocalizedStringResource {
+        moduleResource("settings.section.about.title")
+    }
+    
+    static var settingsSectionSupportTitle: LocalizedStringResource {
+        moduleResource("settings.section.support.title")
     }
     
     static var stationArrivalsSectionHeaderTitle: LocalizedStringResource {
@@ -566,6 +561,22 @@ public extension LocalizedStringResource {
     
     static var stationStatusSectionHeaderTitle: LocalizedStringResource {
         moduleResource("station.status.section.header.title")
+    }
+    
+    static var swapButtonAccessibilityTitle: LocalizedStringResource {
+        moduleResource("swap.button.accessibility.title")
+    }
+    
+    static var systemStatusOkDefaultMessage: LocalizedStringResource {
+        moduleResource("system.status.ok.default.message")
+    }
+    
+    static var systemStatusOutageDefaultMessage: LocalizedStringResource {
+        moduleResource("system.status.outage.default.message")
+    }
+    
+    static var systemStatusBannerTitle: LocalizedStringResource {
+        moduleResource("system.status.banner.title")
     }
 }
 

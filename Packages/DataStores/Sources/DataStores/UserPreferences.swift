@@ -9,6 +9,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         case favouriteLineIDs
         case journeyPlannerModeIDs
         case recentlySavedJourneys
+        case viewedSystemStatusMessages
     }
     
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
@@ -16,6 +17,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var recentlySelectedStations: [Station.ID]
     public var journeyPlannerModeIDs: Set<ModeID>
     public var recentlySavedJourneys: [SavedJourney]
+    public var viewedSystemStatusMessages: Set<SystemStatus.ID>
 
     // N.B. Codable conformance needs to be implemented manually to play nicely with `RawRepresentable`
     // and prevent infinite recursion. It also makes it easier to add new properties (with default values)
@@ -32,6 +34,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.favouriteLineIDs = (try? container.decodeIfPresent(Set<Line.ID>.self, forKey: .favouriteLineIDs)) ?? []
         self.journeyPlannerModeIDs = (try? container.decode(Set<ModeID>.self, forKey: .journeyPlannerModeIDs)) ?? ModeID.defaultJourneyPlannerModeIDs
         self.recentlySavedJourneys = (try? container.decode([SavedJourney].self, forKey: .recentlySavedJourneys)) ?? []
+        self.viewedSystemStatusMessages = (try? container.decode(Set<SystemStatus.ID>.self, forKey: .viewedSystemStatusMessages)) ?? []
     }
     
     public func encode(to encoder: any Encoder) throws {
@@ -41,26 +44,30 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         try container.encode(self.favouriteLineIDs, forKey: .favouriteLineIDs)
         try container.encode(self.journeyPlannerModeIDs, forKey: .journeyPlannerModeIDs)
         try container.encode(self.recentlySavedJourneys, forKey: .recentlySavedJourneys)
+        try container.encode(self.viewedSystemStatusMessages, forKey: .viewedSystemStatusMessages)
     }
     
     public static let `default`: UserPreferences = .init(favouriteLineGroupIDs: [],
                                                          favouriteLineIDs: [],
                                                          recentlySelectedStations: [],
                                                          journeyPlannerModeIDs: ModeID.defaultJourneyPlannerModeIDs,
-                                                         recentlySavedJourneys: [])
+                                                         recentlySavedJourneys: [],
+                                                         viewedSystemStatusMessages: [])
     
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
         favouriteLineIDs: Set<Line.ID> = [],
         recentlySelectedStations: [Station.ID] = [],
         journeyPlannerModeIDs: Set<ModeID>,
-        recentlySavedJourneys: [SavedJourney]
+        recentlySavedJourneys: [SavedJourney],
+        viewedSystemStatusMessages: Set<SystemStatus.ID>
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
         self.favouriteLineIDs = favouriteLineIDs
         self.recentlySelectedStations = recentlySelectedStations
         self.journeyPlannerModeIDs = journeyPlannerModeIDs
         self.recentlySavedJourneys = recentlySavedJourneys
+        self.viewedSystemStatusMessages = viewedSystemStatusMessages
     }
 }
 

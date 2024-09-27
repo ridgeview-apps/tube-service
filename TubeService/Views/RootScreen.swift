@@ -32,17 +32,9 @@ struct RootScreen: View {
     }
 }
 
-
 // MARK: - Previews
 
-#if DEBUG
-
-struct RootScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        
-        return RootScreen()
-                .withStubbedEnvironment()
-    }
+#Preview {
+    return RootScreen()
+        .withStubbedEnvironment()
 }
-
-#endif

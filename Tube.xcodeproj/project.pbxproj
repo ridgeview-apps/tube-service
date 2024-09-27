@@ -38,6 +38,7 @@
 		318D483024EFC4900026B5F4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 318D482F24EFC4900026B5F4 /* Assets.xcassets */; };
 		318D483324EFC4900026B5F4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 318D483224EFC4900026B5F4 /* Preview Assets.xcassets */; };
 		318D483624EFC4900026B5F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 318D483424EFC4900026B5F4 /* LaunchScreen.storyboard */; };
+		31B8E9192CAC5FF200265E10 /* MessageBannerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31B8E9182CAC5FF200265E10 /* MessageBannerScreen.swift */; };
 		31CE9EB32BA4B8230038FBD4 /* JourneyPlannerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31CE9EB22BA4B8230038FBD4 /* JourneyPlannerScreen.swift */; };
 		31D072CB2BCFEB20003286E1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 31D072CA2BCFEB20003286E1 /* PrivacyInfo.xcprivacy */; };
 		31D072CD2BD138AC003286E1 /* NavigationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31D072CC2BD138AC003286E1 /* NavigationState.swift */; };
@@ -109,6 +110,7 @@
 		318D72B22AE6787100DEBE06 /* Models.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Models.xctestplan; sourceTree = "<group>"; };
 		318D72B52AE6918E00DEBE06 /* Shared.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Shared.xctestplan; sourceTree = "<group>"; };
 		318D72B62AE6B9E900DEBE06 /* PresentationViews.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PresentationViews.xctestplan; sourceTree = "<group>"; };
+		31B8E9182CAC5FF200265E10 /* MessageBannerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBannerScreen.swift; sourceTree = "<group>"; };
 		31C99037257FDEA300918812 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		31CE9EB22BA4B8230038FBD4 /* JourneyPlannerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyPlannerScreen.swift; sourceTree = "<group>"; };
 		31D072CA2BCFEB20003286E1 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 		31508D13255E90C20047BC9C /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				31B8E9182CAC5FF200265E10 /* MessageBannerScreen.swift */,
 				310BBA772AD456B30097BAD8 /* SettingsScreen.swift */,
 			);
 			path = Settings;
@@ -589,6 +592,7 @@
 				315693C62BC3F380002F43BC /* View+LocationServices.swift in Sources */,
 				3107A8142ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift in Sources */,
 				3137D6B22BAC4FDF00AF3A35 /* LocationDataStore+.swift in Sources */,
+				31B8E9192CAC5FF200265E10 /* MessageBannerScreen.swift in Sources */,
 				3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */,
 				313DCA952AD740E000FF4271 /* AppEnvironment+Stub.swift in Sources */,
 				317ADDEF2534745600AB34B9 /* NavigationButtons.swift in Sources */,

@@ -52,6 +52,14 @@ final class ModelDecoderTests: XCTestCase {
         XCTAssertEqual(journey.legs?[1].departurePoint?.commonName, "King's Cross St. Pancras Underground Station")
         XCTAssertEqual(journey.legs?[1].arrivalPoint?.commonName, "Leicester Square Underground Station")
     }
+    
+    func testDecodedSystemStatus() throws {
+        let systemStatusOK = try decodeRawJSONString(systemStatusOKJSON, asType: SystemStatus.self)
+        let systemStatusOutage = try decodeRawJSONString(systemStatusOutageJSON, asType: SystemStatus.self)
+        
+        XCTAssertNotNil(systemStatusOK)
+        XCTAssertNotNil(systemStatusOutage)
+    }
 }
 
 
