@@ -1,5 +1,9 @@
 default_platform(:ios)
 
+before_all do
+  setup_ci if is_ci  
+end
+
 private_lane :read_xcconfig_file do
   path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
   Xcodeproj::Config.new(path)
@@ -60,13 +64,14 @@ lane :build do
   match(
     readonly: false,
     clone_branch_directly: true,
-    git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
+    git_url: "https://github.com/ridgeview-apps/ridgeview-certs.git",
+    git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION_BASE64"],
     app_identifier: match_app_identifiers,
     username: "ci.ridgeview@gmail.com",
     type: "appstore"
   )
   
-  increment_build_number(build_number: ENV["BITRISE_BUILD_NUMBER"]) if is_ci
+  increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
 
   gym(
     clean: true,
@@ -79,7 +84,7 @@ end
 
 lane :distribute do
   app_store_connect_api_key(duration: 1200) if is_ci
-
+  
   groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
   distribute_external = groups.length > 0  
 
@@ -123,9 +128,8 @@ lane :submit_for_review do |options|
 end
 
 private_lane :upload_to_app_store_connect do |options|
+  app_store_connect_api_key(duration: 1200) if is_ci
     
-  app_store_connect_api_key(duration: 1200)
-
   app_identifier = "com.ridgeviewapps.tube-service"
   submit_for_review = options[:submit_for_review] || false
   overwrite_screenshots = options[:overwrite_screenshots] || false

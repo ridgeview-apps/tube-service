@@ -6,8 +6,7 @@ cd $(dirname $0)/..
 # Git secret
 echo "🔓 Unlocking secrets..."
 brew install git-secret
-echo $GPG_PRIVATE_KEY | tr ',' '\n' > ./private_key.gpg
-gpg --import ./private_key.gpg
+echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
 git secret reveal
 
 bundle install
