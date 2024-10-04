@@ -36,7 +36,9 @@ struct RootScreen: View {
 
 // MARK: - Previews
 
+#if DEBUG
 #Preview {
-    return RootScreen()
+    RootScreen()
         .withStubbedEnvironment()
 }
+#endif

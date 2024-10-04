@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -122,10 +122,6 @@
 		31E8F8432BFCEE9100603359 /* Defaults.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Defaults.xcconfig; sourceTree = "<group>"; };
 		31EE93512AE6BD0200AB20ED /* Models */ = {isa = PBXFileReference; lastKnownFileType = text; name = Models; path = Packages/Models; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		31E6EEEE2C9DB4980042A66A /* TubeServiceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TubeServiceTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		315F89C42567BCB70069DD2D /* Frameworks */ = {
@@ -260,7 +256,6 @@
 				3168C3902538A0330094CAF9 /* Config */,
 				318D482824EFC4900026B5F4 /* TubeService */,
 				315F89C82567BCB70069DD2D /* TubeServiceUITests */,
-				31E6EEEE2C9DB4980042A66A /* TubeServiceTests */,
 				318D482724EFC4900026B5F4 /* Products */,
 				31ACDBE32700E6E500C33CF3 /* Frameworks */,
 			);
@@ -460,9 +455,6 @@
 			);
 			dependencies = (
 				31E6EEF22C9DB4980042A66A /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				31E6EEEE2C9DB4980042A66A /* TubeServiceTests */,
 			);
 			name = TubeServiceTests;
 			packageProductDependencies = (

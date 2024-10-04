@@ -1,0 +1,22 @@
+name: Feature branch checks
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+
+env:
+  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+jobs:
+  build-and-deploy:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Select Xcode 16.0
+        run: sudo xcode-select -s /Applications/Xcode_16.0.app
+      - name: Install dependencies
+        run: brew install swiftlint
+      - name: Run beta
+        run: ./Scripts/ci-unit-tests.sh
