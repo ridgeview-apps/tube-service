@@ -15,16 +15,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .onSceneDidBecomeActive {
-                Task {
-                    await systemStatus.fetchSystemStatusIfStale()
-                }
-            }
-            .onChange(of: systemStatus.currentStatus) {
-                if let currentStatus = systemStatus.currentStatus, !userPreferences.hasReadSystemStatusMessage(id: currentStatus.id) {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                        withAnimation { showBanner = true }
-                    }
-                }
+                showSystemStatusBannerIfNeeded()
             }
             .overlay(alignment: .top) {
                 if showBanner, let currentStatus = systemStatus.currentStatus {
@@ -40,6 +31,22 @@ struct SystemStatusRefreshableModifier: ViewModifier {
             }
     }
     
+    private func showSystemStatusBannerIfNeeded() {
+        Task {
+            await systemStatus.fetchSystemStatusIfStale()
+            
+            guard let currentStatus = systemStatus.currentStatus, currentStatus.status != .ok else {
+                return
+            }
+            
+            let newMessageAvailable = !userPreferences.hasReadSystemStatusMessage(id: currentStatus.id)
+            if newMessageAvailable {
+                try await Task.sleep(for: .seconds(1.2)) // N.B. Suspends the task without blocking the thread
+                withAnimation { showBanner = true }
+            }
+        }
+    }
+
     private func handleBannerAction(_ action: SystemStatusBannerView.Action) {
         switch action {
         case let .tappedOK(messageID):
