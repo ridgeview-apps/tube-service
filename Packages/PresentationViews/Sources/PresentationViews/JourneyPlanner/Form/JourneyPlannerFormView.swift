@@ -41,14 +41,16 @@ public struct JourneyPlannerFormView: View {
     
     private var formSection: some View {
         Section {
-            fromToSelectionView
-                .padding(.vertical, 4)
-            Group {
+            VStack {
+                fromToSelectionView
                 timePickerCell
                 viaLocationCell
-                submitButton
             }
-            .listRowBackground(Color.clear)
+            .padding(.vertical, 4)
+        } footer: {
+            submitButton
+                .padding(.top, 8)
+                .listRowBackground(Color.clear)
         }
         .listRowBackground(Color.defaultCellBackground)
         .listRowSeparator(.hidden)
@@ -66,6 +68,7 @@ public struct JourneyPlannerFormView: View {
     
     private var timePickerCell: some View {
         JourneyTimePickerView(selection: $form.timeSelection)
+            .frame(minHeight: 44)
     }
     
     private var viaLocationCell: some View {

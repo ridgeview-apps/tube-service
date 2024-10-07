@@ -21,6 +21,7 @@ final class AppDataStore {
         systemStatusAPI: SystemStatusAPIClientType,
         userDefaults: UserDefaults,
         locationManager: LocationManagerType,
+        localSearchCompleter: LocalSearchCompleter = .init(),
         now: @escaping () -> Date = { Date() }
     ) {
         self.transportAPI = transportAPI
@@ -33,7 +34,7 @@ final class AppDataStore {
         self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
-        self.localSearchCompleter = LocalSearchCompleter()
+        self.localSearchCompleter = localSearchCompleter
         self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
     }
 }

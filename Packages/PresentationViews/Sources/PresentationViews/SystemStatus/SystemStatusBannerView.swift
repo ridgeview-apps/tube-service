@@ -4,8 +4,8 @@ import SwiftUI
 public struct SystemStatusBannerView: View {
     
     public enum Action {
-        case tappedOK(SystemStatus.ID)
-        case tappedMoreInfo(SystemStatus.ID)
+        case tappedOK(SystemStatus)
+        case tappedMoreInfo(SystemStatus)
     }
     
     public let systemStatus: SystemStatus
@@ -36,9 +36,9 @@ public struct SystemStatusBannerView: View {
             .padding(.horizontal)
             .padding(.bottom, 24)
             .background {
-                systemStatus.backgroundColor.ignoresSafeArea()
+                systemStatus.tint.ignoresSafeArea()
             }
-            .shadow(color: systemStatus.backgroundColor, radius: 4, y: 2)
+            .shadow(color: systemStatus.tint, radius: 4, y: 2)
             .opacity(0.96)
             .transition(
                 .asymmetric(insertion: .slideDown, removal: .slideUp)
@@ -53,7 +53,7 @@ public struct SystemStatusBannerView: View {
                 Button {
                     withAnimation {
                         isShowing = false
-                        onAction(.tappedMoreInfo(systemStatus.id))
+                        onAction(.tappedMoreInfo(systemStatus))
                     }
                 } label: {
                     Text(.systemStatusBannerMoreInfoButtonTitle)
@@ -62,7 +62,7 @@ public struct SystemStatusBannerView: View {
             Button {
                 withAnimation {
                     isShowing = false
-                    onAction(.tappedOK(systemStatus.id))
+                    onAction(.tappedOK(systemStatus))
                 }
             } label: {
                 Text(.globalOK)

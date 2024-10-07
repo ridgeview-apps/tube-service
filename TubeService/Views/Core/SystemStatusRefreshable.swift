@@ -8,9 +8,9 @@ struct SystemStatusRefreshableModifier: ViewModifier {
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
     
-    @Environment(SystemStatusDataStore.self) var systemStatus: SystemStatusDataStore    
+    @Environment(SystemStatusDataStore.self) var systemStatus: SystemStatusDataStore
+    @Environment(\.showSheet) var showSheet
     @State private var showBanner = false
-    @State private var showMoreInfo = false
     
     func body(content: Content) -> some View {
         content
@@ -25,9 +25,6 @@ struct SystemStatusRefreshableModifier: ViewModifier {
                         onAction: handleBannerAction
                     )
                 }
-            }
-            .sheet(isPresented: $showMoreInfo) {
-                moreInfoSheet
             }
     }
     
@@ -49,28 +46,18 @@ struct SystemStatusRefreshableModifier: ViewModifier {
 
     private func handleBannerAction(_ action: SystemStatusBannerView.Action) {
         switch action {
-        case let .tappedOK(messageID):
-            dismissBanner(messageID)
-        case let .tappedMoreInfo(messageID):
-            dismissBanner(messageID, moreInfo: true)
+        case let .tappedOK(message):
+            dismissBanner(message)
+        case let .tappedMoreInfo(message):
+            dismissBanner(message, moreInfo: true)
         }
     }
     
-    private func dismissBanner(_ messageID: SystemStatus.ID, moreInfo: Bool = false) {
+    private func dismissBanner(_ message: SystemStatus, moreInfo: Bool = false) {
         showBanner = false
-        showMoreInfo = moreInfo
-        userPreferences.markAsRead(systemStatusMessageID: messageID)
-    }
-    
-    @ViewBuilder
-    private var moreInfoSheet: some View {
-        if let currentStatus = systemStatus.currentStatus {
-            NavigationStack {
-                SystemStatusDetailView(systemStatus: currentStatus)
-                    .toolbar {
-                        NavigationButton.Close { showMoreInfo = false }
-                    }
-            }
+        userPreferences.markAsRead(systemStatusMessageID: message.id)
+        if moreInfo {
+            showSheet(.systemStatusDetail(message))
         }
     }
 }

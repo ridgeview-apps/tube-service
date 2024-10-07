@@ -2,11 +2,17 @@ import SwiftUI
 
 public struct MapsListView: View {
     
+    public enum Action {
+        case tappedLink(MapLink)
+    }
+    
     @ScaledMetric private var dynamicTextScale: CGFloat = 1
     
-    @State private var selectedValue: MapLink?
+    public let onAction: (Action) -> Void
     
-    public init() {}
+    public init(onAction: @escaping (Action) -> Void) {
+        self.onAction = onAction
+    }
     
     public var body: some View {
         GeometryReader { geometry in
@@ -26,23 +32,19 @@ public struct MapsListView: View {
     
     @ViewBuilder private func link(for mapLink: MapLink) -> some View {
         Button {
-            selectedValue = mapLink
+            onAction(.tappedLink(mapLink))
         } label: {
             Text(mapLink.title)
         }
         .buttonStyle(.primary)
-        .sheet(item: $selectedValue) { selectedValue in
-            SafariView(url: selectedValue.url)
-        }
-        
     }
 }
 
 
-private struct MapLink: Identifiable {
-    var id: String { url.absoluteString }
-    let title: LocalizedStringResource
-    let url: URL
+public struct MapLink: Identifiable {
+    public var id: String { url.absoluteString }
+    public let title: LocalizedStringResource
+    public let url: URL
     
     static let dayTubeMap = MapLink(
         title: .mapsTubeDayLinkTitle,
@@ -67,7 +69,7 @@ private struct MapLink: Identifiable {
 
 #Preview {
     NavigationStack {
-        MapsListView()
+        MapsListView { action in print(action) }
             .navigationTitle("Maps")
     }
 }

@@ -27,7 +27,7 @@ public struct SystemStatusDetailView: View {
                 }
                 .withDefaultMaxWidth(alignment: .leading)
                 .padding()
-                .cardStyle(backgroundColor: systemStatus.backgroundColor)
+                .cardStyle(backgroundColor: systemStatus.tint)
                 .foregroundStyle(systemStatus.foregroundStyle)
                 
                 if let detail = systemStatus.detail {

@@ -1,4 +1,4 @@
-public struct SystemStatus: Codable, Sendable, Identifiable, Equatable {
+public struct SystemStatus: Codable, Sendable, Identifiable, Equatable, Hashable {
     
     // swiftlint:disable identifier_name
     public enum Status: String, Codable, Sendable, Equatable {

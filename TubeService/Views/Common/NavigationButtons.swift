@@ -28,15 +28,14 @@ enum NavigationButton {
 }
 
 struct SettingsToolBarButton: ViewModifier {
-    @State private var showSettings: Bool = false
+    @Environment(\.showSheet) var showSheet
     
     func body(content: Content) -> some View {
         content
             .toolbar {
-                NavigationButton.Settings { showSettings = true }
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsScreen()
+                NavigationButton.Settings {
+                    showSheet(.settings)
+                }
             }
     }
 }
@@ -44,5 +43,15 @@ struct SettingsToolBarButton: ViewModifier {
 extension View {
     func withSettingsToolbarButton() -> some View {
         self.modifier(SettingsToolBarButton())
+    }
+    
+    func defaultModalScreen(onTapClose: (() -> Void)?) -> some View {
+        NavigationStack {
+            toolbar {
+                NavigationButton.Close {
+                    onTapClose?()
+                }
+            }
+        }
     }
 }

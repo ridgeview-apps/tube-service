@@ -81,10 +81,22 @@ public struct SettingsView: View {
             NavigationLink {
                 SystemStatusDetailView(systemStatus: systemStatus)
             } label: {
-                Text(.settingsSystemStatusTitle)
+                systemStatusLabelTitle
             }
         } header: {
             Text(.settingsSectionSupportTitle)
+        }
+    }
+    
+    private var systemStatusLabelTitle: some View {
+        HStack {
+            if let systemStatus {
+                systemStatus
+                    .titleImage
+                    .foregroundStyle(systemStatus.tint)
+            }
+            Text(.settingsSystemStatusTitle)
+            Spacer()
         }
     }
     
@@ -180,7 +192,7 @@ private struct Previewer: View {
                 appReviewURL: URL(string: "https://www.google.com")!,
                 contactUs: .empty,
                 editableValues: $editableValues,
-                systemStatus: nil,
+                systemStatus: ModelStubs.systemStatusOutage,
                 onDebugAction: { _ in }
             )
         }

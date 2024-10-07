@@ -8,23 +8,25 @@ extension View {
     @MainActor 
     func withStubbedEnvironment(
         transportAPI: StubTransportAPIClient = StubTransportAPIClient(),
-        systemStatusAPI: StubSystemStatusAPIClient = StubSystemStatusAPIClient()
+        systemStatusAPI: StubSystemStatusAPIClient = StubSystemStatusAPIClient(),
+        userDefaults: UserDefaults = .standard,
+        locationManager: LocationManagerType = StubLocationManager(),
+        localSearchCompleter: LocalSearchCompleter = .init(),
+        now: @escaping () -> Date = { Date() }
     ) -> some View {
-        let lineStatus = LineStatusDataStore.stub(transportAPI: transportAPI)
-        let stations = StationsDataStore.stub(transportAPI: transportAPI)
-        let location = LocationDataStore.stub(stations: stations)
-        let localSearchCompleter = LocalSearchCompleter()
-        let systemStatus = SystemStatusDataStore.stub(systemStatusAPI: systemStatusAPI)
         
-        return withEnvironmentDataStores(
-            lineStatus: lineStatus,
-            stations: stations,
-            location: location,
+        let appData = AppDataStore(
+            transportAPI: transportAPI,
+            systemStatusAPI: systemStatusAPI,
+            userDefaults: userDefaults,
+            locationManager: locationManager,
             localSearchCompleter: localSearchCompleter,
-            systemStatus: systemStatus
+            now: now
         )
-        .environment(\.transportAPI, transportAPI)
-        .environment(\.appConfig, AppConfig.stub)
+        return
+            withRootEnvironment(appData: appData)
+                .environment(\.transportAPI, transportAPI)
+                .environment(\.appConfig, AppConfig.stub)
     }
 }
 

@@ -11,12 +11,7 @@ struct RootScene: App {
     var body: some Scene {
         WindowGroup {
             RootScreen()
-                .environment(appData)
-                .withEnvironmentDataStores(lineStatus: appData.lineStatus,
-                                           stations: appData.stations,
-                                           location: appData.location,
-                                           localSearchCompleter: appData.localSearchCompleter,
-                                           systemStatus: appData.systemStatus)
+                .withRootEnvironment(appData: appData)
         }
     }
 }
@@ -28,7 +23,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        UserDefaults.standard.migrateLegacyValuesIfNeeded()
+        AppDataStore.shared.userDefaults.migrateLegacyValuesIfNeeded()
         return true
     }
 }
@@ -36,18 +31,14 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 extension View {
     
-    func withEnvironmentDataStores(
-        lineStatus: LineStatusDataStore,
-        stations: StationsDataStore,
-        location: LocationDataStore,
-        localSearchCompleter: LocalSearchCompleter,
-        systemStatus: SystemStatusDataStore
-    ) -> some View {
+    func withRootEnvironment(appData: AppDataStore) -> some View {
         self
-            .environment(lineStatus)
-            .environment(stations)
-            .environment(location)
-            .environment(localSearchCompleter)
-            .environment(systemStatus)
+            .rootSheetPresenter()
+            .environment(appData)
+            .environment(appData.lineStatus)
+            .environment(appData.stations)
+            .environment(appData.location)
+            .environment(appData.localSearchCompleter)
+            .environment(appData.systemStatus)
     }
 }

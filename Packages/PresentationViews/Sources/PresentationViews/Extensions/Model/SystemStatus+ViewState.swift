@@ -30,7 +30,7 @@ extension SystemStatus {
         .imageScale(.large)
     }
     
-    var backgroundColor: Color {
+    var tint: Color {
         switch status {
         case .ok, .resolved: .systemBannerOK
         case .outage: .systemBannerOutage

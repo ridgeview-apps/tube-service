@@ -6,58 +6,24 @@ import SwiftUI
 @MainActor
 struct JourneyPlannerScreen: View {
     
-    @Observable
-    @MainActor
-    final class ResultsAggregator {
-        var stations: [Station] = []
-        var nationalRailStations: [StopPoint] = []
-        var localSearchResults: [LocationName] = []
-        
-        func all() -> [JourneyLocationPicker.Value] {
-            
-            let stationValues: [JourneyLocationPicker.Value] = stations.map { .station($0) }
-            let nationalRailValues: [JourneyLocationPicker.Value] = nationalRailStations.map { .nationalRail($0) }
-            let otherSearchResults: [JourneyLocationPicker.Value] = localSearchResults.map {
-                .namedLocation(.init(name: $0, coordinate: nil, isCurrentLocation: false))
-            }
-            return stationValues + nationalRailValues + otherSearchResults
-        }
-    }
-    
     enum DestinationID: Identifiable, Hashable {
         var id: Self { self }
-        case locationPicker(JourneyPlannerForm.FieldID.LocationID)
         case results
     }
     
     @State private var form: JourneyPlannerForm = .empty
     @State private var recentJourneys: [RecentJourneyItem] = []
-    @State private var suggestionsSection: JourneyLocationPicker.SectionState = .suggestions([])
-    @State private var nearbyStationsSection: JourneyLocationPicker.SectionState = .nearbyStations([])
-    @State private var searchTerm = ""
     @State private var hasLoaded = false
 
-    @State private var navigationState = NavigationState<DestinationID>.root
+    @State private var navigationState = NavigationState<DestinationID>()
     
-    @State private var resultsAggregator = ResultsAggregator()
-
-    @Environment(\.openURL) var openURL
-    @Environment(\.transportAPI) var transportAPI
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    @Environment(\.showSheet) var showSheet
     
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
-    
-    private var locationPickerSections: [JourneyLocationPicker.SectionState] {
-        if !searchTerm.isEmpty {
-            [.searchResults(resultsAggregator.all())]
-        } else {
-            [suggestionsSection,
-             nearbyStationsSection]
-        }
-    }
     
     var body: some View {
         NavigationStack(path: $navigationState.navigationPath) {
@@ -72,9 +38,6 @@ struct JourneyPlannerScreen: View {
             .onSceneDidBecomeInactive { saveUIState() }
             .onChange(of: userPreferences.recentlySavedJourneys) {
                 refreshRecentJourneys(sortByLastUsedDate: false) // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
-            }
-            .onChange(of: localSearchCompleter.results) { _, newValue in
-                resultsAggregator.localSearchResults = newValue
             }
             .navigationTitle(Text(.journeyPlannerNavigationTitle))
             .withNavigationState($navigationState) { destinationID in
@@ -112,24 +75,14 @@ struct JourneyPlannerScreen: View {
         }
     }
 
-    private func refreshAllSuggestions() {
-        form.updateCurrentLocationInfo(
-            name: location.currentLocationName,
-            coordinate: location.currentLocationCoordinate,
-            updatesAllowed: location.isAuthorizedOrUndetermined
-        )
-        
-        nearbyStationsSection = .nearbyStations(
-            location.nearbyStations.prefix(3).map { .station($0.station) }
-        )
-        
-        refreshLocationPickerSuggestions()
-    }
-    
     private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
         switch action {
         case .nameChanged, .coordinateChanged, .authorizationStatusChanged:
-            refreshAllSuggestions()
+            form.updateCurrentLocationInfo(
+                name: location.currentLocationName,
+                coordinate: location.currentLocationCoordinate,
+                updatesAllowed: location.isAuthorizedOrUndetermined
+            )
         }
     }
     
@@ -139,7 +92,6 @@ struct JourneyPlannerScreen: View {
             findNationalRailByICSCode: stations.nationalRailStation(forICSCode:),
             sortByLastUsedDate: sortByLastUsedDate
         )
-        refreshAllSuggestions()
     }
     
     
@@ -149,43 +101,35 @@ struct JourneyPlannerScreen: View {
     private func destinationScreen(for destinationID: DestinationID) -> some View {
         Group {
             switch destinationID {
-            case .locationPicker(let fieldID):
-                locationPicker(for: fieldID)
             case .results:
                 JourneyResultsScreen(form: $form)
             }
         }
     }
-        
-    @ViewBuilder
-    private func locationPicker(for fieldID: JourneyPlannerForm.FieldID.LocationID) -> some View {
-        JourneyLocationPickerView(
-            searchTerm: $searchTerm,
-            sections: locationPickerSections,
-            locationUIStatus: locationUIStatus,
-            onAction: handleLocationPickerAction
-        )
-        .navigationTitle(Text(fieldID.navigationTitle))
-    }
     
-    private var locationUIStatus: LocationUIStatus {
+    private func currentFormValue(forLocationFieldID locationFieldID: JourneyPlannerForm.FieldID.LocationID) -> Binding<JourneyLocationPicker.Value?> {
         .init(
-            style: location.locationUIStyle(showsSetUpHeader: false,
-                                            loadingState: location.detectionState.toLoadingState()),
-            onRequestPermissions: {
-                handleSelectedLocationValue(.unknownCurrentLocation)
-                location.promptForPermissions()
+            get: {
+                form.locationPickerValue(for: locationFieldID)
+            },
+            set: { newValue in
+                form.populate(locationFieldID: locationFieldID, withValue: newValue)
             }
         )
     }
-    
-    
+
+
     // MARK: - Form actions
     
     private func handleFormAction(_ actionEvent: JourneyPlannerForm.Action) {
         switch actionEvent {
         case let .tappedLocationField(locationFieldID):
-            showModalLocationPicker(for: locationFieldID)
+            let config = JourneyLocationPickerScreen.Config(
+                navigationTitle: locationFieldID.navigationTitle,
+                recentJourneys: recentJourneys,
+                currentSelection: currentFormValue(forLocationFieldID: locationFieldID)
+            )
+            showSheet(.journeyLocationPicker(config))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
@@ -196,79 +140,9 @@ struct JourneyPlannerScreen: View {
         }
     }
     
-    private func showModalLocationPicker(for fieldID: JourneyPlannerForm.FieldID.LocationID) {
-        searchTerm = ""
-        navigationState.modal(to: .locationPicker(fieldID))
-        refreshAllSuggestions()
-    }
-    
     private func showResults() {
         form.adjustCurrentTimeIfNeeded()
         navigationState.push(to: .results)
-    }
-    
-    
-    // MARK: - Location picker state / actions
-    
-    private func refreshLocationPickerSuggestions() {
-        guard let destinationID = navigationState.modalDestinationID,
-              case let .locationPicker(fieldID) = destinationID else {
-            return
-        }
-        
-        var pickerValues: [JourneyLocationPicker.Value] = [
-            .currentLocation(name: location.currentLocationName,
-                             coordinate: location.currentLocationCoordinate)
-        ]
-        
-        if let currentlySelectedValue = form.locationPickerValue(for: fieldID) {
-            if !pickerValues.alreadyContains(currentlySelectedValue) {
-                pickerValues.append(currentlySelectedValue)
-            }
-        }
-        
-        let recentJourneyPickerValues = recentJourneys
-                                            .flatMap {
-                                                [$0.fromLocation, $0.toLocation, $0.viaLocation]
-                                            }
-                                            .compactMap { $0 }
-        recentJourneyPickerValues.forEach {
-            if !pickerValues.alreadyContains($0) {
-                pickerValues.append($0)
-            }
-        }
-        
-        suggestionsSection = .suggestions(pickerValues.removingDuplicates())
-    }
-    
-    private func handleLocationPickerAction(_ action: JourneyLocationPicker.Action) {
-        switch action {
-        case let .searchTermChanged(newValue):
-            searchForLocations(matching: newValue)
-        case let .valueSelected(value):
-            handleSelectedLocationValue(value)
-        }
-    }
-    
-    private func searchForLocations(matching searchTerm: String) {
-        localSearchCompleter.searchForPlaces(matching: searchTerm)
-        resultsAggregator.stations = stations.filteredStations(matchingName: searchTerm)
-        resultsAggregator.nationalRailStations = stations.filteredNationalRailStations(matching: searchTerm)
-    }
-    
-    private func handleSelectedLocationValue(_ value: JourneyLocationPicker.Value) {
-        guard let destinationID = navigationState.modalDestinationID,
-              case let .locationPicker(fieldID) = destinationID else {
-            return
-        }
-        
-        
-        if case .namedLocation(let locationValue) = value, locationValue.isCurrentLocation {
-            location.refreshCurrentLocation(forceRefreshLocationName: true)
-        }
-
-        form.populate(locationFieldID: fieldID, withValue: value)
-        navigationState.popOrDismiss()
     }
 }
 

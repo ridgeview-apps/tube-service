@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		310562B92CAEBEE800A55CCC /* SystemStatusRefreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */; };
+		310329242CB3D99E00142BC2 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3103291D2CB3D99E00142BC2 /* SheetView.swift */; };
+		310329252CB3D99E00142BC2 /* Sheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3103291E2CB3D99E00142BC2 /* Sheet.swift */; };
+		310329262CB3D99E00142BC2 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310329202CB3D99E00142BC2 /* AppConfig.swift */; };
+		310329272CB3D99E00142BC2 /* DataFetchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310329212CB3D99E00142BC2 /* DataFetchState.swift */; };
+		310329282CB3D99E00142BC2 /* SystemStatusRefreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310329222CB3D99E00142BC2 /* SystemStatusRefreshable.swift */; };
+		3103292A2CB42CBC00142BC2 /* JourneyLocationPickerScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310329292CB42CBC00142BC2 /* JourneyLocationPickerScreen.swift */; };
 		3107A8052ACC84EA009AFDB9 /* RootScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A8042ACC84EA009AFDB9 /* RootScreen.swift */; };
 		3107A8072ACD5C8C009AFDB9 /* AppDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A8062ACD5C8C009AFDB9 /* AppDataStore.swift */; };
-		3107A80B2ACECFCA009AFDB9 /* DataFetchState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */; };
 		3107A8142ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3107A8132ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift */; };
 		310BBA782AD456B30097BAD8 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310BBA772AD456B30097BAD8 /* SettingsScreen.swift */; };
 		310BBAAD2AD574D70097BAD8 /* PresentationViews in Frameworks */ = {isa = PBXBuildFile; productRef = 310BBAAC2AD574D70097BAD8 /* PresentationViews */; };
@@ -22,7 +26,6 @@
 		313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313DCA9E2AD7425600FF4271 /* View+Stub.swift */; };
 		3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 314029492BFFAA3900200776 /* View+PublishedEvents.swift */; };
 		314D614C2B4C1F1600C08D67 /* DataStores in Frameworks */ = {isa = PBXBuildFile; productRef = 314D614B2B4C1F1600C08D67 /* DataStores */; };
-		31508D4725604A3C0047BC9C /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31508D4625604A3C0047BC9C /* AppConfig.swift */; };
 		3151E8752B1E411E00D0046C /* LocationModel+Stub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3151E8742B1E411E00D0046C /* LocationModel+Stub.swift */; };
 		3151E8772B1F4C2D00D0046C /* NearbyStationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3151E8762B1F4C2D00D0046C /* NearbyStationsScreen.swift */; };
 		315693C22BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 315693C12BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift */; };
@@ -65,10 +68,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemStatusRefreshable.swift; sourceTree = "<group>"; };
+		3103291D2CB3D99E00142BC2 /* SheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
+		3103291E2CB3D99E00142BC2 /* Sheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheet.swift; sourceTree = "<group>"; };
+		310329202CB3D99E00142BC2 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		310329212CB3D99E00142BC2 /* DataFetchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchState.swift; sourceTree = "<group>"; };
+		310329222CB3D99E00142BC2 /* SystemStatusRefreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemStatusRefreshable.swift; sourceTree = "<group>"; };
+		310329292CB42CBC00142BC2 /* JourneyLocationPickerScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyLocationPickerScreen.swift; sourceTree = "<group>"; };
 		3107A8042ACC84EA009AFDB9 /* RootScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootScreen.swift; sourceTree = "<group>"; };
 		3107A8062ACD5C8C009AFDB9 /* AppDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDataStore.swift; sourceTree = "<group>"; };
-		3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetchState.swift; sourceTree = "<group>"; };
 		3107A8132ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalsBoardListScreen.swift; sourceTree = "<group>"; };
 		310BBA772AD456B30097BAD8 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
 		310BBAA42AD574350097BAD8 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
@@ -87,7 +94,6 @@
 		314029492BFFAA3900200776 /* View+PublishedEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+PublishedEvents.swift"; sourceTree = "<group>"; };
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
-		31508D4625604A3C0047BC9C /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		3151E8742B1E411E00D0046C /* LocationModel+Stub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LocationModel+Stub.swift"; sourceTree = "<group>"; };
 		3151E8762B1F4C2D00D0046C /* NearbyStationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearbyStationsScreen.swift; sourceTree = "<group>"; };
 		315693C12BC2D5A6002F43BC /* JourneyPlanner+PresentationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JourneyPlanner+PresentationState.swift"; sourceTree = "<group>"; };
@@ -152,6 +158,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3103291F2CB3D99E00142BC2 /* Sheets */ = {
+			isa = PBXGroup;
+			children = (
+				3103291E2CB3D99E00142BC2 /* Sheet.swift */,
+				3103291D2CB3D99E00142BC2 /* SheetView.swift */,
+			);
+			path = Sheets;
+			sourceTree = "<group>";
+		};
+		310329232CB3D99E00142BC2 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				3103291F2CB3D99E00142BC2 /* Sheets */,
+				310329202CB3D99E00142BC2 /* AppConfig.swift */,
+				310329212CB3D99E00142BC2 /* DataFetchState.swift */,
+				310329222CB3D99E00142BC2 /* SystemStatusRefreshable.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
 		310BBA792AD573FE0097BAD8 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
@@ -323,22 +349,12 @@
 			path = Util;
 			sourceTree = "<group>";
 		};
-		318D485724EFC9E30026B5F4 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				310562B82CAEBECF00A55CCC /* SystemStatusRefreshable.swift */,
-				31508D4625604A3C0047BC9C /* AppConfig.swift */,
-				3107A80A2ACECFCA009AFDB9 /* DataFetchState.swift */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
 		318D485F24EFCD390026B5F4 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				314D6EA324F3D07100F9AF12 /* Arrivals */,
 				316CAAC024F0012300481DC1 /* Common */,
-				318D485724EFC9E30026B5F4 /* Core */,
+				310329232CB3D99E00142BC2 /* Core */,
 				31CE9EB12BA4B8100038FBD4 /* JourneyPlanner */,
 				314D6EA224F3D05B00F9AF12 /* LineStatus */,
 				3168AB6E2AE2FFE00074DAD5 /* Maps */,
@@ -382,6 +398,7 @@
 		31CE9EB12BA4B8100038FBD4 /* JourneyPlanner */ = {
 			isa = PBXGroup;
 			children = (
+				310329292CB42CBC00142BC2 /* JourneyLocationPickerScreen.swift */,
 				31CE9EB22BA4B8230038FBD4 /* JourneyPlannerScreen.swift */,
 				3137D6B32BAC75C300AF3A35 /* LocalSearchCompleter.swift */,
 				31DA583E2BB5D04E00EB568E /* JourneyResultsScreen.swift */,
@@ -573,7 +590,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				310562B92CAEBEE800A55CCC /* SystemStatusRefreshable.swift in Sources */,
 				31260614256542A900358CA2 /* App.swift in Sources */,
 				313DCA9F2AD7425600FF4271 /* View+Stub.swift in Sources */,
 				31DE50C32AD009F200FC3407 /* EnvironmentValues.swift in Sources */,
@@ -582,8 +598,14 @@
 				3137D6B42BAC75C300AF3A35 /* LocalSearchCompleter.swift in Sources */,
 				310BBA782AD456B30097BAD8 /* SettingsScreen.swift in Sources */,
 				315868752B28BCFA0018477D /* LineStatusDetailScreen.swift in Sources */,
+				310329242CB3D99E00142BC2 /* SheetView.swift in Sources */,
+				310329252CB3D99E00142BC2 /* Sheet.swift in Sources */,
+				310329262CB3D99E00142BC2 /* AppConfig.swift in Sources */,
+				310329272CB3D99E00142BC2 /* DataFetchState.swift in Sources */,
+				310329282CB3D99E00142BC2 /* SystemStatusRefreshable.swift in Sources */,
 				315693C62BC3F380002F43BC /* View+LocationServices.swift in Sources */,
 				3107A8142ACF3ACC009AFDB9 /* ArrivalsBoardListScreen.swift in Sources */,
+				3103292A2CB42CBC00142BC2 /* JourneyLocationPickerScreen.swift in Sources */,
 				3137D6B22BAC4FDF00AF3A35 /* LocationDataStore+.swift in Sources */,
 				3140294A2BFFAA3900200776 /* View+PublishedEvents.swift in Sources */,
 				313DCA952AD740E000FF4271 /* AppEnvironment+Stub.swift in Sources */,
@@ -592,11 +614,9 @@
 				3107A8072ACD5C8C009AFDB9 /* AppDataStore.swift in Sources */,
 				3151E8752B1E411E00D0046C /* LocationModel+Stub.swift in Sources */,
 				315EF4842B2872D6009DA9AA /* StationScreen.swift in Sources */,
-				3107A80B2ACECFCA009AFDB9 /* DataFetchState.swift in Sources */,
 				31D072CD2BD138AC003286E1 /* NavigationState.swift in Sources */,
 				31CE9EB32BA4B8230038FBD4 /* JourneyPlannerScreen.swift in Sources */,
 				31DA583F2BB5D04E00EB568E /* JourneyResultsScreen.swift in Sources */,
-				31508D4725604A3C0047BC9C /* AppConfig.swift in Sources */,
 				3107A8052ACC84EA009AFDB9 /* RootScreen.swift in Sources */,
 				31DE50C12AD0002900FC3407 /* ArrivalsPickerScreen.swift in Sources */,
 				3151E8772B1F4C2D00D0046C /* NearbyStationsScreen.swift in Sources */,

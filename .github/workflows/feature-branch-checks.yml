@@ -3,13 +3,17 @@ name: Feature branch checks
 on:
   push:
     branches:
-      - 'feature/**'
+      - 'feature/**'    
 
 env:
   GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true    
+
 jobs:
-  build-and-deploy:
+  check-feature-branch:
     runs-on: macos-latest
     steps:
       - name: Checkout repo
@@ -17,6 +21,16 @@ jobs:
       - name: Select Xcode 16.0
         run: sudo xcode-select -s /Applications/Xcode_16.0.app
       - name: Install dependencies
-        run: brew install swiftlint
-      - name: Run beta
-        run: ./Scripts/ci-unit-tests.sh
+        run: |
+          brew install git-secret
+          brew install swiftlint
+      - name: Git secret
+        run: |
+          echo "🔓 Unlocking secrets..."
+          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+          git secret reveal          
+      - name: Fastlane commands
+        run: |
+          bundle install
+          bundle update fastlane
+          bundle exec fastlane unit_tests

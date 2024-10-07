@@ -3,23 +3,30 @@ import SwiftUI
 
 public struct LineStatusDetailView: View {
     
+    public enum Action {
+        case linkTapped(LineStatusTwitterLink)
+    }
+    
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
+
     @Binding public var isFavourite: Bool
     
-    @State private var twitterLinkSelection: LineStatusTwitterLink?
+    public let onAction: (Action) -> Void
     
     public init(
         line: Line,
         isFavourite: Binding<Bool>,
         loadingState: LoadingState,
-        refreshDate: Date?
+        refreshDate: Date?,
+        onAction: @escaping (Action) -> Void
     ) {
         self.line = line
         self.loadingState = loadingState
         self.refreshDate = refreshDate
         self._isFavourite = isFavourite
+        self.onAction = onAction
     }
     
     public var body: some View {
@@ -141,7 +148,7 @@ public struct LineStatusDetailView: View {
     
     @ViewBuilder private func twitterLinkButton(for link: LineStatusTwitterLink) -> some View {
         Button {
-            twitterLinkSelection = link
+            onAction(.linkTapped(link))
         } label: {
             Group {
                 switch link.style {
@@ -151,9 +158,6 @@ public struct LineStatusDetailView: View {
                     Text(.lineStatusTflTweetsTitleLine(line.longName))
                 }
             }
-        }
-        .sheet(item: $twitterLinkSelection) { link in
-            SafariView(url: link.url)
         }
         .buttonStyle(.borderless)
 
@@ -175,7 +179,8 @@ private struct Previewer: View {
                 line: line,
                 isFavourite: $isFavourite,
                 loadingState: loadingState,
-                refreshDate: refreshDate
+                refreshDate: refreshDate,
+                onAction: { print($0) }
             )
             .navigationTitle("Preview")
         }
