@@ -1,1 +1,2 @@
-- Minor bug fixes
+- New feature: system status - the app will now inform you about any known technical issues (for example: TFL system problems). You can also find a more detailed status report by tapping on Settings > System Status.
+- Optimised for iOS18
