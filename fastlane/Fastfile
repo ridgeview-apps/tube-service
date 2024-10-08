@@ -88,23 +88,14 @@ lane :distribute do
   groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
   distribute_external = groups.length > 0  
 
-  begin
-    pilot(
-      distribute_external: distribute_external,
-      groups: groups,
-      notify_external_testers: true,
-      skip_waiting_for_build_processing: !distribute_external,
-      changelog: "Thank you for installing our latest build"
-    )
-  rescue Exception => e
-    # See: https://github.com/fastlane/fastlane/issues/18408
-    # This recovery step is a workaround to prevent CI failures while the initial TF beta app is in review (e.g. after bumping the app version no). 
-    if e.message.include? "Another build is in review"
-      UI.important("Another build is already in external beta review. Skipping external beta review submission")
-    else
-      raise
-    end
-  end
+  pilot(
+    distribute_external: distribute_external,
+    groups: groups,
+    notify_external_testers: true,
+    skip_waiting_for_build_processing: !distribute_external,
+    changelog: "Thank you for installing our latest build",
+    reject_build_waiting_for_review: true
+  )
   
 end
 
