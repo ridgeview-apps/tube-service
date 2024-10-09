@@ -1,43 +1,45 @@
 import Models
-import XCTest
+import Testing
 
 @testable import PresentationViews
 
-final class LineIDViewStateTests: XCTestCase {
+struct LineIDViewStateTests {
 
-    func testLineIDShortNames() {
-        XCTAssertEqual("Bakerloo", TrainLineID.bakerloo.name)
-        XCTAssertEqual("Central", TrainLineID.central.name)
-        XCTAssertEqual("Circle", TrainLineID.circle.name)
-        XCTAssertEqual("District", TrainLineID.district.name)
-        XCTAssertEqual("Elizabeth", TrainLineID.elizabeth.name)
-        XCTAssertEqual("Hammersmith & City", TrainLineID.hammersmithAndCity.name)
-        XCTAssertEqual("Jubilee", TrainLineID.jubilee.name)
-        XCTAssertEqual("Metropolitan", TrainLineID.metropolitan.name)
-        XCTAssertEqual("Northern", TrainLineID.northern.name)
-        XCTAssertEqual("Piccadilly", TrainLineID.piccadilly.name)
-        XCTAssertEqual("Victoria", TrainLineID.victoria.name)
-        XCTAssertEqual("Waterloo & City", TrainLineID.waterlooAndCity.name)
-        XCTAssertEqual("DLR", TrainLineID.dlr.name)
-        XCTAssertEqual("Overground", TrainLineID.overground.name)
-        XCTAssertEqual("Tram", TrainLineID.tram.name)
+    @Test
+    func lineIDShortNames() {
+        #expect(TrainLineID.bakerloo.name == "Bakerloo")
+        #expect(TrainLineID.central.name == "Central")
+        #expect(TrainLineID.circle.name == "Circle")
+        #expect(TrainLineID.district.name == "District")
+        #expect(TrainLineID.elizabeth.name == "Elizabeth")
+        #expect(TrainLineID.hammersmithAndCity.name == "Hammersmith & City")
+        #expect(TrainLineID.jubilee.name == "Jubilee")
+        #expect(TrainLineID.metropolitan.name == "Metropolitan")
+        #expect(TrainLineID.northern.name == "Northern")
+        #expect(TrainLineID.piccadilly.name == "Piccadilly")
+        #expect(TrainLineID.victoria.name == "Victoria")
+        #expect(TrainLineID.waterlooAndCity.name == "Waterloo & City")
+        #expect(TrainLineID.dlr.name == "DLR")
+        #expect(TrainLineID.overground.name == "Overground")
+        #expect(TrainLineID.tram.name == "Tram")
     }
     
-    func testLineIDLongNames() {
-        XCTAssertEqual("Bakerloo line", TrainLineID.bakerloo.longName)
-        XCTAssertEqual("Central line", TrainLineID.central.longName)
-        XCTAssertEqual("Circle line", TrainLineID.circle.longName)
-        XCTAssertEqual("District line", TrainLineID.district.longName)
-        XCTAssertEqual("Elizabeth line", TrainLineID.elizabeth.longName)
-        XCTAssertEqual("Hammersmith & City line", TrainLineID.hammersmithAndCity.longName)
-        XCTAssertEqual("Jubilee line", TrainLineID.jubilee.longName)
-        XCTAssertEqual("Metropolitan line", TrainLineID.metropolitan.longName)
-        XCTAssertEqual("Northern line", TrainLineID.northern.longName)
-        XCTAssertEqual("Piccadilly line", TrainLineID.piccadilly.longName)
-        XCTAssertEqual("Victoria line", TrainLineID.victoria.longName)
-        XCTAssertEqual("Waterloo & City line", TrainLineID.waterlooAndCity.longName)
-        XCTAssertEqual("DLR", TrainLineID.dlr.longName)
-        XCTAssertEqual("Overground", TrainLineID.overground.longName)
-        XCTAssertEqual("Tram", TrainLineID.tram.longName)
+    @Test
+    func lineIDLongNames() {
+        #expect(TrainLineID.bakerloo.longName == "Bakerloo line")
+        #expect(TrainLineID.central.longName == "Central line")
+        #expect(TrainLineID.circle.longName == "Circle line")
+        #expect(TrainLineID.district.longName == "District line")
+        #expect(TrainLineID.elizabeth.longName == "Elizabeth line")
+        #expect(TrainLineID.hammersmithAndCity.longName == "Hammersmith & City line")
+        #expect(TrainLineID.jubilee.longName == "Jubilee line")
+        #expect(TrainLineID.metropolitan.longName == "Metropolitan line")
+        #expect(TrainLineID.northern.longName == "Northern line")
+        #expect(TrainLineID.piccadilly.longName == "Piccadilly line")
+        #expect(TrainLineID.victoria.longName == "Victoria line")
+        #expect(TrainLineID.waterlooAndCity.longName == "Waterloo & City line")
+        #expect(TrainLineID.dlr.longName == "DLR")
+        #expect(TrainLineID.overground.longName == "Overground")
+        #expect(TrainLineID.tram.longName == "Tram")
     }
 }

@@ -1,10 +1,13 @@
-@testable import DataStores
-import XCTest
+import Foundation
+import Testing
 
-final class SystemStatusDataStoreTests: XCTestCase {
+@testable import DataStores
+
+@MainActor
+struct SystemStatusDataStoreTests {
     
-    @MainActor
-    func testFetchSystemStatusIfStale() async {
+    @Test
+    func fetchSystemStatusIfStale() async {
         // Given
         var clock = FakeClock(initialTime: .now)
         let systemStatusAPI = StubSystemStatusAPIClient()
@@ -13,27 +16,27 @@ final class SystemStatusDataStoreTests: XCTestCase {
                                           calendar: .london)
         
         // Initial data refresh
-        XCTAssertNil(model.currentStatus)
+        #expect(model.currentStatus == nil)
         await model.fetchSystemStatusIfStale()
-        XCTAssertEqual(clock.initialTime, model.lastFetchedAt)
-        XCTAssertEqual(1, systemStatusAPI.fetchSystemStatusCallCount)
+        #expect(model.lastFetchedAt == clock.initialTime)
+        #expect(systemStatusAPI.fetchSystemStatusCallCount == 1)
         
         // After 9 minutes (no change - data NOT stale)
         clock.addingMinutes(9)
         await model.fetchSystemStatusIfStale()
-        XCTAssertEqual(clock.initialTime, model.lastFetchedAt) // No change
-        XCTAssertEqual(1, systemStatusAPI.fetchSystemStatusCallCount) // No change
+        #expect(model.lastFetchedAt == clock.initialTime) // No change
+        #expect(systemStatusAPI.fetchSystemStatusCallCount == 1) // No change
 
         // After 10 minutes (fetch expected - data IS now stale)
         clock.addingMinutes(10)
         await model.fetchSystemStatusIfStale()
-        XCTAssertEqual(clock.currentTime, model.lastFetchedAt)
-        XCTAssertEqual(2, systemStatusAPI.fetchSystemStatusCallCount)
+        #expect(model.lastFetchedAt == clock.currentTime)
+        #expect(systemStatusAPI.fetchSystemStatusCallCount == 2)
     }
     
     
-    @MainActor
-    func testFetchSystemStatusFailure() async {
+    @Test
+    func fetchSystemStatusFailure() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
         let systemStatusAPI = StubSystemStatusAPIClient()
@@ -46,10 +49,11 @@ final class SystemStatusDataStoreTests: XCTestCase {
         await model.fetchSystemStatusIfStale()
         
         // Then
-        XCTAssertEqual(true, model.fetchState?.isError)
-        XCTAssertEqual(model.lastFetchedAt, .distantPast)
-        XCTAssertNil(model.currentStatus)
-        XCTAssertEqual(1, systemStatusAPI.fetchSystemStatusCallCount)
+        let requiredFetchState = try #require(model.fetchState)
+        #expect(requiredFetchState.isError)
+        #expect(model.lastFetchedAt == .distantPast)
+        #expect(model.currentStatus == nil)
+        #expect(systemStatusAPI.fetchSystemStatusCallCount == 1)
     }
     
 }

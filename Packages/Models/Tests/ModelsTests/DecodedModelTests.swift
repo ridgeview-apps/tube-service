@@ -1,66 +1,73 @@
-import XCTest
+import Foundation
+import Testing
 
 @testable import Models
 @testable import ModelStubs
 
-final class ModelDecoderTests: XCTestCase {
+struct ModelDecoderTests {
 
-    func testDecodedLineStatuses() throws {
+    @Test
+    func decodedLineStatuses() throws {
         let lineStatusesToday = try decodeRawJSONString(lineStatusesTodayJSON, asType: [Line].self)
         let lineStatusesFuture = try decodeRawJSONString(lineStatusesFutureJSON, asType: [Line].self)
         let lineStatusGood = try decodeRawJSONString(lineStatusGoodServiceJSON, asType: Line.self)
         let lineStatusDisrupted = try decodeRawJSONString(lineStatusDisruptedJSON, asType: Line.self)
         
-        XCTAssertNotNil(lineStatusesToday)
-        XCTAssertNotNil(lineStatusesFuture)
-        XCTAssertNotNil(lineStatusGood)
-        XCTAssertNotNil(lineStatusDisrupted)
+        #expect(lineStatusesToday != nil)
+        #expect(lineStatusesFuture != nil)
+        #expect(lineStatusGood != nil)
+        #expect(lineStatusDisrupted != nil)
     }
     
-    func testDecodedArrivalPredictions() throws {
+    @Test
+    func decodedArrivalPredictions() throws {
         let singleLineArrivals = try decodeRawJSONString(northernLineArrivalsJSON, asType: [ArrivalPrediction].self)
         let multiLineArrivals = try decodeRawJSONString(hammerDistrictAndCircleArrivalsJSON, asType: [ArrivalPrediction].self)
         
-        XCTAssertNotNil(singleLineArrivals)
-        XCTAssertNotNil(multiLineArrivals)
+        #expect(singleLineArrivals != nil)
+        #expect(multiLineArrivals != nil)
     }
     
-    func testDecodedArrivalDepartures() throws {
+    @Test
+    func decodedArrivalDepartures() throws {
         let elizabethLineArrivals = try decodeRawJSONString(elizabethLineArrivalsJSON, asType: [ArrivalDeparture].self)
         
-        XCTAssertNotNil(elizabethLineArrivals)
+        #expect(elizabethLineArrivals != nil)
     }
     
-    func testDecodedDisruptionPoints() throws {
+    @Test
+    func decodedDisruptionPoints() throws {
         let disruptedPoints = try decodeRawJSONString(disruptedStationsJSON, asType: [DisruptedPoint].self)
         
-        XCTAssertNotNil(disruptedPoints)
+        #expect(disruptedPoints != nil)
     }
     
-    func testDecodedTubeJourneyItinerary() throws {
+    @Test
+    func decodedTubeJourneyItinerary() throws {
         let journey = try decodeRawJSONString(journeyByTubeJSON, asType: Journey.self)
         
-        XCTAssertNotNil(journey)
+        #expect(journey != nil)
         
-        XCTAssertEqual(journey.legs?[0].modeID, .walking)
+        #expect(journey.legs?[0].modeID == .walking)
         
-        XCTAssertEqual(journey.legs?[1].trainLineID, .piccadilly)
-        XCTAssertEqual(journey.legs?[1].modeID, .tube)
-        XCTAssertEqual(journey.legs?[1].stopPoints[0].name, "Russell Square Underground Station")
-        XCTAssertEqual(journey.legs?[1].stopPoints[1].name, "Holborn Underground Station")
-        XCTAssertEqual(journey.legs?[1].stopPoints[2].name, "Covent Garden Underground Station")
-        XCTAssertEqual(journey.legs?[1].departurePoint?.commonName, "King's Cross St. Pancras Underground Station")
-        XCTAssertEqual(journey.legs?[1].arrivalPoint?.commonName, "Leicester Square Underground Station")
+        #expect(journey.legs?[1].trainLineID == .piccadilly)
+        #expect(journey.legs?[1].modeID == .tube)
+        #expect(journey.legs?[1].stopPoints[0].name == "Russell Square Underground Station")
+        #expect(journey.legs?[1].stopPoints[1].name == "Holborn Underground Station")
+        #expect(journey.legs?[1].stopPoints[2].name == "Covent Garden Underground Station")
+        #expect(journey.legs?[1].departurePoint?.commonName == "King's Cross St. Pancras Underground Station")
+        #expect(journey.legs?[1].arrivalPoint?.commonName == "Leicester Square Underground Station")
     }
     
-    func testDecodedSystemStatus() throws {
+    @Test
+    func decodedSystemStatus() throws {
         let systemStatusOK = try decodeRawJSONString(systemStatusOKJSON, asType: SystemStatus.self)
         let systemStatusOutage = try decodeRawJSONString(systemStatusOutageJSON, asType: SystemStatus.self)
         let systemStatusResolved = try decodeRawJSONString(systemStatusResolvedJSON, asType: SystemStatus.self)
         
-        XCTAssertNotNil(systemStatusOK)
-        XCTAssertNotNil(systemStatusOutage)
-        XCTAssertNotNil(systemStatusResolved)
+        #expect(systemStatusOK != nil)
+        #expect(systemStatusOutage != nil)
+        #expect(systemStatusResolved != nil)
     }
 }
 

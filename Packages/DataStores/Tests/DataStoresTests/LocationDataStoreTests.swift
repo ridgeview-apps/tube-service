@@ -1,13 +1,14 @@
-@testable import DataStores
-
 import Models
 import ModelStubs
-import XCTest
+import Testing
 
-final class LocationDataStoreTests: XCTestCase {
+@testable import DataStores
 
-    @MainActor
-    func testNearestStation_Pentonville() throws {
+@MainActor
+struct LocationDataStoreTests {
+
+    @Test
+    func nearestStationsToPentonville() throws {
         // Given
         let pentonville = LocationCoordinate(lat: 51.531504, lon: -0.113384)
         
@@ -15,16 +16,16 @@ final class LocationDataStoreTests: XCTestCase {
         let nearestStations = Station.all.nearestStations(to: pentonville)
         
         // Then
-        XCTAssertEqual(ModelStubs.angelStation, nearestStations[0].station)
-        XCTAssertEqual(534.20, nearestStations[0].distance, accuracy: 0.1)
-        XCTAssertEqual(ModelStubs.kingsCrossStation, nearestStations[1].station)
-        XCTAssertEqual(687.13, nearestStations[1].distance, accuracy: 0.1)
-        XCTAssertEqual(ModelStubs.russellSquareStation, nearestStations[2].station)
-        XCTAssertEqual(1205.0274, nearestStations[2].distance, accuracy: 0.1)
+        #expect(nearestStations[0].station == ModelStubs.angelStation)
+        #expect(nearestStations[0].distance.isApproximatelyEqual(to: 534.20, plusOrMinus: 0.1))
+        #expect(nearestStations[1].station == ModelStubs.kingsCrossStation)
+        #expect(nearestStations[1].distance.isApproximatelyEqual(to: 687.13, plusOrMinus: 0.1))
+        #expect(nearestStations[2].station == ModelStubs.russellSquareStation)
+        #expect(nearestStations[2].distance.isApproximatelyEqual(to: 1205.0274, plusOrMinus: 0.1))
     }
     
-    @MainActor
-    func testNearestStation_NorthFinchley() throws {
+    @Test
+    func nearestStationsToNorthFinchley() throws {
         // Given
         let northFinchleyHighRoad = LocationCoordinate(lat: 51.618227, lon: -0.176675)
         
@@ -32,13 +33,13 @@ final class LocationDataStoreTests: XCTestCase {
         let nearestStations = Station.all.nearestStations(to: northFinchleyHighRoad)
         
         // Then
-        XCTAssertEqual(ModelStubs.woodsideParkStation, nearestStations[0].station)
-        XCTAssertEqual(606.16, nearestStations[0].distance, accuracy: 0.1)
-        XCTAssertEqual(ModelStubs.westFinchleyStation, nearestStations[1].station)
-        XCTAssertEqual(1270.45, nearestStations[1].distance, accuracy: 0.1)
-        XCTAssertEqual(ModelStubs.totteridgeAndWhetstoneStation, nearestStations[2].station)
-        XCTAssertEqual(1387.44, nearestStations[2].distance, accuracy: 0.1)
-        XCTAssertEqual(ModelStubs.finchleyCentralStation, nearestStations[3].station)
-        XCTAssertEqual(2216.50, nearestStations[3].distance, accuracy: 0.1)
+        #expect(nearestStations[0].station == ModelStubs.woodsideParkStation)
+        #expect(nearestStations[0].distance.isApproximatelyEqual(to: 606.16, plusOrMinus: 0.1))
+        #expect(nearestStations[1].station == ModelStubs.westFinchleyStation)
+        #expect(nearestStations[1].distance.isApproximatelyEqual(to: 1270.45, plusOrMinus: 0.1))
+        #expect(nearestStations[2].station == ModelStubs.totteridgeAndWhetstoneStation)
+        #expect(nearestStations[2].distance.isApproximatelyEqual(to: 1387.44, plusOrMinus: 0.1))
+        #expect(nearestStations[3].station == ModelStubs.finchleyCentralStation)
+        #expect(nearestStations[3].distance.isApproximatelyEqual(to: 2216.50, plusOrMinus: 0.1))
     }
 }

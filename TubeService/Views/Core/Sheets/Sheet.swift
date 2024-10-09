@@ -49,7 +49,7 @@ struct RootSheetPresenterModifier: ViewModifier {
             })
             .sheet(item: $selectedSheet) { sheet in
                 SheetView(sheet: sheet) {
-                    self.selectedSheet = nil
+                    selectedSheet = nil
                 }
             }
     }

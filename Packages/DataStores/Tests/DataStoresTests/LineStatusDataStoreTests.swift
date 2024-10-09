@@ -1,10 +1,14 @@
-@testable import DataStores
-import XCTest
+import Foundation
+import Testing
 
-final class LineStatusDataStoreTests: XCTestCase {
+@testable import DataStores
+
+
+@MainActor
+struct LineStatusDataStoreTests {
     
-    @MainActor
-    func testRefreshLineStatusesForToday() async {
+    @Test
+    func refreshLineStatusesForToday() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
         let transportAPI = StubTransportAPIClient()
@@ -13,19 +17,20 @@ final class LineStatusDataStoreTests: XCTestCase {
                                         calendar: .london)
         
         // When
-        XCTAssertNil(model.fetchedData(for: .today))
+        #expect(model.fetchedData(for: .today) == nil)
         await model.refreshLineStatuses(for: .today)
         let fetchedData = model.fetchedData(for: .today)
         
         // Then
-        XCTAssertEqual(true, fetchedData?.fetchState.isSuccess)
-        XCTAssertEqual(clock.currentTime, fetchedData?.fetchedAt)
-        XCTAssertNotNil(fetchedData?.lines)
-        XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount)
+        let requiredFetchedData = try #require(fetchedData)
+        #expect(requiredFetchedData.fetchState.isSuccess)
+        #expect(requiredFetchedData.fetchedAt == clock.currentTime)
+        #expect(!requiredFetchedData.lines.isEmpty)
+        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
     }
     
-    @MainActor
-    func testRefreshLineStatusesForDateRange() async {
+    @Test
+    func refreshLineStatusesForDateRange() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
         let oneDay: TimeInterval = 60 * 60 * 24
@@ -40,14 +45,15 @@ final class LineStatusDataStoreTests: XCTestCase {
         let fetchedData = model.fetchedData(for: .range(dateInterval))
         
         // Then
-        XCTAssertEqual(true, fetchedData?.fetchState.isSuccess)
-        XCTAssertEqual(clock.currentTime, fetchedData?.fetchedAt)
-        XCTAssertNotNil(fetchedData?.lines)
-        XCTAssertEqual(1, transportAPI.fetchLineStatusesForDateRangeCallCount)
+        let requiredFetchedData = try #require(fetchedData)
+        #expect(requiredFetchedData.fetchState.isSuccess)
+        #expect(requiredFetchedData.fetchedAt == clock.currentTime)
+        #expect(!requiredFetchedData.lines.isEmpty)
+        #expect(transportAPI.fetchLineStatusesForDateRangeCallCount == 1)
     }
     
-    @MainActor
-    func testRefreshLineStatusesFailure() async {
+    @Test
+    func refreshLineStatusesFailure() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
         let transportAPI = StubTransportAPIClient()
@@ -61,14 +67,15 @@ final class LineStatusDataStoreTests: XCTestCase {
         let fetchedData = model.fetchedData(for: .today)
         
         // Then
-        XCTAssertEqual(true, fetchedData?.fetchState.isError)
-        XCTAssertNil(fetchedData?.fetchedAt)
-        XCTAssertEqual(true, fetchedData?.lines.isEmpty)
-        XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount)
+        let requiredFetchedData = try #require(fetchedData)
+        #expect(requiredFetchedData.fetchState.isError)
+        #expect(requiredFetchedData.fetchedAt == nil)
+        #expect(requiredFetchedData.lines.isEmpty)
+        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
     }
     
-    @MainActor
-    func testRefreshStaleLineStatuses() async {
+    @Test
+    func refreshStaleLineStatuses() async throws {
         // Given
         var clock = FakeClock(initialTime: .now)
         let transportAPI = StubTransportAPIClient()
@@ -77,22 +84,22 @@ final class LineStatusDataStoreTests: XCTestCase {
                                         calendar: .london)
         
         // Initial data refresh
-        XCTAssertNil(model.fetchedData(for: .today))
+        #expect(model.fetchedData(for: .today) == nil)
         await model.refreshLineStatusesIfStale(for: .today)
-        XCTAssertEqual(clock.initialTime, model.fetchedData(for: .today)?.fetchedAt)
-        XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount)
+        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime)
+        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
         
         // After 4 minutes (no change - data NOT stale)
         clock.addingMinutes(4)
         await model.refreshLineStatusesIfStale(for: .today)
-        XCTAssertEqual(clock.initialTime, model.fetchedData(for: .today)?.fetchedAt) // No change
-        XCTAssertEqual(1, transportAPI.fetchCurrentLineStatusesCallCount) // No change
+        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime) // No change
+        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1) // No change
 
         // After 5 minutes (fetch expected - data IS now stale)
         clock.addingMinutes(5)
         await model.refreshLineStatusesIfStale(for: .today)
-        XCTAssertEqual(clock.currentTime, model.fetchedData(for: .today)?.fetchedAt)
-        XCTAssertEqual(2, transportAPI.fetchCurrentLineStatusesCallCount)
+        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.currentTime)
+        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 2)
     }
     
 }

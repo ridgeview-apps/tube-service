@@ -1,62 +1,67 @@
 import Models
 import ModelStubs
-import XCTest
+import Testing
 
 @testable import PresentationViews
 
-final class LineViewStateTests: XCTestCase {
+struct LineViewStateTests {
     
-    func testLineDisruptionStatusDisruptedLine() {
+    @Test
+    func lineDisruptionStatusDisruptedLine() {
         let disruptedLine = ModelStubs.lineStatusDisrupted
         let goodServiceLine = ModelStubs.lineStatusGoodService
         
-        XCTAssertTrue(disruptedLine.isDisrupted)
-        XCTAssertFalse(goodServiceLine.isDisrupted)
+        #expect(disruptedLine.isDisrupted)
+        #expect(!goodServiceLine.isDisrupted)
     }
     
-    func testLineDisruptionStates_mixedGoodAndDisrupted() {
+    @Test
+    func lineDisruptionStates_mixedGoodAndDisrupted() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.goodService]),
             Line(id: .northern, lineStatuses: [.goodService]),
             Line(id: .hammersmithAndCity, lineStatuses: [.with(statusSeverity: .severeDelays)])
         ]
-        XCTAssertTrue(lines.hasDisruptions)
-        XCTAssertFalse(lines.allAreDisrupted)
-        XCTAssertEqual(1, lines.disruptionsOnly().count)
+        #expect(lines.hasDisruptions)
+        #expect(!lines.allAreDisrupted)
+        #expect(lines.disruptionsOnly().count == 1)
 
-        XCTAssertFalse(lines.allAreGoodService)
-        XCTAssertEqual(2, lines.goodServiceOnly().count)
+        #expect(!lines.allAreGoodService)
+        #expect(lines.goodServiceOnly().count == 2)
     }
     
-    func testLineDisruptionStates_allDisrupted() {
+    @Test
+    func lineDisruptionStates_allDisrupted() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.with(statusSeverity: .severeDelays)]),
             Line(id: .northern, lineStatuses: [.with(statusSeverity: .minorDelays)]),
             Line(id: .hammersmithAndCity, lineStatuses: [.with(statusSeverity: .partClosed)])
         ]
-        XCTAssertTrue(lines.hasDisruptions)
-        XCTAssertTrue(lines.allAreDisrupted)
-        XCTAssertEqual(3, lines.disruptionsOnly().count)
+        #expect(lines.hasDisruptions)
+        #expect(lines.allAreDisrupted)
+        #expect(lines.disruptionsOnly().count == 3)
         
-        XCTAssertFalse(lines.allAreGoodService)
-        XCTAssertEqual(0, lines.goodServiceOnly().count)
+        #expect(!lines.allAreGoodService)
+        #expect(lines.goodServiceOnly().isEmpty)
     }
 
-    func testLineDisruptionStates_allGoodService() {
+    @Test
+    func lineDisruptionStates_allGoodService() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.goodService]),
             Line(id: .northern, lineStatuses: [.goodService]),
             Line(id: .hammersmithAndCity, lineStatuses: [.goodService])
         ]
-        XCTAssertFalse(lines.hasDisruptions)
-        XCTAssertFalse(lines.allAreDisrupted)
-        XCTAssertEqual(0, lines.disruptionsOnly().count)
+        #expect(!lines.hasDisruptions)
+        #expect(!lines.allAreDisrupted)
+        #expect(lines.disruptionsOnly().isEmpty)
         
-        XCTAssertTrue(lines.allAreGoodService)
-        XCTAssertEqual(3, lines.goodServiceOnly().count)
+        #expect(lines.allAreGoodService)
+        #expect(lines.goodServiceOnly().count == 3)
     }
     
-    func testLinesWithFilteredFavourites() {
+    @Test
+    func linesWithFilteredFavourites() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.goodService]),
             Line(id: .northern, lineStatuses: [.goodService]),
@@ -65,11 +70,12 @@ final class LineViewStateTests: XCTestCase {
         
         let filteredValues = lines.favouritesOnly(matching: [.bakerloo])
         
-        XCTAssertEqual(1, filteredValues.count)
-        XCTAssertEqual(.bakerloo, filteredValues.first?.id)
+        #expect(filteredValues.count == 1)
+        #expect(filteredValues.first?.id == .bakerloo)
     }
     
-    func testLinesWithValuesRemoved() {
+    @Test
+    func linesWithValuesRemoved() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.goodService]),
             Line(id: .northern, lineStatuses: [.goodService]),
@@ -78,13 +84,14 @@ final class LineViewStateTests: XCTestCase {
         
         let filteredValues = lines.removingLineIDs([.bakerloo])
         
-        XCTAssertEqual(2, filteredValues.count)
-        XCTAssertEqual(.northern, filteredValues[0].id)
-        XCTAssertEqual(.hammersmithAndCity, filteredValues[1].id)
+        #expect(filteredValues.count == 2)
+        #expect(filteredValues[0].id == .northern)
+        #expect(filteredValues[1].id == .hammersmithAndCity)
 
     }
     
-    func testDisruptedLinesAreSortedFirst() {
+    @Test
+    func disruptedLinesAreSortedFirst() {
         // Given
         let goodServiceBakerloo = Line(id: .bakerloo, lineStatuses: [.with(statusSeverity: .goodService)])
         let goodServiceCircleLine = Line(id: .circle, lineStatuses: [.with(statusSeverity: .goodService)])
@@ -100,38 +107,36 @@ final class LineViewStateTests: XCTestCase {
         let sortedValues = unsortedValues.sortedByStatusSeverity()
                 
         // Then
-        XCTAssertEqual(
-            [disruptedNorthernLine, disruptedPiccadillyLine, goodServiceBakerloo, goodServiceCircleLine],
-            sortedValues
-        )
+        #expect(sortedValues == [disruptedNorthernLine,
+                                 disruptedPiccadillyLine,
+                                 goodServiceBakerloo,
+                                 goodServiceCircleLine])
     }
     
-    func testServiceDetailTextItems_GoodService() {
+    @Test
+    func serviceDetailTextItems_GoodService() {
         let line = Line(id: .bakerloo,
                         lineStatuses: [.with(statusSeverity: .goodService)])
         
-        XCTAssertEqual(
-            [.init(messageType: .goodService, additionalInfo: nil)],
-            line.serviceDetailTextItems
-        )
+        let expectedValues: [Line.ServiceDetailTextItem] = [.init(messageType: .goodService, additionalInfo: nil)]
+        #expect(line.serviceDetailTextItems == expectedValues)
     }
     
-    
-    func testServiceDetailTextItems_Disrupted_UniqueValues() {
+    @Test
+    func serviceDetailTextItems_Disrupted_UniqueValues() {
         let line = Line(id: .bakerloo,
                         lineStatuses: [.with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                                        .with(statusSeverity: .partClosed, reason: "Closure reason")])
         
-        XCTAssertEqual(
-            [
-                .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil),
-                .init(messageType: .disrupted(reason: "Closure reason"), additionalInfo: nil),
-            ],
-            line.serviceDetailTextItems
-        )
+        let expectedValues: [Line.ServiceDetailTextItem] = [
+            .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil),
+            .init(messageType: .disrupted(reason: "Closure reason"), additionalInfo: nil)
+        ]
+        #expect(line.serviceDetailTextItems == expectedValues)
     }
     
-    func testServiceDetailTextItems_Disrupted_DuplicateValues() {
+    @Test
+    func serviceDetailTextItems_Disrupted_DuplicateValues() {
         let line = Line(id: .bakerloo,
                         lineStatuses: [.with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                                        .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
@@ -139,11 +144,9 @@ final class LineViewStateTests: XCTestCase {
                                        .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                                        .with(statusSeverity: .partSuspended, reason: "Suspension reason")])
         
-        XCTAssertEqual(
-            [
-                .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil), // Duplicates removed
-            ],
-            line.serviceDetailTextItems
-        )
+        let expectedValues: [Line.ServiceDetailTextItem] = [
+            .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil), // Duplicates removed
+        ]
+        #expect(line.serviceDetailTextItems == expectedValues)
     }
 }

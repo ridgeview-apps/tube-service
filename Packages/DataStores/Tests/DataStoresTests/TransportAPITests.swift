@@ -1,15 +1,17 @@
+import Foundation
+import Models
+import Testing
+
 @testable import DataStores
 
-import Models
-import XCTest
-
-final class TransportAPIRouteTests: XCTestCase {
+struct TransportAPIRouteTests {
     
     private let baseURL = URL(string: "https://foo.com/")!
     private let appID = "testAppID"
     private let appKey = "testAppKey"
     
-    func testGetCurrentLineStatusesEndpoint() throws {
+    @Test
+    func getCurrentLineStatusesEndpoint() throws {
         // Given
         let route: TransportAPIRoute = .getCurrentLineStatuses(ModeID.trains)
         
@@ -17,13 +19,12 @@ final class TransportAPIRouteTests: XCTestCase {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        XCTAssertEqual(
-            "https://foo.com/Line/Mode/tube,dlr,overground,tram,elizabeth-line/Status?app_id=testAppID&app_key=testAppKey",
-            url.absoluteString
-        )
+        let expectedValue = "https://foo.com/Line/Mode/tube,dlr,overground,tram,elizabeth-line/Status?app_id=testAppID&app_key=testAppKey"
+        #expect(url.absoluteString == expectedValue)
     }
     
-    func testGetFutureLineStatusesEndpoint() throws {
+    @Test
+    func getFutureLineStatusesEndpoint() throws {
         // Given
         let startDate = dayMonthYear(1, 2, 2023, in: .london)
         let endDate = dayMonthYear(2, 2, 2023, in: .london)
@@ -34,13 +35,12 @@ final class TransportAPIRouteTests: XCTestCase {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        XCTAssertEqual(
-            "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_id=testAppID&app_key=testAppKey",
-            url.absoluteString
-        )
+        let expectedValue = "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_id=testAppID&app_key=testAppKey"
+        #expect(url.absoluteString == expectedValue)
     }
     
-    func testArrivalPredictionsEndpoint() throws {
+    @Test
+    func arrivalPredictionsEndpoint() throws {
         // Given
         let route: TransportAPIRoute = .getArrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
         
@@ -48,13 +48,12 @@ final class TransportAPIRouteTests: XCTestCase {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        XCTAssertEqual(
-            "https://foo.com/Line/circle,hammersmith-city,district,northern/Arrivals/FAKE_STATION_CODE?app_id=testAppID&app_key=testAppKey",
-            url.absoluteString
-        )
+        let expectedValue = "https://foo.com/Line/circle,hammersmith-city,district,northern/Arrivals/FAKE_STATION_CODE?app_id=testAppID&app_key=testAppKey"
+        #expect(url.absoluteString == expectedValue)
     }
     
-    func testArrivalDeparturesEndpoint() throws {
+    @Test
+    func arrivalDeparturesEndpoint() throws {
         // Given
         let route: TransportAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
         
@@ -62,14 +61,13 @@ final class TransportAPIRouteTests: XCTestCase {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        XCTAssertEqual(
-            "https://foo.com/StopPoint/FAKE_STATION_CODE/ArrivalDepartures?app_id=testAppID&app_key=testAppKey&lineIds=elizabeth",
-            url.absoluteString
-        )
+        let expectedValue = "https://foo.com/StopPoint/FAKE_STATION_CODE/ArrivalDepartures?app_id=testAppID&app_key=testAppKey&lineIds=elizabeth"
+        #expect(url.absoluteString == expectedValue)
     }
     
     
-    func testStationDisruptionsEndpoint() throws {
+    @Test
+    func stationDisruptionsEndpoint() throws {
         // Given
         let route: TransportAPIRoute = .getStationDisruptions(ModeID.trains)
         
@@ -77,10 +75,8 @@ final class TransportAPIRouteTests: XCTestCase {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        XCTAssertEqual(
-            "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_id=testAppID&app_key=testAppKey",
-            url.absoluteString
-        )
+        let expectedValue = "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_id=testAppID&app_key=testAppKey"
+        #expect(url.absoluteString == expectedValue)
     }
 }
 

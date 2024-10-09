@@ -1,12 +1,13 @@
 import Models
 import ModelStubs
-import XCTest
+import Testing
 
 @testable import PresentationViews
 
-final class ArrivalPredictionViewStateTests: XCTestCase {
+struct ArrivalPredictionViewStateTests {
     
-    func testTransformArrivalPredictionsToUIState() {
+    @Test
+    func transformArrivalPredictionsToUIState() {
         // Given
         let northernLineBothPlatformArrivals = ModelStubs.northernLineBothPlatforms
         
@@ -14,9 +15,7 @@ final class ArrivalPredictionViewStateTests: XCTestCase {
         let boardStates = northernLineBothPlatformArrivals.toPlatformBoardStates()
         
         // Then
-        XCTAssertEqual(
-            ["Northbound - Platform 7", "Southbound - Platform 8"],
-            boardStates.map(\.platformName)
-        )
+        #expect(boardStates.map(\.platformName) == ["Northbound - Platform 7",
+                                                    "Southbound - Platform 8"])
     }
 }
