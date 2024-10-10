@@ -83,7 +83,7 @@ struct ArrivalsBoardListScreen: View {
         }
     }
     
-    nonisolated private func fetchBoards() async throws -> [ArrivalsBoardState] {
+    private func fetchBoards() async throws -> [ArrivalsBoardState] {
         switch lineGroup.arrivalsDataType {
         case let .arrivalDepartures(lineIDs):
             guard let lineID = lineIDs.first else { return [] } // ArrivalDepartures are only for a single line

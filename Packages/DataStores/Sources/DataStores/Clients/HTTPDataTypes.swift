@@ -7,7 +7,7 @@ public struct HTTPResponseErrorModel: Decodable {
     public let message: String?
 }
 
-public struct HTTPResponse<T: Decodable> {
+public struct HTTPResponse<T: Decodable & Sendable>: Sendable {
     public let statusCode: Int
     public let decodedModel: T
         

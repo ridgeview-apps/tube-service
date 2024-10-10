@@ -71,8 +71,8 @@ struct JourneyResultsScreen: View {
         return try await fetchItinerary()
     }
     
-    nonisolated private func fetchItinerary() async throws -> JourneyItinerary {
-        let requestParams = try await form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
+    private func fetchItinerary() async throws -> JourneyItinerary {
+        let requestParams = try form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
         return try await transportAPI.fetchJourneyItinerary(for: requestParams).decodedModel
 
     }

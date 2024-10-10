@@ -4,13 +4,13 @@ import Models
 // MARK: - Journey API models
 
 // swiftlint:disable identifier_name
-public struct JourneyRequestParams {
-    public enum JourneyLocation {
+public struct JourneyRequestParams: Sendable {
+    public enum JourneyLocation: Sendable {
         case icsCode(String)
         case coordinate(LocationCoordinate)
     }
     
-    public enum TimeOption {
+    public enum TimeOption: Sendable {
         case arriving(Date)
         case departing(Date)
     }
