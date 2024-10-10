@@ -71,7 +71,7 @@ struct ArrivalsPickerScreen: View {
                                         lineGroup: selection)
                 .id(selection.id)
             } else {
-                Text("arrivals.picker.no.selection")
+                Text(.arrivalsPickerNoSelection)
             }
         }
     }
