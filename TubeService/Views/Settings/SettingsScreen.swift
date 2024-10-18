@@ -44,7 +44,7 @@ struct SettingsScreen: View {
         .init(emailAddress: appConfig.contactUsEmail,
               appVersion: Bundle.main.appVersionNumber,
               appName: Bundle.main.appName,
-              deviceInfo: Device.current.modelName,
+              deviceInfo: Device.modelName,
               localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")")
     }
     

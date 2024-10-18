@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ridgeview-apps/ridgeview-core",
       "state" : {
-        "revision" : "4b3f097756af53844e75cac333fddcdeb36c99cf",
-        "version" : "1.0.0"
+        "revision" : "ae7e6755af4410c425c12be5ea57f82108292fad",
+        "version" : "1.1.1"
       }
     }
   ],
