@@ -18,12 +18,20 @@ public extension TrainLineID {
             return "Hammersmith & City"
         case .jubilee:
             return "Jubilee"
+        case .liberty:
+            return "Liberty"
+        case .lioness:
+            return "Lioness"
         case .metropolitan:
             return "Metropolitan"
+        case .mildmay:
+            return "Mildmay"
         case .northern:
             return "Northern"
         case .piccadilly:
             return "Piccadilly"
+        case .suffragette:
+            return "Suffragette"
         case .victoria:
             return "Victoria"
         case .waterlooAndCity:
@@ -32,6 +40,10 @@ public extension TrainLineID {
             return "Tram"
         case .overground:
             return "Overground"
+        case .weaver:
+            return "Weaver"
+        case .windrush:
+            return "Windrush"
         }
     }
 }

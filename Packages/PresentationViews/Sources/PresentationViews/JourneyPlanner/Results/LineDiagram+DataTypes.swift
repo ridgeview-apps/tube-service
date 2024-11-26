@@ -190,7 +190,8 @@ extension LineDiagramItem.Style.LineStyle {
         case .bakerloo, .central, .circle, .district, .hammersmithAndCity, .jubilee,
                 .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity:
             self = .init(color: trainLineID.backgroundColor, fill: .solid)
-        case .dlr, .elizabeth, .tram, .overground:
+        case .dlr, .elizabeth, .tram, .overground,
+                .liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush:
             self = .init(color: trainLineID.backgroundColor, fill: .double)
         }
     }

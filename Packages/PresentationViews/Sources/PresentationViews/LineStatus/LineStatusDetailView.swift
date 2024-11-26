@@ -115,7 +115,8 @@ public struct LineStatusDetailView: View {
     @ViewBuilder private var goodServiceText: some View {
         switch line.id {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
-             .metropolitan, .overground, .northern, .piccadilly, .victoria, .waterlooAndCity:
+                .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
+                .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
         case .tram:
             Text(.lineStatusDetailGoodServiceOnTrams)
