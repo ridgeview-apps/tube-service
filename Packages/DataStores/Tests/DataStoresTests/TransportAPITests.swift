@@ -35,7 +35,7 @@ struct TransportAPIRouteTests {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         
         // Then
-        let expectedValue = "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,metropolitan,northern,piccadilly,victoria,waterloo-city,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_id=testAppID&app_key=testAppKey"
+        let expectedValue = "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,liberty,lioness,metropolitan,mildmay,northern,piccadilly,suffragette,victoria,waterloo-city,weaver,windrush,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_id=testAppID&app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
     

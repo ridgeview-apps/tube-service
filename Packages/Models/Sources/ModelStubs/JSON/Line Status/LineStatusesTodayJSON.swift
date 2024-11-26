@@ -6,60 +6,16 @@ let lineStatusesTodayJSON = """
     "name": "Bakerloo",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
-        "lineId": "bakerloo",
-        "statusSeverity": 9,
-        "statusSeverityDescription": "Minor Delays",
-        "reason": "Bakerloo Line: No service between Stonebridge Park and Harrow & Wealdstone while we fix a faulty train at Harrow & Wealdstone. London Buses are accepting tickets. MINOR DELAYS on the rest of the line. ",
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
         "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:38:29Z",
-            "toDate": "2023-10-18T00:29:00Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "Bakerloo Line: No service between Stonebridge Park and Harrow & Wealdstone while we fix a faulty train at Harrow & Wealdstone. London Buses are accepting tickets. MINOR DELAYS on the rest of the line. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "minorDelays"
-        }
-      },
-      {
-        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-        "id": 0,
-        "lineId": "bakerloo",
-        "statusSeverity": 3,
-        "statusSeverityDescription": "Part Suspended",
-        "reason": "Bakerloo Line: No service between Stonebridge Park and Harrow & Wealdstone while we fix a faulty train at Harrow & Wealdstone. London Buses are accepting tickets. MINOR DELAYS on the rest of the line. ",
-        "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:38:29Z",
-            "toDate": "2023-10-17T14:40:20Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "Bakerloo Line: No service between Stonebridge Park and Harrow & Wealdstone while we fix a faulty train at Harrow & Wealdstone. London Buses are accepting tickets. MINOR DELAYS on the rest of the line. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "partSuspended"
-        }
+        "validityPeriods": []
       }
     ],
     "routeSections": [],
@@ -80,8 +36,8 @@ let lineStatusesTodayJSON = """
     "name": "Central",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -115,8 +71,8 @@ let lineStatusesTodayJSON = """
     "name": "Circle",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -145,8 +101,8 @@ let lineStatusesTodayJSON = """
     "name": "District",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -175,8 +131,8 @@ let lineStatusesTodayJSON = """
     "name": "DLR",
     "modeName": "dlr",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -205,8 +161,8 @@ let lineStatusesTodayJSON = """
     "name": "Elizabeth line",
     "modeName": "elizabeth-line",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -214,13 +170,13 @@ let lineStatusesTodayJSON = """
         "lineId": "elizabeth",
         "statusSeverity": 6,
         "statusSeverityDescription": "Severe Delays",
-        "reason": "Severe delays between Abbey Wood and Reading / Heathrow Terminals due to a signal failure at Acton Main Line. MINOR DELAYS on the rest of the line. London Underground, London Buses, DLR, Great Western Railway, Southeastern and Thameslink are accepting tickets. ",
+        "reason": "No service between Paddington and Abbey Wood while we deal with a signalling systems fault. SEVERE DELAYS on the rest of the line. London Underground are accepting their tickets via any reasonable route. ",
         "created": "0001-01-01T00:00:00",
         "validityPeriods": [
           {
             "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T10:06:39Z",
-            "toDate": "2023-10-18T00:29:00Z",
+            "fromDate": "2024-11-26T15:57:37Z",
+            "toDate": "2024-11-27T01:29:00Z",
             "isNow": true
           }
         ],
@@ -228,7 +184,7 @@ let lineStatusesTodayJSON = """
           "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
           "category": "RealTime",
           "categoryDescription": "RealTime",
-          "description": "Severe delays between Abbey Wood and Reading / Heathrow Terminals due to a signal failure at Acton Main Line. MINOR DELAYS on the rest of the line. London Underground, London Buses, DLR, Great Western Railway, Southeastern and Thameslink are accepting tickets. ",
+          "description": "No service between Paddington and Abbey Wood while we deal with a signalling systems fault. SEVERE DELAYS on the rest of the line. London Underground are accepting their tickets via any reasonable route. ",
           "affectedRoutes": [],
           "affectedStops": [],
           "closureText": "severeDelays"
@@ -238,15 +194,15 @@ let lineStatusesTodayJSON = """
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
         "lineId": "elizabeth",
-        "statusSeverity": 9,
-        "statusSeverityDescription": "Minor Delays",
-        "reason": "Severe delays between Abbey Wood and Reading / Heathrow Terminals due to a signal failure at Acton Main Line. MINOR DELAYS on the rest of the line. London Underground, London Buses, DLR, Great Western Railway, Southeastern and Thameslink are accepting tickets. ",
+        "statusSeverity": 3,
+        "statusSeverityDescription": "Part Suspended",
+        "reason": "No service between Paddington and Abbey Wood while we deal with a signalling systems fault. SEVERE DELAYS on the rest of the line. London Underground are accepting their tickets via any reasonable route. ",
         "created": "0001-01-01T00:00:00",
         "validityPeriods": [
           {
             "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T10:06:39Z",
-            "toDate": "2023-10-18T00:29:00Z",
+            "fromDate": "2024-11-26T15:57:37Z",
+            "toDate": "2024-11-26T20:37:22Z",
             "isNow": true
           }
         ],
@@ -254,10 +210,10 @@ let lineStatusesTodayJSON = """
           "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
           "category": "RealTime",
           "categoryDescription": "RealTime",
-          "description": "Severe delays between Abbey Wood and Reading / Heathrow Terminals due to a signal failure at Acton Main Line. MINOR DELAYS on the rest of the line. London Underground, London Buses, DLR, Great Western Railway, Southeastern and Thameslink are accepting tickets. ",
+          "description": "No service between Paddington and Abbey Wood while we deal with a signalling systems fault. SEVERE DELAYS on the rest of the line. London Underground are accepting their tickets via any reasonable route. ",
           "affectedRoutes": [],
           "affectedStops": [],
-          "closureText": "minorDelays"
+          "closureText": "partSuspended"
         }
       }
     ],
@@ -279,8 +235,8 @@ let lineStatusesTodayJSON = """
     "name": "Hammersmith & City",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.877Z",
-    "modified": "2023-10-10T15:08:36.877Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -309,16 +265,34 @@ let lineStatusesTodayJSON = """
     "name": "Jubilee",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
-        "statusSeverity": 10,
-        "statusSeverityDescription": "Good Service",
+        "lineId": "jubilee",
+        "statusSeverity": 9,
+        "statusSeverityDescription": "Minor Delays",
+        "reason": "Jubilee Line: Minor delays due to train cancellations. ",
         "created": "0001-01-01T00:00:00",
-        "validityPeriods": []
+        "validityPeriods": [
+          {
+            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
+            "fromDate": "2024-11-26T16:51:20Z",
+            "toDate": "2024-11-27T01:29:00Z",
+            "isNow": true
+          }
+        ],
+        "disruption": {
+          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
+          "category": "RealTime",
+          "categoryDescription": "RealTime",
+          "description": "Jubilee Line: Minor delays due to train cancellations. ",
+          "affectedRoutes": [],
+          "affectedStops": [],
+          "closureText": "minorDelays"
+        }
       }
     ],
     "routeSections": [],
@@ -340,64 +314,20 @@ let lineStatusesTodayJSON = """
   },
   {
     "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
-    "id": "london-overground",
-    "name": "London Overground",
+    "id": "liberty",
+    "name": "Liberty",
     "modeName": "overground",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
-        "lineId": "london-overground",
-        "statusSeverity": 6,
-        "statusSeverityDescription": "Severe Delays",
-        "reason": "London Overground: No service between Watford Junction and Willesden Junction while we fix a faulty train at Harrow & Wealdstone. SEVERE DELAYS between Willesden Junction and Euston. ",
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
         "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:19:47Z",
-            "toDate": "2023-10-18T00:29:00Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "London Overground: No service between Watford Junction and Willesden Junction while we fix a faulty train at Harrow & Wealdstone. SEVERE DELAYS between Willesden Junction and Euston. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "severeDelays"
-        }
-      },
-      {
-        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-        "id": 0,
-        "lineId": "london-overground",
-        "statusSeverity": 3,
-        "statusSeverityDescription": "Part Suspended",
-        "reason": "London Overground: No service between Watford Junction and Willesden Junction while we fix a faulty train at Harrow & Wealdstone. SEVERE DELAYS between Willesden Junction and Euston. ",
-        "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:19:47Z",
-            "toDate": "2023-10-17T14:40:20Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "London Overground: No service between Watford Junction and Willesden Junction while we fix a faulty train at Harrow & Wealdstone. SEVERE DELAYS between Willesden Junction and Euston. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "partSuspended"
-        }
+        "validityPeriods": []
       }
     ],
     "routeSections": [],
@@ -405,12 +335,37 @@ let lineStatusesTodayJSON = """
       {
         "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
         "name": "Regular",
-        "uri": "/Line/Route?ids=London Overground&serviceTypes=Regular"
-      },
+        "uri": "/Line/Route?ids=Liberty&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "lioness",
+    "name": "Lioness",
+    "modeName": "overground",
+    "disruptions": [],
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
+    "lineStatuses": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
+        "id": 0,
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
+        "created": "0001-01-01T00:00:00",
+        "validityPeriods": []
+      }
+    ],
+    "routeSections": [],
+    "serviceTypes": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
-        "name": "Night",
-        "uri": "/Line/Route?ids=London Overground&serviceTypes=Night"
+        "name": "Regular",
+        "uri": "/Line/Route?ids=Lioness&serviceTypes=Regular"
       }
     ],
     "crowding": {
@@ -423,8 +378,8 @@ let lineStatusesTodayJSON = """
     "name": "Metropolitan",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.877Z",
-    "modified": "2023-10-10T15:08:36.877Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -449,12 +404,42 @@ let lineStatusesTodayJSON = """
   },
   {
     "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "mildmay",
+    "name": "Mildmay",
+    "modeName": "overground",
+    "disruptions": [],
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
+    "lineStatuses": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
+        "id": 0,
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
+        "created": "0001-01-01T00:00:00",
+        "validityPeriods": []
+      }
+    ],
+    "routeSections": [],
+    "serviceTypes": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Regular",
+        "uri": "/Line/Route?ids=Mildmay&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
     "id": "northern",
     "name": "Northern",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -488,60 +473,16 @@ let lineStatusesTodayJSON = """
     "name": "Piccadilly",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.863Z",
-    "modified": "2023-10-10T15:08:36.863Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
-        "lineId": "piccadilly",
-        "statusSeverity": 6,
-        "statusSeverityDescription": "Severe Delays",
-        "reason": "Piccadilly Line: No service between Arnos Grove and Cockfosters to a signal failure at Finsbury Park. SEVERE DELAYS between Arnos Grove and Acton Town. London Buses, Great Northern, London Overground and South Western Railway are accepting tickets. ",
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
         "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:32:15Z",
-            "toDate": "2023-10-18T00:29:00Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "Piccadilly Line: No service between Arnos Grove and Cockfosters to a signal failure at Finsbury Park. SEVERE DELAYS between Arnos Grove and Acton Town. London Buses, Great Northern, London Overground and South Western Railway are accepting tickets. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "severeDelays"
-        }
-      },
-      {
-        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-        "id": 0,
-        "lineId": "piccadilly",
-        "statusSeverity": 3,
-        "statusSeverityDescription": "Part Suspended",
-        "reason": "Piccadilly Line: No service between Arnos Grove and Cockfosters to a signal failure at Finsbury Park. SEVERE DELAYS between Arnos Grove and Acton Town. London Buses, Great Northern, London Overground and South Western Railway are accepting tickets. ",
-        "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-17T11:32:15Z",
-            "toDate": "2023-10-17T14:40:20Z",
-            "isNow": true
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "RealTime",
-          "categoryDescription": "RealTime",
-          "description": "Piccadilly Line: No service between Arnos Grove and Cockfosters to a signal failure at Finsbury Park. SEVERE DELAYS between Arnos Grove and Acton Town. London Buses, Great Northern, London Overground and South Western Railway are accepting tickets. ",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "partSuspended"
-        }
+        "validityPeriods": []
       }
     ],
     "routeSections": [],
@@ -563,12 +504,42 @@ let lineStatusesTodayJSON = """
   },
   {
     "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "suffragette",
+    "name": "Suffragette",
+    "modeName": "overground",
+    "disruptions": [],
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
+    "lineStatuses": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
+        "id": 0,
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
+        "created": "0001-01-01T00:00:00",
+        "validityPeriods": []
+      }
+    ],
+    "routeSections": [],
+    "serviceTypes": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Regular",
+        "uri": "/Line/Route?ids=Suffragette&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
     "id": "tram",
     "name": "Tram",
     "modeName": "tram",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.847Z",
-    "modified": "2023-10-10T15:08:36.847Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -597,8 +568,8 @@ let lineStatusesTodayJSON = """
     "name": "Victoria",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.877Z",
-    "modified": "2023-10-10T15:08:36.877Z",
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -632,8 +603,8 @@ let lineStatusesTodayJSON = """
     "name": "Waterloo & City",
     "modeName": "tube",
     "disruptions": [],
-    "created": "2023-10-10T15:08:36.847Z",
-    "modified": "2023-10-10T15:08:36.847Z",
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
     "lineStatuses": [
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -650,6 +621,89 @@ let lineStatusesTodayJSON = """
         "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
         "name": "Regular",
         "uri": "/Line/Route?ids=Waterloo & City&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "weaver",
+    "name": "Weaver",
+    "modeName": "overground",
+    "disruptions": [],
+    "created": "2024-11-21T16:12:13.093Z",
+    "modified": "2024-11-21T16:12:13.093Z",
+    "lineStatuses": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
+        "id": 0,
+        "statusSeverity": 10,
+        "statusSeverityDescription": "Good Service",
+        "created": "0001-01-01T00:00:00",
+        "validityPeriods": []
+      }
+    ],
+    "routeSections": [],
+    "serviceTypes": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Regular",
+        "uri": "/Line/Route?ids=Weaver&serviceTypes=Regular"
+      }
+    ],
+    "crowding": {
+      "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"
+    }
+  },
+  {
+    "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
+    "id": "windrush",
+    "name": "Windrush",
+    "modeName": "overground",
+    "disruptions": [],
+    "created": "2024-11-21T16:12:13.08Z",
+    "modified": "2024-11-21T16:12:13.08Z",
+    "lineStatuses": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
+        "id": 0,
+        "lineId": "windrush",
+        "statusSeverity": 9,
+        "statusSeverityDescription": "Minor Delays",
+        "reason": "London Overground: Minor delays between Sydenham and West Croydon while Network Rail  fix a signal failure at Norwood Junction. GOOD SERVICE on all other routes. ",
+        "created": "0001-01-01T00:00:00",
+        "validityPeriods": [
+          {
+            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
+            "fromDate": "2024-11-26T17:21:24Z",
+            "toDate": "2024-11-27T01:29:00Z",
+            "isNow": true
+          }
+        ],
+        "disruption": {
+          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
+          "category": "RealTime",
+          "categoryDescription": "RealTime",
+          "description": "London Overground: Minor delays between Sydenham and West Croydon while Network Rail  fix a signal failure at Norwood Junction. GOOD SERVICE on all other routes. ",
+          "affectedRoutes": [],
+          "affectedStops": [],
+          "closureText": "minorDelays"
+        }
+      }
+    ],
+    "routeSections": [],
+    "serviceTypes": [
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Regular",
+        "uri": "/Line/Route?ids=Windrush&serviceTypes=Regular"
+      },
+      {
+        "$type": "Tfl.Api.Presentation.Entities.LineServiceTypeInfo, Tfl.Api.Presentation.Entities",
+        "name": "Night",
+        "uri": "/Line/Route?ids=Windrush&serviceTypes=Night"
       }
     ],
     "crowding": {

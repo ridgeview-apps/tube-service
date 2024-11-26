@@ -19,16 +19,28 @@ public extension TrainLineID {
             return .hammersmithAndCityLine
         case .jubilee:
             return .jubileeLine
+        case .liberty:
+            return .libertyLine
+        case .lioness:
+            return .lionessLine
         case .metropolitan:
             return .metropolitanLine
+        case .mildmay:
+            return .mildmayLine
         case .northern:
             return .northernLine
         case .piccadilly:
             return .piccadillyLine
+        case .suffragette:
+            return .suffragetteLine
         case .victoria:
             return .victoriaLine
         case .waterlooAndCity:
             return .waterlooAndCityLine
+        case .weaver:
+            return .weaverLine
+        case .windrush:
+            return .windrushLine
         case .dlr:
             return .dlr
         case .tram:
@@ -40,18 +52,18 @@ public extension TrainLineID {
     
     var textColor: Color {
         switch self {
-        case .bakerloo, .central, .district, .elizabeth, .jubilee, .metropolitan, .northern, .piccadilly, .tram:
+        case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
             return .white
-        case .circle, .dlr, .hammersmithAndCity, .victoria, .waterlooAndCity, .overground:
+        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity, .overground:
             return .black
         }
     }
     
     var textShadow: TextShadowSettings {
         switch self {
-        case .bakerloo, .central, .district, .elizabeth, .jubilee, .metropolitan, .northern, .piccadilly, .tram:
+        case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
             return (color: .clear, radius: 0, x: 0, y: 0)
-        case .circle, .dlr, .hammersmithAndCity, .victoria, .waterlooAndCity, .overground:
+        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity, .overground:
             return (color: .white, radius: 0.5, x: 0, y: 0.5)
         }
     }
@@ -60,16 +72,16 @@ public extension TrainLineID {
         switch self {
         case .dlr, .overground, .tram:
             return name
-        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee,
-             .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity:
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
+                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             return "\(name) line"
         }
     }
     
     var twitterSearchNameFilter: String? {
         switch self {
-        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .metropolitan,
-             .northern, .piccadilly, .victoria, .waterlooAndCity:
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
+                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             return "\(rawValue) line"
         case .tram, .dlr:
             return rawValue
@@ -80,8 +92,8 @@ public extension TrainLineID {
 
     var shouldShowFilteredTweets: Bool {
         switch self {
-        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .metropolitan,
-             .northern, .piccadilly, .victoria, .waterlooAndCity, .tram, .dlr:
+        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
+                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush, .tram, .dlr:
             return true
         case .overground:
             return false
