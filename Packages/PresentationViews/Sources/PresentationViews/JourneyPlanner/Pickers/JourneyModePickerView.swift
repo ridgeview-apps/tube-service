@@ -129,7 +129,7 @@ private extension Sequence where Element == ModeID {
 private extension TrainLineID {
     static var tubesOnly: [TrainLineID] {
         TrainLineID.allCases.filter {
-            ![TrainLineID.elizabeth, .dlr, .elizabeth, .overground].contains($0)
+            ![TrainLineID.elizabeth, .dlr, .elizabeth, .overground, .liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush].contains($0)
         }
     }
 }

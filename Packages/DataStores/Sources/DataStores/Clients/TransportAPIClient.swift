@@ -125,7 +125,8 @@ public struct TransportAPIClient: TransportAPIClientType {
     }
     
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
-        return try await fetchData(for: .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval),
+        let lineIDS = TrainLineID.allCases.filter { $0 != .overground }
+        return try await fetchData(for: .getLineStatusesForDateRange(lineIDS, dateInterval),
                                    mappedTo: [Line].self)
     }
     
