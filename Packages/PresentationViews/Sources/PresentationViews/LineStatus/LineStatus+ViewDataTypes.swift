@@ -52,8 +52,8 @@ extension URL {
     }
 }
 
-public struct LineStatusTwitterLink: Equatable, Identifiable {
-    public enum Style: Equatable {
+public struct LineStatusTwitterLink: Equatable, Identifiable, Sendable {
+    public enum Style: Equatable, Sendable {
         case tflAllTweets
         case lineTweets(lineId: TrainLineID)
     }

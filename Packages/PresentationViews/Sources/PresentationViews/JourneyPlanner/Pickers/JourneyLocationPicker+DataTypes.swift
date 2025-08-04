@@ -54,7 +54,7 @@ public enum JourneyLocationPicker: Sendable {
         }
     }
 
-    public enum Action {
+    public enum Action: Sendable {
         case searchTermChanged(String)
         case valueSelected(Value)
     }

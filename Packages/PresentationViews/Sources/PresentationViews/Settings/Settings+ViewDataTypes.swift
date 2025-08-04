@@ -52,7 +52,7 @@ public extension Settings {
     
     // MARK: - Debug state
 
-    enum DebugAction {
+    enum DebugAction: Sendable {
         case resetUserDefaults
     }
 }

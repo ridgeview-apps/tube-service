@@ -1,7 +1,7 @@
 import Models
 import SwiftUI
 
-public struct RecentJourneyItem: Hashable, Identifiable {
+public struct RecentJourneyItem: Hashable, Identifiable, Sendable {
     public let id: UUID
     public var fromLocation: JourneyLocationPicker.Value
     public var toLocation: JourneyLocationPicker.Value

@@ -3,7 +3,7 @@ import SwiftUI
 
 public struct SystemStatusBannerView: View {
     
-    public enum Action {
+    public enum Action: Sendable {
         case tappedOK(SystemStatus)
         case tappedMoreInfo(SystemStatus)
     }

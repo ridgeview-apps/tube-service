@@ -19,7 +19,7 @@ public extension JSONDecoder {
         return decoder
     }()
     
-    static func tflDateDecodingStrategy(for decoder: Decoder) throws -> Date {
+    @Sendable static func tflDateDecodingStrategy(for decoder: Decoder) throws -> Date {
         let container = try decoder.singleValueContainer()
         let dateString = try container.decode(String.self)
         

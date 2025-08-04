@@ -10,7 +10,7 @@ public struct JourneyPlannerForm: Hashable, Sendable {
         case omitted
     }
     
-    public enum Action {
+    public enum Action: Sendable {
         case tappedLocationField(JourneyPlannerForm.FieldID.LocationID)
         case tappedSubmit
         case tappedRecentJourney(RecentJourneyItem)
@@ -69,8 +69,8 @@ public struct JourneyPlannerForm: Hashable, Sendable {
         }
     }
 
-    public enum FieldID: Hashable {
-        public enum LocationID {
+    public enum FieldID: Hashable, Sendable {
+        public enum LocationID: Sendable {
             case from
             case to
             case via

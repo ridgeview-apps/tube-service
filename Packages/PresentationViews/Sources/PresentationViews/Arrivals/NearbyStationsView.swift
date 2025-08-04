@@ -4,7 +4,7 @@ import Models
 
 public struct NearbyStationsView: View {
     
-    public enum Action {
+    public enum Action: Sendable {
         case tappedRefresh
     }
     

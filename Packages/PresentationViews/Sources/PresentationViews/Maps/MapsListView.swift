@@ -2,7 +2,7 @@ import SwiftUI
 
 public struct MapsListView: View {
     
-    public enum Action {
+    public enum Action: Sendable {
         case tappedLink(MapLink)
     }
     
@@ -41,7 +41,7 @@ public struct MapsListView: View {
 }
 
 
-public struct MapLink: Identifiable {
+public struct MapLink: Identifiable, Sendable {
     public var id: String { url.absoluteString }
     public let title: LocalizedStringResource
     public let url: URL

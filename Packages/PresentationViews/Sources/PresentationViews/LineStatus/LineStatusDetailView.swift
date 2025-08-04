@@ -3,7 +3,7 @@ import SwiftUI
 
 public struct LineStatusDetailView: View {
     
-    public enum Action {
+    public enum Action: Sendable {
         case linkTapped(LineStatusTwitterLink)
     }
     
