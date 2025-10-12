@@ -37,7 +37,7 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .center, spacing: 16, pinnedViews: [.sectionHeaders]) {
+            LazyVStack(alignment: .center, spacing: 16) {
                 Section {
                     Group {
                         if boardStates.isEmpty && loadingState == .loaded {

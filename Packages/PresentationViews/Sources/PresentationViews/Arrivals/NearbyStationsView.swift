@@ -41,14 +41,16 @@ public struct NearbyStationsView: View {
     @ViewBuilder private var nearbyStationsListView: some View {
         ScrollViewReader { reader in
             List(selection: $selection) {
-                resultsSectionView
-                    .onChange(of: sectionState.currentPageNo) { _, newValue in
-                        withAnimation {
-                            reader.scrollTo("showMoreButtonID_\(newValue)")
+                Group {
+                    resultsSectionView
+                        .onChange(of: sectionState.currentPageNo) { _, newValue in
+                            withAnimation {
+                                reader.scrollTo("showMoreButtonID_\(newValue)")
+                            }
                         }
-                    }
+                }
+                .textCase(nil)
             }
-            .listStyle(.plain)
             .defaultScrollContentBackgroundColor()
             .accessibilityIdentifier("acc.id.nearby.stations.list")
             .animation(.default, value: sectionState.currentPageNo)

@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 // swiftlint:disable identifier_name
+// swiftlint:disable file_length
 
 extension LocalizedStringResource.BundleDescription {
     static let module: Self = { .atURL(Bundle.module.bundleURL) }()

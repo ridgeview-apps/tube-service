@@ -3,9 +3,7 @@ import Shared
 import SwiftUI
 
 public struct LineStatusListView: View {
-    
-    @ScaledMetric private var dynamicTextScale: CGFloat = 1
-    
+        
     public let loadingState: LoadingState
     public let lines: [Line]
     public let favouriteLineIDs: Set<TrainLineID>
@@ -40,27 +38,39 @@ public struct LineStatusListView: View {
     
     public var body: some View {
         List(selection: $selectedLine) {
-            Section {
-                datePickerView
-                    .padding(.bottom)
-                lineStatusCells
-            } header: {
-                sectionHeader
+            Group {
+                Section {
+                    datePickerView
+                } header: {
+                    sectionHeader
+                }
+                lineStatusSections
             }
-            .defaultListRowStyle()
+            .textCase(nil)
+            .listRowInsets(.zero)
+            .listRowBackground(Color.defaultCellBackground)
         }
-        .listStyle(.plain)
+        .listSectionSpacing(12)
         .defaultScrollContentBackgroundColor()
+        .safeAreaInset(edge: .top) {
+            stickyFilterOptionsHeader
+        }
     }
     
-    @ViewBuilder private var lineStatusCells: some View {
+    @ViewBuilder private var lineStatusSections: some View {
         if shouldShowLineStatusCells {
-            tappableStatusCells(with: favourites)
-            tappableStatusCells(with: disruptions)
-            if showOtherLinesSummaryCell {
-                otherLinesSummaryCell
-            } else {
-                tappableStatusCells(with: allOtherLines)
+            Section {
+                tappableStatusCells(with: favourites)
+            }
+            Section {
+                tappableStatusCells(with: disruptions)
+            }
+            Section {
+                if showOtherLinesSummaryCell {
+                    otherLinesSummaryCell
+                } else {
+                    tappableStatusCells(with: allOtherLines)
+                }
             }
         }
     }
@@ -68,7 +78,6 @@ public struct LineStatusListView: View {
     private func tappableStatusCells(with lines: [Line]) -> some View {
         ForEach(lines) { line in
             tappableStatusCell(for: line)
-                .padding(.top, line.id == lines.first?.id ? 12 : 0)
         }
     }
     
@@ -80,11 +89,9 @@ public struct LineStatusListView: View {
                 style: .singleLine(line, showFavouriteImage: favouriteLineIDs.contains(line.id)),
                 showsAccessory: true
             )
-            .cardStyle()
-            .frame(minHeight: 44 * dynamicTextScale)
+            .frame(minHeight: 50)
         }
         .buttonStyle(.borderless)
-        .padding(.bottom, 8)
         .accessibility(identifier: line.id.rawValue)
         .id(line.id)
     }
@@ -116,7 +123,6 @@ public struct LineStatusListView: View {
     
     private var sectionHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
-            filterOptions
             refreshStatusView
             headerTitleView    
         }
@@ -125,7 +131,22 @@ public struct LineStatusListView: View {
         .padding(.bottom, 8)
     }
     
-    private var filterOptions: some View {
+    @ViewBuilder
+    private var stickyFilterOptionsHeader: some View {
+        if #available(iOS 26.0, *) {
+            filterOptionsPicker
+                .withRegularGlassEffect()
+                .padding(.horizontal)
+                
+        } else {
+            filterOptionsPicker
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(Color.defaultBackground)
+        }
+    }
+    
+    private var filterOptionsPicker: some View {
         Picker("", selection: $selectedFilterOption) {
             ForEach(LineStatusFilterOption.allCases) { filterOption in
                 Text(filterOption.localized)
@@ -135,7 +156,7 @@ public struct LineStatusListView: View {
         }
         .pickerStyle(.segmented)
     }
-    
+        
     @ViewBuilder private var headerTitleView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             headerTitleImage
@@ -184,6 +205,7 @@ public struct LineStatusListView: View {
             .onChange(of: selectedDate) {
                 hasSelectedADate = true
             }
+            .padding(.horizontal)
         }
     }
     
@@ -226,7 +248,7 @@ public struct LineStatusListView: View {
             showsAccessory: true
         )
         .cardStyle()
-        .frame(minHeight: 44 * dynamicTextScale)
+        .frame(minHeight: 44)
         .padding(.top, 12)
     }
 }

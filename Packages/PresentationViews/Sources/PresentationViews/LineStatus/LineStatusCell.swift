@@ -5,6 +5,7 @@ public struct LineStatusCell: View {
     
     public let style: Style
     public let showsAccessory: Bool
+    public var leadingColumnInset = 4.0
     
     public enum Style: Hashable {
         case singleLine(Line, showFavouriteImage: Bool)
@@ -56,6 +57,7 @@ public struct LineStatusCell: View {
                 radius: line.id.textShadow.radius,
                 x: line.id.textShadow.x,
                 y: line.id.textShadow.y)
+        .padding(.leading, leadingColumnInset)
         .background(line.id.backgroundColor)
     }
     

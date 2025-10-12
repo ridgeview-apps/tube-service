@@ -42,12 +42,14 @@ public struct ArrivalsPickerView: View {
     
     public var body: some View {
         List(selection: $selection) {
-            if case .normal = style {
-                favouritesSection
+            Group {
+                if case .normal = style {
+                    favouritesSection
+                }
+                allStationsSection
             }
-            allStationsSection
+            .textCase(nil)
         }
-        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }

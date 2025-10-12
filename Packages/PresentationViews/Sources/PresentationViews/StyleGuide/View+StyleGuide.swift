@@ -28,7 +28,7 @@ public extension View {
         )
     }
     
-    func defaultListRowStyle(edgeInsets: EdgeInsets = .init(top: 0, leading: 16, bottom: 0, trailing: 16),
+    func defaultListRowStyle(edgeInsets: EdgeInsets = .zero,
                              listRowSeparator separatorVisibility: Visibility = .hidden,
                              backgroundColor: Color = .defaultBackground) -> some View {
         self
@@ -72,6 +72,33 @@ public extension View {
             }
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
+    }
+    
+    @ViewBuilder
+    func withHardScrollEdgeEffectStyle(for edges: Edge.Set = .all) -> some View {
+        if #available(iOS 26.0, *) {
+            scrollEdgeEffectStyle(.hard, for: edges)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func withScrollEdgeEffectHidden(_ hidden: Bool = true, for edges: Edge.Set = .all) -> some View {
+        if #available(iOS 26.0, *) {
+            scrollEdgeEffectHidden(hidden, for: edges)
+        } else {
+            self
+        }
+    }
+    
+    @ViewBuilder
+    func withRegularGlassEffect() -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(.regular)
+        } else {
+            self
+        }
     }
 }
 

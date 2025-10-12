@@ -25,7 +25,7 @@ private_lane :xcode_tests do |options|
   scan(
     scheme: options[:scheme],
     configuration: "Debug",
-    device: "iPhone 16 Pro (18.0)"
+    device: "iPhone 17 Pro"
   )
 end
 
