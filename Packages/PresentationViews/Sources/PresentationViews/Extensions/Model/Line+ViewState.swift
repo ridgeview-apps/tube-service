@@ -108,13 +108,13 @@ public extension Line {
         return uniqueDescriptions.compactMap { $0 }.joined(separator: ", ")
     }
     
-    var twitterLinks: [LineStatusTwitterLink] {
-        var twitterLinks = [LineStatusTwitterLink(style: .tflAllTweets, url: .latestTflTweets())]
-        if id.shouldShowFilteredTweets {
-            let filteredTweets = LineStatusTwitterLink(style: .lineTweets(lineId: id),
-                                                       url: .latestTflTweets(filteredBy: id))
-            twitterLinks.append(filteredTweets)
+    var xPostLinks: [LineStatusXPostLink] {
+        var xPostLinks = [LineStatusXPostLink(style: .tflAllXPosts, url: .latestXPosts())]
+        if id.shouldShowFilteredXPosts {
+            let filteredPosts = LineStatusXPostLink(style: .lineXPosts(lineId: id),
+                                                     url: .latestXPosts(filteredBy: id))
+            xPostLinks.append(filteredPosts)
         }
-        return twitterLinks
+        return xPostLinks
     }
 }

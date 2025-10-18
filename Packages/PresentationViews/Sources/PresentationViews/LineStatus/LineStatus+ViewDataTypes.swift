@@ -3,7 +3,7 @@ import SwiftUI
 
 public enum LineStatusFilterOption: Int, Identifiable, CaseIterable {
     public var id: Int { rawValue }
-    case today, tomorrow, thisWeekend, other
+    case today, tomorrow, thisWeekend, future
 }
 
 public enum LineStatusAccessoryImageType {
@@ -24,20 +24,20 @@ public extension LineStatusAccessoryImageType {
 }
 
 
-// MARK: Twitter Links
+// MARK: X Posts
 
 extension URL {
     
-    static func latestTflTweets(filteredBy filteredLine: TrainLineID? = nil) -> URL {
+    static func latestXPosts(filteredBy filteredLine: TrainLineID? = nil) -> URL {
         var urlComponents = URLComponents()
         urlComponents.scheme = "https"
-        urlComponents.host = "twitter.com"
+        urlComponents.host = "x.com"
 
-        if let line = filteredLine, let twitterSearchNameFilter = line.twitterSearchNameFilter {
+        if let line = filteredLine, let searchNameFilter = line.xPostsSearchNameFilter {
             urlComponents.path = "/search"
             
             var query: String = "(from:TfL OR to:TfL)"
-            query.append(" \(twitterSearchNameFilter)")
+            query.append(" \(searchNameFilter)")
 
             urlComponents.queryItems = [
                 URLQueryItem(name: "q", value: query),
@@ -52,10 +52,10 @@ extension URL {
     }
 }
 
-public struct LineStatusTwitterLink: Equatable, Identifiable, Sendable {
+public struct LineStatusXPostLink: Equatable, Identifiable, Sendable {
     public enum Style: Equatable, Sendable {
-        case tflAllTweets
-        case lineTweets(lineId: TrainLineID)
+        case tflAllXPosts
+        case lineXPosts(lineId: TrainLineID)
     }
     
     public var id: URL { url }

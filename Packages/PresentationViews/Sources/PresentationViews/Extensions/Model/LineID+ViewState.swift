@@ -78,7 +78,7 @@ public extension TrainLineID {
         }
     }
     
-    var twitterSearchNameFilter: String? {
+    var xPostsSearchNameFilter: String? {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
                 .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
@@ -90,7 +90,7 @@ public extension TrainLineID {
         }
     }
 
-    var shouldShowFilteredTweets: Bool {
+    var shouldShowFilteredXPosts: Bool {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
                 .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush, .tram, .dlr:

@@ -18,8 +18,8 @@ public extension View {
     
     func cardStyle(cornerRadius: CGFloat = 4,
                    backgroundColor: Color = .defaultCellBackground,
-                   borderColor: Color = .clear,
-                   borderWidth: CGFloat = 1) -> some View {
+                   borderColor: Color = .defaultCellBackground,
+                   borderWidth: CGFloat = 0.5) -> some View {
         self.modifier(
             CardStyle(cornerRadius: cornerRadius,
                                 backgroundColor: backgroundColor,

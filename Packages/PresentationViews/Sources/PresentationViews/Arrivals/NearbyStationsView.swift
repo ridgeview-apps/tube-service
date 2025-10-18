@@ -49,8 +49,8 @@ public struct NearbyStationsView: View {
                             }
                         }
                 }
-                .textCase(nil)
             }
+            .listStyle(.plain)
             .defaultScrollContentBackgroundColor()
             .accessibilityIdentifier("acc.id.nearby.stations.list")
             .animation(.default, value: sectionState.currentPageNo)

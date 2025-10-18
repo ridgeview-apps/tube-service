@@ -44,6 +44,7 @@ public struct StationView: View {
                 liveArrivalsSection
             }
             .listRowBackground(Color.defaultCellBackground)
+            .textCase(nil)
             
         }
         .defaultScrollContentBackgroundColor()

@@ -4,37 +4,41 @@ import RidgeviewCore
 // MARK: - Train lines
 public extension Color {
     
-    static let bakerlooLine = Color.rgb(137, 78, 36)
+    //
+    // See: https://content.tfl.gov.uk/tfl-colour-standard.pdf
+    // Issue 10 - May 2025
+    //
+    static let bakerlooLine = Color.rgb(178, 99, 0)
     static let centralLine = Color.rgb(220, 36, 31)
-    static let circleLine = Color.rgb(255, 206, 0)
-    static let districtLine = Color.rgb(0, 114, 41)
-    static let elizabethLine = Color.rgb(105, 80, 161)
-    static let hammersmithAndCityLine = Color.rgb(215, 173, 175)
-    static let jubileeLine = Color.rgb(143, 134, 152)
-    static let libertyLine = Color.rgb(97, 104, 107)
-    static let lionessLine = Color.rgb(255, 166, 0)
-    static let metropolitanLine = Color.rgb(117, 16, 86)
-    static let mildmayLine = Color.rgb(0, 111, 230)
+    static let circleLine = Color.rgb(255, 200, 10)
+    static let districtLine = Color.rgb(0, 125, 50)
+    static let elizabethLine = Color.rgb(96, 57, 158)
+    static let hammersmithAndCityLine = Color.rgb(245, 137, 166)
+    static let jubileeLine = Color.rgb(131, 141, 147)
+    static let libertyLine = Color.rgb(93, 96, 97)
+    static let lionessLine = Color.rgb(250, 166, 26)
+    static let metropolitanLine = Color.rgb(155, 0, 88)
+    static let mildmayLine = Color.rgb(0, 119, 173)
     static let northernLine = Color.rgb(0, 0, 0)
     static let piccadillyLine = Color.rgb(0, 25, 168)
-    static let suffragetteLine = Color.rgb(24, 169, 93)
-    static let victoriaLine = Color.rgb(0, 160, 226)
+    static let suffragetteLine = Color.rgb(91, 189, 114)
+    static let victoriaLine = Color.rgb(3, 155, 229)
     static let waterlooAndCityLine = Color.rgb(118, 208, 189)
     static let dlr = Color.rgb(0, 175, 173)
-    static let tram = Color.rgb(0, 189, 25)
-    static let weaverLine = Color.rgb(155, 0, 88)
-    static let windrushLine = Color.rgb(220, 36, 31)
-    static let overground = Color.rgb(239, 123, 16)
+    static let tram = Color.rgb(95, 181, 38)
+    static let weaverLine = Color.rgb(130, 58, 98)
+    static let windrushLine = Color.rgb(237, 27, 0)
+    static let overground = Color.rgb(250, 123, 5)
     
     // As per "Colour standards": https://tfl.gov.uk/info-for/suppliers-and-contractors/design-standards
 
-    static let bus = Color.adaptive(lightMode: rgb(225, 37, 27),
+    static let bus = Color.adaptive(lightMode: rgb(220, 36, 31),
                                     darkMode: Color.midRed1)
     static let cableCar = Color.rgb(115, 79, 160)
-    static let cycleHire = Color.rgb(239, 56, 36)
-    static let coach = Color.rgb(251, 168, 0)
+    static let cycleHire = Color.rgb(236, 0, 0)
+    static let coach = Color.rgb(255, 166, 0)
     static let nationalRail = Color.rgb(230, 0, 0)
-    static let riverBus = Color.rgb(0, 160, 223)
+    static let riverBus = Color.rgb(3, 159, 229)
 }
 
 // MARK: - Color

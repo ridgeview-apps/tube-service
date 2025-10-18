@@ -13,12 +13,10 @@ public struct LineStatusListView: View {
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
     
-    @State private var hasSelectedADate = false
-    
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
-    private var showsDatePicker: Bool { selectedFilterOption == .other }
+    private var showsDatePicker: Bool { selectedFilterOption == .future }
         
     public init(loadingState: LoadingState,
                 lines: [Line],
@@ -38,22 +36,16 @@ public struct LineStatusListView: View {
     
     public var body: some View {
         List(selection: $selectedLine) {
-            Group {
-                Section {
-                    datePickerView
-                } header: {
-                    sectionHeader
-                }
-                lineStatusSections
-            }
-            .textCase(nil)
-            .listRowInsets(.zero)
-            .listRowBackground(Color.defaultCellBackground)
+            lineStatusSections
+                .listRowInsets(.zero)
+                .listRowSeparator(.hidden)
+                .listRowBackground(Color.defaultBackground)
         }
-        .listSectionSpacing(12)
         .defaultScrollContentBackgroundColor()
+        .listStyle(.plain)
+        .withHardScrollEdgeEffectStyle()
         .safeAreaInset(edge: .top) {
-            stickyFilterOptionsHeader
+            stickyHeader
         }
     }
     
@@ -72,6 +64,7 @@ public struct LineStatusListView: View {
                     tappableStatusCells(with: allOtherLines)
                 }
             }
+            .listSectionSpacing(12)
         }
     }
     
@@ -89,7 +82,11 @@ public struct LineStatusListView: View {
                 style: .singleLine(line, showFavouriteImage: favouriteLineIDs.contains(line.id)),
                 showsAccessory: true
             )
-            .frame(minHeight: 50)
+            .cardStyle(cornerRadius: 8)
+            .frame(minHeight: 52)
+            .padding(.horizontal)
+            .padding(.bottom, 8)
+
         }
         .buttonStyle(.borderless)
         .accessibility(identifier: line.id.rawValue)
@@ -100,7 +97,7 @@ public struct LineStatusListView: View {
         switch selectedFilterOption {
         case .today, .tomorrow, .thisWeekend:
             return true
-        case .other:
+        case .future:
             return isValidFutureDate
         }
     }
@@ -109,7 +106,7 @@ public struct LineStatusListView: View {
         switch selectedFilterOption {
         case .today:
             return false
-        case .tomorrow, .thisWeekend, .other:
+        case .tomorrow, .thisWeekend, .future:
             return allOtherLines.count > 1
         }
     }
@@ -121,29 +118,32 @@ public struct LineStatusListView: View {
         return selectedDate >= startOfTomorrow
     }
     
-    private var sectionHeader: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            refreshStatusView
-            headerTitleView    
-        }
-        .foregroundStyle(.foreground)
-        .padding(.top, 4)
-        .padding(.bottom, 8)
-    }
-    
-    @ViewBuilder
-    private var stickyFilterOptionsHeader: some View {
+   @ViewBuilder
+    private var stickyHeader: some View {
         if #available(iOS 26.0, *) {
-            filterOptionsPicker
-                .withRegularGlassEffect()
+            headerContent
+                .glassEffect(
+                    .regular,
+                    in: .rect(cornerRadius: 12)
+                )
                 .padding(.horizontal)
-                
+                .padding(.bottom)
         } else {
-            filterOptionsPicker
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+            headerContent
                 .background(Color.defaultBackground)
         }
+    }
+    
+    private var headerContent: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            filterOptionsPicker
+            headerTitleView
+            refreshStatusView
+            datePickerView
+        }
+        .foregroundStyle(.foreground)
+        .padding(.horizontal)
+        .padding(.vertical, 8)
     }
     
     private var filterOptionsPicker: some View {
@@ -170,7 +170,7 @@ public struct LineStatusListView: View {
         case .today:
             Image(systemName: "circle.inset.filled")
                 .pulsatingSymbol()
-        case .tomorrow, .thisWeekend, .other:
+        case .tomorrow, .thisWeekend, .future:
             Image(systemName: "hammer.circle.fill")
         }
     }
@@ -180,15 +180,15 @@ public struct LineStatusListView: View {
         case .today:
             Text(.lineStatusServiceNow)
         case .tomorrow:
-            Text(.lineStatusPlannedStatusTitle(tomorrowFormatted()))
+            Text(tomorrowFormatted())
         case .thisWeekend:
-            Text(.lineStatusPlannedStatusTitle(weekendDatesFormatted()))
-        case .other:
+            Text(weekendDatesFormatted())
+        case .future:
             if isValidFutureDate {
-                Text(.lineStatusPlannedStatusTitle(selectedDateFormatted()))
+                Text(selectedDateFormatted())
             } else {
                 Text(.lineStatusSelectOtherDateTitle)
-                    .foregroundStyle(hasSelectedADate ? Color.adaptiveRed : Color.primary)
+                    .foregroundStyle(Color.adaptiveRed)
             }
         }
     }
@@ -202,10 +202,6 @@ public struct LineStatusListView: View {
                     .font(.subheadline)
             }
             .withAutoDismissID(of: selectedDate)
-            .onChange(of: selectedDate) {
-                hasSelectedADate = true
-            }
-            .padding(.horizontal)
         }
     }
     
@@ -213,13 +209,13 @@ public struct LineStatusListView: View {
         if !shouldHideRefreshStatusView {
             RefreshStatusView(loadingState: loadingState,
                               refreshDate: refreshDate)
-            .font(.caption)
+            .font(.caption2)
             .foregroundStyle(Color.adaptiveMidGrey2)
         }
     }
     
     private var shouldHideRefreshStatusView: Bool {
-        selectedFilterOption == .other && !isValidFutureDate
+        selectedFilterOption == .future && !isValidFutureDate
     }
     
     private func tomorrowFormatted() -> String {
@@ -247,9 +243,9 @@ public struct LineStatusListView: View {
             style: .multiLine(allOtherLines),
             showsAccessory: true
         )
-        .cardStyle()
-        .frame(minHeight: 44)
-        .padding(.top, 12)
+        .cardStyle(cornerRadius: 8)
+        .frame(minHeight: 52)
+        .padding(.horizontal)
     }
 }
 
@@ -276,8 +272,8 @@ private extension LineStatusFilterOption {
             .lineStatusFilterOptionTomorrow
         case .thisWeekend:
             .lineStatusFilterOptionThisWeekend
-        case .other:
-            .lineStatusFilterOptionOther
+        case .future:
+            .lineStatusFilterOptionFuture
         }
     }
     
@@ -289,8 +285,8 @@ private extension LineStatusFilterOption {
             "acc.id.filter.option.tomorrow"
         case .thisWeekend:
             "acc.id.filter.option.thisWeekend"
-        case .other:
-            "acc.id.filter.option.other"
+        case .future:
+            "acc.id.filter.option.future"
         }
     }
 }
@@ -334,7 +330,7 @@ private struct WrapperView: View {
 #Preview("Loaded state") {
     WrapperView(loadingState: .loaded,
                 lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
-                favouriteLineIDs: [.jubilee, .northern])
+                favouriteLineIDs: [.jubilee, .northern, .metropolitan])
 }
          
 #Preview("Loading state") {
@@ -353,5 +349,5 @@ private struct WrapperView: View {
     WrapperView(loadingState: .loaded,
                 lines: [],
                 favouriteLineIDs: [.jubilee, .northern],
-                selectedFilterOption: .other)
+                selectedFilterOption: .future)
 }

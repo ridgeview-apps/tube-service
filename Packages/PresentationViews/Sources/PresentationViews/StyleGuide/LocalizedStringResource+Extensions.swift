@@ -344,8 +344,8 @@ public extension LocalizedStringResource {
         moduleResource("line.status.detail.good.service.on.trams")
     }
     
-    static var lineStatusFilterOptionOther: LocalizedStringResource {
-        moduleResource("line.status.filter.option.other")
+    static var lineStatusFilterOptionFuture: LocalizedStringResource {
+        moduleResource("line.status.filter.option.future")
     }
     
     static var lineStatusFilterOptionThisWeekend: LocalizedStringResource {
@@ -388,20 +388,20 @@ public extension LocalizedStringResource {
         moduleResource("line.status.tab.title")
     }
     
-    static var lineStatusTflTweetsTitleAllLines: LocalizedStringResource {
-        moduleResource("line.status.tfl.tweets.title.allLines")
+    static var lineStatusTflXPostsTitleAllLines: LocalizedStringResource {
+        moduleResource("line.status.tfl.xPosts.title.allLines")
     }
     
-    static func lineStatusTflTweetsTitleLine(_ lineName: String) -> LocalizedStringResource {
-        moduleResource("line.status.tfl.tweets.title.line \(lineName)")
+    static func lineStatusTflXPostsTitleLine(_ lineName: String) -> LocalizedStringResource {
+        moduleResource("line.status.tfl.xPosts.title.line \(lineName)")
     }
     
     static var lineStatusServiceNow: LocalizedStringResource {
         moduleResource("line.status.service.now")
     }
     
-    static var lineStatusTwitterSectionTitle: LocalizedStringResource {
-        moduleResource("line.status.twitterSection.title")
+    static var lineStatusXPostsSectionTitle: LocalizedStringResource {
+        moduleResource("line.status.xPosts.section.title")
     }
     
     static var locationServicesAccessDeniedMessageTitle: LocalizedStringResource {

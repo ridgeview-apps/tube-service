@@ -942,13 +942,13 @@
         }
       }
     },
-    "line.status.filter.option.other" : {
+    "line.status.filter.option.future" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Other"
+            "value" : "Future"
           }
         }
       }
@@ -1074,7 +1074,7 @@
         }
       }
     },
-    "line.status.tfl.tweets.title.allLines" : {
+    "line.status.tfl.xPosts.title.allLines" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -1085,7 +1085,7 @@
         }
       }
     },
-    "line.status.tfl.tweets.title.line %@" : {
+    "line.status.tfl.xPosts.title.line %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -1096,13 +1096,13 @@
         }
       }
     },
-    "line.status.twitterSection.title" : {
+    "line.status.xPosts.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Latest tweets:"
+            "value" : "X Posts:"
           }
         }
       }

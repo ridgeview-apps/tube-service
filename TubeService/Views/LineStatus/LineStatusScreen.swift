@@ -117,7 +117,7 @@ struct LineStatusScreen: View {
                 return .today
             }
             return .range(weekendDateRange)
-        case .other:
+        case .future:
             if Calendar.london.isDateInToday(selectedDate) {
                 return .today
             } else {

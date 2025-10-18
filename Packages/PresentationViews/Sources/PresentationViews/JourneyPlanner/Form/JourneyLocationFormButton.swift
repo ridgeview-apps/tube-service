@@ -46,11 +46,11 @@ public struct JourneyLocationFormButton: View {
     private var roundedBorder: some View {
         switch style {
         case .normal:
-            RoundedRectangle(cornerRadius: 4)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(lineWidth: 1.0)
                 .fill(.tertiary)
         case .error:
-            RoundedRectangle(cornerRadius: 4)
+            RoundedRectangle(cornerRadius: 8)
                 .stroke(lineWidth: 1.0)
                 .fill(.adaptiveRed)
         }

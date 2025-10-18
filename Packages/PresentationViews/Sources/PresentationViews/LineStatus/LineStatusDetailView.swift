@@ -4,7 +4,7 @@ import SwiftUI
 public struct LineStatusDetailView: View {
     
     public enum Action: Sendable {
-        case linkTapped(LineStatusTwitterLink)
+        case linkTapped(LineStatusXPostLink)
     }
     
     public let line: Line
@@ -36,7 +36,7 @@ public struct LineStatusDetailView: View {
                     statusHeaderCard
                     favouritesButton
                     Divider()
-                    twitterSection
+                    xPostsSection
                 } header: {
                     refreshStatus
                 }
@@ -134,29 +134,29 @@ public struct LineStatusDetailView: View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
     }
     
-    private var twitterSection: some View {
+    private var xPostsSection: some View {
         HStack {
             VStack(alignment: .leading, spacing: 20) {
-                Text(.lineStatusTwitterSectionTitle)
+                Text(.lineStatusXPostsSectionTitle)
                 
-                ForEach(line.twitterLinks) { link in
-                    twitterLinkButton(for: link)
+                ForEach(line.xPostLinks) { link in
+                    xPostLinkButton(for: link)
                 }
             }
             Spacer()
         }
     }
     
-    @ViewBuilder private func twitterLinkButton(for link: LineStatusTwitterLink) -> some View {
+    @ViewBuilder private func xPostLinkButton(for link: LineStatusXPostLink) -> some View {
         Button {
             onAction(.linkTapped(link))
         } label: {
             Group {
                 switch link.style {
-                case .tflAllTweets:
-                    Text(.lineStatusTflTweetsTitleAllLines)
-                case let .lineTweets(line):
-                    Text(.lineStatusTflTweetsTitleLine(line.longName))
+                case .tflAllXPosts:
+                    Text(.lineStatusTflXPostsTitleAllLines)
+                case let .lineXPosts(line):
+                    Text(.lineStatusTflXPostsTitleLine(line.longName))
                 }
             }
         }

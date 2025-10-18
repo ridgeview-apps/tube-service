@@ -7,6 +7,8 @@ public struct LineStatusCell: View {
     public let showsAccessory: Bool
     public var leadingColumnInset = 4.0
     
+    @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
+    
     public enum Style: Hashable {
         case singleLine(Line, showFavouriteImage: Bool)
         case multiLine([Line])
@@ -46,17 +48,15 @@ public struct LineStatusCell: View {
         HStack(spacing: 4) {
             if showFavouriteImage {
                 Image(systemName: "star.fill")
-                    .imageScale(.small)
-                    .foregroundStyle(.white)
+                    .resizable()
+                    .frame(width: 10 * dynamicScaleFactor,
+                           height: 10 * dynamicScaleFactor)
+                    .foregroundStyle(line.id.textColor)
             }
             Text(line.id.name)
             Spacer()
         }
         .toEqualWidthColumn(textColor: line.id.textColor)
-        .shadow(color: line.id.textShadow.color,
-                radius: line.id.textShadow.radius,
-                x: line.id.textShadow.x,
-                y: line.id.textShadow.y)
         .padding(.leading, leadingColumnInset)
         .background(line.id.backgroundColor)
     }
@@ -80,7 +80,9 @@ public struct LineStatusCell: View {
     
     private func singleLineTrailingColumn(line: Line) -> some View {
         Text(line.shortText)
-            .toEqualWidthColumn(textColor: line.isDisrupted ? .adaptiveRed : .primary)
+            .toEqualWidthColumn(
+                textColor: line.isDisrupted ? .adaptiveRed : .primary
+            )
     }
     
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
@@ -114,15 +116,17 @@ public struct LineStatusCell: View {
 }
 
 
-extension View {
+private extension View {
 
-    @ViewBuilder func toEqualWidthColumn(textColor: Color? = nil) -> some View {
+    @ViewBuilder func toEqualWidthColumn(textColor: Color? = nil,
+                                         isBold: Bool = false) -> some View {
         Group {
             if let textColor {
                 font(.body)
                     .padding(8)
                     .multilineTextAlignment(.leading)
                     .foregroundStyle(textColor)
+                    .bold(isBold)
             } else {
                 self
             }

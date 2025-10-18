@@ -49,7 +49,7 @@ public struct JourneyPlannerFormView: View {
             .padding(.vertical, 4)
         } footer: {
             submitButton
-                .padding(.top, 8)
+                .padding(.vertical, 16)
                 .listRowBackground(Color.clear)
         }
         .listRowBackground(Color.defaultCellBackground)
@@ -94,6 +94,7 @@ public struct JourneyPlannerFormView: View {
     @ViewBuilder
     private var recentJourneysSection: some View {
         if !recentJourneys.isEmpty {
+            Spacer()
             Section {
                 ForEach($recentJourneys) { $recentJourneyItem in
                     RecentJourneyCell(item: $recentJourneyItem,
@@ -110,7 +111,7 @@ public struct JourneyPlannerFormView: View {
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
-            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowInsets(.init(top: 0, leading: 16, bottom: 8, trailing: 16))
         }
     }
     
