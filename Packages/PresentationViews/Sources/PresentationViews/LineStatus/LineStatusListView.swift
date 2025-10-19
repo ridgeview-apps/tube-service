@@ -17,6 +17,7 @@ public struct LineStatusListView: View {
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
     private var showsDatePicker: Bool { selectedFilterOption == .future }
+    private var hasFavouritesOrDisruptions: Bool { !(favourites + disruptions).isEmpty }
         
     public init(loadingState: LoadingState,
                 lines: [Line],
@@ -36,41 +37,38 @@ public struct LineStatusListView: View {
     
     public var body: some View {
         List(selection: $selectedLine) {
-            lineStatusSections
-                .listRowInsets(.zero)
-                .listRowSeparator(.hidden)
-                .listRowBackground(Color.defaultBackground)
+            Section {
+                lineStatusCells
+            } header: {
+                stickyHeader
+            }
+            .listRowInsets(.zero)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.defaultBackground)
         }
         .defaultScrollContentBackgroundColor()
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle()
-        .safeAreaInset(edge: .top) {
-            stickyHeader
-        }
     }
     
-    @ViewBuilder private var lineStatusSections: some View {
+    @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            Section {
-                tappableStatusCells(with: favourites)
+            tappableStatusCells(with: favourites)
+            tappableStatusCells(with: disruptions)
+            if showOtherLinesSummaryCell {
+                otherLinesSummaryCell
+            } else {
+                tappableStatusCells(with: allOtherLines,
+                                    needsTopPadding: hasFavouritesOrDisruptions)
             }
-            Section {
-                tappableStatusCells(with: disruptions)
-            }
-            Section {
-                if showOtherLinesSummaryCell {
-                    otherLinesSummaryCell
-                } else {
-                    tappableStatusCells(with: allOtherLines)
-                }
-            }
-            .listSectionSpacing(12)
         }
     }
     
-    private func tappableStatusCells(with lines: [Line]) -> some View {
+    private func tappableStatusCells(with lines: [Line],
+                                     needsTopPadding: Bool = false) -> some View {
         ForEach(lines) { line in
             tappableStatusCell(for: line)
+                .padding(.top, line == lines.first && needsTopPadding ? 12 : 0)
         }
     }
     
@@ -246,6 +244,7 @@ public struct LineStatusListView: View {
         .cardStyle(cornerRadius: 8)
         .frame(minHeight: 52)
         .padding(.horizontal)
+        .padding(.top, hasFavouritesOrDisruptions ? 12 : 0)
     }
 }
 

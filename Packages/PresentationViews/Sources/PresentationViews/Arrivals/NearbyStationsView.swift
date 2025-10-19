@@ -41,16 +41,18 @@ public struct NearbyStationsView: View {
     @ViewBuilder private var nearbyStationsListView: some View {
         ScrollViewReader { reader in
             List(selection: $selection) {
-                Group {
-                    resultsSectionView
-                        .onChange(of: sectionState.currentPageNo) { _, newValue in
-                            withAnimation {
-                                reader.scrollTo("showMoreButtonID_\(newValue)")
-                            }
+                resultsSectionView
+                    .onChange(of: sectionState.currentPageNo) { _, newValue in
+                        withAnimation {
+                            reader.scrollTo("showMoreButtonID_\(newValue)")
                         }
-                }
+                    }
+                showMoreResultsButtonSection
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(.init(top: 12, leading: 0, bottom: 0, trailing: 0))
             }
-            .listStyle(.plain)
+            .listSectionSpacing(0)
             .defaultScrollContentBackgroundColor()
             .accessibilityIdentifier("acc.id.nearby.stations.list")
             .animation(.default, value: sectionState.currentPageNo)
@@ -62,27 +64,19 @@ public struct NearbyStationsView: View {
             if let loadingState = locationUIStatus.loadingState {
                 switch loadingState {
                 case .loaded where visibleStations.isEmpty:
-                    zeroResultsView()
+                    zeroResultsView
                 case .loaded, .loading:
-                    ForEach(visibleStations, id: \.station.id) { nearbyStation in
-                        NavigationLink(value: nearbyStation) {
-                            StationLineGroupCell(
-                                style: .distance(metres: nearbyStation.distance),
-                                station: nearbyStation.station
-                            )
-                        }
-                    }
+                    populatedResultsView
                 case .failure:
                     errorView
                 }
             }
         } header: {
             resultsHeaderView
-        } footer: {
-            resultsFooterView
         }
         .lineGroupListRowStyle()
     }
+    
     
     @ViewBuilder private var resultsHeaderView: some View {
         if let loadingState = locationUIStatus.loadingState, loadingState != .loaded {
@@ -99,10 +93,22 @@ public struct NearbyStationsView: View {
         return Array(sectionState.nearbyStations.prefix(currentPageNo * pageSize))
     }
     
-    private func zeroResultsView() -> some View {
+    private var zeroResultsView: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(.nearbyStationsNoResults)
             refreshButton
+        }
+    }
+    
+    @ViewBuilder
+    private var populatedResultsView: some View {
+        ForEach(visibleStations, id: \.station.id) { nearbyStation in
+            NavigationLink(value: nearbyStation) {
+                StationLineGroupCell(
+                    style: .distance(metres: nearbyStation.distance),
+                    station: nearbyStation.station
+                )
+            }
         }
     }
     
@@ -125,16 +131,17 @@ public struct NearbyStationsView: View {
         .buttonStyle(.primary)
     }
     
-    @ViewBuilder private var resultsFooterView: some View {
+    @ViewBuilder private var showMoreResultsButtonSection: some View {
         if canShowMoreResults {
-            Button {
-                sectionState.currentPageNo += 1
-            } label: {
-                Text(.nearbyStationsMoreResultsButtonTitle)
+            Section {
+                Button {
+                    sectionState.currentPageNo += 1
+                } label: {
+                    Text(.nearbyStationsMoreResultsButtonTitle)
+                }
+                .buttonStyle(.primary)
+                .id("showMoreButtonID_\(sectionState.currentPageNo)")
             }
-            .buttonStyle(.primary)
-            .id("showMoreButtonID_\(sectionState.currentPageNo)")
-            
         }
     }
     

@@ -49,7 +49,7 @@ public struct JourneyPlannerFormView: View {
             .padding(.vertical, 4)
         } footer: {
             submitButton
-                .padding(.vertical, 16)
+                .listRowInsets(.init(top: 16, leading: 16, bottom: 16, trailing: 16))
                 .listRowBackground(Color.clear)
         }
         .listRowBackground(Color.defaultCellBackground)
