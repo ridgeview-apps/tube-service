@@ -16,6 +16,10 @@ public final class ObservableTimer {
         }
     }
     
+    public func invalidate() {
+        timer?.invalidate()
+    }
+    
     public static func repeating(every seconds: TimeInterval) -> ObservableTimer {
         .init(timeInterval: seconds, repeats: true)
     }

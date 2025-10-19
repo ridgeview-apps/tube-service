@@ -12,15 +12,14 @@ struct ArrivalsBoardListScreen: View {
     @State private var loadedBoardID: Station.LineGroup.ID?
     @State private var boardStates: [ArrivalsBoardState] = []
     @State private var refreshDate: Date?
-    @State private var autoRefreshEnabled = false
+    @State private var autoRefreshTimer: ObservableTimer?
+    
+    private let timerSecondsInterval = 20.0
         
     @Environment(\.transportAPI) var transportAPI
 
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
-    
-    private let autoRefreshTimer: ObservableTimer = .repeating(every: 20)
-    
     
     var body: some View {
         ArrivalsBoardListView(boardStates: boardStates,
@@ -32,34 +31,26 @@ struct ArrivalsBoardListScreen: View {
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
         }
-        .task {
-            refreshData()
-        }
         .refreshable {
-            refreshData()
-        }
-        .onChange(of: autoRefreshTimer.firedAt) {
-            autoRefresh()
+            await refreshData(startNewTimer: true)
         }
         .onAppear {
-            autoRefreshEnabled = true
+            Task {
+                await refreshData(startNewTimer: true)
+            }
         }
         .onDisappear {
-            autoRefreshEnabled = false
+            autoRefreshTimer?.invalidate()
         }
+        .onChange(of: autoRefreshTimer?.firedAt) {
+            Task {
+                await refreshData(startNewTimer: false)
+            }
+        }
+
     }
     
-    private func autoRefresh() {
-        guard autoRefreshEnabled else {
-            return
-        }
-        
-        Task {
-            refreshData()
-        }
-    }
-    
-    private func refreshData() {
+    private func refreshData(startNewTimer: Bool) async {
         guard loadingState != .loading else {
             return
         }
@@ -69,17 +60,20 @@ struct ArrivalsBoardListScreen: View {
             boardStates = []
         }
         
-        Task {
-            loadingState = .loading
-            
-            do {
-                boardStates = try await fetchBoards()
-                refreshDate = .now
-                loadedBoardID = lineGroup.id
-                loadingState = .loaded
-            } catch {
-                loadingState = .failure(errorMessage: error.toUIErrorMessage())
-            }
+        loadingState = .loading
+        
+        do {
+            boardStates = try await fetchBoards()
+            refreshDate = .now
+            loadedBoardID = lineGroup.id
+            loadingState = .loaded
+        } catch {
+            loadingState = .failure(errorMessage: error.toUIErrorMessage())
+        }
+        
+        if startNewTimer {
+            autoRefreshTimer?.invalidate()
+            autoRefreshTimer = .repeating(every: timerSecondsInterval)
         }
     }
     
