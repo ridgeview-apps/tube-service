@@ -145,14 +145,26 @@ struct ArrivalsBoardView: View {
     private var boardTextColor: Color { .rgb(198, 188, 61) }
     
     @ViewBuilder private func arrivalTimeText(for secondsRemaining: Int) -> some View {
+        let oneHour = 60 * 60
         if secondsRemaining < 30 {
             Text(.arrivalsBoardCountdownDue)
         } else if secondsRemaining < 60 {
             Text(.arrivalsBoardCountdownDueSeconds(secondsRemaining))
-        } else {
+        } else if secondsRemaining < oneHour {
             let minutes = secondsRemaining / 60
             Text(.arrivalsBoardCountdownDueMinutes(minutes))
+        } else {
+            Text(formattedHourlyDuration(forSeconds: secondsRemaining))
         }
+    }
+    
+    private func formattedHourlyDuration(forSeconds seconds: Int) -> String {
+        Duration
+            .seconds(seconds)
+            .formatted(
+                .units(allowed: [.hours, .minutes],
+                       width: .narrow)
+            )
     }
     
     @ViewBuilder private func destinationText(for destinationType: ArrivalsBoardDestinationType) -> some View {
@@ -226,9 +238,11 @@ struct ArrivalsBoardView_Previews: PreviewProvider {
         @State var isExpanded: Bool = false
         
         var body: some View {
-            ArrivalsBoardView(boardState: boardState,
-                              isExpanded: $isExpanded)
-            .padding(.horizontal)
+            ScrollView {
+                ArrivalsBoardView(boardState: boardState,
+                                  isExpanded: $isExpanded)
+                .padding(.horizontal)
+            }
         }
     }
     
@@ -250,6 +264,6 @@ struct ArrivalsBoardView_Previews: PreviewProvider {
     }
     
     static var elizabethLineBoard: ArrivalsBoardState {
-        ModelStubs.elizabethLineBothPlatforms.toPlatformBoardStates(forLineID: .elizabeth).first!
+        ModelStubs.elizabethLineArrivalsPlatformB.toPlatformBoardStates(forLineID: .elizabeth).first!
     }
 }

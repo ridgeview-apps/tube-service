@@ -38,7 +38,15 @@ public extension Station.LineGroup {
     }
     
     var arrivalsDataType: ArrivalsDataType {
-        return lineIds.contains(.elizabeth) ? .arrivalDepartures(lineIds) : .arrivalPredictions
+        let departureDataTypes: [TrainLineID] = [.elizabeth,
+                                                 .liberty,
+                                                 .lioness,
+                                                 .mildmay,
+                                                 .suffragette,
+                                                 .windrush,
+                                                 .weaver]
+        let useDepartures = lineIds.contains(anyOf: departureDataTypes)
+        return useDepartures ? .arrivalDepartures(lineIds) : .arrivalPredictions
     }
 }
 
@@ -51,5 +59,11 @@ public extension Sequence where Element == Station {
 public extension Sequence where Element == Station.LineGroup {
     func sortedByName() -> [Station.LineGroup] {
         self.sorted(by: { $0.name < $1.name })
+    }
+}
+
+private extension Array where Element: Hashable {
+    func contains(anyOf otherArray: [Element]) -> Bool {
+        !Set(self).isDisjoint(with: otherArray)
     }
 }

@@ -17,7 +17,7 @@ struct LocationDataStoreTests {
         
         // Then
         #expect(nearestStations[0].station == ModelStubs.angelStation)
-        #expect(nearestStations[0].distance.isApproximatelyEqual(to: 534.20, plusOrMinus: 0.1))
+        #expect(nearestStations[0].distance.isApproximatelyEqual(to: 489.53, plusOrMinus: 0.1))
         #expect(nearestStations[1].station == ModelStubs.kingsCrossStation)
         #expect(nearestStations[1].distance.isApproximatelyEqual(to: 687.13, plusOrMinus: 0.1))
         #expect(nearestStations[2].station == ModelStubs.russellSquareStation)

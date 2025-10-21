@@ -5,6 +5,7 @@ public enum TransportModeID: String, CaseIterable {
     case tram
     case tube
     case elizabethLine = "elizabeth-line"
+    case overground
 }
 
 public enum LineID: String, Codable, CaseIterable {
@@ -16,11 +17,17 @@ public enum LineID: String, Codable, CaseIterable {
     case elizabeth
     case hammersmithAndCity = "hammersmith-city"
     case jubilee
+    case liberty
+    case lioness
     case metropolitan
+    case mildmay
     case northern
     case piccadilly
+    case suffragette
     case victoria
     case waterlooAndCity = "waterloo-city"
+    case weaver
+    case windrush
     case tram
 }
 

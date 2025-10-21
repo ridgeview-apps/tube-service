@@ -13,10 +13,10 @@ struct ModelDecoderTests {
         let lineStatusGood = try decodeRawJSONString(lineStatusGoodServiceJSON, asType: Line.self)
         let lineStatusDisrupted = try decodeRawJSONString(lineStatusDisruptedJSON, asType: Line.self)
         
-        #expect(lineStatusesToday != nil)
-        #expect(lineStatusesFuture != nil)
-        #expect(lineStatusGood != nil)
-        #expect(lineStatusDisrupted != nil)
+        #expect(!lineStatusesToday.isEmpty)
+        #expect(!lineStatusesFuture.isEmpty)
+        #expect(!lineStatusGood.isDisrupted)
+        #expect(lineStatusDisrupted.isDisrupted)
     }
     
     @Test
@@ -24,29 +24,27 @@ struct ModelDecoderTests {
         let singleLineArrivals = try decodeRawJSONString(northernLineArrivalsJSON, asType: [ArrivalPrediction].self)
         let multiLineArrivals = try decodeRawJSONString(hammerDistrictAndCircleArrivalsJSON, asType: [ArrivalPrediction].self)
         
-        #expect(singleLineArrivals != nil)
-        #expect(multiLineArrivals != nil)
+        #expect(!singleLineArrivals.isEmpty)
+        #expect(!multiLineArrivals.isEmpty)
     }
     
     @Test
     func decodedArrivalDepartures() throws {
         let elizabethLineArrivals = try decodeRawJSONString(elizabethLineArrivalsJSON, asType: [ArrivalDeparture].self)
         
-        #expect(elizabethLineArrivals != nil)
+        #expect(!elizabethLineArrivals.isEmpty)
     }
     
     @Test
     func decodedDisruptionPoints() throws {
         let disruptedPoints = try decodeRawJSONString(disruptedStationsJSON, asType: [DisruptedPoint].self)
         
-        #expect(disruptedPoints != nil)
+        #expect(!disruptedPoints.isEmpty)
     }
     
     @Test
     func decodedTubeJourneyItinerary() throws {
         let journey = try decodeRawJSONString(journeyByTubeJSON, asType: Journey.self)
-        
-        #expect(journey != nil)
         
         #expect(journey.legs?[0].modeID == .walking)
         
@@ -65,9 +63,9 @@ struct ModelDecoderTests {
         let systemStatusOutage = try decodeRawJSONString(systemStatusOutageJSON, asType: SystemStatus.self)
         let systemStatusResolved = try decodeRawJSONString(systemStatusResolvedJSON, asType: SystemStatus.self)
         
-        #expect(systemStatusOK != nil)
-        #expect(systemStatusOutage != nil)
-        #expect(systemStatusResolved != nil)
+        #expect(systemStatusOK.status == .ok)
+        #expect(systemStatusOutage.status == .outage)
+        #expect(systemStatusResolved.status == .resolved)
     }
 }
 

@@ -67,13 +67,44 @@ struct StationViewStateTests {
         #expect(unsortedValues.sortedByName() == expectedValues)
     }
     
-    @Test
-    func stationLineGroupDataTypes() {
-        let standardLineGroupType = Station.LineGroup(atcoCode: "FOO", lineIds: [.northern])
-        let elizabethLineGroupType = Station.LineGroup(atcoCode: "BAR", lineIds: [.elizabeth])
-
-        #expect(standardLineGroupType.arrivalsDataType == .arrivalPredictions)
-        #expect(elizabethLineGroupType.arrivalsDataType == .arrivalDepartures([.elizabeth]))
+    @Test(
+        arguments: [
+            [TrainLineID.bakerloo],
+            [TrainLineID.central],
+            [TrainLineID.circle],
+            [TrainLineID.district],
+            [TrainLineID.dlr],
+            [TrainLineID.hammersmithAndCity],
+            [TrainLineID.jubilee],
+            [TrainLineID.metropolitan],
+            [TrainLineID.northern],
+            [TrainLineID.piccadilly],
+            [TrainLineID.victoria],
+            [TrainLineID.waterlooAndCity],
+            [TrainLineID.tram]
+        ]
+    )
+    func shouldUseArrivalPredictionDataType(forLineIDs givenLineIDs: [TrainLineID]) {
+        // Given
+        let lineGroup = Station.LineGroup(atcoCode: "FOO", lineIds: givenLineIDs)
+        #expect(lineGroup.arrivalsDataType == .arrivalPredictions)
+    }
+    
+    @Test(
+        arguments: [
+            [TrainLineID.elizabeth],
+            [TrainLineID.liberty],
+            [TrainLineID.lioness],
+            [TrainLineID.mildmay],
+            [TrainLineID.suffragette],
+            [TrainLineID.weaver],
+            [TrainLineID.windrush]
+        ]
+    )
+    func shouldUseArrivalDepaturesDataType(forLineIDs givenLineIDs: [TrainLineID]) {
+        // Given
+        let lineGroup = Station.LineGroup(atcoCode: "FOO", lineIds: givenLineIDs)
+        #expect(lineGroup.arrivalsDataType == .arrivalDepartures(givenLineIDs))
     }
     
     @Test

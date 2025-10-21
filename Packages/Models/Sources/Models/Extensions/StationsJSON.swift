@@ -32,10 +32,27 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.491241,
-      "lon" : 0.121374
+      "lat" : 51.491284,
+      "lon" : 0.121087
     },
     "name" : "Abbey Wood"
+  },
+  {
+    "icsCode" : "1001002",
+    "id" : "910GACTNCTL",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GACTNCTL",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.508716,
+      "lon" : -0.262971
+    },
+    "name" : "Acton Central"
   },
   {
     "icsCode" : "1001003",
@@ -89,8 +106,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.356241,
-      "lon" : -0.032694
+      "lat" : 51.356599,
+      "lon" : -0.032607
     },
     "name" : "Addington Village"
   },
@@ -106,8 +123,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.379753,
-      "lon" : -0.073058
+      "lat" : 51.37981,
+      "lon" : -0.073242
     },
     "name" : "Addiscombe"
   },
@@ -221,6 +238,23 @@ let allStationsRawJSON = """
     "name" : "Ampere Way"
   },
   {
+    "icsCode" : "1001007",
+    "id" : "910GANERLEY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GANERLEY",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.412153,
+      "lon" : -0.065886
+    },
+    "name" : "Anerley"
+  },
+  {
     "icsCode" : "1000007",
     "id" : "940GZZLUAGL",
     "lineGroups" : [
@@ -232,8 +266,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.532624,
-      "lon" : -0.105898
+      "lat" : 51.53184,
+      "lon" : -0.10635
     },
     "name" : "Angel"
   },
@@ -266,8 +300,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.391362,
-      "lon" : -0.058297
+      "lat" : 51.391525,
+      "lon" : -0.058347
     },
     "name" : "Arena"
   },
@@ -405,8 +439,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.513552,
-      "lon" : -0.088919
+      "lat" : 51.513335,
+      "lon" : -0.088712
     },
     "name" : "Bank"
   },
@@ -451,6 +485,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "hammersmith-city"
         ]
+      },
+      {
+        "atcoCode" : "910GBARKING",
+        "lineIds" : [
+          "suffragette"
+        ]
       }
     ],
     "location" : {
@@ -458,6 +498,23 @@ let allStationsRawJSON = """
       "lon" : 0.081053
     },
     "name" : "Barking"
+  },
+  {
+    "icsCode" : "1002272",
+    "id" : "910GBKRVS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBKRVS",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.51953,
+      "lon" : 0.11596
+    },
+    "name" : "Barking Riverside"
   },
   {
     "icsCode" : "1000016",
@@ -631,8 +688,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.3893,
-      "lon" : -0.142409
+      "lat" : 51.389242,
+      "lon" : -0.142167
     },
     "name" : "Beddington Lane"
   },
@@ -705,6 +762,23 @@ let allStationsRawJSON = """
     "name" : "Bethnal Green"
   },
   {
+    "icsCode" : "1001023",
+    "id" : "910GBTHNLGR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBTHNLGR",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.523917,
+      "lon" : -0.059568
+    },
+    "name" : "Bethnal Green"
+  },
+  {
     "icsCode" : "1001027",
     "id" : "HUBBIR",
     "lineGroups" : [
@@ -761,6 +835,12 @@ let allStationsRawJSON = """
     "id" : "HUBBHO",
     "lineGroups" : [
       {
+        "atcoCode" : "910GBLCHSRD",
+        "lineIds" : [
+          "suffragette"
+        ]
+      },
+      {
         "atcoCode" : "940GZZLUBLR",
         "lineIds" : [
           "victoria"
@@ -768,8 +848,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.586919,
-      "lon" : -0.04115
+      "lat" : 51.586605,
+      "lon" : -0.041236
     },
     "name" : "Blackhorse Road"
   },
@@ -957,6 +1037,23 @@ let allStationsRawJSON = """
     "name" : "Brixton"
   },
   {
+    "icsCode" : "1001035",
+    "id" : "910GBROCKLY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBROCKLY",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.464649,
+      "lon" : -0.037537
+    },
+    "name" : "Brockley"
+  },
+  {
     "icsCode" : "1000032",
     "id" : "940GZZLUBBB",
     "lineGroups" : [
@@ -973,6 +1070,57 @@ let allStationsRawJSON = """
       "lon" : -0.011538
     },
     "name" : "Bromley-by-Bow"
+  },
+  {
+    "icsCode" : "1001038",
+    "id" : "910GBRBY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBRBY",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.545166,
+      "lon" : -0.202309
+    },
+    "name" : "Brondesbury"
+  },
+  {
+    "icsCode" : "1001039",
+    "id" : "910GBRBYPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBRBYPK",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.540734,
+      "lon" : -0.210054
+    },
+    "name" : "Brondesbury Park"
+  },
+  {
+    "icsCode" : "1001040",
+    "id" : "910GBRUCGRV",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBRUCGRV",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.593959,
+      "lon" : -0.069867
+    },
+    "name" : "Bruce Grove"
   },
   {
     "icsCode" : "1000033",
@@ -1026,6 +1174,40 @@ let allStationsRawJSON = """
     "name" : "Burnt Oak"
   },
   {
+    "icsCode" : "1001042",
+    "id" : "910GBHILLPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBHILLPK",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.641519,
+      "lon" : -0.069221
+    },
+    "name" : "Bush Hill Park"
+  },
+  {
+    "icsCode" : "1001041",
+    "id" : "HUBBSH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBUSHYDC",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.645894,
+      "lon" : -0.385229
+    },
+    "name" : "Bushey"
+  },
+  {
     "icsCode" : "1000035",
     "id" : "940GZZLUCAR",
     "lineGroups" : [
@@ -1041,6 +1223,57 @@ let allStationsRawJSON = """
       "lon" : -0.118493
     },
     "name" : "Caledonian Road"
+  },
+  {
+    "icsCode" : "1001043",
+    "id" : "910GCLDNNRB",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCLDNNRB",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.543041,
+      "lon" : -0.116729
+    },
+    "name" : "Caledonian Road & Barnsbury"
+  },
+  {
+    "icsCode" : "1001044",
+    "id" : "910GCAMHTH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCAMHTH",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.531973,
+      "lon" : -0.057279
+    },
+    "name" : "Cambridge Heath (London)"
+  },
+  {
+    "icsCode" : "1001045",
+    "id" : "910GCMDNRD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCMDNRD",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.541791,
+      "lon" : -0.138701
+    },
+    "name" : "Camden Road"
   },
   {
     "icsCode" : "1000036",
@@ -1067,6 +1300,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUCWR",
         "lineIds" : [
           "jubilee"
+        ]
+      },
+      {
+        "atcoCode" : "910GCNDAW",
+        "lineIds" : [
+          "windrush"
         ]
       }
     ],
@@ -1147,6 +1386,29 @@ let allStationsRawJSON = """
     "name" : "Cannon Street"
   },
   {
+    "icsCode" : "1001048",
+    "id" : "910GCNNB",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCNNB",
+        "lineIds" : [
+          "mildmay"
+        ]
+      },
+      {
+        "atcoCode" : "910GCNNB",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.548732,
+      "lon" : -0.092191
+    },
+    "name" : "Canonbury"
+  },
+  {
     "icsCode" : "1000041",
     "id" : "940GZZLUCPK",
     "lineGroups" : [
@@ -1162,6 +1424,23 @@ let allStationsRawJSON = """
       "lon" : -0.294693
     },
     "name" : "Canons Park"
+  },
+  {
+    "icsCode" : "1001049",
+    "id" : "910GCRPNDPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCRPNDPK",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.628351,
+      "lon" : -0.385939
+    },
+    "name" : "Carpenders Park"
   },
   {
     "icsCode" : "1002042",
@@ -1289,6 +1568,23 @@ let allStationsRawJSON = """
     "name" : "Chesham"
   },
   {
+    "icsCode" : "1001532",
+    "id" : "910GCHESHNT",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCHESHNT",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.702876,
+      "lon" : -0.02396
+    },
+    "name" : "Cheshunt"
+  },
+  {
     "icsCode" : "1000047",
     "id" : "940GZZLUCWL",
     "lineGroups" : [
@@ -1304,6 +1600,23 @@ let allStationsRawJSON = """
       "lon" : 0.075041
     },
     "name" : "Chigwell"
+  },
+  {
+    "icsCode" : "1001063",
+    "id" : "910GCHINGFD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCHINGFD",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.633087,
+      "lon" : 0.009897
+    },
+    "name" : "Chingford"
   },
   {
     "icsCode" : "1000048",
@@ -1351,8 +1664,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.373708,
-      "lon" : -0.104361
+      "lat" : 51.373774,
+      "lon" : -0.103985
     },
     "name" : "Church Street"
   },
@@ -1372,6 +1685,47 @@ let allStationsRawJSON = """
       "lon" : -0.138317
     },
     "name" : "Clapham Common"
+  },
+  {
+    "icsCode" : "1001068",
+    "id" : "910GCLPHHS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCLPHHS",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.465481,
+      "lon" : -0.132522
+    },
+    "name" : "Clapham High Street"
+  },
+  {
+    "icsCode" : "1001069",
+    "id" : "HUBCLJ",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCLPHMJC",
+        "lineIds" : [
+          "mildmay"
+        ]
+      },
+      {
+        "atcoCode" : "910GCLPHMJ1",
+        "lineIds" : [
+          "mildmay",
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.464187,
+      "lon" : -0.170221
+    },
+    "name" : "Clapham Junction"
   },
   {
     "icsCode" : "1000051",
@@ -1406,6 +1760,23 @@ let allStationsRawJSON = """
       "lon" : -0.147582
     },
     "name" : "Clapham South"
+  },
+  {
+    "icsCode" : "1001070",
+    "id" : "910GCLAPTON",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCLAPTON",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.561644,
+      "lon" : -0.057025
+    },
+    "name" : "Clapton"
   },
   {
     "icsCode" : "1000053",
@@ -1470,8 +1841,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.359875,
-      "lon" : -0.058623
+      "lat" : 51.359791,
+      "lon" : -0.05956
     },
     "name" : "Coombe Lane"
   },
@@ -1510,6 +1881,23 @@ let allStationsRawJSON = """
     "name" : "Crossharbour"
   },
   {
+    "icsCode" : "1001077",
+    "id" : "910GCROUCHH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCROUCHH",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.571302,
+      "lon" : -0.117149
+    },
+    "name" : "Crouch Hill"
+  },
+  {
     "icsCode" : "1000057",
     "id" : "940GZZLUCXY",
     "lineGroups" : [
@@ -1527,6 +1915,23 @@ let allStationsRawJSON = """
     "name" : "Croxley"
   },
   {
+    "icsCode" : "1001078",
+    "id" : "HUBCYP",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCRYSTLP",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.418109,
+      "lon" : -0.07261
+    },
+    "name" : "Crystal Palace"
+  },
+  {
     "icsCode" : "1001079",
     "id" : "HUBCUS",
     "lineGroups" : [
@@ -1537,7 +1942,7 @@ let allStationsRawJSON = """
         ]
       },
       {
-        "atcoCode" : "910GCSTMHSXR",
+        "atcoCode" : "910GCUSTMHS",
         "lineIds" : [
           "elizabeth"
         ]
@@ -1618,6 +2023,40 @@ let allStationsRawJSON = """
     "name" : "Dagenham Heathway"
   },
   {
+    "icsCode" : "1001568",
+    "id" : "910GDALS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GDALS",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.546116,
+      "lon" : -0.075137
+    },
+    "name" : "Dalston Junction"
+  },
+  {
+    "icsCode" : "1001081",
+    "id" : "910GDALSKLD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GDALSKLD",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.548148,
+      "lon" : -0.075701
+    },
+    "name" : "Dalston Kingsland"
+  },
+  {
     "icsCode" : "1000060",
     "id" : "940GZZLUDBN",
     "lineGroups" : [
@@ -1633,6 +2072,23 @@ let allStationsRawJSON = """
       "lon" : 0.083782
     },
     "name" : "Debden"
+  },
+  {
+    "icsCode" : "1001083",
+    "id" : "910GDENMRKH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GDENMRKH",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.468203,
+      "lon" : -0.089361
+    },
+    "name" : "Denmark Hill"
   },
   {
     "icsCode" : "1002029",
@@ -1959,6 +2415,23 @@ let allStationsRawJSON = """
     "name" : "Edgware Road (Circle Line)"
   },
   {
+    "icsCode" : "1001092",
+    "id" : "910GEDMNGRN",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GEDMNGRN",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.624929,
+      "lon" : -0.061112
+    },
+    "name" : "Edmonton Green"
+  },
+  {
     "icsCode" : "1000073",
     "id" : "HUBEPH",
     "lineGroups" : [
@@ -2063,6 +2536,40 @@ let allStationsRawJSON = """
     "name" : "Embankment"
   },
   {
+    "icsCode" : "1001098",
+    "id" : "910GEMRSPKH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GEMRSPKH",
+        "lineIds" : [
+          "liberty"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.568642,
+      "lon" : 0.220113
+    },
+    "name" : "Emerson Park"
+  },
+  {
+    "icsCode" : "1001101",
+    "id" : "910GENFLDTN",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GENFLDTN",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.652026,
+      "lon" : -0.079328
+    },
+    "name" : "Enfield Town"
+  },
+  {
     "icsCode" : "1000076",
     "id" : "940GZZLUEPG",
     "lineGroups" : [
@@ -2084,6 +2591,12 @@ let allStationsRawJSON = """
     "id" : "HUBEUS",
     "lineGroups" : [
       {
+        "atcoCode" : "910GEUSTON",
+        "lineIds" : [
+          "lioness"
+        ]
+      },
+      {
         "atcoCode" : "940GZZLUEUS",
         "lineIds" : [
           "northern"
@@ -2097,8 +2610,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.528055,
-      "lon" : -0.132182
+      "lat" : 51.528136,
+      "lon" : -0.133924
     },
     "name" : "Euston"
   },
@@ -2221,6 +2734,23 @@ let allStationsRawJSON = """
     "name" : "Finchley Road"
   },
   {
+    "icsCode" : "1001109",
+    "id" : "910GFNCHLYR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GFNCHLYR",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.550266,
+      "lon" : -0.183141
+    },
+    "name" : "Finchley Road & Frognal"
+  },
+  {
     "icsCode" : "1000083",
     "id" : "HUBFPK",
     "lineGroups" : [
@@ -2259,6 +2789,23 @@ let allStationsRawJSON = """
       "lon" : 0.024353
     },
     "name" : "Forest Gate"
+  },
+  {
+    "icsCode" : "1001112",
+    "id" : "910GFORESTH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GFORESTH",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.43928,
+      "lon" : -0.053157
+    },
+    "name" : "Forest Hill"
   },
   {
     "icsCode" : "1000084",
@@ -2451,6 +2998,29 @@ let allStationsRawJSON = """
     "name" : "Goodmayes"
   },
   {
+    "icsCode" : "1001119",
+    "id" : "910GGOSPLOK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GGOSPLOK",
+        "lineIds" : [
+          "mildmay"
+        ]
+      },
+      {
+        "atcoCode" : "910GGOSPLOK",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.555335,
+      "lon" : -0.15077
+    },
+    "name" : "Gospel Oak"
+  },
+  {
     "icsCode" : "1000090",
     "id" : "940GZZLUGGH",
     "lineGroups" : [
@@ -2575,6 +3145,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "district"
         ]
+      },
+      {
+        "atcoCode" : "910GGNRSBRY",
+        "lineIds" : [
+          "mildmay"
+        ]
       }
     ],
     "location" : {
@@ -2582,6 +3158,74 @@ let allStationsRawJSON = """
       "lon" : -0.275267
     },
     "name" : "Gunnersbury"
+  },
+  {
+    "icsCode" : "1001127",
+    "id" : "910GHACKNYC",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHACKNYC",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.547105,
+      "lon" : -0.056058
+    },
+    "name" : "Hackney Central"
+  },
+  {
+    "icsCode" : "1001128",
+    "id" : "910GHAKNYNM",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHAKNYNM",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.548757,
+      "lon" : -0.060819
+    },
+    "name" : "Hackney Downs"
+  },
+  {
+    "icsCode" : "1001129",
+    "id" : "910GHACKNYW",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHACKNYW",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.54341,
+      "lon" : -0.02492
+    },
+    "name" : "Hackney Wick"
+  },
+  {
+    "icsCode" : "1001569",
+    "id" : "910GHAGGERS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHAGGERS",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.538705,
+      "lon" : -0.075666
+    },
+    "name" : "Haggerston"
   },
   {
     "icsCode" : "1000095",
@@ -2625,8 +3269,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.493535,
-      "lon" : -0.225013
+      "lat" : 51.49339,
+      "lon" : -0.22503
     },
     "name" : "Hammersmith"
   },
@@ -2646,6 +3290,23 @@ let allStationsRawJSON = """
       "lon" : -0.177464
     },
     "name" : "Hampstead"
+  },
+  {
+    "icsCode" : "1001131",
+    "id" : "910GHMPSTDH",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHMPSTDH",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.55521,
+      "lon" : -0.165705
+    },
+    "name" : "Hampstead Heath"
   },
   {
     "icsCode" : "1000099",
@@ -2690,6 +3351,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GHARLSDN",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -2714,6 +3381,23 @@ let allStationsRawJSON = """
       "lon" : 0.233129
     },
     "name" : "Harold Wood"
+  },
+  {
+    "icsCode" : "1001139",
+    "id" : "910GHRGYGL",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHRGYGL",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.577182,
+      "lon" : -0.098144
+    },
+    "name" : "Harringay Green Lanes"
   },
   {
     "icsCode" : "1002045",
@@ -2741,6 +3425,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GHROW",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -2765,6 +3455,23 @@ let allStationsRawJSON = """
       "lon" : -0.337225
     },
     "name" : "Harrow-on-the-Hill"
+  },
+  {
+    "icsCode" : "1001142",
+    "id" : "910GHTCHEND",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHTCHEND",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.609417,
+      "lon" : -0.368601
+    },
+    "name" : "Hatch End"
   },
   {
     "icsCode" : "1000103",
@@ -2799,6 +3506,23 @@ let allStationsRawJSON = """
       "lon" : -0.420683
     },
     "name" : "Hayes & Harlington"
+  },
+  {
+    "icsCode" : "1001146",
+    "id" : "910GHEDSTNL",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHEDSTNL",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.602649,
+      "lon" : -0.35722
+    },
+    "name" : "Headstone Lane"
   },
   {
     "icsCode" : "1000104",
@@ -2864,8 +3588,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.470976,
-      "lon" : -0.458033
+      "lat" : 51.471987,
+      "lon" : -0.454788
     },
     "name" : "Heathrow Terminals 2 & 3"
   },
@@ -2939,19 +3663,55 @@ let allStationsRawJSON = """
     "name" : "High Street Kensington"
   },
   {
+    "icsCode" : "1001150",
+    "id" : "910GHGHMSPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHGHMSPK",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.60835,
+      "lon" : -0.000222
+    },
+    "name" : "Highams Park"
+  },
+  {
     "icsCode" : "1000108",
     "id" : "HUBHHY",
     "lineGroups" : [
+      {
+        "atcoCode" : "910GHGHI",
+        "lineIds" : [
+          "mildmay"
+        ]
+      },
+      {
+        "atcoCode" : "910GHGHI",
+        "lineIds" : [
+          "mildmay",
+          "windrush"
+        ]
+      },
       {
         "atcoCode" : "940GZZLUHAI",
         "lineIds" : [
           "victoria"
         ]
+      },
+      {
+        "atcoCode" : "910GHGHI",
+        "lineIds" : [
+          "windrush"
+        ]
       }
     ],
     "location" : {
-      "lat" : 51.54635,
-      "lon" : -0.103324
+      "lat" : 51.546177,
+      "lon" : -0.103764
     },
     "name" : "Highbury & Islington"
   },
@@ -3048,6 +3808,40 @@ let allStationsRawJSON = """
     "name" : "Holloway Road"
   },
   {
+    "icsCode" : "1001153",
+    "id" : "910GHOMRTON",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHOMRTON",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.547012,
+      "lon" : -0.04236
+    },
+    "name" : "Homerton"
+  },
+  {
+    "icsCode" : "1001154",
+    "id" : "910GHONROPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHONROPK",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.449989,
+      "lon" : -0.045505
+    },
+    "name" : "Honor Oak Park"
+  },
+  {
     "icsCode" : "1000115",
     "id" : "940GZZLUHCH",
     "lineGroups" : [
@@ -3116,6 +3910,23 @@ let allStationsRawJSON = """
     "name" : "Hounslow West"
   },
   {
+    "icsCode" : "1001570",
+    "id" : "910GHOXTON",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GHOXTON",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.531512,
+      "lon" : -0.075681
+    },
+    "name" : "Hoxton"
+  },
+  {
     "icsCode" : "1000119",
     "id" : "940GZZLUHPC",
     "lineGroups" : [
@@ -3145,8 +3956,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.562025,
-      "lon" : -0.441899
+      "lat" : 51.561992,
+      "lon" : -0.442001
     },
     "name" : "Ickenham"
   },
@@ -3166,6 +3977,23 @@ let allStationsRawJSON = """
       "lon" : 0.06968
     },
     "name" : "Ilford"
+  },
+  {
+    "icsCode" : "1001347",
+    "id" : "HUBIMP",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GCSEAH",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.474949,
+      "lon" : -0.182823
+    },
+    "name" : "Imperial Wharf"
   },
   {
     "icsCode" : "1002048",
@@ -3227,6 +4055,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GKENSLG",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -3236,6 +4070,23 @@ let allStationsRawJSON = """
     "name" : "Kensal Green"
   },
   {
+    "icsCode" : "1001161",
+    "id" : "910GKENR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GKENR",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.534554,
+      "lon" : -0.219957
+    },
+    "name" : "Kensal Rise"
+  },
+  {
     "icsCode" : "1000170",
     "id" : "HUBKPA",
     "lineGroups" : [
@@ -3243,6 +4094,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUKOY",
         "lineIds" : [
           "district"
+        ]
+      },
+      {
+        "atcoCode" : "910GKENOLYM",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -3270,6 +4127,23 @@ let allStationsRawJSON = """
     "name" : "Kentish Town"
   },
   {
+    "icsCode" : "1001165",
+    "id" : "910GKNTSHTW",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GKNTSHTW",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.546548,
+      "lon" : -0.146655
+    },
+    "name" : "Kentish Town West"
+  },
+  {
     "icsCode" : "1000124",
     "id" : "HUBKNT",
     "lineGroups" : [
@@ -3277,6 +4151,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUKEN",
         "lineIds" : [
           "bakerloo"
+        ]
+      },
+      {
+        "atcoCode" : "910GKTON",
+        "lineIds" : [
+          "lioness"
         ]
       }
     ],
@@ -3294,6 +4174,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUKWG",
         "lineIds" : [
           "district"
+        ]
+      },
+      {
+        "atcoCode" : "910GKEWGRDN",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -3319,6 +4205,23 @@ let allStationsRawJSON = """
       "lon" : -0.204248
     },
     "name" : "Kilburn"
+  },
+  {
+    "icsCode" : "1001170",
+    "id" : "910GKLBRNHR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GKLBRNHR",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.537277,
+      "lon" : -0.192237
+    },
+    "name" : "Kilburn High Road"
   },
   {
     "icsCode" : "1000127",
@@ -3558,8 +4461,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375075,
-      "lon" : -0.084418
+      "lat" : 51.375201,
+      "lon" : -0.085002
     },
     "name" : "Lebanon Road"
   },
@@ -3621,6 +4524,23 @@ let allStationsRawJSON = """
     "name" : "Leyton"
   },
   {
+    "icsCode" : "1001178",
+    "id" : "910GLEYTNMR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GLEYTNMR",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.569725,
+      "lon" : -0.008051
+    },
+    "name" : "Leyton Midland Road"
+  },
+  {
     "icsCode" : "1000137",
     "id" : "940GZZLULYS",
     "lineGroups" : [
@@ -3636,6 +4556,23 @@ let allStationsRawJSON = """
       "lon" : 0.008194
     },
     "name" : "Leytonstone"
+  },
+  {
+    "icsCode" : "1001179",
+    "id" : "910GLYTNSHR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GLYTNSHR",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.563554,
+      "lon" : 0.008416
+    },
+    "name" : "Leytonstone High Road"
   },
   {
     "icsCode" : "1001180",
@@ -3675,7 +4612,8 @@ let allStationsRawJSON = """
       {
         "atcoCode" : "910GLIVST",
         "lineIds" : [
-          "elizabeth"
+          "elizabeth",
+          "weaver"
         ]
       }
     ],
@@ -3741,6 +4679,23 @@ let allStationsRawJSON = """
       "lon" : 0.048739
     },
     "name" : "London City Airport"
+  },
+  {
+    "icsCode" : "1001183",
+    "id" : "910GLONFLDS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GLONFLDS",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.541153,
+      "lon" : -0.057753
+    },
+    "name" : "London Fields"
   },
   {
     "icsCode" : "1000140",
@@ -4145,10 +5100,44 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.34313,
-      "lon" : -0.017805
+      "lat" : 51.342593,
+      "lon" : -0.017412
     },
     "name" : "New Addington"
+  },
+  {
+    "icsCode" : "1000155",
+    "id" : "HUBNWX",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GNWCRELL",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.476344,
+      "lon" : -0.032441
+    },
+    "name" : "New Cross"
+  },
+  {
+    "icsCode" : "1000156",
+    "id" : "HUBNXG",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GNEWXGTE",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.475128,
+      "lon" : -0.040399
+    },
+    "name" : "New Cross Gate"
   },
   {
     "icsCode" : "1000154",
@@ -4261,6 +5250,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GNWEMBLY",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -4353,6 +5348,23 @@ let allStationsRawJSON = """
       "lon" : -0.409464
     },
     "name" : "Northwood Hills"
+  },
+  {
+    "icsCode" : "1001216",
+    "id" : "HUBNWD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GNORWDJ",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.397019,
+      "lon" : -0.075221
+    },
+    "name" : "Norwood Junction"
   },
   {
     "icsCode" : "1000167",
@@ -4547,6 +5559,40 @@ let allStationsRawJSON = """
     "name" : "Parsons Green"
   },
   {
+    "icsCode" : "1001223",
+    "id" : "910GPCKHMRY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GPCKHMRY",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.470034,
+      "lon" : -0.069414
+    },
+    "name" : "Peckham Rye"
+  },
+  {
+    "icsCode" : "1001225",
+    "id" : "910GPENEW",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GPENEW",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.417555,
+      "lon" : -0.06084
+    },
+    "name" : "Penge West"
+  },
+  {
     "icsCode" : "1000178",
     "id" : "940GZZLUPVL",
     "lineGroups" : [
@@ -4575,8 +5621,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.40423,
-      "lon" : -0.182249
+      "lat" : 51.403979,
+      "lon" : -0.18164
     },
     "name" : "Phipps Bridge"
   },
@@ -4766,6 +5812,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GQPRK",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -4773,6 +5825,23 @@ let allStationsRawJSON = """
       "lon" : -0.204574
     },
     "name" : "Queen's Park"
+  },
+  {
+    "icsCode" : "1001233",
+    "id" : "910GPCKHMQD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GPCKHMQD",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.473566,
+      "lon" : -0.057313
+    },
+    "name" : "Queens Road Peckham"
   },
   {
     "icsCode" : "1000185",
@@ -4861,6 +5930,23 @@ let allStationsRawJSON = """
     "name" : "Reading"
   },
   {
+    "icsCode" : "1001238",
+    "id" : "910GRCTRYRD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GRCTRYRD",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.558502,
+      "lon" : -0.068267
+    },
+    "name" : "Rectory Road"
+  },
+  {
     "icsCode" : "1000190",
     "id" : "940GZZLURBG",
     "lineGroups" : [
@@ -4889,8 +5975,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375279,
-      "lon" : -0.106408
+      "lat" : 51.37527,
+      "lon" : -0.10638
     },
     "name" : "Reeves Corner"
   },
@@ -4919,6 +6005,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLURMD",
         "lineIds" : [
           "district"
+        ]
+      },
+      {
+        "atcoCode" : "910GRICHMND",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -4971,6 +6063,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "elizabeth"
         ]
+      },
+      {
+        "atcoCode" : "910GROMFORD",
+        "lineIds" : [
+          "liberty"
+        ]
       }
     ],
     "location" : {
@@ -4978,6 +6076,23 @@ let allStationsRawJSON = """
       "lon" : 0.183237
     },
     "name" : "Romford"
+  },
+  {
+    "icsCode" : "1000195",
+    "id" : "910GRTHERHI",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GRTHERHI",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.500817,
+      "lon" : -0.052048
+    },
+    "name" : "Rotherhithe"
   },
   {
     "icsCode" : "1002070",
@@ -5149,6 +6264,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "victoria"
         ]
+      },
+      {
+        "atcoCode" : "910GSEVNSIS",
+        "lineIds" : [
+          "weaver"
+        ]
       }
     ],
     "location" : {
@@ -5165,6 +6286,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZDLSHA",
         "lineIds" : [
           "dlr"
+        ]
+      },
+      {
+        "atcoCode" : "910GSHADWEL",
+        "lineIds" : [
+          "windrush"
         ]
       }
     ],
@@ -5200,6 +6327,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "central"
         ]
+      },
+      {
+        "atcoCode" : "910GSHPDSB",
+        "lineIds" : [
+          "mildmay"
+        ]
       }
     ],
     "location" : {
@@ -5225,6 +6358,40 @@ let allStationsRawJSON = """
       "lon" : -0.226375
     },
     "name" : "Shepherd's Bush Market"
+  },
+  {
+    "icsCode" : "1001571",
+    "id" : "910GSHRDHST",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSHRDHST",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.523375,
+      "lon" : -0.075246
+    },
+    "name" : "Shoreditch High Street"
+  },
+  {
+    "icsCode" : "1001250",
+    "id" : "910GSIVRST",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSIVRST",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.614688,
+      "lon" : -0.06724
+    },
+    "name" : "Silver Street"
   },
   {
     "icsCode" : "1000206",
@@ -5279,6 +6446,23 @@ let allStationsRawJSON = """
     "name" : "Snaresbrook"
   },
   {
+    "icsCode" : "1001254",
+    "id" : "910GSACTON",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSACTON",
+        "lineIds" : [
+          "mildmay"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.499695,
+      "lon" : -0.270157
+    },
+    "name" : "South Acton"
+  },
+  {
     "icsCode" : "1000208",
     "id" : "940GZZLUSEA",
     "lineGroups" : [
@@ -5294,6 +6478,23 @@ let allStationsRawJSON = """
       "lon" : -0.307424
     },
     "name" : "South Ealing"
+  },
+  {
+    "icsCode" : "1001260",
+    "id" : "910GSHMPSTD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSHMPSTD",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.541432,
+      "lon" : -0.178878
+    },
+    "name" : "South Hampstead"
   },
   {
     "icsCode" : "1000211",
@@ -5345,6 +6546,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "bakerloo"
         ]
+      },
+      {
+        "atcoCode" : "910GSKENTON",
+        "lineIds" : [
+          "lioness"
+        ]
       }
     ],
     "location" : {
@@ -5386,6 +6593,23 @@ let allStationsRawJSON = """
       "lon" : -0.398915
     },
     "name" : "South Ruislip"
+  },
+  {
+    "icsCode" : "1001264",
+    "id" : "910GSTOTNHM",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSTOTNHM",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.580372,
+      "lon" : -0.072103
+    },
+    "name" : "South Tottenham"
   },
   {
     "icsCode" : "1000216",
@@ -5439,6 +6663,23 @@ let allStationsRawJSON = """
     "name" : "Southall"
   },
   {
+    "icsCode" : "1001257",
+    "id" : "910GSBURY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSBURY",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.648705,
+      "lon" : -0.052437
+    },
+    "name" : "Southbury"
+  },
+  {
     "icsCode" : "1000209",
     "id" : "940GZZLUSFS",
     "lineGroups" : [
@@ -5488,6 +6729,23 @@ let allStationsRawJSON = """
       "lon" : -0.105331
     },
     "name" : "Southwark"
+  },
+  {
+    "icsCode" : "1001268",
+    "id" : "910GSTJMSST",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSTJMSST",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.580981,
+      "lon" : -0.032918
+    },
+    "name" : "St James Street (London)"
   },
   {
     "icsCode" : "1000221",
@@ -5557,6 +6815,23 @@ let allStationsRawJSON = """
       "lon" : -0.245704
     },
     "name" : "Stamford Brook"
+  },
+  {
+    "icsCode" : "1001265",
+    "id" : "910GSTMFDHL",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSTMFDHL",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.574467,
+      "lon" : -0.076682
+    },
+    "name" : "Stamford Hill"
   },
   {
     "icsCode" : "1000219",
@@ -5634,6 +6909,23 @@ let allStationsRawJSON = """
     "name" : "Stockwell"
   },
   {
+    "icsCode" : "1001273",
+    "id" : "910GSTKNWNG",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSTKNWNG",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.565233,
+      "lon" : -0.072887
+    },
+    "name" : "Stoke Newington"
+  },
+  {
     "icsCode" : "1000224",
     "id" : "HUBSBP",
     "lineGroups" : [
@@ -5641,6 +6933,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUSGP",
         "lineIds" : [
           "bakerloo"
+        ]
+      },
+      {
+        "atcoCode" : "910GSTNBGPK",
+        "lineIds" : [
+          "lioness"
         ]
       }
     ],
@@ -5676,6 +6974,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUSTD",
         "lineIds" : [
           "jubilee"
+        ]
+      },
+      {
+        "atcoCode" : "910GSTFD",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -5754,6 +7058,23 @@ let allStationsRawJSON = """
     "name" : "Sudbury Town"
   },
   {
+    "icsCode" : "1000229",
+    "id" : "910GSURREYQ",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSURREYQ",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.493196,
+      "lon" : -0.047519
+    },
+    "name" : "Surrey Quays"
+  },
+  {
     "icsCode" : "1000230",
     "id" : "940GZZLUSWC",
     "lineGroups" : [
@@ -5769,6 +7090,23 @@ let allStationsRawJSON = """
       "lon" : -0.174894
     },
     "name" : "Swiss Cottage"
+  },
+  {
+    "icsCode" : "1001289",
+    "id" : "HUBSYD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GSYDENHM",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.427248,
+      "lon" : -0.054244
+    },
+    "name" : "Sydenham"
   },
   {
     "icsCode" : "1000960",
@@ -5804,6 +7142,23 @@ let allStationsRawJSON = """
       "lon" : -0.11426
     },
     "name" : "Temple"
+  },
+  {
+    "icsCode" : "1001533",
+    "id" : "910GTHBLDSG",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GTHBLDSG",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.692457,
+      "lon" : -0.034831
+    },
+    "name" : "Theobalds Grove"
   },
   {
     "icsCode" : "1002075",
@@ -5989,6 +7344,23 @@ let allStationsRawJSON = """
     "name" : "Tufnell Park"
   },
   {
+    "icsCode" : "1001299",
+    "id" : "910GTURKYST",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GTURKYST",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.672628,
+      "lon" : -0.047217
+    },
+    "name" : "Turkey Street"
+  },
+  {
     "icsCode" : "1000240",
     "id" : "940GZZLUTNG",
     "lineGroups" : [
@@ -5996,13 +7368,6 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUTNG",
         "lineIds" : [
           "district"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUTNG",
-        "lineIds" : [
-          "district",
-          "piccadilly"
         ]
       },
       {
@@ -6061,6 +7426,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "district"
         ]
+      },
+      {
+        "atcoCode" : "910GUPMNSTR",
+        "lineIds" : [
+          "liberty"
+        ]
       }
     ],
     "location" : {
@@ -6102,6 +7473,23 @@ let allStationsRawJSON = """
       "lon" : 0.10153
     },
     "name" : "Upney"
+  },
+  {
+    "icsCode" : "1001302",
+    "id" : "910GUPRHLWY",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GUPRHLWY",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.563631,
+      "lon" : -0.129513
+    },
+    "name" : "Upper Holloway"
   },
   {
     "icsCode" : "1000245",
@@ -6206,6 +7594,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "victoria"
         ]
+      },
+      {
+        "atcoCode" : "910GWLTWCEN",
+        "lineIds" : [
+          "weaver"
+        ]
       }
     ],
     "location" : {
@@ -6213,6 +7607,23 @@ let allStationsRawJSON = """
       "lon" : -0.019885
     },
     "name" : "Walthamstow Central"
+  },
+  {
+    "icsCode" : "1001308",
+    "id" : "910GWLTHQRD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWLTHQRD",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.581503,
+      "lon" : -0.023846
+    },
+    "name" : "Walthamstow Queens Road"
   },
   {
     "icsCode" : "1002079",
@@ -6232,6 +7643,23 @@ let allStationsRawJSON = """
     "name" : "Wandle Park"
   },
   {
+    "icsCode" : "1001310",
+    "id" : "910GWNDSWRD",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWNDSWRD",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.470216,
+      "lon" : -0.13852
+    },
+    "name" : "Wandsworth Road"
+  },
+  {
     "icsCode" : "1000250",
     "id" : "940GZZLUWSD",
     "lineGroups" : [
@@ -6247,6 +7675,40 @@ let allStationsRawJSON = """
       "lon" : 0.028527
     },
     "name" : "Wanstead"
+  },
+  {
+    "icsCode" : "1001312",
+    "id" : "910GWNSTDPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWNSTDPK",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.551693,
+      "lon" : 0.026213
+    },
+    "name" : "Wanstead Park"
+  },
+  {
+    "icsCode" : "1000251",
+    "id" : "910GWAPPING",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWAPPING",
+        "lineIds" : [
+          "windrush"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.504388,
+      "lon" : -0.055931
+    },
+    "name" : "Wapping"
   },
   {
     "icsCode" : "1000252",
@@ -6341,6 +7803,40 @@ let allStationsRawJSON = """
     "name" : "Watford"
   },
   {
+    "icsCode" : "1001316",
+    "id" : "910GWATFDHS",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWATFDHS",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.652655,
+      "lon" : -0.391711
+    },
+    "name" : "Watford High Street"
+  },
+  {
+    "icsCode" : "1001317",
+    "id" : "HUBWFJ",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWATFJDC",
+        "lineIds" : [
+          "lioness"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.663529,
+      "lon" : -0.396517
+    },
+    "name" : "Watford Junction"
+  },
+  {
     "icsCode" : "1002081",
     "id" : "940GZZCRWEL",
     "lineGroups" : [
@@ -6352,8 +7848,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.37537,
-      "lon" : -0.097554
+      "lat" : 51.375369,
+      "lon" : -0.097539
     },
     "name" : "Wellesley Road"
   },
@@ -6365,6 +7861,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUWYC",
         "lineIds" : [
           "bakerloo"
+        ]
+      },
+      {
+        "atcoCode" : "910GWMBY",
+        "lineIds" : [
+          "lioness"
         ]
       }
     ],
@@ -6423,6 +7925,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "district"
         ]
+      },
+      {
+        "atcoCode" : "910GWBRMPTN",
+        "lineIds" : [
+          "mildmay"
+        ]
       }
     ],
     "location" : {
@@ -6439,6 +7947,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZCRWCR",
         "lineIds" : [
           "tram"
+        ]
+      },
+      {
+        "atcoCode" : "910GWCROYDN",
+        "lineIds" : [
+          "windrush"
         ]
       }
     ],
@@ -6537,6 +8051,12 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUWHP",
         "lineIds" : [
           "jubilee"
+        ]
+      },
+      {
+        "atcoCode" : "910GWHMDSTD",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -6708,6 +8228,23 @@ let allStationsRawJSON = """
     "name" : "White City"
   },
   {
+    "icsCode" : "1001335",
+    "id" : "910GWHHRTLA",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWHHRTLA",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.605037,
+      "lon" : -0.070914
+    },
+    "name" : "White Hart Lane"
+  },
+  {
     "icsCode" : "1000268",
     "id" : "HUBZWL",
     "lineGroups" : [
@@ -6722,6 +8259,12 @@ let allStationsRawJSON = """
         "atcoCode" : "910GWCHAPXR",
         "lineIds" : [
           "elizabeth"
+        ]
+      },
+      {
+        "atcoCode" : "910GWCHAPEL",
+        "lineIds" : [
+          "windrush"
         ]
       }
     ],
@@ -6740,12 +8283,6 @@ let allStationsRawJSON = """
         "lineIds" : [
           "jubilee"
         ]
-      },
-      {
-        "atcoCode" : "940GZZLUWIG",
-        "lineIds" : [
-          "metropolitan"
-        ]
       }
     ],
     "location" : {
@@ -6762,6 +8299,18 @@ let allStationsRawJSON = """
         "atcoCode" : "940GZZLUWJN",
         "lineIds" : [
           "bakerloo"
+        ]
+      },
+      {
+        "atcoCode" : "910GWLSDJHL",
+        "lineIds" : [
+          "lioness"
+        ]
+      },
+      {
+        "atcoCode" : "910GWLSDJHL",
+        "lineIds" : [
+          "mildmay"
         ]
       }
     ],
@@ -6847,6 +8396,23 @@ let allStationsRawJSON = """
     "name" : "Wood Lane"
   },
   {
+    "icsCode" : "1001343",
+    "id" : "910GWDST",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWDST",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.58658,
+      "lon" : -0.002405
+    },
+    "name" : "Wood Street"
+  },
+  {
     "icsCode" : "1000274",
     "id" : "940GZZLUWOF",
     "lineGroups" : [
@@ -6862,6 +8428,23 @@ let allStationsRawJSON = """
       "lon" : 0.03397
     },
     "name" : "Woodford"
+  },
+  {
+    "icsCode" : "1001341",
+    "id" : "910GWDGRNPK",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GWDGRNPK",
+        "lineIds" : [
+          "suffragette"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.549264,
+      "lon" : 0.044423
+    },
+    "name" : "Woodgrange Park"
   },
   {
     "icsCode" : "1002086",
@@ -6909,8 +8492,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.491851,
-      "lon" : 0.070737
+      "lat" : 51.49119,
+      "lon" : 0.07072
     },
     "name" : "Woolwich"
   },
@@ -6932,4 +8515,5 @@ let allStationsRawJSON = """
     "name" : "Woolwich Arsenal"
   }
 ]
+
 """
