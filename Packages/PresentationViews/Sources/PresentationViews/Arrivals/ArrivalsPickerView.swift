@@ -50,7 +50,9 @@ public struct ArrivalsPickerView: View {
             }
             .textCase(nil)
         }
+        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
+        .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
     
@@ -75,6 +77,12 @@ public struct ArrivalsPickerView: View {
             }
         } header: {
             header
+                .frame(maxWidth: .infinity,
+                       maxHeight: .infinity, alignment: .leading)
+                .padding(.vertical, 8)
+                .padding(.horizontal)
+                .listRowInsets(.zero)
+                .background(Color.defaultBackground)
         }
         .lineGroupListRowStyle()
     }

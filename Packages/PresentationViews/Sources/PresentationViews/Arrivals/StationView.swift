@@ -44,13 +44,14 @@ public struct StationView: View {
                 liveArrivalsSection
             }
             .listRowBackground(Color.defaultCellBackground)
-            .textCase(nil)
+            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             
         }
+        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .withDefaultMaxWidth()
-        .frame(maxWidth: .infinity)
         .background(Color.defaultBackground)
+        .withHardScrollEdgeEffectStyle()
     }
     
     
@@ -60,21 +61,27 @@ public struct StationView: View {
         Section {
             StationMapView(station: station)
                 .frame(height: 200)
-                .listRowInsets(.zero)
             if let mapURL {
                 Link(destination: mapURL) {
                     Text(.stationLocationShowInMapsButtonTitle)
                 }
+                .foregroundStyle(.link)
+                .padding(.horizontal)
             }
             if let directionsURL {
                 Link(destination: directionsURL) {
                     Text(.stationLocationDirectionsButtonTitle)
                 }
+                .foregroundStyle(.link)
+                .padding(.horizontal)
             }
         } header: {
             Text(.stationLocationSectionHeaderTitle)
-                .listRowInsets(.zero)
+                .sectionHeaderStyle()
+
+            
         }
+        .listRowInsets(.zero)
     }
     
     
@@ -98,6 +105,10 @@ public struct StationView: View {
             ForEach(statusCells, id: \.self) { cellStyle in
                 if case let .singleLine(line, _) = cellStyle {
                     LineStatusCell(style: cellStyle, showsAccessory: true)
+                        .cardStyle(cornerRadius: 8)
+                        .frame(minHeight: 52)
+                        .padding(.horizontal)
+                        .padding(.bottom, 8)
                         .overlay {
                             NavigationLink(value: Selection.line(line)) {
                                 EmptyView()
@@ -105,10 +116,13 @@ public struct StationView: View {
                         }
                 }
             }
-            .listRowInsets(.zero)
         } header: {
             statusSectionHeader
+                .sectionHeaderStyle()
         }
+        .listRowInsets(.zero)
+        .listRowBackground(Color.defaultBackground)
+        .listRowSeparator(.hidden)
     }
     
     private var statusSectionHeader: some View {
@@ -119,7 +133,6 @@ public struct StationView: View {
                 .font(.footnote)
                 .foregroundStyle(Color.adaptiveMidGrey2)
         }
-        .listRowInsets(.zero)
     }
     
     
@@ -132,15 +145,28 @@ public struct StationView: View {
                     LineGroupCell(style: .plain,
                                   lineIDs: lineGroup.lineIds.sortedByName(),
                                   title: lineGroup.name)
+                    .frame(minHeight: 44)
                 }
             }
-            .listRowInsets(.init(top: 12, leading: 16, bottom: 12, trailing: 16))
         } header: {
             Text(.stationArrivalsSectionHeaderTitle)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .sectionHeaderStyle()
         }
         
 
+    }
+}
+
+private extension View {
+    func sectionHeaderStyle() -> some View {
+        self
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .leading)
+            .padding(.vertical, 8)
+            .padding(.horizontal)
+            .listRowInsets(.zero)
+            .background(Color.defaultBackground)
     }
 }
 
