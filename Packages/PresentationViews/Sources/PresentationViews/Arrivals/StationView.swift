@@ -43,8 +43,8 @@ public struct StationView: View {
                 lineStatusSection
                 liveArrivalsSection
             }
-            .listRowBackground(Color.defaultCellBackground)
-            .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
+            .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
+            .listRowBackground(Color.clear)
             
         }
         .listStyle(.plain)
@@ -59,29 +59,25 @@ public struct StationView: View {
     
     private var locationSection: some View {
         Section {
-            StationMapView(station: station)
-                .frame(height: 200)
-            if let mapURL {
-                Link(destination: mapURL) {
-                    Text(.stationLocationShowInMapsButtonTitle)
+                StationMapView(station: station)
+                    .frame(height: 200)
+                if let mapURL {
+                    Link(destination: mapURL) {
+                        Text(.stationLocationShowInMapsButtonTitle)
+                    }
+                    .foregroundStyle(.link)
                 }
-                .foregroundStyle(.link)
-                .padding(.horizontal)
-            }
-            if let directionsURL {
-                Link(destination: directionsURL) {
-                    Text(.stationLocationDirectionsButtonTitle)
+                if let directionsURL {
+                    Link(destination: directionsURL) {
+                        Text(.stationLocationDirectionsButtonTitle)
+                    }
+                    .foregroundStyle(.link)
                 }
-                .foregroundStyle(.link)
-                .padding(.horizontal)
-            }
         } header: {
             Text(.stationLocationSectionHeaderTitle)
-                .sectionHeaderStyle()
-
-            
         }
-        .listRowInsets(.zero)
+        .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
+        .listRowBackground(Color.defaultCellBackground)
     }
     
     
@@ -107,8 +103,6 @@ public struct StationView: View {
                     LineStatusCell(style: cellStyle, showsAccessory: true)
                         .cardStyle(cornerRadius: 8)
                         .frame(minHeight: 52)
-                        .padding(.horizontal)
-                        .padding(.bottom, 8)
                         .overlay {
                             NavigationLink(value: Selection.line(line)) {
                                 EmptyView()
@@ -118,10 +112,7 @@ public struct StationView: View {
             }
         } header: {
             statusSectionHeader
-                .sectionHeaderStyle()
         }
-        .listRowInsets(.zero)
-        .listRowBackground(Color.defaultBackground)
         .listRowSeparator(.hidden)
     }
     
@@ -150,23 +141,8 @@ public struct StationView: View {
             }
         } header: {
             Text(.stationArrivalsSectionHeaderTitle)
-                .sectionHeaderStyle()
         }
-        
-
-    }
-}
-
-private extension View {
-    func sectionHeaderStyle() -> some View {
-        self
-            .frame(maxWidth: .infinity,
-                   maxHeight: .infinity,
-                   alignment: .leading)
-            .padding(.vertical, 8)
-            .padding(.horizontal)
-            .listRowInsets(.zero)
-            .background(Color.defaultBackground)
+        .lineGroupListRowStyle()
     }
 }
 

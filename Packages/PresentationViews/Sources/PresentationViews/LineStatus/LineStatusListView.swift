@@ -42,7 +42,7 @@ public struct LineStatusListView: View {
             } header: {
                 stickyHeader
             }
-            .listRowInsets(.zero)
+            .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
@@ -82,8 +82,6 @@ public struct LineStatusListView: View {
             )
             .cardStyle(cornerRadius: 8)
             .frame(minHeight: 52)
-            .padding(.horizontal)
-            .padding(.bottom, 8)
 
         }
         .buttonStyle(.borderless)
@@ -116,18 +114,18 @@ public struct LineStatusListView: View {
         return selectedDate >= startOfTomorrow
     }
     
-   @ViewBuilder
+    @ViewBuilder
     private var stickyHeader: some View {
         if #available(iOS 26.0, *) {
             headerContent
+                .padding()
                 .glassEffect(
                     .regular,
-                    in: .rect(cornerRadius: 12)
+                    in: .rect(cornerRadius: 8)
                 )
-                .padding(.horizontal)
-                .padding(.bottom)
         } else {
             headerContent
+                .padding(.vertical, 4)
                 .background(Color.defaultBackground)
         }
     }
@@ -140,8 +138,6 @@ public struct LineStatusListView: View {
             datePickerView
         }
         .foregroundStyle(.foreground)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
     }
     
     private var filterOptionsPicker: some View {
@@ -243,7 +239,6 @@ public struct LineStatusListView: View {
         )
         .cardStyle(cornerRadius: 8)
         .frame(minHeight: 52)
-        .padding(.horizontal)
         .padding(.top, hasFavouritesOrDisruptions ? 12 : 0)
     }
 }
@@ -289,7 +284,6 @@ private extension LineStatusFilterOption {
         }
     }
 }
-
 
 // MARK: - Previews
 
