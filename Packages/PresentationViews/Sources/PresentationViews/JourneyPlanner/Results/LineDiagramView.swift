@@ -80,15 +80,10 @@ private extension Journey {
                     isShowingAllStops: expandedStopJourneyItemIDs.contains(.init(journeyID: journeyID, legID: legID))
                 )
                 
-                let nextLeg = legIfExists(at: legIndex + 1)
-                let isFinalVisibleLeg = nextLeg == legs?.last && nextLeg?.isWalkToEntranceOrExit == true
-
                 let horizontalItemsConfig = JourneyLeg.HorizontalItemsConfig(
                     journeyID: journeyID,
                     legID: legID,
-                    isLastLeg: isLastLeg,
-                    isFirstLeg: legs?.first == leg,
-                    isFinalVisibleLeg: isFinalVisibleLeg
+                    isLastLeg: isLastLeg
                 )
                 
                 
@@ -125,8 +120,6 @@ private extension JourneyLeg {
         let journeyID: LineDiagramItem.JourneyID
         let legID: LineDiagramItem.JourneyLegID
         let isLastLeg: Bool
-        let isFirstLeg: Bool
-        let isFinalVisibleLeg: Bool
     }
     
     func diagramItems(
@@ -169,25 +162,14 @@ private extension JourneyLeg {
         
         let journeyID = config.journeyID
         let legID = config.legID
-        let isFirstLeg = config.isFirstLeg
         let isLastLeg = config.isLastLeg
-        let isFinalVisibleLeg = config.isFinalVisibleLeg
-        
-        let skipThisItem = (isFirstLeg || isLastLeg) && isWalkToEntranceOrExit
-        guard !skipThisItem else {
-            return []
-        }
-        
+                
         var items = [LineDiagramItem]()
         
         items.append(departureStopPointItem(forJourneyID: journeyID,
                                             legID: legID,
-                                            showsTrailingLine: !isFinalVisibleLeg))
-        
-        if isLastLeg {
-            items.append(arrivalStopPointItem(forJourneyID: journeyID, legID: legID))
-        }
-        
+                                            showsTrailingLine: !isLastLeg))
+                
         return items
     }
     

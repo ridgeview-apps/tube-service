@@ -28,7 +28,7 @@ public struct JourneyRequestParams: Sendable {
                 via: JourneyLocation?,
                 modeIDs: Set<ModeID>,
                 timeOption: TimeOption?,
-                routeBetweenEntrances: Bool = true) {
+                routeBetweenEntrances: Bool = false) {
         self.from = from
         self.to = to
         self.via = via
