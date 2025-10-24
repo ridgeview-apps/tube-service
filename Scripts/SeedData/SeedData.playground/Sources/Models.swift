@@ -234,6 +234,13 @@ extension Station {
                 ($0.lineIds == ["elizabeth"] && $0.atcoCode == "910GLIVSTLL")
             }
             return patchedStation
+        case "HUBHHY":
+            // ArrivalDepartures don't give the line ID in each departure item, so it's impossible to tell them apart
+            var patchedStation = self
+            patchedStation.lineGroups.removeAll {
+                $0.lineIds.contains("mildmay") && $0.lineIds.contains("windrush")
+            }
+            return patchedStation
         default:
             return self
         }

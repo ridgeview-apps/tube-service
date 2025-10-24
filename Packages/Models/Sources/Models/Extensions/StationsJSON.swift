@@ -106,8 +106,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.356599,
-      "lon" : -0.032607
+      "lat" : 51.356241,
+      "lon" : -0.032694
     },
     "name" : "Addington Village"
   },
@@ -300,8 +300,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.391525,
-      "lon" : -0.058347
+      "lat" : 51.391362,
+      "lon" : -0.058297
     },
     "name" : "Arena"
   },
@@ -351,8 +351,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.4068,
-      "lon" : -0.049476
+      "lat" : 51.407037,
+      "lon" : -0.049092
     },
     "name" : "Avenue Road"
   },
@@ -705,8 +705,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.399722,
-      "lon" : -0.180256
+      "lat" : 51.40133,
+      "lon" : -0.177806
     },
     "name" : "Belgrave Walk"
   },
@@ -745,23 +745,6 @@ let allStationsRawJSON = """
     "name" : "Bermondsey"
   },
   {
-    "icsCode" : "1000022",
-    "id" : "940GZZLUBLG",
-    "lineGroups" : [
-      {
-        "atcoCode" : "940GZZLUBLG",
-        "lineIds" : [
-          "central"
-        ]
-      }
-    ],
-    "location" : {
-      "lat" : 51.527222,
-      "lon" : -0.055506
-    },
-    "name" : "Bethnal Green"
-  },
-  {
     "icsCode" : "1001023",
     "id" : "910GBTHNLGR",
     "lineGroups" : [
@@ -775,6 +758,23 @@ let allStationsRawJSON = """
     "location" : {
       "lat" : 51.523917,
       "lon" : -0.059568
+    },
+    "name" : "Bethnal Green"
+  },
+  {
+    "icsCode" : "1000022",
+    "id" : "940GZZLUBLG",
+    "lineGroups" : [
+      {
+        "atcoCode" : "940GZZLUBLG",
+        "lineIds" : [
+          "central"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.527222,
+      "lon" : -0.055506
     },
     "name" : "Bethnal Green"
   },
@@ -3690,13 +3690,6 @@ let allStationsRawJSON = """
         ]
       },
       {
-        "atcoCode" : "910GHGHI",
-        "lineIds" : [
-          "mildmay",
-          "windrush"
-        ]
-      },
-      {
         "atcoCode" : "940GZZLUHAI",
         "lineIds" : [
           "victoria"
@@ -4461,8 +4454,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375201,
-      "lon" : -0.085002
+      "lat" : 51.375075,
+      "lon" : -0.084418
     },
     "name" : "Lebanon Road"
   },
@@ -4863,8 +4856,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.413589,
-      "lon" : -0.201219
+      "lat" : 51.414797,
+      "lon" : -0.201431
     },
     "name" : "Merton Park"
   },
@@ -5975,8 +5968,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.37527,
-      "lon" : -0.10638
+      "lat" : 51.375279,
+      "lon" : -0.106408
     },
     "name" : "Reeves Corner"
   },
@@ -7172,8 +7165,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.385296,
-      "lon" : -0.128702
+      "lat" : 51.385697,
+      "lon" : -0.129045
     },
     "name" : "Therapia Lane"
   },
@@ -7637,8 +7630,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.373022,
-      "lon" : -0.113082
+      "lat" : 51.373403,
+      "lon" : -0.113282
     },
     "name" : "Wandle Park"
   },
@@ -8458,8 +8451,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.38732,
-      "lon" : -0.064576
+      "lat" : 51.3871,
+      "lon" : -0.065361
     },
     "name" : "Woodside"
   },
@@ -8515,5 +8508,4 @@ let allStationsRawJSON = """
     "name" : "Woolwich Arsenal"
   }
 ]
-
 """
