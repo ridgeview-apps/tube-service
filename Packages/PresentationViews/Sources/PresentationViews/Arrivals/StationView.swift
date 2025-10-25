@@ -43,11 +43,8 @@ public struct StationView: View {
                 lineStatusSection
                 liveArrivalsSection
             }
-            .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
-            .listRowBackground(Color.clear)
-            
+            .lineGroupListRowStyle()
         }
-        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .withDefaultMaxWidth()
         .background(Color.defaultBackground)
@@ -59,25 +56,25 @@ public struct StationView: View {
     
     private var locationSection: some View {
         Section {
-                StationMapView(station: station)
-                    .frame(height: 200)
-                if let mapURL {
-                    Link(destination: mapURL) {
-                        Text(.stationLocationShowInMapsButtonTitle)
-                    }
-                    .foregroundStyle(.link)
+            StationMapView(station: station)
+                .frame(height: 200)
+                .listRowInsets(.zero)
+            if let mapURL {
+                Link(destination: mapURL) {
+                    Text(.stationLocationShowInMapsButtonTitle)
                 }
-                if let directionsURL {
-                    Link(destination: directionsURL) {
-                        Text(.stationLocationDirectionsButtonTitle)
-                    }
-                    .foregroundStyle(.link)
+                .foregroundStyle(.link)
+            }
+            if let directionsURL {
+                Link(destination: directionsURL) {
+                    Text(.stationLocationDirectionsButtonTitle)
                 }
+                .foregroundStyle(.link)
+            }
         } header: {
             Text(.stationLocationSectionHeaderTitle)
         }
-        .listRowInsets(.init(top: 0, leading: 16, bottom: 0, trailing: 16))
-        .listRowBackground(Color.defaultCellBackground)
+        
     }
     
     
@@ -87,6 +84,7 @@ public struct StationView: View {
         if !disruptionMessages.isEmpty {
             Section {
                 DisruptionsCell(disruptionMessages: disruptionMessages)
+                    .frame(minHeight: 52)
             } header: {
                 Text(.stationDisruptionsSectionHeaderTitle)
             }
@@ -101,8 +99,7 @@ public struct StationView: View {
             ForEach(statusCells, id: \.self) { cellStyle in
                 if case let .singleLine(line, _) = cellStyle {
                     LineStatusCell(style: cellStyle, showsAccessory: true)
-                        .cardStyle(cornerRadius: 8)
-                        .frame(minHeight: 52)
+                        .frame(minHeight: 60)
                         .overlay {
                             NavigationLink(value: Selection.line(line)) {
                                 EmptyView()
@@ -113,7 +110,7 @@ public struct StationView: View {
         } header: {
             statusSectionHeader
         }
-        .listRowSeparator(.hidden)
+        .listRowInsets(.zero)
     }
     
     private var statusSectionHeader: some View {
@@ -136,13 +133,12 @@ public struct StationView: View {
                     LineGroupCell(style: .plain,
                                   lineIDs: lineGroup.lineIds.sortedByName(),
                                   title: lineGroup.name)
-                    .frame(minHeight: 44)
+                    .frame(minHeight: 52)
                 }
             }
         } header: {
             Text(.stationArrivalsSectionHeaderTitle)
         }
-        .lineGroupListRowStyle()
     }
 }
 

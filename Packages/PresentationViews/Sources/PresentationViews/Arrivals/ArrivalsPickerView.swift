@@ -49,7 +49,6 @@ public struct ArrivalsPickerView: View {
                 allStationsSection
             }
         }
-        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
@@ -93,8 +92,6 @@ public struct ArrivalsPickerView: View {
 
 private struct ArrivalsPickerExpandableCell: View {
     
-    @ScaledMetric private var dynamicTextScale: CGFloat = 1
-    
     let style: LineGroupCell.Style
     let station: Station
     
@@ -120,7 +117,7 @@ private struct ArrivalsPickerExpandableCell: View {
                 .tint(.clear)
             }
         }
-        .frame(minHeight: 44 * dynamicTextScale)
+        .frame(minHeight: 52)
     }
     
     

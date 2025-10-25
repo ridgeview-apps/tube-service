@@ -10,7 +10,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .withDefaultMaxWidth()
             .background(.blue.opacity(isEnabled ? 1 : 0.4))
             .foregroundColor(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .clipShape(.capsule)
             .opacity(configuration.isPressed ? 0.5 : 1)
             .scaleEffect(configuration.isPressed ? 0.97 : 1)
             .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
