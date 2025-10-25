@@ -81,7 +81,7 @@ public struct LineStatusListView: View {
                 showsAccessory: true
             )
             .cardStyle(cornerRadius: 8)
-            .frame(minHeight: 60)
+            .frame(minHeight: 52)
 
         }
         .buttonStyle(.borderless)
