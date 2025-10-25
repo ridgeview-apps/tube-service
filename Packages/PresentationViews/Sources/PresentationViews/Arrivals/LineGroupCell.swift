@@ -4,7 +4,6 @@ import SwiftUI
 extension View {
     func lineGroupListRowStyle(backgroundColor: Color = .defaultCellBackground) -> some View {
         self
-            .listRowSeparator(.visible, edges: .bottom)
             .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
             .listRowBackground(backgroundColor)
     }
