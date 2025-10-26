@@ -24,17 +24,47 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     }
     let id: String
     let numberLabel: NumberLabel
-    let destinationType: ArrivalsBoardDestinationType
-    let secondsToArrival: Int?
-    let subtitleType: ArrivalsBoardSubtitleType?
+    let topLeadingTextItem: ArrivalsBoardTextItem
+    let topTrailingTextItem: ArrivalsBoardTextItem
+    let bottomLeadingTextItem: ArrivalsBoardTextItem?
+    let bottomTrailingTextItem: ArrivalsBoardTextItem?
 }
 
 enum ArrivalsBoardDestinationType: Sendable {
-    case destination(String)
+    case known(String)
     case checkFrontOfTrain
 }
 
 enum ArrivalsBoardSubtitleType: Sendable {
     case currentLocationName(String)
     case depatureTime(String)
+}
+
+enum ArrivalsBoardTextItem {
+    enum DepartureStatus {
+        case onTime
+        case delayed
+        case cancelled
+        case notStopping
+        
+        var localized: LocalizedStringResource {
+            switch self {
+            case .onTime:
+                .arrivalsBoardDepartureStatusOnTime
+            case .delayed:
+                .arrivalsBoardDepartureStatusDelayed
+            case .cancelled:
+                .arrivalsBoardDepartureStatusCancelled
+            case .notStopping:
+                .arrivalsBoardDepartureStatusNotStopping
+            }
+        }
+    }
+    
+    case destinationType(ArrivalsBoardDestinationType)
+    case countdownSeconds(Int?)
+    case scheduledDepartureTime(String)
+    case currentPosition(String)
+    case departureStatus(DepartureStatus) // On Time / Delayed / Cancelled / Not stopping
+    case estimatedDepartureTime(String)
 }

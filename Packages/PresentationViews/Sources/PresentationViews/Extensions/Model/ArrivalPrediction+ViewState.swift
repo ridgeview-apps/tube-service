@@ -9,9 +9,9 @@ extension ArrivalPrediction {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        var subtitleType: ArrivalsBoardSubtitleType?
+        var bottomLeadingTextItem: ArrivalsBoardTextItem?
         if let currentLocation {
-            subtitleType = .currentLocationName(currentLocation)
+            bottomLeadingTextItem = .currentPosition(currentLocation)
         }
         
         return .init(id: cellID,
@@ -19,9 +19,10 @@ extension ArrivalPrediction {
                                         backgroundColor: lineID.backgroundColor,
                                         textColor: lineID.textColor,
                                         textShadow: lineID.textShadow),
-                     destinationType: destinationType,
-                     secondsToArrival: timeToStation,
-                     subtitleType: subtitleType)
+                     topLeadingTextItem: .destinationType(destinationType),
+                     topTrailingTextItem: .countdownSeconds(timeToStation),
+                     bottomLeadingTextItem: bottomLeadingTextItem,
+                     bottomTrailingTextItem: nil)
 
     }
     
@@ -36,9 +37,9 @@ extension ArrivalPrediction {
         if terminatesHere {
             return .checkFrontOfTrain
         } else if let towards, !towards.isEmpty {
-            return .destination(towards)
+            return .known(towards)
         } else if let destinationName, !destinationName.isEmpty {
-            return .destination(destinationName)
+            return .known(destinationName)
         } else {
             return .checkFrontOfTrain
         }

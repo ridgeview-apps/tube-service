@@ -125,21 +125,31 @@ struct ArrivalsBoardView: View {
             }
             .roundedBorder(.white)
             VStack(alignment: .leading, spacing: 6) {
-                HStack(alignment: .top) {
-                    destinationText(for: cellItem.destinationType)
-                    Spacer()
-                    if let secondsToArrival = cellItem.secondsToArrival {
-                        arrivalTimeText(for: secondsToArrival)
-                    }
-                }
-                .font(.headline)
-                .foregroundColor(boardTextColor)
-                if let subtitleType = cellItem.subtitleType {
-                    subtitleText(for: subtitleType)
-                }
+                topText(for: cellItem)
+                bottomText(for: cellItem)
             }
         }
         .id(cellItem.id)
+    }
+    
+    @ViewBuilder
+    private func cellTextItem(for itemType: ArrivalsBoardTextItem) -> some View {
+        switch itemType {
+        case .destinationType(let arrivalsBoardDestinationType):
+            destinationText(for: arrivalsBoardDestinationType)
+        case .countdownSeconds(let seconds):
+            if let seconds {
+                arrivalTimeText(for: seconds)
+            }
+        case .scheduledDepartureTime(let departureTime):
+            Text(departureTime)
+        case .currentPosition(let locationName):
+            Text(locationName)
+        case .departureStatus(let status):
+            Text(status.localized)
+        case .estimatedDepartureTime(let departureTime):
+            Text(departureTime)
+        }
     }
     
     private var boardTextColor: Color { .rgb(198, 188, 61) }
@@ -169,20 +179,31 @@ struct ArrivalsBoardView: View {
     
     @ViewBuilder private func destinationText(for destinationType: ArrivalsBoardDestinationType) -> some View {
         switch destinationType {
-        case let .destination(name):
+        case let .known(name):
             Text(name)
         case .checkFrontOfTrain:
             Text(.arrivalsCheckFrontOfTrain)
         }
     }
     
-    private func subtitleText(for subtitleType: ArrivalsBoardSubtitleType) -> some View {
-        Group {
-            switch subtitleType {
-            case let .currentLocationName(name):
-                Text(name)
-            case let .depatureTime(time):
-                Text(.arrivalsBoardDepartsAt(time))
+    private func topText(for cellItem: ArrivalsBoardCellItem) -> some View {
+        HStack(alignment: .top) {
+            cellTextItem(for: cellItem.topLeadingTextItem)
+            Spacer()
+            cellTextItem(for: cellItem.topTrailingTextItem)
+        }
+        .font(.headline)
+        .foregroundColor(boardTextColor)
+    }
+    
+    private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
+        HStack {
+            if let bottomLeadingTextItem = cellItem.bottomLeadingTextItem {
+                cellTextItem(for: bottomLeadingTextItem)
+            }
+            Spacer()
+            if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {
+                cellTextItem(for: bottomTrailingTextItem)
             }
         }
         .font(.caption2)

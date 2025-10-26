@@ -32,7 +32,23 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.board.departs.at \(departureTime)")
     }
     
-    static var arrivalsCheckFrontOfTrain: LocalizedStringResource {
+    static var arrivalsBoardDepartureStatusCancelled: LocalizedStringResource {
+        moduleResource("arrivals.board.departure.status.cancelled")
+    }
+    
+    static var arrivalsBoardDepartureStatusDelayed: LocalizedStringResource {
+        moduleResource("arrivals.board.departure.status.delayed")
+    }
+    
+    static var arrivalsBoardDepartureStatusNotStopping:LocalizedStringResource {
+        moduleResource("arrivals.board.departure.status.notStopping")
+    }
+    
+    static var arrivalsBoardDepartureStatusOnTime: LocalizedStringResource {
+        moduleResource("arrivals.board.departure.status.onTime")
+    }
+    
+        static var arrivalsCheckFrontOfTrain: LocalizedStringResource {
         moduleResource("arrivals.check.front.of.train")
     }
     

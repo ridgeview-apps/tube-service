@@ -43,6 +43,25 @@ public struct ArrivalDeparture: Equatable, Codable, Sendable {
         self.minutesAndSecondsToDeparture = minutesAndSecondsToDeparture
         self.departureStatus = departureStatus
     }
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.platformName = try container.decodeIfPresent(String.self, forKey: .platformName)
+        self.destinationName = try container.decodeIfPresent(String.self, forKey: .destinationName)
+        self.naptanId = try container.decodeIfPresent(String.self, forKey: .naptanId)
+        self.stationName = try container.decodeIfPresent(String.self, forKey: .stationName)
+        self.estimatedTimeOfArrival = try container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfArrival)
+        self.scheduledTimeOfArrival = try container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfArrival)
+        self.estimatedTimeOfDeparture = try container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfDeparture)
+        self.scheduledTimeOfDeparture = try container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfDeparture)
+        self.minutesAndSecondsToArrival = try container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToArrival)
+        self.minutesAndSecondsToDeparture = try container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToDeparture)
+        do {
+            self.departureStatus = try container.decodeIfPresent(ArrivalDeparture.DepartureStatus.self, forKey: .departureStatus)
+        } catch {
+            self.departureStatus = nil
+        }
+    }
 }
 
 extension ArrivalDeparture: Identifiable {

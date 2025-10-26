@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -56,6 +53,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Departure Time %@"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.status.cancelled" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.status.delayed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delayed"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.status.notStopping" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not stopping"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.status.onTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On time"
           }
         }
       }

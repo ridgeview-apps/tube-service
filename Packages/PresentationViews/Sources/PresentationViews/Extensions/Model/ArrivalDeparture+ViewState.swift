@@ -8,9 +8,23 @@ extension ArrivalDeparture {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        var subtitleType: ArrivalsBoardSubtitleType?
+        let bottomLeadingTextItem: ArrivalsBoardTextItem?
+        switch departureStatus {
+        case .onTime:
+            bottomLeadingTextItem = .departureStatus(.onTime)
+        case .cancelled:
+            bottomLeadingTextItem = .departureStatus(.cancelled)
+        case .delayed:
+            bottomLeadingTextItem = .departureStatus(.delayed)
+        case .notStoppingHere:
+            bottomLeadingTextItem = .departureStatus(.notStopping)
+        case nil:
+            bottomLeadingTextItem = nil
+        }
+        
+        var bottomTrailingTextItem: ArrivalsBoardTextItem?
         if let scheduledTimeOfDeparture {
-            subtitleType = .depatureTime(ukDateFormatter.string(from: scheduledTimeOfDeparture))
+            bottomTrailingTextItem = .scheduledDepartureTime(ukDateFormatter.string(from: scheduledTimeOfDeparture))
         }
         
         let secondsToDeparture = parsedSeconds(for: minutesAndSecondsToDeparture) ?? parsedSeconds(for: minutesAndSecondsToArrival)
@@ -20,16 +34,17 @@ extension ArrivalDeparture {
                                         backgroundColor: lineID.backgroundColor,
                                         textColor: lineID.textColor,
                                         textShadow: lineID.textShadow),
-                     destinationType: destinationType,
-                     secondsToArrival: secondsToDeparture,
-                     subtitleType: subtitleType)
+                     topLeadingTextItem: .destinationType(destinationType),
+                     topTrailingTextItem: .countdownSeconds(secondsToDeparture),
+                     bottomLeadingTextItem: bottomLeadingTextItem,
+                     bottomTrailingTextItem: bottomTrailingTextItem)
     }
     
     private var destinationType: ArrivalsBoardDestinationType {
         if terminatesHere {
             return .checkFrontOfTrain
         } else if let sanitizedDestinationName, !sanitizedDestinationName.isEmpty {
-            return .destination(sanitizedDestinationName)
+            return .known(sanitizedDestinationName)
         } else {
             return .checkFrontOfTrain
         }
