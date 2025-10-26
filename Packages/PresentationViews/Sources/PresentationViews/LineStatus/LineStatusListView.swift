@@ -54,7 +54,8 @@ public struct LineStatusListView: View {
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
             tappableStatusCells(with: favourites)
-            tappableStatusCells(with: disruptions)
+            tappableStatusCells(with: disruptions,
+                                needsTopPadding: !favourites.isEmpty)
             if showOtherLinesSummaryCell {
                 otherLinesSummaryCell
             } else {
@@ -118,7 +119,7 @@ public struct LineStatusListView: View {
     private var stickyHeader: some View {
         if #available(iOS 26.0, *) {
             headerContent
-                .padding()
+                .padding(12)
                 .glassEffect(
                     .regular,
                     in: .rect(cornerRadius: 8)
