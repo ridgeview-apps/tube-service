@@ -61,6 +61,10 @@ public extension View {
         self.modifier(PulsatingSymbolEffectModifier())
     }
     
+    func breathingSymbol() -> some View {
+        self.modifier(BreatheSymbolEffectModifier())
+    }
+    
     func withDefaultMaxWidth(alignment: Alignment = .center) -> some View {
         self.frame(maxWidth: 600, alignment: alignment)
     }
@@ -176,6 +180,23 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
         if #available(iOS 17.0, *) {
             content
                 .symbolEffect(.pulse, options: .repeating, value: isAnimating)
+                .onAppear {
+                    isAnimating = true
+                }
+        } else {
+            content
+        }
+    }
+}
+
+private struct BreatheSymbolEffectModifier: ViewModifier {
+    
+    @State private var isAnimating = false
+    
+    func body(content: Content) -> some View {
+        if #available(iOS 18.0, *) {
+            content
+                .symbolEffect(.breathe, options: .repeating, value: isAnimating)
                 .onAppear {
                     isAnimating = true
                 }

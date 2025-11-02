@@ -24,47 +24,106 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     }
     let id: String
     let numberLabel: NumberLabel
-    let topLeadingTextItem: ArrivalsBoardTextItem
-    let topTrailingTextItem: ArrivalsBoardTextItem
-    let bottomLeadingTextItem: ArrivalsBoardTextItem?
-    let bottomTrailingTextItem: ArrivalsBoardTextItem?
+    let destinationText: ArrivalsBoardTextItem
+    let countdownText: ArrivalsBoardTextItem?
+    var bottomLeadingTextItem: ArrivalsBoardTextItem?
+    var bottomTrailingTextItem1: ArrivalsBoardTextItem?
+    var bottomTrailingTextItem2: ArrivalsBoardTextItem?
 }
 
-enum ArrivalsBoardDestinationType: Sendable {
-    case known(String)
-    case checkFrontOfTrain
-}
-
-enum ArrivalsBoardSubtitleType: Sendable {
-    case currentLocationName(String)
-    case depatureTime(String)
-}
-
-enum ArrivalsBoardTextItem {
-    enum DepartureStatus {
-        case onTime
-        case delayed
-        case cancelled
-        case notStopping
+struct ArrivalsBoardTextItem {
+    enum MessageType {
+        case verbatim(String)
+        case localized(LocalizedStringResource)
+    }
+    
+    struct Style {
         
-        var localized: LocalizedStringResource {
-            switch self {
-            case .onTime:
-                .arrivalsBoardDepartureStatusOnTime
-            case .delayed:
-                .arrivalsBoardDepartureStatusDelayed
-            case .cancelled:
-                .arrivalsBoardDepartureStatusCancelled
-            case .notStopping:
-                .arrivalsBoardDepartureStatusNotStopping
-            }
+        enum ColorStyle {
+            case primary
+            case secondary
+            case warning
+        }
+        
+        let font: Font
+        let colorStyle: ColorStyle
+        let isStrikeThrough: Bool
+        let isBold: Bool
+        
+        static func header(
+            colorStyle: ColorStyle = .primary,
+            isStrikeThrough: Bool = false,
+            isBold: Bool = false
+        ) -> Style {
+            .init(
+                font: .headline,
+                colorStyle: colorStyle,
+                isStrikeThrough: isStrikeThrough,
+                isBold: isBold
+            )
+        }
+        
+        static func footerSmall(
+            colorStyle: ColorStyle = .secondary,
+            isStrikeThrough: Bool = false,
+            isBold: Bool = false
+        ) -> Style {
+            .init(
+                font: .caption2,
+                colorStyle: colorStyle,
+                isStrikeThrough: isStrikeThrough,
+                isBold: isBold
+            )
+        }
+        
+        static func footerMedium(
+            colorStyle: ColorStyle = .secondary,
+            isStrikeThrough: Bool = false,
+            isBold: Bool = false
+        ) -> Style {
+            .init(
+                font: .subheadline,
+                colorStyle: colorStyle,
+                isStrikeThrough: isStrikeThrough,
+                isBold: isBold
+            )
         }
     }
     
-    case destinationType(ArrivalsBoardDestinationType)
-    case countdownSeconds(Int?)
-    case scheduledDepartureTime(String)
-    case currentPosition(String)
-    case departureStatus(DepartureStatus) // On Time / Delayed / Cancelled / Not stopping
-    case estimatedDepartureTime(String)
+    let messageType: MessageType
+    let style: Style
+        
+    static func verbatimMessage(_ rawString: String,
+                                style: Style) -> ArrivalsBoardTextItem {
+        .init(messageType: .verbatim(rawString), style: style)
+    }
+    
+    static func localizedMessage(_ resource: LocalizedStringResource,
+                                 style: Style) -> ArrivalsBoardTextItem {
+        .init(messageType: .localized(resource), style: style)
+    }
+    
+    static func countdownSeconds(_ seconds: Int?,
+                                 style: Style) -> ArrivalsBoardTextItem? {
+        guard let seconds else { return nil }
+        return .init(messageType: countdownMessage(for: seconds), style: style)
+    }
+    
+    private static func countdownMessage(for secondsRemaining: Int) -> MessageType {
+        let oneHour = 60 * 60
+        if secondsRemaining < 60 {
+            return .localized(.arrivalsBoardCountdownDue)
+        } else if secondsRemaining < oneHour {
+            let minutes = secondsRemaining / 60
+            return .localized(.arrivalsBoardCountdownDueMinutes(minutes))
+        } else {
+            let formattedDuration = Duration
+                                        .seconds(secondsRemaining)
+                                        .formatted(
+                                            .units(allowed: [.hours, .minutes],
+                                                   width: .narrow)
+                                        )
+            return .verbatim(formattedDuration)
+        }
+    }
 }

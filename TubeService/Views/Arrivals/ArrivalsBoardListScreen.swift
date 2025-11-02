@@ -83,6 +83,7 @@ struct ArrivalsBoardListScreen: View {
             guard let lineID = lineIDs.first else { return [] } // ArrivalDepartures are only for a single line
             return try await transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
                                          .decodedModel
+                                         .removingDuplicates()
                                          .toPlatformBoardStates(forLineID: lineID)
         case .arrivalPredictions:
             return try await transportAPI.fetchArrivalPredictions(forLineGroup: lineGroup)

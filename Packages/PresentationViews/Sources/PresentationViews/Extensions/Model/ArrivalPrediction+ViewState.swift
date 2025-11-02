@@ -9,20 +9,16 @@ extension ArrivalPrediction {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        var bottomLeadingTextItem: ArrivalsBoardTextItem?
-        if let currentLocation {
-            bottomLeadingTextItem = .currentPosition(currentLocation)
-        }
-        
-        return .init(id: cellID,
-                     numberLabel: .init(value: arrivalNumber,
-                                        backgroundColor: lineID.backgroundColor,
-                                        textColor: lineID.textColor,
-                                        textShadow: lineID.textShadow),
-                     topLeadingTextItem: .destinationType(destinationType),
-                     topTrailingTextItem: .countdownSeconds(timeToStation),
-                     bottomLeadingTextItem: bottomLeadingTextItem,
-                     bottomTrailingTextItem: nil)
+        return .init(
+            id: cellID,
+            numberLabel: .init(value: arrivalNumber,
+                               backgroundColor: lineID.backgroundColor,
+                               textColor: lineID.textColor,
+                               textShadow: lineID.textShadow),
+            destinationText: destinationTextItem,
+            countdownText: countdownTextItem,
+            bottomLeadingTextItem: currentLocationTextItem
+        )
 
     }
     
@@ -33,16 +29,30 @@ extension ArrivalPrediction {
         return naptanID == destinationNaptanID
     }
     
-    private var destinationType: ArrivalsBoardDestinationType {
+    private var destinationTextItem: ArrivalsBoardTextItem {
+        let textStyle = ArrivalsBoardTextItem.Style.header()
+        let checkFrontOfTrain = ArrivalsBoardTextItem.localizedMessage(.arrivalsCheckFrontOfTrain,
+                                                                       style: textStyle)
+
+        
         if terminatesHere {
-            return .checkFrontOfTrain
+            return checkFrontOfTrain
         } else if let towards, !towards.isEmpty {
-            return .known(towards)
+            return .verbatimMessage(towards, style: textStyle)
         } else if let destinationName, !destinationName.isEmpty {
-            return .known(destinationName)
+            return .verbatimMessage(destinationName, style: textStyle)
         } else {
-            return .checkFrontOfTrain
+            return checkFrontOfTrain
         }
+    }
+    
+    private var currentLocationTextItem: ArrivalsBoardTextItem? {
+        guard let currentLocation else { return nil }
+        return .verbatimMessage(currentLocation, style: .footerSmall())
+    }
+    
+    private var countdownTextItem: ArrivalsBoardTextItem? {
+        return .countdownSeconds(timeToStation, style: .header())
     }
 }
 

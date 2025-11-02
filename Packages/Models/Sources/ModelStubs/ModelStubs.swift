@@ -32,6 +32,10 @@ public extension ModelStubs {
         elizabethLineBothPlatforms.filter { $0.platformName == "Platform B" }
     }
     
+    static var elizabethLineArrivalsWithDuplicates: [ArrivalDeparture] {
+        decodedValue(for: elizabethLineArrivalsWithDuplicatesJSON)
+    }
+    
     
     // Northern line (single tube-line platforms)
     static var northernLineBothPlatforms: [ArrivalPrediction] {

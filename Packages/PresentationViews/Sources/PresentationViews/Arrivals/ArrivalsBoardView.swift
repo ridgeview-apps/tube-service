@@ -54,7 +54,7 @@ struct ArrivalsBoardView: View {
     }
     
     private var cells: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             ForEach(fixedCellItems) { cellItem in
                 makeCell(with: cellItem)
             }
@@ -133,67 +133,42 @@ struct ArrivalsBoardView: View {
     }
     
     @ViewBuilder
-    private func cellTextItem(for itemType: ArrivalsBoardTextItem) -> some View {
-        switch itemType {
-        case .destinationType(let arrivalsBoardDestinationType):
-            destinationText(for: arrivalsBoardDestinationType)
-        case .countdownSeconds(let seconds):
-            if let seconds {
-                arrivalTimeText(for: seconds)
+    private func cellTextItem(for textItem: ArrivalsBoardTextItem) -> some View {
+        Group {
+            switch textItem.messageType {
+            case .verbatim(let rawString):
+                Text(rawString)
+            case .localized(let localizedStringResource):
+                Text(localizedStringResource)
             }
-        case .scheduledDepartureTime(let departureTime):
-            Text(departureTime)
-        case .currentPosition(let locationName):
-            Text(locationName)
-        case .departureStatus(let status):
-            Text(status.localized)
-        case .estimatedDepartureTime(let departureTime):
-            Text(departureTime)
+        }
+        .font(textItem.style.font)
+        .strikethrough(textItem.style.isStrikeThrough)
+        .bold(textItem.style.isBold)
+        .foregroundStyle(color(forTextItem: textItem))
+    }
+    
+    private func color(forTextItem textItem: ArrivalsBoardTextItem) -> Color {
+        switch textItem.style.colorStyle {
+        case .primary:
+            return boardTextColor
+        case .secondary:
+            return .white
+        case .warning:
+            return .midRed1
         }
     }
     
     private var boardTextColor: Color { .rgb(198, 188, 61) }
     
-    @ViewBuilder private func arrivalTimeText(for secondsRemaining: Int) -> some View {
-        let oneHour = 60 * 60
-        if secondsRemaining < 30 {
-            Text(.arrivalsBoardCountdownDue)
-        } else if secondsRemaining < 60 {
-            Text(.arrivalsBoardCountdownDueSeconds(secondsRemaining))
-        } else if secondsRemaining < oneHour {
-            let minutes = secondsRemaining / 60
-            Text(.arrivalsBoardCountdownDueMinutes(minutes))
-        } else {
-            Text(formattedHourlyDuration(forSeconds: secondsRemaining))
-        }
-    }
-    
-    private func formattedHourlyDuration(forSeconds seconds: Int) -> String {
-        Duration
-            .seconds(seconds)
-            .formatted(
-                .units(allowed: [.hours, .minutes],
-                       width: .narrow)
-            )
-    }
-    
-    @ViewBuilder private func destinationText(for destinationType: ArrivalsBoardDestinationType) -> some View {
-        switch destinationType {
-        case let .known(name):
-            Text(name)
-        case .checkFrontOfTrain:
-            Text(.arrivalsCheckFrontOfTrain)
-        }
-    }
-    
     private func topText(for cellItem: ArrivalsBoardCellItem) -> some View {
         HStack(alignment: .top) {
-            cellTextItem(for: cellItem.topLeadingTextItem)
+            cellTextItem(for: cellItem.destinationText)
             Spacer()
-            cellTextItem(for: cellItem.topTrailingTextItem)
+            if let countdownText = cellItem.countdownText {
+                cellTextItem(for: countdownText)
+            }
         }
-        .font(.headline)
-        .foregroundColor(boardTextColor)
     }
     
     private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
@@ -202,12 +177,15 @@ struct ArrivalsBoardView: View {
                 cellTextItem(for: bottomLeadingTextItem)
             }
             Spacer()
-            if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {
-                cellTextItem(for: bottomTrailingTextItem)
+            HStack(spacing: 6) {
+                if let bottomTrailingTextItem1 = cellItem.bottomTrailingTextItem1 {
+                    cellTextItem(for: bottomTrailingTextItem1)
+                }
+                if let bottomTrailingTextItem2 = cellItem.bottomTrailingTextItem2 {
+                    cellTextItem(for: bottomTrailingTextItem2)
+                }
             }
         }
-        .font(.caption2)
-        .foregroundColor(.white)
     }
     
     private func rotateToNextArrivalIfNeeded(animated: Bool) {

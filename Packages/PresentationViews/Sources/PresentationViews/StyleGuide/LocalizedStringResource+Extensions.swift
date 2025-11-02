@@ -40,7 +40,7 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.board.departure.status.delayed")
     }
     
-    static var arrivalsBoardDepartureStatusNotStopping:LocalizedStringResource {
+    static var arrivalsBoardDepartureStatusNotStopping: LocalizedStringResource {
         moduleResource("arrivals.board.departure.status.notStopping")
     }
     

@@ -53,14 +53,14 @@ public struct LineStatusListView: View {
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            tappableStatusCells(with: favourites)
+            tappableStatusCells(with: favourites, needsTopPadding: true)
             tappableStatusCells(with: disruptions,
-                                needsTopPadding: !favourites.isEmpty)
+                                needsTopPadding: favourites.isEmpty)
             if showOtherLinesSummaryCell {
                 otherLinesSummaryCell
             } else {
                 tappableStatusCells(with: allOtherLines,
-                                    needsTopPadding: hasFavouritesOrDisruptions)
+                                    needsTopPadding: true)
             }
         }
     }

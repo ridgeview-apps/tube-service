@@ -15,6 +15,7 @@ public extension LineStatusAccessoryImageType {
         switch self {
         case .disruption:
             Image(systemName: "exclamationmark.circle.fill")
+                .breathingSymbol()
                 .foregroundColor(.adaptiveRed)
         case .goodService:
             Image(systemName: "checkmark.circle.fill")
