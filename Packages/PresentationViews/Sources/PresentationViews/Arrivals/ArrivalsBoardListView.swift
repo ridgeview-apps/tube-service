@@ -37,7 +37,7 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .center, spacing: 16) {
+            LazyVStack(alignment: .center, spacing: 24) {
                 Section {
                     Group {
                         if boardStates.isEmpty && loadingState == .loaded {
@@ -60,6 +60,7 @@ public struct ArrivalsBoardListView: View {
         }
         .frame(maxWidth: .infinity)
         .background(Color.defaultBackground)
+        .withHardScrollEdgeEffectStyle()
     }
 
     private var noDataView: some View {

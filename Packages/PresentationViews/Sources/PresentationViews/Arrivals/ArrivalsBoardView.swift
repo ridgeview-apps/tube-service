@@ -113,23 +113,27 @@ struct ArrivalsBoardView: View {
     
     private func makeCell(with cellItem: ArrivalsBoardCellItem) -> some View {
         HStack(alignment: .top, spacing: 12) {
-            ZStack {
-                cellItem.numberLabel.backgroundColor
-                    .frame(width: 36, height: 40)
-                Text(cellItem.numberLabel.valueText)
-                    .foregroundColor(cellItem.numberLabel.textColor)
-                    .shadow(color: cellItem.numberLabel.textShadow.color,
-                            radius: cellItem.numberLabel.textShadow.radius,
-                            x: cellItem.numberLabel.textShadow.x, 
-                            y: cellItem.numberLabel.textShadow.y)
-            }
-            .roundedBorder(.white)
-            VStack(alignment: .leading, spacing: 6) {
+            numberLabelView(for: cellItem)
+            VStack(alignment: .leading, spacing: 4) {
                 topText(for: cellItem)
                 bottomText(for: cellItem)
             }
         }
         .id(cellItem.id)
+    }
+    
+    private func numberLabelView(for cellItem: ArrivalsBoardCellItem) -> some View {
+        Text(cellItem.numberLabel.valueText)
+            .padding(2)
+            .minimumScaleFactor(0.7)
+            .foregroundColor(cellItem.numberLabel.textColor)
+            .shadow(color: cellItem.numberLabel.textShadow.color,
+                    radius: cellItem.numberLabel.textShadow.radius,
+                    x: cellItem.numberLabel.textShadow.x,
+                    y: cellItem.numberLabel.textShadow.y)
+            .frame(width: 36, height: 40)
+            .background(cellItem.numberLabel.backgroundColor)
+            .roundedBorder(.white)
     }
     
     @ViewBuilder
@@ -165,8 +169,10 @@ struct ArrivalsBoardView: View {
         HStack(alignment: .top) {
             cellTextItem(for: cellItem.destinationText)
             Spacer()
-            if let countdownText = cellItem.countdownText {
-                cellTextItem(for: countdownText)
+            HStack(spacing: 6) {
+                ForEach(cellItem.topTrailingTextItems, id: \.self) { trailingTextItem in
+                    cellTextItem(for: trailingTextItem)
+                }
             }
         }
     }
@@ -177,13 +183,8 @@ struct ArrivalsBoardView: View {
                 cellTextItem(for: bottomLeadingTextItem)
             }
             Spacer()
-            HStack(spacing: 6) {
-                if let bottomTrailingTextItem1 = cellItem.bottomTrailingTextItem1 {
-                    cellTextItem(for: bottomTrailingTextItem1)
-                }
-                if let bottomTrailingTextItem2 = cellItem.bottomTrailingTextItem2 {
-                    cellTextItem(for: bottomTrailingTextItem2)
-                }
+            if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {
+                cellTextItem(for: bottomTrailingTextItem)
             }
         }
     }
@@ -230,39 +231,39 @@ extension ArrivalsBoardView {
 
 import ModelStubs
 
-struct ArrivalsBoardView_Previews: PreviewProvider {
+private struct WrapperView: View {
+    var boardState: ArrivalsBoardState
+    @State var isExpanded: Bool = false
     
-    struct WrapperView: View {
-        var boardState: ArrivalsBoardState
-        @State var isExpanded: Bool = false
-        
-        var body: some View {
-            ScrollView {
-                ArrivalsBoardView(boardState: boardState,
-                                  isExpanded: $isExpanded)
-                .padding(.horizontal)
-            }
+    var body: some View {
+        ScrollView {
+            ArrivalsBoardView(boardState: boardState,
+                              isExpanded: $isExpanded)
+            .padding(.horizontal)
         }
     }
-    
-    static var previews: some View {
-        WrapperView(boardState: northernLineBoard)
-            .previewDisplayName("Northern)")
-        WrapperView(boardState: hammersmithDistrictAndCircleBoard)
-            .previewDisplayName("Hammersmith, District & Circle")
-        WrapperView(boardState: elizabethLineBoard)
-            .previewDisplayName("Elizabeth")
-    }
-    
-    static var northernLineBoard: ArrivalsBoardState {
-        ModelStubs.northernLineBothPlatforms.toPlatformBoardStates().first!
-    }
-    
-    static var hammersmithDistrictAndCircleBoard: ArrivalsBoardState {
-        ModelStubs.hammerDistrictAndCircleBothPlatforms.toPlatformBoardStates().first!
-    }
-    
-    static var elizabethLineBoard: ArrivalsBoardState {
-        ModelStubs.elizabethLineArrivalsPlatformB.toPlatformBoardStates(forLineID: .elizabeth).first!
-    }
+}
+
+#Preview("Northern") {
+    WrapperView(
+        boardState: ModelStubs.northernLineBothPlatforms.toPlatformBoardStates().first!
+    )
+}
+
+#Preview("Hammersmith, District & Circle") {
+    WrapperView(
+        boardState: ModelStubs.hammerDistrictAndCircleBothPlatforms.toPlatformBoardStates().first!
+    )
+}
+
+#Preview("Elizabeth") {
+    WrapperView(
+        boardState: ModelStubs.elizabethLineArrivalsPlatformB.toPlatformBoardStates(forLineID: .elizabeth).first!
+    )
+}
+
+#Preview("Mildmay") {
+    WrapperView(
+        boardState: ModelStubs.mildmayLineArrivalsPlatform2.toPlatformBoardStates(forLineID: .mildmay).first!
+    )
 }

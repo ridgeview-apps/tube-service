@@ -9,6 +9,8 @@ extension ArrivalPrediction {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
+        let topTrailingTextItem = [countdownTextItem].compactMap { $0 }
+        
         return .init(
             id: cellID,
             numberLabel: .init(value: arrivalNumber,
@@ -16,7 +18,7 @@ extension ArrivalPrediction {
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
-            countdownText: countdownTextItem,
+            topTrailingTextItems: topTrailingTextItem,
             bottomLeadingTextItem: currentLocationTextItem
         )
 

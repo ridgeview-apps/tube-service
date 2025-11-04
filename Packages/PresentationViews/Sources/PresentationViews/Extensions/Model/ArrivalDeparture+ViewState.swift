@@ -8,19 +8,22 @@ extension ArrivalDeparture {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        let bottomTrailingTextItem1: ArrivalsBoardTextItem?
-        let bottomTrailingTextItem2: ArrivalsBoardTextItem?
+        var topTrailingTextItems = [ArrivalsBoardTextItem]()
         
-        if isDelayedByMoreThanOneMinute {
-            bottomTrailingTextItem1 = scheduledDepartureTextItem(
-                isStrikeThrough: estimatedTimeOfDeparture != nil
-            )
-            bottomTrailingTextItem2 = estimatedDepartureTextItem
-        } else {
-            bottomTrailingTextItem1 = nil
-            bottomTrailingTextItem2 = scheduledDepartureTextItem(isStrikeThrough: false)
+        if let scheduledTimeOfDeparture {
+            let isStrikeThrough = (isDelayedByMoreThanOneMinute && estimatedTimeOfDeparture != nil) || departureStatus == .cancelled
+            let scheduledDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: scheduledTimeOfDeparture),
+                                                                                   style: .header(isStrikeThrough: isStrikeThrough))
+            topTrailingTextItems.append(scheduledDepartureTextItem)
         }
-
+        
+        if isDelayedByMoreThanOneMinute, let estimatedTimeOfDeparture {
+            let estimatedDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: estimatedTimeOfDeparture),
+                                                                                   style: .header())
+            topTrailingTextItems.append(estimatedDepartureTextItem)
+            
+        }
+        
         return .init(
             id: cellID,
             numberLabel: .init(value: arrivalNumber,
@@ -28,10 +31,9 @@ extension ArrivalDeparture {
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
-            countdownText: countdownTextItem,
+            topTrailingTextItems: topTrailingTextItems,
             bottomLeadingTextItem: departureStatusTextItem,
-            bottomTrailingTextItem1: bottomTrailingTextItem1,
-            bottomTrailingTextItem2: bottomTrailingTextItem2
+            bottomTrailingTextItem: countdownTextItem
         )
     }
     
@@ -50,8 +52,11 @@ extension ArrivalDeparture {
     }
     
     private var countdownTextItem: ArrivalsBoardTextItem? {
+        guard departureStatus != .cancelled && departureStatus != .notStoppingHere else {
+            return nil
+        }
         let secondsToDeparture = parsedSeconds(for: minutesAndSecondsToDeparture) ?? parsedSeconds(for: minutesAndSecondsToArrival)
-        return .countdownSeconds(secondsToDeparture, style: .header())
+        return .countdownSeconds(secondsToDeparture, style: .footerMedium())
     }
     
     private var departureStatusTextItem: ArrivalsBoardTextItem? {
@@ -61,9 +66,11 @@ extension ArrivalDeparture {
         case .onTime:
             return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
         case .cancelled:
+            let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
             return .localizedMessage(.arrivalsBoardDepartureStatusCancelled, style: style)
         case .delayed:
             if isDelayedByMoreThanOneMinute {
+                let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
                 return .localizedMessage(.arrivalsBoardDepartureStatusDelayed, style: style)
             } else {
                 return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
@@ -73,22 +80,6 @@ extension ArrivalDeparture {
         case nil:
             return nil
         }
-    }
-    
-    private func scheduledDepartureTextItem(isStrikeThrough: Bool) -> ArrivalsBoardTextItem? {
-        guard let scheduledTimeOfDeparture else { return nil }
-        return .verbatimMessage(
-            ukDateFormatter.string(from: scheduledTimeOfDeparture),
-            
-            style: .footerMedium(isStrikeThrough: isStrikeThrough))
-    }
-    
-    private var estimatedDepartureTextItem: ArrivalsBoardTextItem? {
-        guard let estimatedTimeOfDeparture else { return nil }
-        return .verbatimMessage(
-            ukDateFormatter.string(from: estimatedTimeOfDeparture),
-            style: .footerMedium()
-        )
     }
     
     private var isDelayedByMoreThanOneMinute: Bool {
@@ -165,9 +156,11 @@ extension Sequence where Element == ArrivalDeparture {
                                           with lineID: TrainLineID) -> ArrivalsBoardState {
         let sortedArrivalDepartures = arrivalDepartures.sortedByArrivalOrDepartureTime()
         
-        let cellItems = sortedArrivalDepartures.enumerated().compactMap { idx, element in
-            element.toArrivalsBoardCellItem(withArrivalNumber: idx + 1, lineID: lineID)
-        }
+        let cellItems = sortedArrivalDepartures
+                            .enumerated()
+                            .compactMap { idx, element in
+                                element.toArrivalsBoardCellItem(withArrivalNumber: idx + 1, lineID: lineID)
+                            }
         
         let platformName = sortedArrivalDepartures.first?.platformName ?? ""
         

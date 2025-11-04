@@ -36,6 +36,19 @@ public extension ModelStubs {
         decodedValue(for: elizabethLineArrivalsWithDuplicatesJSON)
     }
     
+    // Mildmay line
+    static var mildmayLineBothPlatforms: [ArrivalDeparture] {
+        decodedValue(for: mildmayLineArrivalsJSON)
+    }
+    
+    static var mildmayLineArrivalsPlatform1: [ArrivalDeparture] {
+        mildmayLineBothPlatforms.filter { $0.platformName == "Platform 1" }
+    }
+    
+    static var mildmayLineArrivalsPlatform2: [ArrivalDeparture] {
+        mildmayLineBothPlatforms.filter { $0.platformName == "Platform 2" }
+    }
+    
     
     // Northern line (single tube-line platforms)
     static var northernLineBothPlatforms: [ArrivalPrediction] {

@@ -25,21 +25,30 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     let id: String
     let numberLabel: NumberLabel
     let destinationText: ArrivalsBoardTextItem
-    let countdownText: ArrivalsBoardTextItem?
+    var topTrailingTextItems: [ArrivalsBoardTextItem] = []
     var bottomLeadingTextItem: ArrivalsBoardTextItem?
-    var bottomTrailingTextItem1: ArrivalsBoardTextItem?
-    var bottomTrailingTextItem2: ArrivalsBoardTextItem?
+    var bottomTrailingTextItem: ArrivalsBoardTextItem?
 }
 
-struct ArrivalsBoardTextItem {
-    enum MessageType {
+struct ArrivalsBoardTextItem: Hashable {
+    
+    enum MessageType: Hashable {
         case verbatim(String)
         case localized(LocalizedStringResource)
+        
+        func hash(into hasher: inout Hasher) {
+            switch self {
+            case .verbatim(let string):
+                hasher.combine(string)
+            case .localized(let localizedStringResource):
+                hasher.combine(localizedStringResource.key)
+            }
+        }
     }
     
-    struct Style {
+    struct Style: Hashable {
         
-        enum ColorStyle {
+        enum ColorStyle: Hashable {
             case primary
             case secondary
             case warning

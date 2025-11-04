@@ -84,6 +84,7 @@ struct ArrivalsBoardListScreen: View {
             return try await transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
                                          .decodedModel
                                          .removingDuplicates()
+                                         .filter { $0.scheduledTimeOfDeparture != nil }
                                          .toPlatformBoardStates(forLineID: lineID)
         case .arrivalPredictions:
             return try await transportAPI.fetchArrivalPredictions(forLineGroup: lineGroup)
