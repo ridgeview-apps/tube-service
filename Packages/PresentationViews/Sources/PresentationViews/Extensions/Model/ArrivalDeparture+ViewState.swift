@@ -8,21 +8,27 @@ extension ArrivalDeparture {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        var topTrailingTextItems = [ArrivalsBoardTextItem]()
+        var bottomLeadingTextItems = [ArrivalsBoardTextItem]()
         
         if let scheduledTimeOfDeparture {
             let isStrikeThrough = (isDelayedByMoreThanOneMinute && estimatedTimeOfDeparture != nil) || departureStatus == .cancelled
-            let scheduledDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: scheduledTimeOfDeparture),
-                                                                                   style: .header(isStrikeThrough: isStrikeThrough))
-            topTrailingTextItems.append(scheduledDepartureTextItem)
+            
+            let departsAtText = ArrivalsBoardTextItem.verbatimMessage("Dep", style: .footerMedium())
+            
+            let formattedDepartureText = ArrivalsBoardTextItem.verbatimMessage(
+                ukDateFormatter.string(from: scheduledTimeOfDeparture),
+                style: .footerMedium(isStrikeThrough: isStrikeThrough)
+            )
+            bottomLeadingTextItems += [departsAtText,
+                                       formattedDepartureText]
         }
         
         if isDelayedByMoreThanOneMinute, let estimatedTimeOfDeparture {
             let estimatedDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: estimatedTimeOfDeparture),
-                                                                                   style: .header())
-            topTrailingTextItems.append(estimatedDepartureTextItem)
-            
+                                                                                   style: .footerMedium())
+            bottomLeadingTextItems.append(estimatedDepartureTextItem)
         }
+    
         
         return .init(
             id: cellID,
@@ -31,9 +37,9 @@ extension ArrivalDeparture {
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
-            topTrailingTextItems: topTrailingTextItems,
-            bottomLeadingTextItem: departureStatusTextItem,
-            bottomTrailingTextItem: countdownTextItem
+            topTrailingTextItem: countdownTextItem,
+            bottomLeadingTextItems: bottomLeadingTextItems,
+            bottomTrailingTextItem: departureStatusTextItem
         )
     }
     
@@ -52,11 +58,8 @@ extension ArrivalDeparture {
     }
     
     private var countdownTextItem: ArrivalsBoardTextItem? {
-        guard departureStatus != .cancelled && departureStatus != .notStoppingHere else {
-            return nil
-        }
         let secondsToDeparture = parsedSeconds(for: minutesAndSecondsToDeparture) ?? parsedSeconds(for: minutesAndSecondsToArrival)
-        return .countdownSeconds(secondsToDeparture, style: .footerMedium())
+        return .countdownSeconds(secondsToDeparture, style: .header())
     }
     
     private var departureStatusTextItem: ArrivalsBoardTextItem? {
@@ -64,7 +67,8 @@ extension ArrivalDeparture {
         
         switch departureStatus {
         case .onTime:
-            return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
+            return nil
+//            return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
         case .cancelled:
             let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
             return .localizedMessage(.arrivalsBoardDepartureStatusCancelled, style: style)
@@ -73,7 +77,8 @@ extension ArrivalDeparture {
                 let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
                 return .localizedMessage(.arrivalsBoardDepartureStatusDelayed, style: style)
             } else {
-                return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
+                return nil
+//                return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
             }
         case .notStoppingHere:
             return .localizedMessage(.arrivalsBoardDepartureStatusNotStopping, style: style)

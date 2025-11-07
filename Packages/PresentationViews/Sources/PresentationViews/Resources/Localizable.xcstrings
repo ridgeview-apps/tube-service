@@ -46,13 +46,13 @@
         }
       }
     },
-    "arrivals.board.departs.at %@" : {
+    "arrivals.board.departs.at" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Departure Time %@"
+            "value" : "Departs"
           }
         }
       }

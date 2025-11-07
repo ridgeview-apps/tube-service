@@ -28,8 +28,8 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.board.countdown.due.seconds \(seconds)")
     }
     
-    static func arrivalsBoardDepartsAt(_ departureTime: String) -> LocalizedStringResource {
-        moduleResource("arrivals.board.departs.at \(departureTime)")
+    static var arrivalsBoardDepartsAt: LocalizedStringResource {
+        moduleResource("arrivals.board.departs.at")
     }
     
     static var arrivalsBoardDepartureStatusCancelled: LocalizedStringResource {

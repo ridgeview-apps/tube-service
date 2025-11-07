@@ -25,8 +25,8 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     let id: String
     let numberLabel: NumberLabel
     let destinationText: ArrivalsBoardTextItem
-    var topTrailingTextItems: [ArrivalsBoardTextItem] = []
-    var bottomLeadingTextItem: ArrivalsBoardTextItem?
+    var topTrailingTextItem: ArrivalsBoardTextItem?
+    var bottomLeadingTextItems: [ArrivalsBoardTextItem] = []
     var bottomTrailingTextItem: ArrivalsBoardTextItem?
 }
 
@@ -113,8 +113,8 @@ struct ArrivalsBoardTextItem: Hashable {
     }
     
     static func countdownSeconds(_ seconds: Int?,
-                                 style: Style) -> ArrivalsBoardTextItem? {
-        guard let seconds else { return nil }
+                                 style: Style) -> ArrivalsBoardTextItem {
+        guard let seconds else { return .verbatimMessage("--", style: style) }
         return .init(messageType: countdownMessage(for: seconds), style: style)
     }
     

@@ -169,18 +169,19 @@ struct ArrivalsBoardView: View {
         HStack(alignment: .top) {
             cellTextItem(for: cellItem.destinationText)
             Spacer()
-            HStack(spacing: 6) {
-                ForEach(cellItem.topTrailingTextItems, id: \.self) { trailingTextItem in
-                    cellTextItem(for: trailingTextItem)
-                }
+            if let topTrailingTextItem = cellItem.topTrailingTextItem {
+                cellTextItem(for:
+                                topTrailingTextItem)
             }
         }
     }
     
     private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
         HStack {
-            if let bottomLeadingTextItem = cellItem.bottomLeadingTextItem {
-                cellTextItem(for: bottomLeadingTextItem)
+            HStack(spacing: 6) {
+                ForEach(cellItem.bottomLeadingTextItems, id: \.self) { leadingTextItem in
+                    cellTextItem(for: leadingTextItem)
+                }
             }
             Spacer()
             if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {
