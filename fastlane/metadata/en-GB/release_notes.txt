@@ -1,1 +1,3 @@
-- 6 new overground lines added (Liberty, Lioness, Mildmay, Suffragette, Weaver and Windrush)
+- Updated for iOS 26 / Liquid Glass
+- New arrivals boards for London Overground lines: Liberty, Lioness, Mildmay, Suffragette, Weaver and Windrush
+- Bug fixes and performance improvements
