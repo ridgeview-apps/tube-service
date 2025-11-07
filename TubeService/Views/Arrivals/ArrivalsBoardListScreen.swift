@@ -32,25 +32,21 @@ struct ArrivalsBoardListScreen: View {
             FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
         }
         .refreshable {
-            await refreshData(startNewTimer: true)
+            refreshData(startNewTimer: true)
         }
         .onAppear {
-            Task {
-                await refreshData(startNewTimer: true)
-            }
+            refreshData(startNewTimer: true)
         }
         .onDisappear {
             autoRefreshTimer?.invalidate()
         }
         .onChange(of: autoRefreshTimer?.firedAt) {
-            Task {
-                await refreshData(startNewTimer: false)
-            }
+            refreshData(startNewTimer: false)
         }
 
     }
     
-    private func refreshData(startNewTimer: Bool) async {
+    private func refreshData(startNewTimer: Bool) {
         guard loadingState != .loading else {
             return
         }
@@ -62,18 +58,20 @@ struct ArrivalsBoardListScreen: View {
         
         loadingState = .loading
         
-        do {
-            boardStates = try await fetchBoards()
-            refreshDate = .now
-            loadedBoardID = lineGroup.id
-            loadingState = .loaded
-        } catch {
-            loadingState = .failure(errorMessage: error.toUIErrorMessage())
-        }
-        
-        if startNewTimer {
-            autoRefreshTimer?.invalidate()
-            autoRefreshTimer = .repeating(every: timerSecondsInterval)
+        Task {
+            do {
+                boardStates = try await fetchBoards()
+                refreshDate = .now
+                loadedBoardID = lineGroup.id
+                loadingState = .loaded
+            } catch {
+                loadingState = .failure(errorMessage: error.toUIErrorMessage())
+            }
+            
+            if startNewTimer {
+                autoRefreshTimer?.invalidate()
+                autoRefreshTimer = .repeating(every: timerSecondsInterval)
+            }
         }
     }
     
