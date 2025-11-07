@@ -259,7 +259,7 @@ private struct WrapperView: View {
 
 #Preview("Elizabeth") {
     WrapperView(
-        boardState: ModelStubs.elizabethLineArrivalsPlatformB.toPlatformBoardStates(forLineID: .elizabeth).first!
+        boardState: ModelStubs.elizabethLineArrivalsPlatformA.toPlatformBoardStates(forLineID: .elizabeth).first!
     )
 }
 

@@ -11,24 +11,42 @@ extension ArrivalDeparture {
         var bottomLeadingTextItems = [ArrivalsBoardTextItem]()
         
         if let scheduledTimeOfDeparture {
-            let isStrikeThrough = (isDelayedByMoreThanOneMinute && estimatedTimeOfDeparture != nil) || departureStatus == .cancelled
+            var colorStyle: ArrivalsBoardTextItem.Style.ColorStyle = .secondary
+            var isStrikeThrough = false
             
-            let departsAtText = ArrivalsBoardTextItem.verbatimMessage("Dep", style: .footerMedium())
+            if isDelayedByMoreThanOneMinute {
+                colorStyle = .warning
+                isStrikeThrough = estimatedTimeOfDeparture != nil
+            } else if departureStatus == .cancelled || departureStatus == .notStoppingHere {
+                colorStyle = .warning
+                isStrikeThrough = true
+            }
+            
+            let departsAtText = ArrivalsBoardTextItem.localizedMessage(
+                .arrivalsBoardDepartsAt,
+                style: .footerMedium(
+                    colorStyle: colorStyle,
+                    isStrikeThrough: departureStatus == .cancelled || departureStatus == .notStoppingHere)
+            )
             
             let formattedDepartureText = ArrivalsBoardTextItem.verbatimMessage(
                 ukDateFormatter.string(from: scheduledTimeOfDeparture),
-                style: .footerMedium(isStrikeThrough: isStrikeThrough)
+                style: .footerMedium(
+                    colorStyle: colorStyle,
+                    isStrikeThrough: isStrikeThrough,
+                )
             )
             bottomLeadingTextItems += [departsAtText,
                                        formattedDepartureText]
         }
         
-        if isDelayedByMoreThanOneMinute, let estimatedTimeOfDeparture {
-            let estimatedDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: estimatedTimeOfDeparture),
-                                                                                   style: .footerMedium())
-            bottomLeadingTextItems.append(estimatedDepartureTextItem)
+        if isDelayedByMoreThanOneMinute {
+            if let estimatedTimeOfDeparture {
+                let estimatedDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: estimatedTimeOfDeparture),
+                                                                                       style: .footerMedium(colorStyle: .warning))
+                bottomLeadingTextItems.append(estimatedDepartureTextItem)
+            }
         }
-    
         
         return .init(
             id: cellID,
@@ -141,8 +159,8 @@ extension Sequence where Element == ArrivalDeparture {
     
     func sortedByArrivalOrDepartureTime() -> [Element] {
         sorted {
-            let lhsArrivalOrDepartureTime = $0.scheduledTimeOfArrival ?? $0.scheduledTimeOfDeparture ?? .distantPast
-            let rhsArrivalOrDepartureTime = $1.scheduledTimeOfArrival ?? $1.scheduledTimeOfDeparture ?? .distantPast
+            let lhsArrivalOrDepartureTime = $0.estimatedTimeOfDeparture ?? $0.scheduledTimeOfDeparture ?? .distantPast
+            let rhsArrivalOrDepartureTime = $1.estimatedTimeOfDeparture ?? $1.scheduledTimeOfDeparture ?? .distantPast
             return lhsArrivalOrDepartureTime < rhsArrivalOrDepartureTime
         }
     }
