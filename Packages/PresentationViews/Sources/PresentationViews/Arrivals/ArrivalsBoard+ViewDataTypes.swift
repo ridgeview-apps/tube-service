@@ -64,7 +64,7 @@ struct ArrivalsBoardTextItem {
     
     private static func footerMedium(messageType: MessageType,
                                      colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
-        .init(messageType: messageType, font: .footnote, colorStyle: colorStyle)
+        .init(messageType: messageType, font: .caption2, colorStyle: colorStyle)
     }
 }
 
