@@ -28,10 +28,6 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.board.countdown.due.seconds \(seconds)")
     }
     
-    static var arrivalsBoardDepartsAt: LocalizedStringResource {
-        moduleResource("arrivals.board.departs.at")
-    }
-    
     static var arrivalsBoardDepartureStatusCancelled: LocalizedStringResource {
         moduleResource("arrivals.board.departure.status.cancelled")
     }
@@ -50,6 +46,19 @@ public extension LocalizedStringResource {
     
         static var arrivalsCheckFrontOfTrain: LocalizedStringResource {
         moduleResource("arrivals.check.front.of.train")
+    }
+    
+    static func arrivalsBoardDepartureTime(_ time: String) -> LocalizedStringResource {
+        moduleResource("arrivals.board.departure.time \(time)")
+    }
+    
+    static func arrivalsBoardDepartureTimeNever(_ time: String) -> LocalizedStringResource {
+        moduleResource("arrivals.board.departure.time.never \(time)")
+    }
+
+    static func arrivalsBoardDepartureTimeScheduledEstimated(_ scheduled: String,
+                                                             _ estimated: String) -> LocalizedStringResource {
+        moduleResource("arrivals.board.departure.time.scheduled.estimated \(scheduled) \(estimated)")
     }
     
     static var arrivalsNoData: LocalizedStringResource {

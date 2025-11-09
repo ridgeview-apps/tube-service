@@ -46,17 +46,6 @@
         }
       }
     },
-    "arrivals.board.departs.at" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Departs"
-          }
-        }
-      }
-    },
     "arrivals.board.departure.status.cancelled" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -97,6 +86,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "On time"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.time %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Departs %@"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.time.never %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "~Departs %@~"
+          }
+        }
+      }
+    },
+    "arrivals.board.departure.time.scheduled.estimated %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Departs ~%@~ %@"
           }
         }
       }

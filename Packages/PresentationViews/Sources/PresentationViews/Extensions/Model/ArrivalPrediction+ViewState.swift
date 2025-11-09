@@ -9,8 +9,6 @@ extension ArrivalPrediction {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        let bottomLeadingTextItems = [currentLocationTextItem].compactMap { $0 }
-        
         return .init(
             id: cellID,
             numberLabel: .init(value: arrivalNumber,
@@ -18,10 +16,9 @@ extension ArrivalPrediction {
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
-            topTrailingTextItem: countdownTextItem,
-            bottomLeadingTextItems: bottomLeadingTextItems
+            countdownText: countdownTextItem,
+            bottomLeadingTextItem: currentVehicleLocationTextItem
         )
-
     }
     
     private var terminatesHere: Bool {
@@ -32,29 +29,24 @@ extension ArrivalPrediction {
     }
     
     private var destinationTextItem: ArrivalsBoardTextItem {
-        let textStyle = ArrivalsBoardTextItem.Style.header()
-        let checkFrontOfTrain = ArrivalsBoardTextItem.localizedMessage(.arrivalsCheckFrontOfTrain,
-                                                                       style: textStyle)
-
-        
         if terminatesHere {
-            return checkFrontOfTrain
+            return .destination(.checkFrontOfTrain)
         } else if let towards, !towards.isEmpty {
-            return .verbatimMessage(towards, style: textStyle)
+            return .destination(.towards(towards))
         } else if let destinationName, !destinationName.isEmpty {
-            return .verbatimMessage(destinationName, style: textStyle)
+            return .destination(.towards(destinationName))
         } else {
-            return checkFrontOfTrain
+            return .destination(.checkFrontOfTrain)
         }
     }
     
-    private var currentLocationTextItem: ArrivalsBoardTextItem? {
+    private var currentVehicleLocationTextItem: ArrivalsBoardTextItem? {
         guard let currentLocation else { return nil }
-        return .verbatimMessage(currentLocation, style: .footerSmall())
+        return .currentVehicleLocation(currentLocation)
     }
     
-    private var countdownTextItem: ArrivalsBoardTextItem? {
-        return .countdownSeconds(timeToStation, style: .header())
+    private var countdownTextItem: ArrivalsBoardTextItem {
+        return .countdownSeconds(timeToStation)
     }
 }
 

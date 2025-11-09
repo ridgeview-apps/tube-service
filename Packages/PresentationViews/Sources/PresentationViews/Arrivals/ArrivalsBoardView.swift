@@ -20,7 +20,7 @@ struct ArrivalsBoardView: View {
     @State private var rotatingCellIndex: Int?
     
     private let collapsedStateMaxCellCount = 3
-
+    private let boardPrimaryColor = Color.rgb(198, 188, 61)
     
     // MARK: Body
     
@@ -32,7 +32,7 @@ struct ArrivalsBoardView: View {
         }
         .padding()
         .background(Color.darkGrey2)
-        .roundedBorder(boardTextColor,
+        .roundedBorder(boardPrimaryColor,
                        cornerRadius: 12,
                        lineWidth: 4)
         .animation(.default, value: isExpanded)
@@ -54,7 +54,7 @@ struct ArrivalsBoardView: View {
     }
     
     private var cells: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 16) {
             ForEach(fixedCellItems) { cellItem in
                 makeCell(with: cellItem)
             }
@@ -146,42 +146,33 @@ struct ArrivalsBoardView: View {
                 Text(localizedStringResource)
             }
         }
-        .font(textItem.style.font)
-        .strikethrough(textItem.style.isStrikeThrough)
-        .bold(textItem.style.isBold)
-        .foregroundStyle(color(forTextItem: textItem))
+        .font(textItem.font)
+        .foregroundStyle(textColor(for: textItem))
     }
     
-    private func color(forTextItem textItem: ArrivalsBoardTextItem) -> Color {
-        switch textItem.style.colorStyle {
-        case .primary:
-            return boardTextColor
-        case .secondary:
+    private func textColor(for textItem: ArrivalsBoardTextItem) -> Color {
+        switch textItem.colorStyle {
+        case .headerInfo:
+            return boardPrimaryColor
+        case .footerInfo:
             return .white
-        case .warning:
+        case .footerWarning:
             return .midRed1
         }
     }
-    
-    private var boardTextColor: Color { .rgb(198, 188, 61) }
     
     private func topText(for cellItem: ArrivalsBoardCellItem) -> some View {
         HStack(alignment: .top) {
             cellTextItem(for: cellItem.destinationText)
             Spacer()
-            if let topTrailingTextItem = cellItem.topTrailingTextItem {
-                cellTextItem(for:
-                                topTrailingTextItem)
-            }
+            cellTextItem(for: cellItem.countdownText)
         }
     }
     
     private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
         HStack {
-            HStack(spacing: 6) {
-                ForEach(cellItem.bottomLeadingTextItems, id: \.self) { leadingTextItem in
-                    cellTextItem(for: leadingTextItem)
-                }
+            if let bottomLeadingTextItem = cellItem.bottomLeadingTextItem {
+                cellTextItem(for: bottomLeadingTextItem)
             }
             Spacer()
             if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {

@@ -37,7 +37,7 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            LazyVStack(alignment: .center, spacing: 24) {
+            VStack(alignment: .center, spacing: 24) {
                 Section {
                     Group {
                         if boardStates.isEmpty && loadingState == .loaded {
@@ -142,7 +142,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Loaded state") {
-    WrapperView(boardStates: ModelStubs.northernLineBothPlatforms.toPlatformBoardStates(),
+    WrapperView(boardStates: ModelStubs.elizabethLineBothPlatforms.toPlatformBoardStates(forLineID: .elizabeth),
                 loadingState: .loaded)
 }
 

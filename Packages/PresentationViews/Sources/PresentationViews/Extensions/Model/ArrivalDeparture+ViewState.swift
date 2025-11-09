@@ -8,46 +8,6 @@ extension ArrivalDeparture {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
-        var bottomLeadingTextItems = [ArrivalsBoardTextItem]()
-        
-        if let scheduledTimeOfDeparture {
-            var colorStyle: ArrivalsBoardTextItem.Style.ColorStyle = .secondary
-            var isStrikeThrough = false
-            
-            if isDelayedByMoreThanOneMinute {
-                colorStyle = .warning
-                isStrikeThrough = estimatedTimeOfDeparture != nil
-            } else if departureStatus == .cancelled || departureStatus == .notStoppingHere {
-                colorStyle = .warning
-                isStrikeThrough = true
-            }
-            
-            let departsAtText = ArrivalsBoardTextItem.localizedMessage(
-                .arrivalsBoardDepartsAt,
-                style: .footerMedium(
-                    colorStyle: colorStyle,
-                    isStrikeThrough: departureStatus == .cancelled || departureStatus == .notStoppingHere)
-            )
-            
-            let formattedDepartureText = ArrivalsBoardTextItem.verbatimMessage(
-                ukDateFormatter.string(from: scheduledTimeOfDeparture),
-                style: .footerMedium(
-                    colorStyle: colorStyle,
-                    isStrikeThrough: isStrikeThrough,
-                )
-            )
-            bottomLeadingTextItems += [departsAtText,
-                                       formattedDepartureText]
-        }
-        
-        if isDelayedByMoreThanOneMinute {
-            if let estimatedTimeOfDeparture {
-                let estimatedDepartureTextItem = ArrivalsBoardTextItem.verbatimMessage(ukDateFormatter.string(from: estimatedTimeOfDeparture),
-                                                                                       style: .footerMedium(colorStyle: .warning))
-                bottomLeadingTextItems.append(estimatedDepartureTextItem)
-            }
-        }
-        
         return .init(
             id: cellID,
             numberLabel: .init(value: arrivalNumber,
@@ -55,68 +15,76 @@ extension ArrivalDeparture {
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
-            topTrailingTextItem: countdownTextItem,
-            bottomLeadingTextItems: bottomLeadingTextItems,
-            bottomTrailingTextItem: departureStatusTextItem
+            countdownText: countdownTextItem,
+            bottomLeadingTextItem: departureTimeTextItem,
+            bottomTrailingTextItem: departureStatusWarningTextItem
         )
     }
     
     private var destinationTextItem: ArrivalsBoardTextItem {
-        let textStyle = ArrivalsBoardTextItem.Style.header()
-        let checkFrontOfTrain = ArrivalsBoardTextItem.localizedMessage(.arrivalsCheckFrontOfTrain,
-                                                                       style: textStyle)
-        
         if terminatesHere {
-            return checkFrontOfTrain
+            return .destination(.checkFrontOfTrain)
         } else if let sanitizedDestinationName, !sanitizedDestinationName.isEmpty {
-            return .verbatimMessage(sanitizedDestinationName, style: textStyle)
+            return .destination(.towards(sanitizedDestinationName))
         } else {
-            return checkFrontOfTrain
+            return .destination(.checkFrontOfTrain)
         }
     }
     
-    private var countdownTextItem: ArrivalsBoardTextItem? {
+    private var countdownTextItem: ArrivalsBoardTextItem {
         let secondsToDeparture = parsedSeconds(for: minutesAndSecondsToDeparture) ?? parsedSeconds(for: minutesAndSecondsToArrival)
-        return .countdownSeconds(secondsToDeparture, style: .header())
+        return .countdownSeconds(secondsToDeparture)
     }
     
-    private var departureStatusTextItem: ArrivalsBoardTextItem? {
-        let style: ArrivalsBoardTextItem.Style = .footerMedium()
-        
-        switch departureStatus {
-        case .onTime:
+    private var departureTimeTextItem: ArrivalsBoardTextItem? {
+        switch (departureStatus, scheduledTimeOfDeparture, estimatedTimeOfDeparture) {
+        case (.delayed, let .some(scheduledTimeOfDeparture), let .some(estimatedTimeOfDeparture))
+            where isSignificantlyDelayed:
+            return .departureTimeDelayedWithEstimate(
+                scheduledTime: scheduledTimeOfDeparture,
+                estimatedTime: estimatedTimeOfDeparture
+            )
+        case (.delayed, let .some(scheduledTimeOfDeparture), nil)
+            where isSignificantlyDelayed:
+            return .departureTimeWarning(departureTime: scheduledTimeOfDeparture)
+        case (.cancelled, let .some(scheduledTimeOfDeparture), _):
+            return .departureTimeNever(scheduledTimeOfDeparture)
+        case (.notStoppingHere, let .some(scheduledTimeOfDeparture), _):
+            return .departureTimeNever(scheduledTimeOfDeparture)
+        case (_, let .some(scheduledTimeOfDeparture), _):
+            return .departureTimeInfo(departureTime: scheduledTimeOfDeparture)
+        default:
             return nil
-//            return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
+        }
+        
+    }
+    
+    private var departureStatusWarningTextItem: ArrivalsBoardTextItem? {
+
+        switch departureStatus {
         case .cancelled:
-            let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
-            return .localizedMessage(.arrivalsBoardDepartureStatusCancelled, style: style)
-        case .delayed:
-            if isDelayedByMoreThanOneMinute {
-                let style: ArrivalsBoardTextItem.Style = .footerMedium(colorStyle: .warning)
-                return .localizedMessage(.arrivalsBoardDepartureStatusDelayed, style: style)
-            } else {
-                return nil
-//                return .localizedMessage(.arrivalsBoardDepartureStatusOnTime, style: style)
-            }
+            return .departureStatus(.cancelled)
         case .notStoppingHere:
-            return .localizedMessage(.arrivalsBoardDepartureStatusNotStopping, style: style)
-        case nil:
+            return .departureStatus(.notStoppingHere)
+        case .delayed where isSignificantlyDelayed:
+            return .departureStatus(.delayed)
+        default:
             return nil
         }
     }
     
-    private var isDelayedByMoreThanOneMinute: Bool {
+    private var isSignificantlyDelayed: Bool {
         guard departureStatus == .delayed else {
             return false
         }
         
         guard let estimatedTimeOfDeparture, let scheduledTimeOfDeparture else {
-            return true
+            return true // Can't calculate the delay, so assume significantly delayed
         }
         
         let secondsDifference = abs(estimatedTimeOfDeparture.timeIntervalSince1970 - scheduledTimeOfDeparture.timeIntervalSince1970)
         
-        return secondsDifference > 60
+        return secondsDifference > 120
     }
     
     private var terminatesHere: Bool {
@@ -147,13 +115,6 @@ extension ArrivalDeparture {
 
     }
 }
-
-private let ukDateFormatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.timeZone = .london
-    dateFormatter.dateFormat = "HH:mm"
-    return dateFormatter
-}()
 
 extension Sequence where Element == ArrivalDeparture {
     
