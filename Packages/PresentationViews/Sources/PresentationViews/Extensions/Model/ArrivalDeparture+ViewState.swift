@@ -27,41 +27,39 @@ extension ArrivalDeparture {
     }
     
     private var destinationTextItem: ArrivalsBoardTextItem {
+        let isStrikeThrough = isCancelledOrNotStopping
         if terminatesHere {
-            return .destination(.checkFrontOfTrain)
+            return .destination(.checkFrontOfTrain,
+                                isStrikethrough: isStrikeThrough)
         } else if let sanitizedDestinationName, !sanitizedDestinationName.isEmpty {
-            return .destination(.towards(sanitizedDestinationName))
+            return .destination(.towards(sanitizedDestinationName),
+                                isStrikethrough: isStrikeThrough)
         } else {
-            return .destination(.checkFrontOfTrain)
+            return .destination(.checkFrontOfTrain,
+                                isStrikethrough: isStrikeThrough)
         }
     }
     
     private var countdownTextItem: ArrivalsBoardTextItem {
         let secondsToDeparture = parsedSeconds(for: minutesAndSecondsToDeparture) ?? parsedSeconds(for: minutesAndSecondsToArrival)
-        return .countdownSeconds(secondsToDeparture)
+        
+        return .countdownSeconds(secondsToDeparture,
+                                 isStrikethrough: isCancelledOrNotStopping)
     }
     
     private var scheduledDepartureTextItem: ArrivalsBoardTextItem? {
-        guard let scheduledTimeOfDeparture else {
-            return nil
-        }
-        
-        var isStrikethrough = false
-        if departureStatus == .cancelled
-            || isSignificantlyDelayed && estimatedTimeOfDeparture != nil {
-            isStrikethrough = true
-        }
-        return .departureTimeScheduled(
-            departureTime: scheduledTimeOfDeparture,
-            isStrikethrough: isStrikethrough
-        )
+        guard let scheduledTimeOfDeparture else { return nil }
+        return .departureTimeScheduled(departureTime: scheduledTimeOfDeparture)
     }
     
     private var estimatedDepartureTextItem: ArrivalsBoardTextItem? {
-        guard let estimatedTimeOfDeparture, isSignificantlyDelayed else {
-            return nil
-        }
+        guard let estimatedTimeOfDeparture, isSignificantlyDelayed else { return nil }
         return .departureTimeEstimated(departureTime: estimatedTimeOfDeparture)
+    }
+    
+    private var isCancelledOrNotStopping: Bool {
+        departureStatus == .cancelled || departureStatus == .notStoppingHere
+
     }
 
     private var departureStatusWarningTextItem: ArrivalsBoardTextItem? {

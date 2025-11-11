@@ -64,7 +64,7 @@ struct ArrivalsBoardTextItem {
     
     private static func header(messageType: MessageType,
                                colorStyle: ColorStyle = .headerInfo,
-                               isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
+                               isStrikethrough: Bool) -> ArrivalsBoardTextItem {
         .init(
             messageType: messageType,
             font: .headline,
@@ -89,7 +89,7 @@ struct ArrivalsBoardTextItem {
                                      isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
         .init(
             messageType: messageType,
-            font: .subheadline,
+            font: .footnote,
             colorStyle: colorStyle,
             isStrikethrough: isStrikethrough
         )
@@ -100,12 +100,15 @@ extension ArrivalsBoardTextItem {
     
     // MARK: - Destination
     
-    static func destination(_ desinationType: ArrivalsBoardDestinationType) -> ArrivalsBoardTextItem {
+    static func destination(_ desinationType: ArrivalsBoardDestinationType,
+                            isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
         switch desinationType {
         case .checkFrontOfTrain:
-            return .header(messageType: .localized(.arrivalsCheckFrontOfTrain))
+            return .header(messageType: .localized(.arrivalsCheckFrontOfTrain),
+                           isStrikethrough: isStrikethrough)
         case .towards(let destinationName):
-            return .header(messageType: .verbatim(destinationName))
+            return .header(messageType: .verbatim(destinationName),
+                           isStrikethrough: isStrikethrough)
         }
     }
     
@@ -117,11 +120,15 @@ extension ArrivalsBoardTextItem {
     
     // MARK: - Countdown
     
-    static func countdownSeconds(_ seconds: Int?) -> ArrivalsBoardTextItem {
+    static func countdownSeconds(_ seconds: Int?,
+                                 isStrikethrough: Bool) -> ArrivalsBoardTextItem {
         guard let seconds else {
-            return .header(messageType: .verbatim("--"))
+            return .header(messageType: .verbatim("--"), isStrikethrough: false)
         }
-        return .header(messageType: countdownMessage(for: seconds))
+        return .header(
+            messageType: countdownMessage(for: seconds),
+            isStrikethrough: isStrikethrough
+        )
     }
     
     private static func countdownMessage(for secondsRemaining: Int) -> MessageType {
@@ -144,12 +151,10 @@ extension ArrivalsBoardTextItem {
     
     // MARK: - Departure time
     
-    static func departureTimeScheduled(departureTime: Date,
-                                       isStrikethrough: Bool) -> ArrivalsBoardTextItem {
+    static func departureTimeScheduled(departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
         return .footerMedium(
-            messageType: .localized(.arrivalsBoardDepartureTimeScheduled(formattedTime)),
-            isStrikethrough: isStrikethrough
+            messageType: .localized(.arrivalsBoardDepartureTimeScheduled(formattedTime))
         )
     }
         

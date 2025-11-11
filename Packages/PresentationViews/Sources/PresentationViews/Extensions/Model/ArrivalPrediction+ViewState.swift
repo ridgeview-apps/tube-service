@@ -46,7 +46,7 @@ extension ArrivalPrediction {
     }
     
     private var countdownTextItem: ArrivalsBoardTextItem {
-        return .countdownSeconds(timeToStation)
+        return .countdownSeconds(timeToStation, isStrikethrough: false)
     }
 }
 
