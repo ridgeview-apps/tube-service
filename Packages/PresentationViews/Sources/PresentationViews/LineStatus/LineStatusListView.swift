@@ -126,6 +126,8 @@ public struct LineStatusListView: View {
                 )
         } else {
             headerContent
+                .listRowInsets(.zero)
+                .padding(.horizontal, 16)
                 .padding(.vertical, 4)
                 .background(Color.defaultBackground)
         }
