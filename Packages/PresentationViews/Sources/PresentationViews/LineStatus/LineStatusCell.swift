@@ -41,7 +41,7 @@ public struct LineStatusCell: View {
             
             if animatedAccessoryImage && style.isAnimatable {
                 accessoryImage
-                    .breathingSymbol()
+//                    .breathingSymbol() // TODO-fix post release
             } else {
                 accessoryImage
             }
