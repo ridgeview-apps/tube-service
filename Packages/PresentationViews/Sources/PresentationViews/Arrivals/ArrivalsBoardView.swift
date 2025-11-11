@@ -54,7 +54,7 @@ struct ArrivalsBoardView: View {
     }
     
     private var cells: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 20) {
             ForEach(fixedCellItems) { cellItem in
                 makeCell(with: cellItem)
             }
