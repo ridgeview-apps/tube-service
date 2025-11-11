@@ -125,13 +125,13 @@ struct ArrivalsBoardView: View {
     private func numberLabelView(for cellItem: ArrivalsBoardCellItem) -> some View {
         Text(cellItem.numberLabel.valueText)
             .padding(2)
-            .minimumScaleFactor(0.7)
+            .minimumScaleFactor(0.4)
             .foregroundColor(cellItem.numberLabel.textColor)
             .shadow(color: cellItem.numberLabel.textShadow.color,
                     radius: cellItem.numberLabel.textShadow.radius,
                     x: cellItem.numberLabel.textShadow.x,
                     y: cellItem.numberLabel.textShadow.y)
-            .frame(width: 36, height: 40)
+            .frame(width: 28, height: 32)
             .background(cellItem.numberLabel.backgroundColor)
             .roundedBorder(.white)
     }
@@ -148,6 +148,7 @@ struct ArrivalsBoardView: View {
         }
         .font(textItem.font)
         .foregroundStyle(textColor(for: textItem))
+        .strikethrough(textItem.isStrikethrough)
     }
     
     private func textColor(for textItem: ArrivalsBoardTextItem) -> Color {
@@ -169,16 +170,37 @@ struct ArrivalsBoardView: View {
         }
     }
     
+    @ViewBuilder
     private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
-        HStack {
-            if let bottomLeadingTextItem = cellItem.bottomLeadingTextItem {
-                cellTextItem(for: bottomLeadingTextItem)
-            }
-            Spacer()
-            if let bottomTrailingTextItem = cellItem.bottomTrailingTextItem {
-                cellTextItem(for: bottomTrailingTextItem)
+        if let bottomTextMessage = cellItem.bottomTextMessage {
+            switch bottomTextMessage {
+            case let .generalInfo(messageTextItem):
+                if let messageTextItem {
+                    cellTextItem(for: messageTextItem)
+                }
+            case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
+                HStack {
+                    if let scheduledDepartureItem {
+                        departureTimeText(with: scheduledDepartureItem)
+                    }
+                    if let estimatedDepartureItem {
+                        departureTimeText(with: estimatedDepartureItem)
+                    }
+                    Spacer()
+                    if let statusTextItem {
+                        cellTextItem(for: statusTextItem)
+                    }
+                }
             }
         }
+    }
+    
+    private func departureTimeText(with textItem: ArrivalsBoardTextItem) -> some View {
+        cellTextItem(for: textItem)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Color.darkGrey1)
+            .clipShape(.rect(cornerRadius: 4))
     }
     
     private func rotateToNextArrivalIfNeeded(animated: Bool) {

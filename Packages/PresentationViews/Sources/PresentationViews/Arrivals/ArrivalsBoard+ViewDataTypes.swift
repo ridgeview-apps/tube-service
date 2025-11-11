@@ -22,12 +22,21 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
         
         var valueText: String { String(value) }
     }
+    
+    enum BottomTextMessage {
+        case generalInfo(ArrivalsBoardTextItem?)
+        case departureInfo(
+            scheduled: ArrivalsBoardTextItem?,
+            estimated: ArrivalsBoardTextItem?,
+            status: ArrivalsBoardTextItem?
+        )
+    }
+    
     let id: String
     let numberLabel: NumberLabel
     let destinationText: ArrivalsBoardTextItem
     var countdownText: ArrivalsBoardTextItem
-    var bottomLeadingTextItem: ArrivalsBoardTextItem?
-    var bottomTrailingTextItem: ArrivalsBoardTextItem?
+    var bottomTextMessage: BottomTextMessage?
 }
 
 enum ArrivalsBoardDestinationType {
@@ -51,20 +60,39 @@ struct ArrivalsBoardTextItem {
     let messageType: MessageType
     let font: Font
     let colorStyle: ColorStyle
+    let isStrikethrough: Bool
     
     private static func header(messageType: MessageType,
-                               colorStyle: ColorStyle = .headerInfo) -> ArrivalsBoardTextItem {
-        .init(messageType: messageType, font: .headline, colorStyle: colorStyle)
+                               colorStyle: ColorStyle = .headerInfo,
+                               isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
+        .init(
+            messageType: messageType,
+            font: .headline,
+            colorStyle: colorStyle,
+            isStrikethrough: isStrikethrough
+        )
     }
     
     private static func footerSmall(messageType: MessageType,
-                                    colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
-        .init(messageType: messageType, font: .caption2, colorStyle: colorStyle)
+                                    colorStyle: ColorStyle = .footerInfo,
+                                    isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
+        .init(
+            messageType: messageType,
+            font: .caption2,
+            colorStyle: colorStyle,
+            isStrikethrough: isStrikethrough
+        )
     }
     
     private static func footerMedium(messageType: MessageType,
-                                     colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
-        .init(messageType: messageType, font: .footnote, colorStyle: colorStyle)
+                                     colorStyle: ColorStyle = .footerInfo,
+                                     isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
+        .init(
+            messageType: messageType,
+            font: .subheadline,
+            colorStyle: colorStyle,
+            isStrikethrough: isStrikethrough
+        )
     }
 }
 
@@ -116,32 +144,19 @@ extension ArrivalsBoardTextItem {
     
     // MARK: - Departure time
     
-    static func departureTimeInfo(departureTime: Date) -> ArrivalsBoardTextItem {
+    static func departureTimeScheduled(departureTime: Date,
+                                       isStrikethrough: Bool) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)))
-    }
-    
-    static func departureTimeWarning(departureTime: Date) -> ArrivalsBoardTextItem {
-        let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)),
-                             colorStyle: .footerWarning)
-    }
-    
-    static func departureTimeNever(_ departureTime: Date) -> ArrivalsBoardTextItem {
-        let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTimeNever(formattedTime)),
-                             colorStyle: .footerWarning)
-    }
-    
-    static func departureTimeDelayedWithEstimate(scheduledTime: Date,
-                                                 estimatedTime: Date) -> ArrivalsBoardTextItem {
-        let scheduledTimeFormatted = ukDateFormatter.string(from: scheduledTime)
-        let estimatedTimeFormatted = ukDateFormatter.string(from: estimatedTime)
         return .footerMedium(
-            messageType: .localized(.arrivalsBoardDepartureTimeScheduledEstimated(scheduledTimeFormatted,
-                                                                                  estimatedTimeFormatted)),
-            colorStyle: .footerWarning
+            messageType: .localized(.arrivalsBoardDepartureTimeScheduled(formattedTime)),
+            isStrikethrough: isStrikethrough
         )
+    }
+        
+    static func departureTimeEstimated(departureTime: Date) -> ArrivalsBoardTextItem {
+        let formattedTime = ukDateFormatter.string(from: departureTime)
+        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTimeEstimated(formattedTime)),
+                             colorStyle: .footerWarning)
     }
     
     // MARK: Departure status

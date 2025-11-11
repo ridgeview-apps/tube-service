@@ -8,6 +8,12 @@ extension ArrivalDeparture {
         
         let cellID = "\(id)-\(arrivalNumber)"
         
+        let bottomTextMessage: ArrivalsBoardCellItem.BottomTextMessage = .departureInfo(
+            scheduled: scheduledDepartureTextItem,
+            estimated: estimatedDepartureTextItem,
+            status: departureStatusWarningTextItem
+        )
+        
         return .init(
             id: cellID,
             numberLabel: .init(value: arrivalNumber,
@@ -16,8 +22,7 @@ extension ArrivalDeparture {
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
             countdownText: countdownTextItem,
-            bottomLeadingTextItem: departureTimeTextItem,
-            bottomTrailingTextItem: departureStatusWarningTextItem
+            bottomTextMessage: bottomTextMessage
         )
     }
     
@@ -36,29 +41,29 @@ extension ArrivalDeparture {
         return .countdownSeconds(secondsToDeparture)
     }
     
-    private var departureTimeTextItem: ArrivalsBoardTextItem? {
-        switch (departureStatus, scheduledTimeOfDeparture, estimatedTimeOfDeparture) {
-        case (.delayed, let .some(scheduledTimeOfDeparture), let .some(estimatedTimeOfDeparture))
-            where isSignificantlyDelayed:
-            return .departureTimeDelayedWithEstimate(
-                scheduledTime: scheduledTimeOfDeparture,
-                estimatedTime: estimatedTimeOfDeparture
-            )
-        case (.delayed, let .some(scheduledTimeOfDeparture), nil)
-            where isSignificantlyDelayed:
-            return .departureTimeWarning(departureTime: scheduledTimeOfDeparture)
-        case (.cancelled, let .some(scheduledTimeOfDeparture), _):
-            return .departureTimeNever(scheduledTimeOfDeparture)
-        case (.notStoppingHere, let .some(scheduledTimeOfDeparture), _):
-            return .departureTimeNever(scheduledTimeOfDeparture)
-        case (_, let .some(scheduledTimeOfDeparture), _):
-            return .departureTimeInfo(departureTime: scheduledTimeOfDeparture)
-        default:
+    private var scheduledDepartureTextItem: ArrivalsBoardTextItem? {
+        guard let scheduledTimeOfDeparture else {
             return nil
         }
         
+        var isStrikethrough = false
+        if departureStatus == .cancelled
+            || isSignificantlyDelayed && estimatedTimeOfDeparture != nil {
+            isStrikethrough = true
+        }
+        return .departureTimeScheduled(
+            departureTime: scheduledTimeOfDeparture,
+            isStrikethrough: isStrikethrough
+        )
     }
     
+    private var estimatedDepartureTextItem: ArrivalsBoardTextItem? {
+        guard let estimatedTimeOfDeparture, isSignificantlyDelayed else {
+            return nil
+        }
+        return .departureTimeEstimated(departureTime: estimatedTimeOfDeparture)
+    }
+
     private var departureStatusWarningTextItem: ArrivalsBoardTextItem? {
 
         switch departureStatus {

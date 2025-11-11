@@ -17,7 +17,7 @@ extension ArrivalPrediction {
                                textShadow: lineID.textShadow),
             destinationText: destinationTextItem,
             countdownText: countdownTextItem,
-            bottomLeadingTextItem: currentVehicleLocationTextItem
+            bottomTextMessage: .generalInfo(currentVehicleLocationTextItem)
         )
     }
     

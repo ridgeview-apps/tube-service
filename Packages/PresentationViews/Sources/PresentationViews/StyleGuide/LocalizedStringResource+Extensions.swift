@@ -48,19 +48,14 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.check.front.of.train")
     }
     
-    static func arrivalsBoardDepartureTime(_ time: String) -> LocalizedStringResource {
-        moduleResource("arrivals.board.departure.time \(time)")
+    static func arrivalsBoardDepartureTimeScheduled(_ time: String) -> LocalizedStringResource {
+        moduleResource("arrivals.board.departure.time.scheduled \(time)")
     }
     
-    static func arrivalsBoardDepartureTimeNever(_ time: String) -> LocalizedStringResource {
-        moduleResource("arrivals.board.departure.time.never \(time)")
+    static func arrivalsBoardDepartureTimeEstimated(_ time: String) -> LocalizedStringResource {
+        moduleResource("arrivals.board.departure.time.estimated \(time)")
     }
 
-    static func arrivalsBoardDepartureTimeScheduledEstimated(_ scheduled: String,
-                                                             _ estimated: String) -> LocalizedStringResource {
-        moduleResource("arrivals.board.departure.time.scheduled.estimated \(scheduled) \(estimated)")
-    }
-    
     static var arrivalsNoData: LocalizedStringResource {
         moduleResource("arrivals.no.data")
     }

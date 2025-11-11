@@ -90,35 +90,24 @@
         }
       }
     },
-    "arrivals.board.departure.time %@" : {
+    "arrivals.board.departure.time.estimated %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Departs %@"
+            "value" : "Est. %@"
           }
         }
       }
     },
-    "arrivals.board.departure.time.never %@" : {
+    "arrivals.board.departure.time.scheduled %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "~Departs %@~"
-          }
-        }
-      }
-    },
-    "arrivals.board.departure.time.scheduled.estimated %@ %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Departs ~%@~ %@"
+            "value" : "Dep. %@"
           }
         }
       }
