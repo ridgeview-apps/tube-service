@@ -196,7 +196,8 @@ private struct BreatheSymbolEffectModifier: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *) {
             content
-                .symbolEffect(.breathe, options: .repeating, value: isAnimating)
+                .symbolEffect(.breathe.wholeSymbol,
+                              options: .repeat(.continuous))
                 .onAppear {
                     isAnimating = true
                 }

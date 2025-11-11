@@ -6,6 +6,7 @@ public struct LineStatusCell: View {
     public let style: Style
     public let showsAccessory: Bool
     public var leadingColumnInset = 4.0
+    public var animatedAccessoryImage: Bool = false
     
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
     
@@ -21,6 +22,15 @@ public struct LineStatusCell: View {
                 return lines.allAreGoodService ? .goodService : .disruption
             }
         }
+        
+        var isAnimatable: Bool {
+            switch accessoryImageType {
+            case .goodService:
+                return false
+            case .disruption:
+                return true
+            }
+        }
     }
     
     
@@ -28,7 +38,13 @@ public struct LineStatusCell: View {
         HStack(spacing: 0) {
             leadingColumn()
             trailingColumn()
-            accessoryImage
+            
+            if animatedAccessoryImage && style.isAnimatable {
+                accessoryImage
+                    .breathingSymbol()
+            } else {
+                accessoryImage
+            }
         }
     }
     

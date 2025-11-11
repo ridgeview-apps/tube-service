@@ -79,7 +79,8 @@ public struct LineStatusListView: View {
         } label: {
             LineStatusCell(
                 style: .singleLine(line, showFavouriteImage: favouriteLineIDs.contains(line.id)),
-                showsAccessory: true
+                showsAccessory: true,
+                animatedAccessoryImage: true
             )
             .cardStyle(cornerRadius: 8)
             .frame(minHeight: 52)
@@ -122,7 +123,7 @@ public struct LineStatusListView: View {
                 .padding(12)
                 .glassEffect(
                     .regular,
-                    in: .rect(cornerRadius: 8)
+                    in: .rect(cornerRadius: 16)
                 )
         } else {
             headerContent
