@@ -97,11 +97,7 @@ struct NearbyStationsScreen: View {
     private func stationName(for lineGroup: Station.LineGroup) -> String {
         stations.station(forLineGroupID: lineGroup.id)?.name ?? ""
     }
-    
-    private func resumeLocationDetection() {
-        location.startDetectingCurrentLocationIfAuthorized()
-    }
-    
+        
     private func updateResultsSectionState(reset: Bool = false) {
         let nearbyStations = location.nearbyStations
         

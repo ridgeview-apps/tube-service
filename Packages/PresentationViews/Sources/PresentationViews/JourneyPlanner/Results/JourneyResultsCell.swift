@@ -66,6 +66,8 @@ struct JourneyResultsCell: View {
             Text(journey.formattedDuration)
                 .font(.subheadline)
         }
+        .accessibilityAddTraits(.isButton)
+        .accessibilityIdentifier("journey.start.time.info")
     }
     
     private var startAndEndTime: some View {
@@ -81,7 +83,6 @@ struct JourneyResultsCell: View {
             }
         }
         .font(.headline)
-        .accessibilityIdentifier("journey.start.time.info")
     }
     
     private var lineDiagram: some View {

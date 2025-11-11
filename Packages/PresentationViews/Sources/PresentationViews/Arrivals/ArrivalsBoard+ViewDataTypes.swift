@@ -57,9 +57,14 @@ struct ArrivalsBoardTextItem {
         .init(messageType: messageType, font: .headline, colorStyle: colorStyle)
     }
     
-    private static func footer(messageType: MessageType,
-                               colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
+    private static func footerSmall(messageType: MessageType,
+                                    colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
         .init(messageType: messageType, font: .caption2, colorStyle: colorStyle)
+    }
+    
+    private static func footerMedium(messageType: MessageType,
+                                     colorStyle: ColorStyle = .footerInfo) -> ArrivalsBoardTextItem {
+        .init(messageType: messageType, font: .footnote, colorStyle: colorStyle)
     }
 }
 
@@ -79,7 +84,7 @@ extension ArrivalsBoardTextItem {
     // MARK: - Vehicle location
     
     static func currentVehicleLocation(_ locationName: String) -> ArrivalsBoardTextItem {
-        return .footer(messageType: .verbatim(locationName))
+        return .footerSmall(messageType: .verbatim(locationName))
     }
     
     // MARK: - Countdown
@@ -113,18 +118,18 @@ extension ArrivalsBoardTextItem {
     
     static func departureTimeInfo(departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footer(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)))
+        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)))
     }
     
     static func departureTimeWarning(departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footer(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)),
+        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTime(formattedTime)),
                              colorStyle: .footerWarning)
     }
     
     static func departureTimeNever(_ departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footer(messageType: .localized(.arrivalsBoardDepartureTimeNever(formattedTime)),
+        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTimeNever(formattedTime)),
                              colorStyle: .footerWarning)
     }
     
@@ -132,7 +137,7 @@ extension ArrivalsBoardTextItem {
                                                  estimatedTime: Date) -> ArrivalsBoardTextItem {
         let scheduledTimeFormatted = ukDateFormatter.string(from: scheduledTime)
         let estimatedTimeFormatted = ukDateFormatter.string(from: estimatedTime)
-        return .footer(
+        return .footerMedium(
             messageType: .localized(.arrivalsBoardDepartureTimeScheduledEstimated(scheduledTimeFormatted,
                                                                                   estimatedTimeFormatted)),
             colorStyle: .footerWarning
@@ -144,15 +149,15 @@ extension ArrivalsBoardTextItem {
     static func departureStatus(_ departureStatus: ArrivalDeparture.DepartureStatus) -> ArrivalsBoardTextItem {
         switch departureStatus {
         case .onTime:
-            return .footer(messageType: .localized(.arrivalsBoardDepartureStatusOnTime))
+            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusOnTime))
         case .cancelled:
-            return .footer(messageType: .localized(.arrivalsBoardDepartureStatusCancelled),
+            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusCancelled),
                                  colorStyle: .footerWarning)
         case .delayed:
-            return .footer(messageType: .localized(.arrivalsBoardDepartureStatusDelayed),
+            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusDelayed),
                                  colorStyle: .footerWarning)
         case .notStoppingHere:
-            return .footer(messageType: .localized(.arrivalsBoardDepartureStatusNotStopping),
+            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusNotStopping),
                                  colorStyle: .footerWarning)
         }
     }

@@ -76,7 +76,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureJourneyPlannerTab() {
-        app.buttons["Journey planner"].tap()
+        app.buttons["Planner"].tap()
         
         app.buttons["Departure location"].tap()
         app.textFields.firstMatch.typeText("King's Cross & St Pancras International")
@@ -112,7 +112,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureArrivalsTab() {
-        app.buttons["Live arrivals"].tap()
+        app.buttons["Arrivals"].tap()
         
         if iPhone {
             captureScreenshot("LiveArrivalsPicker")
