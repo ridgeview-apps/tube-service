@@ -96,7 +96,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Exp. %@"
+            "value" : "Exp %@"
           }
         }
       }
@@ -107,7 +107,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dep. %@"
+            "value" : "Dep %@"
           }
         }
       }

@@ -179,7 +179,7 @@ struct ArrivalsBoardView: View {
                     cellTextItem(for: messageTextItem)
                 }
             case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
-                HStack {
+                HStack(alignment: .top) {
                     if let scheduledDepartureItem {
                         departureTimeText(with: scheduledDepartureItem)
                     }
@@ -197,7 +197,7 @@ struct ArrivalsBoardView: View {
     
     private func departureTimeText(with textItem: ArrivalsBoardTextItem) -> some View {
         cellTextItem(for: textItem)
-            .padding(.horizontal, 6)
+            .padding(.horizontal, 4)
             .padding(.vertical, 2)
             .background(Color.darkGrey1)
             .clipShape(.rect(cornerRadius: 4))

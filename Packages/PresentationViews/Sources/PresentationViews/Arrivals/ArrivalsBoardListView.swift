@@ -37,7 +37,7 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .center, spacing: 24) {
+            VStack(alignment: .center, spacing: 28) {
                 Section {
                     Group {
                         if boardStates.isEmpty && loadingState == .loaded {
