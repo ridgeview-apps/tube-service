@@ -23,7 +23,7 @@ public struct LineStatusCell: View {
             }
         }
         
-        var isAnimatable: Bool {
+        var supportsAnimation: Bool {
             switch accessoryImageType {
             case .goodService:
                 return false
@@ -38,13 +38,7 @@ public struct LineStatusCell: View {
         HStack(spacing: 0) {
             leadingColumn()
             trailingColumn()
-            
-            if animatedAccessoryImage && style.isAnimatable {
-                accessoryImage
-//                    .breathingSymbol() // TODO-fix post release
-            } else {
-                accessoryImage
-            }
+            accessoryImage
         }
     }
     
@@ -118,7 +112,7 @@ public struct LineStatusCell: View {
     
     
     // MARK: - Accessory image
-    
+        
     @ViewBuilder private var accessoryImage: some View {
         if showsAccessory {
             style
@@ -126,7 +120,11 @@ public struct LineStatusCell: View {
                 .image
                 .padding(.trailing)
                 .frame(width: 30)
+                .bounceOnceSymbol(
+                    isEnabled: animatedAccessoryImage && style.supportsAnimation
+                )
         }
+
     }
 
 }

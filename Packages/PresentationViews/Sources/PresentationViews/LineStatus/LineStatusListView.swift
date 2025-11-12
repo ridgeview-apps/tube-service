@@ -84,11 +84,14 @@ public struct LineStatusListView: View {
             )
             .cardStyle(cornerRadius: 8)
             .frame(minHeight: 52)
-
         }
         .buttonStyle(.borderless)
         .accessibility(identifier: line.id.rawValue)
-        .id(line.id)
+        .id(statusCellAnimationID(for: line))
+    }
+    
+    private func statusCellAnimationID(for line: Line) -> some Hashable {
+        "\(line.id)_\(selectedFilterOption)_\(refreshDate ?? .distantPast)"
     }
     
     private var shouldShowLineStatusCells: Bool {

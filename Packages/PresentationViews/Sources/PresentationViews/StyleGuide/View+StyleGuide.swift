@@ -61,8 +61,13 @@ public extension View {
         self.modifier(PulsatingSymbolEffectModifier())
     }
     
-    func breathingSymbol() -> some View {
-        self.modifier(BreatheSymbolEffectModifier())
+    @ViewBuilder
+    func bounceOnceSymbol(isEnabled: Bool = true) -> some View {
+        if isEnabled {
+            self.modifier(BounceOnceSymbolEffectModifier())
+        } else {
+            self
+        }
     }
     
     func withDefaultMaxWidth(alignment: Alignment = .center) -> some View {
@@ -189,15 +194,15 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
     }
 }
 
-private struct BreatheSymbolEffectModifier: ViewModifier {
+private struct BounceOnceSymbolEffectModifier: ViewModifier {
     
     @State private var isAnimating = false
     
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *) {
             content
-                .symbolEffect(.breathe.wholeSymbol,
-                              options: .repeat(.continuous))
+                .symbolEffect(.bounce.up.byLayer,
+                              value: isAnimating)
                 .onAppear {
                     isAnimating = true
                 }
