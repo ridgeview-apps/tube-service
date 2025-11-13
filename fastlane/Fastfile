@@ -2,6 +2,7 @@ default_platform(:ios)
 
 before_all do
   setup_ci if is_ci  
+  ENV["DELIVER_ALTOOL_ADDITIONAL_UPLOAD_PARAMETERS"] = "--use-old-altool"
 end
 
 private_lane :read_xcconfig_file do
