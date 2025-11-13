@@ -53,7 +53,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureStatusTab() {
-        app.buttons["Status"].tap()
+        app.buttons["Status"].firstMatch.tap()
         
         if iPhone {
             captureScreenshot("ServiceStatuses-Today")
@@ -76,7 +76,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureJourneyPlannerTab() {
-        app.buttons["Planner"].tap()
+        app.buttons["Planner"].firstMatch.tap()
         
         app.buttons["Departure location"].tap()
         app.textFields.firstMatch.typeText("King's Cross & St Pancras International")
@@ -112,7 +112,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureArrivalsTab() {
-        app.buttons["Arrivals"].tap()
+        app.buttons["Arrivals"].firstMatch.tap()
         
         if iPhone {
             captureScreenshot("LiveArrivalsPicker")
@@ -129,7 +129,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureNearbyStationsTab() {
-        app.buttons["Nearby"].tap()
+        app.buttons["Nearby"].firstMatch.tap()
         
         if iPhone {
             captureScreenshot("NearbyStations-List")
@@ -147,7 +147,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureMapsTab() {
-        app.buttons["Maps"].tap()
+        app.buttons["Maps"].firstMatch.tap()
         
         captureScreenshot("Maps")
     }

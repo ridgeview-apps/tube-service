@@ -153,7 +153,7 @@ struct ArrivalsBoardView: View {
     
     private func textColor(for textItem: ArrivalsBoardTextItem) -> Color {
         switch textItem.colorStyle {
-        case .headerInfo:
+        case .boardPrimary:
             return boardPrimaryColor
         case .footerInfo:
             return .white

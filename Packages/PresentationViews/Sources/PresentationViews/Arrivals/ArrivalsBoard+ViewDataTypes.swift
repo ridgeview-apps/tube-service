@@ -52,7 +52,7 @@ struct ArrivalsBoardTextItem {
     }
     
     enum ColorStyle: Hashable {
-        case headerInfo
+        case boardPrimary
         case footerInfo
         case footerWarning
     }
@@ -63,7 +63,7 @@ struct ArrivalsBoardTextItem {
     let isStrikethrough: Bool
     
     private static func header(messageType: MessageType,
-                               colorStyle: ColorStyle = .headerInfo,
+                               colorStyle: ColorStyle = .boardPrimary,
                                isStrikethrough: Bool) -> ArrivalsBoardTextItem {
         .init(
             messageType: messageType,
@@ -154,7 +154,8 @@ extension ArrivalsBoardTextItem {
     static func departureTimeScheduled(departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
         return .footerMedium(
-            messageType: .localized(.arrivalsBoardDepartureTimeScheduled(formattedTime))
+            messageType: .verbatim(formattedTime),
+            colorStyle: .boardPrimary
         )
     }
         

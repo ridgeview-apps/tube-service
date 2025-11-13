@@ -47,8 +47,8 @@ public extension View {
                     .imageScale(.large)
                 Text(title)
             }
-        }
-        .accessibilityIdentifier(accessibilityID)
+            .accessibilityIdentifier(accessibilityID)
+        }        
     }
     
     func defaultScrollContentBackgroundColor() -> some View {
@@ -201,10 +201,11 @@ private struct BounceOnceSymbolEffectModifier: ViewModifier {
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *) {
             content
-                .symbolEffect(.bounce.up.byLayer,
-                              value: isAnimating)
+                .symbolEffect(.bounce.wholeSymbol, value: isAnimating)
                 .onAppear {
-                    isAnimating = true
+                    withAnimation {
+                        isAnimating = true
+                    }
                 }
         } else {
             content

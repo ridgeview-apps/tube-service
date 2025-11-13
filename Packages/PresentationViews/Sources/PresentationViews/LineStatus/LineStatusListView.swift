@@ -84,10 +84,10 @@ public struct LineStatusListView: View {
             )
             .cardStyle(cornerRadius: 8)
             .frame(minHeight: 52)
+            .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
-        .accessibility(identifier: line.id.rawValue)
-        .id(statusCellAnimationID(for: line))
+        .accessibility(identifier: line.id.rawValue)        
     }
     
     private func statusCellAnimationID(for line: Line) -> some Hashable {
