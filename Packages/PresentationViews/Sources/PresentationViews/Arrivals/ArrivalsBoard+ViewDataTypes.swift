@@ -26,7 +26,6 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     enum BottomTextMessage {
         case generalInfo(ArrivalsBoardTextItem?)
         case departureInfo(
-            scheduled: ArrivalsBoardTextItem?,
             estimated: ArrivalsBoardTextItem?,
             status: ArrivalsBoardTextItem?
         )
@@ -34,8 +33,9 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     
     let id: String
     let numberLabel: NumberLabel
+    let departureTimeText: ArrivalsBoardTextItem?
     let destinationText: ArrivalsBoardTextItem
-    var countdownText: ArrivalsBoardTextItem
+    let countdownText: ArrivalsBoardTextItem
     var bottomTextMessage: BottomTextMessage?
 }
 
@@ -67,7 +67,7 @@ struct ArrivalsBoardTextItem {
                                isStrikethrough: Bool) -> ArrivalsBoardTextItem {
         .init(
             messageType: messageType,
-            font: .headline,
+            font: .subheadline,
             colorStyle: colorStyle,
             isStrikethrough: isStrikethrough
         )
@@ -100,15 +100,14 @@ extension ArrivalsBoardTextItem {
     
     // MARK: - Destination
     
-    static func destination(_ desinationType: ArrivalsBoardDestinationType,
-                            isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
+    static func destination(_ desinationType: ArrivalsBoardDestinationType) -> ArrivalsBoardTextItem {
         switch desinationType {
         case .checkFrontOfTrain:
             return .header(messageType: .localized(.arrivalsCheckFrontOfTrain),
-                           isStrikethrough: isStrikethrough)
+                           isStrikethrough: false)
         case .towards(let destinationName):
             return .header(messageType: .verbatim(destinationName),
-                           isStrikethrough: isStrikethrough)
+                                isStrikethrough: false)
         }
     }
     
@@ -153,9 +152,10 @@ extension ArrivalsBoardTextItem {
     
     static func departureTimeScheduled(departureTime: Date) -> ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(
+        return .header(
             messageType: .verbatim(formattedTime),
-            colorStyle: .boardPrimary
+            colorStyle: .boardPrimary,
+            isStrikethrough: false
         )
     }
         
