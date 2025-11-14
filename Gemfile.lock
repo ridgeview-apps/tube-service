@@ -118,7 +118,6 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.4.1)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
-    fastlane-plugin-appcenter (2.1.2)
     fastlane-plugin-badge (1.5.0)
       badge (~> 0.13.0)
     fastlane-sirp (1.0.0)
@@ -231,7 +230,6 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
-  fastlane-plugin-appcenter
   fastlane-plugin-badge
 
 BUNDLED WITH

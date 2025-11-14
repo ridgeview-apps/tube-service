@@ -27,16 +27,12 @@ extension ArrivalDeparture {
     }
     
     private var destinationTextItem: ArrivalsBoardTextItem {
-        let isStrikeThrough = isCancelledOrNotStopping
         if terminatesHere {
-            return .destination(.checkFrontOfTrain,
-                                isStrikethrough: isStrikeThrough)
+            return .destination(.checkFrontOfTrain)
         } else if let sanitizedDestinationName, !sanitizedDestinationName.isEmpty {
-            return .destination(.towards(sanitizedDestinationName),
-                                isStrikethrough: isStrikeThrough)
+            return .destination(.towards(sanitizedDestinationName))
         } else {
-            return .destination(.checkFrontOfTrain,
-                                isStrikethrough: isStrikeThrough)
+            return .destination(.checkFrontOfTrain)
         }
     }
     

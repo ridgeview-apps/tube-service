@@ -35,7 +35,7 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     let id: String
     let numberLabel: NumberLabel
     let destinationText: ArrivalsBoardTextItem
-    var countdownText: ArrivalsBoardTextItem
+    let countdownText: ArrivalsBoardTextItem
     var bottomTextMessage: BottomTextMessage?
 }
 
@@ -155,7 +155,8 @@ extension ArrivalsBoardTextItem {
         let formattedTime = ukDateFormatter.string(from: departureTime)
         return .footerMedium(
             messageType: .verbatim(formattedTime),
-            colorStyle: .boardPrimary
+            colorStyle: .boardPrimary,
+            isStrikethrough: false
         )
     }
         
