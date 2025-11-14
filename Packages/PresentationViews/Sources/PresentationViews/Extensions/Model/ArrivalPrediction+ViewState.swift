@@ -15,7 +15,6 @@ extension ArrivalPrediction {
                                backgroundColor: lineID.backgroundColor,
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
-            departureTimeText: nil,
             destinationText: destinationTextItem,
             countdownText: countdownTextItem,
             bottomTextMessage: .generalInfo(currentVehicleLocationTextItem)

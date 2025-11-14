@@ -9,6 +9,7 @@ extension ArrivalDeparture {
         let cellID = "\(id)-\(arrivalNumber)"
         
         let bottomTextMessage: ArrivalsBoardCellItem.BottomTextMessage = .departureInfo(
+            scheduled: scheduledDepartureTextItem,
             estimated: estimatedDepartureTextItem,
             status: departureStatusWarningTextItem
         )
@@ -19,7 +20,6 @@ extension ArrivalDeparture {
                                backgroundColor: lineID.backgroundColor,
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
-            departureTimeText: scheduledDepartureTextItem,
             destinationText: destinationTextItem,
             countdownText: countdownTextItem,
             bottomTextMessage: bottomTextMessage

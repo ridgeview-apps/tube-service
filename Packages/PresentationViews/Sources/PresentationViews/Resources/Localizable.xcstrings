@@ -96,7 +96,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Expected %@"
+            "value" : "Exp %@"
           }
         }
       }

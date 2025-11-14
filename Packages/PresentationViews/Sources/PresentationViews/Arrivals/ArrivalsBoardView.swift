@@ -164,14 +164,10 @@ struct ArrivalsBoardView: View {
     
     private func topText(for cellItem: ArrivalsBoardCellItem) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            if let departureTimeText = cellItem.departureTimeText {
-                scheduledDepartureText(with: departureTimeText)
-            }
             cellTextItem(for: cellItem.destinationText)
             Spacer()
             cellTextItem(for: cellItem.countdownText)
         }
-        .bold()
     }
     
     @ViewBuilder
@@ -182,8 +178,11 @@ struct ArrivalsBoardView: View {
                 if let messageTextItem {
                     cellTextItem(for: messageTextItem)
                 }
-            case let .departureInfo(estimatedDepartureItem, statusTextItem):
-                HStack(alignment: .top) {
+            case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
+                HStack(alignment: .firstTextBaseline) {
+                    if let scheduledDepartureItem {
+                        scheduledDepartureText(with: scheduledDepartureItem)
+                    }
                     if let estimatedDepartureItem {
                         cellTextItem(for: estimatedDepartureItem)
                     }
