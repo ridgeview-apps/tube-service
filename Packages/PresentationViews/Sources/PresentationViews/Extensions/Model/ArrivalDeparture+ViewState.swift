@@ -54,7 +54,7 @@ extension ArrivalDeparture {
     }
     
     private var isCancelledOrNotStopping: Bool {
-        departureStatus == .cancelled || departureStatus == .notStoppingHere
+        departureStatus == .cancelled || departureStatus == .notStoppingAtStation
 
     }
 
@@ -63,8 +63,8 @@ extension ArrivalDeparture {
         switch departureStatus {
         case .cancelled:
             return .departureStatus(.cancelled)
-        case .notStoppingHere:
-            return .departureStatus(.notStoppingHere)
+        case .notStoppingAtStation:
+            return .departureStatus(.notStoppingAtStation)
         case .delayed where isSignificantlyDelayed:
             return .departureStatus(.delayed)
         default:

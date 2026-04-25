@@ -178,9 +178,11 @@ extension ArrivalsBoardTextItem {
         case .delayed:
             return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusDelayed),
                                  colorStyle: .footerWarning)
-        case .notStoppingHere:
+        case .notStoppingAtStation:
             return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusNotStopping),
                                  colorStyle: .footerWarning)
+        case .unknown:
+            return .footerMedium(messageType: .verbatim(""))
         }
     }
 }

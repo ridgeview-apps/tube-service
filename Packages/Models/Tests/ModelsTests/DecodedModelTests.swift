@@ -34,6 +34,28 @@ struct ModelDecoderTests {
         
         #expect(!elizabethLineArrivals.isEmpty)
     }
+
+    @Test
+    func decodedArrivalDeparturesWithUnsupportedStatusValues() throws {
+        let arrivalDepartures = try decodeRawJSONString(
+            elizabethLineArrivalsWithUnsupportedDepartureStatusJSON,
+            asType: [ArrivalDeparture].self
+        )
+
+        #expect(!arrivalDepartures.isEmpty)
+        #expect(arrivalDepartures.contains { $0.departureStatus == .unknown("BoardingSoon") })
+    }
+
+    @Test
+    func decodedArrivalDeparturesWithInvalidStatusTypes() throws {
+        let arrivalDepartures = try decodeRawJSONString(
+            elizabethLineArrivalsWithInvalidDepartureStatusTypeJSON,
+            asType: [ArrivalDeparture].self
+        )
+
+        #expect(!arrivalDepartures.isEmpty)
+        #expect(arrivalDepartures.contains { $0.departureStatus == .unknown("missing") })
+    }
     
     @Test
     func decodedDisruptionPoints() throws {
