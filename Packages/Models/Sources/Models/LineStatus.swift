@@ -76,11 +76,7 @@ public struct Disruption: Codable, Hashable, Sendable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        do {
-            self.category = try container.decodeIfPresent(DisruptionCategory.self, forKey: .category)
-        } catch {
-            self.category = .undefined
-        }
+        self.category = (try? container.decodeIfPresent(DisruptionCategory.self, forKey: .category)) ?? .undefined
         self.description = try container.decodeIfPresent(String.self, forKey: .description)
         self.additionalInfo = try container.decodeIfPresent(String.self, forKey: .additionalInfo)
     }

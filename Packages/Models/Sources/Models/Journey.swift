@@ -22,9 +22,23 @@ public struct JourneyLeg: Codable, Hashable, Sendable {
     public let departurePoint: StopPoint?
     public let arrivalPoint: StopPoint?
     public let routeOptions: [JourneyRouteOption]?
-    public let mode: TflIdentifierType?
+    public let mode: TflIdentifier?
     public let path: JourneyPath?
     public let disruptions: [Disruption]?
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.duration = try? container.decodeIfPresent(Int.self, forKey: .duration)
+        self.instruction = try? container.decodeIfPresent(JourneyInstruction.self, forKey: .instruction)
+        self.departureTime = try? container.decodeIfPresent(Date.self, forKey: .departureTime)
+        self.arrivalTime = try? container.decodeIfPresent(Date.self, forKey: .arrivalTime)
+        self.departurePoint = try? container.decodeIfPresent(StopPoint.self, forKey: .departurePoint)
+        self.arrivalPoint = try? container.decodeIfPresent(StopPoint.self, forKey: .arrivalPoint)
+        self.routeOptions = try? container.decodeIfPresent([JourneyRouteOption].self, forKey: .routeOptions)
+        self.mode = try? container.decodeIfPresent(TflIdentifier.self, forKey: .mode)
+        self.path = try? container.decodeIfPresent(JourneyPath.self, forKey: .path)
+        self.disruptions = try? container.decodeIfPresent([Disruption].self, forKey: .disruptions)
+    }
 }
 
 public struct JourneyInstruction: Codable, Hashable, Sendable {
@@ -33,7 +47,7 @@ public struct JourneyInstruction: Codable, Hashable, Sendable {
 }
 
 public struct JourneyRouteOption: Codable, Hashable, Sendable {
-    public let lineIdentifier: TflIdentifierType?
+    public let lineIdentifier: TflIdentifier?
 }
 
 public struct JourneyPath: Codable, Hashable, Sendable {
@@ -52,63 +66,15 @@ public struct StopPoint: Codable, Hashable, Sendable {
 public struct TflIdentifier: Codable, Hashable, Sendable {
     public let id: String?
     public let name: String?
-}
-
-public enum TflIdentifierType: Hashable, Codable, Sendable {
-    
-    case modeID(ModeID)
-    case trainLineID(TrainLineID)
-    case otherLineID(String)
-    case otherID(TflIdentifier)
-    case unsupported
-    
-    var modeID: ModeID? {
-        guard case let .modeID(modeID) = self else {
-            return nil
-        }
-        return modeID
-    }
     
     var trainLineID: TrainLineID? {
-        guard case let .trainLineID(lineID) = self else {
-            return nil
-        }
-        return lineID
+        guard let id else { return nil }
+        return TrainLineID(rawValue: id)
     }
     
-    private struct DiscriminatorKey: Decodable {
-        let type: String?
-    }
-    
-    public init(from decoder: Decoder) throws {
-        guard let discriminator = try? DiscriminatorKey(from: decoder).type else {
-            self = .unsupported
-            return
-        }
-        
-        let identifier = try TflIdentifier(from: decoder)
-        
-        switch discriminator.lowercased() {
-        case "mode":
-            guard let id = identifier.id,
-                  let mode = ModeID(rawValue: id) else {
-                self = .unsupported
-                return
-            }
-            self = .modeID(mode)
-        case "line":
-            guard let id = identifier.id else {
-                self = .unsupported
-                return
-            }
-            if let trainLineID = TrainLineID(rawValue: id) {
-                self = .trainLineID(trainLineID)
-            } else {
-                self = .otherLineID(id)
-            }
-        default:
-            self = .otherID(identifier)
-        }
+    var modeID: ModeID? {
+        guard let id else { return nil }
+        return ModeID(rawValue: id)
     }
 }
 

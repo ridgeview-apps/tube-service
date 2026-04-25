@@ -9,7 +9,7 @@ public extension JourneyItinerary {
 
 public extension JourneyLeg {
     var firstRouteOption: JourneyRouteOption? { routeOptions?.first }
-    var lineIdentifier: TflIdentifierType? { firstRouteOption?.lineIdentifier }
+    var lineIdentifier: TflIdentifier? { firstRouteOption?.lineIdentifier }
     var trainLineID: TrainLineID? { lineIdentifier?.trainLineID }
     var modeID: ModeID? { mode?.modeID }
     var stopPoints: [TflIdentifier] { path?.stopPoints ?? [] }
