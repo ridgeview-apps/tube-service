@@ -168,7 +168,7 @@ extension ArrivalsBoardTextItem {
     
     // MARK: Departure status
     
-    static func departureStatus(_ departureStatus: ArrivalDeparture.DepartureStatus) -> ArrivalsBoardTextItem {
+    static func departureStatus(_ departureStatus: DepartureStatus) -> ArrivalsBoardTextItem {
         switch departureStatus {
         case .onTime:
             return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusOnTime))
