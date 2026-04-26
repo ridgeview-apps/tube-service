@@ -191,7 +191,7 @@ private struct Previewer: View {
 #Preview("Loaded") {
     Previewer(
         loadingState: .loaded,
-        cellItems: (ModelStubs.journeyItineraryKingsXToWaterloo.journeys ?? [])
+        cellItems: (ModelStubs.journeyResultsKingsXToWaterloo.journeys ?? [])
                         .removingDuplicates()
                         .map {
                             JourneyResultsCellItem(journey: $0,

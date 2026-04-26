@@ -1,6 +1,6 @@
 import Foundation
 
-public struct JourneyItinerary: Codable, Hashable, Sendable {
+public struct JourneyResults: Codable, Hashable, Sendable {
     public let journeys: [Journey]?
 }
 

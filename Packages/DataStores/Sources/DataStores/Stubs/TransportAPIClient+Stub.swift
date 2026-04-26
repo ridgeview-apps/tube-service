@@ -47,11 +47,11 @@ public final class StubTransportAPIClient: TransportAPIClientType {
         return stubbedDisruptedPoints
     }
     
-    public private(set) var fetchJourneyItineraryCallCount = 0
-    public var stubbedJourneyItinerary: HTTPResponse<JourneyItinerary> = .success200(ModelStubs.journeyItineraryKingsXToWaterloo)
-    public func fetchJourneyItinerary(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyItinerary> {
-        fetchJourneyItineraryCallCount += 1
-        return stubbedJourneyItinerary
+    public private(set) var fetchJourneyResultsCallCount = 0
+    public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterloo)
+    public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
+        fetchJourneyResultsCallCount += 1
+        return stubbedJourneyResults
     }
 }
 

@@ -1,4 +1,4 @@
-let journeyItineraryKingsXToWaterlooJSON = #"""
+let journeyResultsKingsXToWaterlooJSON = #"""
 {
     "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.ItineraryResult, Tfl.Api.Presentation.Entities",
     "journeys": [

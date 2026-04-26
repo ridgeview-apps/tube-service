@@ -9,7 +9,7 @@ public protocol TransportAPIClientType: Sendable {
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]>
     func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]>
     func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]>
-    func fetchJourneyItinerary(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyItinerary>
+    func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults>
 }
 
 
@@ -22,7 +22,7 @@ enum TransportAPIRoute {
     case getArrivalPredictions(stationCode: String, [TrainLineID]) // Tube lines only
     case getArrivalDepartures(stationCode: String, [TrainLineID])  // Overground, Thameslink & Elizabeth line
     case getStationDisruptions([ModeID])
-    case getJourneyItinerary(JourneyRequestParams)
+    case getJourneyResults(JourneyRequestParams)
     
     func toURL(relativeTo baseURL: URL, appID: String, appKey: String) throws -> URL {
         var urlComponents = try self.toURLComponents()
@@ -64,7 +64,7 @@ enum TransportAPIRoute {
         case let .getStationDisruptions(modes):
             let modesParam = modes.toURLPathParam()
             return try .fromPath("/StopPoint/Mode/\(modesParam)/Disruption")
-        case let .getJourneyItinerary(params):
+        case let .getJourneyResults(params):
             let fromParam = params.from.toURLPathParam()
             let toParam = params.to.toURLPathParam()
             
@@ -145,9 +145,9 @@ public struct TransportAPIClient: TransportAPIClientType {
                                    mappedTo: [DisruptedPoint].self)
     }
     
-    public func fetchJourneyItinerary(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyItinerary> {
-        return try await fetchData(for: .getJourneyItinerary(params),
-                                   mappedTo: JourneyItinerary.self)
+    public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
+        return try await fetchData(for: .getJourneyResults(params),
+                                   mappedTo: JourneyResults.self)
     }
     
     private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {

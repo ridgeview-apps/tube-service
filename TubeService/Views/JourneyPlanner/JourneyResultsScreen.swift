@@ -66,18 +66,18 @@ struct JourneyResultsScreen: View {
         }
     }
     
-    private func resolveLocationCoordinatesAndFetchItinerary() async throws -> JourneyItinerary {
+    private func resolveLocationCoordinatesAndFetchItinerary() async throws -> JourneyResults {
         form = try await localSearchCompleter.resolveLocationCoordinates(forForm: form)
         return try await fetchItinerary()
     }
     
-    private func fetchItinerary() async throws -> JourneyItinerary {
+    private func fetchItinerary() async throws -> JourneyResults {
         let requestParams = try form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
-        return try await transportAPI.fetchJourneyItinerary(for: requestParams).decodedModel
+        return try await transportAPI.fetchJourneyResults(for: requestParams).decodedModel
 
     }
     
-    private func makeCellItems(for itinerary: JourneyItinerary) {
+    private func makeCellItems(for itinerary: JourneyResults) {
         cellItems = (itinerary.journeys ?? [])
             .sanitizedAndSortedByArrivalTime(forModeIDs: modeIDS)
             .enumerated()

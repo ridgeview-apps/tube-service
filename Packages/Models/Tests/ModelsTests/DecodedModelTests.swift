@@ -65,7 +65,7 @@ struct ModelDecoderTests {
     }
     
     @Test
-    func decodedTubeJourneyItinerary() throws {
+    func decodedTubeJourneyResults() throws {
         let journey = try decodeRawJSONString(journeyByTubeJSON, asType: Journey.self)
         
         #expect(journey.legs?[0].modeID == .walking)
