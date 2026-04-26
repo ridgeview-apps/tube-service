@@ -56,7 +56,6 @@ public enum LineStatusSeverity: Int, Codable, Sendable {
     case noIssues = 18
     case information = 19
     case serviceClosed = 20
-    case ignored = 999
 }
 
 public struct Disruption: Codable, Hashable, Sendable {
