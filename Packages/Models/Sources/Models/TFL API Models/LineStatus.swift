@@ -1,13 +1,13 @@
 import Foundation
 
 public struct LineStatus: Codable, Hashable, Sendable {
-    public let statusSeverity: LineStatusSeverity?
+    public let statusSeverity: LineStatusSeverity
     public let statusSeverityDescription: String?
     public let reason: String?
     public let disruption: Disruption?
     
     public init(
-        statusSeverity: LineStatusSeverity?,
+        statusSeverity: LineStatusSeverity,
         statusSeverityDescription: String?,
         reason: String?,
         disruption: Disruption?
@@ -20,20 +20,16 @@ public struct LineStatus: Codable, Hashable, Sendable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        do {
-            self.statusSeverity = try container.decodeIfPresent(LineStatusSeverity.self, forKey: .statusSeverity)
-        } catch {
-            self.statusSeverity = .undefined
-        }
-        self.statusSeverityDescription = try container.decodeIfPresent(String.self, forKey: .statusSeverityDescription)
-        self.reason = try container.decodeIfPresent(String.self, forKey: .reason)
-        self.disruption = try container.decodeIfPresent(Disruption.self, forKey: .disruption)
+        self.statusSeverity = (try? container.decodeIfPresent(LineStatusSeverity.self, forKey: .statusSeverity)) ?? .undefined
+        self.statusSeverityDescription = try? container.decodeIfPresent(String.self, forKey: .statusSeverityDescription)
+        self.reason = try? container.decodeIfPresent(String.self, forKey: .reason)
+        self.disruption = try? container.decodeIfPresent(Disruption.self, forKey: .disruption)
     }
 }
 
 extension LineStatus: Identifiable {
     public var id: String {
-        "\(statusSeverity ?? .undefined)-\(statusSeverityDescription ?? "")-\(reason ?? "")-\(disruption?.description ?? "")"
+        "\(statusSeverity)-\(statusSeverityDescription ?? "")-\(reason ?? "")-\(disruption?.description ?? "")"
     }
 }
 
@@ -77,8 +73,8 @@ public struct Disruption: Codable, Hashable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.category = (try? container.decodeIfPresent(DisruptionCategory.self, forKey: .category)) ?? .undefined
-        self.description = try container.decodeIfPresent(String.self, forKey: .description)
-        self.additionalInfo = try container.decodeIfPresent(String.self, forKey: .additionalInfo)
+        self.description = try? container.decodeIfPresent(String.self, forKey: .description)
+        self.additionalInfo = try? container.decodeIfPresent(String.self, forKey: .additionalInfo)
     }
 }
 

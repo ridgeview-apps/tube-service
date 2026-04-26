@@ -40,16 +40,16 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
     
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.platformName = try container.decodeIfPresent(String.self, forKey: .platformName)
-        self.destinationName = try container.decodeIfPresent(String.self, forKey: .destinationName)
-        self.naptanId = try container.decodeIfPresent(String.self, forKey: .naptanId)
-        self.stationName = try container.decodeIfPresent(String.self, forKey: .stationName)
-        self.estimatedTimeOfArrival = try container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfArrival)
-        self.scheduledTimeOfArrival = try container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfArrival)
-        self.estimatedTimeOfDeparture = try container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfDeparture)
-        self.scheduledTimeOfDeparture = try container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfDeparture)
-        self.minutesAndSecondsToArrival = try container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToArrival)
-        self.minutesAndSecondsToDeparture = try container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToDeparture)
+        self.platformName = try? container.decodeIfPresent(String.self, forKey: .platformName)
+        self.destinationName = try? container.decodeIfPresent(String.self, forKey: .destinationName)
+        self.naptanId = try? container.decodeIfPresent(String.self, forKey: .naptanId)
+        self.stationName = try? container.decodeIfPresent(String.self, forKey: .stationName)
+        self.estimatedTimeOfArrival = try? container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfArrival)
+        self.scheduledTimeOfArrival = try? container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfArrival)
+        self.estimatedTimeOfDeparture = try? container.decodeIfPresent(Date.self, forKey: .estimatedTimeOfDeparture)
+        self.scheduledTimeOfDeparture = try? container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfDeparture)
+        self.minutesAndSecondsToArrival = try? container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToArrival)
+        self.minutesAndSecondsToDeparture = try? container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToDeparture)
         self.departureStatus = (try? container.decodeIfPresent(DepartureStatus.self, forKey: .departureStatus)) ?? .unknownMissing
     }
 }
