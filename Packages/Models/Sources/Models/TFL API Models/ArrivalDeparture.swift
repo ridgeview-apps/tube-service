@@ -12,7 +12,7 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
     public let scheduledTimeOfDeparture: Date?
     public let minutesAndSecondsToArrival: String?
     public let minutesAndSecondsToDeparture: String?
-    public let departureStatus: DepartureStatus
+    public let departureStatus: DepartureStatus?
     
     public init(platformName: String,
                 destinationName: String?,
@@ -50,7 +50,7 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
         self.scheduledTimeOfDeparture = try? container.decodeIfPresent(Date.self, forKey: .scheduledTimeOfDeparture)
         self.minutesAndSecondsToArrival = try? container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToArrival)
         self.minutesAndSecondsToDeparture = try? container.decodeIfPresent(String.self, forKey: .minutesAndSecondsToDeparture)
-        self.departureStatus = (try? container.decodeIfPresent(DepartureStatus.self, forKey: .departureStatus)) ?? .unknownMissing
+        self.departureStatus = try? container.decodeIfPresent(DepartureStatus.self, forKey: .departureStatus)
     }
 }
 

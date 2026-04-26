@@ -4,7 +4,7 @@ extension Sequence where Element == LineStatus {
     
     func sortedByStatusSeverity() -> [LineStatus] {
         self.sorted {
-            ($0.statusSeverity).rawValue < ($1.statusSeverity).rawValue
+            ($0.statusSeverity ?? .ignored).rawValue < ($1.statusSeverity ?? .ignored).rawValue
         }
     }
 }

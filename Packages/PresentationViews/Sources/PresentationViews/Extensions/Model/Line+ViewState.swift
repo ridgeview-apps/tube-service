@@ -45,9 +45,9 @@ public extension Line {
     typealias SortProperties = (disruptionSortOrder: Int,
                                 lineName: String)
     
-    var statusSeverity: LineStatusSeverity {
+    var statusSeverity: LineStatusSeverity? {
         lineStatusesSortedBySeverity
-            .compactMap(\.statusSeverity).first ?? .undefined
+            .compactMap(\.statusSeverity).first
     }
     
     var lineStatusesSortedBySeverity: [LineStatus] {

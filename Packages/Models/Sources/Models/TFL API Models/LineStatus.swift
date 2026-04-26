@@ -1,7 +1,7 @@
 import Foundation
 
 public struct LineStatus: Codable, Hashable, Sendable {
-    public let statusSeverity: LineStatusSeverity
+    public let statusSeverity: LineStatusSeverity?
     public let statusSeverityDescription: String?
     public let reason: String?
     public let disruption: Disruption?
@@ -20,16 +20,10 @@ public struct LineStatus: Codable, Hashable, Sendable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.statusSeverity = (try? container.decodeIfPresent(LineStatusSeverity.self, forKey: .statusSeverity)) ?? .undefined
+        self.statusSeverity = try? container.decodeIfPresent(LineStatusSeverity.self, forKey: .statusSeverity)
         self.statusSeverityDescription = try? container.decodeIfPresent(String.self, forKey: .statusSeverityDescription)
         self.reason = try? container.decodeIfPresent(String.self, forKey: .reason)
         self.disruption = try? container.decodeIfPresent(Disruption.self, forKey: .disruption)
-    }
-}
-
-extension LineStatus: Identifiable {
-    public var id: String {
-        "\(statusSeverity)-\(statusSeverityDescription ?? "")-\(reason ?? "")-\(disruption?.description ?? "")"
     }
 }
 
@@ -62,7 +56,7 @@ public enum LineStatusSeverity: Int, Codable, Sendable {
     case noIssues = 18
     case information = 19
     case serviceClosed = 20
-    case undefined = 999
+    case ignored = 999
 }
 
 public struct Disruption: Codable, Hashable, Sendable {
@@ -72,14 +66,13 @@ public struct Disruption: Codable, Hashable, Sendable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.category = (try? container.decodeIfPresent(DisruptionCategory.self, forKey: .category)) ?? .undefined
+        self.category = try? container.decodeIfPresent(DisruptionCategory.self, forKey: .category)
         self.description = try? container.decodeIfPresent(String.self, forKey: .description)
         self.additionalInfo = try? container.decodeIfPresent(String.self, forKey: .additionalInfo)
     }
 }
 
 public enum DisruptionCategory: String, Codable, Sendable {
-    case undefined = "Undefined"
     case realTime = "RealTime"
     case plannedWork = "PlannedWork"
     case information = "Information"
