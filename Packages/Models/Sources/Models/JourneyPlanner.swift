@@ -54,37 +54,13 @@ public struct JourneyPath: Codable, Hashable, Sendable {
     public let stopPoints: [TflIdentifier]?
 }
 
-public struct StopPoint: Codable, Hashable, Sendable {
-    public let naptanId: String?
-    public let platformName: String?
-    public let icsCode: String?
-    public let commonName: String?
-    public let lat: Double?
-    public let lon: Double?
-}
-
-public struct TflIdentifier: Codable, Hashable, Sendable {
-    public let id: String?
-    public let name: String?
-    
-    var trainLineID: TrainLineID? {
-        guard let id else { return nil }
-        return TrainLineID(rawValue: id)
-    }
-    
-    var modeID: ModeID? {
-        guard let id else { return nil }
-        return ModeID(rawValue: id)
-    }
-}
-
 public struct JourneyFare: Codable, Hashable, Sendable {
+    public struct Fare: Codable, Hashable, Sendable {
+        let chargeLevel: String?
+        let peak: Int?
+        let offPeak: Int?
+    }
+    
     public let totalCost: Int? // In pence
     public let fares: [Fare]?
-}
-
-public struct Fare: Codable, Hashable, Sendable {
-    let chargeLevel: String?
-    let peak: Int?
-    let offPeak: Int?
 }
