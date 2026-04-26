@@ -32,7 +32,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.favouriteLineGroupIDs = try container.decode(Set<Station.LineGroup.ID>.self, forKey: .favouriteLineGroupIDs)
         self.recentlySelectedStations = (try? container.decode([Station.ID].self, forKey: .recentlySelectedStations)) ?? []
         self.favouriteLineIDs = (try? container.decodeIfPresent(Set<Line.ID>.self, forKey: .favouriteLineIDs)) ?? []
-        self.journeyPlannerModeIDs = (try? container.decode(Set<ModeID>.self, forKey: .journeyPlannerModeIDs)) ?? ModeID.defaultJourneyPlannerModeIDs
+        self.journeyPlannerModeIDs = (try? container.decode(Set<ModeID>.self, forKey: .journeyPlannerModeIDs)) ?? ModeID.defaultJourneyPlannerModes
         self.recentlySavedJourneys = (try? container.decode([SavedJourney].self, forKey: .recentlySavedJourneys)) ?? []
         self.readSystemStatusMessage = (try? container.decodeIfPresent(SystemStatus.ID.self, forKey: .readSystemStatusMessage))
     }
@@ -50,7 +50,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public static let `default`: UserPreferences = .init(favouriteLineGroupIDs: [],
                                                          favouriteLineIDs: [],
                                                          recentlySelectedStations: [],
-                                                         journeyPlannerModeIDs: ModeID.defaultJourneyPlannerModeIDs,
+                                                         journeyPlannerModeIDs: ModeID.defaultJourneyPlannerModes,
                                                          recentlySavedJourneys: [],
                                                          readSystemStatusMessage: nil)
     

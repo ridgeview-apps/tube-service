@@ -25,7 +25,7 @@ public extension ModeID {
         [.tube, .dlr, .overground, .tram, .elizabethLine]
     }
     
-    static var allJourneyPlannerModeIDs: Set<ModeID> {
+    static var journeyPlannerModes: Set<ModeID> {
         [
             .bus,
             .cableCar,
@@ -41,9 +41,9 @@ public extension ModeID {
         ]
     }
     
-    static var defaultJourneyPlannerModeIDs: Set<ModeID> {
+    static var defaultJourneyPlannerModes: Set<ModeID> {
         let excludedDefaultModes: Set<ModeID> = [.walking, cycle]
-        return allJourneyPlannerModeIDs.filter {
+        return journeyPlannerModes.filter {
             !excludedDefaultModes.contains($0)
         }
     }

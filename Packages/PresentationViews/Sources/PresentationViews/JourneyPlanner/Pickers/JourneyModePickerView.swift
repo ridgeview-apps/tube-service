@@ -14,7 +14,7 @@ public struct JourneyModePickerView: View {
     public var body: some View {
         List {
             Section {
-                ForEach(ModeID.allJourneyPlannerModeIDs.sortedBySortValue(), id: \.self) { modeID in
+                ForEach(ModeID.journeyPlannerModes.sortedBySortValue(), id: \.self) { modeID in
                     cell(forModeID: modeID)
                 }
             } header: {
@@ -74,7 +74,7 @@ public struct JourneyModePickerView: View {
     
     private func selectAll() {
         minimumSelectionWarningID = nil
-        selection = Set(ModeID.allJourneyPlannerModeIDs)
+        selection = Set(ModeID.journeyPlannerModes)
     }
     
     @ViewBuilder
@@ -193,7 +193,7 @@ private extension ModeID {
 
 // MARK: - Previews
 private struct Previewer: View {
-    @State var selection = Set(ModeID.defaultJourneyPlannerModeIDs)
+    @State var selection = Set(ModeID.defaultJourneyPlannerModes)
     
     var body: some View {
         NavigationStack {

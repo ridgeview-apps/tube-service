@@ -39,14 +39,14 @@ public extension Settings {
         public var journeyPlannerModesSelection: Set<ModeID>
         
         var allJourneyPlannerModesSelected: Bool {
-            journeyPlannerModesSelection.count == ModeID.allJourneyPlannerModeIDs.count
+            journeyPlannerModesSelection.count == ModeID.journeyPlannerModes.count
         }
         
         public init(journeyPlannerModesSelection: Set<ModeID>) {
             self.journeyPlannerModesSelection = journeyPlannerModesSelection
         }
         
-        public static let `default` = EditableValues(journeyPlannerModesSelection: Set(ModeID.defaultJourneyPlannerModeIDs))
+        public static let `default` = EditableValues(journeyPlannerModesSelection: Set(ModeID.defaultJourneyPlannerModes))
     }
     
     
