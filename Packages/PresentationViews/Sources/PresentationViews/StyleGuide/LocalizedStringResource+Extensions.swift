@@ -520,10 +520,6 @@ public extension LocalizedStringResource {
         moduleResource("refresh.status.last.updated \(date)")
     }
     
-    static var refreshStatusLoading: LocalizedStringResource {
-        moduleResource("refresh.status.loading")
-    }
-    
     static var searchSuggestionsSectionTitle: LocalizedStringResource {
         moduleResource("search.suggestions.section.title")
     }

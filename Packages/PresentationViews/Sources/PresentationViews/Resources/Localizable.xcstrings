@@ -1093,17 +1093,6 @@
         }
       }
     },
-    "line.status.select.other.date.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select a future date"
-          }
-        }
-      }
-    },
     "line.status.section.disruptions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1133,6 +1122,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Good Service"
+          }
+        }
+      }
+    },
+    "line.status.select.other.date.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select a future date"
           }
         }
       }
@@ -1432,7 +1432,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Updated %@"
+            "value" : "Last updated: %@"
           }
         }
       }

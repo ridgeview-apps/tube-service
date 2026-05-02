@@ -40,6 +40,7 @@ public struct LineStatusListView: View {
                 lineStatusCells
             } header: {
                 stickyHeader
+                    .textCase(nil)
             }
             .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
             .listRowSeparator(.hidden)
@@ -50,11 +51,12 @@ public struct LineStatusListView: View {
         .withHardScrollEdgeEffectStyle(for: .top)
         .withTightenedLabelIconToTitleSpacing()
         .environment(\.defaultMinListRowHeight, 0)
-        .animation(.default, value: selectedFilterOption)        
+        .animation(.default, value: selectedFilterOption)
     }
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
+            refreshStatusView
             if !favourites.isEmpty {
                 sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
                 tappableStatusCells(with: favourites)
@@ -142,7 +144,11 @@ public struct LineStatusListView: View {
     private var stickyHeader: some View {
         if #available(iOS 26.0, *) {
             headerContent
-                .padding(12)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
+                .listRowInsets(
+                    .init(top: 0, leading: 8, bottom: 4, trailing: 8)
+                )
                 .glassEffect(
                     .regular,
                     in: .rect(cornerRadius: 16)
@@ -151,17 +157,19 @@ public struct LineStatusListView: View {
             headerContent
                 .listRowInsets(.zero)
                 .padding(.horizontal, 16)
-                .padding(.vertical, 4)
+                .padding(.vertical, 8)
                 .background(Color.defaultBackground)
+                .overlay(alignment: .bottom) {
+                    Divider()
+                }
         }
     }
-    
+
     private var headerContent: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             filterOptionsPicker
             headerTitleView
             datePickerView
-            refreshStatusView
         }
         .foregroundStyle(.foreground)
     }
@@ -226,7 +234,7 @@ public struct LineStatusListView: View {
         if !shouldHideRefreshStatusView {
             RefreshStatusView(loadingState: loadingState,
                               refreshDate: refreshDate)
-            .font(.caption2)
+            .font(.caption)
             .foregroundStyle(Color.adaptiveMidGrey2)
         }
     }

@@ -10,22 +10,19 @@ public struct RefreshStatusView: View {
     
     public let loadingState: LoadingState
     public let refreshDate: Date?
-    public let loadingMessageTitle: LocalizedStringResource
     public let showsText: Bool
-    
-    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .full, timeStyle: .short)
+
+    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .medium, timeStyle: .short)
     private var refreshDateFormatted: String? {
         guard let refreshDate else { return nil }
         return timestampFormatter.string(from: refreshDate)
     }
-    
-    public init(loadingState: LoadingState, 
+
+    public init(loadingState: LoadingState,
                 refreshDate: Date? = nil,
-                loadingMessageTitle: LocalizedStringResource = .refreshStatusLoading,
                 showsText: Bool = true) {
         self.loadingState = loadingState
         self.refreshDate = refreshDate
-        self.loadingMessageTitle = loadingMessageTitle
         self.showsText = showsText
     }
     
@@ -36,25 +33,30 @@ public struct RefreshStatusView: View {
                 statusText
             }
         }
+        .animation(.default, value: loadingState)
     }
-    
+
     @ViewBuilder private var statusImage: some View {
         switch loadingState {
         case .loading:
             ProgressView()
+                .controlSize(.mini)
         case .loaded:
-            EmptyView()
+            if refreshDate != nil {
+                Image(systemName: "clock")
+                    .imageScale(.small)
+            }
         case .failure:
             Image(systemName: "exclamationmark.circle.fill")
-                .foregroundColor(.adaptiveRed)
+                .foregroundStyle(.adaptiveRed)
                 .imageScale(.small)
         }
     }
-    
+
     @ViewBuilder private var statusText: some View {
         switch loadingState {
         case .loading:
-            Text(loadingMessageTitle)
+            EmptyView()
         case let .failure(errorMessage):
             Text(errorMessage)
                 .foregroundStyle(.adaptiveRed)
