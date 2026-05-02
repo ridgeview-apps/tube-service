@@ -416,6 +416,18 @@ public extension LocalizedStringResource {
         moduleResource("line.status.tfl.xPosts.title.line \(lineName)")
     }
     
+    static var lineStatusSectionDisruptions: LocalizedStringResource {
+        moduleResource("line.status.section.disruptions")
+    }
+
+    static var lineStatusSectionFavourites: LocalizedStringResource {
+        moduleResource("line.status.section.favourites")
+    }
+
+    static var lineStatusSectionGoodService: LocalizedStringResource {
+        moduleResource("line.status.section.good.service")
+    }
+
     static var lineStatusServiceNow: LocalizedStringResource {
         moduleResource("line.status.service.now")
     }

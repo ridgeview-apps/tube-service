@@ -1104,6 +1104,39 @@
         }
       }
     },
+    "line.status.section.disruptions" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disruptions"
+          }
+        }
+      }
+    },
+    "line.status.section.favourites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favourites"
+          }
+        }
+      }
+    },
+    "line.status.section.good.service" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good Service"
+          }
+        }
+      }
+    },
     "line.status.service.now" : {
       "extractionState" : "manual",
       "localizations" : {

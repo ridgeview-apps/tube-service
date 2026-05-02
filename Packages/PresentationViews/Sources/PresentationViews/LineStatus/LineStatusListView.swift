@@ -17,7 +17,6 @@ public struct LineStatusListView: View {
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
     private var showsDatePicker: Bool { selectedFilterOption == .future }
-    private var hasFavouritesOrDisruptions: Bool { !(favourites + disruptions).isEmpty }
         
     public init(loadingState: LoadingState,
                 lines: [Line],
@@ -49,27 +48,46 @@ public struct LineStatusListView: View {
         .defaultScrollContentBackgroundColor()
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle()
+        .withCustomLabelIconToTitleSpacing()
+        .environment(\.defaultMinListRowHeight, 0)
+        .animation(.default, value: selectedFilterOption)        
     }
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            tappableStatusCells(with: favourites, needsTopPadding: true)
-            tappableStatusCells(with: disruptions,
-                                needsTopPadding: favourites.isEmpty)
+            if !favourites.isEmpty {
+                sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
+                tappableStatusCells(with: favourites)
+            }
+            if !disruptions.isEmpty {
+                sectionLabel(.lineStatusSectionDisruptions, systemImage: "exclamationmark.triangle.fill")
+                tappableStatusCells(with: disruptions)
+            }
             if showOtherLinesSummaryCell {
+                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
                 otherLinesSummaryCell
-            } else {
-                tappableStatusCells(with: allOtherLines,
-                                    needsTopPadding: true)
+            } else if !allOtherLines.isEmpty {
+                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
+                tappableStatusCells(with: allOtherLines)
             }
         }
     }
     
-    private func tappableStatusCells(with lines: [Line],
-                                     needsTopPadding: Bool = false) -> some View {
+    private func sectionLabel(_ title: LocalizedStringResource, systemImage: String) -> some View {
+        Label {
+            Text(title)
+        } icon: {
+            Image(systemName: systemImage)
+                .imageScale(.small)
+        }
+        .font(.subheadline.weight(.semibold))
+        .foregroundStyle(.secondary)
+        .padding(.top, 12)
+    }
+    
+    private func tappableStatusCells(with lines: [Line]) -> some View {
         ForEach(lines) { line in
             tappableStatusCell(for: line)
-                .padding(.top, line == lines.first && needsTopPadding ? 12 : 0)
         }
     }
     
@@ -82,7 +100,7 @@ public struct LineStatusListView: View {
                 showsAccessory: true,
                 animatedAccessoryImage: true
             )
-            .cardStyle(cornerRadius: 8)
+            .cardStyle(cornerRadius: 12)
             .frame(minHeight: 52)
             .id(statusCellAnimationID(for: line))
         }
@@ -244,9 +262,8 @@ public struct LineStatusListView: View {
             style: .multiLine(allOtherLines),
             showsAccessory: true
         )
-        .cardStyle(cornerRadius: 8)
+        .cardStyle(cornerRadius: 12)
         .frame(minHeight: 52)
-        .padding(.top, hasFavouritesOrDisruptions ? 12 : 0)
     }
 }
 

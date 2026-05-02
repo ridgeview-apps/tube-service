@@ -109,6 +109,15 @@ public extension View {
             self
         }
     }
+    
+    @ViewBuilder
+    func withCustomLabelIconToTitleSpacing(_ value: CGFloat = 0) -> some View {
+        if #available(iOS 26.0, *) {
+            labelIconToTitleSpacing(0)
+        } else {
+            self
+        }
+    }
 }
 
 extension ForEach where Content: View {
