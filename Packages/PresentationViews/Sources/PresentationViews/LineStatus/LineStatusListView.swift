@@ -78,10 +78,11 @@ public struct LineStatusListView: View {
             Text(title)
         } icon: {
             Image(systemName: systemImage)
-                .imageScale(.small)
         }
+        .imageScale(.small)
         .font(.subheadline.weight(.semibold))
         .foregroundStyle(.secondary)
+        .labelStyle(.titleAndIcon)
         .padding(.top, 12)
     }
     

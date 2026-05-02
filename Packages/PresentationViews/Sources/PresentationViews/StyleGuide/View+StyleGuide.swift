@@ -113,7 +113,7 @@ public extension View {
     @ViewBuilder
     func withCustomLabelIconToTitleSpacing(_ value: CGFloat = 0) -> some View {
         if #available(iOS 26.0, *) {
-            labelIconToTitleSpacing(0)
+            labelIconToTitleSpacing(8)
         } else {
             self
         }
@@ -156,8 +156,8 @@ private struct CardStyle: ViewModifier {
             .background(backgroundColor)
             .cornerRadius(cornerRadius)
             .shadow(color: .primary.opacity(0.14),
-                    radius: colorScheme == .dark ? 0: 4,
-                    x: 0,
+                    radius: colorScheme == .dark ? 0: 2,
+                    x: colorScheme == .dark ? 0 : 2,
                     y: colorScheme == .dark ? 0 : 2)
             .overlay {
                 if borderColor != .clear {
