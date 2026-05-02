@@ -11,12 +11,12 @@ public struct LineStatusCell: View {
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
     
     public enum Style: Hashable {
-        case singleLine(Line, showFavouriteImage: Bool)
+        case singleLine(Line)
         case multiLine([Line])
         
         var accessoryImageType: LineStatusAccessoryImageType {
             switch self {
-            case .singleLine(let line, _):
+            case .singleLine(let line):
                 return line.isDisrupted ? .disruption : .goodService
             case .multiLine(let lines):
                 return lines.allAreGoodService ? .goodService : .disruption
@@ -47,22 +47,15 @@ public struct LineStatusCell: View {
     
     @ViewBuilder private func leadingColumn() -> some View {
         switch style {
-        case .singleLine(let line, let showFavouriteImage):
-            singleLineLeadingColumn(line: line, showFavouriteImage: showFavouriteImage)
+        case .singleLine(let line):
+            singleLineLeadingColumn(line: line)
         case .multiLine(let lines):
             multilineLeadingColumn(with: lines)
         }
     }
     
-    private func singleLineLeadingColumn(line: Line, showFavouriteImage: Bool) -> some View {
+    private func singleLineLeadingColumn(line: Line) -> some View {
         HStack(spacing: 4) {
-            if showFavouriteImage {
-                Image(systemName: "star.fill")
-                    .resizable()
-                    .frame(width: 10 * dynamicScaleFactor,
-                           height: 10 * dynamicScaleFactor)
-                    .foregroundStyle(line.id.textColor)
-            }
             Text(line.id.name)
             Spacer()
         }
@@ -81,7 +74,7 @@ public struct LineStatusCell: View {
     
     @ViewBuilder private func trailingColumn() -> some View {
         switch style {
-        case .singleLine(let line, _):
+        case .singleLine(let line):
             singleLineTrailingColumn(line: line)
         case .multiLine(let lines):
             multilineTrailingColumn(with: lines)
@@ -161,18 +154,11 @@ import ModelStubs
     List {
         Group {
             Section("Single line - good service") {
-                LineStatusCell(style: .singleLine(ModelStubs.lineStatusGoodService,
-                                                  showFavouriteImage: false),
-                               showsAccessory: true)
-            }
-            Section("Single line - favourite") {
-                LineStatusCell(style: .singleLine(ModelStubs.lineStatusGoodService,
-                                                  showFavouriteImage: true),
+                LineStatusCell(style: .singleLine(ModelStubs.lineStatusGoodService),
                                showsAccessory: true)
             }
             Section("Single line - disrupted") {
-                LineStatusCell(style: .singleLine(ModelStubs.lineStatusDisrupted,
-                                                  showFavouriteImage: true),
+                LineStatusCell(style: .singleLine(ModelStubs.lineStatusDisrupted),
                                showsAccessory: true)
             }
             Section("Multline") {

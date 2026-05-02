@@ -97,7 +97,7 @@ public struct StationView: View {
     private var lineStatusSection: some View {
         Section {
             ForEach(statusCells, id: \.self) { cellStyle in
-                if case let .singleLine(line, _) = cellStyle {
+                if case let .singleLine(line) = cellStyle {
                     LineStatusCell(style: cellStyle, showsAccessory: true)
                         .frame(minHeight: 60)
                         .overlay {
@@ -151,12 +151,12 @@ private struct WrapperView: View {
     var loadingState: LoadingState = .loaded
     var statusCells: [LineStatusCell.Style] =
         [
-            .singleLine(.init(id: .circle, lineStatuses: [.goodService]), showFavouriteImage: false),
-            .singleLine(.init(id: .hammersmithAndCity, lineStatuses: [.goodService]), showFavouriteImage: false),
-            .singleLine(.init(id: .metropolitan, lineStatuses: [.goodService]), showFavouriteImage: false),
-            .singleLine(.init(id: .northern, lineStatuses: [.goodService]), showFavouriteImage: false),
-            .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService]), showFavouriteImage: false),
-            .singleLine(.init(id: .victoria, lineStatuses: [.goodService]), showFavouriteImage: false)
+            .singleLine(.init(id: .circle, lineStatuses: [.goodService])),
+            .singleLine(.init(id: .hammersmithAndCity, lineStatuses: [.goodService])),
+            .singleLine(.init(id: .metropolitan, lineStatuses: [.goodService])),
+            .singleLine(.init(id: .northern, lineStatuses: [.goodService])),
+            .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService])),
+            .singleLine(.init(id: .victoria, lineStatuses: [.goodService]))
         ]
     var disruptionMessages: [String] = []
     

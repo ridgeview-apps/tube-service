@@ -111,9 +111,9 @@ public extension View {
     }
     
     @ViewBuilder
-    func withCustomLabelIconToTitleSpacing(_ value: CGFloat = 0) -> some View {
+    func withTightenedLabelIconToTitleSpacing() -> some View {
         if #available(iOS 26.0, *) {
-            labelIconToTitleSpacing(8)
+            labelIconToTitleSpacing(6)
         } else {
             self
         }
@@ -154,7 +154,7 @@ private struct CardStyle: ViewModifier {
     public func body(content: Content) -> some View {
         content
             .background(backgroundColor)
-            .cornerRadius(cornerRadius)
+            .clipShape(.rect(cornerRadius: cornerRadius))
             .shadow(color: .primary.opacity(0.14),
                     radius: colorScheme == .dark ? 0: 2,
                     x: colorScheme == .dark ? 0 : 2,

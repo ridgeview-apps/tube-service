@@ -79,7 +79,7 @@ private extension Sequence where Element == Line {
             .sortedByStatusSeverity()
             .filter { station.sortedLineIDs.contains($0.id) }
             .map {
-                LineStatusCell.Style.singleLine($0, showFavouriteImage: false)
+                LineStatusCell.Style.singleLine($0)
             }
     }
 }

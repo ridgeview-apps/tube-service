@@ -47,8 +47,8 @@ public struct LineStatusListView: View {
         }
         .defaultScrollContentBackgroundColor()
         .listStyle(.plain)
-        .withHardScrollEdgeEffectStyle()
-        .withCustomLabelIconToTitleSpacing()
+        .withHardScrollEdgeEffectStyle(for: .top)
+        .withTightenedLabelIconToTitleSpacing()
         .environment(\.defaultMinListRowHeight, 0)
         .animation(.default, value: selectedFilterOption)        
     }
@@ -97,7 +97,7 @@ public struct LineStatusListView: View {
             selectedLine = line
         } label: {
             LineStatusCell(
-                style: .singleLine(line, showFavouriteImage: favouriteLineIDs.contains(line.id)),
+                style: .singleLine(line),
                 showsAccessory: true,
                 animatedAccessoryImage: true
             )
@@ -160,8 +160,8 @@ public struct LineStatusListView: View {
         VStack(alignment: .leading, spacing: 8) {
             filterOptionsPicker
             headerTitleView
-            refreshStatusView
             datePickerView
+            refreshStatusView
         }
         .foregroundStyle(.foreground)
     }
@@ -191,7 +191,7 @@ public struct LineStatusListView: View {
             Image(systemName: "circle.inset.filled")
                 .pulsatingSymbol()
         case .tomorrow, .thisWeekend, .future:
-            Image(systemName: "hammer.circle.fill")
+            EmptyView()
         }
     }
     
@@ -204,20 +204,17 @@ public struct LineStatusListView: View {
         case .thisWeekend:
             Text(weekendDatesFormatted())
         case .future:
-            if isValidFutureDate {
-                Text(selectedDateFormatted())
-            } else {
-                Text(.lineStatusSelectOtherDateTitle)
-                    .foregroundStyle(Color.adaptiveRed)
-            }
+            EmptyView()
         }
     }
     
     @ViewBuilder private var datePickerView: some View {
         if showsDatePicker {
-            DatePicker(selection: $selectedDate,
-                       in: .now...,
-                       displayedComponents: [.date]) {
+            DatePicker(
+                selection: $selectedDate,
+                in: .now...,
+                displayedComponents: [.date]
+            ) {
                 Text(.lineStatusDatePickerTitle)
                     .font(.subheadline)
             }
