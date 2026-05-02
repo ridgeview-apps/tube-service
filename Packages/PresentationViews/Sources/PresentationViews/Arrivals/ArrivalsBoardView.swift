@@ -33,7 +33,6 @@ struct ArrivalsBoardView: View {
         .padding()
         .background(Color.darkGrey2)
         .roundedBorder(boardPrimaryColor,
-                       cornerRadius: 12,
                        lineWidth: 4)
         .animation(.default, value: isExpanded)
         .shadow(color: .black.opacity(0.14), radius: 4, x: 0, y: 2)
@@ -133,7 +132,7 @@ struct ArrivalsBoardView: View {
                     y: cellItem.numberLabel.textShadow.y)
             .frame(width: 28, height: 32)
             .background(cellItem.numberLabel.backgroundColor)
-            .roundedBorder(.white)
+            .roundedBorder(.white, cornerRadius: 4)
     }
     
     @ViewBuilder

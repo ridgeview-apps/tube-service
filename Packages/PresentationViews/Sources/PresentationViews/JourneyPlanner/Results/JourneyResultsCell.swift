@@ -42,7 +42,7 @@ struct JourneyResultsCell: View {
             .padding()
         }
         .buttonStyle(.plain)
-        .cardStyle(cornerRadius: 8)
+        .cardStyle()
     }
     
     @ViewBuilder

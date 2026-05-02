@@ -45,7 +45,7 @@ struct RecentJourneyCell: View {
                 buttonLabel
             }
         }
-        .cardStyle(cornerRadius: 8)
+        .cardStyle()
     }
     
     var buttonLabel: some View {

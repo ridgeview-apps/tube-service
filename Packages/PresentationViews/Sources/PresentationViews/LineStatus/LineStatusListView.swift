@@ -103,7 +103,7 @@ public struct LineStatusListView: View {
                 showsAccessory: true,
                 animatedAccessoryImage: true
             )
-            .cardStyle(cornerRadius: 12)
+            .cardStyle()
             .frame(minHeight: 52)
             .id(statusCellAnimationID(for: line))
         }
@@ -268,7 +268,7 @@ public struct LineStatusListView: View {
             style: .multiLine(allOtherLines),
             showsAccessory: true
         )
-        .cardStyle(cornerRadius: 12)
+        .cardStyle()
         .frame(minHeight: 52)
     }
 }

@@ -7,16 +7,16 @@ public typealias TextShadowSettings = (color: Color, radius: CGFloat, x: CGFloat
 public extension View {
     
     func roundedBorder(_ color: Color,
-                       cornerRadius: CGFloat = 4,
+                       cornerRadius: CGFloat = 12,
                        lineWidth: CGFloat = 1) -> some View {
-        self.cornerRadius(cornerRadius)
+        self.clipShape(.rect(cornerRadius: cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(color, lineWidth: lineWidth)
             )
     }
     
-    func cardStyle(cornerRadius: CGFloat = 4,
+    func cardStyle(cornerRadius: CGFloat = 12,
                    backgroundColor: Color = .defaultCellBackground,
                    borderColor: Color = .defaultCellBackground,
                    borderWidth: CGFloat = 0.5) -> some View {
@@ -116,6 +116,17 @@ public extension View {
             labelIconToTitleSpacing(6)
         } else {
             self
+        }
+    }
+
+    @ViewBuilder
+    func withCardOrGlassStyle(cornerRadius: CGFloat = 12) -> some View {
+        if #available(iOS 26.0, *) {
+            self
+                .clipShape(.rect(cornerRadius: cornerRadius))
+                .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+        } else {
+            self.cardStyle(cornerRadius: cornerRadius)
         }
     }
 }

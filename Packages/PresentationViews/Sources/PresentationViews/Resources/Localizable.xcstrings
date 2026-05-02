@@ -1165,7 +1165,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "@Tfl (All lines)"
+            "value" : "@TfL (All lines)"
           }
         }
       }
@@ -1187,7 +1187,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "X Posts:"
+            "value" : "X Posts"
           }
         }
       }

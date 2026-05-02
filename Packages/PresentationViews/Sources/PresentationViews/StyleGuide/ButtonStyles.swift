@@ -1,19 +1,23 @@
 import SwiftUI
 
 public struct PrimaryActionButtonStyle: ButtonStyle {
+    private static let accentBlue = Color(red: 0.2, green: 0.28, blue: 0.85)
+
     @Environment(\.isEnabled) var isEnabled
-    
+
     public func makeBody(configuration: Configuration) -> some View {
         configuration
             .label
-            .padding(12)
+            .font(.body.weight(.medium))
+            .padding(.vertical, 14)
+            .padding(.horizontal, 20)
             .withDefaultMaxWidth()
-            .background(.blue.opacity(isEnabled ? 1 : 0.4))
-            .foregroundColor(.white)
-            .clipShape(.capsule)
-            .opacity(configuration.isPressed ? 0.5 : 1)
-            .scaleEffect(configuration.isPressed ? 0.97 : 1)
-            .animation(.easeOut(duration: 0.15), value: configuration.isPressed)
+            .background(isEnabled ? Self.accentBlue : Color.gray.opacity(0.3))
+            .foregroundStyle(isEnabled ? .white : .secondary)
+            .clipShape(.rect(cornerRadius: 12))
+            .opacity(configuration.isPressed ? 0.75 : 1)
+            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }
 }
 

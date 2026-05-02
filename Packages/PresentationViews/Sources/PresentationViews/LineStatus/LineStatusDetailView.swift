@@ -30,24 +30,30 @@ public struct LineStatusDetailView: View {
     }
     
     public var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
-                Section {
-                    statusHeaderCard
-                    favouritesButton
-                    Divider()
-                    xPostsSection
-                } header: {
-                    refreshStatus
+        VStack(spacing: 0) {
+            ScrollView {
+                LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
+                    Section {
+                        statusHeaderCard
+                        xPostsSection
+                    } header: {
+                        refreshStatus
+                    }
+                    .background(Color.defaultBackground)
                 }
-                .background(Color.defaultBackground)
+                .withDefaultMaxWidth()
+                .padding(.horizontal)
+                .frame(maxWidth: .infinity)
             }
-            .withDefaultMaxWidth()
-            .padding(.horizontal)
-            .frame(maxWidth: .infinity)
+            .scrollBounceBehavior(.basedOnSize)
+
+            Divider()
+            favouritesButton
+                .withDefaultMaxWidth()
+                .padding(.horizontal)
+                .padding(.vertical, 12)
         }
         .background(Color.defaultBackground)
-        .scrollBounceBehavior(.basedOnSize)
     }
     
     
@@ -60,18 +66,20 @@ public struct LineStatusDetailView: View {
             .foregroundStyle(Color.adaptiveMidGrey2)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.defaultBackground)
-            .padding(.vertical, 4)
     }
     
     private var statusHeaderCard: some View {
-        HStack(spacing: 12) {
-            Rectangle()
-                .foregroundColor(line.id.backgroundColor)
-                .frame(width: 20)
+        HStack(spacing: 0) {
+            // Leading accent bar
+            RoundedRectangle(cornerRadius: 2)
+                .fill(line.id.backgroundColor)
+                .frame(width: 12)
+
+            // Status content
             VStack(alignment: .leading, spacing: 12) {
                 Label {
                     Text(line.shortText)
-                        .font(.title2)
+                        .font(.title3.weight(.semibold))
                 } icon: {
                     line.accessoryImageType.image
                         .imageScale(.large)
@@ -81,11 +89,11 @@ public struct LineStatusDetailView: View {
                     serviceDetailText(for: textItem, needsDivider: idx != 0)
                 }
             }
-            .padding([.top, .bottom, .trailing])
+            .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
+            .padding(12)
             Spacer()
         }
-        .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
-        .cardStyle(cornerRadius: 8)
+        .withCardOrGlassStyle(cornerRadius: 12)
     }
     
     @ViewBuilder private func serviceDetailText(for textItem: Line.ServiceDetailTextItem, needsDivider: Bool) -> some View {
@@ -135,18 +143,26 @@ public struct LineStatusDetailView: View {
     }
     
     private var xPostsSection: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 20) {
-                Text(.lineStatusXPostsSectionTitle)
-                
-                ForEach(line.xPostLinks) { link in
+        VStack(alignment: .leading, spacing: 12) {
+            Text(.lineStatusXPostsSectionTitle)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(line.xPostLinks.enumerated()), id: \.element.id) { idx, link in
+                    if idx != 0 {
+                        Divider()
+                            .padding(.leading, 12)
+                    }
                     xPostLinkButton(for: link)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 10)
                 }
             }
-            Spacer()
+            .withCardOrGlassStyle(cornerRadius: 12)
         }
     }
-    
+
     @ViewBuilder private func xPostLinkButton(for link: LineStatusXPostLink) -> some View {
         Button {
             onAction(.linkTapped(link))
