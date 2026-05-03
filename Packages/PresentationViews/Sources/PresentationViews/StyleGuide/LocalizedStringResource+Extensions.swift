@@ -416,16 +416,16 @@ public extension LocalizedStringResource {
         moduleResource("line.status.tfl.xPosts.title.line \(lineName)")
     }
     
+    static var lineStatusSectionAllOtherLines: LocalizedStringResource {
+        moduleResource("line.status.section.all.other.lines")
+    }
+    
     static var lineStatusSectionDisruptions: LocalizedStringResource {
         moduleResource("line.status.section.disruptions")
     }
 
     static var lineStatusSectionFavourites: LocalizedStringResource {
         moduleResource("line.status.section.favourites")
-    }
-
-    static var lineStatusSectionGoodService: LocalizedStringResource {
-        moduleResource("line.status.section.good.service")
     }
 
     static var lineStatusServiceNow: LocalizedStringResource {
@@ -514,6 +514,10 @@ public extension LocalizedStringResource {
     
     static var refreshButtonTitle: LocalizedStringResource {
         moduleResource("refresh.button.title")
+    }
+    
+    static var refreshStatusLoading: LocalizedStringResource {
+        moduleResource("refresh.status.loading")
     }
     
     static func refreshStatusLastUpdated(_ date: String) -> LocalizedStringResource {

@@ -30,29 +30,23 @@ public struct LineStatusDetailView: View {
     }
     
     public var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
-                    Section {
-                        statusHeaderCard
-                        xPostsSection
-                    } header: {
-                        refreshStatus
-                    }
-                    .background(Color.defaultBackground)
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
+                Section {
+                    statusHeaderCard
+                } header: {
+                    refreshStatus
                 }
-                .withDefaultMaxWidth()
-                .padding(.horizontal)
-                .frame(maxWidth: .infinity)
+                Section {
+                    xPostsSection
+                }
+                favouritesButton
             }
-            .scrollBounceBehavior(.basedOnSize)
-
-            Divider()
-            favouritesButton
-                .withDefaultMaxWidth()
-                .padding(.horizontal)
-                .padding(.vertical, 12)
+            .withDefaultMaxWidth()
+            .padding(.horizontal)
+            .frame(maxWidth: .infinity)
         }
+        .scrollBounceBehavior(.basedOnSize)
         .background(Color.defaultBackground)
     }
     
@@ -70,30 +64,35 @@ public struct LineStatusDetailView: View {
     
     private var statusHeaderCard: some View {
         HStack(spacing: 0) {
-            // Leading accent bar
-            RoundedRectangle(cornerRadius: 2)
-                .fill(line.id.backgroundColor)
-                .frame(width: 12)
-
-            // Status content
-            VStack(alignment: .leading, spacing: 12) {
-                Label {
-                    Text(line.shortText)
-                        .font(.title3.weight(.semibold))
-                } icon: {
-                    line.accessoryImageType.image
-                        .imageScale(.large)
-                }
-
-                ForEach(Array(line.serviceDetailTextItems.enumerated()), id: \.offset) { idx, textItem in
-                    serviceDetailText(for: textItem, needsDivider: idx != 0)
-                }
-            }
-            .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
-            .padding(12)
+            statusHeaderLeadingAccentBar
+            statusHeaderContent
             Spacer()
         }
         .withCardOrGlassStyle(cornerRadius: 12)
+    }
+    
+    private var statusHeaderLeadingAccentBar: some View {
+        RoundedRectangle(cornerRadius: 2)
+            .fill(line.id.backgroundColor)
+            .frame(width: 12)
+    }
+    
+    private var statusHeaderContent: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label {
+                Text(line.shortText)
+                    .font(.title3.weight(.semibold))
+            } icon: {
+                line.accessoryImageType.image
+                    .imageScale(.large)
+            }
+
+            ForEach(Array(line.serviceDetailTextItems.enumerated()), id: \.offset) { idx, textItem in
+                serviceDetailText(for: textItem, needsDivider: idx != 0)
+            }
+        }
+        .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
+        .padding(12)
     }
     
     @ViewBuilder private func serviceDetailText(for textItem: Line.ServiceDetailTextItem, needsDivider: Bool) -> some View {

@@ -1093,6 +1093,17 @@
         }
       }
     },
+    "line.status.section.all.other.lines" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All other lines"
+          }
+        }
+      }
+    },
     "line.status.section.disruptions" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1111,17 +1122,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Favourites"
-          }
-        }
-      }
-    },
-    "line.status.section.good.service" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Good Service"
           }
         }
       }
@@ -1432,7 +1432,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last updated: %@"
+            "value" : "Last updated %@"
           }
         }
       }
@@ -1443,7 +1443,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loading..."
+            "value" : "Updating"
           }
         }
       }

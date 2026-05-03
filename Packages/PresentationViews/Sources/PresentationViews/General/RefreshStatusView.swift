@@ -12,7 +12,9 @@ public struct RefreshStatusView: View {
     public let refreshDate: Date?
     public let showsText: Bool
 
-    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .medium, timeStyle: .short)
+    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .short,
+                                                                       timeStyle: .short,
+                                                                       context: .middleOfSentence)
     private var refreshDateFormatted: String? {
         guard let refreshDate else { return nil }
         return timestampFormatter.string(from: refreshDate)
@@ -56,7 +58,7 @@ public struct RefreshStatusView: View {
     @ViewBuilder private var statusText: some View {
         switch loadingState {
         case .loading:
-            EmptyView()
+            Text(.refreshStatusLoading)
         case let .failure(errorMessage):
             Text(errorMessage)
                 .foregroundStyle(.adaptiveRed)

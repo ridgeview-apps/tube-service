@@ -52,11 +52,13 @@ public struct LineStatusListView: View {
         .withTightenedLabelIconToTitleSpacing()
         .environment(\.defaultMinListRowHeight, 0)
         .animation(.default, value: selectedFilterOption)
+        .animation(.default, value: favourites)
     }
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
             refreshStatusView
+                .padding(.bottom, 4)
             if !favourites.isEmpty {
                 sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
                 tappableStatusCells(with: favourites)
@@ -66,10 +68,10 @@ public struct LineStatusListView: View {
                 tappableStatusCells(with: disruptions)
             }
             if showOtherLinesSummaryCell {
-                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
+                sectionLabel(.lineStatusSectionAllOtherLines, systemImage: "checkmark.circle.fill")
                 otherLinesSummaryCell
             } else if !allOtherLines.isEmpty {
-                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
+                sectionLabel(.lineStatusSectionAllOtherLines, systemImage: "checkmark.circle.fill")
                 tappableStatusCells(with: allOtherLines)
             }
         }
@@ -82,10 +84,10 @@ public struct LineStatusListView: View {
             Image(systemName: systemImage)
         }
         .imageScale(.small)
-        .font(.subheadline.weight(.semibold))
+        .font(.footnote.weight(.semibold))
         .foregroundStyle(.secondary)
         .labelStyle(.titleAndIcon)
-        .padding(.top, 12)
+        .padding(.top, 8)
     }
     
     private func tappableStatusCells(with lines: [Line]) -> some View {
@@ -227,6 +229,7 @@ public struct LineStatusListView: View {
                     .font(.subheadline)
             }
             .withAutoDismissID(of: selectedDate)
+            .labelsHidden()
         }
     }
     
@@ -235,7 +238,7 @@ public struct LineStatusListView: View {
             RefreshStatusView(loadingState: loadingState,
                               refreshDate: refreshDate)
             .font(.caption)
-            .foregroundStyle(Color.adaptiveMidGrey2)
+            .foregroundStyle(.secondary)
         }
     }
     

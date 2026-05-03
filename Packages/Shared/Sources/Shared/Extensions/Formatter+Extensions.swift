@@ -3,11 +3,13 @@ import Foundation
 public extension Formatter {
     
     static func relative(dateStyle: DateFormatter.Style,
-                         timeStyle: DateFormatter.Style) -> DateFormatter {
+                         timeStyle: DateFormatter.Style,
+                         context: Formatter.Context = .standalone) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = dateStyle
         formatter.timeStyle = timeStyle
         formatter.doesRelativeDateFormatting = true
+        formatter.formattingContext = context
         return formatter
     }
     

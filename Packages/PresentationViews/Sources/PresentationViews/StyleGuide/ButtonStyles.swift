@@ -1,7 +1,7 @@
 import SwiftUI
 
 public struct PrimaryActionButtonStyle: ButtonStyle {
-    private static let accentBlue = Color(red: 0.2, green: 0.28, blue: 0.85)
+    private static let accentBlue = Color(red: 0.13, green: 0.47, blue: 0.85)
 
     @Environment(\.isEnabled) var isEnabled
 
