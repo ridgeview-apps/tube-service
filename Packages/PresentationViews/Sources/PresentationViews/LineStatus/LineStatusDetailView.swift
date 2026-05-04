@@ -91,10 +91,12 @@ public struct LineStatusDetailView: View {
             )
 
             ForEach(line.serviceDetailTextItems) { textItem in
-                if textItem != line.serviceDetailTextItems.first {
-                    Divider()
-                }
                 ServiceDetailTextView(line: line, textItem: textItem)
+                if textItem != line.serviceDetailTextItems.last {
+                    Divider()
+                        .padding(.vertical, 4)
+                        .foregroundStyle(.tertiary)
+                }
             }
         }
         .padding(12)
@@ -111,13 +113,14 @@ public struct LineStatusDetailView: View {
                 .foregroundStyle(.secondary)
 
             VStack(alignment: .leading, spacing: 0) {
-                ForEach(Array(line.xPostLinks.enumerated()), id: \.element.id) { idx, link in
-                    if idx != 0 {
+                ForEach(line.xPostLinks) { link in
+                    xPostLinkButton(for: link)
+                        .padding(.horizontal, 12)
+                    
+                    if link != line.xPostLinks.last {
                         Divider()
                             .padding(.horizontal, 12)
                     }
-                    xPostLinkButton(for: link)
-                        .padding(.horizontal, 12)
                 }
             }
             .cardStyle()
