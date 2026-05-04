@@ -73,68 +73,6 @@ let lineStatusDisruptedJSON = """
             ],
             "closureText":"partClosure"
          }
-      },
-      {
-         "$type":"Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-         "id":0,
-         "lineId":"london-overground",
-         "statusSeverity":5,
-         "statusSeverityDescription":"Part Closure",
-         "reason":"LONDON OVERGROUND: Sunday 15 October, no service between Clapham Junction and Willesden Junction. Please use local London Buses and London Underground services. The 0003 Sunday morning train from Willesden Junction to Clapham Junction will not operate, please use the 2348 Saturday night departure.",
-         "created":"0001-01-01T00:00:00",
-         "validityPeriods":[
-            {
-               "$type":"Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-               "fromDate":"2023-10-14T23:01:00Z",
-               "toDate":"2023-10-16T08:30:00Z",
-               "isNow":false
-            }
-         ],
-         "disruption":{
-            "$type":"Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-            "category":"PlannedWork",
-            "categoryDescription":"PlannedWork",
-            "description":"LONDON OVERGROUND: Sunday 15 October, no service between Clapham Junction and Willesden Junction. Please use local London Buses and London Underground services. The 0003 Sunday morning train from Willesden Junction to Clapham Junction will not operate, please use the 2348 Saturday night departure.",
-            "created":"2023-09-08T16:01:00Z",
-            "affectedRoutes":[
-               
-            ],
-            "affectedStops":[
-               
-            ],
-            "closureText":"partClosure"
-         }
-      },
-      {
-         "$type":"Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-         "id":0,
-         "lineId":"london-overground",
-         "statusSeverity":7,
-         "statusSeverityDescription":"Reduced Service",
-         "reason":"LONDON OVERGROUND: Saturday 14 and Sunday 15 October, a reduced service will operate between Kilburn High Road and Euston. Trains at 30 minutes past each hour, between 0630 and 2030 Saturday, and between 1130 and 2030 Sunday, will operate from Watford Junction to Kilburn High Road. Trains at 15 minutes past each hour from Euston, between 0715 and 2115 Saturday, and between 1215 and 2115 Sunday, will instead start at Kilburn High Road, seven minutes later.",
-         "created":"0001-01-01T00:00:00",
-         "validityPeriods":[
-            {
-               "$type":"Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-               "fromDate":"2023-10-14T05:30:00Z",
-               "toDate":"2023-10-16T20:15:00Z",
-               "isNow":false
-            }
-         ],
-         "disruption":{
-            "$type":"Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-            "category":"PlannedWork",
-            "categoryDescription":"PlannedWork",
-            "description":"LONDON OVERGROUND: Saturday 14 and Sunday 15 October, a reduced service will operate between Kilburn High Road and Euston. Trains at 30 minutes past each hour, between 0630 and 2030 Saturday, and between 1130 and 2030 Sunday, will operate from Watford Junction to Kilburn High Road. Trains at 15 minutes past each hour from Euston, between 0715 and 2115 Saturday, and between 1215 and 2115 Sunday, will instead start at Kilburn High Road, seven minutes later.",
-            "created":"2023-09-08T16:00:00Z",
-            "affectedRoutes":[
-               
-            ],
-            "affectedStops":[
-               
-            ],
-            "closureText":"reducedService"
-         }
       }
    ],
    "routeSections":[
