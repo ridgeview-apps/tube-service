@@ -60,34 +60,28 @@ public struct LineStatusListView: View {
             refreshStatusView
                 .padding(.bottom, 4)
             if !favourites.isEmpty {
-                sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
+                sectionLabel(.lineStatusSectionFavourites)
                 tappableStatusCells(with: favourites)
             }
             if !disruptions.isEmpty {
-                sectionLabel(.lineStatusSectionDisruptions, systemImage: "exclamationmark.triangle.fill")
+                sectionLabel(.lineStatusSectionDisruptions)
                 tappableStatusCells(with: disruptions)
             }
             if showOtherLinesSummaryCell {
-                sectionLabel(.lineStatusSectionAllOtherLines, systemImage: "checkmark.circle.fill")
+                sectionLabel(.lineStatusSectionAllOtherLines)
                 otherLinesSummaryCell
             } else if !allOtherLines.isEmpty {
-                sectionLabel(.lineStatusSectionAllOtherLines, systemImage: "checkmark.circle.fill")
+                sectionLabel(.lineStatusSectionAllOtherLines)
                 tappableStatusCells(with: allOtherLines)
             }
         }
     }
     
-    private func sectionLabel(_ title: LocalizedStringResource, systemImage: String) -> some View {
-        Label {
-            Text(title)
-        } icon: {
-            Image(systemName: systemImage)
-        }
-        .imageScale(.small)
-        .font(.footnote.weight(.semibold))
-        .foregroundStyle(.secondary)
-        .labelStyle(.titleAndIcon)
-        .padding(.top, 8)
+    private func sectionLabel(_ title: LocalizedStringResource) -> some View {
+        Text(title)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(.secondary)
+            .padding(.top, 8)
     }
     
     private func tappableStatusCells(with lines: [Line]) -> some View {

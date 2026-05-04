@@ -309,6 +309,28 @@
         }
       }
     },
+    "expansion.info.button.show.less.title" : {
+      "extractionState" : "pasted",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show less"
+          }
+        }
+      }
+    },
+    "expansion.info.button.show.more.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show more"
+          }
+        }
+      }
+    },
     "favourites.button.title.add" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1750,5 +1772,5 @@
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.2"
 }

@@ -3,29 +3,28 @@ import SwiftUI
 public struct ExpansionInfoButton: View {
     
     public let style: Style
-    public let title: LocalizedStringResource?
-    public var titleAlignment: Alignment = .leading
+    public let titleState: TitleState
     @Binding public var isExpanded: Bool
     
-    public init(style: Style,
-                title: LocalizedStringResource? = nil,
-                isExpanded: Binding<Bool>) {
+    public init(
+        style: Style = .imageAndText,
+        titleState: TitleState = .showMoreLess,
+        isExpanded: Binding<Bool>
+    ) {
         self.style = style
-        self.title = title
+        self.titleState = titleState
         self._isExpanded = isExpanded
+    }
+    
+    private var title: LocalizedStringResource {
+        isExpanded ? titleState.expanded : titleState.collapsed
     }
     
     
     public enum Style {
-        case pullDown
-        case list
+        case imageOnly
+        case imageAndText
         
-        var expandedRotationAngle: CGFloat {
-            switch self {
-            case .pullDown: 180
-            case .list: 90
-            }
-        }
     }
     
     public var body: some View {
@@ -35,62 +34,61 @@ public struct ExpansionInfoButton: View {
             }
         } label: {
             HStack(spacing: 4) {
-                expansionButtonImage
-                    .rotationEffect(isExpanded ? .init(degrees: style.expandedRotationAngle) : .init(degrees: 0))
-                if let title {
+                if style == .imageAndText {
                     Text(title)
-                        .frame(maxWidth: .infinity, alignment: titleAlignment)
                 }
+                Image(systemName: "chevron.down")
+                    .rotationEffect(rotationAngle)
             }
-            .imageScale(imageScale)
-            .frame(alignment: .bottom)
         }
-        .buttonStyle(.borderless)
+        .accessibilityLabel(title)
+        .accessibilityAddTraits(.isToggle)
     }
     
-    private var expansionButtonImage: Image {
-        switch style {
-        case .pullDown:
-            return Image(systemName: "arrowtriangle.down.circle")
-        case .list:
-            return Image(systemName: "chevron.right")
-        }
+    private var rotationAngle: Angle {
+        isExpanded ? .init(degrees: 180) : .init(degrees: 0)
     }
+}
+
+public extension ExpansionInfoButton {
     
-    private var imageScale: Image.Scale {
-        switch style {
-        case .pullDown:
-            return .large
-        case .list:
-            return .small
+    struct TitleState {
+        public let collapsed: LocalizedStringResource
+        public let expanded: LocalizedStringResource
+        
+        public init(
+            collapsed: LocalizedStringResource,
+            expanded: LocalizedStringResource
+        ) {
+            self.collapsed = collapsed
+            self.expanded = expanded
+        }
+        
+        public static let showMoreLess: TitleState = .init(
+            collapsed: .expansionInfoButtonShowMoreTitle,
+            expanded: .expansionInfoButtonShowLessTitle
+        )
+        
+        public static func constant(_ value: LocalizedStringResource) -> TitleState {
+            .init(collapsed: value, expanded: value)
         }
     }
 }
 
 // MARK: - Previews
-
-struct ExpansionInfoButton_Previews: PreviewProvider {
-    
-    struct ExpansionInfoButtonPreview: View {
-        @State private(set) var style: ExpansionInfoButton.Style
-        @State private(set) var isExpanded = false
-        var title: LocalizedStringResource?
-        
-        var body: some View {
-            ExpansionInfoButton(style: style,
-                                title: title,
-                                isExpanded: $isExpanded)
-        }
-    }
-    
-    static var previews: some View {
-        VStack {
-            ExpansionInfoButtonPreview(style: .pullDown,
-                                       isExpanded: true)
-            ExpansionInfoButtonPreview(style: .pullDown,
-                                       isExpanded: false)
-            ExpansionInfoButtonPreview(style: .pullDown,
-                                       title: "Show more")
-        }
+#Preview {
+    @Previewable @State var isExpanded = false
+    VStack {
+        ExpansionInfoButton(
+            isExpanded: $isExpanded
+        )
+        ExpansionInfoButton(
+            style: .imageOnly,
+            isExpanded: $isExpanded
+        )
+        ExpansionInfoButton(
+            titleState: .constant("Fixed title"),
+            isExpanded: $isExpanded
+        )
     }
 }

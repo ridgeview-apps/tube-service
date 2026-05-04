@@ -92,9 +92,11 @@ struct JourneyResultsCell: View {
                             journey: journey,
                             journeyID: journeyID,
                             expandedStopJourneyItemIDs: $expandedStopJourneyItemIDs)
-            ExpansionInfoButton(style: .list,
-                                isExpanded: $cellItem.isExpanded)
-
+            ExpansionInfoButton(
+                style: .imageOnly,
+                isExpanded: $cellItem.isExpanded
+            )
+            .buttonStyle(.bordered)
         }
 
     }

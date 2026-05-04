@@ -14,8 +14,8 @@ public extension LineStatusAccessoryImageType {
     @ViewBuilder var image: some View {
         switch self {
         case .disruption:
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.yellow)
+            Image(systemName: "exclamationmark.circle.fill")
+                .foregroundColor(.adaptiveRed)
         case .goodService:
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(.green)

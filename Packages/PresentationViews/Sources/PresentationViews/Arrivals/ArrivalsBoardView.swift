@@ -83,10 +83,14 @@ struct ArrivalsBoardView: View {
     
     @ViewBuilder private var expansionButton: some View {
         if isExpandable {
-            ExpansionInfoButton(style: .pullDown,
-                                isExpanded: $isExpanded)
-                .foregroundColor(.white)
-                .padding([.top, .bottom], 4)
+            HStack {
+                ExpansionInfoButton(style: .imageAndText,
+                                    isExpanded: $isExpanded)
+                    .padding(.vertical, 4)
+                    .foregroundStyle(.white)
+                    .buttonStyle(.bordered)
+                    Spacer()
+            }
         }
     }
     

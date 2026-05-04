@@ -100,6 +100,14 @@ public extension LocalizedStringResource {
         moduleResource("error.something.went.wrong")
     }
     
+    static var expansionInfoButtonShowLessTitle: LocalizedStringResource {
+        moduleResource("expansion.info.button.show.less.title")
+    }
+    
+    static var expansionInfoButtonShowMoreTitle: LocalizedStringResource {
+        moduleResource("expansion.info.button.show.more.title")
+    }
+    
     static var favouritesButtonTitleAdd: LocalizedStringResource {
         moduleResource("favourites.button.title.add")
     }
