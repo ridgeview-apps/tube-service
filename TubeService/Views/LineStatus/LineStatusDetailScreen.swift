@@ -34,6 +34,10 @@ struct LineStatusDetailScreen: View {
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)
+        .toolbar {
+            FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
+        }
+
     }
     
     private func handleDetailViewAction(_ action: LineStatusDetailView.Action) {

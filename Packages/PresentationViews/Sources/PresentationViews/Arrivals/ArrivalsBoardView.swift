@@ -42,14 +42,9 @@ struct ArrivalsBoardView: View {
     // MARK: Layout views
     
     private var boardHeader: some View {
-        VStack(spacing: 4) {
-            Text(platformName)
-                .font(.headline)
-            HStack(spacing: 8) {
-                clockView
-            }
-        }
-        .foregroundColor(.white)
+        Text(platformName)
+            .font(.headline)
+            .foregroundColor(.white)
     }
     
     private var cells: some View {
@@ -71,26 +66,21 @@ struct ArrivalsBoardView: View {
             rotateToNextArrivalIfNeeded(animated: true)
         }
     }
-    
-    private var clockView: some View {
-        Text(Date(), formatter: .shortTimeStyle)
-            .font(.subheadline)
-    }
-    
+        
     private var isExpandable: Bool {
         cellItems.count > collapsedStateMaxCellCount
     }
     
     @ViewBuilder private var expansionButton: some View {
         if isExpandable {
-            HStack {
-                ExpansionInfoButton(style: .imageAndText,
-                                    isExpanded: $isExpanded)
-                    .padding(.vertical, 4)
-                    .foregroundStyle(.white)
-                    .buttonStyle(.bordered)
-                    Spacer()
-            }
+            ExpansionInfoButton(
+                style: .imageAndText,
+                isExpanded: $isExpanded
+            )
+            .padding(.vertical, 4)
+            .foregroundStyle(.white)
+            .buttonStyle(.bordered)
+            .font(.caption)
         }
     }
     
@@ -126,16 +116,17 @@ struct ArrivalsBoardView: View {
     }
     
     private func numberLabelView(for cellItem: ArrivalsBoardCellItem) -> some View {
-        Text(cellItem.numberLabel.valueText)
+        let label = cellItem.numberLabel
+        return Text(label.valueText)
             .padding(2)
             .minimumScaleFactor(0.4)
-            .foregroundColor(cellItem.numberLabel.textColor)
-            .shadow(color: cellItem.numberLabel.textShadow.color,
-                    radius: cellItem.numberLabel.textShadow.radius,
-                    x: cellItem.numberLabel.textShadow.x,
-                    y: cellItem.numberLabel.textShadow.y)
+            .foregroundColor(label.textColor)
+            .shadow(color: label.textShadow.color,
+                    radius: label.textShadow.radius,
+                    x: label.textShadow.x,
+                    y: label.textShadow.y)
             .frame(width: 28, height: 32)
-            .background(cellItem.numberLabel.backgroundColor)
+            .background(label.backgroundColor)
             .roundedBorder(.white, cornerRadius: 4)
     }
     
@@ -175,24 +166,27 @@ struct ArrivalsBoardView: View {
     
     @ViewBuilder
     private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
-        if let bottomTextMessage = cellItem.bottomTextMessage {
-            switch bottomTextMessage {
-            case let .generalInfo(messageTextItem):
-                if let messageTextItem {
-                    cellTextItem(for: messageTextItem)
+        switch cellItem.bottomTextMessage {
+        case nil:
+            EmptyView()
+        case let .generalInfo(messageTextItem):
+            if let messageTextItem {
+                cellTextItem(for: messageTextItem)
+            }
+        case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                if let scheduledDepartureItem {
+                    scheduledDepartureText(with: scheduledDepartureItem)
                 }
-            case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
-                HStack(alignment: .firstTextBaseline) {
-                    if let scheduledDepartureItem {
-                        scheduledDepartureText(with: scheduledDepartureItem)
-                    }
-                    if let estimatedDepartureItem {
-                        cellTextItem(for: estimatedDepartureItem)
-                    }
-                    Spacer()
-                    if let statusTextItem {
-                        cellTextItem(for: statusTextItem)
-                    }
+                if let estimatedDepartureItem {
+                    cellTextItem(for: estimatedDepartureItem)
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 2)
+                        .background(Color.midRed1.opacity(0.25), in: .rect(cornerRadius: 4))
+                }
+                Spacer()
+                if let statusTextItem {
+                    cellTextItem(for: statusTextItem)
                 }
             }
         }
@@ -202,19 +196,18 @@ struct ArrivalsBoardView: View {
         cellTextItem(for: textItem)
             .padding(.horizontal, 4)
             .padding(.vertical, 2)
-            .background(Color.darkGrey1)
-            .clipShape(.rect(cornerRadius: 4))
+            .background(Color.darkGrey1, in: .rect(cornerRadius: 4))
     }
     
     private func rotateToNextArrivalIfNeeded(animated: Bool) {
         rotationCellAnimated = animated
-        
+
         let canRotateToNextCell = isExpandable && !isExpanded
         guard canRotateToNextCell else {
             return
         }
         let firstRotatingCellIndex = collapsedStateMaxCellCount - 1
-        
+
         if let rotatingCellIndex {
             let isLastIndex = rotatingCellIndex == cellItems.count - 1
             if isLastIndex {
