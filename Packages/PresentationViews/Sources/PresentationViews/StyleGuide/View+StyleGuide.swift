@@ -118,17 +118,6 @@ public extension View {
             self
         }
     }
-
-    @ViewBuilder
-    func withCardOrGlassStyle(cornerRadius: CGFloat = 12) -> some View {
-        if #available(iOS 26.0, *) {
-            self
-                .clipShape(.rect(cornerRadius: cornerRadius))
-                .glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
-        } else {
-            self.cardStyle(cornerRadius: cornerRadius)
-        }
-    }
 }
 
 extension ForEach where Content: View {

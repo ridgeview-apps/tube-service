@@ -68,7 +68,7 @@ public struct LineStatusDetailView: View {
             statusHeaderContent
             Spacer()
         }
-        .withCardOrGlassStyle(cornerRadius: 12)
+        .cardStyle()
     }
     
     private var statusHeaderLeadingAccentBar: some View {
@@ -86,55 +86,18 @@ public struct LineStatusDetailView: View {
                 line.accessoryImageType.image
                     .imageScale(.large)
             }
+            .foregroundStyle(
+                line.isDisrupted ? .adaptiveRed : .primary
+            )
 
-            ForEach(Array(line.serviceDetailTextItems.enumerated()), id: \.offset) { idx, textItem in
-                serviceDetailText(for: textItem, needsDivider: idx != 0)
-            }
-        }
-        .foregroundColor(line.isDisrupted ? .adaptiveRed : .primary)
-        .padding(12)
-    }
-    
-    @ViewBuilder private func serviceDetailText(for textItem: Line.ServiceDetailTextItem, needsDivider: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if needsDivider {
-                Divider()
-            }
-            serviceDetailDescription(for: textItem)
-            serviceDetailAdditionalInfo(for: textItem)
-        }
-    }
-    
-    @ViewBuilder private func serviceDetailDescription(for textItem: Line.ServiceDetailTextItem) -> some View {
-        Group {
-            switch textItem.messageType {
-            case .goodService:
-                goodServiceText
-            case let .disrupted(reason):
-                if let reason {
-                    Text(reason)
+            ForEach(line.serviceDetailTextItems) { textItem in
+                if textItem != line.serviceDetailTextItems.first {
+                    Divider()
                 }
+                ServiceDetailTextView(line: line, textItem: textItem)
             }
         }
-        .font(.body)
-    }
-    
-    @ViewBuilder private var goodServiceText: some View {
-        switch line.id {
-        case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
-                .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
-                .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
-            Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
-        case .tram:
-            Text(.lineStatusDetailGoodServiceOnTrams)
-        }
-    }
-    
-    @ViewBuilder func serviceDetailAdditionalInfo(for textItem: Line.ServiceDetailTextItem) -> some View {
-        if let additionalInfo = textItem.additionalInfo {
-            Text(additionalInfo)
-                .font(.caption)
-        }
+        .padding(12)
     }
     
     private var favouritesButton: some View {
@@ -151,14 +114,13 @@ public struct LineStatusDetailView: View {
                 ForEach(Array(line.xPostLinks.enumerated()), id: \.element.id) { idx, link in
                     if idx != 0 {
                         Divider()
-                            .padding(.leading, 12)
+                            .padding(.horizontal, 12)
                     }
                     xPostLinkButton(for: link)
                         .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
                 }
             }
-            .withCardOrGlassStyle(cornerRadius: 12)
+            .cardStyle()
         }
     }
 
@@ -166,17 +128,96 @@ public struct LineStatusDetailView: View {
         Button {
             onAction(.linkTapped(link))
         } label: {
-            Group {
-                switch link.style {
-                case .tflAllXPosts:
-                    Text(.lineStatusTflXPostsTitleAllLines)
-                case let .lineXPosts(line):
-                    Text(.lineStatusTflXPostsTitleLine(line.longName))
+            HStack {
+                Group {
+                    switch link.style {
+                    case .tflAllXPosts:
+                        Text(.lineStatusTflXPostsTitleAllLines)
+                    case let .lineXPosts(line):
+                        Text(.lineStatusTflXPostsTitleLine(line.longName))
+                    }
                 }
+                Spacer()
             }
         }
         .buttonStyle(.borderless)
+        .frame(minHeight: 44)
+    }
+}
 
+
+// MARK: - Service Detail Additional Info
+
+private struct ServiceDetailAdditionalInfoView: View {
+    let textItem: Line.ServiceDetailTextItem
+    @State private var isExpanded = false
+
+    var body: some View {
+        if let additionalInfo = textItem.additionalInfo {
+            VStack(alignment: .leading, spacing: 8) {
+                ExpansionInfoButton(isExpanded: $isExpanded)
+                    .font(.caption)
+                    .buttonStyle(.borderless)
+
+                if isExpanded {
+                    Text(additionalInfo)
+                        .font(.caption)
+                }
+            }
+        }
+    }
+}
+
+private struct ServiceDetailTextView: View {
+    let line: Line
+    let textItem: Line.ServiceDetailTextItem
+    
+    @State private var isExpanded = false
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            descriptionText
+            expandableAdditionalInfoText
+        }
+    }
+    
+    @ViewBuilder private var descriptionText: some View {
+        Group {
+            switch textItem.messageType {
+            case .goodService:
+                goodServiceText
+            case let .disrupted(reason):
+                if let reason {
+                    Text(reason)
+                }
+            }
+        }
+        .font(.subheadline)
+    }
+    
+    @ViewBuilder
+    private var expandableAdditionalInfoText: some View {
+        if let additionalInfo = textItem.additionalInfo {
+            VStack(alignment: .leading, spacing: 8) {
+                ExpansionInfoButton(isExpanded: $isExpanded)
+                
+                if isExpanded {
+                    Text(additionalInfo)
+                }
+            }
+            .font(.caption)
+        }
+    }
+    
+    @ViewBuilder private var goodServiceText: some View {
+        switch line.id {
+        case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
+                .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
+                .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
+            Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
+        case .tram:
+            Text(.lineStatusDetailGoodServiceOnTrams)
+        }
     }
 }
 

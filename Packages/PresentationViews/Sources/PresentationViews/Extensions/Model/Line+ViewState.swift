@@ -63,17 +63,18 @@ public extension Line {
 
 // MARK: - Display
 
-public extension Line {
+extension Line {
     
     var accessoryImageType: LineStatusAccessoryImageType {
         isDisrupted ? .disruption : .goodService
     }
     
-    struct ServiceDetailTextItem: Equatable {
-        enum MessageType: Equatable {
+    struct ServiceDetailTextItem: Hashable, Identifiable {
+        enum MessageType: Hashable {
             case goodService
             case disrupted(reason: String?)
         }
+        var id: Self { self }
         let messageType: MessageType
         let additionalInfo: String?
     }
