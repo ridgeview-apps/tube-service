@@ -22,9 +22,9 @@ public extension View {
                    borderWidth: CGFloat = 0.5) -> some View {
         self.modifier(
             CardStyle(cornerRadius: cornerRadius,
-                                backgroundColor: backgroundColor,
-                                borderColor: borderColor,
-                                borderWidth: borderWidth)
+                      backgroundColor: backgroundColor,
+                      borderColor: borderColor,
+                      borderWidth: borderWidth)
         )
     }
     

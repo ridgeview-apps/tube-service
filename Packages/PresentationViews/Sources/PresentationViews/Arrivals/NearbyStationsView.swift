@@ -80,9 +80,9 @@ public struct NearbyStationsView: View {
     
     @ViewBuilder private var resultsHeaderView: some View {
         if let loadingState = locationUIStatus.loadingState, loadingState != .loaded {
-            RefreshStatusView(loadingState: loadingState, refreshDate: nil)
+            RefreshStatusView(loadingState: loadingState)
                 .font(.footnote)
-                .foregroundStyle(Color.adaptiveMidGrey2)
+                .foregroundStyle(Color.secondary)
         }
     }
     

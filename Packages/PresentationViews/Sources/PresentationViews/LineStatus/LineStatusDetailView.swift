@@ -54,10 +54,9 @@ public struct LineStatusDetailView: View {
     // MARK: - Layout views
     
     private var refreshStatus: some View {
-        RefreshStatusView(loadingState: loadingState, 
-                          refreshDate: refreshDate)
+        RefreshStatusView(loadingState: loadingState)
             .font(.caption)
-            .foregroundStyle(Color.adaptiveMidGrey2)
+            .foregroundStyle(Color.secondary)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color.defaultBackground)
     }
@@ -98,6 +97,13 @@ public struct LineStatusDetailView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+            
+            if let refreshDate {
+                RefreshTimestampView(refreshDate)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
         }
         .padding(12)
     }

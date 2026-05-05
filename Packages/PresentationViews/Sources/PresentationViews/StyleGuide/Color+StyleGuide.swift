@@ -57,13 +57,7 @@ public extension Color {
     
     static let adaptiveRed = Color.adaptive(lightMode: .darkRed1,
                                             darkMode: .midRed1)
-    
-    static let adaptiveMidGrey2 = Color.adaptive(lightMode: .midGrey2,
-                                                 darkMode: .lightGrey1)
-    
-    static let adaptiveDarkGrey1 = Color.adaptive(lightMode: .darkGrey1,
-                                                 darkMode: .lightGrey2)
-    
+        
     static let defaultBackground = Color.adaptive(lightMode: .lightGrey2,
                                                   darkMode: .darkGrey2)
     
@@ -121,10 +115,6 @@ public extension ShapeStyle where Self == Color {
     static var midRed1: Color { .midRed1 }
     
     static var adaptiveRed: Color { .adaptiveRed }
-    
-    static var adaptiveMidGrey2: Color { .adaptiveMidGrey2 }
-    
-    static var adaptiveDarkGrey1: Color { .adaptiveDarkGrey1 }
     
     static var defaultBackground: Color { .defaultBackground }
     

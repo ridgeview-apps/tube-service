@@ -69,7 +69,7 @@ public struct LineStatusCell: View {
         }
         .toEqualWidthColumn(textColor: line.id.textColor)
         .padding(.leading, leadingColumnInset)
-        .background(line.id.backgroundColor)
+        .background { line.id.backgroundColor.scaledToFill() }
     }
     
     private func multilineLeadingColumn(with lines: [Line]) -> some View {
@@ -147,7 +147,6 @@ private extension View {
             }
         }
         .frame(maxWidth: .infinity,
-               maxHeight: .infinity,
                alignment: .leading)
     }
     

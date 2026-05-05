@@ -40,9 +40,14 @@ public struct JourneyResultsView: View {
                 VStack(spacing: 24) {
                     switch loadingState {
                     case .loading, .failure:
-                        RefreshStatusView(loadingState: loadingState)
-                            .foregroundStyle(Color.adaptiveMidGrey2)
-                            .padding(.top, 12)
+                        HStack {
+                            RefreshStatusView(loadingState: loadingState)
+                                .font(.caption)
+                                .foregroundStyle(Color.secondary)
+                                .padding(.top, 12)
+                            Spacer()
+                        }
+                        .padding(.horizontal)
                     case .loaded:
                         loadedView
                     }
@@ -114,7 +119,7 @@ public struct JourneyResultsView: View {
     private var loadedView: some View {
         if cellItems.isEmpty {
             Text(.journeyResultsZeroResultsTitle)
-                .foregroundStyle(Color.adaptiveMidGrey2)
+                .foregroundStyle(Color.secondary)
                 .padding(.top, 12)
         } else {
             LazyVStack(alignment: .leading, pinnedViews: [.sectionHeaders]) {

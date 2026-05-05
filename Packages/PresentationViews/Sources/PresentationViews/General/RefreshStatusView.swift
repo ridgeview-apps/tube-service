@@ -9,22 +9,11 @@ public enum LoadingState: Hashable {
 public struct RefreshStatusView: View {
     
     public let loadingState: LoadingState
-    public let refreshDate: Date?
     public let showsText: Bool
 
-    private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .short,
-                                                                       timeStyle: .short,
-                                                                       context: .middleOfSentence)
-    private var refreshDateFormatted: String? {
-        guard let refreshDate else { return nil }
-        return timestampFormatter.string(from: refreshDate)
-    }
-
     public init(loadingState: LoadingState,
-                refreshDate: Date? = nil,
                 showsText: Bool = true) {
         self.loadingState = loadingState
-        self.refreshDate = refreshDate
         self.showsText = showsText
     }
     
@@ -44,10 +33,7 @@ public struct RefreshStatusView: View {
             ProgressView()
                 .controlSize(.mini)
         case .loaded:
-            if refreshDate != nil {
-                Image(systemName: "clock")
-                    .imageScale(.small)
-            }
+            EmptyView()
         case .failure:
             Image(systemName: "exclamationmark.circle.fill")
                 .foregroundStyle(.adaptiveRed)
@@ -63,22 +49,21 @@ public struct RefreshStatusView: View {
             Text(errorMessage)
                 .foregroundStyle(.adaptiveRed)
         case .loaded:
-            if let refreshDateFormatted {
-                Text(.refreshStatusLastUpdated(refreshDateFormatted))
-            }
+            EmptyView()
         }
     }
 }
 
 #Preview {
     VStack {
-        RefreshStatusView(loadingState: .loading, refreshDate: .now)
-        RefreshStatusView(loadingState: .loaded, refreshDate: .now)
-        RefreshStatusView(loadingState: .loaded, refreshDate: Calendar.current.date(byAdding: .day, value: -1, to: Date())!)
-        RefreshStatusView(loadingState: .loaded, refreshDate: Calendar.current.date(byAdding: .day, value: -7, to: Date())!)
-        RefreshStatusView(loadingState: .loaded, refreshDate: nil)
-        RefreshStatusView(loadingState: .failure(errorMessage: "Sorry, something went wrong"), refreshDate: nil)
-        RefreshStatusView(loadingState: .failure(errorMessage: "Sorry, something went wrong"), refreshDate: nil,
-                          showsText: false)
+        RefreshStatusView(loadingState: .loading)
+        RefreshStatusView(loadingState: .loaded)
+        RefreshStatusView(
+            loadingState: .failure(errorMessage: "Sorry, something went wrong")
+        )
+        RefreshStatusView(
+            loadingState: .failure(errorMessage: "Sorry, something went wrong"),
+            showsText: false
+        )
     }
 }

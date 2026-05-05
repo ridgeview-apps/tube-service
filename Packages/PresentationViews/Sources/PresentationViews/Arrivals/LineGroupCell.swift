@@ -60,7 +60,7 @@ struct LineGroupCell: View {
                 )
         )
         .font(.subheadline)
-        .foregroundStyle(Color.adaptiveMidGrey2)
+        .foregroundStyle(Color.secondary)
     }
 }
 

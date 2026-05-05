@@ -39,12 +39,15 @@ public struct LineStatusListView: View {
     public var body: some View {
         List(selection: $selectedLine) {
             Section {
+                RefreshStatusView(loadingState: loadingState)
+                    .controlSize(.mini)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
                 lineStatusCells
             } header: {
-                stickyHeader
-                    .textCase(nil)
+                filterOptionsHeader
             }
-            .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
+            .listRowInsets(.init(top: 0, leading: 16, bottom: 8, trailing: 16))
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
@@ -59,11 +62,9 @@ public struct LineStatusListView: View {
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            refreshStatusView
-                .padding(.bottom, 4)
             if hasFavouritesOrDisruptions {
                 Spacer()
-                    .frame(height: 0)
+                    .frame(height: 4)
                 tappableStatusCells(with: favourites)
                 tappableStatusCells(with: disruptions)
             }
@@ -75,11 +76,12 @@ public struct LineStatusListView: View {
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
             sectionLabel(.lineStatusSectionAllOtherLines)
-        }
-        if showOtherLinesSummaryCell {
-            otherLinesSummaryCell
-        } else if !allOtherLines.isEmpty {
-            tappableStatusCells(with: allOtherLines)
+            
+            if showOtherLinesSummaryCell {
+                otherLinesSummaryCell
+            } else {
+                tappableStatusCells(with: allOtherLines)
+            }
         }
     }
     
@@ -87,7 +89,7 @@ public struct LineStatusListView: View {
         Text(title)
             .font(.footnote.weight(.semibold))
             .foregroundStyle(.secondary)
-            .padding(.top, 8)
+            .padding(.top, 12)
     }
     
     private func tappableStatusCells(
@@ -114,8 +116,8 @@ public struct LineStatusListView: View {
                 animatedAccessoryImage: true,
                 isFavourite: isFavourite
             )
-            .cardStyle()
             .frame(minHeight: 52)
+            .cardStyle()
             .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
@@ -152,37 +154,16 @@ public struct LineStatusListView: View {
     }
     
     @ViewBuilder
-    private var stickyHeader: some View {
-        if #available(iOS 26.0, *) {
-            headerContent
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .listRowInsets(
-                    .init(top: 0, leading: 8, bottom: 4, trailing: 8)
-                )
-                .glassEffect(
-                    .regular,
-                    in: .rect(cornerRadius: 16)
-                )
-        } else {
-            headerContent
-                .listRowInsets(.zero)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(Color.defaultBackground)
-                .overlay(alignment: .bottom) {
-                    Divider()
-                }
-        }
-    }
-
-    private var headerContent: some View {
-        VStack(alignment: .leading, spacing: 6) {
+    private var filterOptionsHeader: some View {
+        VStack(alignment: .leading, spacing: 8) {
             filterOptionsPicker
             headerTitleView
             datePickerView
         }
         .foregroundStyle(.foreground)
+        .padding(.vertical, 12)
+        .padding(.horizontal, 8)
+        .cardStyle()
     }
     
     private var filterOptionsPicker: some View {
@@ -200,6 +181,8 @@ public struct LineStatusListView: View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             headerTitleImage
             headerTitleText
+            Spacer()
+            refreshTimestampView
         }
         .font(.subheadline)
     }
@@ -242,17 +225,12 @@ public struct LineStatusListView: View {
         }
     }
     
-    @ViewBuilder private var refreshStatusView: some View {
-        if !shouldHideRefreshStatusView {
-            RefreshStatusView(loadingState: loadingState,
-                              refreshDate: refreshDate)
-            .font(.caption)
-            .foregroundStyle(.secondary)
+    @ViewBuilder private var refreshTimestampView: some View {
+        if selectedFilterOption == .today, let refreshDate {
+            RefreshTimestampView(refreshDate)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
         }
-    }
-    
-    private var shouldHideRefreshStatusView: Bool {
-        selectedFilterOption == .future && !isValidFutureDate
     }
     
     private func tomorrowFormatted() -> String {

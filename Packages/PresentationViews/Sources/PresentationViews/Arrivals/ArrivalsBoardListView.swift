@@ -37,7 +37,7 @@ public struct ArrivalsBoardListView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .center, spacing: 28) {
+            VStack(alignment: .center, spacing: 24) {
                 Section {
                     Group {
                         if boardStates.isEmpty && loadingState == .loaded {
@@ -77,12 +77,19 @@ public struct ArrivalsBoardListView: View {
     
     private var headerTitleView: some View {
         VStack(alignment: .leading) {
-            Text(lineGroupName)
-                .font(.subheadline)
-            RefreshStatusView(loadingState: loadingState,
-                              refreshDate: refreshDate)
+            HStack {
+                Text(lineGroupName)
+                    .font(.subheadline)
+                Spacer()
+                if let refreshDate {
+                    RefreshTimestampView(refreshDate)
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            RefreshStatusView(loadingState: loadingState)
                 .font(.caption)
-                .foregroundStyle(Color.adaptiveMidGrey2)
+                .foregroundStyle(.secondary)
         }
         .padding(.vertical, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
