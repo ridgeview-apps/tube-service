@@ -17,6 +17,8 @@ public struct LineStatusListView: View {
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
     private var showsDatePicker: Bool { selectedFilterOption == .future }
+    private var hasFavouritesOrDisruptions: Bool { !(favourites + disruptions).isEmpty }
+
         
     public init(loadingState: LoadingState,
                 lines: [Line],
@@ -59,21 +61,25 @@ public struct LineStatusListView: View {
         if shouldShowLineStatusCells {
             refreshStatusView
                 .padding(.bottom, 4)
-            if !favourites.isEmpty {
-                sectionLabel(.lineStatusSectionFavourites)
+            if hasFavouritesOrDisruptions {
+                Spacer()
+                    .frame(height: 0)
                 tappableStatusCells(with: favourites)
-            }
-            if !disruptions.isEmpty {
-                sectionLabel(.lineStatusSectionDisruptions)
                 tappableStatusCells(with: disruptions)
             }
-            if showOtherLinesSummaryCell {
-                sectionLabel(.lineStatusSectionAllOtherLines)
-                otherLinesSummaryCell
-            } else if !allOtherLines.isEmpty {
-                sectionLabel(.lineStatusSectionAllOtherLines)
-                tappableStatusCells(with: allOtherLines)
-            }
+            allOtherLineCells
+        }
+    }
+    
+    @ViewBuilder
+    private var allOtherLineCells: some View {
+        if !allOtherLines.isEmpty {
+            sectionLabel(.lineStatusSectionAllOtherLines)
+        }
+        if showOtherLinesSummaryCell {
+            otherLinesSummaryCell
+        } else if !allOtherLines.isEmpty {
+            tappableStatusCells(with: allOtherLines)
         }
     }
     
@@ -84,20 +90,29 @@ public struct LineStatusListView: View {
             .padding(.top, 8)
     }
     
-    private func tappableStatusCells(with lines: [Line]) -> some View {
+    private func tappableStatusCells(
+        with lines: [Line]
+    ) -> some View {
         ForEach(lines) { line in
-            tappableStatusCell(for: line)
+            tappableStatusCell(
+                for: line,
+                isFavourite: favouriteLineIDs.contains(line.id)
+            )
         }
     }
     
-    private func tappableStatusCell(for line: Line) -> some View {
+    private func tappableStatusCell(
+        for line: Line,
+        isFavourite: Bool
+    ) -> some View {
         Button {
             selectedLine = line
         } label: {
             LineStatusCell(
                 style: .singleLine(line),
                 showsAccessory: true,
-                animatedAccessoryImage: true
+                animatedAccessoryImage: true,
+                isFavourite: isFavourite
             )
             .cardStyle()
             .frame(minHeight: 52)

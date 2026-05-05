@@ -428,14 +428,6 @@ public extension LocalizedStringResource {
         moduleResource("line.status.section.all.other.lines")
     }
     
-    static var lineStatusSectionDisruptions: LocalizedStringResource {
-        moduleResource("line.status.section.disruptions")
-    }
-
-    static var lineStatusSectionFavourites: LocalizedStringResource {
-        moduleResource("line.status.section.favourites")
-    }
-
     static var lineStatusServiceNow: LocalizedStringResource {
         moduleResource("line.status.service.now")
     }

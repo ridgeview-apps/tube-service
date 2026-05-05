@@ -1126,28 +1126,6 @@
         }
       }
     },
-    "line.status.section.disruptions" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disruptions"
-          }
-        }
-      }
-    },
-    "line.status.section.favourites" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favourites"
-          }
-        }
-      }
-    },
     "line.status.select.other.date.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -7,6 +7,7 @@ public struct LineStatusCell: View {
     public let showsAccessory: Bool
     public var leadingColumnInset = 4.0
     public var animatedAccessoryImage: Bool = false
+    public var isFavourite = false
     
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
     
@@ -56,6 +57,13 @@ public struct LineStatusCell: View {
     
     private func singleLineLeadingColumn(line: Line) -> some View {
         HStack(spacing: 4) {
+            if isFavourite {
+                Image(systemName: "star.fill")
+                    .resizable()
+                    .frame(width: 10 * dynamicScaleFactor,
+                           height: 10 * dynamicScaleFactor)
+                    .foregroundStyle(line.id.textColor)
+            }
             Text(line.id.name)
             Spacer()
         }
@@ -156,6 +164,13 @@ import ModelStubs
             Section("Single line - good service") {
                 LineStatusCell(style: .singleLine(ModelStubs.lineStatusGoodService),
                                showsAccessory: true)
+            }
+            Section("Single line - good service (favourite)") {
+                LineStatusCell(
+                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    showsAccessory: true,
+                    isFavourite: true
+                )
             }
             Section("Single line - disrupted") {
                 LineStatusCell(style: .singleLine(ModelStubs.lineStatusDisrupted),
