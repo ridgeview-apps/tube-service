@@ -47,7 +47,7 @@ public struct LineStatusListView: View {
             } header: {
                 filterOptionsHeader
             }
-            .listRowInsets(.init(top: 0, leading: 16, bottom: 8, trailing: 16))
+            .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
@@ -64,7 +64,7 @@ public struct LineStatusListView: View {
         if shouldShowLineStatusCells {
             if hasFavouritesOrDisruptions {
                 Spacer()
-                    .frame(height: 4)
+                    .frame(height: 8)
                 tappableStatusCells(with: favourites)
                 tappableStatusCells(with: disruptions)
             }
@@ -89,7 +89,7 @@ public struct LineStatusListView: View {
         Text(title)
             .font(.footnote.weight(.semibold))
             .foregroundStyle(.secondary)
-            .padding(.top, 12)
+            .padding(.top, 8)
     }
     
     private func tappableStatusCells(
@@ -227,9 +227,12 @@ public struct LineStatusListView: View {
     
     @ViewBuilder private var refreshTimestampView: some View {
         if selectedFilterOption == .today, let refreshDate {
-            RefreshTimestampView(refreshDate)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
+            RefreshTimestampView(
+                date: refreshDate,
+                textStyle: .lastUpdated
+            )
+            .font(.caption2)
+            .foregroundStyle(.secondary)
         }
     }
     

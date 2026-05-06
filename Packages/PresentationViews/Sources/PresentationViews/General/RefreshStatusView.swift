@@ -18,13 +18,16 @@ public struct RefreshStatusView: View {
     }
     
     public var body: some View {
-        HStack(spacing: 4) {
-            statusImage
-            if showsText {
-                statusText
+        if loadingState != .loaded {
+            Label {
+                if showsText {
+                    statusText
+                }
+            } icon: {
+                statusImage
             }
+            .animation(.default, value: loadingState)
         }
-        .animation(.default, value: loadingState)
     }
 
     @ViewBuilder private var statusImage: some View {
@@ -57,7 +60,7 @@ public struct RefreshStatusView: View {
 #Preview {
     VStack {
         RefreshStatusView(loadingState: .loading)
-        RefreshStatusView(loadingState: .loaded)
+        RefreshStatusView(loadingState: .loading, showsText: false)
         RefreshStatusView(
             loadingState: .failure(errorMessage: "Sorry, something went wrong")
         )

@@ -1121,7 +1121,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All other lines"
+            "value" : "Other lines"
           }
         }
       }
@@ -1143,7 +1143,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Live status"
+            "value" : "Live"
           }
         }
       }
@@ -1432,7 +1432,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last updated %@"
+            "value" : "Updated %@"
           }
         }
       }

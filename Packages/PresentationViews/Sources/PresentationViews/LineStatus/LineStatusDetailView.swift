@@ -99,7 +99,7 @@ public struct LineStatusDetailView: View {
             }
             
             if let refreshDate {
-                RefreshTimestampView(refreshDate)
+                RefreshTimestampView(date: refreshDate)
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

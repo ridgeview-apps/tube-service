@@ -76,13 +76,13 @@ public struct ArrivalsBoardListView: View {
     }
     
     private var headerTitleView: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(lineGroupName)
-                    .font(.subheadline)
+                    .font(.headline)
                 Spacer()
                 if let refreshDate {
-                    RefreshTimestampView(refreshDate)
+                    RefreshTimestampView(date: refreshDate)
                         .font(.caption2)
                         .foregroundStyle(.secondary)
                 }
