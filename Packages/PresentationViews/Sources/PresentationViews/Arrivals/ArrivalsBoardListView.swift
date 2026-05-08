@@ -76,7 +76,7 @@ public struct ArrivalsBoardListView: View {
     }
     
     private var headerTitleView: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack {
                 Text(lineGroupName)
                     .font(.headline)
@@ -88,7 +88,6 @@ public struct ArrivalsBoardListView: View {
             )
             .defaultLoadingStatusStyle()
         }
-        .padding(.vertical, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 

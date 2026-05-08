@@ -51,7 +51,6 @@ public struct LineStatusListView: View {
         .defaultScrollContentBackgroundColor()
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle(for: .top)
-        .withTightenedLabelIconToTitleSpacing()
         .environment(\.defaultMinListRowHeight, 0)
         .animation(.default, value: selectedFilterOption)
         .animation(.default, value: favourites)
