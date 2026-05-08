@@ -28,7 +28,7 @@ public struct JourneyLocationTitleLabel: View {
     private var currentLocationLabel: some View {
         HStack(spacing: 4) {
             Text(Image(systemName: "location.fill"))
-                .font(.caption)
+                .font(.caption2)
             Text(value.name)
             if let accessoryStatus {
                 Group {
@@ -36,15 +36,16 @@ public struct JourneyLocationTitleLabel: View {
                     case .warning:
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(.yellow)
-                    case .loadingState(let loadingState):
-                        RefreshStatusView(
-                            loadingState: loadingState,
-                            showsText: false
-                        )
-                        .foregroundStyle(.secondary)
+                    case .loadingState(.loading):
+                        ProgressView()
+                    case .loadingState(.failure):
+                        Image(systemName: "exclamationmark.circle.fill")
+                    default:
+                        EmptyView()
                     }
                 }
-                .font(.caption)
+                .controlSize(.mini)
+                .font(.caption2)
             }
         }
     }

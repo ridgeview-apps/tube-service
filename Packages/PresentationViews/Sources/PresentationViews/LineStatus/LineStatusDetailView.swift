@@ -35,7 +35,7 @@ public struct LineStatusDetailView: View {
                 Section {
                     statusHeaderCard
                 } header: {
-                    refreshStatus
+                    loadingStatusView
                 }
                 Section {
                     xPostsSection
@@ -53,12 +53,12 @@ public struct LineStatusDetailView: View {
     
     // MARK: - Layout views
     
-    private var refreshStatus: some View {
-        RefreshStatusView(loadingState: loadingState)
-            .font(.caption)
-            .foregroundStyle(Color.secondary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.defaultBackground)
+    private var loadingStatusView: some View {
+        LoadingStatusView(
+            loadingState: loadingState,
+            refreshedAt: refreshDate
+        )
+        .defaultLoadingStatusStyle()
     }
     
     private var statusHeaderCard: some View {
@@ -97,13 +97,6 @@ public struct LineStatusDetailView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            
-            if let refreshDate {
-                RefreshTimestampView(date: refreshDate)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-
         }
         .padding(12)
     }
@@ -147,6 +140,7 @@ public struct LineStatusDetailView: View {
                     }
                 }
                 Spacer()
+                Image(systemName: "arrow.up.forward.square")
             }
         }
         .buttonStyle(.borderless)

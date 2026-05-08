@@ -9,6 +9,7 @@ struct LineStatusDetailScreen: View {
     
     @Environment(LineStatusDataStore.self) var model
     @Environment(\.showSheet) var showSheet
+    @Environment(\.openURL) var openURL
     
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
@@ -43,7 +44,7 @@ struct LineStatusDetailScreen: View {
     private func handleDetailViewAction(_ action: LineStatusDetailView.Action) {
         switch action {
         case .linkTapped(let link):
-            showSheet(.safari(link.url))
+            openURL(link.url)
         }
     }
     

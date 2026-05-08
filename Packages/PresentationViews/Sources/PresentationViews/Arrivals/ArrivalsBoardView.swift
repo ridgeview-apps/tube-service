@@ -51,6 +51,7 @@ struct ArrivalsBoardView: View {
         VStack(alignment: .leading, spacing: 20) {
             ForEach(fixedCellItems) { cellItem in
                 makeCell(with: cellItem)
+                    .animation(nil, value: rotatingCellIndex)
             }
             if let rotatingCellItem {
                 makeCell(with: rotatingCellItem)

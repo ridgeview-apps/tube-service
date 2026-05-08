@@ -47,10 +47,6 @@ public struct NearbyStationsView: View {
                             reader.scrollTo("showMoreButtonID_\(newValue)")
                         }
                     }
-                showMoreResultsButton
-                    .listRowSeparator(.hidden)
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(.init(top: 16, leading: 0, bottom: 0, trailing: 0))
             }
             .listSectionSpacing(0)
             .defaultScrollContentBackgroundColor()
@@ -73,6 +69,11 @@ public struct NearbyStationsView: View {
             }
         } header: {
             resultsHeaderView
+        } footer: {
+            showMoreResultsButton
+                .listRowInsets(
+                    .init(top: 16, leading: 0, bottom: 0, trailing: 0)
+                )
         }
         .lineGroupListRowStyle()
     }
@@ -80,9 +81,8 @@ public struct NearbyStationsView: View {
     
     @ViewBuilder private var resultsHeaderView: some View {
         if let loadingState = locationUIStatus.loadingState, loadingState != .loaded {
-            RefreshStatusView(loadingState: loadingState)
-                .font(.footnote)
-                .foregroundStyle(Color.secondary)
+            LoadingStatusView(loadingState: loadingState)
+                .defaultLoadingStatusStyle()
         }
     }
     

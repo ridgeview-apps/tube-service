@@ -117,10 +117,8 @@ public struct StationView: View {
         HStack(spacing: 8) {
             Text(.stationStatusSectionHeaderTitle)
             Spacer()
-            RefreshStatusView(loadingState: loadingState)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .textCase(nil)
+            LoadingStatusView(loadingState: loadingState)
+                .defaultLoadingStatusStyle()
         }
     }
     

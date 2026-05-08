@@ -39,10 +39,7 @@ public struct LineStatusListView: View {
     public var body: some View {
         List(selection: $selectedLine) {
             Section {
-                RefreshStatusView(loadingState: loadingState)
-                    .controlSize(.mini)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+                loadingStatusView
                 lineStatusCells
             } header: {
                 filterOptionsHeader
@@ -58,6 +55,14 @@ public struct LineStatusListView: View {
         .environment(\.defaultMinListRowHeight, 0)
         .animation(.default, value: selectedFilterOption)
         .animation(.default, value: favourites)
+    }
+    
+    private var loadingStatusView: some View {
+        LoadingStatusView(
+            loadingState: loadingState,
+            refreshedAt: refreshDate
+        )
+        .defaultLoadingStatusStyle()
     }
     
     @ViewBuilder private var lineStatusCells: some View {
@@ -181,8 +186,6 @@ public struct LineStatusListView: View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             headerTitleImage
             headerTitleText
-            Spacer()
-            refreshTimestampView
         }
         .font(.subheadline)
     }
@@ -222,17 +225,6 @@ public struct LineStatusListView: View {
             }
             .withAutoDismissID(of: selectedDate)
             .labelsHidden()
-        }
-    }
-    
-    @ViewBuilder private var refreshTimestampView: some View {
-        if selectedFilterOption == .today, let refreshDate {
-            RefreshTimestampView(
-                date: refreshDate,
-                textStyle: .lastUpdated
-            )
-            .font(.caption2)
-            .foregroundStyle(.secondary)
         }
     }
     

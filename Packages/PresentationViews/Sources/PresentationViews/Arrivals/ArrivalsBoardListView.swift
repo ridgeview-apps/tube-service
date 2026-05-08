@@ -81,15 +81,12 @@ public struct ArrivalsBoardListView: View {
                 Text(lineGroupName)
                     .font(.headline)
                 Spacer()
-                if let refreshDate {
-                    RefreshTimestampView(date: refreshDate)
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
             }
-            RefreshStatusView(loadingState: loadingState)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            LoadingStatusView(
+                loadingState: loadingState,
+                refreshedAt: refreshDate
+            )
+            .defaultLoadingStatusStyle()
         }
         .padding(.vertical, 4)
         .frame(maxWidth: .infinity, alignment: .leading)
