@@ -47,6 +47,7 @@ public struct NearbyStationsView: View {
                             reader.scrollTo("showMoreButtonID_\(newValue)")
                         }
                     }
+                showMoreResultsButton
             }
             .listSectionSpacing(0)
             .defaultScrollContentBackgroundColor()
@@ -69,11 +70,6 @@ public struct NearbyStationsView: View {
             }
         } header: {
             resultsHeaderView
-        } footer: {
-            showMoreResultsButton
-                .listRowInsets(
-                    .init(top: 16, leading: 0, bottom: 0, trailing: 0)
-                )
         }
         .lineGroupListRowStyle()
     }
@@ -134,13 +130,17 @@ public struct NearbyStationsView: View {
     
     @ViewBuilder private var showMoreResultsButton: some View {
         if canShowMoreResults {
-            Button {
-                sectionState.currentPageNo += 1
-            } label: {
-                Text(.nearbyStationsMoreResultsButtonTitle)
+            Section {
+                Button {
+                    sectionState.currentPageNo += 1
+                } label: {
+                    Text(.nearbyStationsMoreResultsButtonTitle)
+                }
+                .buttonStyle(.primary)
+                .id("showMoreButtonID_\(sectionState.currentPageNo)")
             }
-            .buttonStyle(.primary)
-            .id("showMoreButtonID_\(sectionState.currentPageNo)")
+            .listRowBackground(Color.clear)
+            .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
         }
     }
     
