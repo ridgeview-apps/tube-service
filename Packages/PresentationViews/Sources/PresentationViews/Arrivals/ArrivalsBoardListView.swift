@@ -3,7 +3,6 @@ import SwiftUI
 import Models
 
 public struct ArrivalsBoardListView: View {
-    
 
     // MARK: Public properties
 
@@ -81,12 +80,13 @@ public struct ArrivalsBoardListView: View {
                 Text(lineGroupName)
                     .font(.headline)
                 Spacer()
+                if let refreshDate {
+                    LastUpatedTimeLabel(date: refreshDate)
+                        .defaultLastUpdatedTimeLabelStyle()
+                }
             }
-            LoadingStatusView(
-                loadingState: loadingState,
-                refreshedAt: refreshDate
-            )
-            .defaultLoadingStatusStyle()
+            LoadingStatusView(loadingState: loadingState)
+                .defaultLoadingStatusStyle()
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

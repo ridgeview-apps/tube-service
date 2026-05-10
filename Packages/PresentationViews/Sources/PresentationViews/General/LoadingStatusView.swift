@@ -7,59 +7,31 @@ public enum LoadingState: Hashable {
 }
 
 public struct LoadingStatusView: View {
-    
+
     public let loadingState: LoadingState
-    public let refreshedAt: Date?
-    
-    private let timestampFormatter: DateFormatter = Formatter.relative(
-        dateStyle: .short,
-        timeStyle: .short,
-        context: .middleOfSentence
-    )
-    
-    private var formattedRefreshDate: String? {
-        guard let refreshedAt else { return nil }
-        return timestampFormatter.string(from: refreshedAt)
-    }
-    
+
     public init(
-        loadingState: LoadingState,
-        refreshedAt: Date? = nil
+        loadingState: LoadingState
     ) {
         self.loadingState = loadingState
-        self.refreshedAt = refreshedAt
     }
-    
+
     public var body: some View {
-        HStack(alignment: verticalAlignment, spacing: 4) {
+        HStack(spacing: 4) {
             switch loadingState {
             case .loading:
                 ProgressView()
                     .controlSize(.small)
                 Text(.refreshStatusLoading)
-            case .loaded:
-                if let formattedRefreshDate {
-                    Image(systemName: "clock")
-                    Text(
-                        .refreshStatusLastUpdated(formattedRefreshDate)
-                    )
-                }
             case .failure(let reason):
                 Group {
                     Image(systemName: "exclamationmark.circle.fill")
                     Text(reason)
                 }
                 .foregroundStyle(.adaptiveRed)
+            case .loaded:
+                EmptyView()
             }
-        }
-    }
-    
-    private var verticalAlignment: VerticalAlignment {
-        switch loadingState {
-        case .loading:
-            .center
-        case .loaded, .failure:
-            .firstTextBaseline
         }
     }
 }
@@ -67,10 +39,14 @@ public struct LoadingStatusView: View {
 extension View {
     func defaultLoadingStatusStyle(
         font: Font = .caption,
-        foregroundStyle: some ShapeStyle = .secondary
+        lineLimit: Int = 3,
+        foregroundStyle: some ShapeStyle = .secondary,
+        verticalPadding: CGFloat = 4.0
     ) -> some View {
         self.font(font)
             .foregroundStyle(foregroundStyle)
+            .lineLimit(lineLimit)
+            .padding(.vertical, verticalPadding)
     }
 }
 
@@ -78,12 +54,22 @@ extension View {
     VStack {
         LoadingStatusView(loadingState: .loading)
         LoadingStatusView(
-            loadingState: .loaded,
-            refreshedAt: .now
+            loadingState: .failure(
+                errorMessage: "Sorry, something went wrong wrong"
+            )
         )
         LoadingStatusView(
-            loadingState: .failure(errorMessage: "Sorry, something went wrong")
+            loadingState: .failure(
+                errorMessage: """
+                    Sorry, something went wrong wrong. Super long message. 
+                    Super long message. Super long message. Super long message. 
+                    Super long message. Super long message. Super long message. 
+                    Super long message.
+                    """
+            )
         )
+        LoadingStatusView(loadingState: .loaded)
+            .background(.orange)
     }
     .defaultLoadingStatusStyle()
 }

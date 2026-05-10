@@ -90,5 +90,15 @@ public extension ExpansionInfoButton {
             titleState: .constant("Fixed title"),
             isExpanded: $isExpanded
         )
+        Group {
+            ExpansionInfoButton(
+                isExpanded: $isExpanded
+            )
+            ExpansionInfoButton(
+                style: .imageOnly,
+                isExpanded: $isExpanded
+            )
+        }
+        .buttonStyle(.bordered)
     }
 }

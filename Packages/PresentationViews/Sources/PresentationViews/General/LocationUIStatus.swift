@@ -37,7 +37,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
     public func body(content: Content) -> some View {
         switch status.style {
         case let .setUp(showsHeader):
-            setupView(showsHeader: showsHeader)
+            initialSetupView(showsHeader: showsHeader)
         case .openSettingsToAllowLocation:
             permissionDeniedView
         case .locationAllowed:
@@ -46,7 +46,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
     }
     
     @ViewBuilder
-    private func setupView(showsHeader: Bool) -> some View {
+    private func initialSetupView(showsHeader: Bool) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             if showsHeader {
                 Text(.locationServicesAllowAccessHeaderTitle)
@@ -62,6 +62,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
             .buttonStyle(.primary)
             Text(.locationServicesAllowAccessFooterTitle)
                 .font(.caption)
+                .foregroundStyle(.secondary)
         }
         .padding(.horizontal, status.horizontalPadding)
     }

@@ -53,12 +53,14 @@ public struct LineStatusDetailView: View {
     
     // MARK: - Layout views
     
+    @ViewBuilder
     private var loadingStatusView: some View {
-        LoadingStatusView(
-            loadingState: loadingState,
-            refreshedAt: refreshDate
-        )
-        .defaultLoadingStatusStyle()
+        if loadingState != .loaded {
+            LoadingStatusView(
+                loadingState: loadingState,
+            )
+            .defaultLoadingStatusStyle(verticalPadding: 0)
+        }
     }
     
     private var statusHeaderCard: some View {
@@ -96,6 +98,11 @@ public struct LineStatusDetailView: View {
                         .padding(.vertical, 4)
                         .foregroundStyle(.tertiary)
                 }
+            }
+            
+            if let refreshDate {
+                LastUpatedTimeLabel(date: refreshDate)
+                    .defaultLastUpdatedTimeLabelStyle()
             }
         }
         .padding(12)

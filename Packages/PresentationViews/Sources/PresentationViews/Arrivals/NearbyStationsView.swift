@@ -76,7 +76,7 @@ public struct NearbyStationsView: View {
     
     
     @ViewBuilder private var resultsHeaderView: some View {
-        if let loadingState = locationUIStatus.loadingState, loadingState != .loaded {
+        if let loadingState = locationUIStatus.loadingState {
             LoadingStatusView(loadingState: loadingState)
                 .defaultLoadingStatusStyle()
         }
@@ -112,6 +112,7 @@ public struct NearbyStationsView: View {
     private var errorView: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(.nearbyStationsLoadFailureTitle)
+                .font(.headline)
             refreshButton
         }
     }

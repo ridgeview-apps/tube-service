@@ -36,7 +36,7 @@ struct LineStatusScreen: View {
                            selectedDate: $selectedDate)
         .navigationTitle(Text(.lineStatusNavigationTitle))
         .refreshable {
-            refreshDataForCurrentFilterOption()
+            await refreshDataForCurrentFilterOption()
         }
         .withSettingsToolbarButton()
         .onAppear {
@@ -94,10 +94,8 @@ struct LineStatusScreen: View {
         }
     }
     
-    private func refreshDataForCurrentFilterOption() {
-        Task {
-            await model.refreshLineStatuses(for: currentFetchType)
-        }
+    private func refreshDataForCurrentFilterOption() async {
+        await model.refreshLineStatuses(for: currentFetchType)
     }
     
     private var currentFetchType: LineStatusDataStore.FetchType {

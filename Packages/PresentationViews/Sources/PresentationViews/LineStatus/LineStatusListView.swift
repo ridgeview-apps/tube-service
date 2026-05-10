@@ -52,23 +52,22 @@ public struct LineStatusListView: View {
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)
-        .animation(.default, value: selectedFilterOption)
-        .animation(.default, value: favourites)
     }
     
     private var loadingStatusView: some View {
         LoadingStatusView(
-            loadingState: loadingState,
-            refreshedAt: refreshDate
+            loadingState: loadingState
         )
         .defaultLoadingStatusStyle()
+        .frame(height: loadingState == .loaded ? 0 : nil)
     }
     
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
+            Spacer()
+                .listRowInsets(.zero)
+                .frame(height: 8)
             if hasFavouritesOrDisruptions {
-                Spacer()
-                    .frame(height: 8)
                 tappableStatusCells(with: favourites)
                 tappableStatusCells(with: disruptions)
             }
@@ -185,6 +184,11 @@ public struct LineStatusListView: View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             headerTitleImage
             headerTitleText
+            Spacer()
+            if let refreshDate, selectedFilterOption == .today {
+                LastUpatedTimeLabel(date: refreshDate)
+                    .defaultLastUpdatedTimeLabelStyle()
+            }
         }
         .font(.subheadline)
     }

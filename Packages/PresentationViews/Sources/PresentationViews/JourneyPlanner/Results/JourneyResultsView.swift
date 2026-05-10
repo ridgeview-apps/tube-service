@@ -41,9 +41,11 @@ public struct JourneyResultsView: View {
                     switch loadingState {
                     case .loading, .failure:
                         HStack {
+                            Spacer()
                             LoadingStatusView(loadingState: loadingState)
-                                .defaultLoadingStatusStyle()
-                                .padding(.top, 12)
+                                .defaultLoadingStatusStyle(
+                                    verticalPadding: 8
+                                )
                             Spacer()
                         }
                         .padding(.horizontal)

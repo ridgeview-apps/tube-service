@@ -97,6 +97,7 @@ struct JourneyResultsCell: View {
                 isExpanded: $cellItem.isExpanded
             )
             .buttonStyle(.bordered)
+            .controlSize(.small)
         }
 
     }
