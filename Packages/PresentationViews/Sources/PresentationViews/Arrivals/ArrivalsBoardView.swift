@@ -143,8 +143,7 @@ struct ArrivalsBoardView: View {
                     cellText(for: .localized(.arrivalsCheckFrontOfTrain))
                 }
             }
-            .font(headerRow.style == .tube ? .headline : .callout)
-            .fontWeight(headerRow.style == .scheduledDeparture ? .semibold : nil)
+            .font(.headline)
             
             Spacer()
             
