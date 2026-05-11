@@ -29,10 +29,13 @@ public struct LastUpatedTimeLabel: View {
 extension View {
     func defaultLastUpdatedTimeLabelStyle(
         font: Font = .caption,
-        foregroundStyle: some ShapeStyle = .secondary
+        foregroundStyle: some ShapeStyle = .secondary,
+        imageScale: Image.Scale = .small
     ) -> some View {
-        self.font(font)
+        self
+            .font(font)
             .foregroundStyle(foregroundStyle)
+            .imageScale(imageScale)
     }
 }
 

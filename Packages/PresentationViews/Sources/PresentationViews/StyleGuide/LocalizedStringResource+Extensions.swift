@@ -44,7 +44,7 @@ public extension LocalizedStringResource {
         moduleResource("arrivals.board.departure.status.onTime")
     }
     
-        static var arrivalsCheckFrontOfTrain: LocalizedStringResource {
+    static var arrivalsCheckFrontOfTrain: LocalizedStringResource {
         moduleResource("arrivals.check.front.of.train")
     }
     

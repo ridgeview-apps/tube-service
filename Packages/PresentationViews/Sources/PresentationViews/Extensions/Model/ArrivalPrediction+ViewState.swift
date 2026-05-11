@@ -15,9 +15,17 @@ extension ArrivalPrediction {
                                backgroundColor: lineID.backgroundColor,
                                textColor: lineID.textColor,
                                textShadow: lineID.textShadow),
-            destinationText: destinationTextItem,
-            countdownText: countdownTextItem,
-            bottomTextMessage: .generalInfo(currentVehicleLocationTextItem)
+            headerRow: headerRowState,
+            footerRow: footerRow
+        )
+    }
+    
+    private var headerRowState: ArrivalsBoardCellItem.HeaderRowState {
+        .init(
+            style: .tube,
+            destination: destinationText,
+            countdownText: CountdownTextFormatter.formattedText(forSeconds: timeToStation),
+            needsStrikethrough: false
         )
     }
     
@@ -28,25 +36,21 @@ extension ArrivalPrediction {
         return naptanID == destinationNaptanID
     }
     
-    private var destinationTextItem: ArrivalsBoardTextItem {
+    private var destinationText: ArrivalsBoardCellItem.HeaderRowState.DestinationType {
         if terminatesHere {
-            return .destination(.checkFrontOfTrain)
+            return .checkFrontOfTrain
         } else if let towards, !towards.isEmpty {
-            return .destination(.towards(towards))
+            return .towards(towards)
         } else if let destinationName, !destinationName.isEmpty {
-            return .destination(.towards(destinationName))
+            return .towards(destinationName)
         } else {
-            return .destination(.checkFrontOfTrain)
+            return .checkFrontOfTrain
         }
     }
     
-    private var currentVehicleLocationTextItem: ArrivalsBoardTextItem? {
+    private var footerRow: ArrivalsBoardCellItem.FooterRowType? {
         guard let currentLocation else { return nil }
-        return .currentVehicleLocation(currentLocation)
-    }
-    
-    private var countdownTextItem: ArrivalsBoardTextItem {
-        return .countdownSeconds(timeToStation, isStrikethrough: false)
+        return .tubeLiveLocation(currentLocation)
     }
 }
 

@@ -85,8 +85,10 @@ public struct ArrivalsBoardListView: View {
                         .defaultLastUpdatedTimeLabelStyle()
                 }
             }
-            LoadingStatusView(loadingState: loadingState)
-                .defaultLoadingStatusStyle()
+            if loadingState != .loaded {
+                LoadingStatusView(loadingState: loadingState)
+                    .defaultLoadingStatusStyle()
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

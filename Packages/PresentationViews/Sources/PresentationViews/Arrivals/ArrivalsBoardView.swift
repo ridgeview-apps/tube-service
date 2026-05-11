@@ -20,7 +20,6 @@ struct ArrivalsBoardView: View {
     @State private var rotatingCellIndex: Int?
     
     private let collapsedStateMaxCellCount = 3
-    private let boardPrimaryColor = Color.rgb(198, 188, 61)
     
     // MARK: Body
     
@@ -32,7 +31,7 @@ struct ArrivalsBoardView: View {
         }
         .padding()
         .background(Color.darkGrey2)
-        .roundedBorder(boardPrimaryColor,
+        .roundedBorder(Color.arrivalsBoardPrimary,
                        lineWidth: 4)
         .animation(.default, value: isExpanded)
         .shadow(color: .black.opacity(0.14), radius: 4, x: 0, y: 2)
@@ -58,6 +57,7 @@ struct ArrivalsBoardView: View {
                     .transition(.slideUp)
             }
         }
+        .dynamicTypeSize(..<DynamicTypeSize.accessibility1)
         .animation(.default, value: isExpanded)
         .animation(rotationCellAnimated ? .default : nil, value: rotatingCellIndex)
         .task {
@@ -78,9 +78,9 @@ struct ArrivalsBoardView: View {
                 style: .imageAndText,
                 isExpanded: $isExpanded
             )
-            .padding(.vertical, 4)
             .foregroundStyle(.white)
             .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
             .font(.caption)
         }
     }
@@ -109,8 +109,10 @@ struct ArrivalsBoardView: View {
         HStack(alignment: .top, spacing: 12) {
             numberLabelView(for: cellItem)
             VStack(alignment: .leading, spacing: 4) {
-                topText(for: cellItem)
-                bottomText(for: cellItem)
+                header(for: cellItem.headerRow)
+                if let footerRow = cellItem.footerRow {
+                    footer(for: footerRow)
+                }
             }
         }
         .id(cellItem.id)
@@ -131,73 +133,83 @@ struct ArrivalsBoardView: View {
             .roundedBorder(.white, cornerRadius: 4)
     }
     
-    @ViewBuilder
-    private func cellTextItem(for textItem: ArrivalsBoardTextItem) -> some View {
-        Group {
-            switch textItem.messageType {
-            case .verbatim(let rawString):
-                Text(rawString)
-            case .localized(let localizedStringResource):
-                Text(localizedStringResource)
-            }
-        }
-        .font(textItem.font)
-        .foregroundStyle(textColor(for: textItem))
-        .strikethrough(textItem.isStrikethrough)
-    }
-    
-    private func textColor(for textItem: ArrivalsBoardTextItem) -> Color {
-        switch textItem.colorStyle {
-        case .boardPrimary:
-            return boardPrimaryColor
-        case .footerInfo:
-            return .white
-        case .footerWarning:
-            return .midRed1
-        }
-    }
-    
-    private func topText(for cellItem: ArrivalsBoardCellItem) -> some View {
+    private func header(for headerRow: ArrivalsBoardCellItem.HeaderRowState) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
-            cellTextItem(for: cellItem.destinationText)
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                switch headerRow.destination {
+                case .towards(let towards):
+                    cellText(for: .verbatim(towards))
+                case .checkFrontOfTrain:
+                    cellText(for: .localized(.arrivalsCheckFrontOfTrain))
+                }
+            }
+            .font(headerRow.style == .tube ? .headline : .callout)
+            .fontWeight(headerRow.style == .scheduledDeparture ? .semibold : nil)
+            
             Spacer()
-            cellTextItem(for: cellItem.countdownText)
+            
+            cellText(for: headerRow.countdownText)
+                .font(headerRow.style == .tube ? .subheadline : .footnote)
         }
+        .strikethrough(headerRow.needsStrikethrough)
+        .foregroundStyle(Color.arrivalsBoardPrimary)
     }
     
     @ViewBuilder
-    private func bottomText(for cellItem: ArrivalsBoardCellItem) -> some View {
-        switch cellItem.bottomTextMessage {
-        case nil:
-            EmptyView()
-        case let .generalInfo(messageTextItem):
-            if let messageTextItem {
-                cellTextItem(for: messageTextItem)
-            }
-        case let .departureInfo(scheduledDepartureItem, estimatedDepartureItem, statusTextItem):
-            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                if let scheduledDepartureItem {
-                    scheduledDepartureText(with: scheduledDepartureItem)
-                }
-                if let estimatedDepartureItem {
-                    cellTextItem(for: estimatedDepartureItem)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 2)
-                        .background(Color.midRed1.opacity(0.25), in: .rect(cornerRadius: 4))
-                }
-                Spacer()
-                if let statusTextItem {
-                    cellTextItem(for: statusTextItem)
-                }
-            }
+    private func footer(for footerRow: ArrivalsBoardCellItem.FooterRowType) -> some View {
+        switch footerRow {
+        case .tubeLiveLocation(let currentLocation):
+            tubeLiveLocationText(with: currentLocation)
+        case .departureStatus(let departureStatusState):
+            departureStatusInfo(with: departureStatusState)
         }
     }
     
-    private func scheduledDepartureText(with textItem: ArrivalsBoardTextItem) -> some View {
-        cellTextItem(for: textItem)
-            .padding(.horizontal, 4)
-            .padding(.vertical, 2)
-            .background(Color.darkGrey1, in: .rect(cornerRadius: 4))
+    private func tubeLiveLocationText(with currentLocation: String) -> some View {
+        HStack {
+            cellText(for: .verbatim(currentLocation))
+                .foregroundStyle(.white)
+                .font(.footnote)
+        }
+    }
+    
+    private func departureStatusInfo(with departureStatusState: ArrivalsBoardCellItem.DepartureStatusState) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            if let scheduledDepartureTime = departureStatusState.scheduledDeparture {
+                cellText(for: scheduledDepartureTime)
+                    .foregroundStyle(Color.arrivalsBoardPrimary)
+                    .fontWeight(.semibold)
+            }
+            
+            if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
+                cellText(for: estimatedDepartureTime)
+                    .fontWeight(.semibold)
+                    .padding(.vertical, 2)
+                    .padding(.horizontal, 4)
+                    .background(Color.midRed1.opacity(0.25), in: .rect(cornerRadius: 4))
+                
+            }
+            
+            Spacer()
+            
+            if let statusText = departureStatusState.statusText {
+                cellText(for: statusText)
+                    .font(.footnote)
+            }
+        }
+        .foregroundStyle(
+            departureStatusState.style == .warning ? .midRed1 : .white
+        )
+        .font(.subheadline)
+    }
+    
+    private func cellText(for textType: ArrivalsBoardCellItem.TextType) -> some View {
+        switch textType {
+        case .verbatim(let rawString):
+            Text(rawString)
+        case .localized(let localizedStringResource):
+            Text(localizedStringResource)
+        }
     }
     
     private func rotateToNextArrivalIfNeeded(animated: Bool) {
@@ -221,7 +233,6 @@ struct ArrivalsBoardView: View {
         }
     }
 }
-
 
 // MARK: - Convenience initializers
 

@@ -23,115 +23,65 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
         var valueText: String { String(value) }
     }
     
-    enum BottomTextMessage {
-        case generalInfo(ArrivalsBoardTextItem?)
-        case departureInfo(
-            scheduled: ArrivalsBoardTextItem?,
-            estimated: ArrivalsBoardTextItem?,
-            status: ArrivalsBoardTextItem?
-        )
+    enum TextType {
+        case verbatim(String)
+        case localized(LocalizedStringResource)
+    }
+
+    struct HeaderRowState {
+        enum Style {
+            case tube
+            case scheduledDeparture
+        }
+        
+        enum DestinationType {
+            case towards(String)
+            case checkFrontOfTrain
+        }
+        
+        let style: Style
+        let destination: DestinationType
+        let countdownText: TextType
+        let needsStrikethrough: Bool
+    }
+    
+    struct DepartureStatusState {
+        enum Style {
+            case info
+            case warning
+        }
+        
+        let scheduledDeparture: TextType?
+        let estimatedDeparture: TextType?
+        let statusText: TextType?
+        let style: Style
+    }
+    
+    enum FooterRowType {        
+        case tubeLiveLocation(String)
+        case departureStatus(DepartureStatusState)
     }
     
     let id: String
     let numberLabel: NumberLabel
-    let destinationText: ArrivalsBoardTextItem
-    let countdownText: ArrivalsBoardTextItem
-    var bottomTextMessage: BottomTextMessage?
+    let headerRow: HeaderRowState
+    let footerRow: FooterRowType?
 }
 
-enum ArrivalsBoardDestinationType {
-    case checkFrontOfTrain
-    case towards(String)
-}
 
-struct ArrivalsBoardTextItem {
-    
-    enum MessageType {
-        case verbatim(String)
-        case localized(LocalizedStringResource)
-    }
-    
-    enum ColorStyle: Hashable {
-        case boardPrimary
-        case footerInfo
-        case footerWarning
-    }
-    
-    let messageType: MessageType
-    let font: Font
-    let colorStyle: ColorStyle
-    let isStrikethrough: Bool
-    
-    private static func header(messageType: MessageType,
-                               colorStyle: ColorStyle = .boardPrimary,
-                               isStrikethrough: Bool) -> ArrivalsBoardTextItem {
-        .init(
-            messageType: messageType,
-            font: .headline,
-            colorStyle: colorStyle,
-            isStrikethrough: isStrikethrough
-        )
-    }
-    
-    private static func footerSmall(messageType: MessageType,
-                                    colorStyle: ColorStyle = .footerInfo,
-                                    isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
-        .init(
-            messageType: messageType,
-            font: .caption2,
-            colorStyle: colorStyle,
-            isStrikethrough: isStrikethrough
-        )
-    }
-    
-    private static func footerMedium(messageType: MessageType,
-                                     colorStyle: ColorStyle = .footerInfo,
-                                     isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
-        .init(
-            messageType: messageType,
-            font: .footnote,
-            colorStyle: colorStyle,
-            isStrikethrough: isStrikethrough
-        )
-    }
-}
+// MARK: - Countdown text formatter
 
-extension ArrivalsBoardTextItem {
+enum CountdownTextFormatter {
     
-    // MARK: - Destination
-    
-    static func destination(_ desinationType: ArrivalsBoardDestinationType,
-                            isStrikethrough: Bool = false) -> ArrivalsBoardTextItem {
-        switch desinationType {
-        case .checkFrontOfTrain:
-            return .header(messageType: .localized(.arrivalsCheckFrontOfTrain),
-                           isStrikethrough: isStrikethrough)
-        case .towards(let destinationName):
-            return .header(messageType: .verbatim(destinationName),
-                           isStrikethrough: isStrikethrough)
-        }
-    }
-    
-    // MARK: - Vehicle location
-    
-    static func currentVehicleLocation(_ locationName: String) -> ArrivalsBoardTextItem {
-        return .footerSmall(messageType: .verbatim(locationName))
-    }
-    
-    // MARK: - Countdown
-    
-    static func countdownSeconds(_ seconds: Int?,
-                                 isStrikethrough: Bool) -> ArrivalsBoardTextItem {
+    static func formattedText(forSeconds seconds: Int?) -> ArrivalsBoardCellItem.TextType {
         guard let seconds else {
-            return .header(messageType: .verbatim("--"), isStrikethrough: false)
+            return .verbatim("--")
         }
-        return .header(
-            messageType: countdownMessage(for: seconds),
-            isStrikethrough: isStrikethrough
-        )
+        
+        return countdownMessage(for: seconds)
     }
     
-    private static func countdownMessage(for secondsRemaining: Int) -> MessageType {
+    private static func countdownMessage(for secondsRemaining: Int) -> ArrivalsBoardCellItem.TextType {
         let oneHour = 60 * 60
         if secondsRemaining < 60 {
             return .localized(.arrivalsBoardCountdownDue)
@@ -148,43 +98,9 @@ extension ArrivalsBoardTextItem {
             return .verbatim(formattedDuration)
         }
     }
-    
-    // MARK: - Departure time
-    
-    static func departureTimeScheduled(departureTime: Date) -> ArrivalsBoardTextItem {
-        let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(
-            messageType: .verbatim(formattedTime),
-            colorStyle: .boardPrimary,
-            isStrikethrough: false
-        )
-    }
-        
-    static func departureTimeEstimated(departureTime: Date) -> ArrivalsBoardTextItem {
-        let formattedTime = ukDateFormatter.string(from: departureTime)
-        return .footerMedium(messageType: .localized(.arrivalsBoardDepartureTimeEstimated(formattedTime)),
-                             colorStyle: .footerWarning)
-    }
-    
-    // MARK: Departure status
-    
-    static func departureStatus(_ departureStatus: DepartureStatus) -> ArrivalsBoardTextItem {
-        switch departureStatus {
-        case .onTime:
-            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusOnTime))
-        case .cancelled:
-            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusCancelled),
-                                 colorStyle: .footerWarning)
-        case .delayed:
-            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusDelayed),
-                                 colorStyle: .footerWarning)
-        case .notStoppingAtStation:
-            return .footerMedium(messageType: .localized(.arrivalsBoardDepartureStatusNotStopping),
-                                 colorStyle: .footerWarning)
-        }
-    }
 }
 
+// MARK: - Departure time formatter
 
 private let ukDateFormatter: DateFormatter = {
     let dateFormatter = DateFormatter()
@@ -192,3 +108,9 @@ private let ukDateFormatter: DateFormatter = {
     dateFormatter.dateFormat = "HH:mm"
     return dateFormatter
 }()
+
+enum DepartureTimeFormatter {
+    static func formattedText(for date: Date) -> String {
+        ukDateFormatter.string(from: date)
+    }
+}
