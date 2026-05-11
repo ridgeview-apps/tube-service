@@ -168,7 +168,7 @@ struct ArrivalsBoardView: View {
         HStack {
             cellText(for: .verbatim(currentLocation))
                 .foregroundStyle(.white)
-                .font(.footnote)
+                .font(.caption)
         }
     }
     
@@ -180,9 +180,12 @@ struct ArrivalsBoardView: View {
                     .fontWeight(.semibold)
             }
             
+            if let statusText = departureStatusState.statusText {
+                cellText(for: statusText)
+            }
+            
             if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
                 cellText(for: estimatedDepartureTime)
-                    .fontWeight(.semibold)
                     .padding(.vertical, 2)
                     .padding(.horizontal, 4)
                     .background(Color.midRed1.opacity(0.25), in: .rect(cornerRadius: 4))
@@ -190,11 +193,6 @@ struct ArrivalsBoardView: View {
             }
             
             Spacer()
-            
-            if let statusText = departureStatusState.statusText {
-                cellText(for: statusText)
-                    .font(.footnote)
-            }
         }
         .foregroundStyle(
             departureStatusState.style == .warning ? .midRed1 : .white
