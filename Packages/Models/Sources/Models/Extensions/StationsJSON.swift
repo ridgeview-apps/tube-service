@@ -32,8 +32,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.491284,
-      "lon" : 0.121087
+      "lat" : 51.491241,
+      "lon" : 0.121374
     },
     "name" : "Abbey Wood"
   },
@@ -123,8 +123,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.37981,
-      "lon" : -0.073242
+      "lat" : 51.379753,
+      "lon" : -0.073058
     },
     "name" : "Addiscombe"
   },
@@ -232,8 +232,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.382238,
-      "lon" : -0.123654
+      "lat" : 51.38222,
+      "lon" : -0.12386
     },
     "name" : "Ampere Way"
   },
@@ -266,8 +266,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.53184,
-      "lon" : -0.10635
+      "lat" : 51.531788,
+      "lon" : -0.105919
     },
     "name" : "Angel"
   },
@@ -351,8 +351,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.407037,
-      "lon" : -0.049092
+      "lat" : 51.4068,
+      "lon" : -0.049476
     },
     "name" : "Avenue Road"
   },
@@ -439,8 +439,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.513335,
-      "lon" : -0.088712
+      "lat" : 51.513132,
+      "lon" : -0.090047
     },
     "name" : "Bank"
   },
@@ -501,10 +501,10 @@ let allStationsRawJSON = """
   },
   {
     "icsCode" : "1002272",
-    "id" : "910GBKRVS",
+    "id" : "910GBARKRIV",
     "lineGroups" : [
       {
-        "atcoCode" : "910GBKRVS",
+        "atcoCode" : "910GBARKRIV",
         "lineIds" : [
           "suffragette"
         ]
@@ -705,8 +705,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.40133,
-      "lon" : -0.177806
+      "lat" : 51.4011,
+      "lon" : -0.17774
     },
     "name" : "Belgrave Walk"
   },
@@ -1100,8 +1100,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.540734,
-      "lon" : -0.210054
+      "lat" : 51.540699,
+      "lon" : -0.210128
     },
     "name" : "Brondesbury Park"
   },
@@ -1202,8 +1202,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.645894,
-      "lon" : -0.385229
+      "lat" : 51.645691,
+      "lon" : -0.385612
     },
     "name" : "Bushey"
   },
@@ -1454,8 +1454,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.376229,
-      "lon" : -0.103424
+      "lat" : 51.375769,
+      "lon" : -0.103917
     },
     "name" : "Centrale"
   },
@@ -1841,8 +1841,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.359791,
-      "lon" : -0.05956
+      "lat" : 51.359875,
+      "lon" : -0.058623
     },
     "name" : "Coombe Lane"
   },
@@ -2153,8 +2153,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.417608,
-      "lon" : -0.207648
+      "lat" : 51.417555,
+      "lon" : -0.207679
     },
     "name" : "Dundonald Road"
   },
@@ -2688,8 +2688,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.351305,
-      "lon" : -0.024245
+      "lat" : 51.351319,
+      "lon" : -0.024532
     },
     "name" : "Fieldway"
   },
@@ -2870,8 +2870,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.373977,
-      "lon" : -0.098746
+      "lat" : 51.373815,
+      "lon" : -0.098753
     },
     "name" : "George Street"
   },
@@ -3049,8 +3049,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.354676,
-      "lon" : -0.042355
+      "lat" : 51.354545,
+      "lon" : -0.04315
     },
     "name" : "Gravel Hill"
   },
@@ -3411,8 +3411,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.399793,
-      "lon" : -0.060729
+      "lat" : 51.399609,
+      "lon" : -0.060478
     },
     "name" : "Harrington Road"
   },
@@ -3949,8 +3949,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.561992,
-      "lon" : -0.442001
+      "lat" : 51.56202,
+      "lon" : -0.4419
     },
     "name" : "Ickenham"
   },
@@ -4628,8 +4628,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.364193,
-      "lon" : -0.082229
+      "lat" : 51.364278,
+      "lon" : -0.080775
     },
     "name" : "Lloyd Park"
   },
@@ -7573,8 +7573,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.377076,
-      "lon" : -0.118016
+      "lat" : 51.37711,
+      "lon" : -0.117886
     },
     "name" : "Waddon Marsh"
   },
@@ -7841,8 +7841,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.375369,
-      "lon" : -0.097539
+      "lat" : 51.37537,
+      "lon" : -0.097554
     },
     "name" : "Wellesley Road"
   },
@@ -8276,6 +8276,12 @@ let allStationsRawJSON = """
         "lineIds" : [
           "jubilee"
         ]
+      },
+      {
+        "atcoCode" : "940GZZLUWIG",
+        "lineIds" : [
+          "metropolitan"
+        ]
       }
     ],
     "location" : {
@@ -8485,8 +8491,8 @@ let allStationsRawJSON = """
       }
     ],
     "location" : {
-      "lat" : 51.49119,
-      "lon" : 0.07072
+      "lat" : 51.492168,
+      "lon" : 0.070593
     },
     "name" : "Woolwich"
   },

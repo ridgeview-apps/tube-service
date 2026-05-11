@@ -128,7 +128,7 @@ import ModelStubs
 
 private struct WrapperView: View {
     var boardStates: [ArrivalsBoardState]
-    var lineGroupName: String = "Northern"
+    var lineGroupName: String = "Line group name"
     var refreshDate: Date? = .now
     var loadingState: LoadingState = .loaded
     @State var isFavourite = false

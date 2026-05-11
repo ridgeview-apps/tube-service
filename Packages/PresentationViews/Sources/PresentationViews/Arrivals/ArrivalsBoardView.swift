@@ -148,7 +148,7 @@ struct ArrivalsBoardView: View {
             Spacer()
             
             cellText(for: headerRow.countdownText)
-                .font(headerRow.style == .tube ? .subheadline : .footnote)
+                .font(.callout)
         }
         .strikethrough(headerRow.needsStrikethrough)
         .foregroundStyle(Color.arrivalsBoardPrimary)
