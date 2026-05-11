@@ -108,6 +108,14 @@ public extension LocalizedStringResource {
         moduleResource("expansion.info.button.show.more.title")
     }
     
+    static var favouritesButtonAlertConfirmTitle: LocalizedStringResource {
+        moduleResource("favourites.button.alert.confirm.title")
+    }
+    
+    static var favouritesButtonAlertConfirmMessage: LocalizedStringResource {
+        moduleResource("favourites.button.alert.confirm.message")
+    }
+    
     static var favouritesButtonTitleAdd: LocalizedStringResource {
         moduleResource("favourites.button.title.add")
     }
@@ -116,8 +124,16 @@ public extension LocalizedStringResource {
         moduleResource("favourites.button.title.remove")
     }
     
+    static var globalCancel: LocalizedStringResource {
+        moduleResource("global.cancel")
+    }
+    
     static var globalOK: LocalizedStringResource {
         moduleResource("global.ok")
+    }
+    
+    static var globalRemove: LocalizedStringResource {
+        moduleResource("global.remove")
     }
     
     static var mailNotSupported: LocalizedStringResource {

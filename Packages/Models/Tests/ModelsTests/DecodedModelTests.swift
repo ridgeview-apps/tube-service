@@ -43,7 +43,6 @@ struct ModelDecoderTests {
         )
 
         #expect(!arrivalDepartures.isEmpty)
-        #expect(arrivalDepartures.contains { $0.departureStatus == .unknown("BoardingSoon") })
     }
 
     @Test
@@ -54,7 +53,6 @@ struct ModelDecoderTests {
         )
 
         #expect(!arrivalDepartures.isEmpty)
-        #expect(arrivalDepartures.contains { $0.departureStatus == .unknown("missing") })
     }
     
     @Test

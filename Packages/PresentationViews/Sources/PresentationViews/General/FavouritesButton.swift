@@ -9,17 +9,23 @@ public struct FavouritesButton: View {
     @Binding public var isSelected: Bool
     public let style: Style
     
-    public init(style: Style,
-                isSelected: Binding<Bool>) {
+    private let confirmOnDelete: Bool
+    
+    @State private var showsConfirmDeleteAlert = false
+    
+    public init(
+        style: Style,
+        isSelected: Binding<Bool>,
+        confirmOnDelete: Bool = true
+    ) {
         self.style = style
         self._isSelected = isSelected
+        self.confirmOnDelete = confirmOnDelete
     }
 
     public var body: some View {
         Button {
-            withAnimation {
-                isSelected.toggle()
-            }
+            buttonTapped()
         } label: {
             switch style {
             case .small:
@@ -36,8 +42,32 @@ public struct FavouritesButton: View {
                 }
             }
         }
+        .confirmationDialog(
+            .favouritesButtonAlertConfirmTitle,
+            isPresented: $showsConfirmDeleteAlert,
+            titleVisibility: .visible
+        ) {
+            Button(.globalCancel, role: .cancel) {}
+            Button(.globalRemove, role: .destructive) {
+                toggleFavourite()
+            }
+        }
         .accessibility(identifier: "acc.id.favourites.button.\(style.rawValue)")
         .applyingStyle(style)
+    }
+    
+    private func buttonTapped() {
+        if isSelected && confirmOnDelete {
+            showsConfirmDeleteAlert = true
+        } else {
+            toggleFavourite()
+        }
+    }
+    
+    private func toggleFavourite() {
+        withAnimation {
+            isSelected.toggle()
+        }
     }
 }
 
@@ -59,7 +89,10 @@ private extension View {
         let style: FavouritesButton.Style
         
         var body: some View {
-            FavouritesButton(style: style, isSelected: $isSelected)
+            FavouritesButton(
+                style: style,
+                isSelected: $isSelected
+            )
         }
     }
     

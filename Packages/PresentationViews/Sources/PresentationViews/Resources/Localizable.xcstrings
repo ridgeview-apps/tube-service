@@ -331,6 +331,17 @@
         }
       }
     },
+    "favourites.button.alert.confirm.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to remove this favourite?"
+          }
+        }
+      }
+    },
     "favourites.button.title.add" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -353,6 +364,17 @@
         }
       }
     },
+    "global.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
     "global.ok" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -360,6 +382,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
+          }
+        }
+      }
+    },
+    "global.remove" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
           }
         }
       }
