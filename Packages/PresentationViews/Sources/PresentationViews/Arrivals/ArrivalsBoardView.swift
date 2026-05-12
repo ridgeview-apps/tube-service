@@ -179,20 +179,20 @@ struct ArrivalsBoardView: View {
                     .foregroundStyle(Color.arrivalsBoardPrimary)
             }
             
-            if let statusText = departureStatusState.statusText {
-                cellText(for: statusText)
+            if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
+                cellText(for: estimatedDepartureTime)
+                    .padding(.vertical, 2)
+                    .padding(.horizontal, 4)
+                    .background(
+                        Color.white.opacity(0.15), in: .rect(cornerRadius: 4)
+                    )
             }
             
             Spacer()
             
-            if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
-                cellText(for: estimatedDepartureTime)
-                    .fontWeight(.semibold)
-//                    .padding(.vertical, 2)
-//                    .padding(.horizontal, 8)
-//                    .background(
-//                        Color.white.opacity(0.05), in: .rect(cornerRadius: 4)
-//                    )
+            if let statusText = departureStatusState.statusText {
+                cellText(for: statusText)
+                    .font(.footnote)
             }
         }
         .foregroundStyle(
