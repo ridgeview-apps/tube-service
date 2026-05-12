@@ -202,7 +202,7 @@ private struct ServiceDetailTextView: View {
                 }
             }
         }
-        .font(.subheadline)
+        .font(.body)
     }
     
     @ViewBuilder

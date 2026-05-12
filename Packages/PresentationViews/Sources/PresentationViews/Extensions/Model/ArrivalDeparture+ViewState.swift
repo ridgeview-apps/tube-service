@@ -58,7 +58,7 @@ extension ArrivalDeparture {
             departureStatusText = .localized(.arrivalsBoardDepartureStatusDelayed)
             textStyle = .warning
         default:
-            departureStatusText = nil // .localized(.arrivalsBoardDepartureStatusOnTime)
+            departureStatusText = .localized(.arrivalsBoardDepartureStatusOnTime)
             textStyle = .info
         }
         

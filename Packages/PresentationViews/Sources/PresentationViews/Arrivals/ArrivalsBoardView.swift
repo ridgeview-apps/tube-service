@@ -109,9 +109,9 @@ struct ArrivalsBoardView: View {
         HStack(alignment: .top, spacing: 12) {
             numberLabelView(for: cellItem)
             VStack(alignment: .leading, spacing: 4) {
-                header(for: cellItem.headerRow)
+                cellHeaderRow(with: cellItem.headerRow)
                 if let footerRow = cellItem.footerRow {
-                    footer(for: footerRow)
+                    cellFooterRow(with: footerRow)
                 }
             }
         }
@@ -133,7 +133,7 @@ struct ArrivalsBoardView: View {
             .roundedBorder(.white, cornerRadius: 4)
     }
     
-    private func header(for headerRow: ArrivalsBoardCellItem.HeaderRowState) -> some View {
+    private func cellHeaderRow(with headerRow: ArrivalsBoardCellItem.HeaderRowState) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 8) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 switch headerRow.destination {
@@ -155,7 +155,7 @@ struct ArrivalsBoardView: View {
     }
     
     @ViewBuilder
-    private func footer(for footerRow: ArrivalsBoardCellItem.FooterRowType) -> some View {
+    private func cellFooterRow(with footerRow: ArrivalsBoardCellItem.FooterRowType) -> some View {
         switch footerRow {
         case .tubeLiveLocation(let currentLocation):
             tubeLiveLocationText(with: currentLocation)
@@ -177,22 +177,23 @@ struct ArrivalsBoardView: View {
             if let scheduledDepartureTime = departureStatusState.scheduledDeparture {
                 cellText(for: scheduledDepartureTime)
                     .foregroundStyle(Color.arrivalsBoardPrimary)
-                    .fontWeight(.semibold)
             }
             
             if let statusText = departureStatusState.statusText {
                 cellText(for: statusText)
             }
             
+            Spacer()
+            
             if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
                 cellText(for: estimatedDepartureTime)
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 4)
-                    .background(Color.midRed1.opacity(0.25), in: .rect(cornerRadius: 4))
-                
+                    .fontWeight(.semibold)
+//                    .padding(.vertical, 2)
+//                    .padding(.horizontal, 8)
+//                    .background(
+//                        Color.white.opacity(0.05), in: .rect(cornerRadius: 4)
+//                    )
             }
-            
-            Spacer()
         }
         .foregroundStyle(
             departureStatusState.style == .warning ? .midRed1 : .white
