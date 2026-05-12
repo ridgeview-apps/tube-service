@@ -85,8 +85,8 @@ extension Line {
         lineStatuses?.sortedByStatusSeverity().forEach {
             let textItem: ServiceDetailTextItem
             if $0.isDisrupted {
-                textItem = ServiceDetailTextItem(messageType: .disrupted(reason: $0.reason),
-                                                 additionalInfo: $0.disruption?.additionalInfo)
+                textItem = ServiceDetailTextItem(messageType: .disrupted(reason: $0.reason?.trimmed()),
+                                                 additionalInfo: $0.disruption?.additionalInfo?.trimmed())
             } else {
                 textItem = ServiceDetailTextItem(messageType: .goodService,
                                                  additionalInfo: nil)
