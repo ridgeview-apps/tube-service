@@ -175,17 +175,17 @@ struct ArrivalsBoardView: View {
     private func departureStatusInfo(with departureStatusState: ArrivalsBoardCellItem.DepartureStatusState) -> some View {
         HStack(alignment: .firstTextBaseline) {
             if let scheduledDepartureTime = departureStatusState.scheduledDeparture {
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Image(systemName: "clock")
-                        .imageScale(.small)
                     cellText(for: scheduledDepartureTime)
-                }
-                .foregroundStyle(Color.arrivalsBoardPrimary)
+                    .foregroundStyle(Color.arrivalsBoardPrimary)
             }
             
             if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
-                cellText(for: estimatedDepartureTime)
-                    .fontWeight(.semibold)
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Image(systemName: "clock.fill")
+                        .imageScale(.small)
+                    cellText(for: estimatedDepartureTime)
+                }
+                .fontWeight(.semibold)
             }
             
             Spacer()
