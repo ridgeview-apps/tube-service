@@ -181,11 +181,7 @@ struct ArrivalsBoardView: View {
             
             if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
                 cellText(for: estimatedDepartureTime)
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 4)
-                    .background(
-                        Color.white.opacity(0.15), in: .rect(cornerRadius: 4)
-                    )
+                    .fontWeight(.semibold)
             }
             
             Spacer()
