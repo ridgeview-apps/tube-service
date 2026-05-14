@@ -185,7 +185,6 @@ struct ArrivalsBoardView: View {
                         .imageScale(.small)
                     cellText(for: estimatedDepartureTime)
                 }
-                .fontWeight(.semibold)
             }
             
             Spacer()
