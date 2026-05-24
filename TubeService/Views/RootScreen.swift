@@ -10,12 +10,12 @@ struct RootScreen: View {
                                accessibilityID: "acc.id.line.status.tab.title")
             
             JourneyPlannerScreen()
-                .styledTabItem(imageName: "app.connected.to.app.below.fill",
+                .styledTabItem(imageName: "point.topleft.down.curvedto.point.bottomright.up",
                                title: .journeyPlannerTabTitle,
                                accessibilityID: "acc.id.journey.planner.tab.title")
 
             ArrivalsPickerScreen()
-                .styledTabItem(imageName: "tram",
+                .styledTabItem(imageName: "train.side.front.car",
                                title: .arrivalsTabTitle,
                                accessibilityID: "acc.id.arrivals.tab.title")
             

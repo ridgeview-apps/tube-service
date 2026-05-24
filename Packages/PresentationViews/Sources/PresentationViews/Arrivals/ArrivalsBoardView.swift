@@ -75,10 +75,10 @@ struct ArrivalsBoardView: View {
     @ViewBuilder private var expansionButton: some View {
         if isExpandable {
             ExpansionInfoButton(
-                style: .imageAndText,
+                style: .imageOnly,
                 isExpanded: $isExpanded
             )
-            .foregroundStyle(.white)
+            .tint(.white)
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
             .font(.caption)
@@ -175,29 +175,35 @@ struct ArrivalsBoardView: View {
     private func departureStatusInfo(with departureStatusState: ArrivalsBoardCellItem.DepartureStatusState) -> some View {
         HStack(alignment: .firstTextBaseline) {
             if let scheduledDepartureTime = departureStatusState.scheduledDeparture {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Image(systemName: "train.side.front.car")
+                        .imageScale(.small)
                     cellText(for: scheduledDepartureTime)
-                    .foregroundStyle(Color.arrivalsBoardPrimary)
+                }
+                .foregroundStyle(Color.arrivalsBoardPrimary)
             }
             
             if let estimatedDepartureTime = departureStatusState.estimatedDeparture {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Image(systemName: "clock.fill")
+                    Image(systemName: "exclamationmark.triangle")
                         .imageScale(.small)
                     cellText(for: estimatedDepartureTime)
+                    
                 }
+                .foregroundStyle(.midRed1)
             }
             
             Spacer()
             
             if let statusText = departureStatusState.statusText {
                 cellText(for: statusText)
-                    .font(.footnote)
+                    .foregroundStyle(
+                        departureStatusState.style == .warning ? .midRed1 : .white
+                    )
             }
         }
-        .foregroundStyle(
-            departureStatusState.style == .warning ? .midRed1 : .white
-        )
-        .font(.subheadline)
+        .font(.footnote)
+        .monospacedDigit()
     }
     
     private func cellText(for textType: ArrivalsBoardCellItem.TextType) -> some View {

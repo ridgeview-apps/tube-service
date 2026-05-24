@@ -210,7 +210,8 @@ private struct ServiceDetailTextView: View {
         if let additionalInfo = textItem.additionalInfo {
             VStack(alignment: .leading, spacing: 8) {
                 ExpansionInfoButton(isExpanded: $isExpanded)
-                
+                    .buttonStyle(.bordered)
+                    .buttonBorderShape(.capsule)                
                 if isExpanded {
                     Text(additionalInfo)
                 }
