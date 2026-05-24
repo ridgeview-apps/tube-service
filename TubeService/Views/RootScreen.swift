@@ -15,7 +15,7 @@ struct RootScreen: View {
                                accessibilityID: "acc.id.journey.planner.tab.title")
 
             ArrivalsPickerScreen()
-                .styledTabItem(imageName: "train.side.front.car",
+                .styledTabItem(imageName: "list.bullet.rectangle",
                                title: .arrivalsTabTitle,
                                accessibilityID: "acc.id.arrivals.tab.title")
             
