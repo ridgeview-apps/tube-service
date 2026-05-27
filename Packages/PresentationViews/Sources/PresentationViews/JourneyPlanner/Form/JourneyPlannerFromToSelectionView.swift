@@ -27,6 +27,7 @@ struct JourneyPlannerFromToSelectionView: View {
                     let toY = proxy[toAnchor].midY
 
                     routeIndicator(fromY: fromY, toY: toY)
+                        .transaction { $0.animation = nil }
 
                     if canShowSwapLocationsButton {
                         swapLocationsButton
@@ -110,9 +111,9 @@ struct JourneyPlannerFromToSelectionView: View {
         SwapValuesButton(isSwapped: $isSwapped,
                          valueA: $form.from,
                          valueB: $form.to)
-        .font(.system(size: 12, weight: .semibold))
+        .font(.system(size: 13, weight: .semibold))
         .foregroundStyle(Color.accentColor)
-        .frame(width: 30, height: 30)
+        .frame(width: 34, height: 34)
         .background {
             Circle()
                 .fill(Color.defaultCellBackground)
@@ -121,6 +122,7 @@ struct JourneyPlannerFromToSelectionView: View {
             Circle()
                 .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5)
         }
+        .contentShape(Circle().scale(1.3))
     }
     
     private var canShowSwapLocationsButton: Bool {

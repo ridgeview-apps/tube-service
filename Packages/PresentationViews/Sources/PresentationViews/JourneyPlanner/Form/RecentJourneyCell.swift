@@ -34,9 +34,9 @@ struct RecentJourneyCell: View {
             SwapValuesButton(isSwapped: $isSwapped,
                              valueA: $item.fromLocation,
                              valueB: $item.toLocation)
-                .font(.system(size: 12, weight: .semibold))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(Color.accentColor)
-                .frame(width: 30, height: 30)
+                .frame(width: 34, height: 34)
                 .background {
                     Circle()
                         .fill(Color.defaultCellBackground)
