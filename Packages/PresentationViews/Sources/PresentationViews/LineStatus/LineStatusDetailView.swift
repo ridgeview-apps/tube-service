@@ -115,8 +115,7 @@ public struct LineStatusDetailView: View {
     private var xPostsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(.lineStatusXPostsSectionTitle)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.secondary)
+                .secondarySectionHeaderStyle()
 
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(line.xPostLinks) { link in

@@ -43,31 +43,22 @@ public extension Color {
 
 // MARK: - Color
 public extension Color {
-    static let lightGrey1 = Color.rgb(251, 251, 251)
-    static let lightGrey2 = Color.rgb(242, 242, 242)
+    static let darkRed1 = Color.rgb(217, 45, 32)
+    static let midRed1 = Color.rgb(255, 90, 82)
     
-    static let midGrey1 = Color.rgb(147, 147, 147)
-    static let midGrey2 = Color.rgb(108, 108, 108)
-    
-    static let darkGrey1 = Color.rgb(62, 62, 62)
-    static let darkGrey2 = Color.rgb(34, 30, 40)
-    
-    static let darkRed1 = Color.rgb(235, 77, 61)
-    static let midRed1 = Color.rgb(255, 145, 145)
-    
-    static let adaptiveRed = Color.adaptive(lightMode: .darkRed1,
-                                            darkMode: .midRed1)
+    static let adaptiveRed = Color.adaptive(
+        lightMode: .darkRed1,
+        darkMode: .midRed1
+    )
         
-    static let defaultBackground = Color.adaptive(lightMode: .lightGrey2,
-                                                  darkMode: .darkGrey2)
-    
-    static let defaultCellBackground = Color.adaptive(lightMode: .lightGrey1,
-                                                      darkMode: .darkGrey1)
+    static let defaultBackground = Color(uiColor: .secondarySystemBackground)    
+    static let defaultCellBackground = Color(uiColor: .tertiarySystemBackground)
     
     static let systemBannerOK = Color.rgb(55, 122, 0)
     static let systemBannerOutage = Color.darkRed1
     
-    static let arrivalsBoardPrimary = Color.rgb(198, 188, 61)
+    static let arrivalsBoardPrimary = Color.rgb(255, 184, 28)
+    static let arrivalsBoardBackground = Color.rgb(7, 15, 28)
 }
 
 public extension Color {
@@ -103,15 +94,6 @@ public extension ShapeStyle where Self == Color {
     static var coach: Color { .coach }
     static var nationalRail: Color { .nationalRail }
     static var riverBus: Color { .riverBus }
-    
-    static var lightGrey1: Color { .lightGrey1 }
-    static var lightGrey2: Color { .lightGrey2 }
-    
-    static var midGrey1: Color { .midGrey1 }
-    static var midGrey2: Color { .midGrey2 }
-    
-    static var darkGrey1: Color { .darkGrey1 }
-    static var darkGrey2: Color { .darkGrey2 }
     
     static var darkRed1: Color { .darkRed1 }
     static var midRed1: Color { .midRed1 }

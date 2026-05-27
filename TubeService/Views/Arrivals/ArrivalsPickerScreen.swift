@@ -109,6 +109,7 @@ struct ArrivalsPickerScreen: View {
                         }
                     } header: {
                         Text(.searchSuggestionsSectionTitle)
+                            .secondarySectionHeaderStyle()
                     }
                 }
             }

@@ -10,7 +10,7 @@ struct RootScreen: View {
                                accessibilityID: "acc.id.line.status.tab.title")
             
             JourneyPlannerScreen()
-                .styledTabItem(imageName: "point.topleft.down.curvedto.point.bottomright.up",
+                .styledTabItem(imageName: "point.topleft.down.curvedto.point.filled.bottomright.up",
                                title: .journeyPlannerTabTitle,
                                accessibilityID: "acc.id.journey.planner.tab.title")
 

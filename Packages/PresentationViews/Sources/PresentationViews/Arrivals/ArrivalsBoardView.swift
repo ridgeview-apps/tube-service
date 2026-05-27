@@ -30,7 +30,7 @@ struct ArrivalsBoardView: View {
             expansionButton
         }
         .padding()
-        .background(Color.darkGrey2)
+        .background(Color.arrivalsBoardBackground)
         .roundedBorder(Color.arrivalsBoardPrimary,
                        lineWidth: 4)
         .animation(.default, value: isExpanded)

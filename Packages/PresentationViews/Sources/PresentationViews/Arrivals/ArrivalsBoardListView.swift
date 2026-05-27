@@ -76,7 +76,7 @@ public struct ArrivalsBoardListView: View {
     
     private var headerTitleView: some View {
         VStack(alignment: .leading, spacing: 4) {
-            HStack {
+            HStack(alignment: .firstTextBaseline) {
                 Text(lineGroupName)
                     .font(.headline)
                 Spacer()
@@ -91,6 +91,7 @@ public struct ArrivalsBoardListView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+        .secondarySectionHeaderStyle()
     }
 
     private func arrivalsBoardView(with boardState: ArrivalsBoardState) -> some View {
