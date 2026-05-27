@@ -19,8 +19,7 @@ struct JourneyPlannerFromToSelectionView: View {
             fromLocationField
             toLocationField
         }
-        .padding(.leading, 20)
-        .padding(.trailing, canShowSwapLocationsButton ? 44 : 0)
+        .padding(.leading, 44)
         .overlayPreferenceValue(RouteAnchorKey.self) { anchors in
             GeometryReader { proxy in
                 if let fromAnchor = anchors[.from], let toAnchor = anchors[.to] {
@@ -32,7 +31,7 @@ struct JourneyPlannerFromToSelectionView: View {
                     if canShowSwapLocationsButton {
                         swapLocationsButton
                             .position(
-                                x: proxy.size.width - 18,
+                                x: 20,
                                 y: (fromY + toY) / 2
                             )
                     }
@@ -43,7 +42,7 @@ struct JourneyPlannerFromToSelectionView: View {
 
     // swiftlint:disable identifier_name
     private func routeIndicator(fromY: CGFloat, toY: CGFloat) -> some View {
-        let x: CGFloat = 10
+        let x: CGFloat = 20
         let dotSize: CGFloat = 10
         let dotRadius = dotSize / 2
 
@@ -111,12 +110,16 @@ struct JourneyPlannerFromToSelectionView: View {
         SwapValuesButton(isSwapped: $isSwapped,
                          valueA: $form.from,
                          valueB: $form.to)
-        .font(.system(size: 14, weight: .semibold))
+        .font(.system(size: 12, weight: .semibold))
         .foregroundStyle(Color.accentColor)
-        .frame(width: 36, height: 36)
+        .frame(width: 30, height: 30)
         .background {
             Circle()
+                .fill(Color.defaultCellBackground)
+            Circle()
                 .fill(Color.accentColor.opacity(0.12))
+            Circle()
+                .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5)
         }
     }
     

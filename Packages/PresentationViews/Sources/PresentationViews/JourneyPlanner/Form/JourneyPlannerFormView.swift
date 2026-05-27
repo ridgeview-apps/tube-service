@@ -49,16 +49,12 @@ public struct JourneyPlannerFormView: View {
             VStack(spacing: 16) {
                 fromToSelectionView
                 travelOptionsChips
+                submitButton
             }
-            .padding(.vertical, 8)
-        } footer: {
-            submitButton
-                .listRowInsets(
-                    .init(top: 12, leading: 16, bottom: 16, trailing: 16)
-                )
-                .listRowBackground(Color.clear)
+            .padding(16)
+            .cardStyle()
         }
-        .listRowBackground(Color.defaultCellBackground)
+        .listRowBackground(Color.defaultBackground)
         .listRowSeparator(.hidden)
         .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
     }
@@ -203,7 +199,6 @@ public struct JourneyPlannerFormView: View {
     @ViewBuilder
     private var recentJourneysSection: some View {
         if !recentJourneys.isEmpty {
-            Spacer()
             Section {
                 ForEach($recentJourneys) { $recentJourneyItem in
                     RecentJourneyCell(
@@ -218,7 +213,11 @@ public struct JourneyPlannerFormView: View {
                     onAction(.swipedToDelete(recentJourney))
                 }
             } header: {
-                Text(.journeyPlannerRecentJourneysSectionTitle)
+                HStack(spacing: 4) {
+                    Image(systemName: "clock.arrow.circlepath")
+                    Text(.journeyPlannerRecentJourneysSectionTitle)
+                }
+                .secondarySectionHeaderStyle()
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)

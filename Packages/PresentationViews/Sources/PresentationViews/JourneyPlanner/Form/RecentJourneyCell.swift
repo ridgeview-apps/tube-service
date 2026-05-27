@@ -34,8 +34,17 @@ struct RecentJourneyCell: View {
             SwapValuesButton(isSwapped: $isSwapped,
                              valueA: $item.fromLocation,
                              valueB: $item.toLocation)
-                .imageScale(.small)
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Color.accentColor)
+                .frame(width: 30, height: 30)
+                .background {
+                    Circle()
+                        .fill(Color.defaultCellBackground)
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.12))
+                    Circle()
+                        .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5)
+                }
                 .padding()
             Button {
                 withAnimation {
