@@ -187,6 +187,7 @@ struct ArrivalsBoardView: View {
                     
                 }
                 .foregroundStyle(.midRed1)
+                .fontWeight(.semibold)
             }
             
             Spacer()
@@ -196,6 +197,7 @@ struct ArrivalsBoardView: View {
                     .foregroundStyle(
                         departureStatusState.style == .warning ? .midRed1 : .white
                     )
+                    .fontWeight(departureStatusState.style == .warning ? .semibold : .regular)
             }
         }
         .font(.footnote)

@@ -43,12 +43,12 @@ public extension Color {
 
 // MARK: - Color
 public extension Color {
-    static let darkRed1 = Color.rgb(217, 45, 32)
-    static let midRed1 = Color.rgb(255, 90, 82)
+    static let darkRed1 = Color.rgb(255, 69, 58)
+    static let midRed1 = Color.rgb(214, 78, 68)
     
     static let adaptiveRed = Color.adaptive(
-        lightMode: .darkRed1,
-        darkMode: .midRed1
+        lightMode: darkRed1,
+        darkMode: midRed1
     )
         
     static let defaultBackground = Color(uiColor: .secondarySystemBackground)    

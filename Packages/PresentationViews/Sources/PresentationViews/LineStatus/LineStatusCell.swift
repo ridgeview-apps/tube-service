@@ -94,6 +94,7 @@ public struct LineStatusCell: View {
             .toEqualWidthColumn(
                 textColor: line.isDisrupted ? .adaptiveRed : .primary
             )
+            .fontWeight(line.isDisrupted ? .semibold : .regular)
     }
     
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
