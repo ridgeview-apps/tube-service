@@ -56,6 +56,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
             } label: {
                 HStack(spacing: 4) {
                     Image(systemName: "location.fill")
+                        .imageScale(.small)
                     Text(.locationServicesAllowAccessButtonTitle)
                 }
             }

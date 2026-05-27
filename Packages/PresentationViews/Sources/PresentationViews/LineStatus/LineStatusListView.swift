@@ -90,8 +90,7 @@ public struct LineStatusListView: View {
     
     private func sectionLabel(_ title: LocalizedStringResource) -> some View {
         Text(title)
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(.secondary)
+            .secondarySectionHeaderStyle()
             .padding(.top, 8)
     }
     

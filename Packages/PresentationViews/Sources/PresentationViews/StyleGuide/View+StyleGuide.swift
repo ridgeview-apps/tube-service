@@ -118,6 +118,13 @@ public extension View {
             self
         }
     }
+    
+    func secondarySectionHeaderStyle(textCase: Text.Case? = nil) -> some View {
+        self
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(.secondary)
+            .textCase(textCase)
+    }
 }
 
 extension ForEach where Content: View {

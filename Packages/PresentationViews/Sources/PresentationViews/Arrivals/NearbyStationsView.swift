@@ -50,6 +50,7 @@ public struct NearbyStationsView: View {
                 showMoreResultsButton
             }
             .listSectionSpacing(0)
+            .listStyle(.plain)
             .defaultScrollContentBackgroundColor()
             .accessibilityIdentifier("acc.id.nearby.stations.list")
             .animation(.default, value: sectionState.currentPageNo)
@@ -141,7 +142,8 @@ public struct NearbyStationsView: View {
                 .id("showMoreButtonID_\(sectionState.currentPageNo)")
             }
             .listRowBackground(Color.clear)
-            .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 12, leading: 16, bottom: 12, trailing: 16))
         }
     }
     

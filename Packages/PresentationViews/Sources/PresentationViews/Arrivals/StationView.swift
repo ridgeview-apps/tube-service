@@ -45,6 +45,7 @@ public struct StationView: View {
             }
             .lineGroupListRowStyle()
         }
+        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .withDefaultMaxWidth()
         .background(Color.defaultBackground)
@@ -60,21 +61,35 @@ public struct StationView: View {
                 .frame(height: 200)
                 .listRowInsets(.zero)
             if let mapURL {
-                Link(destination: mapURL) {
-                    Text(.stationLocationShowInMapsButtonTitle)
-                }
-                .foregroundStyle(.link)
+                linkView(
+                    url: mapURL,
+                    text: .stationLocationShowInMapsButtonTitle
+                )
             }
             if let directionsURL {
-                Link(destination: directionsURL) {
-                    Text(.stationLocationDirectionsButtonTitle)
-                }
-                .foregroundStyle(.link)
+                linkView(
+                    url: directionsURL,
+                    text: .stationLocationDirectionsButtonTitle
+                )
             }
         } header: {
             Text(.stationLocationSectionHeaderTitle)
+                .secondarySectionHeaderStyle()
         }
-        
+    }
+    
+    private func linkView(
+        url: URL,
+        text: LocalizedStringResource
+    ) -> some View {
+        Link(destination: url) {
+            HStack {
+                Text(text)
+                Spacer()
+                Image(systemName: "arrow.up.forward.square")
+            }
+        }
+        .foregroundStyle(.link)
     }
     
     
@@ -87,6 +102,7 @@ public struct StationView: View {
                     .frame(minHeight: 52)
             } header: {
                 Text(.stationDisruptionsSectionHeaderTitle)
+                    .secondarySectionHeaderStyle()
             }
         }
     }
@@ -105,12 +121,17 @@ public struct StationView: View {
                                 EmptyView()
                             }.opacity(0)
                         }
+                        .cardStyle()
                 }
             }
         } header: {
             statusSectionHeader
+                .secondarySectionHeaderStyle()
         }
-        .listRowInsets(.zero)
+        .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
+        .listRowSeparator(.hidden)
+        .listRowBackground(Color.defaultBackground)
+
     }
     
     private var statusSectionHeader: some View {
@@ -137,6 +158,7 @@ public struct StationView: View {
             }
         } header: {
             Text(.stationArrivalsSectionHeaderTitle)
+                .secondarySectionHeaderStyle()
         }
     }
 }

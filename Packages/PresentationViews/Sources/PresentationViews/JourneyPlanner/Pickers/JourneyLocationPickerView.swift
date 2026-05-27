@@ -71,6 +71,7 @@ public struct JourneyLocationPickerView: View {
                 }
             } header: {
                 Text(sectionState.sectionTitle)
+                    .secondarySectionHeaderStyle()
             }
             .lineGroupListRowStyle()
         }

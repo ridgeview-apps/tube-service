@@ -49,6 +49,7 @@ public struct ArrivalsPickerView: View {
                 allStationsSection
             }
         }
+        .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
@@ -75,6 +76,7 @@ public struct ArrivalsPickerView: View {
             }
         } header: {
             header
+                .secondarySectionHeaderStyle()
         }
         .lineGroupListRowStyle()
     }
