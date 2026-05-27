@@ -36,23 +36,18 @@ public struct JourneyLocationFormButton: View {
             .frame(height: 44)
             .padding(.leading, 8)
             .padding(.trailing, 4)
-            .overlay(roundedBorder)
+            .background(fieldBackground, in: RoundedRectangle(cornerRadius: 8))
         }
         .buttonStyle(.plain)
         .lineLimit(1)
     }
     
-    @ViewBuilder
-    private var roundedBorder: some View {
+    private var fieldBackground: some ShapeStyle {
         switch style {
         case .normal:
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(lineWidth: 1.0)
-                .fill(.tertiary)
+            AnyShapeStyle(Color(.tertiarySystemFill))
         case .error:
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(lineWidth: 1.0)
-                .fill(.adaptiveRed)
+            AnyShapeStyle(Color.adaptiveRed.opacity(0.12))
         }
     }
     

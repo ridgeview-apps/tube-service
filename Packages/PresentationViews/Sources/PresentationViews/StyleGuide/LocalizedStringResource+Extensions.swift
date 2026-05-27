@@ -264,6 +264,10 @@ public extension LocalizedStringResource {
         moduleResource("journey.planner.form.error.to.field.invalid")
     }
     
+    static var journeyPlannerFromLabelTitle: LocalizedStringResource {
+        moduleResource("journey.planner.from.label.title")
+    }
+
     static var journeyPlannerFromPlaceholderTitle: LocalizedStringResource {
         moduleResource("journey.planner.from.placeholder.title")
     }

@@ -629,6 +629,17 @@
         }
       }
     },
+    "journey.planner.from.label.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From"
+          }
+        }
+      }
+    },
     "journey.planner.from.placeholder.title" : {
       "extractionState" : "manual",
       "localizations" : {

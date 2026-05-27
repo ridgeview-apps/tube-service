@@ -107,6 +107,42 @@ private extension JourneyLocationPicker.Value {
     }
 }
 
+private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .medium,
+                                                                   timeStyle: .short)
+
+public struct JourneyTimePickerSelection: Hashable, Sendable {
+    
+    public enum Option: CaseIterable, Sendable {
+        case leaveNow, leaveAt, arriveBy
+        
+        var title: LocalizedStringResource {
+            switch self {
+            case .leaveNow:
+                    .journeyPlannerTimePickerOptionLeaveNow
+            case .leaveAt:
+                    .journeyPlannerTimePickerOptionLeaveLater
+            case .arriveBy:
+                    .journeyPlannerTimePickerOptionArriveBy
+            }
+        }
+    }
+    public var option: Option
+    public var date: Date = .now
+    
+    var formattedDate: String {
+        switch option {
+        case .leaveNow:
+            timestampFormatter.string(from: .now)
+        case .leaveAt, .arriveBy:
+            timestampFormatter.string(from: date)
+        }
+    }
+    
+    public static func leaveNow() -> JourneyTimePickerSelection {
+        .init(option: .leaveNow)
+    }
+}
+
 public extension Sequence where Element == JourneyLocationPicker.Value {
     func sortedByName() -> [Element] {
         sorted {

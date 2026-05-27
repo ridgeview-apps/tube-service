@@ -15,16 +15,58 @@ struct JourneyPlannerFromToSelectionView: View {
     @State private var isSwapped = false
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                fromLocationField
-                toLocationField
-            }
-            if canShowSwapLocationsButton {
-                swapLocationsButton
+        VStack(alignment: .leading, spacing: 4) {
+            fromLocationField
+            toLocationField
+        }
+        .padding(.leading, 20)
+        .padding(.trailing, canShowSwapLocationsButton ? 44 : 0)
+        .overlayPreferenceValue(RouteAnchorKey.self) { anchors in
+            GeometryReader { proxy in
+                if let fromAnchor = anchors[.from], let toAnchor = anchors[.to] {
+                    let fromY = proxy[fromAnchor].midY
+                    let toY = proxy[toAnchor].midY
+
+                    routeIndicator(fromY: fromY, toY: toY)
+
+                    if canShowSwapLocationsButton {
+                        swapLocationsButton
+                            .position(
+                                x: proxy.size.width - 18,
+                                y: (fromY + toY) / 2
+                            )
+                    }
+                }
             }
         }
     }
+
+    // swiftlint:disable identifier_name
+    private func routeIndicator(fromY: CGFloat, toY: CGFloat) -> some View {
+        let x: CGFloat = 10
+        let dotSize: CGFloat = 10
+        let dotRadius = dotSize / 2
+
+        return ZStack {
+            Path { path in
+                path.move(to: CGPoint(x: x, y: fromY + dotRadius))
+                path.addLine(to: CGPoint(x: x, y: toY - dotRadius))
+            }
+            .stroke(.quaternary, lineWidth: 2)
+
+            Circle()
+                .strokeBorder(lineWidth: 2)
+                .frame(width: dotSize, height: dotSize)
+                .foregroundStyle(.secondary)
+                .position(x: x, y: fromY)
+
+            Circle()
+                .frame(width: dotSize, height: dotSize)
+                .foregroundStyle(.secondary)
+                .position(x: x, y: toY)
+        }
+    }
+    // swiftlint:enable identifier_name
     
     private var fromLocationField: some View {
         JourneyLocationFormButton(style: buttonStyle(forFieldID: .from),
@@ -33,10 +75,12 @@ struct JourneyPlannerFromToSelectionView: View {
                                   placeholderText: .journeyPlannerFromPlaceholderTitle) {
             onAction(.tappedLocationField(.from))
         }
+        .transformAnchorPreference(key: RouteAnchorKey.self, value: .bounds) { $0[.from] = $1 }
         .swapValuesGeometryEffectID(.firstPairItem("fromToFormFields"), isSwapped: isSwapped, in: animationNamespace)
-        .formDetailCell(errors: inlineErrors(forFieldID: .from))
+        .formDetailCell(title: .journeyPlannerFromLabelTitle,
+                        errors: inlineErrors(forFieldID: .from))
     }
-    
+
     private var toLocationField: some View {
         JourneyLocationFormButton(style: buttonStyle(forFieldID: .to),
                                   value: $form.to,
@@ -44,6 +88,7 @@ struct JourneyPlannerFromToSelectionView: View {
                                   placeholderText: .journeyPlannerToPlaceholderTitle) {
             onAction(.tappedLocationField(.to))
         }
+        .transformAnchorPreference(key: RouteAnchorKey.self, value: .bounds) { $0[.to] = $1 }
         .swapValuesGeometryEffectID(.secondPairItem("fromToFormFields"), isSwapped: isSwapped, in: animationNamespace)
         .formDetailCell(title: .journeyPlannerToLabelTitle,
                         errors: inlineErrors(forFieldID: .to))
@@ -66,14 +111,33 @@ struct JourneyPlannerFromToSelectionView: View {
         SwapValuesButton(isSwapped: $isSwapped,
                          valueA: $form.from,
                          valueB: $form.to)
-        .foregroundColor(Color.accentColor)
-        .frame(height: 44)
+        .font(.system(size: 14, weight: .semibold))
+        .foregroundStyle(Color.accentColor)
+        .frame(width: 36, height: 36)
+        .background {
+            Circle()
+                .fill(Color.accentColor.opacity(0.12))
+        }
     }
     
     private var canShowSwapLocationsButton: Bool {
         form.from != nil
             && form.to != nil
             && form.from != form.to
+    }
+}
+
+// swiftlint:disable identifier_name
+private enum RouteAnchorID: Hashable {
+    case from, to
+}
+// swiftlint:enable identifier_name
+
+private struct RouteAnchorKey: PreferenceKey {
+    static var defaultValue: [RouteAnchorID: Anchor<CGRect>] = [:]
+    static func reduce(value: inout [RouteAnchorID: Anchor<CGRect>],
+                       nextValue: () -> [RouteAnchorID: Anchor<CGRect>]) {
+        value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
 }
 
