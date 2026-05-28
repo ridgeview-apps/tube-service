@@ -47,7 +47,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
     
     @ViewBuilder
     private func initialSetupView(showsHeader: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        statusContainer {
             if showsHeader {
                 Text(.locationServicesAllowAccessHeaderTitle)
             }
@@ -65,19 +65,25 @@ public struct LocationUIStatusViewModifier: ViewModifier {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding(.horizontal, status.horizontalPadding)
     }
-    
+
     private var permissionDeniedView: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        statusContainer {
             HStack(spacing: 4) {
                 Image(systemName: "exclamationmark.triangle.fill")
-                    .foregroundColor(.yellow)
+                    .foregroundStyle(.yellow)
                     .imageScale(.large)
+                    .accessibilityLabel(Text("Warning"))
                 Text(.locationServicesAccessDeniedMessageTitle)
             }
             OpenSettingsButton()
                 .buttonStyle(.primary)
+        }
+    }
+
+    private func statusContainer<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            content()
         }
         .padding(.horizontal, status.horizontalPadding)
     }
@@ -89,7 +95,6 @@ public extension View {
         modifier(LocationUIStatusViewModifier(status: status))
     }
 }
-
 
 // MARK: - Previews
 
@@ -103,7 +108,6 @@ private struct Previewer: View {
                                     onRequestPermissions: onRequestPermissions))
     }
 }
-
 
 #Preview("Setup (header)") {
     Previewer(style: .setUp(showsHeader: true))

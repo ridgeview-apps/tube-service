@@ -102,6 +102,7 @@ public struct JourneyLocationPickerView: View {
                 if location.isCurrentLocation {
                     Group {
                         Text(Image(systemName: "location.fill"))
+                            .imageScale(.small)
                         VStack(alignment: .leading) {
                             Text(.journeyPlannerLocationValueCurrentLocation)
                             if let locationTitle = location.name?.formattedSingleLineTitle, !locationTitle.isEmpty {
