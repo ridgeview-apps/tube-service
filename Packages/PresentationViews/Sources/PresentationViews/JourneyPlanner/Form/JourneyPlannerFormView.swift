@@ -80,11 +80,15 @@ public struct JourneyPlannerFormView: View {
         VStack(alignment: .leading, spacing: 8) {
             if showsDatePicker {
                 timeSelectionGroup
-                viaChip
+                JourneyPlannerViaChip(via: $form.via) {
+                    onAction(.tappedLocationField(.via))
+                }
             } else {
                 HStack(spacing: 8) {
-                    timeChip
-                    viaChip
+                    JourneyPlannerTimeChip(timeSelection: $form.timeSelection)
+                    JourneyPlannerViaChip(via: $form.via) {
+                        onAction(.tappedLocationField(.via))
+                    }
                 }
             }
         }
@@ -94,7 +98,7 @@ public struct JourneyPlannerFormView: View {
 
     private var timeSelectionGroup: some View {
         HStack {
-            timeChip
+            JourneyPlannerTimeChip(timeSelection: $form.timeSelection)
             CompactDatePicker(
                 selection: $form.timeSelection.date,
                 minimumDate: .now,
@@ -105,91 +109,6 @@ public struct JourneyPlannerFormView: View {
         .padding(.vertical, 4)
         .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 12))
         .transition(.opacity.combined(with: .move(edge: .top)))
-    }
-
-    private var timeChip: some View {
-        Menu {
-            ForEach(JourneyTimePickerSelection.Option.allCases, id: \.self) { option in
-                Button {
-                    withAnimation(.snappy) {
-                        form.timeSelection.option = option
-                    }
-                } label: {
-                    if option == form.timeSelection.option {
-                        Label(option.title, systemImage: "checkmark")
-                    } else {
-                        Text(option.title)
-                    }
-                }
-            }
-        } label: {
-            HStack(spacing: 4) {
-                Image(systemName: "clock")
-                    .imageScale(.small)
-                Text(form.timeSelection.option.title)
-                Image(systemName: "chevron.up.chevron.down")
-                    .imageScale(.small)
-            }
-            .font(.subheadline)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .foregroundStyle(timeChipIsHighlighted ? Color.accentColor : .secondary)
-            .background(
-                timeChipIsHighlighted
-                    ? AnyShapeStyle(Color.accentColor.opacity(0.12))
-                    : AnyShapeStyle(Color(.tertiarySystemFill)),
-                in: Capsule()
-            )
-        }
-    }
-
-    private var timeChipIsHighlighted: Bool {
-        form.timeSelection.option != .leaveNow
-    }
-
-    @ViewBuilder
-    private var viaChip: some View {
-        if let via = form.via {
-            HStack(spacing: 4) {
-                Button {
-                    onAction(.tappedLocationField(.via))
-                } label: {
-                    Text(.journeyPlannerTravelOptionsVia(via.name))
-                }
-
-                Button {
-                    withAnimation {
-                        form.via = nil
-                    }
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .imageScale(.small)
-                }
-                .foregroundStyle(Color.accentColor.opacity(0.6))
-            }
-            .font(.subheadline)
-            .lineLimit(1)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .foregroundStyle(Color.accentColor)
-            .background(Color.accentColor.opacity(0.12), in: Capsule())
-        } else {
-            Button {
-                onAction(.tappedLocationField(.via))
-            } label: {
-                HStack(spacing: 4) {
-                    Image(systemName: "plus")
-                        .imageScale(.small)
-                    Text(.journeyPlannerViaLabelTitle)
-                }
-                .font(.subheadline)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-                .foregroundStyle(.secondary)
-                .background(Color(.tertiarySystemFill), in: Capsule())
-            }
-            .buttonStyle(.plain)
-        }
     }
 
     private var submitButton: some View {
