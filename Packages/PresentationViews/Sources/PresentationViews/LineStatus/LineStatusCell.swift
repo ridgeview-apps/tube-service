@@ -184,4 +184,5 @@ import ModelStubs
         }
         .listRowInsets(.zero)
     }
+    .listStyle(.plain)
 }

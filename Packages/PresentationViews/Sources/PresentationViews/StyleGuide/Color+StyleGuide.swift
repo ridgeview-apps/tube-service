@@ -44,7 +44,7 @@ public extension Color {
 // MARK: - Color
 public extension Color {
     static let darkRed1 = Color.rgb(255, 69, 58)
-    static let midRed1 = Color.rgb(214, 78, 68)
+    static let midRed1 = Color.rgb(255, 105, 97)
     
     static let adaptiveRed = Color.adaptive(
         lightMode: darkRed1,
