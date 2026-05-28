@@ -108,7 +108,8 @@ private extension JourneyLocationPicker.Value {
 }
 
 private let timestampFormatter: DateFormatter = Formatter.relative(dateStyle: .medium,
-                                                                   timeStyle: .short)
+                                                                   timeStyle: .short,
+                                                                   context: .middleOfSentence)
 
 public struct JourneyTimePickerSelection: Hashable, Sendable {
     

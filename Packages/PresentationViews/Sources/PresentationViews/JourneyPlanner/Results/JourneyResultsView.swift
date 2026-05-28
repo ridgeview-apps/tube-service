@@ -41,6 +41,7 @@ public struct JourneyResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             journeyTitleView
+            Divider()
             ScrollView {
                 VStack(spacing: 24) {
                     switch loadingState {

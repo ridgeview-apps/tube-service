@@ -44,14 +44,17 @@ struct JourneyPlannerFromToSelectionView: View {
                     fromY: fromY,
                     toY: toY
                 )
-                .transaction { $0.animation = nil }
-
-                if canShowSwapLocationsButton {
-                    swapLocationsButton
-                        .position(
-                            x: positionX,
-                            y: (fromY + toY) / 2
-                        )
+                .transaction {
+                    $0.animation = nil
+                }
+                .overlay {
+                    if canShowSwapLocationsButton {
+                        swapLocationsButton
+                            .position(
+                                x: positionX,
+                                y: (fromY + toY) / 2
+                            )
+                    }
                 }
             }
         }
