@@ -8,9 +8,6 @@ struct JourneyPlannerFromToSelectionView: View {
     let animationNamespace: Namespace.ID
     let onAction: (JourneyPlannerForm.Action) -> Void
 
-    private let routeIndicatorDotSize: CGFloat = 10
-    private var routeIndicatorDotRadius: CGFloat { routeIndicatorDotSize / 2.0 }
-
     enum Action {
         case locationButtonTapped(JourneyPlannerForm.FieldID.LocationID)
         case swapLocations
@@ -24,76 +21,12 @@ struct JourneyPlannerFromToSelectionView: View {
             toLocationField
         }
         .padding(.trailing, 44)
-        .overlayPreferenceValue(RouteAnchorKey.self) { anchors in
-            routeIndicatorSideOverlay(anchors: anchors)
-        }
-    }
-
-    @ViewBuilder
-    private func routeIndicatorSideOverlay(
-        anchors: [RouteAnchorID: Anchor<CGRect>]
-    ) -> some View {
-        GeometryReader { proxy in
-            if let fromAnchor = anchors[.from], let toAnchor = anchors[.to] {
-                let fromY = proxy[fromAnchor].midY
-                let toY = proxy[toAnchor].midY
-                let positionX = proxy.size.width - 20
-
-                routeIndicator(
-                    x: positionX,
-                    fromY: fromY,
-                    toY: toY
-                )
-                .transaction {
-                    $0.animation = nil
-                }
-                .overlay {
-                    if canShowSwapLocationsButton {
-                        swapLocationsButton
-                            .position(
-                                x: positionX,
-                                y: (fromY + toY) / 2
-                            )
-                    }
-                }
+        .routeIndicatorOverlay {
+            if canShowSwapLocationsButton {
+                swapLocationsButton
             }
         }
     }
-
-    // swiftlint:disable identifier_name
-    private func routeIndicator(
-        x: CGFloat,
-        fromY: CGFloat,
-        toY: CGFloat
-    ) -> some View {
-        ZStack {
-            Path { path in
-                path.move(to: CGPoint(x: x, y: fromY + routeIndicatorDotRadius))
-                path.addLine(
-                    to: CGPoint(x: x, y: toY - routeIndicatorDotRadius)
-                )
-            }
-            .stroke(.quaternary, lineWidth: 2)
-
-            Circle()
-                .strokeBorder(lineWidth: 2)
-                .frame(
-                    width: routeIndicatorDotSize,
-                    height: routeIndicatorDotSize
-                )
-                .foregroundStyle(.secondary)
-                .position(x: x, y: fromY)
-
-            Circle()
-                .frame(
-                    width: routeIndicatorDotSize,
-                    height: routeIndicatorDotSize
-                )
-                .foregroundStyle(.secondary)
-                .position(x: x, y: toY)
-        }
-    }
-    // swiftlint:enable identifier_name
 
     private var fromLocationField: some View {
         JourneyLocationFormButton(
@@ -104,9 +37,7 @@ struct JourneyPlannerFromToSelectionView: View {
         ) {
             onAction(.tappedLocationField(.from))
         }
-        .transformAnchorPreference(key: RouteAnchorKey.self, value: .bounds) {
-            $0[.from] = $1
-        }
+        .routeAnchor(.from)
         .swapValuesGeometryEffectID(
             .firstPairItem("fromToFormFields"),
             isSwapped: isSwapped,
@@ -127,9 +58,7 @@ struct JourneyPlannerFromToSelectionView: View {
         ) {
             onAction(.tappedLocationField(.to))
         }
-        .transformAnchorPreference(key: RouteAnchorKey.self, value: .bounds) {
-            $0[.to] = $1
-        }
+        .routeAnchor(.to)
         .swapValuesGeometryEffectID(
             .secondPairItem("fromToFormFields"),
             isSwapped: isSwapped,
@@ -170,22 +99,6 @@ struct JourneyPlannerFromToSelectionView: View {
         form.from != nil
             && form.to != nil
             && form.from != form.to
-    }
-}
-
-// swiftlint:disable identifier_name
-private enum RouteAnchorID: Hashable {
-    case from, to
-}
-// swiftlint:enable identifier_name
-
-private struct RouteAnchorKey: PreferenceKey {
-    static var defaultValue: [RouteAnchorID: Anchor<CGRect>] = [:]
-    static func reduce(
-        value: inout [RouteAnchorID: Anchor<CGRect>],
-        nextValue: () -> [RouteAnchorID: Anchor<CGRect>]
-    ) {
-        value.merge(nextValue(), uniquingKeysWith: { $1 })
     }
 }
 
