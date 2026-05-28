@@ -2,6 +2,8 @@ import SwiftUI
 
 struct RootScreen: View {
     
+    @Environment(AppDataStore.self) var appData
+    
     var body: some View {
         TabView {
             LineStatusScreen()
@@ -30,6 +32,9 @@ struct RootScreen: View {
                                accessibilityID: "acc.id.maps.tab.title")
         }
         .systemStatusRefreshable()
+        .task {
+            appData.initialiseAppData()
+        }
     }
 }
 

@@ -5,8 +5,15 @@ import SwiftUI
 @MainActor
 struct RootScene: App {
     
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State private var appData = AppDataStore.shared
+    @State private var appData: AppDataStore
+    
+    init() {
+        if ProcessInfo.isRunningUITests {
+            appData = .stub()
+        } else {
+            appData = .live
+        }
+    }
     
     var body: some Scene {
         WindowGroup {
@@ -15,19 +22,6 @@ struct RootScene: App {
         }
     }
 }
-
-
-// MARK: - AppDelegate
-
-class AppDelegate: NSObject, UIApplicationDelegate {
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        AppDataStore.shared.userDefaults.migrateLegacyValuesIfNeeded()
-        return true
-    }
-}
-
 
 extension View {
     

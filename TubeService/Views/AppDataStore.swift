@@ -37,27 +37,24 @@ final class AppDataStore {
         self.localSearchCompleter = localSearchCompleter
         self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
     }
+    
+    func initialiseAppData() {
+        userDefaults.migrateLegacyValuesIfNeeded()
+    }
 }
 
 
 extension AppDataStore {
-    static let shared: AppDataStore = {
-        #if DEBUG
-        if ProcessInfo.isRunningUITests {
-            return .stub()
-        }
-        #endif
-        
-        return .init(
-            transportAPI: TransportAPIClient.shared,
-            systemStatusAPI: SystemStatusAPIClient.shared,
-            userDefaults: .standard,
-            locationManager: CLLocationManager())
-    }()
+    static let live: AppDataStore = .init(
+        transportAPI: TransportAPIClient.live,
+        systemStatusAPI: SystemStatusAPIClient.live,
+        userDefaults: .standard,
+        locationManager: CLLocationManager()
+    )
 }
 
 extension TransportAPIClient {
-    static let shared = TransportAPIClient(
+    static let live = TransportAPIClient(
         baseURL: AppConfig.shared.transportAPI.baseURL,
         appID: AppConfig.shared.transportAPI.appID,
         appKey: AppConfig.shared.transportAPI.appKey
@@ -65,7 +62,7 @@ extension TransportAPIClient {
 }
 
 extension SystemStatusAPIClient {
-    static let shared = SystemStatusAPIClient(
+    static let live = SystemStatusAPIClient(
         baseURL: AppConfig.shared.systemStatusAPI.baseURL,
         fileName: AppConfig.shared.systemStatusAPI.fileName
     )
