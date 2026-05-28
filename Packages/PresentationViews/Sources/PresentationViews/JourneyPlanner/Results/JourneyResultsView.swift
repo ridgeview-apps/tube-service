@@ -85,31 +85,35 @@ public struct JourneyResultsView: View {
             Spacer()
                 .frame(height: 44)
 
-            if let toLocation {
-                JourneyLocationTitleLabel(value: toLocation)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .swapValuesGeometryEffectID(
-                        .secondPairItem("locationsPair"),
-                        isSwapped: hasSwappedLocations,
-                        in: animationNamespace
-                    )
-                    .routeAnchor(.to)
+            VStack(alignment: .leading, spacing: 4) {
+                if let toLocation {
+                    JourneyLocationTitleLabel(value: toLocation)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .swapValuesGeometryEffectID(
+                            .secondPairItem("locationsPair"),
+                            isSwapped: hasSwappedLocations,
+                            in: animationNamespace
+                        )
+                        .routeAnchor(.to)
 
-            }
-            
-            if let viaLocation {
-                HStack(spacing: 0) {
-                    Text(.journeyResultsViaTitle)
-                    JourneyLocationTitleLabel(value: viaLocation)
-                        .bold()
                 }
-                .font(.caption2)
-                .secondarySectionHeaderStyle()
+
+                if let viaLocation {
+                    HStack(spacing: 0) {
+                        Text(.journeyResultsViaTitle)
+                        JourneyLocationTitleLabel(value: viaLocation)
+                            .bold()
+                    }
+                    .font(.caption2)
+                }
             }
         }
         .lineLimit(1)
         .font(.headline)
-        .routeIndicatorOverlay(leadingOffset: 20) {
+        .routeIndicatorOverlay(
+            leadingOffset: 28,
+            leadingPadding: 44
+        ) {
             swapLocationsButton
         }
         .padding(.vertical)
