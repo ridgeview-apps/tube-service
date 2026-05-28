@@ -26,7 +26,7 @@ public struct JourneyLocationFormButton: View {
                 }
                 locationValueLabel(for: value)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+                    .contentShape(.rect)
                 
                 if value != nil {
                     clearButton

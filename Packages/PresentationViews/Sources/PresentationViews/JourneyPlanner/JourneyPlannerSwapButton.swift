@@ -1,22 +1,24 @@
 import SwiftUI
 
-struct SwapValuesButton<Value>: View {
-    
+struct JourneyPlannerSwapButton<Value>: View {
+
     @Binding var isSwapped: Bool
     @Binding var valueA: Value
     @Binding var valueB: Value
-    
-    init(isSwapped: Binding<Bool>,
-         valueA: Binding<Value>,
-         valueB: Binding<Value>) {
+
+    init(
+        isSwapped: Binding<Bool>,
+        valueA: Binding<Value>,
+        valueB: Binding<Value>
+    ) {
         self._isSwapped = isSwapped
         self._valueA = valueA
         self._valueB = valueB
     }
-    
+
     var body: some View {
         Button {
-            withAnimation {
+            withAnimation(.snappy) {
                 let oldValueA = valueA
                 valueA = valueB
                 valueB = oldValueA
@@ -26,9 +28,20 @@ struct SwapValuesButton<Value>: View {
             Image(systemName: "arrow.up.arrow.down")
                 .accessibilityLabel(Text(.swapButtonAccessibilityTitle))
         }
+        .font(.system(size: 13, weight: .semibold))
+        .foregroundStyle(Color.accentColor)
+        .frame(width: 34, height: 34)
+        .background {
+            Circle()
+                .fill(Color.defaultCellBackground)
+            Circle()
+                .fill(Color.accentColor.opacity(0.12))
+            Circle()
+                .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5)
+        }
+        .contentShape(Circle().scale(1.3))
     }
 }
-
 
 // MARK: - Animation view modifiers
 
@@ -43,11 +56,11 @@ public struct SwapValuesTaggedViewID<PairedViewID: Hashable>: Hashable {
     static func firstPairItem(_ pairID: PairedViewID) -> SwapValuesTaggedViewID<PairedViewID> {
         .init(position: .firstPairItem, pairID: pairID)
     }
-    
+
     static func secondPairItem(_ pairID: PairedViewID) -> SwapValuesTaggedViewID<PairedViewID> {
         .init(position: .secondPairItem, pairID: pairID)
     }
-    
+
     var swappedViewID: SwapValuesTaggedViewID<PairedViewID> {
         switch position {
         case .firstPairItem:
@@ -65,36 +78,44 @@ struct SwapValuesSettings<TagID: Hashable> {
 }
 
 private struct SwapValuesButtonGeometryEffectID<TagID: Hashable>: ViewModifier {
-    
+
     let settings: SwapValuesSettings<TagID>
-        
+
     func body(content: Content) -> some View {
         if settings.isSwapped {
             content
-                .matchedGeometryEffect(id: settings.viewID, in: settings.namespace)
+                .matchedGeometryEffect(
+                    id: settings.viewID,
+                    in: settings.namespace
+                )
         } else {
             content
-                .matchedGeometryEffect(id: settings.viewID.swappedViewID, in: settings.namespace)
-                
+                .matchedGeometryEffect(
+                    id: settings.viewID.swappedViewID,
+                    in: settings.namespace
+                )
+
         }
     }
 }
 
 extension View {
-    func swapValuesGeometryEffectID<TagID: Hashable>(_ settings: SwapValuesSettings<TagID>) -> some View {
+    func swapValuesGeometryEffectID<TagID: Hashable>(
+        _ settings: SwapValuesSettings<TagID>
+    ) -> some View {
         self.modifier(SwapValuesButtonGeometryEffectID(settings: settings))
     }
-    
-    
-    func swapValuesGeometryEffectID<TagID: Hashable>(_ viewID: SwapValuesTaggedViewID<TagID>,
-                                                     isSwapped: Bool,
-                                                     in namespace: Namespace.ID) -> some View {
+
+    func swapValuesGeometryEffectID<TagID: Hashable>(
+        _ viewID: SwapValuesTaggedViewID<TagID>,
+        isSwapped: Bool,
+        in namespace: Namespace.ID
+    ) -> some View {
         self.swapValuesGeometryEffectID(
             .init(viewID: viewID, isSwapped: isSwapped, namespace: namespace)
         )
     }
 }
-
 
 // MARK: - Previews
 private struct Previewer: View {
@@ -103,28 +124,34 @@ private struct Previewer: View {
         @State var value2 = "This is value2"
         @State var isSwapped = false
         let cellID: String
-        
+
         @Namespace private var animationNamespace
 
         var body: some View {
             HStack {
                 VStack {
                     Text("\(cellID)-\(value1)")
-                        .swapValuesGeometryEffectID(.firstPairItem(cellID),
-                                                    isSwapped: isSwapped,
-                                                    in: animationNamespace)
+                        .swapValuesGeometryEffectID(
+                            .firstPairItem(cellID),
+                            isSwapped: isSwapped,
+                            in: animationNamespace
+                        )
                     Text("\(cellID)-\(value2)")
-                        .swapValuesGeometryEffectID(.secondPairItem(cellID),
-                                                    isSwapped: isSwapped,
-                                                    in: animationNamespace)
+                        .swapValuesGeometryEffectID(
+                            .secondPairItem(cellID),
+                            isSwapped: isSwapped,
+                            in: animationNamespace
+                        )
                 }
-                SwapValuesButton(isSwapped: $isSwapped,
-                                 valueA: $value1,
-                                 valueB: $value2)
+                JourneyPlannerSwapButton(
+                    isSwapped: $isSwapped,
+                    valueA: $value1,
+                    valueB: $value2
+                )
             }
         }
     }
-    
+
     var body: some View {
         VStack {
             PreviewCell(cellID: "cell1")

@@ -48,10 +48,16 @@ public struct JourneyPlannerFormView: View {
         Section {
             VStack(spacing: 16) {
                 fromToSelectionView
-                travelOptionsChips
-                submitButton
+                    .padding(.leading, 16)
+                    .padding(.trailing, 8)
+                Group {
+                    travelOptionsChips
+                    submitButton
+                }
+                .padding(.horizontal, 16)
+
             }
-            .padding(16)
+            .padding(.vertical, 16)
             .cardStyle()
         }
         .listRowBackground(Color.defaultBackground)
