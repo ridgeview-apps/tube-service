@@ -51,14 +51,9 @@ public struct JourneyLocationPickerView: View {
             .focused($showKeyboard)
             .autocorrectionDisabled()
         }
-        .padding(8)
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(lineWidth: 1.0)
-                .fill(.tertiary)
-        }
+        .padding(10)
+        .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal)
-        
     }
     
 
@@ -70,8 +65,11 @@ public struct JourneyLocationPickerView: View {
                     selectableRow(for: value)
                 }
             } header: {
-                Text(sectionState.sectionTitle)
-                    .secondarySectionHeaderStyle()
+                HStack(spacing: 4) {
+                    Image(systemName: sectionState.sectionIcon)
+                    Text(sectionState.sectionTitle)
+                }
+                .secondarySectionHeaderStyle()
             }
             .lineGroupListRowStyle()
         }
@@ -117,8 +115,10 @@ public struct JourneyLocationPickerView: View {
                     if let name = location.name {
                         VStack(alignment: .leading) {
                             Text(name.title)
-                            Text(name.subtitle)
-                                .font(.footnote)
+                            if !name.subtitle.isEmpty {
+                                Text(name.subtitle)
+                                    .font(.footnote)
+                            }
                         }
                     }
                 }
@@ -129,9 +129,20 @@ public struct JourneyLocationPickerView: View {
 
 private extension JourneyLocationPicker.SectionState {
     
+    var sectionIcon: String {
+        switch sectionID {
+        case .suggestions:
+            "sparkles"
+        case .nearbyStations:
+            "location"
+        case .searchResults:
+            "magnifyingglass"
+        }
+    }
+
     var sectionTitle: LocalizedStringResource {
         switch sectionID {
-        case .suggestions: 
+        case .suggestions:
             .journeyLocationPickerSuggestionsSectionTitle
         case .nearbyStations:
             .journeyLocationPickerNearbyStationsSectionTitle

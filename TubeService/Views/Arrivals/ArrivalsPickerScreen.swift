@@ -108,8 +108,11 @@ struct ArrivalsPickerScreen: View {
                             }
                         }
                     } header: {
-                        Text(.searchSuggestionsSectionTitle)
-                            .secondarySectionHeaderStyle()
+                        HStack(spacing: 4) {
+                            Image(systemName: "sparkles")
+                            Text(.searchSuggestionsSectionTitle)
+                                .secondarySectionHeaderStyle()
+                        }
                     }
                 }
             }
