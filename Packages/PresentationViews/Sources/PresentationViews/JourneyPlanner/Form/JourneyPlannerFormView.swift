@@ -48,8 +48,8 @@ public struct JourneyPlannerFormView: View {
         Section {
             VStack(spacing: 16) {
                 fromToSelectionView
-                    .padding(.leading, 16)
-                    .padding(.trailing, 8)
+                    .padding(.leading, 8)
+                    .padding(.trailing, 16)
                 Group {
                     travelOptionsChips
                     submitButton

@@ -43,7 +43,7 @@ public struct JourneyResultsView: View {
             journeyTitleView
             Divider()
             ScrollView {
-                VStack(spacing: 24) {
+                VStack {
                     switch loadingState {
                     case .loading, .failure:
                         HStack {
@@ -71,51 +71,48 @@ public struct JourneyResultsView: View {
 
     private var journeyTitleView: some View {
         VStack(alignment: .leading) {
-            HStack {
-                VStack(alignment: .leading) {
-                    if let fromLocation {
-                        JourneyLocationTitleLabel(value: fromLocation)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .swapValuesGeometryEffectID(
-                                .firstPairItem("locationsPair"),
-                                isSwapped: hasSwappedLocations,
-                                in: animationNamespace
-                            )
-                    }
-
-                    Text(.journeyResultsToLabelTitle)
-                        .font(.caption)
-
-                    if let toLocation {
-                        JourneyLocationTitleLabel(value: toLocation)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .swapValuesGeometryEffectID(
-                                .secondPairItem("locationsPair"),
-                                isSwapped: hasSwappedLocations,
-                                in: animationNamespace
-                            )
-
-                    }
-                }
-                .lineLimit(1)
-                .font(.headline)
-
-                Spacer()
-
-                swapLocationsButton
+            if let fromLocation {
+                JourneyLocationTitleLabel(value: fromLocation)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .swapValuesGeometryEffectID(
+                        .firstPairItem("locationsPair"),
+                        isSwapped: hasSwappedLocations,
+                        in: animationNamespace
+                    )
+                    .routeAnchor(.from)
             }
 
+            Spacer()
+                .frame(height: 44)
+
+            if let toLocation {
+                JourneyLocationTitleLabel(value: toLocation)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .swapValuesGeometryEffectID(
+                        .secondPairItem("locationsPair"),
+                        isSwapped: hasSwappedLocations,
+                        in: animationNamespace
+                    )
+                    .routeAnchor(.to)
+
+            }
+            
             if let viaLocation {
                 HStack(spacing: 0) {
                     Text(.journeyResultsViaTitle)
                     JourneyLocationTitleLabel(value: viaLocation)
-                        .lineLimit(1)
                         .bold()
                 }
                 .font(.caption2)
+                .secondarySectionHeaderStyle()
             }
         }
-        .padding()
+        .lineLimit(1)
+        .font(.headline)
+        .routeIndicatorOverlay(leadingOffset: 20) {
+            swapLocationsButton
+        }
+        .padding(.vertical)
         .background(Color.defaultCellBackground)
     }
 
@@ -126,7 +123,6 @@ public struct JourneyResultsView: View {
             valueB: $toLocation
         )
         .disabled(loadingState == .loading)
-        .frame(width: 44, height: 44)
         .onChange(of: hasSwappedLocations) {
             refreshData()
         }

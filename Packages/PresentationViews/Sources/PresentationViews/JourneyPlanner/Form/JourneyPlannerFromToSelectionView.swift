@@ -20,7 +20,6 @@ struct JourneyPlannerFromToSelectionView: View {
             fromLocationField
             toLocationField
         }
-        .padding(.trailing, 44)
         .routeIndicatorOverlay {
             if canShowSwapLocationsButton {
                 swapLocationsButton

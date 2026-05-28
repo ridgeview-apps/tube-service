@@ -18,7 +18,7 @@ struct RouteAnchorKey: PreferenceKey {
 
 struct RouteIndicatorOverlay: View {
     let dotSize: CGFloat
-    let trailingOffset: CGFloat
+    let leadingOffset: CGFloat
     let fromAnchor: Anchor<CGRect>
     let toAnchor: Anchor<CGRect>
     let midContent: AnyView?
@@ -29,7 +29,7 @@ struct RouteIndicatorOverlay: View {
         GeometryReader { proxy in
             let fromY = proxy[fromAnchor].midY
             let toY = proxy[toAnchor].midY
-            let positionX = proxy.size.width - trailingOffset
+            let positionX = leadingOffset
 
             ZStack {
                 Path { path in
@@ -65,24 +65,28 @@ extension View {
         transformAnchorPreference(key: RouteAnchorKey.self, value: .bounds) {
             $0[id] = $1
         }
+
     }
 
     func routeIndicatorOverlay(
         dotSize: CGFloat = 10,
-        trailingOffset: CGFloat = 20,
+        leadingOffset: CGFloat = 16,
+        leadingPadding: CGFloat = 32,
         @ViewBuilder midContent: @escaping () -> some View = { EmptyView?.none }
     ) -> some View {
-        overlayPreferenceValue(RouteAnchorKey.self) { anchors in
-            if let fromAnchor = anchors[.from], let toAnchor = anchors[.to] {
-                RouteIndicatorOverlay(
-                    dotSize: dotSize,
-                    trailingOffset: trailingOffset,
-                    fromAnchor: fromAnchor,
-                    toAnchor: toAnchor,
-                    midContent: AnyView(midContent())
-                )
+        self
+            .padding(.leading, leadingPadding)
+            .overlayPreferenceValue(RouteAnchorKey.self) { anchors in
+                if let fromAnchor = anchors[.from], let toAnchor = anchors[.to] {
+                    RouteIndicatorOverlay(
+                        dotSize: dotSize,
+                        leadingOffset: leadingOffset,
+                        fromAnchor: fromAnchor,
+                        toAnchor: toAnchor,
+                        midContent: AnyView(midContent())
+                    )
+                }
             }
-        }
     }
 }
 
@@ -95,7 +99,5 @@ extension View {
         Text("King's Cross")
             .routeAnchor(.to)
     }
-    .padding()
-    .padding(.trailing, 44)
     .routeIndicatorOverlay()
 }
