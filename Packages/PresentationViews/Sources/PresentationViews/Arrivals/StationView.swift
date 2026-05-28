@@ -57,21 +57,26 @@ public struct StationView: View {
     
     private var locationSection: some View {
         Section {
-            StationMapView(station: station)
-                .frame(height: 200)
-                .listRowInsets(.zero)
-            if let mapURL {
-                linkView(
-                    url: mapURL,
-                    text: .stationLocationShowInMapsButtonTitle
-                )
+            VStack(spacing: 0) {
+                StationMapView(station: station)
+                    .frame(height: 200)
+                if let mapURL {
+                    linkView(
+                        url: mapURL,
+                        text: .stationLocationShowInMapsButtonTitle
+                    )
+                }
+                if let directionsURL {
+                    Divider()
+                    linkView(
+                        url: directionsURL,
+                        text: .stationLocationDirectionsButtonTitle
+                    )
+                }
             }
-            if let directionsURL {
-                linkView(
-                    url: directionsURL,
-                    text: .stationLocationDirectionsButtonTitle
-                )
-            }
+            .cardStyle()
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
         } header: {
             Text(.stationLocationSectionHeaderTitle)
                 .secondarySectionHeaderStyle()
@@ -90,6 +95,7 @@ public struct StationView: View {
             }
         }
         .foregroundStyle(.link)
+        .padding()
     }
     
     
