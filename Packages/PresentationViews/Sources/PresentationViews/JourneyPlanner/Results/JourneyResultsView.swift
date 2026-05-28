@@ -40,6 +40,7 @@ public struct JourneyResultsView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
+            Divider()
             journeyTitleView
             Divider()
             ScrollView {
@@ -66,6 +67,7 @@ public struct JourneyResultsView: View {
                 }
             }
         }
+        .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .journeyPlannerFullWidthBackground()
     }
 
@@ -139,12 +141,11 @@ public struct JourneyResultsView: View {
                 .foregroundStyle(Color.secondary)
                 .padding(.top, 12)
         } else {
-            LazyVStack(alignment: .leading, pinnedViews: [.sectionHeaders]) {
+            LazyVStack(alignment: .leading, spacing: 12, pinnedViews: [.sectionHeaders]) {
                 Section {
                     ForEach($cellItems) { $cellItem in
                         JourneyResultsCell(cellItem: $cellItem)
                             .padding(.horizontal)
-                            .padding(.bottom, 16)
                     }
                 } header: {
                     resultsSectionHeader

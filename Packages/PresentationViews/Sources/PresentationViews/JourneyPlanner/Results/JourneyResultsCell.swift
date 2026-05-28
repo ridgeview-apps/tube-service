@@ -65,6 +65,7 @@ struct JourneyResultsCell: View {
             Spacer()
             Text(journey.formattedDuration)
                 .font(.subheadline)
+            
         }
         .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier("journey.start.time.info")

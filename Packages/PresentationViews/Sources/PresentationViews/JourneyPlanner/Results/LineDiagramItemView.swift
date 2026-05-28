@@ -7,7 +7,7 @@ struct LineDiagramItemView: View {
     
     var containerThickness: CGFloat { 30.0 * scaleFactor }
     var lineThickness: CGFloat { 4.0 * scaleFactor }
-    var tubeLineTitleFont: Font { .system(size: 20 * scaleFactor) }
+    var tubeLineTitleFont: Font { .system(size: 16 * scaleFactor) }
     
     let item: LineDiagramItem
     let animationNamespace: Namespace.ID
@@ -101,7 +101,7 @@ struct LineDiagramItemView: View {
                 image
                     .resizable()
                     .scaledToFit()
-                    .padding(4)
+                    .padding(6)
                     .foregroundStyle(item.style.lineStyle.color)
                     
             }

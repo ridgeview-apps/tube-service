@@ -57,7 +57,7 @@ struct ArrivalsBoardView: View {
                     .transition(.slideUp)
             }
         }
-        .dynamicTypeSize(..<DynamicTypeSize.accessibility1)
+        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
         .animation(.default, value: isExpanded)
         .animation(rotationCellAnimated ? .default : nil, value: rotatingCellIndex)
         .task {
