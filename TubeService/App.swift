@@ -5,21 +5,23 @@ import SwiftUI
 @MainActor
 struct RootScene: App {
     
-    @State private var appData: AppDataStore
-    
-    init() {
-        if ProcessInfo.isRunningUITests {
-            appData = .stub()
-        } else {
-            appData = .live
-        }
-    }
+    @State private var appData: AppDataStore = .current
     
     var body: some Scene {
         WindowGroup {
             RootScreen()
                 .withRootEnvironment(appData: appData)
         }
+    }
+}
+
+private extension AppDataStore {
+    static var current: AppDataStore {
+#if DEBUG
+        ProcessInfo.isRunningUITests ? .stub() : .live
+#else
+        .live
+#endif
     }
 }
 

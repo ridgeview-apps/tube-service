@@ -12,6 +12,7 @@ struct FormDetailCellViewModifier: ViewModifier {
             if let title {
                 Text(title)
                     .font(.caption)
+                    .padding(.leading, 8)
             }
             content
             if let errors, !errors.isEmpty {
