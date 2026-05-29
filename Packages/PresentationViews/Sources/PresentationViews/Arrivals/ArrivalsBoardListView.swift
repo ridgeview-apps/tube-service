@@ -119,6 +119,7 @@ public struct ArrivalsBoardListView: View {
     
     @ViewBuilder private var footerView: some View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
+            .padding(.bottom, 30)
     }
 }
 

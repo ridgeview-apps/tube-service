@@ -1,5 +1,6 @@
 import Foundation
 import Testing
+import Shared
 
 @testable import Models
 @testable import ModelStubs
@@ -63,7 +64,7 @@ struct ModelDecoderTests {
     }
     
     @Test
-    func decodedTubeJourneyResults() throws {
+    func decodedTubeJourneyResult() throws {
         let journey = try decodeRawJSONString(journeyByTubeJSON, asType: Journey.self)
         
         #expect(journey.legs?[0].modeID == .walking)
@@ -75,6 +76,30 @@ struct ModelDecoderTests {
         #expect(journey.legs?[1].stopPoints[2].name == "Covent Garden Underground Station")
         #expect(journey.legs?[1].departurePoint?.commonName == "King's Cross St. Pancras Underground Station")
         #expect(journey.legs?[1].arrivalPoint?.commonName == "Leicester Square Underground Station")
+    }
+    
+    @Test func decodedJourneyResults() async throws {
+        let resultsNow = try decodeRawJSONString(journeyResultsKingsXToWaterlooNowJSON, asType: JourneyResults.self)
+        let resultsEarlierJourneys = try decodeRawJSONString(journeyResultsKingsXToWaterlooEarlierJSON, asType: JourneyResults.self)
+        let resultsLaterJourneys = try decodeRawJSONString(journeyResultsKingsXToWaterlooLaterJSON, asType: JourneyResults.self)
+        let expectedEarlierJourney = JourneyTimeAdjustment(
+            date: "20260529", time: "1425", timeIs: "departing"
+        )
+        let expectedLaterJourney = JourneyTimeAdjustment(
+            date: "20260529", time: "1450", timeIs: "departing"
+        )
+        
+        #expect(resultsNow.journeys?.count == 3)
+        #expect(resultsNow.searchCriteria?.dateTime == dayMonthYear(29, 5, 2026,
+                                                                    hour: 14,
+                                                                    minute: 40,
+                                                                    in: .london))
+        #expect(resultsNow.searchCriteria?.dateTimeType == "Departing")
+        
+        #expect(resultsNow.searchCriteria?.timeAdjustments?.earlier == expectedEarlierJourney)
+        #expect(resultsNow.searchCriteria?.timeAdjustments?.later == expectedLaterJourney)
+        #expect(resultsEarlierJourneys.journeys?.count == 3)
+        #expect(resultsLaterJourneys.journeys?.count == 3)
     }
     
     @Test
@@ -103,4 +128,27 @@ private extension ModelDecoderTests {
         
         return try JSONDecoder.defaultModelDecoder.decode(type, from: jsonData)
     }
+    
+    // swiftlint:disable function_parameter_count
+    private func dayMonthYear(
+        _ day: Int,
+        _ month: Int,
+        _ year: Int,
+        hour: Int,
+        minute: Int,
+        in timeZone: TimeZone
+    ) -> Date {
+        let calendar = Calendar.iso8601(in: timeZone)
+        let dateComponents = DateComponents(
+            calendar: calendar,
+            timeZone: calendar.timeZone,
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute
+        )
+        return calendar.date(from: dateComponents)!
+    }
+    // swiftlint:enable function_parameter_count
 }

@@ -9,9 +9,7 @@ public struct JourneyResultsView: View {
     @Binding public var pages: [JourneyResultsPage]
     public let viaLocation: JourneyLocationPicker.Value?
     public let timeOption: JourneyTimePickerSelection
-    public let onRefresh: () -> Void
-    public let onEarlierJourneys: () -> Void
-    public let onLaterJourneys: () -> Void
+    public let onAction: (JourneyResultsAction) -> Void
 
     @State private var hasSwappedLocations = false
     @Namespace private var animationNamespace
@@ -27,18 +25,14 @@ public struct JourneyResultsView: View {
         toLocation: Binding<JourneyLocationPicker.Value?>,
         viaLocation: JourneyLocationPicker.Value?,
         timeoption: JourneyTimePickerSelection,
-        onRefresh: @escaping () -> Void,
-        onEarlierJourneys: @escaping () -> Void,
-        onLaterJourneys: @escaping () -> Void
+        onAction: @escaping (JourneyResultsAction) -> Void
     ) {
         self._pages = pages
         self._fromLocation = fromLocation
         self._toLocation = toLocation
         self.viaLocation = viaLocation
         self.timeOption = timeoption
-        self.onRefresh = onRefresh
-        self.onEarlierJourneys = onEarlierJourneys
-        self.onLaterJourneys = onLaterJourneys
+        self.onAction = onAction
     }
 
     private var isAnyPageLoading: Bool {
@@ -59,9 +53,12 @@ public struct JourneyResultsView: View {
             }
             .refreshable {
                 if !isAnyPageLoading {
-                    refreshData()
+                    onAction(.refresh)
                 }
             }
+        }
+        .task {
+            onAction(.initialFetch)
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .journeyPlannerFullWidthBackground()
@@ -126,7 +123,7 @@ public struct JourneyResultsView: View {
         )
         .disabled(isAnyPageLoading)
         .onChange(of: hasSwappedLocations) {
-            refreshData()
+            onAction(.refresh)
         }
     }
 
@@ -152,6 +149,7 @@ public struct JourneyResultsView: View {
                 } else if pages.allSatisfy({ $0.loadingState == .loaded }) {
                     zeroResultsView
                 }
+                Spacer().frame(height: 30) // Bottom scroll padding
             } header: {
                 if hasLoadedResults {
                     resultsSectionHeader
@@ -198,7 +196,7 @@ public struct JourneyResultsView: View {
     }
 
     private var earlierJourneysButton: some View {
-        Button(action: onEarlierJourneys) {
+        Button { onAction(.earlierJourneys) } label: {
             Label(
                 .journeyResultsEarlierJourneysButton,
                 systemImage: "chevron.up"
@@ -210,7 +208,7 @@ public struct JourneyResultsView: View {
     }
 
     private var laterJourneysButton: some View {
-        Button(action: onLaterJourneys) {
+        Button { onAction(.laterJourneys) } label: {
             Label(
                 .journeyResultsLaterJourneysButton,
                 systemImage: "chevron.down"
@@ -245,9 +243,6 @@ public struct JourneyResultsView: View {
         }
     }
 
-    private func refreshData() {
-        onRefresh()
-    }
 }
 
 // MARK: - Previews
@@ -276,19 +271,20 @@ private struct Previewer: View {
             toLocation: $toLocation,
             viaLocation: viaLocation,
             timeoption: timeOption,
-            onRefresh: { print("Refreshing") },
-            onEarlierJourneys: { print("Earlier journeys") },
-            onLaterJourneys: { print("Later journeys") }
+            onAction: { print("Action: \($0)") }
         )
     }
 }
 
 extension JourneyResultsPage {
-    fileprivate static func loadedPage() -> Self {
+    fileprivate static func loadedPage(
+        id: String,
+        results: JourneyResults
+    ) -> Self {
         JourneyResultsPage(
-            id: "initial",
+            id: id,
             loadingState: .loaded,
-            cellItems: (ModelStubs.journeyResultsKingsXToWaterloo.journeys ?? [])
+            cellItems: (results.journeys ?? [])
                 .removingDuplicates()
                 .map {
                     JourneyResultsCellItem(
@@ -309,10 +305,21 @@ extension JourneyResultsPage {
     }
 }
 
-#Preview("Loaded") {
+#Preview("Loaded (3 pages)") {
     Previewer(
         pages: [
-            .loadedPage()
+            .loadedPage(
+                id: "previous",
+                results: ModelStubs.journeyResultsKingsXToWaterlooEarlier
+            ),
+            .loadedPage(
+                id: "initial",
+                results: ModelStubs.journeyResultsKingsXToWaterlooNow
+            ),
+            .loadedPage(
+                id: "next",
+                results: ModelStubs.journeyResultsKingsXToWaterlooLater
+            )
         ]
     )
 }
@@ -326,7 +333,10 @@ extension JourneyResultsPage {
 #Preview("Loading (next)") {
     Previewer(
         pages: [
-            .loadedPage(),
+            .loadedPage(
+                id: "initial",
+                results: ModelStubs.journeyResultsKingsXToWaterlooNow
+            ),
             .loadingPage(id: "next")
         ]
     )
@@ -336,7 +346,10 @@ extension JourneyResultsPage {
     Previewer(
         pages: [
             .loadingPage(id: "previous"),
-            .loadedPage(),
+            .loadedPage(
+                id: "initial",
+                results: ModelStubs.journeyResultsKingsXToWaterlooNow
+            ),
         ]
     )
 }

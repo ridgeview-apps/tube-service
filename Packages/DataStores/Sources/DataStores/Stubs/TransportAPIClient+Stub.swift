@@ -48,7 +48,7 @@ public final class StubTransportAPIClient: TransportAPIClientType {
     }
     
     public private(set) var fetchJourneyResultsCallCount = 0
-    public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterloo)
+    public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
     public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
         fetchJourneyResultsCallCount += 1
         return stubbedJourneyResults

@@ -2,6 +2,24 @@ import Foundation
 
 public struct JourneyResults: Codable, Hashable, Sendable {
     public let journeys: [Journey]?
+    public let searchCriteria: JourneySearchCriteria?
+}
+
+public struct JourneySearchCriteria: Codable, Hashable, Sendable {
+    public let dateTime: Date?
+    public let dateTimeType: String?
+    public let timeAdjustments: JourneyTimeAdjustments?
+}
+
+public struct JourneyTimeAdjustments: Codable, Hashable, Sendable {
+    public let earlier: JourneyTimeAdjustment?
+    public let later: JourneyTimeAdjustment?
+}
+
+public struct JourneyTimeAdjustment: Codable, Hashable, Sendable {
+    public let date: String?
+    public let time: String?
+    public let timeIs: String?
 }
 
 public struct Journey: Codable, Hashable, Sendable {

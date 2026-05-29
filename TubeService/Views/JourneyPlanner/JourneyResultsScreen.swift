@@ -7,7 +7,7 @@ import SwiftUI
 struct JourneyResultsScreen: View {
     
     @State private var pages: [JourneyResultsPage] = []
-    @State private var hasFetchedData = false
+    @State private var hasFetchedInitialData = false
     
     @Environment(\.transportAPI) var transportAPI
     @Environment(LocationDataStore.self) var location
@@ -30,18 +30,23 @@ struct JourneyResultsScreen: View {
             toLocation: $form.to,
             viaLocation: form.via,
             timeoption: form.timeSelection,
-            onRefresh: {
-                Task { await fetchData() }
-            },
-            onEarlierJourneys: {},
-            onLaterJourneys: {}
+            onAction: { handleAction($0) }
         )
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(.journeyResultsNavigationTitle))
-        .task {
-            if !hasFetchedData {
-                await fetchData()
-            }
+    }
+
+    private func handleAction(_ action: JourneyResultsAction) {
+        switch action {
+        case .initialFetch:
+            guard !hasFetchedInitialData else { return }
+            Task { await fetchData() }
+        case .refresh:
+            Task { await fetchData() }
+        case .earlierJourneys:
+            break
+        case .laterJourneys:
+            break
         }
     }
     
@@ -51,7 +56,7 @@ struct JourneyResultsScreen: View {
         do {
             let itinerary = try await resolveLocationCoordinatesAndFetchItinerary()
             pages = [makePage(id: pageID, for: itinerary)]
-            hasFetchedData = true
+            hasFetchedInitialData = true
         } catch HTTPError.statusCode(404, _) {
             pages = [JourneyResultsPage(id: pageID, loadingState: .loaded, cellItems: [])]
         } catch {

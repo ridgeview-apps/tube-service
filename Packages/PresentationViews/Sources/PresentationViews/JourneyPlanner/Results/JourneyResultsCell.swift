@@ -1,6 +1,13 @@
 import SwiftUI
 import Models
 
+public enum JourneyResultsAction {
+    case initialFetch
+    case refresh
+    case earlierJourneys
+    case laterJourneys
+}
+
 public struct JourneyResultsPage: Identifiable {
     public let id: String
     public var loadingState: LoadingState

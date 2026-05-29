@@ -140,7 +140,9 @@ public extension ModelStubs {
     
     static var journeyWithLongTitleName: Journey { decodedValue(for: journeyWithLongTitleNameJSON) }
     
-    static var journeyResultsKingsXToWaterloo: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooJSON) }
+    static var journeyResultsKingsXToWaterlooNow: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooNowJSON) }
+    static var journeyResultsKingsXToWaterlooEarlier: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooEarlierJSON) }
+    static var journeyResultsKingsXToWaterlooLater: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooLaterJSON) }
 }
 
 
