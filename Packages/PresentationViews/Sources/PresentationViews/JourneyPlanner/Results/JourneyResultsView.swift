@@ -229,6 +229,7 @@ public struct JourneyResultsView: View {
                 )
             }
             .buttonStyle(.bordered)
+            .font(.caption)
             .disabled(isAnyPageLoading)
             Spacer()
         }
