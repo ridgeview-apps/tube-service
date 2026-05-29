@@ -9,7 +9,7 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
             .label
             .font(.subheadline.weight(.medium))
             .withDefaultMaxWidth()
-            .padding(.vertical, 10)
+            .padding(.vertical, 14)
             .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
             .foregroundStyle(isEnabled ? Color.accentColor : .secondary)
             .opacity(configuration.isPressed ? 0.75 : 1)
