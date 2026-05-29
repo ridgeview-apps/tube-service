@@ -201,7 +201,6 @@ struct ArrivalsBoardView: View {
             }
         }
         .font(.footnote)
-        .monospacedDigit()
     }
     
     private func cellText(for textType: ArrivalsBoardCellItem.TextType) -> some View {

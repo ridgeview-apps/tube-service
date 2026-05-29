@@ -6,11 +6,12 @@ public struct JourneyResultsView: View {
 
     @Binding public var fromLocation: JourneyLocationPicker.Value?
     @Binding public var toLocation: JourneyLocationPicker.Value?
-    @Binding public var cellItems: [JourneyResultsCellItem]
+    @Binding public var pages: [JourneyResultsPage]
     public let viaLocation: JourneyLocationPicker.Value?
     public let timeOption: JourneyTimePickerSelection
-    public let loadingState: LoadingState
     public let onRefresh: () -> Void
+    public let onEarlierJourneys: () -> Void
+    public let onLaterJourneys: () -> Void
 
     @State private var hasSwappedLocations = false
     @Namespace private var animationNamespace
@@ -21,21 +22,31 @@ public struct JourneyResultsView: View {
     )
 
     public init(
-        loadingState: LoadingState,
-        cellItems: Binding<[JourneyResultsCellItem]>,
+        pages: Binding<[JourneyResultsPage]>,
         fromLocation: Binding<JourneyLocationPicker.Value?>,
         toLocation: Binding<JourneyLocationPicker.Value?>,
         viaLocation: JourneyLocationPicker.Value?,
         timeoption: JourneyTimePickerSelection,
-        onRefresh: @escaping () -> Void
+        onRefresh: @escaping () -> Void,
+        onEarlierJourneys: @escaping () -> Void,
+        onLaterJourneys: @escaping () -> Void
     ) {
-        self.loadingState = loadingState
-        self._cellItems = cellItems
+        self._pages = pages
         self._fromLocation = fromLocation
         self._toLocation = toLocation
         self.viaLocation = viaLocation
         self.timeOption = timeoption
         self.onRefresh = onRefresh
+        self.onEarlierJourneys = onEarlierJourneys
+        self.onLaterJourneys = onLaterJourneys
+    }
+
+    private var isAnyPageLoading: Bool {
+        pages.contains { $0.loadingState == .loading }
+    }
+
+    private var hasLoadedResults: Bool {
+        totalCellItemCount > 0
     }
 
     public var body: some View {
@@ -44,25 +55,10 @@ public struct JourneyResultsView: View {
             journeyTitleView
             Divider()
             ScrollView {
-                VStack {
-                    switch loadingState {
-                    case .loading, .failure:
-                        HStack {
-                            Spacer()
-                            LoadingStatusView(loadingState: loadingState)
-                                .defaultLoadingStatusStyle(
-                                    verticalPadding: 8
-                                )
-                            Spacer()
-                        }
-                        .padding(.horizontal)
-                    case .loaded:
-                        loadedView
-                    }
-                }
+                contentView
             }
             .refreshable {
-                if loadingState != .loading {
+                if !isAnyPageLoading {
                     refreshData()
                 }
             }
@@ -128,35 +124,106 @@ public struct JourneyResultsView: View {
             valueA: $fromLocation,
             valueB: $toLocation
         )
-        .disabled(loadingState == .loading)
+        .disabled(isAnyPageLoading)
         .onChange(of: hasSwappedLocations) {
             refreshData()
         }
     }
 
-    @ViewBuilder
-    private var loadedView: some View {
-        if cellItems.isEmpty {
-            Text(.journeyResultsZeroResultsTitle)
-                .foregroundStyle(Color.secondary)
-                .padding(.top, 12)
-        } else {
-            LazyVStack(alignment: .leading, spacing: 12, pinnedViews: [.sectionHeaders]) {
-                Section {
-                    ForEach($cellItems) { $cellItem in
-                        JourneyResultsCell(cellItem: $cellItem)
-                            .padding(.horizontal)
-                    }
-                } header: {
+    private var totalCellItemCount: Int {
+        pages.reduce(0) { $0 + $1.cellItems.count }
+    }
+
+    private var contentView: some View {
+        LazyVStack(
+            alignment: .leading,
+            spacing: 12,
+            pinnedViews: [.sectionHeaders]
+        ) {
+            Section {
+                if hasLoadedResults {
+                    earlierJourneysButton
+                }
+                ForEach($pages) { $page in
+                    pageView(page: $page)
+                }
+                if hasLoadedResults {
+                    laterJourneysButton
+                } else if pages.allSatisfy({ $0.loadingState == .loaded }) {
+                    zeroResultsView
+                }
+            } header: {
+                if hasLoadedResults {
                     resultsSectionHeader
                 }
             }
         }
     }
 
+    private var zeroResultsView: some View {
+        ContentUnavailableView(
+            .journeyResultsZeroResultsTitle,
+            systemImage:
+                "point.topright.arrow.triangle.backward.to.point.bottomleft.scurvepath"
+        )
+    }
+
+    @ViewBuilder
+    private func pageView(page: Binding<JourneyResultsPage>) -> some View {
+        switch page.wrappedValue.loadingState {
+        case .loading:
+            HStack(spacing: 4) {
+                Spacer()
+                ProgressView()
+                    .controlSize(.small)
+                Text(.journeyResultsPageFetchingResults)
+                Spacer()
+            }
+            .defaultLoadingStatusStyle(verticalPadding: 12)
+            .padding(.horizontal)
+        case .failure:
+            HStack {
+                Spacer()
+                LoadingStatusView(loadingState: page.wrappedValue.loadingState)
+                    .defaultLoadingStatusStyle(verticalPadding: 12)
+                Spacer()
+            }
+            .padding(.horizontal)
+        case .loaded:
+            ForEach(page.cellItems) { $cellItem in
+                JourneyResultsCell(cellItem: $cellItem)
+                    .padding(.horizontal)
+            }
+        }
+    }
+
+    private var earlierJourneysButton: some View {
+        Button(action: onEarlierJourneys) {
+            Label(
+                .journeyResultsEarlierJourneysButton,
+                systemImage: "chevron.up"
+            )
+        }
+        .buttonStyle(.primary)
+        .disabled(isAnyPageLoading)
+        .padding(.horizontal)
+    }
+
+    private var laterJourneysButton: some View {
+        Button(action: onLaterJourneys) {
+            Label(
+                .journeyResultsLaterJourneysButton,
+                systemImage: "chevron.down"
+            )
+        }
+        .buttonStyle(.primary)
+        .disabled(isAnyPageLoading)
+        .padding(.horizontal)
+    }
+
     private var resultsSectionHeader: some View {
         HStack(spacing: 0) {
-            Text(.journeyPlannerResultsCount(cellItems.count))
+            Text(.journeyPlannerResultsCount(totalCellItemCount))
             Text(", ")
             timeOptionText
             Spacer()
@@ -186,8 +253,7 @@ public struct JourneyResultsView: View {
 // MARK: - Previews
 
 private struct Previewer: View {
-    var loadingState: LoadingState
-    @State var cellItems: [JourneyResultsCellItem] = []
+    @State var pages: [JourneyResultsPage]
     @State var fromLocation: JourneyLocationPicker.Value? = .station(
         ModelStubs.angelStation
     )
@@ -205,42 +271,98 @@ private struct Previewer: View {
 
     var body: some View {
         JourneyResultsView(
-            loadingState: loadingState,
-            cellItems: $cellItems,
+            pages: $pages,
             fromLocation: $fromLocation,
             toLocation: $toLocation,
             viaLocation: viaLocation,
             timeoption: timeOption,
-            onRefresh: { print("Refreshing") }
+            onRefresh: { print("Refreshing") },
+            onEarlierJourneys: { print("Earlier journeys") },
+            onLaterJourneys: { print("Later journeys") }
+        )
+    }
+}
+
+extension JourneyResultsPage {
+    fileprivate static func loadedPage() -> Self {
+        JourneyResultsPage(
+            id: "initial",
+            loadingState: .loaded,
+            cellItems: (ModelStubs.journeyResultsKingsXToWaterloo.journeys ?? [])
+                .removingDuplicates()
+                .map {
+                    JourneyResultsCellItem(
+                        journey: $0,
+                        journeyDiagramID: UUID().uuidString,
+                        isExpanded: false
+                    )
+                }
+        )
+    }
+
+    fileprivate static func loadingPage(id: String) -> Self {
+        JourneyResultsPage(
+            id: id,
+            loadingState: .loading,
+            cellItems: []
         )
     }
 }
 
 #Preview("Loaded") {
     Previewer(
-        loadingState: .loaded,
-        cellItems: (ModelStubs.journeyResultsKingsXToWaterloo.journeys ?? [])
-            .removingDuplicates()
-            .map {
-                JourneyResultsCellItem(
-                    journey: $0,
-                    journeyDiagramID: UUID().uuidString,
-                    isExpanded: false
-                )
-            }
+        pages: [
+            .loadedPage()
+        ]
     )
 }
 
-#Preview("Loading") {
-    Previewer(loadingState: .loading)
+#Preview("Loading (initial)") {
+    Previewer(
+        pages: [.loadingPage(id: "initial")]
+    )
+}
+
+#Preview("Loading (next)") {
+    Previewer(
+        pages: [
+            .loadedPage(),
+            .loadingPage(id: "next")
+        ]
+    )
+}
+
+#Preview("Loading (previous)") {
+    Previewer(
+        pages: [
+            .loadingPage(id: "previous"),
+            .loadedPage(),
+        ]
+    )
 }
 
 #Preview("Loading error") {
     Previewer(
-        loadingState: .failure(errorMessage: "Oops, something bad happened")
+        pages: [
+            JourneyResultsPage(
+                id: "initial",
+                loadingState: .failure(
+                    errorMessage: "Oops, something bad happened"
+                ),
+                cellItems: []
+            )
+        ]
     )
 }
 
 #Preview("No results") {
-    Previewer(loadingState: .loaded)
+    Previewer(
+        pages: [
+            JourneyResultsPage(
+                id: "initial",
+                loadingState: .loaded,
+                cellItems: []
+            )
+        ]
+    )
 }

@@ -1,12 +1,24 @@
 import SwiftUI
 import Models
 
+public struct JourneyResultsPage: Identifiable {
+    public let id: String
+    public var loadingState: LoadingState
+    public var cellItems: [JourneyResultsCellItem]
+
+    public init(id: String, loadingState: LoadingState, cellItems: [JourneyResultsCellItem]) {
+        self.id = id
+        self.loadingState = loadingState
+        self.cellItems = cellItems
+    }
+}
+
 public struct JourneyResultsCellItem: Identifiable {
     public var id: LineDiagramItemJourneyID { journeyDiagramID }
     public let journey: Journey
     public let journeyDiagramID: LineDiagramItemJourneyID
     public var isExpanded: Bool
-    
+
     public init(journey: Journey,
                 journeyDiagramID: LineDiagramItemJourneyID,
                 isExpanded: Bool) {

@@ -6,8 +6,7 @@ import SwiftUI
 @MainActor
 struct JourneyResultsScreen: View {
     
-    @State private var loadingState: LoadingState = .loaded
-    @State private var cellItems: [JourneyResultsCellItem] = []
+    @State private var pages: [JourneyResultsPage] = []
     @State private var hasFetchedData = false
     
     @Environment(\.transportAPI) var transportAPI
@@ -26,15 +25,16 @@ struct JourneyResultsScreen: View {
     
     var body: some View {
         JourneyResultsView(
-            loadingState: loadingState,
-            cellItems: $cellItems,
+            pages: $pages,
             fromLocation: $form.from,
             toLocation: $form.to,
             viaLocation: form.via,
             timeoption: form.timeSelection,
             onRefresh: {
                 Task { await fetchData() }
-            }
+            },
+            onEarlierJourneys: {},
+            onLaterJourneys: {}
         )
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(.journeyResultsNavigationTitle))
@@ -46,19 +46,18 @@ struct JourneyResultsScreen: View {
     }
     
     private func fetchData() async {
+        let pageID = "initial"
+        pages = [JourneyResultsPage(id: pageID, loadingState: .loading, cellItems: [])]
         do {
-            loadingState = .loading
             let itinerary = try await resolveLocationCoordinatesAndFetchItinerary()
-            makeCellItems(for: itinerary)
-            loadingState = .loaded
+            pages = [makePage(id: pageID, for: itinerary)]
             hasFetchedData = true
         } catch HTTPError.statusCode(404, _) {
-            cellItems = []
-            loadingState = .loaded
+            pages = [JourneyResultsPage(id: pageID, loadingState: .loaded, cellItems: [])]
         } catch {
-            loadingState = .failure(errorMessage: error.toUIErrorMessage())
+            pages = [JourneyResultsPage(id: pageID, loadingState: .failure(errorMessage: error.toUIErrorMessage()), cellItems: [])]
         }
-        
+
         if let savedJourney = form.toNewSavedJourney() {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
@@ -77,15 +76,16 @@ struct JourneyResultsScreen: View {
 
     }
     
-    private func makeCellItems(for itinerary: JourneyResults) {
-        cellItems = (itinerary.journeys ?? [])
+    private func makePage(id: String, for itinerary: JourneyResults) -> JourneyResultsPage {
+        let cellItems = (itinerary.journeys ?? [])
             .sanitizedAndSortedByArrivalTime(forModeIDs: modeIDS)
             .enumerated()
             .map { index, journey in
                 JourneyResultsCellItem(journey: journey,
-                                       journeyDiagramID: String(index),
+                                       journeyDiagramID: "\(id)-\(index)",
                                        isExpanded: false)
             }
+        return JourneyResultsPage(id: id, loadingState: .loaded, cellItems: cellItems)
     }
 }
 

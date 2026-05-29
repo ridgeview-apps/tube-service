@@ -255,7 +255,19 @@ public extension LocalizedStringResource {
     static var journeyResultsViaTitle: LocalizedStringResource {
         moduleResource("journey.results.via.title")
     }
-    
+
+    static var journeyResultsEarlierJourneysButton: LocalizedStringResource {
+        moduleResource("journey.results.earlier.journeys.button")
+    }
+
+    static var journeyResultsLaterJourneysButton: LocalizedStringResource {
+        moduleResource("journey.results.later.journeys.button")
+    }
+
+    static var journeyResultsPageFetchingResults: LocalizedStringResource {
+        moduleResource("journey.results.page.fetching.results")
+    }
+
     static var journeyPlannerFormErrorFieldRequired: LocalizedStringResource {
         moduleResource("journey.planner.form.error.field.required")
     }

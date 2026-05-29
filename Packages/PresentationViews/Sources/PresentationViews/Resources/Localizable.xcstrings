@@ -1016,6 +1016,39 @@
         }
       }
     },
+    "journey.results.earlier.journeys.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier journeys"
+          }
+        }
+      }
+    },
+    "journey.results.later.journeys.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later journeys"
+          }
+        }
+      }
+    },
+    "journey.results.page.fetching.results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fetching results"
+          }
+        }
+      }
+    },
     "journey.results.zero.results.title" : {
       "extractionState" : "manual",
       "localizations" : {
