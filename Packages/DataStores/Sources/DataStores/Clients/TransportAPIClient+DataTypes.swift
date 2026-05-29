@@ -12,8 +12,8 @@ public struct JourneyRequestParams: Sendable {
 
     public struct TimeOptionParam: Sendable {
         public enum OptionType: String, Sendable {
-            case arriving = "Arriving"
-            case departing = "Departing"
+            case arriving
+            case departing
         }
         public let type: OptionType
         public let queryDate: String  // yyyyMMdd
@@ -89,6 +89,22 @@ extension JourneyRequestParams.JourneyLocation {
             return value
         case .coordinate(let location):
             return "\(location.lat),\(location.lon)"
+        }
+    }
+}
+
+// MARK: - JourneyTimeAdjustment mapping
+
+extension JourneyTimeAdjustment {
+    public func toTimeOptionParam() -> JourneyRequestParams.TimeOptionParam? {
+        guard let date, let time, let timeIs else { return nil }
+        switch timeIs {
+        case JourneyRequestParams.TimeOptionParam.OptionType.arriving.rawValue:
+            return .arriving(queryDate: date, queryTime: time)
+        case JourneyRequestParams.TimeOptionParam.OptionType.departing.rawValue:
+            return .departing(queryDate: date, queryTime: time)
+        default:
+            return nil
         }
     }
 }
