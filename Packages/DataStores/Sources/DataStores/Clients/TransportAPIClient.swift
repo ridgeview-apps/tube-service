@@ -81,7 +81,7 @@ enum TransportAPIRoute {
             }
             
             if let timeOption = params.timeOption {
-                queryParams.merge(timeOption.toQueryParams) { _, newKey in newKey }
+                queryParams.merge(timeOption.toAPIQueryParams) { _, newKey in newKey }
             }
             
             return try .fromPath("/Journey/JourneyResults/\(fromParam)/to/\(toParam)",

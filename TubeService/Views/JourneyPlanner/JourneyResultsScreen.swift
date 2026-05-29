@@ -54,8 +54,8 @@ struct JourneyResultsScreen: View {
         let pageID = "initial"
         pages = [JourneyResultsPage(id: pageID, loadingState: .loading, cellItems: [])]
         do {
-            let itinerary = try await resolveLocationCoordinatesAndFetchItinerary()
-            pages = [makePage(id: pageID, for: itinerary)]
+            let results = try await resolveLocationCoordinatesAndFetchResults()
+            pages = [makePage(id: pageID, with: results)]
             hasFetchedInitialData = true
         } catch HTTPError.statusCode(404, _) {
             pages = [JourneyResultsPage(id: pageID, loadingState: .loaded, cellItems: [])]
@@ -70,19 +70,19 @@ struct JourneyResultsScreen: View {
         }
     }
     
-    private func resolveLocationCoordinatesAndFetchItinerary() async throws -> JourneyResults {
+    private func resolveLocationCoordinatesAndFetchResults() async throws -> JourneyResults {
         form = try await localSearchCompleter.resolveLocationCoordinates(forForm: form)
-        return try await fetchItinerary()
+        return try await fetchJourneyResults()
     }
     
-    private func fetchItinerary() async throws -> JourneyResults {
+    private func fetchJourneyResults() async throws -> JourneyResults {
         let requestParams = try form.toJourneyRequestParams(withModeIDs: userPreferences.journeyPlannerModeIDs)
         return try await transportAPI.fetchJourneyResults(for: requestParams).decodedModel
 
     }
     
-    private func makePage(id: String, for itinerary: JourneyResults) -> JourneyResultsPage {
-        let cellItems = (itinerary.journeys ?? [])
+    private func makePage(id: String, with results: JourneyResults) -> JourneyResultsPage {
+        let cellItems = (results.journeys ?? [])
             .sanitizedAndSortedByArrivalTime(forModeIDs: modeIDS)
             .enumerated()
             .map { index, journey in

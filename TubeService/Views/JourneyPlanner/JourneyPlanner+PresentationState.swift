@@ -126,14 +126,14 @@ extension JourneyPlannerForm {
             viaParam = .init(via)
         }
         
-        let timeOption: JourneyRequestParams.TimeOption?
+        let timeOption: JourneyRequestParams.TimeOptionParam?
         switch timeSelection.option {
         case .leaveNow:
             timeOption = nil
         case .leaveAt:
-            timeOption = .departing(timeSelection.date)
+            timeOption = .departing(at: timeSelection.date)
         case .arriveBy:
-            timeOption = .arriving(timeSelection.date)
+            timeOption = .arriving(at: timeSelection.date)
         }
         
         return .init(
