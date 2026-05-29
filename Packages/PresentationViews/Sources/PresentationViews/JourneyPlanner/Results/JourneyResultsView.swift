@@ -177,7 +177,7 @@ public struct JourneyResultsView: View {
                 Text(.journeyResultsPageFetchingResults)
                 Spacer()
             }
-            .defaultLoadingStatusStyle(verticalPadding: 12)
+            .defaultLoadingStatusStyle(verticalPadding: hasLoadedResults ? 2 : 12)
             .padding(.horizontal)
         case .failure:
             HStack {
@@ -196,26 +196,42 @@ public struct JourneyResultsView: View {
     }
 
     private var earlierJourneysButton: some View {
-        Button { onAction(.earlierJourneys) } label: {
-            Label(
-                .journeyResultsEarlierJourneysButton,
-                systemImage: "chevron.up"
-            )
+        pagerButton(
+            title: .journeyResultsEarlierJourneysButton,
+            imageName: "chevron.up"
+        ) {
+            onAction(.earlierJourneys)
         }
-        .buttonStyle(.primary)
-        .disabled(isAnyPageLoading)
-        .padding(.horizontal)
     }
 
     private var laterJourneysButton: some View {
-        Button { onAction(.laterJourneys) } label: {
-            Label(
-                .journeyResultsLaterJourneysButton,
-                systemImage: "chevron.down"
-            )
+        pagerButton(
+            title: .journeyResultsLaterJourneysButton,
+            imageName: "chevron.down"
+        ) {
+            onAction(.laterJourneys)
         }
-        .buttonStyle(.primary)
-        .disabled(isAnyPageLoading)
+    }
+    
+    private func pagerButton(
+        title: LocalizedStringResource,
+        imageName: String,
+        action: @escaping () -> Void
+    ) -> some View {
+        HStack {
+            Spacer()
+            Button {
+                action()
+            } label: {
+                Label(
+                    title,
+                    systemImage: imageName
+                )
+            }
+            .buttonStyle(.bordered)
+            .disabled(isAnyPageLoading)
+            Spacer()
+        }
         .padding(.horizontal)
     }
 
