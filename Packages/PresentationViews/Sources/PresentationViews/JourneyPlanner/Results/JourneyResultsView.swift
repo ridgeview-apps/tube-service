@@ -238,18 +238,22 @@ public struct JourneyResultsView: View {
     }
 
     private var resultsSectionHeader: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .firstTextBaseline){
             Text(.journeyPlannerResultsCount(totalCellItemCount))
-            Text(", ")
-            timeOptionText
+                .secondarySectionHeaderStyle()
             Spacer()
+            HStack(spacing: 4) {
+                Image(systemName: "clock")
+                    .imageScale(.small)
+                timeOptionText
+            }
         }
         .font(.footnote)
         .lineLimit(2)
         .foregroundStyle(.secondary)
         .padding(.horizontal)
         .padding(.vertical, 8)
-        .background(Color.defaultBackground)
+        .background(Color.defaultBackground.opacity(0.9))
     }
 
     private var timeOptionText: some View {
