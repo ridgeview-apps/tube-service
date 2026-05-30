@@ -1,3 +1,3 @@
-- Updated for iOS 26 / Liquid Glass
-- New arrivals boards for London Overground lines: Liberty, Lioness, Mildmay, Suffragette, Weaver and Windrush
-- Bug fixes and performance improvements
+- Planning journeys is now easier with a streamlined Journey Planner and new options to browse earlier or later departures.
+- Updated designs throughout the app for a cleaner, more consistent experience.
+- Bug fixes and performance improvements.
