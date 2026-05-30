@@ -38,8 +38,8 @@ public struct StationView: View {
     public var body: some View {
         List {
             Group {
-                locationSection
                 disruptionsSection
+                locationSection                
                 lineStatusSection
                 liveArrivalsSection
             }
