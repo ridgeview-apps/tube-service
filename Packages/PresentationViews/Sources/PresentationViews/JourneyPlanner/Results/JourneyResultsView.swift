@@ -240,17 +240,17 @@ public struct JourneyResultsView: View {
     private var resultsSectionHeader: some View {
         HStack(alignment: .firstTextBaseline) {
             Text(.journeyPlannerResultsCount(totalCellItemCount))
-                .secondarySectionHeaderStyle()
             Spacer()
             HStack(spacing: 4) {
                 Image(systemName: "clock")
                     .imageScale(.small)
                 timeOptionText
+                    .font(.caption)
             }
         }
-        .font(.footnote)
-        .lineLimit(2)
         .foregroundStyle(.secondary)
+        .secondarySectionHeaderStyle()
+        .lineLimit(2)
         .padding(.horizontal)
         .padding(.vertical, 8)
         .background(Color.defaultBackground.opacity(0.9))
