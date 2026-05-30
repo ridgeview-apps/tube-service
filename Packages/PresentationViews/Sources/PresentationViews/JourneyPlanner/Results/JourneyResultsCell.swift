@@ -8,7 +8,7 @@ public enum JourneyResultsAction {
     case laterJourneys
 }
 
-public struct JourneyResultsPage: Identifiable {
+public struct JourneyResultsPage: Identifiable, Hashable {
     public let id: String
     public var loadingState: LoadingState
     public var cellItems: [JourneyResultsCellItem]
@@ -20,7 +20,7 @@ public struct JourneyResultsPage: Identifiable {
     }
 }
 
-public struct JourneyResultsCellItem: Identifiable {
+public struct JourneyResultsCellItem: Identifiable, Hashable {
     public var id: LineDiagramItemJourneyID { journeyDiagramID }
     public let journey: Journey
     public let journeyDiagramID: LineDiagramItemJourneyID

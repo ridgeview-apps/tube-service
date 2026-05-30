@@ -23,77 +23,109 @@ final class JourneyResultsModel {
     // MARK: - Public
 
     func prepareForInitialFetch() {
-        pages = [JourneyResultsPage(id: Self.initialPageID, loadingState: .loading, cellItems: [])]
+        pages = [JourneyResultsPage(id: PageID.initial.description, loadingState: .loading, cellItems: [])]
         earlierTimeAdjustment = nil
         laterTimeAdjustment = nil
         pageCounter = 0
     }
 
     func setInitialPageError(_ message: String) {
-        if let index = pages.firstIndex(where: { $0.id == Self.initialPageID }) {
+        if let index = pageIndex(for: .initial) {
             pages[index].loadingState = .failure(errorMessage: message)
         }
     }
 
     func fetchInitialResults(requestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
-        if await fetchAndUpdatePage(id: Self.initialPageID, action: .initialFetch, requestParams: requestParams, modeIDs: modeIDs) {
+        if await fetchAndUpdatePage(pageID: .initial, action: .initialFetch, requestParams: requestParams, modeIDs: modeIDs) {
             hasFetchedInitialData = true
         }
     }
 
     func fetchAdjacentResults(action: JourneyResultsAction, baseRequestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
-        let timeAdjustment: JourneyTimeAdjustment?
+        let timeAdjustment: JourneyTimeAdjustment
+        let pageID: PageID
+
         switch action {
-        case .earlierJourneys: timeAdjustment = earlierTimeAdjustment
-        case .laterJourneys: timeAdjustment = laterTimeAdjustment
-        default: return
+        case .earlierJourneys:
+            guard let earlier = earlierTimeAdjustment else { return }
+            timeAdjustment = earlier
+            pageCounter += 1
+            pageID = .earlier(pageCounter)
+        case .laterJourneys:
+            guard let later = laterTimeAdjustment else { return }
+            timeAdjustment = later
+            pageCounter += 1
+            pageID = .later(pageCounter)
+        default:
+            return
         }
-        guard let timeAdjustment else { return }
 
-        pageCounter += 1
-        let isEarlier = action == .earlierJourneys
-        let pageID = "\(isEarlier ? "earlier" : "later")-\(pageCounter)"
-        let loadingPage = JourneyResultsPage(id: pageID, loadingState: .loading, cellItems: [])
+        let loadingPage = JourneyResultsPage(id: pageID.description, loadingState: .loading, cellItems: [])
 
-        if isEarlier {
+        if case .earlier = pageID {
             pages.insert(loadingPage, at: 0)
         } else {
             pages.append(loadingPage)
         }
 
         let requestParams = Self.applyTimeAdjustment(timeAdjustment, to: baseRequestParams)
-        await fetchAndUpdatePage(id: pageID, action: action, requestParams: requestParams, modeIDs: modeIDs)
+        await fetchAndUpdatePage(pageID: pageID, action: action, requestParams: requestParams, modeIDs: modeIDs)
     }
 
     // MARK: - Private
 
-    private static let initialPageID = "initial"
+    private enum PageID: CustomStringConvertible {
+        case initial
+        case earlier(Int)
+        case later(Int)
+
+        var description: String {
+            switch self {
+            case .initial: "initial"
+            case .earlier(let pageCounter): "earlier-\(pageCounter)"
+            case .later(let pageCounter): "later-\(pageCounter)"
+            }
+        }
+    }
+
+    private func pageIndex(for pageID: PageID) -> Int? {
+        pages.firstIndex(where: { $0.id == pageID.description })
+    }
 
     @discardableResult
     private func fetchAndUpdatePage(
-        id: String,
+        pageID: PageID,
         action: JourneyResultsAction,
         requestParams: JourneyRequestParams,
         modeIDs: Set<ModeID>
     ) async -> Bool {
         do {
             let results: JourneyResults = try await transportAPI.fetchJourneyResults(for: requestParams).decodedModel
-            let page = makePage(id: id, with: results, modeIDs: modeIDs)
+            let page = makePage(pageID: pageID, with: results, modeIDs: modeIDs)
             if page.cellItems.isEmpty {
-                pages.removeAll { $0.id == id }
-            } else if let index = pages.firstIndex(where: { $0.id == id }) {
+                clearPage(pageID: pageID)
+            } else if let index = pageIndex(for: pageID) {
                 pages[index] = page
             }
             updateTimeAdjustments(from: results, for: action)
             return true
         } catch HTTPError.statusCode(404, _) {
-            pages.removeAll { $0.id == id }
+            clearPage(pageID: pageID)
             return true
         } catch {
-            if let index = pages.firstIndex(where: { $0.id == id }) {
+            if let index = pageIndex(for: pageID) {
                 pages[index].loadingState = .failure(errorMessage: error.toUIErrorMessage())
             }
             return false
+        }
+    }
+
+    private func clearPage(pageID: PageID) {
+        guard let index = pageIndex(for: pageID) else { return }
+        if case .initial = pageID {
+            pages[index] = JourneyResultsPage(id: pageID.description, loadingState: .loaded, cellItems: [])
+        } else {
+            pages.remove(at: index)
         }
     }
 
@@ -110,7 +142,7 @@ final class JourneyResultsModel {
         }
     }
 
-    private func makePage(id: String, with results: JourneyResults, modeIDs: Set<ModeID>) -> JourneyResultsPage {
+    private func makePage(pageID: PageID, with results: JourneyResults, modeIDs: Set<ModeID>) -> JourneyResultsPage {
         let existingTimePairs: Set<JourneyTimePair> = Set(
             pages.flatMap { $0.cellItems.map(\.journey) }
                 .compactMap(JourneyTimePair.init)
@@ -124,10 +156,10 @@ final class JourneyResultsModel {
             .enumerated()
             .map { index, journey in
                 JourneyResultsCellItem(journey: journey,
-                                       journeyDiagramID: "\(id)-\(index)",
+                                       journeyDiagramID: "\(pageID)-\(index)",
                                        isExpanded: false)
             }
-        return JourneyResultsPage(id: id, loadingState: .loaded, cellItems: cellItems)
+        return JourneyResultsPage(id: pageID.description, loadingState: .loaded, cellItems: cellItems)
     }
 
     private static func applyTimeAdjustment(_ timeAdjustment: JourneyTimeAdjustment, to params: JourneyRequestParams) -> JourneyRequestParams {

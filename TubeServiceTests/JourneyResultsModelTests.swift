@@ -70,7 +70,7 @@ struct JourneyResultsModelTests {
     }
 
     @Test
-    func fetchInitialResults_404_removesPage() async {
+    func fetchInitialResults_404_keepsPageWithEmptyResults() async {
         let model = makeModel()
         model.prepareForInitialFetch()
         transportAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
@@ -78,7 +78,9 @@ struct JourneyResultsModelTests {
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.hasFetchedInitialData == true)
-        #expect(model.pages.isEmpty)
+        #expect(model.pages.count == 1)
+        #expect(model.pages.first?.loadingState == .loaded)
+        #expect(model.pages.first?.cellItems.isEmpty == true)
     }
 
     @Test

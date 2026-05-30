@@ -146,7 +146,7 @@ public struct JourneyResultsView: View {
                 }
                 if hasLoadedResults {
                     laterJourneysButton
-                } else if pages.allSatisfy({ $0.loadingState == .loaded }) {
+                } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
                     zeroResultsView
                 }
                 Spacer().frame(height: 30) // Bottom scroll padding
@@ -156,6 +156,7 @@ public struct JourneyResultsView: View {
                 }
             }
         }
+        .animation(.snappy, value: pages)
     }
 
     private var zeroResultsView: some View {
@@ -229,10 +230,10 @@ public struct JourneyResultsView: View {
                 )
             }
             .buttonStyle(.bordered)
-            .font(.caption)
-            .disabled(isAnyPageLoading)
+            .font(.caption)            
             Spacer()
         }
+        .disabled(isAnyPageLoading)
         .padding(.horizontal)
     }
 
