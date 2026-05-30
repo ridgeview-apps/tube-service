@@ -487,7 +487,15 @@ public extension LocalizedStringResource {
     static var mapsElizabethLinkTitle: LocalizedStringResource {
         moduleResource("maps.elizabeth.link.title")
     }
-    
+
+    static var mapsLoadingErrorInvalidPDF: LocalizedStringResource {
+        moduleResource("maps.loading.error.invalid.pdf")
+    }
+
+    static var mapsLoadingErrorTitle: LocalizedStringResource {
+        moduleResource("maps.loading.error.title")
+    }
+
     static var mapsNavigationTitle: LocalizedStringResource {
         moduleResource("maps.navigation.title")
     }

@@ -1,75 +1,92 @@
 import SwiftUI
 
 public struct MapsListView: View {
-    
-    public enum Action: Sendable {
-        case tappedLink(MapLink)
-    }
-    
-    @ScaledMetric private var dynamicTextScale: CGFloat = 1
-    
-    public let onAction: (Action) -> Void
-    
-    public init(onAction: @escaping (Action) -> Void) {
-        self.onAction = onAction
-    }
-    
+
+    public init() {}
+
     public var body: some View {
-        GeometryReader { geometry in
-            ScrollView {
-                VStack {
-                    link(for: .dayTubeMap)
-                    link(for: .nightTubeMap)
-                    link(for: .railAndTubeMap)
-                    link(for: .elizabethLineMap)
+        ScrollView {
+            VStack(spacing: 12) {
+                ForEach(MapLink.allMaps) { mapLink in
+                    mapCard(for: mapLink)
                 }
-                .padding()
-                .frame(width: geometry.size.width)
-                .frame(minHeight: geometry.size.height)
             }
+            .withDefaultMaxWidth()
+            .padding()
         }
+        .background(Color.defaultBackground)
     }
-    
-    @ViewBuilder private func link(for mapLink: MapLink) -> some View {
-        Button {
-            onAction(.tappedLink(mapLink))
-        } label: {
-            Text(mapLink.title)
+
+    private func mapCard(for mapLink: MapLink) -> some View {
+        NavigationLink(value: mapLink) {
+            HStack(spacing: 16) {
+                Image(systemName: mapLink.iconName)
+                    .font(.title2)
+                    .foregroundStyle(Color.accentColor)
+                    .frame(width: 32)
+
+                Text(mapLink.title)
+                    .font(.body)
+                    .foregroundStyle(.primary)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.tertiary)
+            }
+            .padding()
+            .cardStyle()
         }
-        .buttonStyle(.primary)
+        .buttonStyle(.plain)
     }
 }
 
 
-public struct MapLink: Identifiable, Sendable {
+public struct MapLink: Identifiable, Hashable, Sendable {
     public var id: String { url.absoluteString }
     public let title: LocalizedStringResource
+    public let iconName: String
     public let url: URL
-    
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(url)
+    }
+
+    public static func == (lhs: MapLink, rhs: MapLink) -> Bool {
+        lhs.url == rhs.url
+    }
+
+    static let allMaps: [MapLink] = [dayTubeMap, nightTubeMap, railAndTubeMap, elizabethLineMap]
+
     static let dayTubeMap = MapLink(
         title: .mapsTubeDayLinkTitle,
+        iconName: "map",
         url: URL(string: "https://content.tfl.gov.uk/standard-tube-map.pdf")!
     )
-    
+
     static let nightTubeMap = MapLink(
         title: .mapsTubeNightLinkTitle,
+        iconName: "moon.stars",
         url: URL(string: "https://content.tfl.gov.uk/standard-night-tube-map.pdf")!
     )
-    
+
     static let railAndTubeMap = MapLink(
         title: .mapsRailAndTubeLinkTitle,
+        iconName: "tram.fill",
         url: URL(string: "https://content.tfl.gov.uk/london-rail-and-tube-services-map.pdf")!
     )
-    
+
     static let elizabethLineMap = MapLink(
         title: .mapsElizabethLinkTitle,
+        iconName: "train.side.front.car",
         url: URL(string: "https://content.tfl.gov.uk/elizabeth-line-map.pdf")!
     )
 }
 
 #Preview {
     NavigationStack {
-        MapsListView { action in print(action) }
+        MapsListView()
             .navigationTitle("Maps")
     }
 }

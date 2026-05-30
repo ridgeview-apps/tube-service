@@ -1335,6 +1335,28 @@
         }
       }
     },
+    "maps.loading.error.invalid.pdf" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The file could not be read as a PDF."
+          }
+        }
+      }
+    },
+    "maps.loading.error.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to Load Map"
+          }
+        }
+      }
+    },
     "maps.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
