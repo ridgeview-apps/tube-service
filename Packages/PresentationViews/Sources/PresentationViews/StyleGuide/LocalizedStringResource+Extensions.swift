@@ -120,6 +120,10 @@ public extension LocalizedStringResource {
         moduleResource("favourites.button.title.add")
     }
     
+    static var favouritesButtonTitleAdded: LocalizedStringResource {
+        moduleResource("favourites.button.title.added")
+    }
+
     static var favouritesButtonTitleRemove: LocalizedStringResource {
         moduleResource("favourites.button.title.remove")
     }

@@ -353,6 +353,17 @@
         }
       }
     },
+    "favourites.button.title.added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Added to favourites"
+          }
+        }
+      }
+    },
     "favourites.button.title.remove" : {
       "extractionState" : "manual",
       "localizations" : {

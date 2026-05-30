@@ -238,7 +238,7 @@ public struct JourneyResultsView: View {
     }
 
     private var resultsSectionHeader: some View {
-        HStack(alignment: .firstTextBaseline){
+        HStack(alignment: .firstTextBaseline) {
             Text(.journeyPlannerResultsCount(totalCellItemCount))
                 .secondarySectionHeaderStyle()
             Spacer()
