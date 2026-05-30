@@ -9,7 +9,7 @@ private extension DateFormatter {
 }
 
 private let customDateFormatters: [DateFormatter] = [.standardT]
-private let iso8601DateFormatter = ISO8601DateFormatter()
+nonisolated(unsafe) private let iso8601DateFormatter = ISO8601DateFormatter()
 
 public extension JSONDecoder {
     

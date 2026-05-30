@@ -2,7 +2,7 @@ import Foundation
 import Observation
 
 @Observable
-public final class ObservableTimer {
+public final class ObservableTimer: @unchecked Sendable {
     public private(set) var firedAt: Date?
     public let timeInterval: TimeInterval
     

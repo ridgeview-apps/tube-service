@@ -7,7 +7,7 @@ enum RouteAnchorID: Hashable {
 // swiftlint:enable identifier_name
 
 struct RouteAnchorKey: PreferenceKey {
-    static var defaultValue: [RouteAnchorID: Anchor<CGRect>] = [:]
+    static let defaultValue: [RouteAnchorID: Anchor<CGRect>] = [:]
     static func reduce(
         value: inout [RouteAnchorID: Anchor<CGRect>],
         nextValue: () -> [RouteAnchorID: Anchor<CGRect>]

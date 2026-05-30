@@ -36,7 +36,7 @@ struct CompactDatePicker: UIViewRepresentable {
             self.selection = selection
         }
 
-        @objc func dateChanged(_ sender: UIDatePicker) {
+        @MainActor @objc func dateChanged(_ sender: UIDatePicker) {
             selection.wrappedValue = sender.date
         }
     }

@@ -52,7 +52,7 @@ public struct ExpansionInfoButton: View {
 
 public extension ExpansionInfoButton {
     
-    struct TitleState {
+    struct TitleState: Sendable {
         public let collapsed: LocalizedStringResource
         public let expanded: LocalizedStringResource
         

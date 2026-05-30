@@ -3,7 +3,7 @@ import Models
 
 // MARK: - Network API models
 
-public struct HTTPResponseErrorModel: Decodable {
+public struct HTTPResponseErrorModel: Decodable, Sendable {
     public let message: String?
 }
 

@@ -6,7 +6,7 @@ public extension Settings {
     
     // MARK: - Contact us
     
-    struct ContactUs: Equatable {
+    struct ContactUs: Equatable, Sendable {
         public let emailAddress: String
         public let appVersion: String
         public let appName: String
@@ -35,7 +35,7 @@ public extension Settings {
     
     // MARK: - Editable values
     
-    struct EditableValues: Equatable {
+    struct EditableValues: Equatable, Sendable {
         public var journeyPlannerModesSelection: Set<ModeID>
         
         var allJourneyPlannerModesSelected: Bool {
