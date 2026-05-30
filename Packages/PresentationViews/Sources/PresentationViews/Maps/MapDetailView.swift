@@ -56,7 +56,7 @@ public struct MapDetailView: View {
         if let cached = MapCache.loadCachedDocument(for: mapLink) {
             pdfDocument = cached
             if MapCache.isStale(mapLink) {
-                try? await MapCache.downloadAndCache(for: mapLink)
+                _ = try? await MapCache.downloadAndCache(for: mapLink)
             }
             return
         }
