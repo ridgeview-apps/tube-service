@@ -110,6 +110,7 @@ public struct LineStatusDetailView: View {
     
     private var favouritesButton: some View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
+            .padding(.bottom, 30)
     }
     
     private var xPostsSection: some View {
