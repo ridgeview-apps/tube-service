@@ -47,11 +47,11 @@ public struct FavouritesButton: View {
                 toggleFavourite()
             }
         }
-        .sensoryFeedback(.impact(flexibility: .solid, intensity: 0.7), trigger: isSelected) { oldValue, newValue in
+        .sensoryFeedback(.success, trigger: isSelected) { oldValue, newValue in
             let wasAdded = !oldValue && newValue
             return wasAdded
         }
-        .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.4), trigger: isSelected) { oldValue, newValue in
+        .sensoryFeedback(.warning, trigger: isSelected) { oldValue, newValue in
             let wasRemoved = oldValue && !newValue
             return wasRemoved
         }
