@@ -36,11 +36,13 @@ public struct LineStatusDetailView: View {
                     statusHeaderCard
                 } header: {
                     loadingStatusView
+                } footer: {
+                    favouritesButton
                 }
                 Section {
                     xPostsSection
+                        .padding(.bottom, 30)
                 }
-                favouritesButton
             }
             .withDefaultMaxWidth()
             .padding(.horizontal)
@@ -110,7 +112,6 @@ public struct LineStatusDetailView: View {
     
     private var favouritesButton: some View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
-            .padding(.bottom, 30)
     }
     
     private var xPostsSection: some View {
