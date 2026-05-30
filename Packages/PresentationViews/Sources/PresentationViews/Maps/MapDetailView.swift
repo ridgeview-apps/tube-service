@@ -7,6 +7,7 @@ public struct MapDetailView: View {
 
     @State private var pdfDocument: PDFDocument?
     @State private var loadingError: String?
+    @State private var isRefreshing = false
 
     public init(mapLink: MapLink) {
         self.mapLink = mapLink
@@ -29,21 +30,54 @@ public struct MapDetailView: View {
         }
         .navigationTitle(Text(mapLink.title))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if pdfDocument != nil {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        Task { await refreshPDF() }
+                    } label: {
+                        if isRefreshing {
+                            ProgressView()
+                                .controlSize(.small)
+                        } else {
+                            Image(systemName: "arrow.clockwise")
+                        }
+                    }
+                    .disabled(isRefreshing)
+                }
+            }
+        }
         .task {
             await loadPDF()
         }
     }
 
     private func loadPDF() async {
-        do {
-            let (data, _) = try await URLSession.shared.data(from: mapLink.url)
-            if let document = PDFDocument(data: data) {
-                pdfDocument = document
-            } else {
-                loadingError = String(localized: .mapsLoadingErrorInvalidPDF)
+        if let cached = MapCache.loadCachedDocument(for: mapLink) {
+            pdfDocument = cached
+            if MapCache.isStale(mapLink) {
+                try? await MapCache.downloadAndCache(for: mapLink)
             }
+            return
+        }
+        await downloadPDF()
+    }
+
+    private func refreshPDF() async {
+        isRefreshing = true
+        await downloadPDF()
+        isRefreshing = false
+    }
+
+    private func downloadPDF() async {
+        do {
+            let document = try await MapCache.downloadAndCache(for: mapLink)
+            pdfDocument = document
+            loadingError = nil
         } catch {
-            loadingError = error.localizedDescription
+            if pdfDocument == nil {
+                loadingError = error.localizedDescription
+            }
         }
     }
 }

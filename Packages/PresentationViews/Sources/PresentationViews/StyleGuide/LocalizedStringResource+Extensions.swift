@@ -484,6 +484,10 @@ public extension LocalizedStringResource {
         moduleResource("location.services.allow.access.footer.title")
     }
     
+    static var mapsAvailableOffline: LocalizedStringResource {
+        moduleResource("maps.available.offline")
+    }
+
     static var mapsElizabethLinkTitle: LocalizedStringResource {
         moduleResource("maps.elizabeth.link.title")
     }

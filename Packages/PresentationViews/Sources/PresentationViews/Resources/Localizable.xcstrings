@@ -1324,6 +1324,17 @@
         }
       }
     },
+    "maps.available.offline" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Available offline"
+          }
+        }
+      }
+    },
     "maps.elizabeth.link.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -2,6 +2,8 @@ import SwiftUI
 
 public struct MapsListView: View {
 
+    @State private var cachedMapIDs: Set<String> = []
+
     public init() {}
 
     public var body: some View {
@@ -15,6 +17,9 @@ public struct MapsListView: View {
             .padding()
         }
         .background(Color.defaultBackground)
+        .onAppear {
+            cachedMapIDs = Set(MapLink.allMaps.filter { MapCache.isCached($0) }.map(\.id))
+        }
     }
 
     private func mapCard(for mapLink: MapLink) -> some View {
@@ -25,9 +30,17 @@ public struct MapsListView: View {
                     .foregroundStyle(Color.accentColor)
                     .frame(width: 32)
 
-                Text(mapLink.title)
-                    .font(.body)
-                    .foregroundStyle(.primary)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(mapLink.title)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+
+                    if cachedMapIDs.contains(mapLink.id) {
+                        Label(.mapsAvailableOffline, systemImage: "checkmark.circle.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                }
 
                 Spacer()
 
