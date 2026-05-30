@@ -61,7 +61,7 @@ public struct JourneyResultsView: View {
             onAction(.initialFetch)
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
-        .journeyPlannerFullWidthBackground()
+        .defaultMaxWidthWithFullBackground()
     }
 
     private var journeyTitleView: some View {

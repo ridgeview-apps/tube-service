@@ -46,8 +46,7 @@ public struct StationView: View {
             .lineGroupListRowStyle()
         }
         .listStyle(.plain)
-        .defaultScrollContentBackgroundColor()
-        .withDefaultMaxWidth()
+        .defaultMaxWidthWithFullBackground()
         .background(Color.defaultBackground)
         .withHardScrollEdgeEffectStyle()
     }

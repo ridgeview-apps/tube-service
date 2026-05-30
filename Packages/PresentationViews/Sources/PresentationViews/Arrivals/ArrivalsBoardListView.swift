@@ -58,7 +58,7 @@ public struct ArrivalsBoardListView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
         .withHardScrollEdgeEffectStyle()
     }
 

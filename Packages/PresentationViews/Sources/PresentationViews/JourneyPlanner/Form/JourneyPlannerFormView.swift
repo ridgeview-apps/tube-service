@@ -41,7 +41,7 @@ public struct JourneyPlannerFormView: View {
         .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
         .scrollBounceBehavior(.basedOnSize)
-        .journeyPlannerFullWidthBackground()
+        .defaultMaxWidthWithFullBackground()
     }
 
     private var formSection: some View {
@@ -156,7 +156,7 @@ public struct JourneyPlannerFormView: View {
 }
 
 extension View {
-    func journeyPlannerFullWidthBackground() -> some View {
+    func defaultMaxWidthWithFullBackground() -> some View {
         ZStack {
             Color
                 .defaultBackground

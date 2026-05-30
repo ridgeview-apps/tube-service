@@ -48,7 +48,7 @@ public struct LineStatusListView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
-        .defaultScrollContentBackgroundColor()
+        .background(Color.defaultBackground)
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)

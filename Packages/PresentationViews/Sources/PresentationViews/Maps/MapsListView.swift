@@ -13,10 +13,9 @@ public struct MapsListView: View {
                     mapCard(for: mapLink)
                 }
             }
-            .withDefaultMaxWidth()
             .padding()
         }
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
         .onAppear {
             cachedMapIDs = Set(MapLink.allMaps.filter { MapCache.isCached($0) }.map(\.id))
         }

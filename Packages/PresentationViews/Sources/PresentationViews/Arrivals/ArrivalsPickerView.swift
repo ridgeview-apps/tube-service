@@ -50,7 +50,7 @@ public struct ArrivalsPickerView: View {
             }
         }
         .listStyle(.plain)
-        .defaultScrollContentBackgroundColor()
+        .background(Color.defaultBackground)
         .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
