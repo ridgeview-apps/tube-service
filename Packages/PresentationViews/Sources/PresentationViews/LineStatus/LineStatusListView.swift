@@ -159,8 +159,10 @@ public struct LineStatusListView: View {
     private var filterOptionsHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
             filterOptionsPicker
-            headerTitleView
-            datePickerView
+            HStack {
+                headerTitleView
+                datePickerView
+            }
         }
         .foregroundStyle(.foreground)
         .padding(.vertical, 12)
@@ -198,7 +200,7 @@ public struct LineStatusListView: View {
             Image(systemName: "circle.inset.filled")
                 .pulsatingSymbol()
         case .tomorrow, .thisWeekend, .future:
-            EmptyView()
+            Image(systemName: "calendar")
         }
     }
     
