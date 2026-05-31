@@ -57,16 +57,16 @@ extension AppDataStore {
 
 extension TransportAPIClient {
     static let live = TransportAPIClient(
-        baseURL: AppConfig.shared.transportAPI.baseURL,
-        appID: AppConfig.shared.transportAPI.appID,
-        appKey: AppConfig.shared.transportAPI.appKey
+        baseURL: AppConfig.main.transportAPI.baseURL,
+        appID: AppConfig.main.transportAPI.appID,
+        appKey: AppConfig.main.transportAPI.appKey
     )
 }
 
 extension SystemStatusAPIClient {
     static let live = SystemStatusAPIClient(
-        baseURL: AppConfig.shared.systemStatusAPI.baseURL,
-        fileName: AppConfig.shared.systemStatusAPI.fileName
+        baseURL: AppConfig.main.systemStatusAPI.baseURL,
+        fileName: AppConfig.main.systemStatusAPI.fileName
     )
 }
 

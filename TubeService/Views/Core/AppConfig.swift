@@ -22,7 +22,7 @@ extension AppConfig {
     
     // Load config from Main Info plist
     
-    static let shared: AppConfig = {
+    static let main: AppConfig = {
         let config = Bundle.main.loadInfoPlistConfig(forKey: "appConfig")
         
         let appConfig = AppConfig(
