@@ -2,6 +2,11 @@ import CoreLocation
 import Models
 import Foundation
 
+public protocol ReverseGeocoderType: Sendable {
+    func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark]
+}
+
+extension CLGeocoder: ReverseGeocoderType {}
 
 @Observable
 @MainActor
@@ -10,7 +15,7 @@ public final class LocationDataStore: NSObject {
     private let locationManager: LocationManagerType
     private let locationManagerDelegate = LocationManagerDelegate()
     private let stations: StationsDataStore
-    private let geocoder: CLGeocoder
+    private let geocoder: ReverseGeocoderType
     
     public enum DetectionState {
         case detecting
@@ -26,6 +31,7 @@ public final class LocationDataStore: NSObject {
     
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false
+    private var locationNameUpdateTask: Task<Void, Never>?
     
     public var isAuthorized: Bool {
         locationManager.isAuthorized
@@ -36,17 +42,18 @@ public final class LocationDataStore: NSObject {
     }
     
     public init(locationManager: LocationManagerType,
-                stations: StationsDataStore) {
+                stations: StationsDataStore,
+                geocoder: ReverseGeocoderType = CLGeocoder()) {
         self.locationManager = locationManager
         self.authorizationStatus = locationManager.authorizationStatus
         self.stations = stations
-        self.geocoder = CLGeocoder()
+        self.geocoder = geocoder
         super.init()
         
         locationManagerDelegate.onAction = { [weak self] action in
             self?.handleLocationManagerDelegateAction(action)
         }
-        (locationManager as? CLLocationManager)?.delegate = locationManagerDelegate
+        locationManager.setDelegate(locationManagerDelegate)
     }
     
     public func promptForPermissions() {
@@ -61,10 +68,10 @@ public final class LocationDataStore: NSObject {
         
         self.forceRefreshLocationName = forceRefreshLocationName
         detectionState = .detecting
-        locationManager.requestLocation()        
+        locationManager.requestLocation()
     }
         
-    public func startDetectingCurrentLocationIfAuthorized() {
+    public func startLocationUpdatesIfAuthorized() {
         guard isAuthorized else {
             return
         }
@@ -72,31 +79,37 @@ public final class LocationDataStore: NSObject {
         locationManager.startMonitoringSignificantLocationChanges()
     }
     
-    public func stopDetectingCurrentLocation() {
+    public func stopLocationUpdates() {
         locationManager.stopMonitoringSignificantLocationChanges()
     }
     
-    private func updateCurrentLocation(to newValue: LocationCoordinate) {
+    private func processLocationUpdate(_ newValue: LocationCoordinate) {
         let oldValue = currentLocationCoordinate
         currentLocationCoordinate = newValue
-        if shouldUpdateLocationName(oldValue: oldValue, newValue: newValue) {
-            updateCurrentLocationName()
+        if shouldRefreshLocationName(forOldCoordinate: oldValue, newCoordinate: newValue) {
+            refreshLocationNameForChangedCoordinate()
         }
         updateNearbyStations()
     }
     
-    private func updateCurrentLocationName() {
+    private func refreshLocationNameForChangedCoordinate() {
         guard let currentLocationCoordinate else { return }
-        Task {
+        locationNameUpdateTask?.cancel()
+        locationNameUpdateTask = Task { [weak self] in
+            guard let self else { return }
             do {
-                try await updateCurrentLocationName(for: currentLocationCoordinate)
+                try await reverseGeocodeLocationName(for: currentLocationCoordinate)
             } catch {
-                print("Failed to update location name for new location")
+                if Task.isCancelled {
+                    return
+                }
+                print("Failed to update location name for new location: \(error)")
             }
         }
     }
     
-    private func shouldUpdateLocationName(oldValue: LocationCoordinate?, newValue: LocationCoordinate) -> Bool {
+    private func shouldRefreshLocationName(forOldCoordinate oldValue: LocationCoordinate?,
+                                           newCoordinate newValue: LocationCoordinate) -> Bool {
         if forceRefreshLocationName {
             return true
         }
@@ -114,8 +127,16 @@ public final class LocationDataStore: NSObject {
         return locationHasChangedSignificantly && nameUpdatedOverOneMinuteAgo
     }
     
-    private func updateCurrentLocationName(for newLocation: LocationCoordinate) async throws {
+    private func reverseGeocodeLocationName(for newLocation: LocationCoordinate) async throws {
+        guard currentLocationCoordinate == newLocation else {
+            return
+        }
+        
         guard let placemark = try await geocoder.reverseGeocodeLocation(newLocation.toCLLocation()).first else {
+            return
+        }
+        
+        guard currentLocationCoordinate == newLocation else {
             return
         }
         
@@ -132,7 +153,9 @@ public final class LocationDataStore: NSObject {
         nearbyStations = stations.allStations.nearestStations(to: currentLocationCoordinate)
     }
     
-    private func clearAllLocationValues() {
+    private func resetLocationState() {
+        locationNameUpdateTask?.cancel()
+        locationNameUpdateTask = nil
         currentLocationCoordinate = nil
         currentLocationName = nil
         currentLocationNameLastUpdated = .distantPast
@@ -196,12 +219,12 @@ private extension LocationDataStore {
     
     func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
         switch action {
-        case .didChangeAuthorization(let manager):
-            authorizationStatus = manager.authorizationStatus
-            startDetectingCurrentLocationIfAuthorized() // i.e. CHANGED to authorized (e.g. so permissions have just been granted)
+        case .didChangeAuthorization:
+            authorizationStatus = locationManager.authorizationStatus
+            startLocationUpdatesIfAuthorized() // i.e. CHANGED to authorized (e.g. so permissions have just been granted)
             
             if !isAuthorized {
-                clearAllLocationValues()
+                resetLocationState()
             }
         case .didFailWithError(_, let error):
             detectionState = .failed(error)
@@ -210,7 +233,7 @@ private extension LocationDataStore {
                 return
             }
             detectionState = .detected
-            updateCurrentLocation(to: location)
+            processLocationUpdate(location)
         }
     }
 }

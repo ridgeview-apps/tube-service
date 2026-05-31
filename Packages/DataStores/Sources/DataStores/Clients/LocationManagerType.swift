@@ -2,9 +2,9 @@ import CoreLocation
 
 // MARK: - Data types
 
-public protocol LocationManagerType {
-    var location: CLLocation? { get }
+public protocol LocationManagerType: Sendable {
     var authorizationStatus: CLAuthorizationStatus { get }
+    func setDelegate(_ delegate: CLLocationManagerDelegate)
     func requestLocation()
     func requestWhenInUseAuthorization()
     func startMonitoringSignificantLocationChanges()
@@ -26,3 +26,9 @@ public extension LocationManagerType {
 }
 
 extension CLLocationManager: LocationManagerType {}
+
+public extension CLLocationManager {
+    func setDelegate(_ delegate: CLLocationManagerDelegate) {
+        self.delegate = delegate
+    }
+}

@@ -24,7 +24,7 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
             }
             .onDisappear {
                 isVisible = false
-                location.stopDetectingCurrentLocation()
+                location.stopLocationUpdates()
             }
             .onSceneDidBecomeActive {
                 if isVisible {
@@ -32,7 +32,7 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
                 }
             }
             .onSceneDidBecomeInactive {
-                location.stopDetectingCurrentLocation()
+                location.stopLocationUpdates()
             }
             .onChange(of: location.currentLocationCoordinate) { _, updatedValue in
                 action(.coordinateChanged(updatedValue))
@@ -46,7 +46,7 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
     }
     
     private func resumeLocationDetection() {
-        location.startDetectingCurrentLocationIfAuthorized()
+        location.startLocationUpdatesIfAuthorized()
     }
 }
 
