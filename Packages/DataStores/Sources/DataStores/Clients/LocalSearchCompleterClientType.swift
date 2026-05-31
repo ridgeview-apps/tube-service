@@ -1,17 +1,22 @@
 import Foundation
 @preconcurrency import MapKit
+import Models
 
-protocol LocalSearchCompleterClientType: AnyObject, Sendable {
+public protocol LocalSearchCompleterClientType: AnyObject, Sendable {
     var queryFragment: String { get set }
     var resultTypes: MKLocalSearchCompleter.ResultType { get set }
-    var results: [MKLocalSearchCompletion] { get }
+    var searchResults: [LocationName] { get }
 
     func cancel()
     func setDelegate(_ delegate: MKLocalSearchCompleterDelegate)
 }
 
 extension MKLocalSearchCompleter: LocalSearchCompleterClientType {
-    func setDelegate(_ delegate: MKLocalSearchCompleterDelegate) {
+    public var searchResults: [LocationName] {
+        results.map { .init(title: $0.title, subtitle: $0.subtitle) }
+    }
+
+    public func setDelegate(_ delegate: MKLocalSearchCompleterDelegate) {
         self.delegate = delegate
     }
 }

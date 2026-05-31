@@ -1,3 +1,4 @@
+import DataStores
 import PresentationViews
 
 extension LocalSearchResultsStore {

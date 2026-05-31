@@ -3,36 +3,29 @@ import Foundation
 import Models
 import Observation
 
-enum LocalSearchError: Error {
+public enum LocalSearchError: Error {
     case coordinateNotFound
-}
-
-extension LocationName {
-    init(searchCompletion: MKLocalSearchCompletion) {
-        self = .init(title: searchCompletion.title,
-                     subtitle: searchCompletion.subtitle)
-    }
 }
 
 @MainActor
 @Observable
-final class LocalSearchResultsStore {
+public final class LocalSearchResultsStore {
     
-    private(set) var results: [LocationName] = []
-    private(set) var lastErrorMessage: String?
+    public private(set) var results: [LocationName] = []
+    public private(set) var lastErrorMessage: String?
     
     private let completerClient: LocalSearchCompleterClientType
     private let searchCompleterDelegate = LocalSearchCompleterDelegate()
     
-    static let london = MKCoordinateRegion(center: .init(latitude: 51.5007282,
-                                                         longitude: -0.1246263),
-                                                         span: .init(latitudeDelta: 50000,
-                                                                     longitudeDelta: 50000))
+    public static let london = MKCoordinateRegion(center: .init(latitude: 51.5007282,
+                                                                longitude: -0.1246263),
+                                                  span: .init(latitudeDelta: 50000,
+                                                              longitudeDelta: 50000))
     
-    let searchRegion: MKCoordinateRegion
+    public let searchRegion: MKCoordinateRegion
     
-    init(completerClient: LocalSearchCompleterClientType = MKLocalSearchCompleter(),
-         searchRegion: MKCoordinateRegion? = nil) {
+    public init(completerClient: LocalSearchCompleterClientType = MKLocalSearchCompleter(),
+                searchRegion: MKCoordinateRegion? = nil) {
         self.completerClient = completerClient
         self.searchRegion = searchRegion ?? Self.london
         completerClient.resultTypes = [.pointOfInterest, .address]
@@ -43,13 +36,13 @@ final class LocalSearchResultsStore {
         completerClient.setDelegate(searchCompleterDelegate)
     }
     
-    func searchForPlaces(matching searchTerm: String) {
+    public func searchForPlaces(matching searchTerm: String) {
         results = []
         completerClient.cancel()
         completerClient.queryFragment = searchTerm
     }
     
-    func locationCoordinate(for searchResult: LocationName) async throws -> LocationCoordinate {
+    public func locationCoordinate(for searchResult: LocationName) async throws -> LocationCoordinate {
         let request: MKLocalSearch.Request
         
         request = MKLocalSearch.Request()
@@ -71,14 +64,15 @@ final class LocalSearchResultsStore {
 
 private class LocalSearchCompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
     enum Action {
-        case didUpdateResults([MKLocalSearchCompletion])
+        case didUpdateResults
         case didFailWithError(Error)
     }
     
     var onAction: ((Action) -> Void)?
     
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        onAction?(.didUpdateResults(completer.results))
+        _ = completer
+        onAction?(.didUpdateResults)
     }
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
@@ -90,14 +84,10 @@ private extension LocalSearchResultsStore {
     
     func handleLocalSearchCompleterDelegateAction(_ action: LocalSearchCompleterDelegate.Action) {
         switch action {
-        case .didUpdateResults(let rawResults):
+        case .didUpdateResults:
             lastErrorMessage = nil
             
-            results = rawResults
-                        .map {
-                            LocationName(title: $0.title, subtitle: $0.subtitle)
-                        }
-                        .removingDuplicates()
+            results = completerClient.searchResults.removingDuplicates()
             
         case .didFailWithError(let error):
             lastErrorMessage = error.localizedDescription
