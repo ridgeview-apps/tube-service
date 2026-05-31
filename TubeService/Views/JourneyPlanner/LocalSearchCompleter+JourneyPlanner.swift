@@ -1,6 +1,6 @@
 import PresentationViews
 
-extension LocalSearchCompleter {
+extension LocalSearchResultsStore {
 
     func resolveLocationCoordinates(forForm form: JourneyPlannerForm) async throws -> JourneyPlannerForm {
 

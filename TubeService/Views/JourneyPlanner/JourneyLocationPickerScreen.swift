@@ -31,7 +31,7 @@ extension JourneyLocationPickerScreen {
 
 struct JourneyLocationPickerScreen: View {
     
-    @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    @Environment(LocalSearchResultsStore.self) var localSearchResults
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
     @Environment(\.dismiss) var dismiss
@@ -77,7 +77,7 @@ struct JourneyLocationPickerScreen: View {
         .detectsLocationChanges {
             handleLocationChangeAction($0)
         }
-        .onChange(of: localSearchCompleter.results) { _, newValue in
+        .onChange(of: localSearchResults.results) { _, newValue in
             resultsAggregator.localSearchResults = newValue
         }
         .task {
@@ -123,7 +123,7 @@ struct JourneyLocationPickerScreen: View {
     }
     
     private func searchForLocations(matching searchTerm: String) {
-        localSearchCompleter.searchForPlaces(matching: searchTerm)
+        localSearchResults.searchForPlaces(matching: searchTerm)
         resultsAggregator.stations = stations.filteredStations(matchingName: searchTerm)
         resultsAggregator.nationalRailStations = stations.filteredNationalRailStations(matching: searchTerm)
     }

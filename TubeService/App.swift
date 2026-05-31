@@ -34,7 +34,7 @@ extension View {
             .environment(appData.lineStatus)
             .environment(appData.stations)
             .environment(appData.location)
-            .environment(appData.localSearchCompleter)
+            .environment(appData.localSearchResults)
             .environment(appData.systemStatus)
     }
 }

@@ -8,7 +8,7 @@ struct JourneyResultsScreen: View {
 
     @State private var model: JourneyResultsModel
 
-    @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    @Environment(LocalSearchResultsStore.self) var localSearchResults
 
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
     private var userPreferences: UserPreferences = .default
@@ -51,7 +51,7 @@ struct JourneyResultsScreen: View {
         model.prepareForInitialFetch()
 
         do {
-            form = try await localSearchCompleter.resolveLocationCoordinates(forForm: form)
+            form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
             let requestParams = try form.toJourneyRequestParams(withModeIDs: modeIDs)
             await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         } catch {

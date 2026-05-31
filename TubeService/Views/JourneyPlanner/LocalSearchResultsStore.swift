@@ -16,12 +16,12 @@ extension LocationName {
 
 @MainActor
 @Observable
-final class LocalSearchCompleter: NSObject {
+final class LocalSearchResultsStore {
     
     private(set) var results: [LocationName] = []
-    private(set) var errorMessage: String?
+    private(set) var lastErrorMessage: String?
     
-    private let searchCompleter: MKLocalSearchCompleter = MKLocalSearchCompleter()
+    private let completerClient: LocalSearchCompleterClientType
     private let searchCompleterDelegate = LocalSearchCompleterDelegate()
     
     static let london = MKCoordinateRegion(center: .init(latitude: 51.5007282,
@@ -31,21 +31,22 @@ final class LocalSearchCompleter: NSObject {
     
     let searchRegion: MKCoordinateRegion
     
-    init(searchRegion: MKCoordinateRegion? = nil) {
+    init(completerClient: LocalSearchCompleterClientType = MKLocalSearchCompleter(),
+         searchRegion: MKCoordinateRegion? = nil) {
+        self.completerClient = completerClient
         self.searchRegion = searchRegion ?? Self.london
-        super.init()
-        searchCompleter.resultTypes = [.pointOfInterest, .address]
+        completerClient.resultTypes = [.pointOfInterest, .address]
 
         searchCompleterDelegate.onAction = { [weak self] action in
             self?.handleLocalSearchCompleterDelegateAction(action)
         }
-        searchCompleter.delegate = searchCompleterDelegate
+        completerClient.setDelegate(searchCompleterDelegate)
     }
     
     func searchForPlaces(matching searchTerm: String) {
         results = []
-        searchCompleter.cancel()
-        searchCompleter.queryFragment = searchTerm
+        completerClient.cancel()
+        completerClient.queryFragment = searchTerm
     }
     
     func locationCoordinate(for searchResult: LocationName) async throws -> LocationCoordinate {
@@ -70,37 +71,36 @@ final class LocalSearchCompleter: NSObject {
 
 private class LocalSearchCompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
     enum Action {
-        case didUpdateResults(MKLocalSearchCompleter)
-        case didFailWithError(MKLocalSearchCompleter, Error)
+        case didUpdateResults([MKLocalSearchCompletion])
+        case didFailWithError(Error)
     }
     
     var onAction: ((Action) -> Void)?
     
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        onAction?(.didUpdateResults(completer))
+        onAction?(.didUpdateResults(completer.results))
     }
     
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
-        onAction?(.didFailWithError(completer, error))
+        onAction?(.didFailWithError(error))
     }
 }
 
-private extension LocalSearchCompleter {
+private extension LocalSearchResultsStore {
     
     func handleLocalSearchCompleterDelegateAction(_ action: LocalSearchCompleterDelegate.Action) {
         switch action {
-        case .didUpdateResults(let completer):
-            errorMessage = nil
+        case .didUpdateResults(let rawResults):
+            lastErrorMessage = nil
             
-            results = completer
-                        .results
+            results = rawResults
                         .map {
                             LocationName(title: $0.title, subtitle: $0.subtitle)
                         }
                         .removingDuplicates()
             
-        case .didFailWithError(_, let error):
-            errorMessage = error.localizedDescription
+        case .didFailWithError(let error):
+            lastErrorMessage = error.localizedDescription
         }
     }
 }

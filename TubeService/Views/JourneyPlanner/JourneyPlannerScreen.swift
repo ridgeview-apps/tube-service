@@ -20,7 +20,7 @@ struct JourneyPlannerScreen: View {
     @Environment(\.transportAPI) var transportAPI
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
-    @Environment(LocalSearchCompleter.self) var localSearchCompleter
+    @Environment(LocalSearchResultsStore.self) var localSearchResults
     @Environment(\.showSheet) var showSheet
     
     @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)

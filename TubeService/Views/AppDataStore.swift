@@ -13,7 +13,7 @@ final class AppDataStore {
     private(set) var lineStatus: LineStatusDataStore
     private(set) var stations: StationsDataStore
     private(set) var location: LocationDataStore
-    private(set) var localSearchCompleter: LocalSearchCompleter
+    private(set) var localSearchResults: LocalSearchResultsStore
     private(set) var systemStatus: SystemStatusDataStore
     
     init(
@@ -21,7 +21,7 @@ final class AppDataStore {
         systemStatusAPI: SystemStatusAPIClientType,
         userDefaults: UserDefaults,
         locationManager: LocationManagerType,
-        localSearchCompleter: LocalSearchCompleter = .init(),
+        localSearchResults: LocalSearchResultsStore = .init(),
         now: @escaping () -> Date = { Date() }
     ) {
         self.transportAPI = transportAPI
@@ -34,7 +34,7 @@ final class AppDataStore {
         self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
-        self.localSearchCompleter = localSearchCompleter
+        self.localSearchResults = localSearchResults
         self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
     }
     
