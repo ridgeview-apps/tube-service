@@ -172,9 +172,9 @@ private extension CLPlacemark {
 
 private class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
     enum Action {
-        case didChangeAuthorization(CLLocationManager)
-        case didFailWithError(CLLocationManager, Error)
-        case didUpdateLocations(CLLocationManager, [CLLocation])
+        case didChangeAuthorization(LocationManagerType)
+        case didFailWithError(LocationManagerType, Error)
+        case didUpdateLocations(LocationManagerType, [CLLocation])
     }
     
     var onAction: ((Action) -> Void)?
