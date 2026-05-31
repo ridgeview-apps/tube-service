@@ -11,7 +11,7 @@ extension View {
         systemStatusAPI: StubSystemStatusAPIClient = StubSystemStatusAPIClient(),
         userDefaults: UserDefaults = .standard,
         locationManager: LocationManagerType = StubLocationManager(),
-        localSearchResults: LocalSearchResultsStore = .init(),
+        localSearchCompleterClient: LocalSearchCompleterClientType = StubLocalSearchCompleterClient(),
         now: @escaping () -> Date = { Date() }
     ) -> some View {
         
@@ -20,7 +20,7 @@ extension View {
             systemStatusAPI: systemStatusAPI,
             userDefaults: userDefaults,
             locationManager: locationManager,
-            localSearchResults: localSearchResults,
+            localSearchCompleterClient: localSearchCompleterClient,
             now: now
         )
         return

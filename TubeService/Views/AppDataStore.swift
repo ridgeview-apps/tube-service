@@ -1,6 +1,7 @@
 import CoreLocation
 import DataStores
 import Foundation
+@preconcurrency import MapKit
 
 @MainActor
 @Observable
@@ -21,7 +22,7 @@ final class AppDataStore {
         systemStatusAPI: SystemStatusAPIClientType,
         userDefaults: UserDefaults,
         locationManager: LocationManagerType,
-        localSearchResults: LocalSearchResultsStore = .init(),
+        localSearchCompleterClient: LocalSearchCompleterClientType,
         now: @escaping () -> Date = { Date() }
     ) {
         self.transportAPI = transportAPI
@@ -34,7 +35,7 @@ final class AppDataStore {
         self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
         self.location = LocationDataStore(locationManager: locationManager,
                                           stations: stations)
-        self.localSearchResults = localSearchResults
+        self.localSearchResults = LocalSearchResultsStore(completerClient: localSearchCompleterClient)
         self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
     }
     
@@ -49,7 +50,8 @@ extension AppDataStore {
         transportAPI: TransportAPIClient.live,
         systemStatusAPI: SystemStatusAPIClient.live,
         userDefaults: .standard,
-        locationManager: CLLocationManager()
+        locationManager: CLLocationManager(),
+        localSearchCompleterClient: MKLocalSearchCompleter()
     )
 }
 
@@ -74,7 +76,8 @@ extension AppDataStore {
         .init(transportAPI: StubTransportAPIClient(),
               systemStatusAPI: StubSystemStatusAPIClient(),
               userDefaults: .standard,
-              locationManager: StubLocationManager())
+              locationManager: StubLocationManager(),
+              localSearchCompleterClient: StubLocalSearchCompleterClient())
     }
 }
 #endif
