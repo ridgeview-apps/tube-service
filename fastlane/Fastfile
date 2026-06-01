@@ -79,7 +79,7 @@ lane :build do
     configuration: "Release",
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     skip_profile_detection: true,
-    export_options: "./Config/CI/ExportOptions/ExportOptions-#{ENV["XCODE_CONFIG"]}.plist",
+    export_method: "app-store"
   )
 end
 
