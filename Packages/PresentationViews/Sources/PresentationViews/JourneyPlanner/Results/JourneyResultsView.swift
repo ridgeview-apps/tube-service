@@ -11,13 +11,6 @@ public struct JourneyResultsView: View {
     public let timeOption: JourneyTimePickerSelection
     public let onAction: (JourneyResultsAction) -> Void
 
-    @State private var hasSwappedLocations = false
-    @Namespace private var animationNamespace
-
-    private let timestampFormatter: DateFormatter = Formatter.relative(
-        dateStyle: .medium,
-        timeStyle: .short
-    )
 
     public init(
         pages: Binding<[JourneyResultsPage]>,
@@ -45,9 +38,7 @@ public struct JourneyResultsView: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Divider()
-            journeyTitleView
-            Divider()
+            journeyHeaderView
             ScrollView {
                 contentView
             }
@@ -63,68 +54,17 @@ public struct JourneyResultsView: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .defaultMaxWidthWithFullBackground()
     }
-
-    private var journeyTitleView: some View {
-        VStack(alignment: .leading) {
-            if let fromLocation {
-                JourneyLocationTitleLabel(value: fromLocation)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .swapValuesGeometryEffectID(
-                        .firstPairItem("locationsPair"),
-                        isSwapped: hasSwappedLocations,
-                        in: animationNamespace
-                    )
-                    .routeAnchor(.from)
+    
+    private var journeyHeaderView: some View {
+        JourneyResultsHeaderView(
+            fromLocation: $fromLocation,
+            toLocation: $toLocation,
+            viaLocation: viaLocation,
+            isSwapDisabled: isAnyPageLoading,
+            onSwapLocations: {
+                onAction(.refresh)
             }
-
-            Spacer()
-                .frame(height: 44)
-
-            VStack(alignment: .leading, spacing: 4) {
-                if let toLocation {
-                    JourneyLocationTitleLabel(value: toLocation)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .swapValuesGeometryEffectID(
-                            .secondPairItem("locationsPair"),
-                            isSwapped: hasSwappedLocations,
-                            in: animationNamespace
-                        )
-                        .routeAnchor(.to)
-
-                }
-
-                if let viaLocation {
-                    HStack(spacing: 0) {
-                        Text(.journeyResultsViaTitle)
-                        JourneyLocationTitleLabel(value: viaLocation)
-                            .bold()
-                    }
-                    .font(.caption2)
-                }
-            }
-        }
-        .lineLimit(1)
-        .font(.headline)
-        .routeIndicatorOverlay(
-            leadingOffset: 28,
-            leadingPadding: 44
-        ) {
-            swapLocationsButton
-        }
-        .padding(.vertical)
-        .background(Color.defaultCellBackground)
-    }
-
-    private var swapLocationsButton: some View {
-        JourneyPlannerSwapButton(
-            isSwapped: $hasSwappedLocations,
-            valueA: $fromLocation,
-            valueB: $toLocation
         )
-        .disabled(isAnyPageLoading)
-        .onChange(of: hasSwappedLocations) {
-            onAction(.refresh)
-        }
     }
 
     private var totalCellItemCount: Int {
