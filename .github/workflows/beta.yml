@@ -43,5 +43,5 @@ jobs:
           bundle update fastlane
           # bundle exec fastlane unit_tests
           # bundle exec fastlane add_badge_overlay
-          bundle exec fastlane build -- verbose
+          bundle exec fastlane build --verbose
           bundle exec fastlane distribute
