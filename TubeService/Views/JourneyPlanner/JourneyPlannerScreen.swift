@@ -17,7 +17,7 @@ struct JourneyPlannerScreen: View {
 
     @State private var navigationState = NavigationState<DestinationID>()
     
-    @Environment(\.transportAPI) var transportAPI
+    @Environment(AppDataStore.self) var appData
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchResultsStore.self) var localSearchResults
@@ -106,7 +106,7 @@ struct JourneyPlannerScreen: View {
         Group {
             switch destinationID {
             case .results:
-                JourneyResultsScreen(form: $form, transportAPI: transportAPI)
+                JourneyResultsScreen(form: $form, transportAPI: appData.transportAPI)
             }
         }
     }

@@ -10,21 +10,21 @@ struct RootScene: App {
     var body: some Scene {
         WindowGroup {
             RootScreen()
-                .withRootEnvironment(appData: appData)
+                .withAppEnvironment(dataStore: appData)
         }
     }
 }
 
 extension View {
     
-    func withRootEnvironment(appData: AppDataStore) -> some View {
+    func withAppEnvironment(dataStore: AppDataStore) -> some View {
         self
             .rootSheetPresenter()
-            .environment(appData)
-            .environment(appData.lineStatus)
-            .environment(appData.stations)
-            .environment(appData.location)
-            .environment(appData.localSearchResults)
-            .environment(appData.systemStatus)
+            .environment(dataStore)
+            .environment(dataStore.lineStatus)
+            .environment(dataStore.stations)
+            .environment(dataStore.location)
+            .environment(dataStore.localSearchResults)
+            .environment(dataStore.systemStatus)
     }
 }

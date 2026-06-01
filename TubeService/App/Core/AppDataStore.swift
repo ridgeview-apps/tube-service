@@ -14,6 +14,10 @@ final class AppDataStore {
     private(set) var systemStatus: SystemStatusDataStore
     
     private let dependencies: AppDependencies
+
+    var transportAPI: TransportAPIClientType {
+        dependencies.transportAPI
+    }
     
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies

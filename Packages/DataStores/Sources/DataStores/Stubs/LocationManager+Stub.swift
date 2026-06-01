@@ -9,6 +9,7 @@ public final class StubLocationManager: LocationManagerType, @unchecked Sendable
     public private(set) var requestWhenInUseAuthorizationCallCount = 0
     public private(set) var startMonitoringChangesCallCount = 0
     public private(set) var stopMonitoringChangesCallCount = 0
+    public var locationsToReturnOnRequest: [CLLocation]?
     private weak var delegate: CLLocationManagerDelegate?
     
     public func setDelegate(_ delegate: CLLocationManagerDelegate) {
@@ -17,6 +18,10 @@ public final class StubLocationManager: LocationManagerType, @unchecked Sendable
     
     public func requestLocation() {
         requestLocationCallCount += 1
+
+        if let locationsToReturnOnRequest {
+            simulateLocationUpdate(locationsToReturnOnRequest)
+        }
     }
     
     public func requestWhenInUseAuthorization() {

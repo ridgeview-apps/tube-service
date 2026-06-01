@@ -135,8 +135,8 @@ class TubeServiceUITests: XCTestCase {
             captureScreenshot("NearbyStations-List")
         }
         
-        if app.buttons["King's Cross & St Pancras International, 200 yd"].waitForExistence(timeout: 20) {
-            app.buttons["King's Cross & St Pancras International, 200 yd"].tapUnhittable()
+        if app.buttons["King's Cross & St Pancras International, 50 yd"].waitForExistence(timeout: 20) {
+            app.buttons["King's Cross & St Pancras International, 50 yd"].tapUnhittable()
         } else {
             XCTFail()
             return

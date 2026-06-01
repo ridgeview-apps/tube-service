@@ -18,7 +18,7 @@ struct PreviewEnvironment<Content: View>: View {
 
     var body: some View {
         content
-            .withRootEnvironment(appData: appData)
+            .withAppEnvironment(dataStore: appData)
     }
 }
 
