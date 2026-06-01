@@ -26,10 +26,8 @@ public struct LineColourKeyView: View {
 
 // MARK: - Previews
 
-struct LineColourKeyView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            LineColourKeyView(lineIDs: [.bakerloo, .circle, .central, .district, .dlr])
-        }
+#Preview {
+    VStack {
+        LineColourKeyView(lineIDs: [.bakerloo, .circle, .central, .district, .dlr])
     }
 }

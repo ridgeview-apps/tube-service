@@ -113,13 +113,11 @@ struct ArrivalsBoardListScreen: View {
 import ModelStubs
 
 #if DEBUG
-struct ArrivalsBoardListScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationStack {
+#Preview {
+    NavigationStack {
+        PreviewEnvironment {
             ArrivalsBoardListScreen(stationName: ModelStubs.stations.first!.name,
                                     lineGroup: ModelStubs.stations.first!.lineGroups[0])
-            .withStubbedEnvironment()
-            
         }
     }
 }

@@ -169,7 +169,8 @@ private extension JourneyPlannerForm.FieldID.LocationID {
 
 #if DEBUG
 #Preview {
-    JourneyPlannerScreen()
-        .withStubbedEnvironment()
+    PreviewEnvironment {
+        JourneyPlannerScreen()
+    }
 }
 #endif

@@ -43,7 +43,8 @@ struct RootScreen: View {
 
 #if DEBUG
 #Preview {
-    RootScreen()
-        .withStubbedEnvironment()
+    PreviewEnvironment {
+        RootScreen()
+    }
 }
 #endif

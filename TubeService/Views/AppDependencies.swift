@@ -27,7 +27,25 @@ struct AppDependencies: Sendable {
 }
 
 extension AppDependencies {
+    #if DEBUG
+    private nonisolated(unsafe) static var previewOverride: AppDependencies?
+
+    static func setPreviewOverride(_ dependencies: AppDependencies) {
+        previewOverride = dependencies
+    }
+    #endif
+
     static let current: AppDependencies = {
-        ProcessInfo.isRunningUITests ? .stub : .live
+        #if DEBUG
+        if let previewOverride {
+            return previewOverride
+        }
+        #endif
+
+        if ProcessInfo.isRunningUITests {
+            return .stub
+        }
+
+        return .live
     }()
 }

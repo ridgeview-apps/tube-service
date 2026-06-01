@@ -113,8 +113,9 @@ struct NearbyStationsScreen: View {
 
 #if DEBUG
 #Preview {
-    NearbyStationsScreen()
-        .withStubbedEnvironment()
-        .navigationTitle("Nearby stations")
+    PreviewEnvironment {
+        NearbyStationsScreen()
+    }
+    .navigationTitle("Nearby stations")
 }
 #endif

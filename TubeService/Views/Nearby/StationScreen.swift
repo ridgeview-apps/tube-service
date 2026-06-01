@@ -102,9 +102,10 @@ private struct WrapperView: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        WrapperView()
-            .withStubbedEnvironment()
-            .navigationTitle("Selected station")
+        PreviewEnvironment {
+            WrapperView()
+        }
+        .navigationTitle("Selected station")
     }
 }
 #endif

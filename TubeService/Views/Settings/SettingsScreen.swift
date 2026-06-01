@@ -60,10 +60,9 @@ struct SettingsScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-struct SettingsScreen_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    PreviewEnvironment {
         SettingsScreen()
-            .withStubbedEnvironment()
     }
 }
 #endif

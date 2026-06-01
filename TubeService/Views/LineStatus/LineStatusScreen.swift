@@ -151,10 +151,9 @@ extension DataFetchState {
 // MARK: - Previews
 
 #if DEBUG
-struct LineStatusScreen_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    PreviewEnvironment {
         LineStatusScreen()
-            .withStubbedEnvironment()
     }
 }
 #endif

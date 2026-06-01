@@ -128,10 +128,9 @@ struct ArrivalsPickerScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-struct ArrivalsPickerScreen_Previews: PreviewProvider {
-    static var previews: some View {
+#Preview {
+    PreviewEnvironment {
         ArrivalsPickerScreen()
-            .withStubbedEnvironment()
     }
 }
 #endif
