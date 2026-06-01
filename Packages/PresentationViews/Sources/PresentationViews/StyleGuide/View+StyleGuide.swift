@@ -61,6 +61,16 @@ public extension View {
         self.frame(maxWidth: 700, alignment: alignment)
     }
 
+    func topSafeAreaTint(_ color: Color) -> some View {
+        background(alignment: .top) {
+            GeometryReader { proxy in
+                color
+                    .frame(height: proxy.safeAreaInsets.top)
+                    .offset(y: -proxy.safeAreaInsets.top)
+            }
+        }
+    }
+
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
         background(
             GeometryReader { geometryProxy in

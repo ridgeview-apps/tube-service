@@ -36,10 +36,13 @@ public struct SystemStatusBannerView: View {
             .padding(.horizontal)
             .padding(.bottom, 24)
             .background {
-                systemStatus
-                    .tint
-                    .ignoresSafeArea()
+                UnevenRoundedRectangle(
+                    cornerRadii: .init(bottomLeading: 14, bottomTrailing: 14),
+                    style: .continuous
+                )
+                .fill(systemStatus.tint)
             }
+            .topSafeAreaTint(systemStatus.tint)
             .shadow(color: systemStatus.tint, radius: 4, y: 2)
             .opacity(0.96)
             .transition(
@@ -50,27 +53,36 @@ public struct SystemStatusBannerView: View {
     }
     
     private var actionButtons: some View {
-        HStack(spacing: 20) {
-            if systemStatus.detail != nil {
+        HStack {
+            Spacer(minLength: 0)
+            HStack(spacing: 20) {
+                if systemStatus.detail != nil {
+                    Button {
+                        withAnimation {
+                            isShowing = false
+                            onAction(.tappedMoreInfo(systemStatus))
+                        }
+                    } label: {
+                        Text(.systemStatusBannerMoreInfoButtonTitle)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(.white)
+                    .foregroundStyle(.white)
+                }
                 Button {
                     withAnimation {
                         isShowing = false
-                        onAction(.tappedMoreInfo(systemStatus))
+                        onAction(.tappedOK(systemStatus))
                     }
                 } label: {
-                    Text(.systemStatusBannerMoreInfoButtonTitle)
+                    Text(.globalOK)
                 }
+                .buttonStyle(.borderedProminent)
+                .tint(.white)
+                .foregroundStyle(.black)
             }
-            Button {
-                withAnimation {
-                    isShowing = false
-                    onAction(.tappedOK(systemStatus))
-                }
-            } label: {
-                Text(.globalOK)
-            }
+            Spacer(minLength: 0)
         }
-        .buttonStyle(.primary)
     }
 }
 
