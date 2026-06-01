@@ -40,11 +40,12 @@ extension AppDependencies {
         if let previewOverride {
             return previewOverride
         }
-        #endif
 
         if ProcessInfo.isRunningUITests {
             return .stub
         }
+        #endif
+
 
         return .live
     }()
