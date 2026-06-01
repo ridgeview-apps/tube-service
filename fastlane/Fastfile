@@ -78,14 +78,7 @@ lane :build do
     scheme: "TubeService",
     configuration: "Release",
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
-    export_method: "app-store",
-    export_options: {
-      method: "app-store",
-      signingStyle: "manual",
-      provisioningProfiles: {
-        "#{main_target_bundle_id}": "match AppStore #{main_target_bundle_id}"
-      }
-    }    
+    export_options: "./Config/CI/ExportOptions/ExportOptions-#{ENV["XCODE_CONFIG"]}.plist"
   )
 end
 
