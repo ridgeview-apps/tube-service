@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "App Icon.png",
+      "filename" : "App Icon - no alpha channel.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
