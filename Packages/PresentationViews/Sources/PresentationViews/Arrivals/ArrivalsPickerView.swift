@@ -4,8 +4,8 @@ import Models
 
 // MARK: - Data types
 
-public enum ArrivalsPickerStyle: Equatable {
-    case normal(favouriteLineGroupIDs: Set<Station.LineGroup.ID>)
+public enum ArrivalsPickerMode: Equatable {
+    case favouritesVisible(favourites: Set<Station.LineGroup.ID>)
     case searchResults
 }
 
@@ -14,7 +14,7 @@ public enum ArrivalsPickerStyle: Equatable {
 
 public struct ArrivalsPickerView: View {
     
-    public let style: ArrivalsPickerStyle
+    public let mode: ArrivalsPickerMode
     public let allStations: [Station]
 
     @Binding public var selection: Station.LineGroup?
@@ -24,15 +24,15 @@ public struct ArrivalsPickerView: View {
     // MARK: - Init
     
     public init(allStations: [Station],
-                style: ArrivalsPickerStyle,
+                mode: ArrivalsPickerMode,
                 selection: Binding<Station.LineGroup?>) {
         self.allStations = allStations
-        self.style = style
+        self.mode = mode
         self._selection = selection
         
-        switch style {
-        case let .normal(favouriteLineGroupIDs):
-            self.favourites = allStations.favourites(matching: favouriteLineGroupIDs)
+        switch mode {
+        case let .favouritesVisible(favourites):
+            self.favourites = allStations.favourites(matching: favourites)
         case .searchResults:
             self.favourites = []
         }
@@ -43,7 +43,7 @@ public struct ArrivalsPickerView: View {
     public var body: some View {
         List(selection: $selection) {
             Group {
-                if case .normal = style {
+                if case .favouritesVisible = mode {
                     favouritesSection
                 }
                 allStationsSection
@@ -82,8 +82,8 @@ public struct ArrivalsPickerView: View {
     }
         
     private var allStationsSectionHeaderTitle: LocalizedStringResource {
-        switch style {
-        case .normal:
+        switch mode {
+        case .favouritesVisible:
             .arrivalsPickerAllStationsSectionTitle
         case .searchResults:
             .stationsSearchResultsCount(allStations.count)
@@ -150,13 +150,13 @@ import ModelStubs
 
 private struct WrapperView: View {
     var allStations: [Station] = ModelStubs.stations
-    var style: ArrivalsPickerStyle
+    var mode: ArrivalsPickerMode
     @State var selection: Station.LineGroup?
     
     var body: some View {
         NavigationStack {
             ArrivalsPickerView(allStations: allStations,
-                               style: style,
+                               mode: mode,
                                selection: $selection)
             .navigationTitle("Picker preview")
             .navigationDestination(item: $selection) { selection in
@@ -169,7 +169,7 @@ private struct WrapperView: View {
 
 #Preview("Normal mode (favourites)") {
     WrapperView(
-        style: .normal(favouriteLineGroupIDs: [
+        mode: .favouritesVisible(favourites: [
             "940GZZLUKSX-circle,hammersmith-city,metropolitan", // Kings X - Circle, H&C, Met lines
             "940GZZLUKSX-northern",   // Kings X - Northern line
             "940GZZLUKSX-piccadilly", // Kingx X - Piccadilly line
@@ -180,13 +180,13 @@ private struct WrapperView: View {
 }
 
 #Preview("Normal mode (no favourites)") {
-    WrapperView(style: .normal(favouriteLineGroupIDs: []))
+    WrapperView(mode: .favouritesVisible(favourites: []))
 }
 
 #Preview("Search results mode") {
     WrapperView(
         allStations: Array(ModelStubs.stations.prefix(4)),
-        style: .searchResults
+        mode: .searchResults
     )
     .searchable(text: .constant(""), placement: .navigationBarDrawer(displayMode: .always))
 }

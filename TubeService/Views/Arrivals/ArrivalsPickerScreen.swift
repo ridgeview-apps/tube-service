@@ -19,8 +19,8 @@ struct ArrivalsPickerScreen: View {
     @State private var selectableStations: [Station] = []
 
     private var isSearching: Bool { !searchTerm.isEmpty }
-    private var pickerStyle: ArrivalsPickerStyle {
-        isSearching ? .searchResults : .normal(favouriteLineGroupIDs: userPreferences.favouriteLineGroupIDs)
+    private var pickerMode: ArrivalsPickerMode {
+        isSearching ? .searchResults : .favouritesVisible(favourites: userPreferences.favouriteLineGroupIDs)
     }
     
     
@@ -61,7 +61,7 @@ struct ArrivalsPickerScreen: View {
             Text(.arrivalsPickerSearchNoResults)
         } else {
             ArrivalsPickerView(allStations: selectableStations,
-                               style: pickerStyle,
+                               mode: pickerMode,
                                selection: $selection)
                 .navigationTitle(Text(.arrivalsPickerNavigationTitle))
                 .withSettingsToolbarButton()
