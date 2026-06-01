@@ -44,12 +44,11 @@ public struct LineStatusDetailView: View {
                         .padding(.bottom, 30)
                 }
             }
-            .withDefaultMaxWidth()
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
     }
     
     

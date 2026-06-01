@@ -50,7 +50,7 @@ public struct ArrivalsPickerView: View {
             }
         }
         .listStyle(.plain)
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
         .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
@@ -154,16 +154,13 @@ private struct WrapperView: View {
     @State var selection: Station.LineGroup?
     
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             ArrivalsPickerView(allStations: allStations,
                                style: style,
                                selection: $selection)
             .navigationTitle("Picker preview")
-        } detail: {
-            if let selection {
+            .navigationDestination(item: $selection) { selection in
                 Text("\(String(describing: selection)) selected")
-            } else {
-                Text("No value selected")
             }
         }
     }

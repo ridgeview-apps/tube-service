@@ -48,7 +48,7 @@ public struct LineStatusListView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)
@@ -165,8 +165,7 @@ public struct LineStatusListView: View {
             }
         }
         .foregroundStyle(.foreground)
-        .padding(.vertical, 12)
-        .padding(.horizontal, 8)
+        .padding(12)
         .cardStyle()
     }
     
@@ -318,7 +317,7 @@ private struct WrapperView: View {
     @State var selectedDate: Date = .now
     
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             LineStatusListView(
                 loadingState: loadingState,
                 lines: lines,
@@ -329,11 +328,8 @@ private struct WrapperView: View {
                 selectedDate: $selectedDate
             )
             .navigationTitle("Preview")
-        } detail: {
-            if let selectedLine {
+            .navigationDestination(item: $selectedLine) { selectedLine in
                 Text("\(selectedLine.id.longName) selected")
-            } else {
-                Text("No value selected")
             }
         }
     }

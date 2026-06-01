@@ -58,7 +58,7 @@ public extension View {
     }
     
     func withDefaultMaxWidth(alignment: Alignment = .center) -> some View {
-        self.frame(maxWidth: 600, alignment: alignment)
+        self.frame(maxWidth: 700, alignment: alignment)
     }
 
     func readSize(onChange: @escaping (CGSize) -> Void) -> some View {

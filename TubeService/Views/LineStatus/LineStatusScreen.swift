@@ -17,12 +17,13 @@ struct LineStatusScreen: View {
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
-    
+
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             statusListView
-        } detail: {
-            statusDetailView
+                .navigationDestination(item: $selectedLine) { line in
+                    LineStatusDetailScreen(line: line, fetchType: currentFetchType)
+                }
         }
         .onSceneDidBecomeActive {
             fetchLineStatusesIfStale()
@@ -58,18 +59,6 @@ struct LineStatusScreen: View {
         .onCalendarDayChanged {
             selectedFilterOption = .today
             selectedDate = .now
-        }
-    }
-    
-    private var statusDetailView: some View {
-        NavigationStack {
-            if let selectedLine {
-                LineStatusDetailScreen(line: selectedLine, fetchType: currentFetchType)
-            } else {
-                if selectedFilterOption == .today || lines.hasDisruptions {
-                    Text(.lineStatusNoSelection)
-                }
-            }
         }
     }
     

@@ -36,7 +36,9 @@ public struct SystemStatusBannerView: View {
             .padding(.horizontal)
             .padding(.bottom, 24)
             .background {
-                systemStatus.tint.ignoresSafeArea()
+                systemStatus
+                    .tint
+                    .ignoresSafeArea()
             }
             .shadow(color: systemStatus.tint, radius: 4, y: 2)
             .opacity(0.96)

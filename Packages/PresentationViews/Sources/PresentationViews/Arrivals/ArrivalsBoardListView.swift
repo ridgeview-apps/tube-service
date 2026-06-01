@@ -47,7 +47,6 @@ public struct ArrivalsBoardListView: View {
                             }
                         }
                     }
-                    .withDefaultMaxWidth()
                 } header: {
                     headerTitleView
                 } footer: {

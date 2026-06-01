@@ -17,7 +17,7 @@ struct ArrivalsPickerScreen: View {
     @State private var selection: Station.LineGroup?
     @State private var searchTerm: String = ""
     @State private var selectableStations: [Station] = []
-    
+
     private var isSearching: Bool { !searchTerm.isEmpty }
     private var pickerStyle: ArrivalsPickerStyle {
         isSearching ? .searchResults : .normal(favouriteLineGroupIDs: userPreferences.favouriteLineGroupIDs)
@@ -27,17 +27,21 @@ struct ArrivalsPickerScreen: View {
     // MARK: - Layout
     
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             pickerListView
-        } detail: {
-            detailView
+                .navigationDestination(item: $selection) { lineGroup in
+                    ArrivalsBoardListScreen(
+                        stationName: stationName(for: lineGroup),
+                        lineGroup: lineGroup
+                    )
+                    .id(lineGroup.id)
+                }
+                .searchable(text: $searchTerm,
+                            prompt: Text(.arrivalsPickerSearchPlaceholder)) {
+                    searchSuggestionsView
+                }
+                .autocorrectionDisabled()
         }
-        .searchable(text: $searchTerm,
-                    placement: .navigationBarDrawer(displayMode: .always),
-                    prompt: Text(.arrivalsPickerSearchPlaceholder)) {
-            searchSuggestionsView
-        }
-        .autocorrectionDisabled()
         .onChange(of: searchTerm) {
             reloadStations()
         }
@@ -64,18 +68,6 @@ struct ArrivalsPickerScreen: View {
                 .onAppear {
                     reloadStations()
                 }
-        }
-    }
-    
-    private var detailView: some View {
-        NavigationStack {
-            if let selection {
-                ArrivalsBoardListScreen(stationName: stationName(for: selection),
-                                        lineGroup: selection)
-                .id(selection.id)
-            } else {
-                Text(.arrivalsPickerNoSelection)
-            }
         }
     }
     

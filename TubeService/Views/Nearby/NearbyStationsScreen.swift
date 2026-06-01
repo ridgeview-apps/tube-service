@@ -12,14 +12,19 @@ struct NearbyStationsScreen: View {
     @State private var selectedStation: NearbyStation?
     @State private var selectedStationViewItem: StationView.Selection?
     @State private var sectionState: NearbyStationsResultsSectionState = .empty
-    
+
     // MARK: - Layout
     
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             nearbyStationsListView
-        } detail: {
-            detailView
+                .navigationDestination(item: $selectedStation) { station in
+                    StationScreen(station: station.station,
+                                  selection: $selectedStationViewItem)
+                }
+                .navigationDestination(for: StationView.Selection.self) { selection in
+                    destinationView(for: selection)
+                }
         }
         .detectsLocationChanges(action: handleLocationChangeAction)
         .task {
@@ -66,24 +71,6 @@ struct NearbyStationsScreen: View {
         }
     }
     
-    private var detailView: some View {
-        NavigationStack {
-            Group {
-                if let selectedStation {
-                    StationScreen(station: selectedStation.station,
-                                  selection: $selectedStationViewItem)
-                } else {
-                    if location.isAuthorized {
-                        Text(.nearbyStationsNoSelection)
-                    }
-                }
-            }
-            .navigationDestination(for: StationView.Selection.self) { selection in
-                destinationView(for: selection)
-            }
-        }
-    }
-    
     @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
         switch selection {
         case let .line(line):
@@ -94,10 +81,6 @@ struct NearbyStationsScreen: View {
         }
     }
     
-    private func stationName(for lineGroup: Station.LineGroup) -> String {
-        stations.station(forLineGroupID: lineGroup.id)?.name ?? ""
-    }
-        
     private func updateResultsSectionState(reset: Bool = false) {
         let nearbyStations = location.nearbyStations
         

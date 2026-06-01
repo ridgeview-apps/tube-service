@@ -7,8 +7,7 @@ enum NavigationButton {
         
         var body: some View {
             Button(action: action) {
-                Image(systemName: "gear")
-                    .imageScale(.large)
+                Image(systemName: "gearshape")
             }
         }
     }
@@ -19,7 +18,6 @@ enum NavigationButton {
         var body: some View {
             Button(action: action) {
                 Image(systemName: "xmark.circle.fill")
-                    .imageScale(.large)
             }
             .foregroundStyle(.secondary)
         }

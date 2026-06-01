@@ -32,7 +32,7 @@ public struct NearbyStationsView: View {
     public var body: some View {
         nearbyStationsListView
             .locationUIStatus(locationUIStatus)
-            .withDefaultMaxWidth()
+            .defaultMaxWidthWithFullBackground()
             .frame(maxHeight: .infinity)
             .background(Color.defaultBackground)
             .accessibilityIdentifier("acc.id.nearby.stations")
@@ -174,18 +174,15 @@ private struct Previewer: View {
     }
     
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             NearbyStationsView(locationUIStatus: locationUIStatus,
                                onAction: onAction,
                                sectionState: $sectionState,
                                selection: $selection)
               .navigationTitle("Nearby stations")
-        } detail: {
-            if let selection {
-                Text("\(String(describing: selection)) selected")
-            } else {
-                Text("No value selected")
-            }
+              .navigationDestination(for: NearbyStation.self) { selection in
+                  Text("\(String(describing: selection)) selected")
+              }
         }
     }
 }
