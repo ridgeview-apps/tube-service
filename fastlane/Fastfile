@@ -78,8 +78,8 @@ lane :build do
     scheme: "TubeService",
     configuration: "Release",
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
-    export_method: "app-store",
-    skip_profile_detection: true
+    skip_profile_detection: true,
+    export_options: "./Config/CI/ExportOptions/ExportOptions-#{ENV["XCODE_CONFIG"]}.plist",
   )
 end
 
