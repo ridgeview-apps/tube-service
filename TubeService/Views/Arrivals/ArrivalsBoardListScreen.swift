@@ -18,7 +18,10 @@ struct ArrivalsBoardListScreen: View {
         
     @Environment(\.transportAPI) var transportAPI
 
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
     private var userPreferences: UserPreferences = .default
     
     var body: some View {

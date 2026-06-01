@@ -7,77 +7,30 @@ import Foundation
 @Observable
 final class AppDataStore {
     
-    let transportAPI: TransportAPIClientType
-    let userDefaults: UserDefaults
-    let locationManager: LocationManagerType
-    
     private(set) var lineStatus: LineStatusDataStore
     private(set) var stations: StationsDataStore
     private(set) var location: LocationDataStore
     private(set) var localSearchResults: LocalSearchResultsStore
     private(set) var systemStatus: SystemStatusDataStore
     
-    init(
-        transportAPI: TransportAPIClientType,
-        systemStatusAPI: SystemStatusAPIClientType,
-        userDefaults: UserDefaults,
-        locationManager: LocationManagerType,
-        localSearchCompleterClient: LocalSearchCompleterClientType,
-        now: @escaping () -> Date = { Date() }
-    ) {
-        self.transportAPI = transportAPI
-        self.userDefaults = userDefaults
-        self.locationManager = locationManager
+    private let dependencies: AppDependencies
+    
+    init(dependencies: AppDependencies) {
+        self.dependencies = dependencies
         
-        let stations = StationsDataStore(transportAPI: transportAPI)
+        let stations = StationsDataStore(transportAPI: dependencies.transportAPI)
         self.stations = stations
         
-        self.lineStatus = LineStatusDataStore(transportAPI: transportAPI, now: now)        
-        self.location = LocationDataStore(locationManager: locationManager,
+        self.lineStatus = LineStatusDataStore(transportAPI: dependencies.transportAPI,
+                                              now: dependencies.now)
+        self.location = LocationDataStore(locationManager: dependencies.locationManager,
                                           stations: stations)
-        self.localSearchResults = LocalSearchResultsStore(completerClient: localSearchCompleterClient)
-        self.systemStatus = SystemStatusDataStore(systemStatusAPI: systemStatusAPI, now: now)
+        self.localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
+        self.systemStatus = SystemStatusDataStore(systemStatusAPI: dependencies.systemStatusAPI,
+                                                  now: dependencies.now)
     }
     
     func initialiseAppData() {
-        userDefaults.migrateLegacyValuesIfNeeded()
+        dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
     }
 }
-
-
-extension AppDataStore {
-    static let live: AppDataStore = .init(
-        transportAPI: TransportAPIClient.live,
-        systemStatusAPI: SystemStatusAPIClient.live,
-        userDefaults: .standard,
-        locationManager: CLLocationManager(),
-        localSearchCompleterClient: MKLocalSearchCompleter()
-    )
-}
-
-extension TransportAPIClient {
-    static let live = TransportAPIClient(
-        baseURL: AppConfig.main.transportAPI.baseURL,
-        appID: AppConfig.main.transportAPI.appID,
-        appKey: AppConfig.main.transportAPI.appKey
-    )
-}
-
-extension SystemStatusAPIClient {
-    static let live = SystemStatusAPIClient(
-        baseURL: AppConfig.main.systemStatusAPI.baseURL,
-        fileName: AppConfig.main.systemStatusAPI.fileName
-    )
-}
-
-#if DEBUG
-extension AppDataStore {
-    static func stub() -> AppDataStore {
-        .init(transportAPI: StubTransportAPIClient(),
-              systemStatusAPI: StubSystemStatusAPIClient(),
-              userDefaults: .standard,
-              locationManager: StubLocationManager(),
-              localSearchCompleterClient: StubLocalSearchCompleterClient())
-    }
-}
-#endif

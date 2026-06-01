@@ -9,24 +9,27 @@ extension View {
     func withStubbedEnvironment(
         transportAPI: StubTransportAPIClient = StubTransportAPIClient(),
         systemStatusAPI: StubSystemStatusAPIClient = StubSystemStatusAPIClient(),
-        userDefaults: UserDefaults = .standard,
+        userDefaults: UserDefaults = UserDefaults(suiteName: "StubSuite")!,
         locationManager: LocationManagerType = StubLocationManager(),
         localSearchCompleterClient: LocalSearchCompleterClientType = StubLocalSearchCompleterClient(),
-        now: @escaping () -> Date = { Date() }
+        now: @escaping @Sendable () -> Date = { Date() }
     ) -> some View {
         
-        let appData = AppDataStore(
+        let dependencies = AppDependencies(
             transportAPI: transportAPI,
             systemStatusAPI: systemStatusAPI,
-            userDefaults: userDefaults,
             locationManager: locationManager,
             localSearchCompleterClient: localSearchCompleterClient,
+            userDefaults: UserDefaultsProvider(userDefaults),
             now: now
+        )
+        
+        let appData = AppDataStore(
+            dependencies: dependencies
         )
         return
             withRootEnvironment(appData: appData)
                 .environment(\.transportAPI, transportAPI)
-                .environment(\.appConfig, AppConfig.stub)
     }
 }
 

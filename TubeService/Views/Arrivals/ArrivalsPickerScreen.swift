@@ -8,7 +8,10 @@ struct ArrivalsPickerScreen: View {
 
     @Environment(StationsDataStore.self) var stations
     
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
     private var userPreferences: UserPreferences = .default
     
     @State private var selection: Station.LineGroup?

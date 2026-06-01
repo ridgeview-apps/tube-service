@@ -11,7 +11,10 @@ struct LineStatusDetailScreen: View {
     @Environment(\.showSheet) var showSheet
     @Environment(\.openURL) var openURL
     
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
     private var userPreferences: UserPreferences = .default
     
     let line: Line

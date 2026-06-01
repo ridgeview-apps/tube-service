@@ -10,7 +10,10 @@ struct JourneyResultsScreen: View {
 
     @Environment(LocalSearchResultsStore.self) var localSearchResults
 
-    @AppStorage(UserDefaults.Keys.userPreferences.rawValue, store: .standard)
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
     private var userPreferences: UserPreferences = .default
 
     @Binding var form: JourneyPlannerForm
