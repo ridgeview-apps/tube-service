@@ -10,14 +10,14 @@ struct RootScreen: View {
                 LineStatusScreen()
                     .accessibilityIdentifier("acc.id.line.status.tab.title")
             } label: {
-                Label(.lineStatusTabTitle, systemImage: "exclamationmark.circle")
+                Label(.lineStatusTabTitle, systemImage: "info.circle")
             }
 
             Tab {
                 JourneyPlannerScreen()
                     .accessibilityIdentifier("acc.id.journey.planner.tab.title")
             } label: {
-                Label(.journeyPlannerTabTitle, systemImage: "point.topleft.down.curvedto.point.filled.bottomright.up")
+                Label(.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
             }
 
             Tab {
@@ -31,7 +31,7 @@ struct RootScreen: View {
                 NearbyStationsScreen()
                     .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
             } label: {
-                Label(.nearbyStationsTabTitle, systemImage: "location")
+                Label(.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
             }
 
             Tab {
