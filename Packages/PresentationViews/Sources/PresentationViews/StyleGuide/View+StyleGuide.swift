@@ -38,19 +38,6 @@ public extension View {
             
     }
     
-    func styledTabItem(imageName: String,
-                       title: LocalizedStringResource,
-                       accessibilityID: String) -> some View {
-        tabItem {
-            VStack {
-                Image(systemName: imageName)
-                    .imageScale(.large)
-                Text(title)
-            }
-            .accessibilityIdentifier(accessibilityID)
-        }        
-    }
-    
     func defaultScrollContentBackgroundColor() -> some View {
         self
             .scrollContentBackground(.hidden)
