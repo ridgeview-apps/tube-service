@@ -5,8 +5,7 @@ import Shared
 
 #if DEBUG
 
-@MainActor
-public final class StubTransportAPIClient: TransportAPIClientType {
+public final class StubTransportAPIClient: TransportAPIClientType, @unchecked Sendable {
     
     public init() {}
     

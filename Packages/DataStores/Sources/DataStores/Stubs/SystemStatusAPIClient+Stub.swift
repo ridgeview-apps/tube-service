@@ -5,8 +5,7 @@ import Shared
 
 #if DEBUG
 
-@MainActor
-public final class StubSystemStatusAPIClient: SystemStatusAPIClientType {
+public final class StubSystemStatusAPIClient: SystemStatusAPIClientType, @unchecked Sendable {
     
     public init() {}
     

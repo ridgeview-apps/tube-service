@@ -41,7 +41,6 @@ extension AppConfig {
         
         return appConfig
     }()
-
 }
 
 extension AppConfig {
