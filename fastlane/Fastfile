@@ -78,7 +78,7 @@ lane :build do
     scheme: "TubeService",
     configuration: "Release",
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
-    export_options: "./Config/CI/ExportOptions/ExportOptions-#{ENV["XCODE_CONFIG"]}.plist"
+    export_method: "app-store"
   )
 end
 
