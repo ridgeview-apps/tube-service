@@ -22,10 +22,6 @@ struct JourneyResultsHeaderView: View {
         lerp(from: 16, to: 6, progress: collapseProgress)
     }
 
-    private var titleScale: CGFloat {
-        lerp(from: 1, to: 0.8, progress: collapseProgress)
-    }
-
     private func lerp(from start: CGFloat, to end: CGFloat, progress: CGFloat) -> CGFloat {
         start + (end - start) * progress
     }
@@ -81,7 +77,6 @@ struct JourneyResultsHeaderView: View {
         }
         .lineLimit(1)
         .font(.headline)
-        .scaleEffect(titleScale, anchor: .leading)
         .routeIndicatorOverlay(leadingOffset: 28, leadingPadding: 56) {
             swapLocationsButton
         }
