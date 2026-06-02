@@ -26,7 +26,7 @@ jobs:
         uses: actions/checkout@v4
       - name: List installed Xcode versions
         run: |
-          find /Applications -maxdepth 1 -name "Xcode*" -type d | sort        
+          ls -1 /Applications | grep '^Xcode'      
       # - name: Select Xcode
       #   run: sudo xcode-select -s /Applications/Xcode_26.5.0.app/Contents/Developer
       # - name: Confirm Xcode version
