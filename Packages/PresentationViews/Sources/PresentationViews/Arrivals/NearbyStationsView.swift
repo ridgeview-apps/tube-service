@@ -136,10 +136,10 @@ public struct NearbyStationsView: View {
                         title: .nearbyStationsMoreResultsButtonTitle
                     ) {
                         sectionState.currentPageNo += 1
-                    }
-                    .id("showMoreButtonID_\(sectionState.currentPageNo)")
+                    }                    
                     Spacer()
                 }
+                .id("showMoreButtonID_\(sectionState.currentPageNo)")
             }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
