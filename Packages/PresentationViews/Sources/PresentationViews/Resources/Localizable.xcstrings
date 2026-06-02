@@ -779,7 +779,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show journeys"
+            "value" : "Plan my journey"
           }
         }
       }
@@ -1055,7 +1055,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fetching results"
+            "value" : "Loading journeys"
           }
         }
       }

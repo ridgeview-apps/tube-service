@@ -89,7 +89,7 @@ class TubeServiceUITests: XCTestCase {
         
         captureScreenshot("JourneyPlannerForm")
         
-        app.buttons["Show journeys"].tap()
+        app.buttons["Plan my journey"].tap()
         
         if app.buttons["journey.start.time.info"].firstMatch.waitForExistence(timeout: 5) {
             app.buttons["journey.start.time.info"].firstMatch.tap()
