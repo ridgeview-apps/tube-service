@@ -8,38 +8,38 @@ struct RootScreen: View {
         TabView {
             Tab {
                 LineStatusScreen()
-                    .accessibilityIdentifier("acc.id.line.status.tab.title")
             } label: {
                 Label(.lineStatusTabTitle, systemImage: "info.circle")
             }
+            .accessibilityIdentifier("acc.id.line.status.tab.title")
 
             Tab {
                 JourneyPlannerScreen()
-                    .accessibilityIdentifier("acc.id.journey.planner.tab.title")
             } label: {
                 Label(.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
             }
+            .accessibilityIdentifier("acc.id.journey.planner.tab.title")
 
             Tab {
                 ArrivalsPickerScreen()
-                    .accessibilityIdentifier("acc.id.arrivals.tab.title")
             } label: {
                 Label(.arrivalsTabTitle, systemImage: "tram")
             }
+            .accessibilityIdentifier("acc.id.arrivals.tab.title")
 
             Tab {
                 NearbyStationsScreen()
-                    .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
             } label: {
                 Label(.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
             }
+            .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
 
             Tab {
                 MapsScreen()
-                    .accessibilityIdentifier("acc.id.maps.tab.title")
             } label: {
                 Label(.mapsTabTitle, systemImage: "map")
             }
+            .accessibilityIdentifier("acc.id.maps.tab.title")
         }
         .tabViewStyle(.sidebarAdaptable)
         .systemStatusRefreshable()

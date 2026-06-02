@@ -21,7 +21,6 @@ class TubeServiceUITests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
         
-        
         app = XCUIApplication()
         app.launchArguments = ["UITests"]
         setupSnapshot(app)
@@ -50,23 +49,19 @@ class TubeServiceUITests: XCTestCase {
         captureNearbyStationsTab()
         captureMapsTab()
     }
-    
+        
     @MainActor
     private func captureStatusTab() {
-        app.buttons["Status"].firstMatch.tap()
+        app.buttons["acc.id.line.status.tab.title"].firstMatch.tap()
         
-        if iPhone {
-            captureScreenshot("ServiceStatuses-Today")
-        }
+        captureScreenshot("ServiceStatuses-Today")
         
         // Status - today
         _ = app.buttons["circle"].waitForExistence(timeout: 10)
         app.buttons["circle"].tapUnhittable()
         captureScreenshot("ServiceStatusDetail-Today")
         
-        if iPhone {
-            app.navigationBars.buttons.element(boundBy: 0).tap() // Back
-        }
+        app.navigationBars.buttons.element(boundBy: 0).tap() // Back
         
         // Status - weekend
         
@@ -76,7 +71,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureJourneyPlannerTab() {
-        app.buttons["Planner"].firstMatch.tap()
+        app.buttons["acc.id.journey.planner.tab.title"].firstMatch.tap()
         
         app.buttons["Departure location"].tap()
         app.textFields.firstMatch.typeText("King's Cross & St Pancras International")
@@ -112,28 +107,22 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureArrivalsTab() {
-        app.buttons["Arrivals"].firstMatch.tap()
+        app.buttons["acc.id.arrivals.tab.title"].firstMatch.tap()
         
-        if iPhone {
-            captureScreenshot("LiveArrivalsPicker")
-        }
+        captureScreenshot("LiveArrivalsPicker")
         
         app.buttons["910GABWDXR-elizabeth"].tapUnhittable() // Abbey Wood
         
         captureScreenshot("LiveArrivalsBoard1")
         
-        if iPhone {
-            app.navigationBars.buttons.element(boundBy: 0).tap() // Back
-        }
+        app.navigationBars.buttons.element(boundBy: 0).tap() // Back
     }
     
     @MainActor
     private func captureNearbyStationsTab() {
-        app.buttons["Nearby"].firstMatch.tap()
+        app.buttons["acc.id.nearby.stations.tab.title"].firstMatch.tap()
         
-        if iPhone {
-            captureScreenshot("NearbyStations-List")
-        }
+        captureScreenshot("NearbyStations-List")
         
         if app.buttons["King's Cross & St Pancras International, 50 yd"].waitForExistence(timeout: 20) {
             app.buttons["King's Cross & St Pancras International, 50 yd"].tapUnhittable()
@@ -147,7 +136,7 @@ class TubeServiceUITests: XCTestCase {
     
     @MainActor
     private func captureMapsTab() {
-        app.buttons["Maps"].firstMatch.tap()
+        app.buttons["acc.id.maps.tab.title"].firstMatch.tap()
         
         captureScreenshot("Maps")
     }
