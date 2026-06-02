@@ -4,12 +4,12 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 
 ## Screenshots
 
-![](Docs/Images/01-ServiceStatuses-Today.png)
-![](Docs/Images/02-ServiceStatuses-Weekend.png)
-![](Docs/Images/03-LiveArrivalsBoard.png)
-![](Docs/Images/04-NearbyStations-Detail.png)
-![](Docs/Images/05-JourneyPlanner-Form.png)
-![](Docs/Images/06-JourneyPlanner-Results.png)
+<img src="Docs/Images/01-ServiceStatuses-Today.png" alt="Service status (today)" width="300">
+<img src="Docs/Images/02-ServiceStatuses-Weekend.png" alt="Service status (weekend)" width="300">
+<img src="Docs/Images/03-LiveArrivalsBoard.png" alt="Live arrivals" width="300">
+<img src="Docs/Images/04-NearbyStations-Detail.png" alt="Nearby stations" width="300">
+<img src="Docs/Images/05-JourneyPlanner-Form.png" alt="Journey planner" width="300">
+<img src="Docs/Images/06-JourneyPlanner-Results.png" alt="Journey results" width="300">
 
 ## Getting Started
 
