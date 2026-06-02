@@ -2,7 +2,7 @@ import Foundation
 
 public extension Station {
 
-    static let all: [Station] = {
+    static let allLondonTrains: [Station] = {
         let jsonDecoder = JSONDecoder.defaultModelDecoder
         
         guard let jsonData = allStationsRawJSON.data(using: .utf8),

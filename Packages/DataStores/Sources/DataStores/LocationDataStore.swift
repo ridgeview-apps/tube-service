@@ -150,7 +150,7 @@ public final class LocationDataStore: NSObject {
             return
         }
         
-        nearbyStations = stations.allStations.nearestStations(to: currentLocationCoordinate)
+        nearbyStations = stations.allLondon.nearestStations(to: currentLocationCoordinate)
     }
     
     private func resetLocationState() {

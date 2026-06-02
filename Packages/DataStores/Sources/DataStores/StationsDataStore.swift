@@ -32,7 +32,7 @@ public final class StationsDataStore {
     private var nationRailStationsByICSCode: [String: StopPoint] = [:]
     
     // Public
-    public var allStations: [Station] { Station.all }
+    public var allLondon: [Station] { Station.allLondonTrains }
     private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
     
     // MARK: - Init
@@ -46,7 +46,7 @@ public final class StationsDataStore {
     
     
     private func loadStations() {
-        assert(!allStations.isEmpty)
+        assert(!allLondon.isEmpty)
         assert(!nationRailStations.isEmpty)
         saveStationsByID()
         saveNationalRailStationsByICSCode()
@@ -82,7 +82,7 @@ public final class StationsDataStore {
         stationsByLineGroupID = [:]
         stationsByAtcoCode = [:]
         
-        allStations.forEach { station in
+        allLondon.forEach { station in
             stationsByID[station.id] = station
             station.lineGroups.forEach {
                 stationsByLineGroupID[$0.id] = station
@@ -111,7 +111,7 @@ public final class StationsDataStore {
     
     public func filteredStations(matchingName name: String, limit: Int = 30) -> [Station] {
         Array(
-            allStations
+            allLondon
                 .lazy
                 .filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics)}
                 .prefix(limit)

@@ -75,7 +75,7 @@ struct ArrivalsPickerScreen: View {
         if isSearching {
             selectableStations = stations.filteredStations(matchingName: searchTerm)
         } else {
-            selectableStations = stations.allStations
+            selectableStations = stations.allLondon
         }
     }
     
