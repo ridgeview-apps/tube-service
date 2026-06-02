@@ -61,7 +61,7 @@ struct JourneyResultsHeaderView: View {
         }
         .lineLimit(1)
         .font(.headline)
-        .routeIndicatorOverlay(leadingOffset: 28, leadingPadding: 44) {
+        .routeIndicatorOverlay(leadingOffset: 28, leadingPadding: 56) {
             swapLocationsButton
         }
         .padding(.vertical)
@@ -81,4 +81,58 @@ struct JourneyResultsHeaderView: View {
             onSwapLocations()
         }
     }
+}
+
+// MARK: - Previews
+
+import ModelStubs
+
+private struct Previewer: View {
+    @State var fromLocation: JourneyLocationPicker.Value? = .station(
+        ModelStubs.kingsCrossStation
+    )
+    @State var toLocation: JourneyLocationPicker.Value? = .station(
+        ModelStubs.angelStation
+    )
+    var viaLocation: JourneyLocationPicker.Value?
+    var isSwapDisabled: Bool = false
+
+    var body: some View {
+        JourneyResultsHeaderView(
+            fromLocation: $fromLocation,
+            toLocation: $toLocation,
+            viaLocation: viaLocation,
+            isSwapDisabled: isSwapDisabled,
+            onSwapLocations: { print("Swap locations") }
+        )
+    }
+}
+
+#Preview("Default") {
+    Previewer()
+}
+
+#Preview("With via location") {
+    Previewer(
+        viaLocation: .namedLocation(
+            .init(
+                name: .init(title: "Farringdon", subtitle: ""),
+                coordinate: nil,
+                isCurrentLocation: false
+            )
+        )
+    )
+}
+
+#Preview("Current location") {
+    Previewer(
+        fromLocation: .currentLocation(
+            name: .init(title: "Current location", subtitle: ""),
+            coordinate: nil
+        )
+    )
+}
+
+#Preview("Swap disabled") {
+    Previewer(isSwapDisabled: true)
 }
