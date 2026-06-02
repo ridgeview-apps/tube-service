@@ -4,12 +4,13 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 
 ## Screenshots
 
-<img src="Docs/Images/01-ServiceStatuses-Today.png" alt="Service status (today)" width="300">
-<img src="Docs/Images/02-ServiceStatuses-Weekend.png" alt="Service status (weekend)" width="300">
-<img src="Docs/Images/03-LiveArrivalsBoard.png" alt="Live arrivals" width="300">
-<img src="Docs/Images/04-NearbyStations-Detail.png" alt="Nearby stations" width="300">
-<img src="Docs/Images/05-JourneyPlanner-Form.png" alt="Journey planner" width="300">
-<img src="Docs/Images/06-JourneyPlanner-Results.png" alt="Journey results" width="300">
+<img width="200" alt="01-ServiceStatuses-Today" src="https://github.com/user-attachments/assets/e50d4cf8-4a4b-4179-84dd-2ebaa5e3ae65" />
+<img width="200" alt="02-ServiceStatuses-Weekend" src="https://github.com/user-attachments/assets/a3332281-7c5f-4432-8e49-e4eb3f2709f2" />
+<img width="200" alt="03-JourneyPlanner-Form" src="https://github.com/user-attachments/assets/bd0dac98-ea95-4d1a-8a3b-be626b9e1479" />
+<img width="200" alt="04-JourneyPlanner-Results" src="https://github.com/user-attachments/assets/52b2a7f1-e963-4c9c-b5d6-6efd07c91335" />
+<img width="200" alt="05-LiveArrivalsBoard" src="https://github.com/user-attachments/assets/159e1a78-d8ea-4f96-b6b2-0e60059dd2e2" />
+<img width="200" alt="06-NearbyStations-Detail" src="https://github.com/user-attachments/assets/76ee71d1-42ae-44d5-879d-20adb13a7238" />
+<img width="200" alt="07-Maps" src="https://github.com/user-attachments/assets/6b56b310-8307-4aaa-b4c0-becb8596a64f" />
 
 ## Getting Started
 
