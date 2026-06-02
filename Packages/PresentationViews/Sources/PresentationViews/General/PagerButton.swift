@@ -2,13 +2,13 @@ import SwiftUI
 
 public struct PagerButton: View {
     public let style: Style
-    public let title: LocalizedStringResource    
+    public let title: LocalizedStringResource
     public let action: () -> Void
-    
+
     // swiftlint:disable identifier_name
     public enum Style {
         case up, down
-        
+
         var systemImageName: String {
             switch self {
             case .up:
@@ -19,7 +19,7 @@ public struct PagerButton: View {
         }
     }
     // swiftlint:enable identifier_name
-    
+
     public init(
         style: Style,
         title: LocalizedStringResource,
@@ -29,7 +29,7 @@ public struct PagerButton: View {
         self.title = title
         self.action = action
     }
-    
+
     public var body: some View {
         Button {
             action()
@@ -42,4 +42,22 @@ public struct PagerButton: View {
         .buttonStyle(.bordered)
         .font(.caption)
     }
+}
+
+#Preview("Up") {
+    PagerButton(
+        style: .up,
+        title: "Earlier",
+        action: {}
+    )
+    .padding()
+}
+
+#Preview("Down") {
+    PagerButton(
+        style: .down,
+        title: "Later",
+        action: {}
+    )
+    .padding()
 }
