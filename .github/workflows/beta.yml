@@ -24,24 +24,26 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Select Xcode 26.5
-        run: sudo xcode-select -s /Applications/Xcode_26.5.app
-      - name: Install dependencies
-        run: |
-          brew install git-secret
-          brew install librsvg
-          brew install imagemagick
-          brew install swiftlint
-      - name: Git secret
-        run: |
-          echo "🔓 Unlocking secrets..."
-          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
-          git secret reveal
-      - name: Fastlane commands
-        run: |
-          bundle install
-          bundle update fastlane
-          # bundle exec fastlane unit_tests
-          bundle exec fastlane add_badge_overlay
-          bundle exec fastlane build
-          bundle exec fastlane distribute
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.5.app/Contents/Developer
+      - name: Confirm Xcode version
+        run: xcodebuild -version
+      # - name: Install dependencies
+      #   run: |
+      #     brew install git-secret
+      #     brew install librsvg
+      #     brew install imagemagick
+      #     brew install swiftlint
+      # - name: Git secret
+      #   run: |
+      #     echo "🔓 Unlocking secrets..."
+      #     echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
+      #     git secret reveal
+      # - name: Fastlane commands
+      #   run: |
+      #     bundle install
+      #     bundle update fastlane
+      #     # bundle exec fastlane unit_tests
+      #     bundle exec fastlane add_badge_overlay
+      #     bundle exec fastlane build
+      #     bundle exec fastlane distribute
