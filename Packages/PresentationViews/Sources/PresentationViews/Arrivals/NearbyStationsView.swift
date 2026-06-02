@@ -129,13 +129,17 @@ public struct NearbyStationsView: View {
     @ViewBuilder private var showMoreResultsButton: some View {
         if canShowMoreResults {
             Section {
-                Button {
-                    sectionState.currentPageNo += 1
-                } label: {
-                    Text(.nearbyStationsMoreResultsButtonTitle)
+                HStack {
+                    Spacer()
+                    PagerButton(
+                        style: .down,
+                        title: .nearbyStationsMoreResultsButtonTitle
+                    ) {
+                        sectionState.currentPageNo += 1
+                    }
+                    .id("showMoreButtonID_\(sectionState.currentPageNo)")
+                    Spacer()
                 }
-                .buttonStyle(.primary)
-                .id("showMoreButtonID_\(sectionState.currentPageNo)")
             }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)

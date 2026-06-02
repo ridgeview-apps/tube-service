@@ -150,7 +150,7 @@ public struct JourneyResultsView: View {
     private var earlierJourneysButton: some View {
         pagerButton(
             title: .journeyResultsEarlierJourneysButton,
-            imageName: "chevron.up"
+            style: .up
         ) {
             onAction(.earlierJourneys)
         }
@@ -159,7 +159,7 @@ public struct JourneyResultsView: View {
     private var laterJourneysButton: some View {
         pagerButton(
             title: .journeyResultsLaterJourneysButton,
-            imageName: "chevron.down"
+            style: .down
         ) {
             onAction(.laterJourneys)
         }
@@ -167,21 +167,16 @@ public struct JourneyResultsView: View {
     
     private func pagerButton(
         title: LocalizedStringResource,
-        imageName: String,
+        style: PagerButton.Style,
         action: @escaping () -> Void
     ) -> some View {
         HStack {
             Spacer()
-            Button {
-                action()
-            } label: {
-                Label(
-                    title,
-                    systemImage: imageName
-                )
-            }
-            .buttonStyle(.bordered)
-            .font(.caption)            
+            PagerButton(
+                style: style,
+                title: title,
+                action: action
+            )
             Spacer()
         }
         .disabled(isAnyPageLoading)
