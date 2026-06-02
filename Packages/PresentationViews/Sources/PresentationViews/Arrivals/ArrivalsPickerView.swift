@@ -49,7 +49,6 @@ public struct ArrivalsPickerView: View {
                 allStationsSection
             }
         }
-        .listStyle(.plain)
         .defaultMaxWidthWithFullBackground()
         .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")

@@ -28,7 +28,6 @@ public struct JourneyLocationPickerView: View {
                     pickerValuesSection(with: sectionState)
                 }
             }
-            .listStyle(.plain)
             .defaultScrollContentBackgroundColor()
             .onChange(of: searchTerm, debounceTime: .milliseconds(300)) { newValue in
                 onAction(.searchTermChanged(newValue))
@@ -125,6 +124,7 @@ public struct JourneyLocationPickerView: View {
                 }
             }
         }
+        .foregroundStyle(.foreground)
     }
 }
 

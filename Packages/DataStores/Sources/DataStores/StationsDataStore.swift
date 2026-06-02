@@ -132,7 +132,7 @@ public final class StationsDataStore {
     }
     
     public func disruptions(forStationID stationID: Station.ID) -> [String] {
-        fetchedDisruptionData.messagesByStationID[stationID] ?? []
+        (fetchedDisruptionData.messagesByStationID[stationID] ?? []).map { $0.trimmed() }
     }
 }
 

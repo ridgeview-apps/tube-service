@@ -37,15 +37,15 @@ public struct StationView: View {
     
     public var body: some View {
         List {
+            locationSection
             Group {
                 disruptionsSection
-                locationSection                
                 lineStatusSection
                 liveArrivalsSection
             }
             .lineGroupListRowStyle()
         }
-        .listStyle(.plain)
+        .environment(\.defaultMinListRowHeight, 0)
         .defaultMaxWidthWithFullBackground()
         .background(Color.defaultBackground)
         .withHardScrollEdgeEffectStyle()
@@ -56,7 +56,7 @@ public struct StationView: View {
     
     private var locationSection: some View {
         Section {
-            VStack(spacing: 0) {
+            Group {
                 StationMapView(station: station)
                     .frame(height: 200)
                 if let mapURL {
@@ -66,20 +66,18 @@ public struct StationView: View {
                     )
                 }
                 if let directionsURL {
-                    Divider()
                     linkView(
                         url: directionsURL,
                         text: .stationLocationDirectionsButtonTitle
                     )
                 }
             }
-            .cardStyle()
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
+            .listRowInsets(.zero)
         } header: {
             Text(.stationLocationSectionHeaderTitle)
                 .secondarySectionHeaderStyle()
         }
+        
     }
     
     private func linkView(
@@ -127,16 +125,18 @@ public struct StationView: View {
                             }.opacity(0)
                         }
                         .cardStyle()
+                        .padding(.top, cellStyle == statusCells.first ? 12 : 4)
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, cellStyle == statusCells.last ? 12 : 4)
                 }
             }
+            .listRowSeparator(.hidden)
+            .listRowInsets(.zero)
+            .listRowBackground(Color(uiColor: .secondarySystemGroupedBackground))
         } header: {
             statusSectionHeader
                 .secondarySectionHeaderStyle()
         }
-        .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
-        .listRowSeparator(.hidden)
-        .listRowBackground(Color.defaultBackground)
-
     }
     
     private var statusSectionHeader: some View {
