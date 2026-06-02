@@ -57,8 +57,8 @@ public extension Color {
     static let systemBannerOK = Color.rgb(55, 122, 0)
     static let systemBannerOutage = Color.darkRed1
     
-    static let arrivalsBoardPrimary = Color.rgb(255, 196, 64)
-    static let arrivalsBoardBackground = Color.rgb(52, 30, 4)
+    static let arrivalsBoardPrimary = Color.rgb(198, 188, 61)
+    static let arrivalsBoardBackground = Color.rgb(34, 30, 40)
 }
 
 public extension Color {
