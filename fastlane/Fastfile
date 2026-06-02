@@ -53,7 +53,7 @@ lane :add_badge_overlay do
 end
 
 lane :build do
-  app_store_connect_api_key(duration: 1200) if is_ci
+  app_store_connect_api_key(duration: 1200)
 
   xcconfig = read_xcconfig_file
 
@@ -79,12 +79,12 @@ lane :build do
     configuration: "Release",
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     export_method: "app-store",
-    skip_profile_detection: true    
+    skip_profile_detection: true
   )
 end
 
 lane :distribute do
-  app_store_connect_api_key(duration: 1200) if is_ci
+  app_store_connect_api_key(duration: 1200)
   
   groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
   distribute_external = groups.length > 0  
@@ -120,7 +120,7 @@ lane :submit_for_review do |options|
 end
 
 private_lane :upload_to_app_store_connect do |options|
-  app_store_connect_api_key(duration: 1200) if is_ci
+  app_store_connect_api_key(duration: 1200)
     
   app_identifier = "com.ridgeviewapps.tube-service"
   submit_for_review = options[:submit_for_review] || false
