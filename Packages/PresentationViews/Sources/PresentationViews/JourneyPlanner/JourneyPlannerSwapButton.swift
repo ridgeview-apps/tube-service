@@ -26,6 +26,7 @@ struct JourneyPlannerSwapButton<Value>: View {
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
+                .rotationEffect(.degrees(isSwapped ? 180 : 0))
                 .accessibilityLabel(Text(.swapButtonAccessibilityTitle))
         }
         .font(.system(size: 13, weight: .semibold))
