@@ -69,9 +69,6 @@ struct JourneyResultsHeaderView: View {
                             .bold()
                     }
                     .font(.caption2)
-                    .opacity(1 - collapseProgress)
-                    .frame(height: lerp(from: 14, to: 0, progress: collapseProgress))
-                    .clipped()
                 }
             }
         }

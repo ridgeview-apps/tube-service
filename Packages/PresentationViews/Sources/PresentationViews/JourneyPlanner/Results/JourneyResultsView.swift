@@ -12,8 +12,14 @@ public struct JourneyResultsView: View {
     public let onAction: (JourneyResultsAction) -> Void
 
     @State private var headerCollapseProgress: CGFloat = 0
+    @State private var headerHeight: CGFloat = 0
+    @State private var maxHeaderHeight: CGFloat = 0
 
     private let headerCollapseThreshold: CGFloat = 60
+
+    private var headerHeightCompensation: CGFloat {
+        max(0, maxHeaderHeight - headerHeight)
+    }
 
 
     public init(
@@ -76,6 +82,10 @@ public struct JourneyResultsView: View {
                 onAction(.refresh)
             }
         )
+        .onGeometryChange(for: CGFloat.self, of: \.size.height) { newHeight in
+            headerHeight = newHeight
+            maxHeaderHeight = max(maxHeaderHeight, newHeight)
+        }
     }
 
     private var totalCellItemCount: Int {
@@ -100,14 +110,14 @@ public struct JourneyResultsView: View {
                 } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
                     zeroResultsView
                 }
-                Spacer().frame(height: 30) // Bottom scroll padding
+                Spacer().frame(height: 30 + headerHeightCompensation) // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
             } header: {
                 if hasLoadedResults {
                     resultsSectionHeader
                 }
             }
         }
-        .animation(.snappy, value: pages)
+        .animation(.default, value: pages)
     }
 
     private var zeroResultsView: some View {
