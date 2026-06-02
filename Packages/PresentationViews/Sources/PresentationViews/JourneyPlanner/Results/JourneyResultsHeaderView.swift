@@ -7,11 +7,24 @@ struct JourneyResultsHeaderView: View {
     @Binding var toLocation: JourneyLocationPicker.Value?
     let viaLocation: JourneyLocationPicker.Value?
     let isSwapDisabled: Bool
+    var collapseProgress: CGFloat = 0
     let onSwapLocations: () -> Void
 
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var hasSwappedLocations = false
     @Namespace private var animationNamespace
+
+    private var fromToSpacing: CGFloat {
+        lerp(from: 44, to: 8, progress: collapseProgress)
+    }
+
+    private var verticalPadding: CGFloat {
+        lerp(from: 16, to: 6, progress: collapseProgress)
+    }
+
+    private func lerp(from start: CGFloat, to end: CGFloat, progress: CGFloat) -> CGFloat {
+        start + (end - start) * progress
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -35,7 +48,7 @@ struct JourneyResultsHeaderView: View {
                     .routeAnchor(.from)
             }
 
-            Spacer().frame(height: 44)
+            Spacer().frame(height: fromToSpacing)
 
             VStack(alignment: .leading, spacing: 4) {
                 if let toLocation {
@@ -56,6 +69,9 @@ struct JourneyResultsHeaderView: View {
                             .bold()
                     }
                     .font(.caption2)
+                    .opacity(1 - collapseProgress)
+                    .frame(height: lerp(from: 14, to: 0, progress: collapseProgress))
+                    .clipped()
                 }
             }
         }
@@ -64,7 +80,7 @@ struct JourneyResultsHeaderView: View {
         .routeIndicatorOverlay(leadingOffset: 28, leadingPadding: 56) {
             swapLocationsButton
         }
-        .padding(.vertical)
+        .padding(.vertical, verticalPadding)
         .padding(.horizontal, horizontalSizeClass == .regular ? 12 : 0)
         .background(Color.defaultCellBackground)
         .clipShape(RoundedRectangle(cornerRadius: horizontalSizeClass == .regular ? 14 : 0, style: .continuous))
@@ -76,7 +92,9 @@ struct JourneyResultsHeaderView: View {
             valueA: $fromLocation,
             valueB: $toLocation
         )
-        .disabled(isSwapDisabled)
+        .disabled(isSwapDisabled || collapseProgress >= 1)
+        .opacity(1 - collapseProgress)
+        .scaleEffect(lerp(from: 1, to: 0.6, progress: collapseProgress))
         .onChange(of: hasSwappedLocations) {
             onSwapLocations()
         }

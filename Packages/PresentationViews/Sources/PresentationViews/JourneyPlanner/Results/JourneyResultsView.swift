@@ -11,6 +11,10 @@ public struct JourneyResultsView: View {
     public let timeOption: JourneyTimePickerSelection
     public let onAction: (JourneyResultsAction) -> Void
 
+    @State private var headerCollapseProgress: CGFloat = 0
+
+    private let headerCollapseThreshold: CGFloat = 60
+
 
     public init(
         pages: Binding<[JourneyResultsPage]>,
@@ -42,6 +46,12 @@ public struct JourneyResultsView: View {
             ScrollView {
                 contentView
             }
+            .onScrollGeometryChange(for: CGFloat.self) { geometry in
+                geometry.contentOffset.y
+            } action: { _, newOffset in
+                let scrollProgress = newOffset / headerCollapseThreshold
+                headerCollapseProgress = scrollProgress.clamped(to: 0...1)
+            }
             .refreshable {
                 if !isAnyPageLoading {
                     onAction(.refresh)
@@ -61,6 +71,7 @@ public struct JourneyResultsView: View {
             toLocation: $toLocation,
             viaLocation: viaLocation,
             isSwapDisabled: isAnyPageLoading,
+            collapseProgress: headerCollapseProgress,
             onSwapLocations: {
                 onAction(.refresh)
             }
@@ -205,6 +216,12 @@ public struct JourneyResultsView: View {
         }
     }
 
+}
+
+fileprivate extension Comparable {
+    func clamped(to range: ClosedRange<Self>) -> Self {
+        min(max(self, range.lowerBound), range.upperBound)
+    }
 }
 
 // MARK: - Previews
