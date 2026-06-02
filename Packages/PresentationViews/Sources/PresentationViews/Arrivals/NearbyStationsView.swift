@@ -12,18 +12,15 @@ public struct NearbyStationsView: View {
     let onAction: (Action) -> Void
     
     @Binding var sectionState: NearbyStationsResultsSectionState
-    @Binding var selection: NearbyStation?
     
     // MARK: - Init
     
     public init(locationUIStatus: LocationUIStatus,
                 onAction: @escaping (Action) -> Void,
-                sectionState: Binding<NearbyStationsResultsSectionState>,
-                selection: Binding<NearbyStation?>) {
+                sectionState: Binding<NearbyStationsResultsSectionState>) {
         self.locationUIStatus = locationUIStatus
         self.onAction = onAction
         self._sectionState = sectionState
-        self._selection = selection
     }
     
     
@@ -40,7 +37,7 @@ public struct NearbyStationsView: View {
     
     @ViewBuilder private var nearbyStationsListView: some View {
         ScrollViewReader { reader in
-            List(selection: $selection) {
+            List {
                 resultsSectionView
                     .onChange(of: sectionState.currentPageNo) { _, newValue in
                         withAnimation {
@@ -161,7 +158,6 @@ import ModelStubs
 private struct Previewer: View {
     var locationUIStyle: LocationUIStatus.Style
     var onAction: (NearbyStationsView.Action) -> Void = { print($0) }
-    @State var selection: NearbyStation?
     @State var currentPageNo = 1
     @State var sectionState: NearbyStationsResultsSectionState = .init(nearbyStations: [])
     var pagedResultsSize: Int = 5
@@ -176,8 +172,7 @@ private struct Previewer: View {
         NavigationStack {
             NearbyStationsView(locationUIStatus: locationUIStatus,
                                onAction: onAction,
-                               sectionState: $sectionState,
-                               selection: $selection)
+                               sectionState: $sectionState)
               .navigationTitle("Nearby stations")
               .navigationDestination(for: NearbyStation.self) { selection in
                   Text("\(String(describing: selection)) selected")

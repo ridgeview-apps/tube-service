@@ -27,7 +27,7 @@ public extension View {
                       borderWidth: borderWidth)
         )
     }
-    
+
     func defaultListRowStyle(edgeInsets: EdgeInsets = .zero,
                              listRowSeparator separatorVisibility: Visibility = .hidden,
                              backgroundColor: Color = .defaultBackground) -> some View {

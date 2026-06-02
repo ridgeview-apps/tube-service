@@ -11,17 +11,13 @@ struct StationScreen: View {
     
     let station: Station
     
-    @Binding var selection: StationView.Selection?
-    
-    
     // MARK: - Layout
     
     var body: some View {
         StationView(station: station,
                     loadingState: loadingState,
                     statusCells: statusCells,
-                    disruptionMessages: disruptionMessages,
-                    selection: $selection)
+                    disruptionMessages: disruptionMessages)
         .navigationTitle(station.name)
         .refreshable {
             await refreshData()
@@ -94,8 +90,7 @@ private struct WrapperView: View {
     @State var selection: StationView.Selection?
     
     var body: some View {
-        StationScreen(station: station,
-                      selection: $selection)
+        StationScreen(station: station)
     }
 }
 

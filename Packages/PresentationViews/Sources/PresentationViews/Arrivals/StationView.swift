@@ -5,26 +5,23 @@ import MapKit
 public struct StationView: View {
     
     public enum Selection: Hashable {
-        case line(Line)
-        case lineGroup(Station.LineGroup)
+        case lineStatusDetail(Line)
+        case arrivalsBoards(stationName: String, Station.LineGroup)
     }
     
     public let station: Station
     public let loadingState: LoadingState
     public let statusCells: [LineStatusCell.Style]
     public let disruptionMessages: [String]
-    @Binding var selection: Selection?
     
     public init(station: Station,
                 loadingState: LoadingState,
                 statusCells: [LineStatusCell.Style],
-                disruptionMessages: [String],
-                selection: Binding<Selection?>) {
+                disruptionMessages: [String]) {
         self.station = station
         self.loadingState = loadingState
         self.statusCells = statusCells
         self.disruptionMessages = disruptionMessages
-        self._selection = selection
     }
     
     private var mapURL: URL? {
@@ -120,7 +117,7 @@ public struct StationView: View {
                     LineStatusCell(style: cellStyle, showsAccessory: true)
                         .frame(minHeight: 60)
                         .overlay {
-                            NavigationLink(value: Selection.line(line)) {
+                            NavigationLink(value: Selection.lineStatusDetail(line)) {
                                 EmptyView()
                             }.opacity(0)
                         }
@@ -154,7 +151,7 @@ public struct StationView: View {
     @ViewBuilder private var liveArrivalsSection: some View {
         Section {
             ForEach(station.lineGroups.sortedByName()) { lineGroup in
-                NavigationLink(value: Selection.lineGroup(lineGroup)) {
+                NavigationLink(value: Selection.arrivalsBoards(stationName: station.name, lineGroup)) {
                     LineGroupCell(style: .plain,
                                   lineIDs: lineGroup.lineIds.sortedByName(),
                                   title: lineGroup.name)
@@ -191,8 +188,7 @@ private struct WrapperView: View {
             StationView(station: ModelStubs.kingsCrossStation,
                         loadingState: loadingState,
                         statusCells: statusCells,
-                        disruptionMessages: disruptionMessages,
-                        selection: $selection)
+                        disruptionMessages: disruptionMessages)
             .navigationTitle("Station preview")
             .navigationDestination(for: StationView.Selection.self) { selection in
                 Text("Selected \(String(describing: selection))")

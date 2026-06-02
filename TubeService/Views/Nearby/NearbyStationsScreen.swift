@@ -10,7 +10,6 @@ struct NearbyStationsScreen: View {
     @Environment(LocationDataStore.self) var location
     
     @State private var selectedStation: NearbyStation?
-    @State private var selectedStationViewItem: StationView.Selection?
     @State private var sectionState: NearbyStationsResultsSectionState = .empty
 
     // MARK: - Layout
@@ -18,9 +17,8 @@ struct NearbyStationsScreen: View {
     var body: some View {
         NavigationStack {
             nearbyStationsListView
-                .navigationDestination(item: $selectedStation) { station in
-                    StationScreen(station: station.station,
-                                  selection: $selectedStationViewItem)
+                .navigationDestination(for: NearbyStation.self) { station in
+                    StationScreen(station: station.station)
                 }
                 .navigationDestination(for: StationView.Selection.self) { selection in
                     destinationView(for: selection)
@@ -36,8 +34,7 @@ struct NearbyStationsScreen: View {
         NearbyStationsView(
             locationUIStatus: locationUIStatus,
             onAction: handleNearbyStationsViewAction,
-            sectionState: $sectionState,
-            selection: $selectedStation
+            sectionState: $sectionState
         )
         .withSettingsToolbarButton()
         .navigationTitle(Text(.nearbyStationsNavigationTitle))
@@ -73,10 +70,10 @@ struct NearbyStationsScreen: View {
     
     @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
         switch selection {
-        case let .line(line):
+        case let .lineStatusDetail(line):
             LineStatusDetailScreen(line: line, fetchType: .today)
-        case let .lineGroup(lineGroup):
-            ArrivalsBoardListScreen(stationName: selectedStation?.station.name ?? "",
+        case let .arrivalsBoards(stationName, lineGroup):
+            ArrivalsBoardListScreen(stationName: stationName,
                                     lineGroup: lineGroup)
         }
     }
