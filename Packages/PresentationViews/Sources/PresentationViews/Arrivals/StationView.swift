@@ -33,50 +33,72 @@ public struct StationView: View {
     }
     
     public var body: some View {
-        List {
-            Group {
+        ScrollView {
+            LazyVStack(alignment: .leading, spacing: 24) {
                 locationSection
                 disruptionsSection
                 lineStatusSection
                 liveArrivalsSection
             }
-            .lineGroupListRowStyle()
+            .padding(.vertical, 16)
         }
-        .environment(\.defaultMinListRowHeight, 0)
-        .defaultMaxWidthWithFullBackground()
+        .withDefaultMaxWidth()
         .background(Color.defaultBackground)
         .withHardScrollEdgeEffectStyle()
     }
-    
-    
-    // MARK: - Location section
-    
-    private var locationSection: some View {
-        Section {
+
+
+    // MARK: - Section container
+
+    private func section<Content: View, Header: View>(
+        cardBackground: Bool = true,
+        @ViewBuilder content: () -> Content,
+        @ViewBuilder header: () -> Header
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            header()
+                .secondarySectionHeaderStyle()
+                .padding(.horizontal, 32)
             Group {
+                if cardBackground {
+                    content()
+                        .cardStyle()
+                } else {
+                    content()
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+
+
+    // MARK: - Location section
+
+    private var locationSection: some View {
+        section {
+            VStack(spacing: 0) {
                 StationMapView(station: station)
                     .frame(height: 200)
                 if let mapURL {
+                    Divider()
                     linkView(
                         url: mapURL,
                         text: .stationLocationShowInMapsButtonTitle
                     )
                 }
                 if let directionsURL {
+                    Divider()
                     linkView(
                         url: directionsURL,
                         text: .stationLocationDirectionsButtonTitle
                     )
                 }
             }
-            .listRowInsets(.zero)
         } header: {
             Text(.stationLocationSectionHeaderTitle)
-                .secondarySectionHeaderStyle()
         }
-        
     }
-    
+
     private func linkView(
         url: URL,
         text: LocalizedStringResource
@@ -91,51 +113,45 @@ public struct StationView: View {
         .foregroundStyle(.link)
         .padding()
     }
-    
-    
+
+
     // MARK: - Disruption section
-    
+
     @ViewBuilder private var disruptionsSection: some View {
         if !disruptionMessages.isEmpty {
-            Section {
+            section {
                 DisruptionsCell(disruptionMessages: disruptionMessages)
                     .frame(minHeight: 52)
+                    .padding(.vertical, 12)
+                    .padding(.horizontal, 16)
             } header: {
                 Text(.stationDisruptionsSectionHeaderTitle)
-                    .secondarySectionHeaderStyle()
             }
         }
     }
-    
+
 
     // MARK: - Status section
-    
+
     private var lineStatusSection: some View {
-        Section {
-            ForEach(statusCells, id: \.self) { cellStyle in
-                if case let .singleLine(line) = cellStyle {
-                    LineStatusCell(style: cellStyle, showsAccessory: true)
-                        .frame(minHeight: 60)
-                        .overlay {
-                            NavigationLink(value: Selection.lineStatusDetail(line)) {
-                                EmptyView()
-                            }.opacity(0)
+        section(cardBackground: false) {
+            VStack(spacing: 8) {
+                ForEach(statusCells, id: \.self) { cellStyle in
+                    if case let .singleLine(line) = cellStyle {
+                        NavigationLink(value: Selection.lineStatusDetail(line)) {
+                            LineStatusCell(style: cellStyle, showsAccessory: true)
+                                .frame(minHeight: 52)
                         }
-                        .cardStyle(borderColor: Color.defaultCellBackground)
-                        .padding(.top, cellStyle == statusCells.first ? 12 : 4)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, cellStyle == statusCells.last ? 12 : 4)
+                        .buttonStyle(.plain)
+                        .cardStyle()
+                    }
                 }
             }
-            .listRowSeparator(.hidden)
-            .listRowInsets(.zero)
-            .listRowBackground(Color(uiColor: .secondarySystemBackground))
         } header: {
             statusSectionHeader
-                .secondarySectionHeaderStyle()
         }
     }
-    
+
     private var statusSectionHeader: some View {
         HStack(spacing: 8) {
             Text(.stationStatusSectionHeaderTitle)
@@ -144,23 +160,37 @@ public struct StationView: View {
                 .defaultLoadingStatusStyle()
         }
     }
-    
-    
+
+
     // MARK: - Live Arrivals section
-    
-    @ViewBuilder private var liveArrivalsSection: some View {
-        Section {
-            ForEach(station.lineGroups.sortedByName()) { lineGroup in
-                NavigationLink(value: Selection.arrivalsBoards(stationName: station.name, lineGroup)) {
-                    LineGroupCell(style: .plain,
-                                  lineIDs: lineGroup.lineIds.sortedByName(),
-                                  title: lineGroup.name)
-                    .frame(minHeight: 52)
+
+    private var liveArrivalsSection: some View {
+        let lineGroups = station.lineGroups.sortedByName()
+        return section {
+            VStack(spacing: 0) {
+                ForEach(Array(lineGroups.enumerated()), id: \.element.id) { index, lineGroup in
+                    NavigationLink(value: Selection.arrivalsBoards(stationName: station.name, lineGroup)) {
+                        HStack(spacing: 8) {
+                            LineGroupCell(style: .plain,
+                                          lineIDs: lineGroup.lineIds.sortedByName(),
+                                          title: lineGroup.name)
+                            Spacer(minLength: 0)
+                            Image(systemName: "chevron.right")
+                                .font(.footnote.weight(.semibold))
+                                .foregroundStyle(.tertiary)
+                        }
+                        .frame(minHeight: 52)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 16)
+                    }
+                    .buttonStyle(.plain)
+                    if index < lineGroups.count - 1 {
+                        Divider().padding(.leading, 16)
+                    }
                 }
             }
         } header: {
             Text(.stationArrivalsSectionHeaderTitle)
-                .secondarySectionHeaderStyle()
         }
     }
 }
