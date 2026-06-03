@@ -164,6 +164,8 @@ extension View {
             self
                 .withDefaultMaxWidth()
         }
+        .scrollContentBackground(.hidden)
+        .background(Color.defaultBackground)
     }
 }
 

@@ -34,8 +34,8 @@ public struct StationView: View {
     
     public var body: some View {
         List {
-            locationSection
             Group {
+                locationSection
                 disruptionsSection
                 lineStatusSection
                 liveArrivalsSection
@@ -121,7 +121,7 @@ public struct StationView: View {
                                 EmptyView()
                             }.opacity(0)
                         }
-                        .cardStyle()
+                        .cardStyle(borderColor: Color.defaultCellBackground)
                         .padding(.top, cellStyle == statusCells.first ? 12 : 4)
                         .padding(.horizontal, 16)
                         .padding(.bottom, cellStyle == statusCells.last ? 12 : 4)
@@ -129,7 +129,7 @@ public struct StationView: View {
             }
             .listRowSeparator(.hidden)
             .listRowInsets(.zero)
-            .listRowBackground(Color(uiColor: .secondarySystemGroupedBackground))
+            .listRowBackground(Color(uiColor: .secondarySystemBackground))
         } header: {
             statusSectionHeader
                 .secondarySectionHeaderStyle()
