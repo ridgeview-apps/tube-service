@@ -18,7 +18,7 @@ public extension View {
     
     func cardStyle(cornerRadius: CGFloat = 12,
                    backgroundColor: Color = .defaultCellBackground,
-                   borderColor: Color = .defaultCellBackground,
+                   borderColor: Color = .clear,
                    borderWidth: CGFloat = 0.5) -> some View {
         self.modifier(
             CardStyle(cornerRadius: cornerRadius,
@@ -148,21 +148,19 @@ public extension EdgeInsets {
 }
 
 private struct CardStyle: ViewModifier {
-    var cornerRadius: CGFloat = 4
+    var cornerRadius: CGFloat = 12
     var backgroundColor: Color = .defaultCellBackground
     var borderColor: Color = .clear
-    var borderWidth: CGFloat = 1
-    
+    var borderWidth: CGFloat = 0.5
+
     @Environment(\.colorScheme) var colorScheme
-    
+
     public func body(content: Content) -> some View {
         content
             .background(backgroundColor)
             .clipShape(.rect(cornerRadius: cornerRadius))
-            .shadow(color: .primary.opacity(0.14),
-                    radius: colorScheme == .dark ? 0: 2,
-                    x: colorScheme == .dark ? 0 : 2,
-                    y: colorScheme == .dark ? 0 : 2)
+            .shadow(color: .black.opacity(colorScheme == .dark ? 0 : 0.12),
+                    radius: 4, x: 0, y: 2)
             .overlay {
                 if borderColor != .clear {
                     RoundedRectangle(cornerRadius: cornerRadius)
