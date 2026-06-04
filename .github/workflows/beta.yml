@@ -38,8 +38,8 @@ jobs:
           echo "🔓 Unlocking secrets..."
           echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
           git secret reveal
-      # - name: Swift format lint
-      #   run: Scripts/swift-format-lint.sh          
+      - name: Swift format lint
+        run: Scripts/swift-format-lint.sh          
       - name: Fastlane commands
         run: |
           bundle install
