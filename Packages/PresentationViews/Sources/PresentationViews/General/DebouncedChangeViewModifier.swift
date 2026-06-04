@@ -7,9 +7,11 @@ extension View {
         debounceTime: Duration,
         perform action: @escaping (_ newValue: Value) -> Void
     ) -> some View where Value: Equatable {
-        self.modifier(DebouncedChangeViewModifier(trigger: value, action: action) {
-            try await Task.sleep(for: debounceTime)
-        })
+        self.modifier(
+            DebouncedChangeViewModifier(trigger: value, action: action) {
+                try await Task.sleep(for: debounceTime)
+            }
+        )
     }
 }
 

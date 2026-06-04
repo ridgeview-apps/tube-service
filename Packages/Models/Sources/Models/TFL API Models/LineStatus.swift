@@ -5,7 +5,7 @@ public struct LineStatus: Codable, Hashable, Sendable {
     public let statusSeverityDescription: String?
     public let reason: String?
     public let disruption: Disruption?
-    
+
     public init(
         statusSeverity: LineStatusSeverity,
         statusSeverityDescription: String?,
@@ -17,7 +17,7 @@ public struct LineStatus: Codable, Hashable, Sendable {
         self.reason = reason
         self.disruption = disruption
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.statusSeverity = try? container.decodeIfPresent(LineStatusSeverity.self, forKey: .statusSeverity)
@@ -34,7 +34,7 @@ public extension LineStatus {
 }
 
 public enum LineStatusSeverity: Int, Codable, Sendable {
-    
+
     case specialService = 0
     case closed = 1
     case suspended = 2
@@ -62,7 +62,7 @@ public struct Disruption: Codable, Hashable, Sendable {
     public let category: DisruptionCategory?
     public let description: String?
     public let additionalInfo: String?
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.category = try? container.decodeIfPresent(DisruptionCategory.self, forKey: .category)

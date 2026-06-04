@@ -3,9 +3,9 @@ import SwiftUI
 
 struct DisruptionsCell: View {
     let disruptionMessages: [String]
-    
+
     @State var isExpanded = false
-    
+
     var body: some View {
         DisclosureGroup(isExpanded: $isExpanded) {
             ForEach(disruptionMessages, id: \.self) { message in
@@ -40,6 +40,6 @@ struct DisruptionsCell: View {
             ]
         )
     }
-    
+
 }
 // swiftlint:enable line_length

@@ -44,6 +44,7 @@ struct CompactDatePicker: UIViewRepresentable {
 
 #Preview {
     CompactDatePicker(
-        selection: .constant(.now), minuteInterval: 5
+        selection: .constant(.now),
+        minuteInterval: 5
     )
 }

@@ -15,7 +15,7 @@ extension Sheet: Identifiable {
     enum ModalScreenID {
         case systemStatusDetail, settings, safari, journeyLocationPicker
     }
-    
+
     var id: ModalScreenID {
         switch self {
         case .systemStatusDetail: .systemStatusDetail
@@ -32,7 +32,7 @@ extension Sheet: Identifiable {
 struct SheetAction {
     typealias Action = (Sheet) -> Void
     let action: Action
-    
+
     func callAsFunction(_ sheet: Sheet) {
         action(sheet)
     }
@@ -41,12 +41,15 @@ struct SheetAction {
 
 struct RootSheetPresenterModifier: ViewModifier {
     @State private var selectedSheet: Sheet?
-    
+
     func body(content: Content) -> some View {
         content
-            .environment(\.showSheet, SheetAction { sheet in
-                selectedSheet = sheet
-            })
+            .environment(
+                \.showSheet,
+                SheetAction { sheet in
+                    selectedSheet = sheet
+                }
+            )
             .sheet(item: $selectedSheet) { sheet in
                 SheetView(sheet: sheet) {
                     selectedSheet = nil

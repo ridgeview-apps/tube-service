@@ -16,14 +16,14 @@ public protocol TransportAPIClientType: Sendable {
 // MARK: - API Routes
 
 enum TransportAPIRoute {
-    
+
     case getCurrentLineStatuses([ModeID])
     case getLineStatusesForDateRange([TrainLineID], DateInterval)
-    case getArrivalPredictions(stationCode: String, [TrainLineID]) // Tube lines only
+    case getArrivalPredictions(stationCode: String, [TrainLineID])  // Tube lines only
     case getArrivalDepartures(stationCode: String, [TrainLineID])  // Overground, Thameslink & Elizabeth line
     case getStationDisruptions([ModeID])
     case getJourneyResults(JourneyRequestParams)
-    
+
     func toURL(relativeTo baseURL: URL, appID: String, appKey: String) throws -> URL {
         var urlComponents = try self.toURLComponents()
 
@@ -31,19 +31,19 @@ enum TransportAPIRoute {
             URLQueryItem(name: "app_id", value: appID),
             URLQueryItem(name: "app_key", value: appKey)
         ]
-        
+
         let routeQueryItems = urlComponents.queryItems ?? []
-        
+
         urlComponents.queryItems = fixedQueryItems + routeQueryItems
-        
+
         guard let url = urlComponents.url(relativeTo: baseURL) else {
             throw HTTPError.invalidRequestURL
         }
-        
+
         return url
     }
-    
-    
+
+
     private func toURLComponents() throws -> URLComponents {
         switch self {
         case let .getCurrentLineStatuses(modes):
@@ -59,33 +59,37 @@ enum TransportAPIRoute {
             return try .fromPath("/Line/\(lineIDsParam)/Arrivals/\(stationCode)")
         case let .getArrivalDepartures(stationCode, lineIDs):
             let lineIDsParam = lineIDs.toURLPathParam()
-            return try .fromPath("/StopPoint/\(stationCode)/ArrivalDepartures",
-                                 queryParams: ["lineIds": lineIDsParam])
+            return try .fromPath(
+                "/StopPoint/\(stationCode)/ArrivalDepartures",
+                queryParams: ["lineIds": lineIDsParam]
+            )
         case let .getStationDisruptions(modes):
             let modesParam = modes.toURLPathParam()
             return try .fromPath("/StopPoint/Mode/\(modesParam)/Disruption")
         case let .getJourneyResults(params):
             let fromParam = params.from.toURLPathParam()
             let toParam = params.to.toURLPathParam()
-            
+
             let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
-            
+
             var queryParams = [
                 "routeBetweenEntrances": "\(params.routeBetweenEntrances)",
                 "mode": params.modeIDs.toURLPathParam(),
                 "alternativeCycle": "\(alternativeCycle)"
             ]
-            
+
             if let via = params.via {
                 queryParams["via"] = via.toURLPathParam()
             }
-            
+
             if let timeOption = params.timeOption {
                 queryParams.merge(timeOption.toAPIQueryParams) { _, newKey in newKey }
             }
-            
-            return try .fromPath("/Journey/JourneyResults/\(fromParam)/to/\(toParam)",
-                                 queryParams: queryParams)
+
+            return try .fromPath(
+                "/Journey/JourneyResults/\(fromParam)/to/\(toParam)",
+                queryParams: queryParams
+            )
 
         }
     }
@@ -95,61 +99,73 @@ enum TransportAPIRoute {
 // MARK: - TransportAPIClient
 
 public struct TransportAPIClient: TransportAPIClientType {
-    
+
     public let baseURL: URL
     public let appID: String
     public let appKey: String
     public let urlSession: URLSession
     public let jsonDecoder: JSONDecoder
-    
-    
+
+
     // MARK: - Init
-    
-    public init(baseURL: URL,
-                appID: String,
-                appKey: String,
-                urlSession: URLSession = .shared,
-                jsonDecoder: JSONDecoder = .defaultModelDecoder) {
+
+    public init(
+        baseURL: URL,
+        appID: String,
+        appKey: String,
+        urlSession: URLSession = .shared,
+        jsonDecoder: JSONDecoder = .defaultModelDecoder
+    ) {
         self.baseURL = baseURL
         self.appID = appID
         self.appKey = appKey
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
     }
-    
-    
+
+
     // MARK: - Data fetching
-    
+
     public func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]> {
         return try await fetchData(for: .getCurrentLineStatuses(ModeID.trains), mappedTo: [Line].self)
     }
-    
+
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
         let lineIDS = TrainLineID.allCases.filter { $0 != .overground }
-        return try await fetchData(for: .getLineStatusesForDateRange(lineIDS, dateInterval),
-                                   mappedTo: [Line].self)
+        return try await fetchData(
+            for: .getLineStatusesForDateRange(lineIDS, dateInterval),
+            mappedTo: [Line].self
+        )
     }
-    
+
     public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
-        return try await fetchData(for: .getArrivalPredictions(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
-                                   mappedTo: [ArrivalPrediction].self)
+        return try await fetchData(
+            for: .getArrivalPredictions(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
+            mappedTo: [ArrivalPrediction].self
+        )
     }
-    
+
     public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
-        return try await fetchData(for: .getArrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
-                                   mappedTo: [ArrivalDeparture].self)
+        return try await fetchData(
+            for: .getArrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
+            mappedTo: [ArrivalDeparture].self
+        )
     }
-    
+
     public func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]> {
-        return try await fetchData(for: .getStationDisruptions(ModeID.trains),
-                                   mappedTo: [DisruptedPoint].self)
+        return try await fetchData(
+            for: .getStationDisruptions(ModeID.trains),
+            mappedTo: [DisruptedPoint].self
+        )
     }
-    
+
     public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
-        return try await fetchData(for: .getJourneyResults(params),
-                                   mappedTo: JourneyResults.self)
+        return try await fetchData(
+            for: .getJourneyResults(params),
+            mappedTo: JourneyResults.self
+        )
     }
-    
+
     private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
         let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
         return try await urlSession.get(url: url, decodedBy: jsonDecoder, as: model)

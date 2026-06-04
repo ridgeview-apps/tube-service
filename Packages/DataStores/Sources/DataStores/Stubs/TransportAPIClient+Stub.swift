@@ -5,61 +5,61 @@ import Shared
 
 #if DEBUG
 
-public final class StubTransportAPIClient: TransportAPIClientType, @unchecked Sendable {
-    
-    public init() {}
-    
-    public private(set) var fetchCurrentLineStatusesCallCount = 0
-    public var stubbedLineStatuses: HTTPResponse<[Line]> = .success200(ModelStubs.lineStatusesToday)
-    public var fetchCurrentLineStatusesError: Error?
-    public func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]> {
-        fetchCurrentLineStatusesCallCount += 1
-        if let fetchCurrentLineStatusesError { throw fetchCurrentLineStatusesError }
-        return stubbedLineStatuses
-    }
-    
-    public private(set) var fetchLineStatusesForDateRangeCallCount = 0
-    public var stubbedLineStatusesForDateRange: HTTPResponse<[Line]> = .success200(ModelStubs.lineStatusesFuture)
-    public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
-        fetchLineStatusesForDateRangeCallCount += 1
-        return stubbedLineStatusesForDateRange
-    }
-    
-    public private(set) var fetchArrivalPredictionsCallCount = 0
-    public var stubbedArrivalPredictions: HTTPResponse<[ArrivalPrediction]> = .success200(ModelStubs.northernLineBothPlatforms)
-    public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
-        fetchArrivalPredictionsCallCount += 1
-        return stubbedArrivalPredictions
-    }
-    
-    public private(set) var fetchArrivalDeparturesCallCount = 0
-    public var stubbedArrivalDepartures: HTTPResponse<[ArrivalDeparture]> = .success200(ModelStubs.elizabethLineBothPlatforms)
-    public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
-        fetchArrivalDeparturesCallCount += 1
-        return stubbedArrivalDepartures
+    public final class StubTransportAPIClient: TransportAPIClientType, @unchecked Sendable {
+
+        public init() {}
+
+        public private(set) var fetchCurrentLineStatusesCallCount = 0
+        public var stubbedLineStatuses: HTTPResponse<[Line]> = .success200(ModelStubs.lineStatusesToday)
+        public var fetchCurrentLineStatusesError: Error?
+        public func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]> {
+            fetchCurrentLineStatusesCallCount += 1
+            if let fetchCurrentLineStatusesError { throw fetchCurrentLineStatusesError }
+            return stubbedLineStatuses
+        }
+
+        public private(set) var fetchLineStatusesForDateRangeCallCount = 0
+        public var stubbedLineStatusesForDateRange: HTTPResponse<[Line]> = .success200(ModelStubs.lineStatusesFuture)
+        public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
+            fetchLineStatusesForDateRangeCallCount += 1
+            return stubbedLineStatusesForDateRange
+        }
+
+        public private(set) var fetchArrivalPredictionsCallCount = 0
+        public var stubbedArrivalPredictions: HTTPResponse<[ArrivalPrediction]> = .success200(ModelStubs.northernLineBothPlatforms)
+        public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
+            fetchArrivalPredictionsCallCount += 1
+            return stubbedArrivalPredictions
+        }
+
+        public private(set) var fetchArrivalDeparturesCallCount = 0
+        public var stubbedArrivalDepartures: HTTPResponse<[ArrivalDeparture]> = .success200(ModelStubs.elizabethLineBothPlatforms)
+        public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
+            fetchArrivalDeparturesCallCount += 1
+            return stubbedArrivalDepartures
+        }
+
+        public private(set) var fetchStationDisruptionsCallCount = 0
+        public var stubbedDisruptedPoints: HTTPResponse<[DisruptedPoint]> = .success200(ModelStubs.disruptedStations)
+        public func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]> {
+            fetchStationDisruptionsCallCount += 1
+            return stubbedDisruptedPoints
+        }
+
+        public private(set) var fetchJourneyResultsCallCount = 0
+        public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        public var fetchJourneyResultsError: Error?
+        public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
+            fetchJourneyResultsCallCount += 1
+            if let fetchJourneyResultsError { throw fetchJourneyResultsError }
+            return stubbedJourneyResults
+        }
     }
 
-    public private(set) var fetchStationDisruptionsCallCount = 0
-    public var stubbedDisruptedPoints: HTTPResponse<[DisruptedPoint]> = .success200(ModelStubs.disruptedStations)
-    public func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]> {
-        fetchStationDisruptionsCallCount += 1
-        return stubbedDisruptedPoints
+    extension HTTPResponse {
+        static func success200(_ decodeModel: T) -> HTTPResponse<T> {
+            .init(statusCode: 200, decodedModel: decodeModel)
+        }
     }
-    
-    public private(set) var fetchJourneyResultsCallCount = 0
-    public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
-    public var fetchJourneyResultsError: Error?
-    public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
-        fetchJourneyResultsCallCount += 1
-        if let fetchJourneyResultsError { throw fetchJourneyResultsError }
-        return stubbedJourneyResults
-    }
-}
-
-extension HTTPResponse {
-    static func success200(_ decodeModel: T) -> HTTPResponse<T> {
-        .init(statusCode: 200, decodedModel: decodeModel)
-    }
-}
 
 #endif

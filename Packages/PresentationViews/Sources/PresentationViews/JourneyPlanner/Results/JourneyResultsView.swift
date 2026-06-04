@@ -70,7 +70,7 @@ public struct JourneyResultsView: View {
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .defaultMaxWidthWithFullBackground()
     }
-    
+
     private var journeyHeaderView: some View {
         JourneyResultsHeaderView(
             fromLocation: $fromLocation,
@@ -110,7 +110,7 @@ public struct JourneyResultsView: View {
                 } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
                     zeroResultsView
                 }
-                Spacer().frame(height: 30 + headerHeightCompensation) // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
+                Spacer().frame(height: 30 + headerHeightCompensation)  // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
             } header: {
                 if hasLoadedResults {
                     resultsSectionHeader
@@ -174,7 +174,7 @@ public struct JourneyResultsView: View {
             onAction(.laterJourneys)
         }
     }
-    
+
     private func pagerButton(
         title: LocalizedStringResource,
         style: PagerButton.Style,
@@ -333,7 +333,7 @@ extension JourneyResultsPage {
             .loadedPage(
                 id: "initial",
                 results: ModelStubs.journeyResultsKingsXToWaterlooNow
-            ),
+            )
         ]
     )
 }

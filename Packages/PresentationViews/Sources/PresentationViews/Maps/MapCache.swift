@@ -16,7 +16,8 @@ public enum MapCache {
     public static func isStale(_ mapLink: MapLink, maxAge: TimeInterval = 7 * 24 * 60 * 60) -> Bool {
         let url = fileURL(for: mapLink)
         guard let attributes = try? FileManager.default.attributesOfItem(atPath: url.path),
-              let modified = attributes[.modificationDate] as? Date else {
+            let modified = attributes[.modificationDate] as? Date
+        else {
             return true
         }
         return Date().timeIntervalSince(modified) > maxAge

@@ -7,15 +7,15 @@ import SwiftUI
 struct ArrivalsBoardListScreen: View {
     let stationName: String
     let lineGroup: Station.LineGroup
-    
+
     @State private var loadingState: LoadingState = .loaded
     @State private var loadedBoardID: Station.LineGroup.ID?
     @State private var boardStates: [ArrivalsBoardState] = []
     @State private var refreshDate: Date?
     @State private var autoRefreshTimer: ObservableTimer?
-    
+
     private let timerSecondsInterval = 20.0
-        
+
     @Environment(AppDataStore.self) var appData
 
     @AppStorage(
@@ -23,13 +23,15 @@ struct ArrivalsBoardListScreen: View {
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     var body: some View {
-        ArrivalsBoardListView(boardStates: boardStates,
-                              lineGroupName: lineGroup.name,
-                              refreshDate: refreshDate,
-                              loadingState: loadingState,
-                              isFavourite: isFavouriteLineGroup)
+        ArrivalsBoardListView(
+            boardStates: boardStates,
+            lineGroupName: lineGroup.name,
+            refreshDate: refreshDate,
+            loadingState: loadingState,
+            isFavourite: isFavouriteLineGroup
+        )
         .navigationTitle(stationName)
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
@@ -48,19 +50,19 @@ struct ArrivalsBoardListScreen: View {
         }
 
     }
-    
+
     private func refreshData(startNewTimer: Bool) {
         guard loadingState != .loading else {
             return
         }
-        
-        let boardIDHasChanged = loadedBoardID != lineGroup.id // e.g. split view selection
+
+        let boardIDHasChanged = loadedBoardID != lineGroup.id  // e.g. split view selection
         if boardIDHasChanged {
             boardStates = []
         }
-        
+
         loadingState = .loading
-        
+
         Task {
             do {
                 boardStates = try await fetchBoards()
@@ -70,30 +72,30 @@ struct ArrivalsBoardListScreen: View {
             } catch {
                 loadingState = .failure(errorMessage: error.toUIErrorMessage())
             }
-            
+
             if startNewTimer {
                 autoRefreshTimer?.invalidate()
                 autoRefreshTimer = .repeating(every: timerSecondsInterval)
             }
         }
     }
-    
+
     private func fetchBoards() async throws -> [ArrivalsBoardState] {
         switch lineGroup.arrivalsDataType {
         case let .arrivalDepartures(lineIDs):
-            guard let lineID = lineIDs.first else { return [] } // ArrivalDepartures are only for a single line
+            guard let lineID = lineIDs.first else { return [] }  // ArrivalDepartures are only for a single line
             return try await appData.transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
-                                         .decodedModel
-                                         .removingDuplicates()
-                                         .filter { $0.scheduledTimeOfDeparture != nil }
-                                         .toPlatformBoardStates(forLineID: lineID)
+                .decodedModel
+                .removingDuplicates()
+                .filter { $0.scheduledTimeOfDeparture != nil }
+                .toPlatformBoardStates(forLineID: lineID)
         case .arrivalPredictions:
             return try await appData.transportAPI.fetchArrivalPredictions(forLineGroup: lineGroup)
-                                         .decodedModel
-                                         .toPlatformBoardStates()
+                .decodedModel
+                .toPlatformBoardStates()
         }
     }
-    
+
     private var isFavouriteLineGroup: Binding<Bool> {
         .init {
             userPreferences.containsFavouriteLineGroup(lineGroup.id)
@@ -104,7 +106,7 @@ struct ArrivalsBoardListScreen: View {
                 userPreferences.removeFavouriteLineGroup(lineGroup.id)
             }
         }
-    }    
+    }
 }
 
 
@@ -113,12 +115,14 @@ struct ArrivalsBoardListScreen: View {
 import ModelStubs
 
 #if DEBUG
-#Preview {
-    NavigationStack {
-        PreviewEnvironment {
-            ArrivalsBoardListScreen(stationName: ModelStubs.stations.first!.name,
-                                    lineGroup: ModelStubs.stations.first!.lineGroups[0])
+    #Preview {
+        NavigationStack {
+            PreviewEnvironment {
+                ArrivalsBoardListScreen(
+                    stationName: ModelStubs.stations.first!.name,
+                    lineGroup: ModelStubs.stations.first!.lineGroups[0]
+                )
+            }
         }
     }
-}
 #endif

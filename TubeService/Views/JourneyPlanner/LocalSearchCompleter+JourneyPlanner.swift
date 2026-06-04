@@ -46,9 +46,13 @@ extension LocalSearchResultsStore {
                 throw JourneyPlannerError.coordinateUnknown
             }
             let resolvedCoordinate = try await locationCoordinate(for: locationName)
-            return .namedLocation(.init(name: locationName,
-                                        coordinate: resolvedCoordinate,
-                                        isCurrentLocation: value.isCurrentLocation))
+            return .namedLocation(
+                .init(
+                    name: locationName,
+                    coordinate: resolvedCoordinate,
+                    isCurrentLocation: value.isCurrentLocation
+                )
+            )
         }
     }
 }

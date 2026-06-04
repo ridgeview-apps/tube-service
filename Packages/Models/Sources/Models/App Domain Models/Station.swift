@@ -6,7 +6,7 @@ public struct Station: Identifiable, Hashable, Codable, Sendable {
     public let name: String
     public let location: LocationCoordinate
     public let lineGroups: [LineGroup]
-    
+
     public init(
         id: String,
         icsCode: String,
@@ -23,11 +23,11 @@ public struct Station: Identifiable, Hashable, Codable, Sendable {
 }
 
 public extension Station {
-    
+
     struct LineGroup: Hashable, Equatable, Codable, Sendable {
         public let atcoCode: String
         public let lineIds: [TrainLineID]
-        
+
         public init(
             atcoCode: String,
             lineIds: [TrainLineID]
@@ -39,11 +39,11 @@ public extension Station {
 }
 
 extension Station.LineGroup: Identifiable {
-    
+
     public var id: String {
         "\(atcoCode)-\(commaSeparatedLineIDs)"
     }
-    
+
     private var commaSeparatedLineIDs: String {
         lineIds
             .sorted { $0.name < $1.name }

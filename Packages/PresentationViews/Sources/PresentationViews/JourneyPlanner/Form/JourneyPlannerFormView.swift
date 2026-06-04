@@ -267,7 +267,7 @@ private struct Previewer: View {
                 toLocation: .station(ModelStubs.eastFinchleyStation),
                 viaLocation: .station(ModelStubs.angelStation),
                 lastUsed: .distantPast
-            ),
+            )
         ]
     )
 }

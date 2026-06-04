@@ -2,18 +2,18 @@ import Models
 import SwiftUI
 
 public struct JourneyLocationFormButton: View {
-    
+
     enum Style {
         case normal, error
     }
-    
+
     var style: Style = .normal
     @Binding var value: JourneyLocationPicker.Value?
     var accessoryStatus: JourneyLocationTitleLabel.AccessoryStatus?
     var placeholderText: LocalizedStringResource = .journeyPlannerLocationButtonSelectLocation
     var prefixLabelTitle: LocalizedStringResource?
     let action: () -> Void
-    
+
     public var body: some View {
         Button {
             withAnimation {
@@ -27,7 +27,7 @@ public struct JourneyLocationFormButton: View {
                 locationValueLabel(for: value)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .contentShape(.rect)
-                
+
                 if value != nil {
                     clearButton
                 }
@@ -41,7 +41,7 @@ public struct JourneyLocationFormButton: View {
         .buttonStyle(.plain)
         .lineLimit(1)
     }
-    
+
     private var fieldBackground: some ShapeStyle {
         switch style {
         case .normal:
@@ -50,7 +50,7 @@ public struct JourneyLocationFormButton: View {
             AnyShapeStyle(Color.adaptiveRed.opacity(0.12))
         }
     }
-    
+
     @ViewBuilder
     private func locationValueLabel(for value: JourneyLocationPicker.Value?) -> some View {
         Group {
@@ -65,7 +65,7 @@ public struct JourneyLocationFormButton: View {
             }
         }
     }
-    
+
     private var clearButton: some View {
         Button {
             value = nil
@@ -82,19 +82,21 @@ public struct JourneyLocationFormButton: View {
 // MARK: - Previews
 
 private struct Previewer: View {
-    
+
     var style: JourneyLocationFormButton.Style = .normal
     let title: LocalizedStringResource
     @State var value: JourneyLocationPicker.Value? = .unknownCurrentLocation
     var accessoryStatus: JourneyLocationTitleLabel.AccessoryStatus?
     var action: () -> Void = { print("Tapped") }
-    
+
     var body: some View {
-        JourneyLocationFormButton(style: .normal,
-                                  value: $value,
-                                  accessoryStatus: accessoryStatus,
-                                  action: action)
-            .formDetailCell(title: title)
+        JourneyLocationFormButton(
+            style: .normal,
+            value: $value,
+            accessoryStatus: accessoryStatus,
+            action: action
+        )
+        .formDetailCell(title: title)
     }
 }
 

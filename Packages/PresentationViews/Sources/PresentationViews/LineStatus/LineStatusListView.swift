@@ -3,30 +3,32 @@ import Shared
 import SwiftUI
 
 public struct LineStatusListView: View {
-        
+
     public let loadingState: LoadingState
     public let lines: [Line]
     public let favouriteLineIDs: Set<TrainLineID>
     public let refreshDate: Date?
-    
+
     @Binding var selectedLine: Line?
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
-    
+
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
     private var showsDatePicker: Bool { selectedFilterOption == .future }
     private var hasFavouritesOrDisruptions: Bool { !(favourites + disruptions).isEmpty }
 
-        
-    public init(loadingState: LoadingState,
-                lines: [Line],
-                favouriteLineIDs: Set<TrainLineID>,
-                refreshDate: Date?,
-                selectedLine: Binding<Line?>,
-                selectedFilterOption: Binding<LineStatusFilterOption>,
-                selectedDate: Binding<Date>) {
+
+    public init(
+        loadingState: LoadingState,
+        lines: [Line],
+        favouriteLineIDs: Set<TrainLineID>,
+        refreshDate: Date?,
+        selectedLine: Binding<Line?>,
+        selectedFilterOption: Binding<LineStatusFilterOption>,
+        selectedDate: Binding<Date>
+    ) {
         self.loadingState = loadingState
         self.lines = lines
         self.favouriteLineIDs = favouriteLineIDs
@@ -35,7 +37,7 @@ public struct LineStatusListView: View {
         self._selectedFilterOption = selectedFilterOption
         self._selectedDate = selectedDate
     }
-    
+
     public var body: some View {
         List(selection: $selectedLine) {
             Section {
@@ -53,7 +55,7 @@ public struct LineStatusListView: View {
         .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)
     }
-    
+
     private var loadingStatusView: some View {
         LoadingStatusView(
             loadingState: loadingState
@@ -61,7 +63,7 @@ public struct LineStatusListView: View {
         .defaultLoadingStatusStyle()
         .frame(height: loadingState == .loaded ? 0 : nil)
     }
-    
+
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
             Spacer()
@@ -74,12 +76,12 @@ public struct LineStatusListView: View {
             allOtherLineCells
         }
     }
-    
+
     @ViewBuilder
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
             sectionLabel(.lineStatusSectionAllOtherLines)
-            
+
             if showOtherLinesSummaryCell {
                 otherLinesSummaryCell
             } else {
@@ -87,13 +89,13 @@ public struct LineStatusListView: View {
             }
         }
     }
-    
+
     private func sectionLabel(_ title: LocalizedStringResource) -> some View {
         Text(title)
             .secondarySectionHeaderStyle()
             .padding(.top, 8)
     }
-    
+
     private func tappableStatusCells(
         with lines: [Line]
     ) -> some View {
@@ -104,7 +106,7 @@ public struct LineStatusListView: View {
             )
         }
     }
-    
+
     private func tappableStatusCell(
         for line: Line,
         isFavourite: Bool
@@ -123,13 +125,13 @@ public struct LineStatusListView: View {
             .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
-        .accessibility(identifier: line.id.rawValue)        
+        .accessibility(identifier: line.id.rawValue)
     }
-    
+
     private func statusCellAnimationID(for line: Line) -> some Hashable {
         "\(line.id)_\(selectedFilterOption)_\(refreshDate ?? .distantPast)"
     }
-    
+
     private var shouldShowLineStatusCells: Bool {
         switch selectedFilterOption {
         case .today, .tomorrow, .thisWeekend:
@@ -138,7 +140,7 @@ public struct LineStatusListView: View {
             return isValidFutureDate
         }
     }
-    
+
     private var showOtherLinesSummaryCell: Bool {
         switch selectedFilterOption {
         case .today:
@@ -147,14 +149,14 @@ public struct LineStatusListView: View {
             return allOtherLines.count > 1
         }
     }
-    
+
     private var isValidFutureDate: Bool {
         guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
             return true
         }
         return selectedDate >= startOfTomorrow
     }
-    
+
     @ViewBuilder
     private var filterOptionsHeader: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -168,7 +170,7 @@ public struct LineStatusListView: View {
         .padding(12)
         .cardStyle()
     }
-    
+
     private var filterOptionsPicker: some View {
         Picker("", selection: $selectedFilterOption) {
             ForEach(LineStatusFilterOption.allCases) { filterOption in
@@ -179,7 +181,7 @@ public struct LineStatusListView: View {
         }
         .pickerStyle(.segmented)
     }
-        
+
     @ViewBuilder private var headerTitleView: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             headerTitleImage
@@ -192,7 +194,7 @@ public struct LineStatusListView: View {
         }
         .font(.subheadline)
     }
-    
+
     @ViewBuilder private var headerTitleImage: some View {
         switch selectedFilterOption {
         case .today:
@@ -202,7 +204,7 @@ public struct LineStatusListView: View {
             Image(systemName: "calendar")
         }
     }
-    
+
     @ViewBuilder private var headerTitleText: some View {
         switch selectedFilterOption {
         case .today:
@@ -215,7 +217,7 @@ public struct LineStatusListView: View {
             EmptyView()
         }
     }
-    
+
     @ViewBuilder private var datePickerView: some View {
         if showsDatePicker {
             DatePicker(
@@ -230,27 +232,27 @@ public struct LineStatusListView: View {
             .labelsHidden()
         }
     }
-    
+
     private func tomorrowFormatted() -> String {
         guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
             return ""
         }
         return startOfTomorrow.formatted(date: .complete, time: .omitted)
     }
-    
+
     private func weekendDatesFormatted() -> String {
         guard let thisOrNextWeekendDateInterval = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
             return ""
         }
         let startOfSaturday = thisOrNextWeekendDateInterval.start
-        let endOfSunday = thisOrNextWeekendDateInterval.end - 1 // Subtract 1 from Monday midnight (start of day)
+        let endOfSunday = thisOrNextWeekendDateInterval.end - 1  // Subtract 1 from Monday midnight (start of day)
         return DateIntervalFormatter.longDateIntervalStyle.string(from: startOfSaturday, to: endOfSunday)
     }
-    
+
     private func selectedDateFormatted() -> String {
         selectedDate.formatted(date: .complete, time: .omitted)
     }
-    
+
     private var otherLinesSummaryCell: some View {
         LineStatusCell(
             style: .multiLine(allOtherLines),
@@ -262,7 +264,7 @@ public struct LineStatusListView: View {
 }
 
 private extension DatePicker {
-    
+
     @ViewBuilder
     func withAutoDismissID(of date: Date) -> some View {
         // On iOS, setting an ID makes a date picker auto-dismiss on selection ✅
@@ -288,7 +290,7 @@ private extension LineStatusFilterOption {
             .lineStatusFilterOptionFuture
         }
     }
-    
+
     var accessibilityID: String {
         switch self {
         case .today:
@@ -315,7 +317,7 @@ private struct WrapperView: View {
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
     @State var selectedDate: Date = .now
-    
+
     var body: some View {
         NavigationStack {
             LineStatusListView(
@@ -334,28 +336,36 @@ private struct WrapperView: View {
         }
     }
 }
-    
+
 #Preview("Loaded state") {
-    WrapperView(loadingState: .loaded,
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
-                favouriteLineIDs: [.jubilee, .northern, .metropolitan])
+    WrapperView(
+        loadingState: .loaded,
+        lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+        favouriteLineIDs: [.jubilee, .northern, .metropolitan]
+    )
 }
-         
+
 #Preview("Loading state") {
-    WrapperView(loadingState: .loading,
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
-                favouriteLineIDs: [.jubilee, .northern])
+    WrapperView(
+        loadingState: .loading,
+        lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+        favouriteLineIDs: [.jubilee, .northern]
+    )
 }
 
 #Preview("Error state") {
-    WrapperView(loadingState: .failure(errorMessage: "Sorry, something went wrong"),
-                lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
-                favouriteLineIDs: [.jubilee, .northern])
+    WrapperView(
+        loadingState: .failure(errorMessage: "Sorry, something went wrong"),
+        lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+        favouriteLineIDs: [.jubilee, .northern]
+    )
 }
 
 #Preview("Date picker visible") {
-    WrapperView(loadingState: .loaded,
-                lines: [],
-                favouriteLineIDs: [.jubilee, .northern],
-                selectedFilterOption: .future)
+    WrapperView(
+        loadingState: .loaded,
+        lines: [],
+        favouriteLineIDs: [.jubilee, .northern],
+        selectedFilterOption: .future
+    )
 }

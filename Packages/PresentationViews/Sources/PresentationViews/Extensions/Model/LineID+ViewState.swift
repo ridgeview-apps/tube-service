@@ -2,7 +2,7 @@ import SwiftUI
 import Models
 
 public extension TrainLineID {
-    
+
     var backgroundColor: Color {
         switch self {
         case .bakerloo:
@@ -49,7 +49,7 @@ public extension TrainLineID {
             return .overground
         }
     }
-    
+
     var textColor: Color {
         switch self {
         case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
@@ -58,7 +58,7 @@ public extension TrainLineID {
             return .black
         }
     }
-    
+
     var textShadow: TextShadowSettings {
         switch self {
         case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
@@ -67,21 +67,21 @@ public extension TrainLineID {
             return (color: .white, radius: 0.5, x: 0, y: 0.5)
         }
     }
-        
+
     var longName: String {
         switch self {
         case .dlr, .overground, .tram:
             return name
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
-                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
+            .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             return "\(name) line"
         }
     }
-    
+
     var xPostsSearchNameFilter: String? {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
-                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
+            .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             return "\(rawValue) line"
         case .tram, .dlr:
             return rawValue
@@ -93,7 +93,7 @@ public extension TrainLineID {
     var shouldShowFilteredXPosts: Bool {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
-                .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush, .tram, .dlr:
+            .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush, .tram, .dlr:
             return true
         case .overground:
             return false

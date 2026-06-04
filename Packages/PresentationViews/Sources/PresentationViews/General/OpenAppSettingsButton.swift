@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct OpenSettingsButton: View {
-    
+
     @Environment(\.openURL) var openURL
-    
+
     var body: some View {
         Button {
             openSettings()
@@ -13,9 +13,9 @@ struct OpenSettingsButton: View {
                     .imageScale(.large)
                 Text(.openAppSettingsButtonTitle)
             }
-        }        
+        }
     }
-    
+
     private func openSettings() {
         guard let openSettingsURL = URL(string: UIApplication.openSettingsURLString) else {
             return

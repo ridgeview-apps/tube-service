@@ -7,9 +7,9 @@ struct LineDiagramView: View {
     let orientation: LineDiagramItem.Orientation
     let journey: Journey
     let journeyID: LineDiagramItem.JourneyID
-    
+
     @Binding var expandedStopJourneyItemIDs: Set<LineDiagramItem.JourneyItemID>
-    
+
     var body: some View {
         Group {
             switch orientation {
@@ -28,7 +28,7 @@ struct LineDiagramView: View {
             expandedStopJourneyItemIDs.removeAll()
         }
     }
-    
+
     @ViewBuilder
     private var mainContent: some View {
         ForEach(lineDiagramItems) { item in
@@ -40,7 +40,7 @@ struct LineDiagramView: View {
             )
         }
     }
-    
+
     private func showExpandedStopPoints(for item: LineDiagramItem) -> Binding<Bool> {
         return .init {
             expandedStopJourneyItemIDs.contains(item.journeyItemID)
@@ -52,16 +52,18 @@ struct LineDiagramView: View {
             }
         }
     }
-    
+
     private var lineDiagramItems: [LineDiagramItem] {
-        journey.allLegDiagramItems(forJourneyID: journeyID,
-                                   orientation: orientation,
-                                   expandedStopJourneyItemIDs: expandedStopJourneyItemIDs)
+        journey.allLegDiagramItems(
+            forJourneyID: journeyID,
+            orientation: orientation,
+            expandedStopJourneyItemIDs: expandedStopJourneyItemIDs
+        )
     }
 }
 
 private extension Journey {
-    
+
     func allLegDiagramItems(
         forJourneyID journeyID: LineDiagramItem.JourneyID,
         orientation: LineDiagramItem.Orientation,
@@ -79,49 +81,51 @@ private extension Journey {
                     isLastLeg: isLastLeg,
                     isShowingAllStops: expandedStopJourneyItemIDs.contains(.init(journeyID: journeyID, legID: legID))
                 )
-                
+
                 let horizontalItemsConfig = JourneyLeg.HorizontalItemsConfig(
                     journeyID: journeyID,
                     legID: legID,
                     isLastLeg: isLastLeg
                 )
-                
-                
-                return leg.diagramItems(forOrientation: orientation,
-                                        verticalItemsConfig: verticalItemsConfig,
-                                        horizontalItemsConfig: horizontalItemsConfig)
-        }
+
+
+                return leg.diagramItems(
+                    forOrientation: orientation,
+                    verticalItemsConfig: verticalItemsConfig,
+                    horizontalItemsConfig: horizontalItemsConfig
+                )
+            }
     }
-    
+
     private func legIfExists(at index: Int) -> JourneyLeg? {
         guard let legs, legs.indices.contains(index) else {
             return nil
         }
         return legs[index]
     }
-    
+
 }
 
 private extension JourneyLeg {
-    
+
     var isWalkToEntranceOrExit: Bool {
         let isAtSameLocation = departurePoint?.icsCode == arrivalPoint?.icsCode
         return isAtSameLocation && modeID == .walking
     }
-    
+
     struct VerticalItemsConfig {
         let journeyID: LineDiagramItem.JourneyID
         let legID: LineDiagramItem.JourneyLegID
         let isLastLeg: Bool
         let isShowingAllStops: Bool
     }
-    
+
     struct HorizontalItemsConfig {
         let journeyID: LineDiagramItem.JourneyID
         let legID: LineDiagramItem.JourneyLegID
         let isLastLeg: Bool
     }
-    
+
     func diagramItems(
         forOrientation orientation: LineDiagramItem.Orientation,
         verticalItemsConfig: VerticalItemsConfig,
@@ -134,77 +138,95 @@ private extension JourneyLeg {
             verticalDiagramItems(config: verticalItemsConfig)
         }
     }
-    
+
     func verticalDiagramItems(
         config: VerticalItemsConfig
     ) -> [LineDiagramItem] {
 
         var items = [LineDiagramItem]()
-        
+
         let journeyID = config.journeyID
         let legID = config.legID
-        
+
         items.append(departureStopPointItem(forJourneyID: journeyID, legID: legID, showsTrailingLine: true))
 
         let legDetailItems = legDetailItems(forJourneyID: journeyID, legID: legID, isShowingAllStops: config.isShowingAllStops)
         items.append(contentsOf: legDetailItems)
-            
+
         if config.isLastLeg {
             items.append(arrivalStopPointItem(forJourneyID: journeyID, legID: legID))
         }
-        
+
         return items
     }
-    
+
     func horizontalDiagramItems(
         config: HorizontalItemsConfig
     ) -> [LineDiagramItem] {
-        
+
         let journeyID = config.journeyID
         let legID = config.legID
         let isLastLeg = config.isLastLeg
-                
+
         var items = [LineDiagramItem]()
-        
-        items.append(departureStopPointItem(forJourneyID: journeyID,
-                                            legID: legID,
-                                            showsTrailingLine: !isLastLeg))
-                
+
+        items.append(
+            departureStopPointItem(
+                forJourneyID: journeyID,
+                legID: legID,
+                showsTrailingLine: !isLastLeg
+            )
+        )
+
         return items
     }
-    
-    func departureStopPointItem(forJourneyID journeyID: LineDiagramItem.JourneyID, 
-                                legID: LineDiagramItem.JourneyLegID,
-                                showsTrailingLine: Bool) -> LineDiagramItem {
+
+    func departureStopPointItem(
+        forJourneyID journeyID: LineDiagramItem.JourneyID,
+        legID: LineDiagramItem.JourneyLegID,
+        showsTrailingLine: Bool
+    ) -> LineDiagramItem {
         .init(
-            id: .init(type: .departurePoint(name: departurePoint?.sanitizedName ?? "",
-                                            time: departureTime),
-                      journeyItemID: .init(journeyID: journeyID, legID: legID)),
+            id: .init(
+                type: .departurePoint(
+                    name: departurePoint?.sanitizedName ?? "",
+                    time: departureTime
+                ),
+                journeyItemID: .init(journeyID: journeyID, legID: legID)
+            ),
             style: stopPointCircleOrImage(trailingLine: showsTrailingLine)
         )
     }
-    
+
     func arrivalStopPointItem(forJourneyID journeyID: LineDiagramItem.JourneyID, legID: LineDiagramItem.JourneyLegID) -> LineDiagramItem {
         .init(
-            id: .init(type: .arrivalPoint(name: arrivalPoint?.sanitizedName ?? "",
-                                          time: arrivalTime),
-                      journeyItemID: .init(journeyID: journeyID, legID: legID)),
+            id: .init(
+                type: .arrivalPoint(
+                    name: arrivalPoint?.sanitizedName ?? "",
+                    time: arrivalTime
+                ),
+                journeyItemID: .init(journeyID: journeyID, legID: legID)
+            ),
             style: stopPointCircleOrImage(trailingLine: false)
         )
     }
-    
-    func legDetailItems(forJourneyID journeyID: LineDiagramItem.JourneyID,
-                        legID: LineDiagramItem.JourneyLegID,
-                        isShowingAllStops: Bool) -> [LineDiagramItem] {
+
+    func legDetailItems(
+        forJourneyID journeyID: LineDiagramItem.JourneyID,
+        legID: LineDiagramItem.JourneyLegID,
+        isShowingAllStops: Bool
+    ) -> [LineDiagramItem] {
         var legDetailItems = [LineDiagramItem]()
-        
+
         // Leg detail item
         let mainItem = LineDiagramItem(
             id: .init(
                 type: .legDetail(
-                    .init(durationMinutes: duration,
-                          instructionSummary: instruction?.summary ?? "",
-                          stopPointsCount: sanitizedStopPoints.count + 1)
+                    .init(
+                        durationMinutes: duration,
+                        instructionSummary: instruction?.summary ?? "",
+                        stopPointsCount: sanitizedStopPoints.count + 1
+                    )
                 ),
                 journeyItemID: .init(journeyID: journeyID, legID: legID)
             ),
@@ -212,23 +234,29 @@ private extension JourneyLeg {
             detailItemPadding: .init(top: 8, bottom: 8)
         )
         legDetailItems.append(mainItem)
-        
+
         // Leg stop point ticks
         if isShowingAllStops {
             let stopPointTickItems = stopPointTickItems(forJourneyID: journeyID, legID: legID)
             legDetailItems.append(contentsOf: stopPointTickItems)
         }
-        
+
         return legDetailItems
     }
-        
-    func stopPointTickItems(forJourneyID journeyID: LineDiagramItem.JourneyID, 
-                            legID: LineDiagramItem.JourneyLegID) -> [LineDiagramItem] {
+
+    func stopPointTickItems(
+        forJourneyID journeyID: LineDiagramItem.JourneyID,
+        legID: LineDiagramItem.JourneyLegID
+    ) -> [LineDiagramItem] {
         let stopPointTickItems = sanitizedStopPoints.map { stopPoint in
             LineDiagramItem(
-                id: .init(type: .stopPointTickItem(name: stopPoint.sanitizedStopPointName ?? ""),
-                          journeyItemID: .init(journeyID: journeyID,
-                                               legID: legID)),
+                id: .init(
+                    type: .stopPointTickItem(name: stopPoint.sanitizedStopPointName ?? ""),
+                    journeyItemID: .init(
+                        journeyID: journeyID,
+                        legID: legID
+                    )
+                ),
                 style: .stopPointTick(lineStyleForLineOrMode(), position: .center),
                 detailItemPadding: .init(
                     top: stopPoint == sanitizedStopPoints.first ? 8 : 4,
@@ -239,7 +267,7 @@ private extension JourneyLeg {
 
         return stopPointTickItems
     }
-    
+
     func lineStyleForLineOrMode() -> LineDiagramItem.Style.LineStyle {
         switch (trainLineID, modeID) {
         case (let trainLineID?, _):
@@ -251,7 +279,7 @@ private extension JourneyLeg {
             return .invisible
         }
     }
-    
+
     func stopPointCircleOrImage(trailingLine: Bool) -> LineDiagramItem.Style {
         switch (trainLineID, modeID) {
         case (let trainLineID?, _):
@@ -263,7 +291,7 @@ private extension JourneyLeg {
             return .straightLine(.invisible)
         }
     }
-    
+
     var sanitizedStopPoints: [TflIdentifier] {
         stopPoints
             .removingDuplicates()
@@ -296,13 +324,13 @@ private extension String {
 import ModelStubs
 
 private struct Previewer: View {
-    
+
     @Namespace private var animationNamespace
     @State var orientation: LineDiagramItem.Orientation = .horizontal
     @State var expandedStopJourneyItemIDs: Set<LineDiagramItem.JourneyItemID> = []
     let journey: Journey
     var journeyID: LineDiagramItem.JourneyID = UUID().uuidString
-    
+
     var body: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.5)) {

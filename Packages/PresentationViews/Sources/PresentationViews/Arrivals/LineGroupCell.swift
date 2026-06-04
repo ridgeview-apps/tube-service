@@ -13,7 +13,7 @@ extension View {
 struct LineGroupSectionHeader: View {
     let title: LocalizedStringResource
     var imageName: String?
-    
+
     var body: some View {
         HStack(spacing: 4) {
             if let imageName {
@@ -26,14 +26,14 @@ struct LineGroupSectionHeader: View {
 }
 
 struct LineGroupCell: View {
-    
+
     @Environment(\.locale) var locale
-    
+
     enum Style {
         case plain
         case distance(metres: Double)
     }
-    
+
     let style: Style
     let lineIDs: [TrainLineID]
     let title: String
@@ -51,7 +51,7 @@ struct LineGroupCell: View {
         }
         .contentShape(Rectangle())
     }
-    
+
     private func formattedDistanceText(for metres: Double) -> some View {
         Text(
             Measurement(value: metres, unit: UnitLength.meters)
@@ -72,25 +72,31 @@ import ModelStubs
     NavigationStack {
         List {
             Section {
-                LineGroupCell(style: .plain,
-                              lineIDs: [.circle, .hammersmithAndCity, .district],
-                              title: "Mixed line group")
+                LineGroupCell(
+                    style: .plain,
+                    lineIDs: [.circle, .hammersmithAndCity, .district],
+                    title: "Mixed line group"
+                )
             } header: {
                 LineGroupSectionHeader(title: "Plain cells")
             }
             Section {
-                LineGroupCell(style: .distance(metres: 600), 
-                              lineIDs: ModelStubs.eastFinchleyStation.sortedLineIDs,
-                              title: ModelStubs.eastFinchleyStation.name)
-                LineGroupCell(style: .distance(metres: 7000),
-                              lineIDs: ModelStubs.kingsCrossStation.sortedLineIDs,
-                              title: ModelStubs.kingsCrossStation.name)
+                LineGroupCell(
+                    style: .distance(metres: 600),
+                    lineIDs: ModelStubs.eastFinchleyStation.sortedLineIDs,
+                    title: ModelStubs.eastFinchleyStation.name
+                )
+                LineGroupCell(
+                    style: .distance(metres: 7000),
+                    lineIDs: ModelStubs.kingsCrossStation.sortedLineIDs,
+                    title: ModelStubs.kingsCrossStation.name
+                )
             } header: {
                 LineGroupSectionHeader(title: "Distance cells", imageName: "location.fill")
             }
         }
     }
     .environment(\.locale, .init(languageRegion: .unitedStates))
-//    .environment(\.locale, .init(languageRegion: .unitedKingdom))
-//    .environment(\.locale, .init(languageRegion: .france))
+    //    .environment(\.locale, .init(languageRegion: .unitedKingdom))
+    //    .environment(\.locale, .init(languageRegion: .france))
 }

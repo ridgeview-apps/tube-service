@@ -1,7 +1,7 @@
 import Foundation
 
 public struct ArrivalPrediction: Identifiable, Equatable, Codable, Sendable {
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case currentLocation
@@ -13,9 +13,9 @@ public struct ArrivalPrediction: Identifiable, Equatable, Codable, Sendable {
         case timeToStation
         case towards
     }
-    
+
     public let id: String?
-    
+
     public let currentLocation: String?
     public let destinationName: String?
     public let destinationNaptanID: String?
@@ -24,19 +24,21 @@ public struct ArrivalPrediction: Identifiable, Equatable, Codable, Sendable {
     public let platformName: String?
     public let timeToStation: Int?
     public let towards: String?
-  
-    
+
+
     // MARK: - Init
-    
-    public init(id: String?,
-                currentLocation: String?,
-                destinationName: String?,
-                destinationNaptanID: String?,
-                lineID: TrainLineID?,
-                naptanID: String?,
-                platformName: String?,
-                timeToStation: Int?,
-                towards: String?) {
+
+    public init(
+        id: String?,
+        currentLocation: String?,
+        destinationName: String?,
+        destinationNaptanID: String?,
+        lineID: TrainLineID?,
+        naptanID: String?,
+        platformName: String?,
+        timeToStation: Int?,
+        towards: String?
+    ) {
         self.id = id
         self.currentLocation = currentLocation
         self.destinationName = destinationName

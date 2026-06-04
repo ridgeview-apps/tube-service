@@ -13,18 +13,20 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
     public let minutesAndSecondsToArrival: String?
     public let minutesAndSecondsToDeparture: String?
     public let departureStatus: DepartureStatus?
-    
-    public init(platformName: String,
-                destinationName: String?,
-                naptanId: String?,
-                stationName: String?,
-                estimatedTimeOfArrival: Date?,
-                scheduledTimeOfArrival: Date?,
-                estimatedTimeOfDeparture: Date?,
-                scheduledTimeOfDeparture: Date?,
-                minutesAndSecondsToArrival: String?,
-                minutesAndSecondsToDeparture: String?,
-                departureStatus: DepartureStatus) {
+
+    public init(
+        platformName: String,
+        destinationName: String?,
+        naptanId: String?,
+        stationName: String?,
+        estimatedTimeOfArrival: Date?,
+        scheduledTimeOfArrival: Date?,
+        estimatedTimeOfDeparture: Date?,
+        scheduledTimeOfDeparture: Date?,
+        minutesAndSecondsToArrival: String?,
+        minutesAndSecondsToDeparture: String?,
+        departureStatus: DepartureStatus
+    ) {
         self.platformName = platformName
         self.destinationName = destinationName
         self.naptanId = naptanId
@@ -37,7 +39,7 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
         self.minutesAndSecondsToDeparture = minutesAndSecondsToDeparture
         self.departureStatus = departureStatus
     }
-    
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.platformName = try? container.decodeIfPresent(String.self, forKey: .platformName)
@@ -55,13 +57,15 @@ public struct ArrivalDeparture: Hashable, Codable, Sendable {
 }
 
 extension ArrivalDeparture: Identifiable {
-    
+
     public var id: String {
-        [platformName,
-         destinationName,
-         minutesAndSecondsToDeparture,
-         minutesAndSecondsToArrival]
-            .compactMap { $0 }
-            .joined(separator: "-")
+        [
+            platformName,
+            destinationName,
+            minutesAndSecondsToDeparture,
+            minutesAndSecondsToArrival
+        ]
+        .compactMap { $0 }
+        .joined(separator: "-")
     }
 }

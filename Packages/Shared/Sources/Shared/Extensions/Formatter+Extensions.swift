@@ -1,10 +1,12 @@
 import Foundation
 
 public extension Formatter {
-    
-    static func relative(dateStyle: DateFormatter.Style,
-                         timeStyle: DateFormatter.Style,
-                         context: Formatter.Context = .standalone) -> DateFormatter {
+
+    static func relative(
+        dateStyle: DateFormatter.Style,
+        timeStyle: DateFormatter.Style,
+        context: Formatter.Context = .standalone
+    ) -> DateFormatter {
         let formatter = DateFormatter()
         formatter.dateStyle = dateStyle
         formatter.timeStyle = timeStyle
@@ -12,21 +14,21 @@ public extension Formatter {
         formatter.formattingContext = context
         return formatter
     }
-    
+
     static let fullDateStyle: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .full
         formatter.timeStyle = .none
         return formatter
     }()
-    
+
     static let longDateStyle: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .long
         formatter.timeStyle = .none
         return formatter
     }()
-    
+
     static let shortTimeStyle: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none

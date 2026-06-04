@@ -5,17 +5,17 @@ import RidgeviewCore
 import SwiftUI
 
 struct SettingsScreen: View {
-    
+
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
     @Environment(SystemStatusDataStore.self) var systemStatusData
-    
+
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     var body: some View {
         SettingsView(
             appVersionNumber: Bundle.main.appVersionNumber,
@@ -27,7 +27,7 @@ struct SettingsScreen: View {
         )
         .navigationTitle(Text(.settingsNavigationTitle))
     }
-    
+
     private var editableValues: Binding<Settings.EditableValues> {
         .init(
             get: {
@@ -42,15 +42,17 @@ struct SettingsScreen: View {
             }
         )
     }
-    
+
     private var contactUsConfig: Settings.ContactUs {
-        .init(emailAddress: appConfig.contactUsEmail,
-              appVersion: Bundle.main.appVersionNumber,
-              appName: Bundle.main.appName,
-              deviceInfo: Device.modelName,
-              localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")")
+        .init(
+            emailAddress: appConfig.contactUsEmail,
+            appVersion: Bundle.main.appVersionNumber,
+            appName: Bundle.main.appName,
+            deviceInfo: Device.modelName,
+            localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")"
+        )
     }
-    
+
     private func handleDebugAction(_ action: Settings.DebugAction) {
         userPreferences = .default
     }
@@ -60,9 +62,9 @@ struct SettingsScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-#Preview {
-    PreviewEnvironment {
-        SettingsScreen()
+    #Preview {
+        PreviewEnvironment {
+            SettingsScreen()
+        }
     }
-}
 #endif

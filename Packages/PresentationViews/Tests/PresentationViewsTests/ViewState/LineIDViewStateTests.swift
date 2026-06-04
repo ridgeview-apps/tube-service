@@ -23,7 +23,7 @@ struct LineIDViewStateTests {
         #expect(TrainLineID.overground.name == "Overground")
         #expect(TrainLineID.tram.name == "Tram")
     }
-    
+
     @Test
     func lineIDLongNames() {
         #expect(TrainLineID.bakerloo.longName == "Bakerloo line")

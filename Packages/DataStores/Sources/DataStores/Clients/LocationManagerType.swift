@@ -12,7 +12,7 @@ public protocol LocationManagerType: Sendable {
 }
 
 public extension LocationManagerType {
-    
+
     var isAuthorized: Bool {
         switch authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse, .authorized:

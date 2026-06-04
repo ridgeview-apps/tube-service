@@ -3,10 +3,10 @@ import Models
 import SwiftUI
 
 public struct JourneyModePickerView: View {
-    
+
     @State private var minimumSelectionWarningID: ModeID?
     @Binding var selection: Set<ModeID>
-    
+
     public init(selection: Binding<Set<ModeID>>) {
         self._selection = selection
     }
@@ -23,14 +23,14 @@ public struct JourneyModePickerView: View {
         }
         .listStyle(.plain)
     }
-    
+
     private var sectionHeader: some View {
         VStack(alignment: .leading) {
             Text(.journeyModePickerInstructionTitle)
             selectAllButton
         }
     }
-    
+
     private func cell(forModeID modeID: ModeID) -> some View {
         Button {
             withAnimation {
@@ -56,14 +56,14 @@ public struct JourneyModePickerView: View {
             }
         }
     }
-    
+
     private func toggleSelection(forModeID modeID: ModeID) {
         let isDeselectingLastItem = selection.contains(modeID) && selection.count == 1
         guard !isDeselectingLastItem else {
             minimumSelectionWarningID = modeID
             return
         }
-        
+
         minimumSelectionWarningID = nil
         if selection.contains(modeID) {
             selection.remove(modeID)
@@ -71,12 +71,12 @@ public struct JourneyModePickerView: View {
             selection.insert(modeID)
         }
     }
-    
+
     private func selectAll() {
         minimumSelectionWarningID = nil
         selection = Set(ModeID.journeyPlannerModes)
     }
-    
+
     @ViewBuilder
     private func leadingImage(forModeID modeID: ModeID) -> some View {
         Group {
@@ -100,12 +100,12 @@ public struct JourneyModePickerView: View {
         }
         .frame(width: 40, height: 40)
     }
-    
+
     private func lineColourKeyView(with lineIDs: [TrainLineID]) -> some View {
         LineColourKeyView(lineIDs: lineIDs)
             .roundedBorder(.white)
     }
-    
+
     private var selectAllButton: some View {
         HStack {
             Spacer()
@@ -135,43 +135,44 @@ private extension TrainLineID {
 }
 
 private extension ModeID {
-    
+
     var localized: LocalizedStringResource {
-        let resource: LocalizedStringResource = switch self {
-        case .bus:
-            .journeyModePickerValueBus
-        case .cableCar:
-            .journeyModePickerValueCableCar
-        case .dlr:
-            .journeyModePickerValueDlr
-        case .elizabethLine:
-            .journeyModePickerValueElizabeth
-        case .nationalRail:
-            .journeyModePickerValueNationalRail
-        case .overground:
-            .journeyModePickerValueOverground
-        case .riverBus:
-            .journeyModePickerValueRiverBus
-        case .tram:
-            .journeyModePickerValueTram
-        case .tube:
-            .journeyModePickerValueTube
-        case .walking:
-            .journeyModePickerValueWalk
-        case .cycle:
-            .journeyModePickerValueCycle
-        case .coach, .cycleHire, .interchangeKeepSitting, .interchangeSecure, .replacementBus,
-             .riverTour, .taxi:
-            .journeyModePickerValueInvalid
-        }
-        
+        let resource: LocalizedStringResource =
+            switch self {
+            case .bus:
+                .journeyModePickerValueBus
+            case .cableCar:
+                .journeyModePickerValueCableCar
+            case .dlr:
+                .journeyModePickerValueDlr
+            case .elizabethLine:
+                .journeyModePickerValueElizabeth
+            case .nationalRail:
+                .journeyModePickerValueNationalRail
+            case .overground:
+                .journeyModePickerValueOverground
+            case .riverBus:
+                .journeyModePickerValueRiverBus
+            case .tram:
+                .journeyModePickerValueTram
+            case .tube:
+                .journeyModePickerValueTube
+            case .walking:
+                .journeyModePickerValueWalk
+            case .cycle:
+                .journeyModePickerValueCycle
+            case .coach, .cycleHire, .interchangeKeepSitting, .interchangeSecure, .replacementBus,
+                .riverTour, .taxi:
+                .journeyModePickerValueInvalid
+            }
+
         if resource == .journeyModePickerValueInvalid {
             assertionFailure("Missing string localization for mode: \(self)?")
         }
-        
+
         return resource
     }
-    
+
     var sortValue: Int {
         switch self {
         case .tube: 0
@@ -194,7 +195,7 @@ private extension ModeID {
 // MARK: - Previews
 private struct Previewer: View {
     @State var selection = Set(ModeID.defaultJourneyPlannerModes)
-    
+
     var body: some View {
         NavigationStack {
             JourneyModePickerView(selection: $selection)

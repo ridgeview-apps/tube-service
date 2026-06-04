@@ -2,19 +2,19 @@ import Models
 import SwiftUI
 
 public struct LineStatusCell: View {
-    
+
     public let style: Style
     public let showsAccessory: Bool
     public var leadingColumnInset = 4.0
     public var animatedAccessoryImage: Bool = false
     public var isFavourite = false
-    
+
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
-    
+
     public enum Style: Hashable {
         case singleLine(Line)
         case multiLine([Line])
-        
+
         var accessoryImageType: LineStatusAccessoryImageType {
             switch self {
             case .singleLine(let line):
@@ -23,7 +23,7 @@ public struct LineStatusCell: View {
                 return lines.allAreGoodService ? .goodService : .disruption
             }
         }
-        
+
         var supportsAnimation: Bool {
             switch accessoryImageType {
             case .goodService:
@@ -33,8 +33,8 @@ public struct LineStatusCell: View {
             }
         }
     }
-    
-    
+
+
     public var body: some View {
         HStack(spacing: 0) {
             leadingColumn()
@@ -42,10 +42,10 @@ public struct LineStatusCell: View {
             accessoryImage
         }
     }
-    
-    
+
+
     // MARK: Leading column
-    
+
     @ViewBuilder private func leadingColumn() -> some View {
         switch style {
         case .singleLine(let line):
@@ -54,14 +54,16 @@ public struct LineStatusCell: View {
             multilineLeadingColumn(with: lines)
         }
     }
-    
+
     private func singleLineLeadingColumn(line: Line) -> some View {
         HStack(spacing: 4) {
             if isFavourite {
                 Image(systemName: "star.fill")
                     .resizable()
-                    .frame(width: 10 * dynamicScaleFactor,
-                           height: 10 * dynamicScaleFactor)
+                    .frame(
+                        width: 10 * dynamicScaleFactor,
+                        height: 10 * dynamicScaleFactor
+                    )
                     .foregroundStyle(line.id.textColor)
             }
             Text(line.id.name)
@@ -71,15 +73,15 @@ public struct LineStatusCell: View {
         .padding(.leading, leadingColumnInset)
         .background { line.id.backgroundColor }
     }
-    
+
     private func multilineLeadingColumn(with lines: [Line]) -> some View {
         LineColourKeyView(lineIDs: lines.map(\.id))
             .toEqualWidthColumn()
     }
 
-    
+
     // MARK: Trailing column
-    
+
     @ViewBuilder private func trailingColumn() -> some View {
         switch style {
         case .singleLine(let line):
@@ -88,14 +90,14 @@ public struct LineStatusCell: View {
             multilineTrailingColumn(with: lines)
         }
     }
-    
+
     private func singleLineTrailingColumn(line: Line) -> some View {
         Text(line.shortText)
             .toEqualWidthColumn(
                 textColor: line.isDisrupted ? .adaptiveRed : .primary
             )
     }
-    
+
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
         Group {
             if lines.count == allLineIDs.count {
@@ -106,14 +108,14 @@ public struct LineStatusCell: View {
         }
         .toEqualWidthColumn(textColor: .primary)
     }
-    
+
     private var allLineIDs: [TrainLineID] {
         TrainLineID.allCases.filter { $0 != .overground }
     }
-    
-    
+
+
     // MARK: - Accessory image
-        
+
     @ViewBuilder private var accessoryImage: some View {
         if showsAccessory {
             style
@@ -133,8 +135,10 @@ public struct LineStatusCell: View {
 
 private extension View {
 
-    @ViewBuilder func toEqualWidthColumn(textColor: Color? = nil,
-                                         isBold: Bool = false) -> some View {
+    @ViewBuilder func toEqualWidthColumn(
+        textColor: Color? = nil,
+        isBold: Bool = false
+    ) -> some View {
         Group {
             if let textColor {
                 font(.body)
@@ -146,11 +150,13 @@ private extension View {
                 self
             }
         }
-        .frame(maxWidth: .infinity,
-               maxHeight: .infinity,
-               alignment: .leading)
+        .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity,
+            alignment: .leading
+        )
     }
-    
+
 }
 
 
@@ -162,8 +168,10 @@ import ModelStubs
     List {
         Group {
             Section("Single line - good service") {
-                LineStatusCell(style: .singleLine(ModelStubs.lineStatusGoodService),
-                               showsAccessory: true)
+                LineStatusCell(
+                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    showsAccessory: true
+                )
             }
             Section("Single line - good service (favourite)") {
                 LineStatusCell(
@@ -173,12 +181,16 @@ import ModelStubs
                 )
             }
             Section("Single line - disrupted") {
-                LineStatusCell(style: .singleLine(ModelStubs.lineStatusDisrupted),
-                               showsAccessory: true)
+                LineStatusCell(
+                    style: .singleLine(ModelStubs.lineStatusDisrupted),
+                    showsAccessory: true
+                )
             }
             Section("Multline") {
-                LineStatusCell(style: .multiLine(ModelStubs.lineStatusesFuture.filter { !$0.isDisrupted }),
-                               showsAccessory: true)
+                LineStatusCell(
+                    style: .multiLine(ModelStubs.lineStatusesFuture.filter { !$0.isDisrupted }),
+                    showsAccessory: true
+                )
             }
         }
         .listRowInsets(.zero)

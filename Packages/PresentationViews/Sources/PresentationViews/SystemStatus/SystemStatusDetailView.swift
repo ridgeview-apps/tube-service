@@ -2,13 +2,13 @@ import Models
 import SwiftUI
 
 public struct SystemStatusDetailView: View {
-    
+
     public let systemStatus: SystemStatus?
-    
+
     public init(systemStatus: SystemStatus?) {
         self.systemStatus = systemStatus
     }
-    
+
     public var body: some View {
         if let systemStatus {
             contentAvailableView(systemStatus)
@@ -16,20 +16,20 @@ public struct SystemStatusDetailView: View {
             contentUnavailableView
         }
     }
-    
+
     private func contentAvailableView(_ systemStatus: SystemStatus) -> some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 VStack(alignment: .leading, spacing: 12) {
                     SystemStatusTitleView(systemStatus: systemStatus)
-                    
+
                     Text(systemStatus.formattedMessage)
                 }
                 .withDefaultMaxWidth(alignment: .leading)
                 .padding()
                 .cardStyle(backgroundColor: systemStatus.tint)
                 .foregroundStyle(systemStatus.foregroundStyle)
-                
+
                 if let detail = systemStatus.detail {
                     Divider()
                     Text(.init(stringLiteral: detail))
@@ -40,7 +40,7 @@ public struct SystemStatusDetailView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
     }
-    
+
     private var contentUnavailableView: some View {
         ContentUnavailableView {
             Label {

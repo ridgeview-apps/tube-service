@@ -2,23 +2,23 @@ import Models
 import SwiftUI
 
 struct LineDiagramItemView: View {
-    
+
     @ScaledMetric var scaleFactor = 1
-    
+
     var containerThickness: CGFloat { 30.0 * scaleFactor }
     var lineThickness: CGFloat { 4.0 * scaleFactor }
     var tubeLineTitleFont: Font { .system(size: 16 * scaleFactor) }
-    
+
     let item: LineDiagramItem
     let animationNamespace: Namespace.ID
     let orientation: LineDiagramItem.Orientation
-    
+
     @Binding var showExpandedStopPoints: Bool
-        
-    private var stopPointTickLength: CGFloat { lineThickness * 2/3 }
-    
+
+    private var stopPointTickLength: CGFloat { lineThickness * 2 / 3 }
+
     @State private var detailViewHeight: CGFloat = 0
-    
+
     var body: some View {
         switch orientation {
         case .horizontal:
@@ -31,14 +31,14 @@ struct LineDiagramItemView: View {
                 .frame(height: detailViewHeight, alignment: .top)
                 detailView
                     .frame(minHeight: detailViewMinHeight)
-                    .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/)
+                    .fixedSize(horizontal: false, vertical: /*@START_MENU_TOKEN@*/ true /*@END_MENU_TOKEN@*/)
                     .readSize {
                         detailViewHeight = $0.height
                     }
             }
         }
     }
-    
+
     private var detailViewMinHeight: CGFloat {
         switch item.style.elementType {
         case .stopPointCircle, .stopPointImage, .straightLine:
@@ -47,7 +47,7 @@ struct LineDiagramItemView: View {
             return 0
         }
     }
-    
+
     @ViewBuilder
     private var diagramContent: some View {
         Group {
@@ -70,14 +70,16 @@ struct LineDiagramItemView: View {
             }
         }
     }
-    
-    
+
+
     @ViewBuilder
     private func stopPointCircle(textOverlay: LineDiagramItem.Style.CircleTextOverlay) -> some View {
         Circle()
             .fill(item.style.lineStyle.color)
-            .frame(width: containerThickness,
-                   height: containerThickness)
+            .frame(
+                width: containerThickness,
+                height: containerThickness
+            )
             .overlay {
                 Circle()
                     .stroke(lineWidth: 2.0)
@@ -89,24 +91,26 @@ struct LineDiagramItemView: View {
                     }
             }
     }
-    
+
     @ViewBuilder
     private func stopPointImage(image: Image) -> some View {
         RoundedRectangle(cornerRadius: 8)
             .stroke(lineWidth: 2.0 * scaleFactor)
             .fill(item.style.lineStyle.color)
-            .frame(width: containerThickness,
-                   height: containerThickness)
+            .frame(
+                width: containerThickness,
+                height: containerThickness
+            )
             .overlay {
                 image
                     .resizable()
                     .scaledToFit()
                     .padding(6)
                     .foregroundStyle(item.style.lineStyle.color)
-                    
+
             }
     }
-    
+
     @ViewBuilder
     private func stopPointTick(position: LineDiagramItem.Style.TickPosition) -> some View {
         straightLine()
@@ -134,24 +138,30 @@ struct LineDiagramItemView: View {
                 }
             }
     }
-        
+
     @ViewBuilder
     private func straightLine() -> some View {
         Group {
             switch item.style.lineStyle.fill {
             case .solid:
-                filledLine(lineWidth: lineThickness,
-                           fill: item.style.lineStyle.color)
+                filledLine(
+                    lineWidth: lineThickness,
+                    fill: item.style.lineStyle.color
+                )
             case .double:
-                filledLine(lineWidth: lineThickness,
-                           fill: item.style.lineStyle.color)
+                filledLine(
+                    lineWidth: lineThickness,
+                    fill: item.style.lineStyle.color
+                )
                 .overlay {
-                    filledLine(lineWidth: lineThickness * 1/3, fill: .white)
+                    filledLine(lineWidth: lineThickness * 1 / 3, fill: .white)
                 }
             case .dashed:
-                filledLine(lineWidth: lineThickness,
-                           fill: item.style.lineStyle.color,
-                           dash: [2])
+                filledLine(
+                    lineWidth: lineThickness,
+                    fill: item.style.lineStyle.color,
+                    dash: [2]
+                )
             }
         }
         .frame(
@@ -159,7 +169,7 @@ struct LineDiagramItemView: View {
             maxHeight: orientation == .horizontal ? containerThickness : .infinity
         )
     }
-    
+
     @ViewBuilder
     private func filledLine(
         lineWidth: CGFloat,
@@ -177,7 +187,7 @@ struct LineDiagramItemView: View {
                 .fill(fillColor)
         }
     }
-    
+
     @ViewBuilder
     private var detailView: some View {
         Group {
@@ -196,7 +206,7 @@ struct LineDiagramItemView: View {
         .padding(.top, item.detailItemPadding.top * scaleFactor)
         .padding(.bottom, item.detailItemPadding.bottom * scaleFactor)
     }
-    
+
     @ViewBuilder
     private func mainStopPointDetailView(name: String, time: Date?) -> some View {
         HStack(alignment: .firstTextBaseline) {
@@ -204,14 +214,18 @@ struct LineDiagramItemView: View {
                 .font(.headline)
             if let time {
                 Spacer()
-                Text(time.formatted(date: .omitted,
-                                    time: .shortened))
+                Text(
+                    time.formatted(
+                        date: .omitted,
+                        time: .shortened
+                    )
+                )
                 .font(.callout)
             }
         }
         .lineLimit(3)
     }
-    
+
     @ViewBuilder
     private func legDetailView(with detail: LineDiagramItem.LegDetail) -> some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -225,7 +239,7 @@ struct LineDiagramItemView: View {
                 }
             }
             .foregroundStyle(.secondary)
-            
+
             if detail.shouldShowStopPointsToggle {
                 ExpansionInfoButton(
                     titleState: .constant(.journeyPlannerStopsCount(detail.stopPointsCount)),
@@ -234,10 +248,10 @@ struct LineDiagramItemView: View {
                 .buttonStyle(.bordered)
                 .font(.subheadline)
             }
-            
+
         }
     }
-    
+
     private func formattedDuration(for durationMinutes: Int) -> String {
         let rawDuration = Duration.seconds(durationMinutes * 60)
         return rawDuration.formatted(.units(allowed: [.hours, .minutes]))
@@ -261,63 +275,109 @@ private struct Previewer: View {
     @State private var showExpandedStopPoints = false
     var orientation: LineDiagramItem.Orientation = .horizontal
     @Namespace private var animationNamespace
-    
+
     var body: some View {
         List {
             Section("Stop point circles") {
-                makeItemView(itemType: .departurePoint(name: "Circle example 1", time: .now),
-                             style: .stopPointCircle(.bakerloo, hasTrailingLine: true))
-                makeItemView(itemType: .arrivalPoint(name: "Circle example 2", time: .now),
-                             style: .stopPointCircle(.bakerloo, hasTrailingLine: false))
+                makeItemView(
+                    itemType: .departurePoint(name: "Circle example 1", time: .now),
+                    style: .stopPointCircle(.bakerloo, hasTrailingLine: true)
+                )
+                makeItemView(
+                    itemType: .arrivalPoint(name: "Circle example 2", time: .now),
+                    style: .stopPointCircle(.bakerloo, hasTrailingLine: false)
+                )
             }
             Section("Stop point images") {
-                makeItemView(itemType: .departurePoint(name: "Image example 1", time: .now),
-                             style: .stopPointImage(.bus, hasTrailingLine: true))
-                makeItemView(itemType: .arrivalPoint(name: "Image example 2", time: .now),
-                             style: .stopPointImage(.bus, hasTrailingLine: false))
-                makeItemView(itemType: .departurePoint(name: "Image example 3", time: .now),
-                             style: .stopPointImage(.walking, hasTrailingLine: true))
+                makeItemView(
+                    itemType: .departurePoint(name: "Image example 1", time: .now),
+                    style: .stopPointImage(.bus, hasTrailingLine: true)
+                )
+                makeItemView(
+                    itemType: .arrivalPoint(name: "Image example 2", time: .now),
+                    style: .stopPointImage(.bus, hasTrailingLine: false)
+                )
+                makeItemView(
+                    itemType: .departurePoint(name: "Image example 3", time: .now),
+                    style: .stopPointImage(.walking, hasTrailingLine: true)
+                )
             }
             Section("Stop point ticks") {
-                makeItemView(itemType: .stopPointTickItem(name: "Tick example 1"),
-                             style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .start))
-                makeItemView(itemType: .stopPointTickItem(name: "Tick example 2"),
-                             style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .center))
-                makeItemView(itemType: .stopPointTickItem(name: "Tick example 3"),
-                             style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .end))
-                makeItemView(itemType: .stopPointTickItem(name: "Padded tick example"),
-                             style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .center),
-                             detailItemPadding: .init(top: 30, bottom: 10))
-                
+                makeItemView(
+                    itemType: .stopPointTickItem(name: "Tick example 1"),
+                    style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .start)
+                )
+                makeItemView(
+                    itemType: .stopPointTickItem(name: "Tick example 2"),
+                    style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .center)
+                )
+                makeItemView(
+                    itemType: .stopPointTickItem(name: "Tick example 3"),
+                    style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .end)
+                )
+                makeItemView(
+                    itemType: .stopPointTickItem(name: "Padded tick example"),
+                    style: .stopPointTick(.init(trainLineID: .hammersmithAndCity), position: .center),
+                    detailItemPadding: .init(top: 30, bottom: 10)
+                )
+
             }
             Section("Straight lines") {
-                makeItemView(itemType: .legDetail(.init(durationMinutes: 60,
-                                                        instructionSummary: "Solid line example",
-                                                        stopPointsCount: 4)),
-                             style: .straightLine(.init(trainLineID: .district)))
-                makeItemView(itemType: .legDetail(.init(durationMinutes: 120,
-                                                        instructionSummary: "Double line example",
-                                                        stopPointsCount: 4)),
-                             style: .straightLine(.init(trainLineID: .overground)))
-                makeItemView(itemType: .legDetail(.init(durationMinutes: 120,
-                                                        instructionSummary: "Dotted line example",
-                                                        stopPointsCount: 0)),
-                             style: .straightLine(.init(modeID: .walking)))
+                makeItemView(
+                    itemType: .legDetail(
+                        .init(
+                            durationMinutes: 60,
+                            instructionSummary: "Solid line example",
+                            stopPointsCount: 4
+                        )
+                    ),
+                    style: .straightLine(.init(trainLineID: .district))
+                )
+                makeItemView(
+                    itemType: .legDetail(
+                        .init(
+                            durationMinutes: 120,
+                            instructionSummary: "Double line example",
+                            stopPointsCount: 4
+                        )
+                    ),
+                    style: .straightLine(.init(trainLineID: .overground))
+                )
+                makeItemView(
+                    itemType: .legDetail(
+                        .init(
+                            durationMinutes: 120,
+                            instructionSummary: "Dotted line example",
+                            stopPointsCount: 0
+                        )
+                    ),
+                    style: .straightLine(.init(modeID: .walking))
+                )
             }
         }
     }
-    
-    private func makeItemView(itemType: LineDiagramItem.ItemType,
-                              style: LineDiagramItem.Style,
-                              detailItemPadding: LineDiagramItem.Style.DetailItemPadding = .zero) -> some View {
-        LineDiagramItemView(item: .init(id: .init(type: itemType,
-                                                  journeyItemID: .init(journeyID: UUID().uuidString,
-                                                                       legID: UUID().uuidString)),
-                                        style: style,
-                                        detailItemPadding: detailItemPadding),
-                            animationNamespace: animationNamespace,
-                            orientation: orientation,
-                            showExpandedStopPoints: $showExpandedStopPoints)
+
+    private func makeItemView(
+        itemType: LineDiagramItem.ItemType,
+        style: LineDiagramItem.Style,
+        detailItemPadding: LineDiagramItem.Style.DetailItemPadding = .zero
+    ) -> some View {
+        LineDiagramItemView(
+            item: .init(
+                id: .init(
+                    type: itemType,
+                    journeyItemID: .init(
+                        journeyID: UUID().uuidString,
+                        legID: UUID().uuidString
+                    )
+                ),
+                style: style,
+                detailItemPadding: detailItemPadding
+            ),
+            animationNamespace: animationNamespace,
+            orientation: orientation,
+            showExpandedStopPoints: $showExpandedStopPoints
+        )
     }
 }
 

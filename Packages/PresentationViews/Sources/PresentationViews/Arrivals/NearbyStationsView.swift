@@ -3,29 +3,31 @@ import SwiftUI
 import Models
 
 public struct NearbyStationsView: View {
-    
+
     public enum Action: Sendable {
         case tappedRefresh
     }
-    
+
     let locationUIStatus: LocationUIStatus
     let onAction: (Action) -> Void
-    
+
     @Binding var sectionState: NearbyStationsResultsSectionState
-    
+
     // MARK: - Init
-    
-    public init(locationUIStatus: LocationUIStatus,
-                onAction: @escaping (Action) -> Void,
-                sectionState: Binding<NearbyStationsResultsSectionState>) {
+
+    public init(
+        locationUIStatus: LocationUIStatus,
+        onAction: @escaping (Action) -> Void,
+        sectionState: Binding<NearbyStationsResultsSectionState>
+    ) {
         self.locationUIStatus = locationUIStatus
         self.onAction = onAction
         self._sectionState = sectionState
     }
-    
-    
+
+
     // MARK: Layout
-    
+
     public var body: some View {
         nearbyStationsListView
             .locationUIStatus(locationUIStatus)
@@ -34,7 +36,7 @@ public struct NearbyStationsView: View {
             .background(Color.defaultBackground)
             .accessibilityIdentifier("acc.id.nearby.stations")
     }
-    
+
     @ViewBuilder private var nearbyStationsListView: some View {
         ScrollViewReader { reader in
             List {
@@ -52,7 +54,7 @@ public struct NearbyStationsView: View {
             .animation(.default, value: sectionState.currentPageNo)
         }
     }
-    
+
     @ViewBuilder private var resultsSectionView: some View {
         Section {
             if let loadingState = locationUIStatus.loadingState {
@@ -70,29 +72,29 @@ public struct NearbyStationsView: View {
         }
         .lineGroupListRowStyle()
     }
-    
-    
+
+
     @ViewBuilder private var resultsHeaderView: some View {
         if let loadingState = locationUIStatus.loadingState {
             LoadingStatusView(loadingState: loadingState)
                 .defaultLoadingStatusStyle()
         }
     }
-    
+
     private var visibleStations: [NearbyStation] {
         let currentPageNo = sectionState.currentPageNo
         let pageSize = sectionState.pageSize
-        
+
         return Array(sectionState.nearbyStations.prefix(currentPageNo * pageSize))
     }
-    
+
     private var zeroResultsView: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(.nearbyStationsNoResults)
             refreshButton
         }
     }
-    
+
     @ViewBuilder
     private var populatedResultsView: some View {
         ForEach(visibleStations, id: \.station.id) { nearbyStation in
@@ -105,7 +107,7 @@ public struct NearbyStationsView: View {
             }
         }
     }
-    
+
     private var errorView: some View {
         VStack(alignment: .leading, spacing: 20) {
             Text(.nearbyStationsLoadFailureTitle)
@@ -113,7 +115,7 @@ public struct NearbyStationsView: View {
             refreshButton
         }
     }
-    
+
     private var refreshButton: some View {
         Button {
             onAction(.tappedRefresh)
@@ -125,7 +127,7 @@ public struct NearbyStationsView: View {
         }
         .buttonStyle(.primary)
     }
-    
+
     @ViewBuilder private var showMoreResultsButton: some View {
         if canShowMoreResults {
             Section {
@@ -136,7 +138,7 @@ public struct NearbyStationsView: View {
                         title: .nearbyStationsMoreResultsButtonTitle
                     ) {
                         sectionState.currentPageNo += 1
-                    }                    
+                    }
                     Spacer()
                 }
                 .id("showMoreButtonID_\(sectionState.currentPageNo)")
@@ -146,11 +148,11 @@ public struct NearbyStationsView: View {
             .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
         }
     }
-    
+
     private var canShowMoreResults: Bool {
         let currentPageNo = sectionState.currentPageNo
         let pageSize = sectionState.pageSize
-        
+
         return sectionState.nearbyStations.count > (currentPageNo * pageSize)
     }
 }
@@ -165,22 +167,24 @@ private struct Previewer: View {
     @State var currentPageNo = 1
     @State var sectionState: NearbyStationsResultsSectionState = .init(nearbyStations: [])
     var pagedResultsSize: Int = 5
-    
+
     var locationUIStatus: LocationUIStatus {
         .init(style: locationUIStyle) {
             print("Location allowed")
         }
     }
-    
+
     var body: some View {
         NavigationStack {
-            NearbyStationsView(locationUIStatus: locationUIStatus,
-                               onAction: onAction,
-                               sectionState: $sectionState)
-              .navigationTitle("Nearby stations")
-              .navigationDestination(for: NearbyStation.self) { selection in
-                  Text("\(String(describing: selection)) selected")
-              }
+            NearbyStationsView(
+                locationUIStatus: locationUIStatus,
+                onAction: onAction,
+                sectionState: $sectionState
+            )
+            .navigationTitle("Nearby stations")
+            .navigationDestination(for: NearbyStation.self) { selection in
+                Text("\(String(describing: selection)) selected")
+            }
         }
     }
 }
@@ -195,8 +199,10 @@ private struct Previewer: View {
 }
 
 #Preview("Loading") {
-    Previewer(locationUIStyle: .locationAllowed(.loading),
-              sectionState: .init(nearbyStations: []))
+    Previewer(
+        locationUIStyle: .locationAllowed(.loading),
+        sectionState: .init(nearbyStations: [])
+    )
 }
 
 #Preview("Loaded - stations found") {
@@ -216,12 +222,16 @@ private struct Previewer: View {
 }
 
 #Preview("Error") {
-    Previewer(locationUIStyle: .locationAllowed(.failure(errorMessage: "Oops something went wrong")),
-              sectionState: .init(nearbyStations: []))
+    Previewer(
+        locationUIStyle: .locationAllowed(.failure(errorMessage: "Oops something went wrong")),
+        sectionState: .init(nearbyStations: [])
+    )
 }
 
 
 #Preview("Loaded - zero results") {
-    Previewer(locationUIStyle: .locationAllowed(.loaded),
-              sectionState: .init(nearbyStations: []))
+    Previewer(
+        locationUIStyle: .locationAllowed(.loaded),
+        sectionState: .init(nearbyStations: [])
+    )
 }

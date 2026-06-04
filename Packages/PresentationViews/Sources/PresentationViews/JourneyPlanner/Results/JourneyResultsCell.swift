@@ -26,9 +26,11 @@ public struct JourneyResultsCellItem: Identifiable, Hashable {
     public let journeyDiagramID: LineDiagramItemJourneyID
     public var isExpanded: Bool
 
-    public init(journey: Journey,
-                journeyDiagramID: LineDiagramItemJourneyID,
-                isExpanded: Bool) {
+    public init(
+        journey: Journey,
+        journeyDiagramID: LineDiagramItemJourneyID,
+        isExpanded: Bool
+    ) {
         self.journey = journey
         self.journeyDiagramID = journeyDiagramID
         self.isExpanded = isExpanded
@@ -36,16 +38,16 @@ public struct JourneyResultsCellItem: Identifiable, Hashable {
 }
 
 struct JourneyResultsCell: View {
-    
+
     @Binding var cellItem: JourneyResultsCellItem
-    
+
     private var journey: Journey { cellItem.journey }
     private var journeyID: LineDiagramItem.JourneyID { cellItem.journeyDiagramID }
-    
+
     @Namespace private var cellViewNameSpace
-    
+
     @State private var expandedStopJourneyItemIDs: Set<LineDiagramItem.JourneyItemID> = []
-    
+
     var body: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.5)) {
@@ -63,7 +65,7 @@ struct JourneyResultsCell: View {
         .buttonStyle(.plain)
         .cardStyle()
     }
-    
+
     @ViewBuilder
     private var disruptionsHeader: some View {
         if !journey.realTimeDisruptionMessages.isEmpty {
@@ -76,20 +78,20 @@ struct JourneyResultsCell: View {
             .font(.footnote)
         }
     }
-    
-    
+
+
     private var journeyTimeInfo: some View {
         HStack(alignment: .firstTextBaseline) {
             startAndEndTime
             Spacer()
             Text(journey.formattedDuration)
                 .font(.subheadline)
-            
+
         }
         .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier("journey.start.time.info")
     }
-    
+
     private var startAndEndTime: some View {
         HStack(spacing: 8) {
             if let startDateTime = journey.startDateTime {
@@ -104,14 +106,16 @@ struct JourneyResultsCell: View {
         }
         .font(.headline)
     }
-    
+
     private var lineDiagram: some View {
         HStack(alignment: cellItem.isExpanded ? .firstTextBaseline : .center) {
-            LineDiagramView(animationNamespace: cellViewNameSpace,
-                            orientation: cellItem.isExpanded ? .vertical : .horizontal,
-                            journey: journey,
-                            journeyID: journeyID,
-                            expandedStopJourneyItemIDs: $expandedStopJourneyItemIDs)
+            LineDiagramView(
+                animationNamespace: cellViewNameSpace,
+                orientation: cellItem.isExpanded ? .vertical : .horizontal,
+                journey: journey,
+                journeyID: journeyID,
+                expandedStopJourneyItemIDs: $expandedStopJourneyItemIDs
+            )
             ExpansionInfoButton(
                 style: .imageOnly,
                 isExpanded: $cellItem.isExpanded
@@ -124,7 +128,7 @@ struct JourneyResultsCell: View {
 }
 
 private extension Journey {
-    
+
     var realTimeDisruptionMessages: [String] {
         (legs ?? [])
             .flatMap { $0.disruptions ?? [] }
@@ -132,7 +136,7 @@ private extension Journey {
             .removingDuplicates()
             .compactMap { $0.description }
     }
-    
+
     var formattedDuration: String {
         guard let duration else { return "" }
         let rawDuration = Duration.seconds(duration * 60)
@@ -147,15 +151,19 @@ import ModelStubs
 
 private struct Previewer: View {
     @State var item: JourneyResultsCellItem
-    
-    init(journey: Journey,
-         journeyDiagramID: LineDiagramItem.JourneyID = UUID().uuidString,
-         isExpanded: Bool = false) {
-        item = .init(journey: journey,
-                     journeyDiagramID: journeyDiagramID,
-                     isExpanded: isExpanded)
+
+    init(
+        journey: Journey,
+        journeyDiagramID: LineDiagramItem.JourneyID = UUID().uuidString,
+        isExpanded: Bool = false
+    ) {
+        item = .init(
+            journey: journey,
+            journeyDiagramID: journeyDiagramID,
+            isExpanded: isExpanded
+        )
     }
-    
+
     var body: some View {
         JourneyResultsCell(cellItem: $item)
     }
@@ -175,7 +183,7 @@ private struct Previewer: View {
             Previewer(journey: ModelStubs.journeyByWalking)
             Previewer(journey: ModelStubs.journeyWithLongTitleName)
             Previewer(journey: ModelStubs.journeyWithLongDisruptionMessage)
-            
+
         }
         .padding(.horizontal)
     }

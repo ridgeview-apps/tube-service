@@ -5,30 +5,30 @@ import SwiftUI
 
 @MainActor
 struct JourneyPlannerScreen: View {
-    
+
     enum DestinationID: Identifiable, Hashable {
         var id: Self { self }
         case results
     }
-    
+
     @State private var form: JourneyPlannerForm = .empty
     @State private var recentJourneys: [RecentJourneyItem] = []
     @State private var hasLoaded = false
 
     @State private var navigationState = NavigationState<DestinationID>()
-    
+
     @Environment(AppDataStore.self) var appData
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
     @Environment(LocalSearchResultsStore.self) var localSearchResults
     @Environment(\.showSheet) var showSheet
-    
+
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     var body: some View {
         NavigationStack(path: $navigationState.navigationPath) {
             JourneyPlannerFormView(
@@ -41,7 +41,7 @@ struct JourneyPlannerScreen: View {
             .onSceneDidBecomeActive { restoreUIState() }
             .onSceneDidBecomeInactive { saveUIState() }
             .onChange(of: userPreferences.recentlySavedJourneys) {
-                refreshRecentJourneys(sortByLastUsedDate: false) // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
+                refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
             }
             .navigationTitle(Text(.journeyPlannerNavigationTitle))
             .withNavigationState($navigationState) { destinationID in
@@ -56,7 +56,7 @@ struct JourneyPlannerScreen: View {
             .task { initialLoad() }
         }
     }
-    
+
     private func initialLoad() {
         guard !hasLoaded else {
             return
@@ -64,15 +64,15 @@ struct JourneyPlannerScreen: View {
         restoreUIState()
         hasLoaded = true
     }
-    
+
     private func saveUIState() {
         userPreferences.cleanUpSavedJourneys()
     }
-    
+
     private func restoreUIState() {
         refreshRecentJourneys(sortByLastUsedDate: true)
     }
-        
+
     private func resetTimeSelection() {
         if form.timeSelection.date < .now {
             form.timeSelection = .leaveNow()
@@ -89,7 +89,7 @@ struct JourneyPlannerScreen: View {
             )
         }
     }
-    
+
     private func refreshRecentJourneys(sortByLastUsedDate: Bool) {
         recentJourneys = userPreferences.recentlySavedJourneys.toRecentJourneyItems(
             findStationByID: stations.station(forID:),
@@ -97,10 +97,10 @@ struct JourneyPlannerScreen: View {
             sortByLastUsedDate: sortByLastUsedDate
         )
     }
-    
-    
+
+
     // MARK: - Navigation
-    
+
     @ViewBuilder
     private func destinationScreen(for destinationID: DestinationID) -> some View {
         Group {
@@ -110,7 +110,7 @@ struct JourneyPlannerScreen: View {
             }
         }
     }
-    
+
     private func currentFormValue(forLocationFieldID locationFieldID: JourneyPlannerForm.FieldID.LocationID) -> Binding<JourneyLocationPicker.Value?> {
         .init(
             get: {
@@ -124,7 +124,7 @@ struct JourneyPlannerScreen: View {
 
 
     // MARK: - Form actions
-    
+
     private func handleFormAction(_ actionEvent: JourneyPlannerForm.Action) {
         switch actionEvent {
         case let .tappedLocationField(locationFieldID):
@@ -143,7 +143,7 @@ struct JourneyPlannerScreen: View {
             showResults()
         }
     }
-    
+
     private func showResults() {
         form.adjustCurrentTimeIfNeeded()
         navigationState.push(to: .results)
@@ -151,7 +151,7 @@ struct JourneyPlannerScreen: View {
 }
 
 private extension JourneyPlannerForm.FieldID.LocationID {
-    
+
     var navigationTitle: LocalizedStringResource {
         switch self {
         case .from:
@@ -168,9 +168,9 @@ private extension JourneyPlannerForm.FieldID.LocationID {
 // MARK: - Previews
 
 #if DEBUG
-#Preview {
-    PreviewEnvironment {
-        JourneyPlannerScreen()
+    #Preview {
+        PreviewEnvironment {
+            JourneyPlannerScreen()
+        }
     }
-}
 #endif

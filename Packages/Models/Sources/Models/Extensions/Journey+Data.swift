@@ -1,8 +1,8 @@
 public extension JourneyResults {
-    
+
     func legsForJourney(at index: Int) -> [JourneyLeg] {
         guard let journeys, journeys.indices.contains(index) else { return [] }
-        
+
         return journeys[index].legs ?? []
     }
 }

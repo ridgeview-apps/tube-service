@@ -4,9 +4,9 @@ import SwiftUI
 @main
 @MainActor
 struct RootScene: App {
-    
+
     @State private var appData = AppDataStore(dependencies: .current)
-    
+
     var body: some Scene {
         WindowGroup {
             RootScreen()
@@ -16,7 +16,7 @@ struct RootScene: App {
 }
 
 extension View {
-    
+
     func withAppEnvironment(dataStore: AppDataStore) -> some View {
         self
             .rootSheetPresenter()

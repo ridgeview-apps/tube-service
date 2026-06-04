@@ -13,9 +13,9 @@ enum DetectLocationChangesAction {
 struct DetectsLocationChangesViewModifier: ViewModifier {
     @Environment(LocationDataStore.self) var location
     @State var isVisible: Bool = false
-    
+
     let action: (DetectLocationChangesAction) -> Void
-    
+
     func body(content: Content) -> some View {
         content
             .onAppear {
@@ -44,7 +44,7 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
                 action(.authorizationStatusChanged(updatedValue))
             }
     }
-    
+
     private func resumeLocationDetection() {
         location.startLocationUpdatesIfAuthorized()
     }

@@ -2,19 +2,19 @@ import Models
 import SwiftUI
 
 public struct LineStatusDetailView: View {
-    
+
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
     }
-    
+
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
 
     @Binding public var isFavourite: Bool
-    
+
     public let onAction: (Action) -> Void
-    
+
     public init(
         line: Line,
         isFavourite: Binding<Bool>,
@@ -28,7 +28,7 @@ public struct LineStatusDetailView: View {
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
-    
+
     public var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 20, pinnedViews: .sectionHeaders) {
@@ -50,10 +50,10 @@ public struct LineStatusDetailView: View {
         .scrollBounceBehavior(.basedOnSize)
         .defaultMaxWidthWithFullBackground()
     }
-    
-    
+
+
     // MARK: - Layout views
-    
+
     @ViewBuilder
     private var loadingStatusView: some View {
         if loadingState != .loaded {
@@ -63,7 +63,7 @@ public struct LineStatusDetailView: View {
             .defaultLoadingStatusStyle(verticalPadding: 0)
         }
     }
-    
+
     private var statusHeaderCard: some View {
         HStack(spacing: 0) {
             statusHeaderLeadingAccentBar
@@ -72,13 +72,13 @@ public struct LineStatusDetailView: View {
         }
         .cardStyle()
     }
-    
+
     private var statusHeaderLeadingAccentBar: some View {
         RoundedRectangle(cornerRadius: 2)
             .fill(line.id.backgroundColor)
             .frame(width: 12)
     }
-    
+
     private var statusHeaderContent: some View {
         VStack(alignment: .leading, spacing: 12) {
             Label {
@@ -100,7 +100,7 @@ public struct LineStatusDetailView: View {
                         .foregroundStyle(.tertiary)
                 }
             }
-            
+
             if let refreshDate {
                 LastUpatedTimeLabel(date: refreshDate)
                     .defaultLastUpdatedTimeLabelStyle()
@@ -108,11 +108,11 @@ public struct LineStatusDetailView: View {
         }
         .padding(12)
     }
-    
+
     private var favouritesButton: some View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
     }
-    
+
     private var xPostsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(.lineStatusXPostsSectionTitle)
@@ -122,7 +122,7 @@ public struct LineStatusDetailView: View {
                 ForEach(line.xPostLinks) { link in
                     xPostLinkButton(for: link)
                         .padding(.horizontal, 12)
-                    
+
                     if link != line.xPostLinks.last {
                         Divider()
                             .padding(.horizontal, 12)
@@ -181,7 +181,7 @@ private struct ServiceDetailAdditionalInfoView: View {
 private struct ServiceDetailTextView: View {
     let line: Line
     let textItem: Line.ServiceDetailTextItem
-    
+
     @State private var isExpanded = false
 
     var body: some View {
@@ -190,7 +190,7 @@ private struct ServiceDetailTextView: View {
             expandableAdditionalInfoText
         }
     }
-    
+
     @ViewBuilder private var descriptionText: some View {
         Group {
             switch textItem.messageType {
@@ -204,14 +204,14 @@ private struct ServiceDetailTextView: View {
         }
         .font(.body)
     }
-    
+
     @ViewBuilder
     private var expandableAdditionalInfoText: some View {
         if let additionalInfo = textItem.additionalInfo {
             VStack(alignment: .leading, spacing: 8) {
                 ExpansionInfoButton(isExpanded: $isExpanded)
                     .buttonStyle(.bordered)
-                    .buttonBorderShape(.capsule)                
+                    .buttonBorderShape(.capsule)
                 if isExpanded {
                     Text(additionalInfo)
                 }
@@ -219,12 +219,12 @@ private struct ServiceDetailTextView: View {
             .font(.caption)
         }
     }
-    
+
     @ViewBuilder private var goodServiceText: some View {
         switch line.id {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
-                .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
-                .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
+            .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
+            .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
         case .tram:
             Text(.lineStatusDetailGoodServiceOnTrams)
@@ -240,7 +240,7 @@ private struct Previewer: View {
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
     @State var isFavourite = false
-    
+
     var body: some View {
         NavigationStack {
             LineStatusDetailView(

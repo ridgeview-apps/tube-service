@@ -5,49 +5,57 @@ public typealias TextShadowSettings = (color: Color, radius: CGFloat, x: CGFloat
 // swiftlint:enable large_tuple
 
 public extension View {
-    
-    func roundedBorder(_ color: Color,
-                       cornerRadius: CGFloat = 12,
-                       lineWidth: CGFloat = 1) -> some View {
+
+    func roundedBorder(
+        _ color: Color,
+        cornerRadius: CGFloat = 12,
+        lineWidth: CGFloat = 1
+    ) -> some View {
         self.clipShape(.rect(cornerRadius: cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(color, lineWidth: lineWidth)
             )
     }
-    
-    func cardStyle(cornerRadius: CGFloat = 12,
-                   backgroundColor: Color = .defaultCellBackground,
-                   borderColor: Color = .clear,
-                   borderWidth: CGFloat = 0.5) -> some View {
+
+    func cardStyle(
+        cornerRadius: CGFloat = 12,
+        backgroundColor: Color = .defaultCellBackground,
+        borderColor: Color = .clear,
+        borderWidth: CGFloat = 0.5
+    ) -> some View {
         self.modifier(
-            CardStyle(cornerRadius: cornerRadius,
-                      backgroundColor: backgroundColor,
-                      borderColor: borderColor,
-                      borderWidth: borderWidth)
+            CardStyle(
+                cornerRadius: cornerRadius,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: borderWidth
+            )
         )
     }
 
-    func defaultListRowStyle(edgeInsets: EdgeInsets = .zero,
-                             listRowSeparator separatorVisibility: Visibility = .hidden,
-                             backgroundColor: Color = .defaultBackground) -> some View {
+    func defaultListRowStyle(
+        edgeInsets: EdgeInsets = .zero,
+        listRowSeparator separatorVisibility: Visibility = .hidden,
+        backgroundColor: Color = .defaultBackground
+    ) -> some View {
         self
             .listRowBackground(backgroundColor)
             .listRowInsets(edgeInsets)
             .listRowSeparator(separatorVisibility)
-            
+
     }
-    
+
     func defaultScrollContentBackgroundColor() -> some View {
         self
             .scrollContentBackground(.hidden)
             .background(Color.defaultBackground)
     }
-    
+
     func pulsatingSymbol() -> some View {
         self.modifier(PulsatingSymbolEffectModifier())
     }
-    
+
     @ViewBuilder
     func bounceOnceSymbol(isEnabled: Bool = true) -> some View {
         if isEnabled {
@@ -56,7 +64,7 @@ public extension View {
             self
         }
     }
-    
+
     func withDefaultMaxWidth(alignment: Alignment = .center) -> some View {
         self.frame(maxWidth: 700, alignment: alignment)
     }
@@ -79,7 +87,7 @@ public extension View {
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
-    
+
     @ViewBuilder
     func withHardScrollEdgeEffectStyle(for edges: Edge.Set = .all) -> some View {
         if #available(iOS 26.0, *) {
@@ -88,7 +96,7 @@ public extension View {
             self
         }
     }
-    
+
     @ViewBuilder
     func withScrollEdgeEffectHidden(_ hidden: Bool = true, for edges: Edge.Set = .all) -> some View {
         if #available(iOS 26.0, *) {
@@ -97,7 +105,7 @@ public extension View {
             self
         }
     }
-    
+
     @ViewBuilder
     func withRegularGlassEffect() -> some View {
         if #available(iOS 26.0, *) {
@@ -106,7 +114,7 @@ public extension View {
             self
         }
     }
-    
+
     @ViewBuilder
     func withTightenedLabelIconToTitleSpacing() -> some View {
         if #available(iOS 26.0, *) {
@@ -115,7 +123,7 @@ public extension View {
             self
         }
     }
-    
+
     func secondarySectionHeaderStyle(textCase: Text.Case? = nil) -> some View {
         self
             .font(.footnote.weight(.semibold))
@@ -125,9 +133,11 @@ public extension View {
 }
 
 extension ForEach where Content: View {
-    
-    func onDeleteItem<Element>(in array: [Element],
-                               action: @escaping (Element) -> Void) -> some View {
+
+    func onDeleteItem<Element>(
+        in array: [Element],
+        action: @escaping (Element) -> Void
+    ) -> some View {
         onDelete { offsets in
             let index = offsets[offsets.startIndex]
             if array.indices.contains(index) {
@@ -139,8 +149,8 @@ extension ForEach where Content: View {
 }
 
 private struct SizePreferenceKey: PreferenceKey {
-  static let defaultValue: CGSize = .zero
-  static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
+    static let defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
 
 public extension EdgeInsets {
@@ -159,8 +169,12 @@ private struct CardStyle: ViewModifier {
         content
             .background(backgroundColor)
             .clipShape(.rect(cornerRadius: cornerRadius))
-            .shadow(color: .black.opacity(colorScheme == .dark ? 0 : 0.12),
-                    radius: 4, x: 0, y: 2)
+            .shadow(
+                color: .black.opacity(colorScheme == .dark ? 0 : 0.12),
+                radius: 4,
+                x: 0,
+                y: 2
+            )
             .overlay {
                 if borderColor != .clear {
                     RoundedRectangle(cornerRadius: cornerRadius)
@@ -189,9 +203,9 @@ struct VLine: Shape {
 }
 
 private struct PulsatingSymbolEffectModifier: ViewModifier {
-    
+
     @State private var isAnimating = false
-    
+
     func body(content: Content) -> some View {
         if #available(iOS 17.0, *) {
             content
@@ -206,9 +220,9 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
 }
 
 private struct BounceOnceSymbolEffectModifier: ViewModifier {
-    
+
     @State private var isAnimating = false
-    
+
     func body(content: Content) -> some View {
         if #available(iOS 18.0, *) {
             content
@@ -226,11 +240,11 @@ private struct BounceOnceSymbolEffectModifier: ViewModifier {
 
 struct ClearButton: ViewModifier {
     @Binding var text: String
-    
+
     func body(content: Content) -> some View {
         HStack {
             content
-            
+
             if !text.isEmpty {
                 Button {
                     text = ""

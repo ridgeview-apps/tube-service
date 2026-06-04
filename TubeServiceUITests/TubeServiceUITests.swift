@@ -9,23 +9,23 @@
 import XCTest
 
 class TubeServiceUITests: XCTestCase {
-    
+
     private var app: XCUIApplication!
-    
+
     private var iPhone: Bool { UIDevice.current.userInterfaceIdiom == .phone }
     private var iPad: Bool { UIDevice.current.userInterfaceIdiom == .pad }
-    
+
     var screenshotNumber = 0
 
     @MainActor
     override func setUpWithError() throws {
         continueAfterFailure = false
-        
+
         app = XCUIApplication()
         app.launchArguments = ["UITests"]
         setupSnapshot(app)
         app.launch()
-        
+
         // Handle location permisssions alert
         addUIInterruptionMonitor(withDescription: "Allow \"Tube Service\" to use your location?") { (alert) -> Bool in
             let button = alert.buttons["Allow While Using App"]
@@ -37,10 +37,10 @@ class TubeServiceUITests: XCTestCase {
             return false
         }
     }
-    
+
     @MainActor
     func testGenerateAppScreenshots() throws {
-                       
+
         XCUIDevice.shared.orientation = iPad ? .landscapeLeft : .portrait
 
         captureStatusTab()
@@ -49,98 +49,98 @@ class TubeServiceUITests: XCTestCase {
         captureNearbyStationsTab()
         captureMapsTab()
     }
-        
+
     @MainActor
     private func captureStatusTab() {
         app.buttons["acc.id.line.status.tab.title"].firstMatch.tap()
-        
+
         captureScreenshot("ServiceStatuses-Today")
-        
+
         // Status - today
         _ = app.buttons["circle"].waitForExistence(timeout: 10)
         app.buttons["circle"].tapUnhittable()
         captureScreenshot("ServiceStatusDetail-Today")
-        
-        app.navigationBars.buttons.element(boundBy: 0).tap() // Back
-        
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()  // Back
+
         // Status - weekend
-        
+
         app.buttons["acc.id.filter.option.thisWeekend"].tap()
         captureScreenshot("ServiceStatuses-Weekend")
     }
-    
+
     @MainActor
     private func captureJourneyPlannerTab() {
         app.buttons["acc.id.journey.planner.tab.title"].firstMatch.tap()
-        
+
         app.buttons["Departure location"].tap()
         app.textFields.firstMatch.typeText("King's Cross & St Pancras International")
-        
+
         if app.buttons["King's Cross & St Pancras International"].waitForExistence(timeout: 5) {
             app.buttons["King's Cross & St Pancras International"].tapUnhittable()
         }
-        
+
         app.buttons["Arrival location"].tap()
         app.textFields.firstMatch.typeText("Waterloo")
-        
+
         if app.buttons["Waterloo"].waitForExistence(timeout: 5) {
             app.buttons["Waterloo"].tapUnhittable()
         }
-        
+
         captureScreenshot("JourneyPlannerForm")
-        
+
         app.buttons["Plan my journey"].tap()
-        
+
         if app.buttons["journey.start.time.info"].firstMatch.waitForExistence(timeout: 5) {
             app.buttons["journey.start.time.info"].firstMatch.tap()
         } else {
             XCTFail()
             return
         }
-        
+
         if app.buttons["3 stops"].firstMatch.waitForExistence(timeout: 5) {
             app.buttons["3 stops"].firstMatch.tap()
         }
-        
+
         captureScreenshot("JourneyPlannerResults")
     }
-    
+
     @MainActor
     private func captureArrivalsTab() {
         app.buttons["acc.id.arrivals.tab.title"].firstMatch.tap()
-        
+
         captureScreenshot("LiveArrivalsPicker")
-        
-        app.buttons["910GABWDXR-elizabeth"].tapUnhittable() // Abbey Wood
-        
+
+        app.buttons["910GABWDXR-elizabeth"].tapUnhittable()  // Abbey Wood
+
         captureScreenshot("LiveArrivalsBoard1")
-        
-        app.navigationBars.buttons.element(boundBy: 0).tap() // Back
+
+        app.navigationBars.buttons.element(boundBy: 0).tap()  // Back
     }
-    
+
     @MainActor
     private func captureNearbyStationsTab() {
         app.buttons["acc.id.nearby.stations.tab.title"].firstMatch.tap()
-        
+
         captureScreenshot("NearbyStations-List")
-        
+
         if app.buttons["King's Cross & St Pancras International, 50 yd"].waitForExistence(timeout: 20) {
             app.buttons["King's Cross & St Pancras International, 50 yd"].tapUnhittable()
         } else {
             XCTFail()
             return
         }
-        
+
         captureScreenshot("NearbyStations-Detail")
     }
-    
+
     @MainActor
     private func captureMapsTab() {
         app.buttons["acc.id.maps.tab.title"].firstMatch.tap()
-        
+
         captureScreenshot("Maps")
     }
-    
+
     @MainActor
     private func captureScreenshot(_ name: String) {
         screenshotNumber += 1

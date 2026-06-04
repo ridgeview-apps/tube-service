@@ -3,10 +3,10 @@ import PresentationViews
 import SwiftUI
 
 struct SheetView: View {
-    
+
     let sheet: Sheet
     let onDismiss: (() -> Void)?
-    
+
     var body: some View {
         switch sheet {
         case let .systemStatusDetail(status):

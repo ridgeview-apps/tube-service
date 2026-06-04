@@ -1,5 +1,5 @@
 public extension TrainLineID {
-    
+
     var name: String {
         switch self {
         case .bakerloo:

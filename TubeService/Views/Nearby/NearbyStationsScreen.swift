@@ -8,12 +8,12 @@ struct NearbyStationsScreen: View {
 
     @Environment(StationsDataStore.self) var stations
     @Environment(LocationDataStore.self) var location
-    
+
     @State private var selectedStation: NearbyStation?
     @State private var sectionState: NearbyStationsResultsSectionState = .empty
 
     // MARK: - Layout
-    
+
     var body: some View {
         NavigationStack {
             nearbyStationsListView
@@ -29,7 +29,7 @@ struct NearbyStationsScreen: View {
             updateResultsSectionState()
         }
     }
-    
+
     private var nearbyStationsListView: some View {
         NearbyStationsView(
             locationUIStatus: locationUIStatus,
@@ -42,7 +42,7 @@ struct NearbyStationsScreen: View {
             location.refreshCurrentLocation()
         }
     }
-    
+
     private var locationUIStatus: LocationUIStatus {
         .init(
             style: location.locationUIStyle(loadingState: location.detectionState.toLoadingState()),
@@ -51,7 +51,7 @@ struct NearbyStationsScreen: View {
             }
         )
     }
-    
+
     private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
         switch action {
         case .coordinateChanged, .nameChanged:
@@ -60,27 +60,29 @@ struct NearbyStationsScreen: View {
             return
         }
     }
-    
+
     private func handleNearbyStationsViewAction(_ action: NearbyStationsView.Action) {
         switch action {
         case .tappedRefresh:
             location.refreshCurrentLocation()
         }
     }
-    
+
     @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
         switch selection {
         case let .lineStatusDetail(line):
             LineStatusDetailScreen(line: line, fetchType: .today)
         case let .arrivalsBoards(stationName, lineGroup):
-            ArrivalsBoardListScreen(stationName: stationName,
-                                    lineGroup: lineGroup)
+            ArrivalsBoardListScreen(
+                stationName: stationName,
+                lineGroup: lineGroup
+            )
         }
     }
-    
+
     private func updateResultsSectionState(reset: Bool = false) {
         let nearbyStations = location.nearbyStations
-        
+
         if reset {
             sectionState = .init(nearbyStations: nearbyStations)
         } else {
@@ -92,10 +94,10 @@ struct NearbyStationsScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-#Preview {
-    PreviewEnvironment {
-        NearbyStationsScreen()
+    #Preview {
+        PreviewEnvironment {
+            NearbyStationsScreen()
+        }
+        .navigationTitle("Nearby stations")
     }
-    .navigationTitle("Nearby stations")
-}
 #endif

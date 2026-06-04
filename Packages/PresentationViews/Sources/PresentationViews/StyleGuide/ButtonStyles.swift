@@ -26,14 +26,14 @@ public extension ButtonStyle where Self == PrimaryActionButtonStyle {
 
 private struct WrapperView: View {
     var body: some View {
-        Button("Hello World") { }
+        Button("Hello World") {}
             .buttonStyle(.primary)
     }
 }
 #Preview("Primary button") {
     VStack {
-        Button("Standard") { }
-        Button("Disabled") { }.disabled(true)
+        Button("Standard") {}
+        Button("Disabled") {}.disabled(true)
     }
     .buttonStyle(.primary)
 }

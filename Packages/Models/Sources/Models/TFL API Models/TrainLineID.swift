@@ -1,5 +1,5 @@
 public enum TrainLineID: String, Codable, CaseIterable, Hashable, Sendable {
-    
+
     case bakerloo
     case central
     case circle

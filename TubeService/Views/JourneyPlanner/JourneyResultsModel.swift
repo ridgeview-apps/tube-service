@@ -155,9 +155,11 @@ final class JourneyResultsModel {
             }
             .enumerated()
             .map { index, journey in
-                JourneyResultsCellItem(journey: journey,
-                                       journeyDiagramID: "\(pageID)-\(index)",
-                                       isExpanded: false)
+                JourneyResultsCellItem(
+                    journey: journey,
+                    journeyDiagramID: "\(pageID)-\(index)",
+                    isExpanded: false
+                )
             }
         return JourneyResultsPage(id: pageID.description, loadingState: .loaded, cellItems: cellItems)
     }
@@ -181,7 +183,8 @@ private struct JourneyTimePair: Hashable {
 
     init?(_ journey: Journey) {
         guard let start = journey.startDateTime,
-              let arrival = journey.arrivalDateTime else { return nil }
+            let arrival = journey.arrivalDateTime
+        else { return nil }
         self.start = start
         self.arrival = arrival
     }

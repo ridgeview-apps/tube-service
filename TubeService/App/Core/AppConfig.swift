@@ -1,12 +1,12 @@
 import Foundation
 
 struct AppConfig {
-    
+
     let contactUsEmail: String
     let appStoreProductURL: URL
     let transportAPI: TransportAPIConfig
     let systemStatusAPI: SystemStatusAPIConfig
-    
+
     public var appReviewURL: URL {
         guard var urlComponents = URLComponents(string: appStoreProductURL.absoluteString) else {
             return appStoreProductURL
@@ -19,12 +19,12 @@ struct AppConfig {
 // MARK: - Shared instance
 
 extension AppConfig {
-    
+
     // Load config from Main Info plist
-    
+
     static let main: AppConfig = {
         let config = Bundle.main.loadInfoPlistConfig(forKey: "appConfig")
-        
+
         let appConfig = AppConfig(
             contactUsEmail: config["contactUsEmail"],
             appStoreProductURL: config[url: "appStoreProductUrl"],
@@ -38,19 +38,19 @@ extension AppConfig {
                 fileName: config["systemStatusAPIFileName"]
             )
         )
-        
+
         return appConfig
     }()
 }
 
 extension AppConfig {
-    
+
     struct TransportAPIConfig {
         let baseURL: URL
         let appID: String
         let appKey: String
     }
-    
+
     struct SystemStatusAPIConfig {
         let baseURL: URL
         let fileName: String

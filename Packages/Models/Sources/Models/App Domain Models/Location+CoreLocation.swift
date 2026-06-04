@@ -8,7 +8,9 @@ public extension LocationCoordinate {
 
 public extension CLLocation {
     func toLocation() -> LocationCoordinate {
-        .init(lat: self.coordinate.latitude,
-              lon: self.coordinate.longitude)
+        .init(
+            lat: self.coordinate.latitude,
+            lon: self.coordinate.longitude
+        )
     }
 }

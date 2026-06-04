@@ -1,19 +1,19 @@
 import SwiftUI
 
 public struct LastUpatedTimeLabel: View {
-    
+
     public let date: Date
-    
+
     private let timestampFormatter: DateFormatter = Formatter.relative(
         dateStyle: .short,
         timeStyle: .short,
         context: .middleOfSentence
     )
-    
+
     public init(date: Date) {
         self.date = date
     }
-    
+
     public var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Image(systemName: "clock")

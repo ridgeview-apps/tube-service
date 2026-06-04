@@ -4,7 +4,7 @@ import Testing
 @testable import PresentationViews
 
 struct LineStatusViewStateTests {
-    
+
     @Test
     func lineDisruptionStatus() {
         #expect(LineStatus.with(statusSeverity: .specialService).isDisrupted)
@@ -17,20 +17,24 @@ struct LineStatusViewStateTests {
         #expect(LineStatus.with(statusSeverity: .reducedService).isDisrupted)
         #expect(LineStatus.with(statusSeverity: .busService).isDisrupted)
         #expect(LineStatus.with(statusSeverity: .minorDelays).isDisrupted)
-        
+
         #expect(!LineStatus.with(statusSeverity: .goodService).isDisrupted)
     }
 }
 
 
 extension LineStatus {
-    static func with(statusSeverity: LineStatusSeverity,
-                     statusSeverityDescription: String? = nil,
-                     reason: String? = nil,
-                     disruption: Disruption? = nil) -> LineStatus {
-        .init(statusSeverity: statusSeverity,
-              statusSeverityDescription: statusSeverityDescription,
-              reason: reason,
-              disruption: disruption)
+    static func with(
+        statusSeverity: LineStatusSeverity,
+        statusSeverityDescription: String? = nil,
+        reason: String? = nil,
+        disruption: Disruption? = nil
+    ) -> LineStatus {
+        .init(
+            statusSeverity: statusSeverity,
+            statusSeverityDescription: statusSeverityDescription,
+            reason: reason,
+            disruption: disruption
+        )
     }
 }

@@ -32,7 +32,7 @@ public struct Journey: Codable, Hashable, Sendable {
 }
 
 public struct JourneyLeg: Codable, Hashable, Sendable {
-    
+
     public let duration: Int?
     public let instruction: JourneyInstruction?
     public let departureTime: Date?
@@ -43,7 +43,7 @@ public struct JourneyLeg: Codable, Hashable, Sendable {
     public let mode: TflIdentifier?
     public let path: JourneyPath?
     public let disruptions: [Disruption]?
-    
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.duration = try? container.decodeIfPresent(Int.self, forKey: .duration)
@@ -78,7 +78,7 @@ public struct JourneyFare: Codable, Hashable, Sendable {
         let peak: Int?
         let offPeak: Int?
     }
-    
-    public let totalCost: Int? // In pence
+
+    public let totalCost: Int?  // In pence
     public let fares: [Fare]?
 }

@@ -128,7 +128,7 @@ private extension View {
     struct WrapperView: View {
         @State var isSelected = false
         let style: FavouritesButton.Style
-        
+
         var body: some View {
             FavouritesButton(
                 style: style,
@@ -136,7 +136,7 @@ private extension View {
             )
         }
     }
-    
+
     return Group {
         WrapperView(style: .small)
         WrapperView(style: .large)

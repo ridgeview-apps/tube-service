@@ -13,7 +13,7 @@ struct LineStatusScreen: View {
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
@@ -29,15 +29,17 @@ struct LineStatusScreen: View {
             fetchLineStatusesIfStale()
         }
     }
-    
+
     private var statusListView: some View {
-        LineStatusListView(loadingState: loadingState,
-                           lines: lines,
-                           favouriteLineIDs: userPreferences.favouriteLineIDs,
-                           refreshDate: refreshDate,
-                           selectedLine: $selectedLine,
-                           selectedFilterOption: $selectedFilterOption,
-                           selectedDate: $selectedDate)
+        LineStatusListView(
+            loadingState: loadingState,
+            lines: lines,
+            favouriteLineIDs: userPreferences.favouriteLineIDs,
+            refreshDate: refreshDate,
+            selectedLine: $selectedLine,
+            selectedFilterOption: $selectedFilterOption,
+            selectedDate: $selectedDate
+        )
         .navigationTitle(Text(.lineStatusNavigationTitle))
         .refreshable {
             await refreshDataForCurrentFilterOption()
@@ -61,42 +63,43 @@ struct LineStatusScreen: View {
             selectedDate = .now
         }
     }
-    
+
     private var loadingState: LoadingState {
         return model.fetchedData(for: currentFetchType)?.fetchState.loadingState ?? .loaded
     }
-    
+
     private var lines: [Line] {
         return (model.fetchedData(for: currentFetchType)?.lines ?? []).sortedByStatusSeverity()
     }
-    
+
     private var refreshDate: Date? {
         return model.fetchedData(for: currentFetchType)?.fetchedAt
     }
-    
+
     private func fetchLineStatusesIfStale() {
         Task {
             await model.refreshLineStatusesIfStale(for: currentFetchType)
         }
     }
-    
+
     private func refreshSelectedLine() {
         if let selectedLine {
-            self.selectedLine = lines.first { $0.id == selectedLine .id }
+            self.selectedLine = lines.first { $0.id == selectedLine.id }
         }
     }
-    
+
     private func refreshDataForCurrentFilterOption() async {
         await model.refreshLineStatuses(for: currentFetchType)
     }
-    
+
     private var currentFetchType: LineStatusDataStore.FetchType {
         switch selectedFilterOption {
         case .today:
             return .today
         case .tomorrow:
             guard let startDate = Calendar.london.startOfTomorrow(),
-                  let endDate = Calendar.london.startOfNextDay(after: startDate) else {
+                let endDate = Calendar.london.startOfNextDay(after: startDate)
+            else {
                 assertionFailure("Failed to calculate tomorrow's date range (falling back to today instead)")
                 return .today
             }
@@ -123,7 +126,7 @@ struct LineStatusScreen: View {
 }
 
 extension DataFetchState {
-    
+
     var loadingState: LoadingState {
         switch self {
         case .fetching:
@@ -140,9 +143,9 @@ extension DataFetchState {
 // MARK: - Previews
 
 #if DEBUG
-#Preview {
-    PreviewEnvironment {
-        LineStatusScreen()
+    #Preview {
+        PreviewEnvironment {
+            LineStatusScreen()
+        }
     }
-}
 #endif

@@ -8,19 +8,21 @@ public struct LocationUIStatus {
         case openSettingsToAllowLocation
         case locationAllowed(LoadingState)
     }
-    
+
     public let style: Style
     public let horizontalPadding: CGFloat
     public let onRequestPermissions: () -> Void
-    
-    public init(style: Style,
-                horizontalPadding: CGFloat = 16,
-                onRequestPermissions: @escaping () -> Void) {
+
+    public init(
+        style: Style,
+        horizontalPadding: CGFloat = 16,
+        onRequestPermissions: @escaping () -> Void
+    ) {
         self.style = style
         self.onRequestPermissions = onRequestPermissions
         self.horizontalPadding = horizontalPadding
     }
-    
+
     var loadingState: LoadingState? {
         switch style {
         case .setUp, .openSettingsToAllowLocation:
@@ -33,7 +35,7 @@ public struct LocationUIStatus {
 
 public struct LocationUIStatusViewModifier: ViewModifier {
     public let status: LocationUIStatus
-    
+
     public func body(content: Content) -> some View {
         switch status.style {
         case let .setUp(showsHeader):
@@ -44,7 +46,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
             content
         }
     }
-    
+
     @ViewBuilder
     private func initialSetupView(showsHeader: Bool) -> some View {
         statusContainer {
@@ -90,7 +92,7 @@ public struct LocationUIStatusViewModifier: ViewModifier {
 }
 
 public extension View {
-    
+
     func locationUIStatus(_ status: LocationUIStatus) -> some View {
         modifier(LocationUIStatusViewModifier(status: status))
     }
@@ -104,8 +106,12 @@ private struct Previewer: View {
 
     var body: some View {
         Text("Permissions granted view")
-            .locationUIStatus(.init(style: style,
-                                    onRequestPermissions: onRequestPermissions))
+            .locationUIStatus(
+                .init(
+                    style: style,
+                    onRequestPermissions: onRequestPermissions
+                )
+            )
     }
 }
 

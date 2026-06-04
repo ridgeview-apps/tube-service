@@ -3,35 +3,37 @@ import Models
 import MapKit
 
 public struct StationView: View {
-    
+
     public enum Selection: Hashable {
         case lineStatusDetail(Line)
         case arrivalsBoards(stationName: String, Station.LineGroup)
     }
-    
+
     public let station: Station
     public let loadingState: LoadingState
     public let statusCells: [LineStatusCell.Style]
     public let disruptionMessages: [String]
-    
-    public init(station: Station,
-                loadingState: LoadingState,
-                statusCells: [LineStatusCell.Style],
-                disruptionMessages: [String]) {
+
+    public init(
+        station: Station,
+        loadingState: LoadingState,
+        statusCells: [LineStatusCell.Style],
+        disruptionMessages: [String]
+    ) {
         self.station = station
         self.loadingState = loadingState
         self.statusCells = statusCells
         self.disruptionMessages = disruptionMessages
     }
-    
+
     private var mapURL: URL? {
         URL(string: "https://maps.apple.com?q=\(station.location.lat),\(station.location.lon)")
     }
-    
+
     private var directionsURL: URL? {
         URL(string: "https://maps.apple.com?daddr=\(station.location.lat),\(station.location.lon)&dirflg=w")
     }
-    
+
     public var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: 24) {
@@ -171,9 +173,11 @@ public struct StationView: View {
                 ForEach(Array(lineGroups.enumerated()), id: \.element.id) { index, lineGroup in
                     NavigationLink(value: Selection.arrivalsBoards(stationName: station.name, lineGroup)) {
                         HStack(spacing: 8) {
-                            LineGroupCell(style: .plain,
-                                          lineIDs: lineGroup.lineIds.sortedByName(),
-                                          title: lineGroup.name)
+                            LineGroupCell(
+                                style: .plain,
+                                lineIDs: lineGroup.lineIds.sortedByName(),
+                                title: lineGroup.name
+                            )
                             Spacer(minLength: 0)
                             Image(systemName: "chevron.right")
                                 .font(.footnote.weight(.semibold))
@@ -212,13 +216,15 @@ private struct WrapperView: View {
             .singleLine(.init(id: .victoria, lineStatuses: [.goodService]))
         ]
     var disruptionMessages: [String] = []
-    
+
     var body: some View {
         NavigationStack {
-            StationView(station: ModelStubs.kingsCrossStation,
-                        loadingState: loadingState,
-                        statusCells: statusCells,
-                        disruptionMessages: disruptionMessages)
+            StationView(
+                station: ModelStubs.kingsCrossStation,
+                loadingState: loadingState,
+                statusCells: statusCells,
+                disruptionMessages: disruptionMessages
+            )
             .navigationTitle("Station preview")
             .navigationDestination(for: StationView.Selection.self) { selection in
                 Text("Selected \(String(describing: selection))")
@@ -232,8 +238,10 @@ private struct WrapperView: View {
 }
 
 #Preview("Loaded state - disrupted") {
-    WrapperView(disruptionMessages: ["The escalator to platform 5 is closed",
-                                     "The lifts are bust"])
+    WrapperView(disruptionMessages: [
+        "The escalator to platform 5 is closed",
+        "The lifts are bust"
+    ])
 }
 
 
@@ -249,11 +257,11 @@ private struct WrapperView: View {
 struct StationMapView: View {
     let station: Station
     @State private var position: MapCameraPosition = .automatic
-    
+
     private var stationCoordinate: CLLocationCoordinate2D {
         station.location.toCLLocation().coordinate
     }
-    
+
     var body: some View {
         Map(
             position: $position
@@ -265,8 +273,12 @@ struct StationMapView: View {
         }
         .mapStyle(.standard(pointsOfInterest: .including([.publicTransport])))
         .task {
-            position = .camera(.init(centerCoordinate: stationCoordinate,
-                                     distance: 1500))
+            position = .camera(
+                .init(
+                    centerCoordinate: stationCoordinate,
+                    distance: 1500
+                )
+            )
         }
     }
 }

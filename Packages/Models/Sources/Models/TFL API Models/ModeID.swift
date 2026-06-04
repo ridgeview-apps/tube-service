@@ -20,11 +20,11 @@ public enum ModeID: String, Codable, Sendable {
 }
 
 public extension ModeID {
-    
+
     static var trains: [ModeID] {
         [.tube, .dlr, .overground, .tram, .elizabethLine]
     }
-    
+
     static var journeyPlannerModes: Set<ModeID> {
         [
             .bus,
@@ -40,7 +40,7 @@ public extension ModeID {
             .walking
         ]
     }
-    
+
     static var defaultJourneyPlannerModes: Set<ModeID> {
         let excludedDefaultModes: Set<ModeID> = [.walking, cycle]
         return journeyPlannerModes.filter {

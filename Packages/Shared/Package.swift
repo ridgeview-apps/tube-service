@@ -9,7 +9,7 @@ let package = Package(
         .iOS(.v18)
     ],
     products: [
-        .library(name: "Shared", targets: ["Shared"]),
+        .library(name: "Shared", targets: ["Shared"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.

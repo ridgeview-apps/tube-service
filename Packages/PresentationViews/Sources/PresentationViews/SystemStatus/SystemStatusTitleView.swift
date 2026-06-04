@@ -2,9 +2,9 @@ import Models
 import SwiftUI
 
 struct SystemStatusTitleView: View {
-    
+
     let systemStatus: SystemStatus
-    
+
     var body: some View {
         Label {
             Text(.systemStatusBannerTitle)

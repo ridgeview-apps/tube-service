@@ -2,22 +2,22 @@ import Models
 import SwiftUI
 
 public struct SettingsView: View {
-    
+
     public typealias ContactUs = Settings.ContactUs
     public typealias EditableValues = Settings.EditableValues
     public typealias DebugAction = Settings.DebugAction
-    
+
     public let appVersionNumber: String
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
     public let onDebugAction: (Settings.DebugAction) -> Void
-    
+
     @Binding var editableValues: EditableValues
-    
+
     @State private var showDebugSection = false
     @State private var showDebugConfirmAlert = false
-    
+
     public init(
         appVersionNumber: String,
         appReviewURL: URL,
@@ -33,7 +33,7 @@ public struct SettingsView: View {
         self.systemStatus = systemStatus
         self.onDebugAction = onDebugAction
     }
-        
+
     public var body: some View {
         Form {
             journeyPlannerSection
@@ -45,10 +45,10 @@ public struct SettingsView: View {
             showDebugSection = true
         }
     }
-        
-    
+
+
     // MARK: - Layout views
-    
+
     private var journeyPlannerSection: some View {
         Section {
             NavigationLink {
@@ -67,12 +67,14 @@ public struct SettingsView: View {
             Text(.settingsJourneyPlannerTitle)
         }
     }
-    
+
     private var supportSection: some View {
         Section {
-            MailButton(to: [contactUs.emailAddress],
-                       subject: emailSubject,
-                       body: emailBody) {
+            MailButton(
+                to: [contactUs.emailAddress],
+                subject: emailSubject,
+                body: emailBody
+            ) {
                 Text(.settingsContactUsTitle)
             }
             Link(destination: appReviewURL) {
@@ -87,7 +89,7 @@ public struct SettingsView: View {
             Text(.settingsSectionSupportTitle)
         }
     }
-    
+
     private var systemStatusLabelTitle: some View {
         HStack {
             if let systemStatus {
@@ -99,7 +101,7 @@ public struct SettingsView: View {
             Spacer()
         }
     }
-    
+
     private var modesDetailLabelTitle: some View {
         if editableValues.allJourneyPlannerModesSelected {
             Text(.journeyPlannerTravelOptionsModesDetailAll)
@@ -107,7 +109,7 @@ public struct SettingsView: View {
             Text(.journeyPlannerTravelOptionsModesSelectionCount(editableValues.journeyPlannerModesSelection.count))
         }
     }
-    
+
     private var aboutSection: some View {
         Section(
             header: Text(.settingsSectionAboutTitle)
@@ -125,39 +127,41 @@ public struct SettingsView: View {
             }
         }
     }
-    
+
     @ViewBuilder private var acknowledgements: some View {
         if let acknowledgementsURL = URL(string: "https://tfl.gov.uk/info-for/open-data-users/") {
             HStack {
                 Text(.settingsAppPoweredBy)
-                Link("TfL Open Data",
-                     destination: acknowledgementsURL)
-                
+                Link(
+                    "TfL Open Data",
+                    destination: acknowledgementsURL
+                )
+
                 .foregroundColor(.blue)
             }
             .font(.headline)
         }
     }
-    
+
     private var emailSubject: String {
         String(localized: .contactUsSubject(contactUs.appName))
     }
-    
+
     private var emailBody: String {
-            """
-            \(String(localized: .contactUsBodyDiagnosticInfo))
-            
-            \(String(localized: .contactUsBodyAppVersion)): \(contactUs.appVersion)
-            \(String(localized: .contactUsBodyDeviceInfo)): \(contactUs.deviceInfo)
-            \(String(localized: .contactUsBodyLocaleInfo)): \(contactUs.localeInfo)
-            \(String(localized: .contactUsBodyOsVersion)): \(osNameAndVersion)
-            """
+        """
+        \(String(localized: .contactUsBodyDiagnosticInfo))
+
+        \(String(localized: .contactUsBodyAppVersion)): \(contactUs.appVersion)
+        \(String(localized: .contactUsBodyDeviceInfo)): \(contactUs.deviceInfo)
+        \(String(localized: .contactUsBodyLocaleInfo)): \(contactUs.localeInfo)
+        \(String(localized: .contactUsBodyOsVersion)): \(osNameAndVersion)
+        """
     }
-    
+
     private var osNameAndVersion: String {
         "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
     }
-    
+
     @ViewBuilder
     private var debugSection: some View {
         if showDebugSection {
@@ -184,7 +188,7 @@ import ModelStubs
 
 private struct Previewer: View {
     @State var editableValues: Settings.EditableValues = .default
-    
+
     var body: some View {
         NavigationStack {
             SettingsView(

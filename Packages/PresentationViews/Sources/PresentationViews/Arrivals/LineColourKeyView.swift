@@ -1,10 +1,10 @@
 import Models
 import SwiftUI
- 
+
 public struct LineColourKeyView: View {
 
     public let lineIDs: [TrainLineID]
-    
+
     public init(lineIDs: [TrainLineID]) {
         self.lineIDs = lineIDs
     }

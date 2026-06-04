@@ -53,9 +53,9 @@ struct RootScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-#Preview {
-    PreviewEnvironment {
-        RootScreen()
+    #Preview {
+        PreviewEnvironment {
+            RootScreen()
+        }
     }
-}
 #endif

@@ -2,7 +2,7 @@ import DataStores
 import PresentationViews
 
 extension LocationDataStore {
-    
+
     func locationUIStyle(showsSetUpHeader: Bool = true, loadingState: LoadingState) -> LocationUIStatus.Style {
         switch authorizationStatus {
         case .notDetermined:
@@ -18,7 +18,7 @@ extension LocationDataStore {
 }
 
 extension LocationDataStore.DetectionState {
-    
+
     func toLoadingState() -> LoadingState {
         switch self {
         case .detecting:

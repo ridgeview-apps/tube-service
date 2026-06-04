@@ -8,31 +8,31 @@ public extension Sequence where Element == Line {
     func sortedByStatusSeverity() -> [Line] {
         sorted { $0.sortProperties < $1.sortProperties }
     }
-    
+
     var hasDisruptions: Bool {
         !disruptionsOnly().isEmpty
     }
-    
+
     var allAreDisrupted: Bool {
         allSatisfy { $0.isDisrupted }
     }
-    
+
     var allAreGoodService: Bool {
         allSatisfy { $0.statusSeverity == .goodService }
     }
-    
+
     func disruptionsOnly() -> [Line] {
         self.filter { $0.isDisrupted }.sortedByStatusSeverity()
     }
-    
+
     func goodServiceOnly() -> [Line] {
         self.filter { !$0.isDisrupted }.sorted { $0.id.name < $1.id.name }
     }
-    
+
     func removingLineIDs(_ excludedLineIDs: Set<TrainLineID>) -> [Line] {
         self.filter { !excludedLineIDs.contains($0.id) }
     }
-    
+
     func favouritesOnly(matching favouriteLineIDs: Set<TrainLineID>) -> [Line] {
         self
             .filter { favouriteLineIDs.contains($0.id) }
@@ -41,22 +41,26 @@ public extension Sequence where Element == Line {
 }
 
 public extension Line {
-    
-    typealias SortProperties = (disruptionSortOrder: Int,
-                                lineName: String)
-    
+
+    typealias SortProperties = (
+        disruptionSortOrder: Int,
+        lineName: String
+    )
+
     var statusSeverity: LineStatusSeverity? {
         lineStatusesSortedBySeverity
             .compactMap(\.statusSeverity).first
     }
-    
+
     var lineStatusesSortedBySeverity: [LineStatus] {
         (lineStatuses ?? []).sortedByStatusSeverity()
     }
-    
+
     var sortProperties: SortProperties {
-        (isDisrupted ? 0 : 1,
-         lineName: id.name)
+        (
+            isDisrupted ? 0 : 1,
+            lineName: id.name
+        )
     }
 }
 
@@ -64,11 +68,11 @@ public extension Line {
 // MARK: - Display
 
 extension Line {
-    
+
     var accessoryImageType: LineStatusAccessoryImageType {
         isDisrupted ? .disruption : .goodService
     }
-    
+
     struct ServiceDetailTextItem: Hashable, Identifiable {
         enum MessageType: Hashable {
             case goodService
@@ -78,25 +82,29 @@ extension Line {
         let messageType: MessageType
         let additionalInfo: String?
     }
-    
+
     var serviceDetailTextItems: [ServiceDetailTextItem] {
         var uniqueTextItems = [ServiceDetailTextItem]()
-        
+
         lineStatuses?.sortedByStatusSeverity().forEach {
             let textItem: ServiceDetailTextItem
             if $0.isDisrupted {
-                textItem = ServiceDetailTextItem(messageType: .disrupted(reason: $0.reason?.trimmed()),
-                                                 additionalInfo: $0.disruption?.additionalInfo?.trimmed())
+                textItem = ServiceDetailTextItem(
+                    messageType: .disrupted(reason: $0.reason?.trimmed()),
+                    additionalInfo: $0.disruption?.additionalInfo?.trimmed()
+                )
             } else {
-                textItem = ServiceDetailTextItem(messageType: .goodService,
-                                                 additionalInfo: nil)
+                textItem = ServiceDetailTextItem(
+                    messageType: .goodService,
+                    additionalInfo: nil
+                )
             }
             if !uniqueTextItems.contains(textItem) {
                 uniqueTextItems.append(textItem)
             }
         }
-        
-         return uniqueTextItems
+
+        return uniqueTextItems
     }
 
     var shortText: String {
@@ -108,12 +116,14 @@ extension Line {
         }
         return uniqueDescriptions.compactMap { $0 }.joined(separator: ", ")
     }
-    
+
     var xPostLinks: [LineStatusXPostLink] {
         var xPostLinks = [LineStatusXPostLink(style: .tflAllXPosts, url: .latestXPosts())]
         if id.shouldShowFilteredXPosts {
-            let filteredPosts = LineStatusXPostLink(style: .lineXPosts(lineId: id),
-                                                     url: .latestXPosts(filteredBy: id))
+            let filteredPosts = LineStatusXPostLink(
+                style: .lineXPosts(lineId: id),
+                url: .latestXPosts(filteredBy: id)
+            )
             xPostLinks.append(filteredPosts)
         }
         return xPostLinks

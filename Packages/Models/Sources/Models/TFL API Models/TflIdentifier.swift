@@ -4,12 +4,12 @@ public struct TflIdentifier: Codable, Hashable, Sendable {
 }
 
 extension TflIdentifier {
-    
+
     var trainLineID: TrainLineID? {
         guard let id else { return nil }
         return TrainLineID(rawValue: id)
     }
-    
+
     var modeID: ModeID? {
         guard let id else { return nil }
         return ModeID(rawValue: id)

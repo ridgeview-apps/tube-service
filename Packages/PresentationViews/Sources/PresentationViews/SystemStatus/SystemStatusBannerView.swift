@@ -2,16 +2,16 @@ import Models
 import SwiftUI
 
 public struct SystemStatusBannerView: View {
-    
+
     public enum Action: Sendable {
         case tappedOK(SystemStatus)
         case tappedMoreInfo(SystemStatus)
     }
-    
+
     public let systemStatus: SystemStatus
     public let onAction: (Action) -> Void
     @Binding var isShowing: Bool
-    
+
     public init(
         systemStatus: SystemStatus,
         isShowing: Binding<Bool>,
@@ -21,7 +21,7 @@ public struct SystemStatusBannerView: View {
         self._isShowing = isShowing
         self.onAction = onAction
     }
-    
+
     public var body: some View {
         if isShowing {
             VStack(alignment: .leading, spacing: 8) {
@@ -49,9 +49,9 @@ public struct SystemStatusBannerView: View {
                 .asymmetric(insertion: .slideDown, removal: .slideUp)
             )
         }
-        
+
     }
-    
+
     private var actionButtons: some View {
         HStack {
             Spacer(minLength: 0)
@@ -92,7 +92,7 @@ import ModelStubs
 
 #Preview("OK") {
     @Previewable @State var isShowing = true
-    
+
     NavigationStack {
         Text("Preview").navigationTitle("Preview nav title")
     }
@@ -107,7 +107,7 @@ import ModelStubs
 
 #Preview("Outage") {
     @Previewable @State var isShowing = true
-    
+
     NavigationStack {
         Text("Preview").navigationTitle("Preview nav title")
     }
@@ -121,7 +121,7 @@ import ModelStubs
 
 #Preview("Resolved") {
     @Previewable @State var isShowing = true
-    
+
     NavigationStack {
         Text("Preview").navigationTitle("Preview nav title")
     }

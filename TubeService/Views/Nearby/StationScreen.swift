@@ -8,16 +8,18 @@ struct StationScreen: View {
 
     @Environment(LineStatusDataStore.self) var lineStatus
     @Environment(StationsDataStore.self) var stations
-    
+
     let station: Station
-    
+
     // MARK: - Layout
-    
+
     var body: some View {
-        StationView(station: station,
-                    loadingState: loadingState,
-                    statusCells: statusCells,
-                    disruptionMessages: disruptionMessages)
+        StationView(
+            station: station,
+            loadingState: loadingState,
+            statusCells: statusCells,
+            disruptionMessages: disruptionMessages
+        )
         .navigationTitle(station.name)
         .refreshable {
             await refreshData()
@@ -31,24 +33,24 @@ struct StationScreen: View {
             }
         }
     }
-    
+
     private func refreshDataIfStale() async {
         async let refreshLineStatuses: () = await lineStatus.refreshLineStatusesIfStale(for: .today)
         async let refreshDisruptions: () = await stations.refreshStationDisruptionsIfStale()
-        
+
         _ = await (refreshLineStatuses, refreshDisruptions)
     }
-    
+
     private func refreshData() async {
         async let refreshLineStatuses: () = await lineStatus.refreshLineStatuses(for: .today)
         async let refreshDisruptions: () = await stations.refreshStationDisruptions()
-        
+
         _ = await (refreshLineStatuses, refreshDisruptions)
     }
-    
+
     private var loadingState: LoadingState {
         let fetchedData = lineStatus.fetchedData(for: .today)
-        
+
         switch fetchedData?.fetchState {
         case .success:
             return .loaded
@@ -58,12 +60,12 @@ struct StationScreen: View {
             return .loading
         }
     }
-    
+
     private var statusCells: [LineStatusCell.Style] {
         let allLineStatuses = lineStatus.fetchedData(for: .today)?.lines ?? []
         return allLineStatuses.toLineStatusCellStyles(for: station)
     }
-    
+
     private var disruptionMessages: [String] {
         stations.disruptions(forStationID: station.id)
     }
@@ -88,19 +90,19 @@ import ModelStubs
 private struct WrapperView: View {
     var station: Station = ModelStubs.kingsCrossStation
     @State var selection: StationView.Selection?
-    
+
     var body: some View {
         StationScreen(station: station)
     }
 }
 
 #if DEBUG
-#Preview {
-    NavigationStack {
-        PreviewEnvironment {
-            WrapperView()
+    #Preview {
+        NavigationStack {
+            PreviewEnvironment {
+                WrapperView()
+            }
+            .navigationTitle("Selected station")
         }
-        .navigationTitle("Selected station")
     }
-}
 #endif

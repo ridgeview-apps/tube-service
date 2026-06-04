@@ -3,7 +3,7 @@ import RidgeviewCore
 
 // MARK: - Train lines
 public extension Color {
-    
+
     //
     // See: https://content.tfl.gov.uk/tfl-colour-standard.pdf
     // Issue 10 - May 2025
@@ -29,11 +29,13 @@ public extension Color {
     static let weaverLine = Color.rgb(130, 58, 98)
     static let windrushLine = Color.rgb(237, 27, 0)
     static let overground = Color.rgb(250, 123, 5)
-    
+
     // As per "Colour standards": https://tfl.gov.uk/info-for/suppliers-and-contractors/design-standards
 
-    static let bus = Color.adaptive(lightMode: rgb(220, 36, 31),
-                                    darkMode: Color.midRed1)
+    static let bus = Color.adaptive(
+        lightMode: rgb(220, 36, 31),
+        darkMode: Color.midRed1
+    )
     static let cableCar = Color.rgb(115, 79, 160)
     static let cycleHire = Color.rgb(236, 0, 0)
     static let coach = Color.rgb(255, 166, 0)
@@ -45,33 +47,35 @@ public extension Color {
 public extension Color {
     static let darkRed1 = Color.rgb(255, 69, 58)
     static let midRed1 = Color.rgb(255, 105, 97)
-    
+
     static let adaptiveRed = Color.adaptive(
         lightMode: darkRed1,
         darkMode: midRed1
     )
-        
-    static let defaultBackground = Color(uiColor: .secondarySystemBackground)    
+
+    static let defaultBackground = Color(uiColor: .secondarySystemBackground)
     static let defaultCellBackground = Color(uiColor: .tertiarySystemBackground)
-    
+
     static let systemBannerOK = Color.rgb(55, 122, 0)
     static let systemBannerOutage = Color.darkRed1
-    
+
     static let arrivalsBoardPrimary = Color.rgb(198, 188, 61)
     static let arrivalsBoardBackground = Color.rgb(34, 30, 40)
 }
 
 public extension Color {
-    
+
     static func adaptive(lightMode: Color, darkMode: Color) -> Color {
-        let uiColor = UIColor(lightMode: .init(lightMode),
-                              darkMode: .init(darkMode))
+        let uiColor = UIColor(
+            lightMode: .init(lightMode),
+            darkMode: .init(darkMode)
+        )
         return Color(uiColor: uiColor)
     }
 }
 
 public extension ShapeStyle where Self == Color {
-    
+
     static var bakerlooLine: Color { .bakerlooLine }
     static var centralLine: Color { .centralLine }
     static var circleLine: Color { .circleLine }
@@ -87,29 +91,31 @@ public extension ShapeStyle where Self == Color {
     static var dlr: Color { .dlr }
     static var tram: Color { .tram }
     static var overground: Color { .overground }
-    
+
     static var bus: Color { .bus }
     static var cableCar: Color { .cableCar }
     static var cycleHire: Color { .cycleHire }
     static var coach: Color { .coach }
     static var nationalRail: Color { .nationalRail }
     static var riverBus: Color { .riverBus }
-    
+
     static var darkRed1: Color { .darkRed1 }
     static var midRed1: Color { .midRed1 }
-    
+
     static var adaptiveRed: Color { .adaptiveRed }
-    
+
     static var defaultBackground: Color { .defaultBackground }
-    
+
     static var defaultCellBackground: Color { .defaultCellBackground }
 }
 
 extension UIColor {
-    
-    convenience init(lightMode: UIColor,
-                     darkMode: UIColor) {
-        
+
+    convenience init(
+        lightMode: UIColor,
+        darkMode: UIColor
+    ) {
+
         self.init { traitCollection in
             switch traitCollection.userInterfaceStyle {
             case .light, .unspecified:

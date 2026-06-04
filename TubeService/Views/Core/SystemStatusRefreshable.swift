@@ -4,17 +4,17 @@ import PresentationViews
 import SwiftUI
 
 struct SystemStatusRefreshableModifier: ViewModifier {
-    
+
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     @Environment(SystemStatusDataStore.self) var systemStatus: SystemStatusDataStore
     @Environment(\.showSheet) var showSheet
     @State private var showBanner = false
-    
+
     func body(content: Content) -> some View {
         content
             .onSceneDidBecomeActive {
@@ -30,18 +30,18 @@ struct SystemStatusRefreshableModifier: ViewModifier {
                 }
             }
     }
-    
+
     private func showSystemStatusBannerIfNeeded() {
         Task {
             await systemStatus.fetchSystemStatusIfStale()
-            
+
             guard let currentStatus = systemStatus.currentStatus, currentStatus.status != .ok else {
                 return
             }
-            
+
             let newMessageAvailable = !userPreferences.hasReadSystemStatusMessage(id: currentStatus.id)
             if newMessageAvailable {
-                try await Task.sleep(for: .seconds(1.2)) // N.B. Suspends the task without blocking the thread
+                try await Task.sleep(for: .seconds(1.2))  // N.B. Suspends the task without blocking the thread
                 withAnimation { showBanner = true }
             }
         }
@@ -55,7 +55,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
             dismissBanner(message, moreInfo: true)
         }
     }
-    
+
     private func dismissBanner(_ message: SystemStatus, moreInfo: Bool = false) {
         showBanner = false
         userPreferences.markAsRead(systemStatusMessageID: message.id)
@@ -66,7 +66,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
 }
 
 extension View {
-    
+
     func systemStatusRefreshable() -> some View {
         modifier(SystemStatusRefreshableModifier())
     }

@@ -5,9 +5,9 @@ import SwiftUI
 // MARK: - Data types
 
 public struct ArrivalsBoardState: Identifiable, Sendable {
-    
+
     public var id: String { platformName }
-    
+
     let platformName: String
     let cellItems: [ArrivalsBoardCellItem]
 }
@@ -19,10 +19,10 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
         let backgroundColor: Color
         let textColor: Color
         let textShadow: TextShadowSettings
-        
+
         var valueText: String { String(value) }
     }
-    
+
     enum TextType {
         case verbatim(String)
         case localized(LocalizedStringResource)
@@ -33,35 +33,35 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
             case tube
             case scheduledDeparture
         }
-        
+
         enum DestinationType {
             case towards(String)
             case checkFrontOfTrain
         }
-        
+
         let style: Style
         let destination: DestinationType
         let countdownText: TextType
         let needsStrikethrough: Bool
     }
-    
+
     struct DepartureStatusState {
         enum Style {
             case info
             case warning
         }
-        
+
         let scheduledDeparture: TextType?
         let estimatedDeparture: TextType?
         let statusText: TextType?
         let style: Style
     }
-    
-    enum FooterRowType {        
+
+    enum FooterRowType {
         case tubeLiveLocation(String)
         case departureStatus(DepartureStatusState)
     }
-    
+
     let id: String
     let numberLabel: NumberLabel
     let headerRow: HeaderRowState
@@ -72,15 +72,15 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
 // MARK: - Countdown text formatter
 
 enum CountdownTextFormatter {
-    
+
     static func formattedText(forSeconds seconds: Int?) -> ArrivalsBoardCellItem.TextType {
         guard let seconds else {
             return .verbatim("--")
         }
-        
+
         return countdownMessage(for: seconds)
     }
-    
+
     private static func countdownMessage(for secondsRemaining: Int) -> ArrivalsBoardCellItem.TextType {
         let oneHour = 60 * 60
         if secondsRemaining < 60 {
@@ -89,12 +89,15 @@ enum CountdownTextFormatter {
             let minutes = secondsRemaining / 60
             return .localized(.arrivalsBoardCountdownDueMinutes(minutes))
         } else {
-            let formattedDuration = Duration
-                                        .seconds(secondsRemaining)
-                                        .formatted(
-                                            .units(allowed: [.hours, .minutes],
-                                                   width: .narrow)
-                                        )
+            let formattedDuration =
+                Duration
+                .seconds(secondsRemaining)
+                .formatted(
+                    .units(
+                        allowed: [.hours, .minutes],
+                        width: .narrow
+                    )
+                )
             return .verbatim(formattedDuration)
         }
     }

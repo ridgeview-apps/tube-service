@@ -28,18 +28,18 @@ public struct JourneyRequestParams: Sendable {
                 queryTime: date.toAPIDateParam(dateFormat: timeFormat)
             )
         }
-        
+
         public static func arriving(queryDate: String, queryTime: String) -> Self {
             .init(type: .arriving, queryDate: queryDate, queryTime: queryTime)
         }
-        
+
         public static func departing(at date: Date) -> Self {
             .departing(
                 queryDate: date.toAPIDateParam(dateFormat: dateFormat),
                 queryTime: date.toAPIDateParam(dateFormat: timeFormat)
             )
         }
-        
+
         public static func departing(queryDate: String, queryTime: String) -> Self {
             .init(type: .departing, queryDate: queryDate, queryTime: queryTime)
         }

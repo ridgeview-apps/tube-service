@@ -2,14 +2,14 @@ import SwiftUI
 import Models
 
 extension SystemStatus {
-    
+
     var formattedMessage: LocalizedStringResource {
         guard let message else {
             return defaultMessageText
         }
         return LocalizedStringResource(stringLiteral: message)
     }
-    
+
     private var defaultMessageText: LocalizedStringResource {
         switch status {
         case .ok: .systemStatusOkDefaultMessage
@@ -17,7 +17,7 @@ extension SystemStatus {
         case .outage: .systemStatusOutageDefaultMessage
         }
     }
-    
+
     var titleImage: some View {
         Group {
             switch status {
@@ -29,13 +29,13 @@ extension SystemStatus {
         }
         .imageScale(.large)
     }
-    
+
     var tint: Color {
         switch status {
         case .ok, .resolved: .systemBannerOK
         case .outage: .systemBannerOutage
         }
     }
-    
+
     var foregroundStyle: Color { .white }
 }

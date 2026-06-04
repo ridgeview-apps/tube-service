@@ -6,29 +6,29 @@ import SwiftUI
 
 @MainActor
 struct LineStatusDetailScreen: View {
-    
+
     @Environment(LineStatusDataStore.self) var model
     @Environment(\.showSheet) var showSheet
     @Environment(\.openURL) var openURL
-    
+
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
-    
+
     let line: Line
     let fetchType: LineStatusDataStore.FetchType
-    
-    
+
+
     private var loadingState: LoadingState {
         return model.fetchedData(for: .today)?.fetchState.loadingState ?? .loaded
     }
-    
+
     private var refreshDate: Date? {
         return model.fetchedData(for: .today)?.fetchedAt
     }
-    
+
     var body: some View {
         LineStatusDetailView(
             line: line,
@@ -43,14 +43,14 @@ struct LineStatusDetailScreen: View {
         }
 
     }
-    
+
     private func handleDetailViewAction(_ action: LineStatusDetailView.Action) {
         switch action {
         case .linkTapped(let link):
             openURL(link.url)
         }
     }
-    
+
     private func isFavouriteLine(for lineID: TrainLineID) -> Binding<Bool> {
         .init {
             userPreferences.containsFavouriteLine(lineID)
