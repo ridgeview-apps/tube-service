@@ -41,7 +41,7 @@ extension AppDependencies {
                 return previewOverride
             }
 
-            if ProcessInfo.isRunningUITests {
+            if ProcessInfo.isRunningTests {
                 return .stub
             }
         #endif

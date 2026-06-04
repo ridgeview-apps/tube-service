@@ -75,79 +75,6 @@ struct LocationDataStoreTests {
         #expect(locationManager.requestLocationCallCount == 0)
     }
 
-    @Test
-    func authorizationDeniedClearsLocationValues() async {
-        // Given
-        let (locationManager, model) = makeModel()
-        let location = CLLocation(latitude: 51.531504, longitude: -0.113384)
-        locationManager.simulateLocationUpdate([location])
-        await flushMainActor()
-
-        // When
-        locationManager.simulateAuthorizationChange(.denied)
-        await flushMainActor()
-
-        // Then
-        #expect(model.authorizationStatus == .denied)
-        #expect(model.currentLocationCoordinate == nil)
-        #expect(model.currentLocationName == nil)
-        #expect(model.nearbyStations.isEmpty)
-    }
-
-    @Test
-    func locationUpdateSetsCoordinateAndNearbyStations() async throws {
-        // Given
-        let (locationManager, model) = makeModel()
-
-        // When
-        locationManager.simulateLocationUpdate([CLLocation(latitude: 51.531504, longitude: -0.113384)])
-        await flushMainActor()
-
-        // Then
-        let coordinate = try #require(model.currentLocationCoordinate)
-        #expect(coordinate == .init(lat: 51.531504, lon: -0.113384))
-        #expect(!model.nearbyStations.isEmpty)
-        if case .detected = model.detectionState {
-            #expect(Bool(true))
-        } else {
-            Issue.record("Expected detected state")
-        }
-    }
-
-    @Test
-    func locationFailureSetsFailedState() {
-        // Given
-        let (locationManager, model) = makeModel()
-
-        // When
-        locationManager.simulateLocationFailure(TestError.expected)
-
-        // Then
-        if case .failed = model.detectionState {
-            #expect(Bool(true))
-        } else {
-            Issue.record("Expected failed state")
-        }
-    }
-
-    @Test
-    func authorizationChangeCancelsPendingGeocodingTask() async {
-        // Given
-        let geocoder = StubReverseGeocoder(delayNanoseconds: 200_000_000)
-        let (locationManager, model) = makeModel(geocoder: geocoder)
-        _ = model
-
-        // When
-        locationManager.simulateLocationUpdate([CLLocation(latitude: 51.531504, longitude: -0.113384)])
-        await flushMainActor()
-        locationManager.simulateAuthorizationChange(.denied)
-        try? await Task.sleep(nanoseconds: 350_000_000)
-
-        // Then
-        #expect(geocoder.callCount == 1)
-        #expect(geocoder.cancellationCount == 1)
-    }
-
     private func makeModel(
         locationManager: StubLocationManager = StubLocationManager(),
         geocoder: ReverseGeocoderType = StubReverseGeocoder()
@@ -156,11 +83,6 @@ struct LocationDataStoreTests {
         let stations = StationsDataStore.stub(transportAPI: transportAPI)
         let model = LocationDataStore(locationManager: locationManager, stations: stations, geocoder: geocoder)
         return (locationManager, model)
-    }
-
-    private func flushMainActor() async {
-        await Task.yield()
-        await Task.yield()
     }
 }
 

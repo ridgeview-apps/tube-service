@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - ProcessInfo
 extension ProcessInfo {
-    static var isRunningUITests: Bool {
+    static var isRunningTests: Bool {
         ProcessInfo.processInfo.arguments.contains("UITests") || ProcessInfo.processInfo.arguments.contains("unitTests")
     }
 }
