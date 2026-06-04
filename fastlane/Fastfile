@@ -1,153 +1,165 @@
 default_platform(:ios)
 
-before_all do
-  setup_ci if is_ci  
-end
+platform :ios do
 
-private_lane :read_xcconfig_file do
-  puts("XXXXX DOES THIS GET CALLED???")
-  path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
-  Xcodeproj::Config.new(path)
-end
+  @derived_data_path = "../derived-data"
 
-private_lane :changelog do
-  changelog_from_git_commits(
-    commits_count: 1,
-    date_format: "short"
-  )
-end
-
-
-#######################
-# Unit tests
-#######################
-
-private_lane :xcode_tests do |options|
-  scan(
-    clean: true,
-    scheme: options[:scheme],
-    configuration: "Debug",
-    device: "iPhone 17 Pro"
-  )
-end
-
-lane :unit_tests do
-  xcode_tests(scheme: "TubeService")
-end
-
-lane :ui_tests do
-  xcode_tests(scheme: "TubeServiceUITests")
-end
-
-
-#######################
-# Build & distribute
-#######################
-
-lane :add_badge_overlay do
-  badge_shield_title = ENV["XCODE_CONFIG"].slice(0, 4)
-  badge_shield_date_text = Time.new.strftime("%d.%m.%y")
-
-  add_badge(
-    shield: "#{badge_shield_title}-#{badge_shield_date_text}-blue",
-    no_badge: true
-  )
-end
-
-lane :build do
-  app_store_connect_api_key(duration: 1200)
-
-  xcconfig = read_xcconfig_file
-
-  main_target_bundle_id = xcconfig.attributes['MAIN_TARGET_BUNDLE_ID']
-
-  match_app_identifiers = ["#{main_target_bundle_id}"]
-
-  match(
-    readonly: false,
-    clone_branch_directly: true,
-    git_url: "https://github.com/ridgeview-apps/ridgeview-certs.git",
-    git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION_BASE64"],
-    app_identifier: match_app_identifiers,
-    username: "ci.ridgeview@gmail.com",
-    type: "appstore"
-  )
-  
-  increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
-
-  gym(
-    clean: true,
-    scheme: "TubeService",
-    configuration: "Release",
-    xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
-    export_method: "app-store",
-    skip_profile_detection: true
-  )
-end
-
-lane :distribute do
-  app_store_connect_api_key(duration: 1200)
-  
-  groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
-  distribute_external = groups.length > 0  
-
-  pilot(
-    distribute_external: distribute_external,
-    groups: groups,
-    notify_external_testers: true,
-    skip_waiting_for_build_processing: !distribute_external,
-    changelog: "Thank you for installing our latest build",
-    reject_build_waiting_for_review: true
-  )
-  
-end
-
-
-#######################
-# App Store submission
-#######################
-
-lane :upload_screenshots do |options|
-  upload_to_app_store_connect(
-    submit_for_review: false,
-    overwrite_screenshots: true
-  )
-end
-
-lane :submit_for_review do |options|
-  upload_to_app_store_connect(
-    submit_for_review: true,
-    build_number: options[:build_number]
-  )
-end
-
-private_lane :upload_to_app_store_connect do |options|
-  app_store_connect_api_key(duration: 1200)
-    
-  app_identifier = "com.ridgeviewapps.tube-service"
-  submit_for_review = options[:submit_for_review] || false
-  overwrite_screenshots = options[:overwrite_screenshots] || false
-  
-  if submit_for_review
-    build_number = options[:build_number] || latest_testflight_build_number(app_identifier: app_identifier).to_s
+  before_all do
+    setup_ci if is_ci  
   end
-  
-  deliver(
-    app_identifier: app_identifier,
-    automatic_release: false,
-    submit_for_review: submit_for_review,
-    overwrite_screenshots: overwrite_screenshots,
-    precheck_include_in_app_purchases: false,
-    force: true, # Skips the interactive preview of html file before uploading
-    build_number: build_number,
-    submission_information: {
-      add_id_info_uses_idfa: false,
-      add_id_info_serves_ads: false,
-      add_id_info_tracks_action: false,
-      add_id_info_tracks_install: false,
-      add_id_info_limits_tracking: true,
-      # content_rights_contains_third_party_content: true,
-      # content_rights_has_rights: true,
-    }
-  )
+
+  private_lane :read_xcconfig_file do
+    puts("XXXXX DOES THIS GET CALLED???")
+    path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
+    Xcodeproj::Config.new(path)
+  end
+
+  private_lane :changelog do
+    changelog_from_git_commits(
+      commits_count: 1,
+      date_format: "short"
+    )
+  end
+
+
+  #######################
+  # Unit tests
+  #######################
+
+  private_lane :xcode_tests do |options|
+    run_tests(
+      clean: true,
+      scheme: options[:scheme],
+      configuration: "Debug",
+      device: "iPhone 17 Pro",
+      derived_data_path: @derived_data_path,
+    )
+  end
+
+  lane :unit_tests do
+        run_tests(
+      clean: true,
+      scheme: options[:scheme],
+      configuration: "Debug",
+      device: "iPhone 17 Pro",
+      derived_data_path: @derived_data_path,
+    )
+  end
+
+  lane :ui_tests do
+    xcode_tests(scheme: "TubeServiceUITests")
+  end
+
+
+  #######################
+  # Build & distribute
+  #######################
+
+  lane :add_badge_overlay do
+    badge_shield_title = ENV["XCODE_CONFIG"].slice(0, 4)
+    badge_shield_date_text = Time.new.strftime("%d.%m.%y")
+
+    add_badge(
+      shield: "#{badge_shield_title}-#{badge_shield_date_text}-blue",
+      no_badge: true
+    )
+  end
+
+  lane :build do
+    app_store_connect_api_key(duration: 1200)
+
+    xcconfig = read_xcconfig_file
+
+    main_target_bundle_id = xcconfig.attributes['MAIN_TARGET_BUNDLE_ID']
+
+    match_app_identifiers = ["#{main_target_bundle_id}"]
+
+    match(
+      readonly: false,
+      clone_branch_directly: true,
+      git_url: "https://github.com/ridgeview-apps/ridgeview-certs.git",
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION_BASE64"],
+      app_identifier: match_app_identifiers,
+      username: "ci.ridgeview@gmail.com",
+      type: "appstore"
+    )
+    
+    increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
+
+    gym(
+      clean: true,
+      scheme: "TubeService",
+      configuration: "Release",
+      xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
+      export_method: "app-store",
+      skip_profile_detection: true
+    )
+  end
+
+  lane :distribute do
+    app_store_connect_api_key(duration: 1200)
+    
+    groups = ENV["DISTRIBUTION_GROUPS"] ? ENV["DISTRIBUTION_GROUPS"].split("\n") : []
+    distribute_external = groups.length > 0  
+
+    pilot(
+      distribute_external: distribute_external,
+      groups: groups,
+      notify_external_testers: true,
+      skip_waiting_for_build_processing: !distribute_external,
+      changelog: "Thank you for installing our latest build",
+      reject_build_waiting_for_review: true
+    )
+    
+  end
+
+
+  #######################
+  # App Store submission
+  #######################
+
+  lane :upload_screenshots do |options|
+    upload_to_app_store_connect(
+      submit_for_review: false,
+      overwrite_screenshots: true
+    )
+  end
+
+  lane :submit_for_review do |options|
+    upload_to_app_store_connect(
+      submit_for_review: true,
+      build_number: options[:build_number]
+    )
+  end
+
+  private_lane :upload_to_app_store_connect do |options|
+    app_store_connect_api_key(duration: 1200)
+      
+    app_identifier = "com.ridgeviewapps.tube-service"
+    submit_for_review = options[:submit_for_review] || false
+    overwrite_screenshots = options[:overwrite_screenshots] || false
+    
+    if submit_for_review
+      build_number = options[:build_number] || latest_testflight_build_number(app_identifier: app_identifier).to_s
+    end
+    
+    deliver(
+      app_identifier: app_identifier,
+      automatic_release: false,
+      submit_for_review: submit_for_review,
+      overwrite_screenshots: overwrite_screenshots,
+      precheck_include_in_app_purchases: false,
+      force: true, # Skips the interactive preview of html file before uploading
+      build_number: build_number,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        add_id_info_serves_ads: false,
+        add_id_info_tracks_action: false,
+        add_id_info_tracks_install: false,
+        add_id_info_limits_tracking: true,
+        # content_rights_contains_third_party_content: true,
+        # content_rights_has_rights: true,
+      }
+    )
+  end
 end
