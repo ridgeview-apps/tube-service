@@ -36,6 +36,12 @@
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
 		315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		316577342FD194F200CABBB4 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
+		3165775F2FD195B600CABBB4 /* generate-screenshots.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "generate-screenshots.sh"; sourceTree = "<group>"; };
+		316577602FD195B600CABBB4 /* quick-start.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "quick-start.sh"; sourceTree = "<group>"; };
+		316577612FD195B600CABBB4 /* screenshots-upload.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshots-upload.sh"; sourceTree = "<group>"; };
+		316577622FD195B600CABBB4 /* submit-for-review.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "submit-for-review.sh"; sourceTree = "<group>"; };
+		316577642FD195EC00CABBB4 /* swift-format-lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "swift-format-lint.sh"; sourceTree = "<group>"; };
 		318D482624EFC4900026B5F4 /* Tube Service.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tube Service.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D72B22AE6787100DEBE06 /* Models.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Models.xctestplan; sourceTree = "<group>"; };
 		318D72B52AE6918E00DEBE06 /* Shared.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Shared.xctestplan; sourceTree = "<group>"; };
@@ -45,13 +51,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		310B4C5B2FCDA399000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 315F89C62567BCB70069DD2D /* TubeServiceUITests */;
-		};
 		310B4C662FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -76,7 +75,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		310B4C572FCDA398000BA667 /* TubeServiceUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (310B4C5B2FCDA399000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeServiceUITests; sourceTree = "<group>"; };
+		310B4C572FCDA398000BA667 /* TubeServiceUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TubeServiceUITests; sourceTree = "<group>"; };
 		310B4C642FCDA3A4000BA667 /* TubeServiceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (310B4C662FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 310B4C672FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeServiceTests; sourceTree = "<group>"; };
 		310B4C7D2FCDA47D000BA667 /* Config */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Config; sourceTree = "<group>"; };
 		3192F9AF2FCDA24C00D46C61 /* TubeService */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3192F9D72FCDA24D00D46C61 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeService; sourceTree = "<group>"; };
@@ -123,15 +122,29 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
+		316577632FD195B600CABBB4 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				3165775F2FD195B600CABBB4 /* generate-screenshots.sh */,
+				316577602FD195B600CABBB4 /* quick-start.sh */,
+				316577612FD195B600CABBB4 /* screenshots-upload.sh */,
+				316577622FD195B600CABBB4 /* submit-for-review.sh */,
+				316577642FD195EC00CABBB4 /* swift-format-lint.sh */,
+			);
+			path = Scripts;
+			sourceTree = "<group>";
+		};
 		318D481D24EFC4900026B5F4 = {
 			isa = PBXGroup;
 			children = (
+				316577342FD194F200CABBB4 /* .swift-format */,
 				310BBA792AD573FE0097BAD8 /* Packages */,
 				310B4C7D2FCDA47D000BA667 /* Config */,
 				3192F9AF2FCDA24C00D46C61 /* TubeService */,
 				310B4C642FCDA3A4000BA667 /* TubeServiceTests */,
 				310B4C572FCDA398000BA667 /* TubeServiceUITests */,
 				318D482724EFC4900026B5F4 /* Products */,
+				316577632FD195B600CABBB4 /* Scripts */,
 			);
 			sourceTree = "<group>";
 		};
@@ -184,10 +197,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 318D483A24EFC4900026B5F4 /* Build configuration list for PBXNativeTarget "TubeService" */;
 			buildPhases = (
+				3145BA7F2B4EBF9900AE1DDE /* Swift format */,
 				318D482224EFC4900026B5F4 /* Sources */,
 				318D482324EFC4900026B5F4 /* Frameworks */,
 				318D482424EFC4900026B5F4 /* Resources */,
-				3145BA7F2B4EBF9900AE1DDE /* Swiftlint */,
 			);
 			buildRules = (
 			);
@@ -299,7 +312,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		3145BA7F2B4EBF9900AE1DDE /* Swiftlint */ = {
+		3145BA7F2B4EBF9900AE1DDE /* Swift format */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -309,14 +322,14 @@
 			);
 			inputPaths = (
 			);
-			name = Swiftlint;
+			name = "Swift format";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nif [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/opt/homebrew/bin:$PATH\"\nfi\n\nif which swiftlint > /dev/null; then\n  swiftlint --strict\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "\"$SRCROOT/Scripts/swift-format-lint.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
