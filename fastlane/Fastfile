@@ -1,8 +1,8 @@
 default_platform(:ios)
 
-before_all do
-  setup_ci if is_ci  
-end
+# before_all do
+#   setup_ci if is_ci  
+# end
 
 private_lane :read_xcconfig_file do
   path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
