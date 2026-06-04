@@ -31,8 +31,8 @@ jobs:
       - name: Install dependencies
         run: |
           brew install git-secret
-          # brew install librsvg
-          # brew install imagemagick
+          brew install librsvg
+          brew install imagemagick
       - name: Git secret
         run: |
           echo "🔓 Unlocking secrets..."
@@ -45,6 +45,6 @@ jobs:
           bundle install
           bundle update fastlane
           bundle exec fastlane unit_tests
-          # bundle exec fastlane add_badge_overlay
-          # bundle exec fastlane build
-          # bundle exec fastlane distribute
+          bundle exec fastlane add_badge_overlay
+          bundle exec fastlane build
+          bundle exec fastlane distribute
