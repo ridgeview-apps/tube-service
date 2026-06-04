@@ -5,6 +5,7 @@ before_all do
 end
 
 private_lane :read_xcconfig_file do
+  puts("XXXXX DOES THIS GET CALLED???")
   path = "../Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig"
   Xcodeproj::Config.new(path)
 end
@@ -23,6 +24,7 @@ end
 
 private_lane :xcode_tests do |options|
   scan(
+    clean: true,
     scheme: options[:scheme],
     configuration: "Debug",
     device: "iPhone 17 Pro"
