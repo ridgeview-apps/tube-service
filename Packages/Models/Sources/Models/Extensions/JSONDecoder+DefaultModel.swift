@@ -4,6 +4,7 @@ private extension DateFormatter {
     static let standardT: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         return dateFormatter
     }()
 }
