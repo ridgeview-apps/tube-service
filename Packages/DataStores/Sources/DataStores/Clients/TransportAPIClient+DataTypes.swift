@@ -3,7 +3,6 @@ import Models
 
 // MARK: - Journey API models
 
-// swiftlint:disable identifier_name
 public struct JourneyRequestParams: Sendable {
     public enum JourneyLocation: Sendable {
         case icsCode(String)
@@ -69,7 +68,6 @@ public struct JourneyRequestParams: Sendable {
         self.routeBetweenEntrances = routeBetweenEntrances
     }
 }
-// swiftlint:enable identifier_name
 
 extension JourneyRequestParams.TimeOptionParam {
 

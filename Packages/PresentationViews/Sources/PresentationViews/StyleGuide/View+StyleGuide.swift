@@ -1,8 +1,6 @@
 import SwiftUI
 
-// swiftlint:disable large_tuple
 public typealias TextShadowSettings = (color: Color, radius: CGFloat, x: CGFloat, y: CGFloat)
-// swiftlint:enable large_tuple
 
 public extension View {
 

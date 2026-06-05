@@ -141,7 +141,6 @@ private extension ModelDecoderTests {
         return try JSONDecoder.defaultModelDecoder.decode(type, from: jsonData)
     }
 
-    // swiftlint:disable function_parameter_count
     private func dayMonthYear(
         _ day: Int,
         _ month: Int,
@@ -161,5 +160,4 @@ private extension ModelDecoderTests {
         )
         return calendar.date(from: dateComponents)!
     }
-    // swiftlint:enable function_parameter_count
 }

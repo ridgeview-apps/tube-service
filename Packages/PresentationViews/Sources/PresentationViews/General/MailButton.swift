@@ -5,7 +5,6 @@ import MessageUI
 //
 // Adapted from: https://stackoverflow.com/questions/56784722/swiftui-send-email
 //
-// swiftlint:disable identifier_name
 public struct MailButton<Label: View>: View {
 
     @State private var result: Result<MFMailComposeResult, Error>?
@@ -158,4 +157,3 @@ private struct MailViewController: UIViewControllerRepresentable {
     }
 
 }
-// swiftlint:enable identifier_name

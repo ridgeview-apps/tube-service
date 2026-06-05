@@ -4,12 +4,10 @@ import SwiftUI
 
 struct LineDiagramItem: Identifiable, Equatable {
 
-    // swiftlint:disable type_name
     struct ID: Hashable {
         let type: ItemType
         let journeyItemID: JourneyItemID
     }
-    // swiftlint:enable type_name
 
     let id: ID
     let style: LineDiagramItem.Style

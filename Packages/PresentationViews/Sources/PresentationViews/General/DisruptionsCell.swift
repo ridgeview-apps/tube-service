@@ -30,7 +30,6 @@ struct DisruptionsCell: View {
     }
 }
 
-// swiftlint:disable line_length
 #Preview {
     List {
         DisruptionsCell(
@@ -42,4 +41,3 @@ struct DisruptionsCell: View {
     }
 
 }
-// swiftlint:enable line_length

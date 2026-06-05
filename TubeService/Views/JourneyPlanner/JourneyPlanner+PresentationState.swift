@@ -3,8 +3,6 @@ import DataStores
 import Models
 import PresentationViews
 
-// swiftlint:disable identifier_name
-
 enum JourneyPlannerError: Error {
     case stationNotFound
     case invalidLocationRequest
@@ -351,5 +349,3 @@ extension Journey {
         return true
     }
 }
-
-// swiftlint:enable identifier_name

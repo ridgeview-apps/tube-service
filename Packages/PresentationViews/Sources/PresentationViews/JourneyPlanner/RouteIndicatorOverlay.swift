@@ -1,10 +1,8 @@
 import SwiftUI
 
-// swiftlint:disable identifier_name
 enum RouteAnchorID: Hashable {
     case from, to
 }
-// swiftlint:enable identifier_name
 
 struct RouteAnchorKey: PreferenceKey {
     static let defaultValue: [RouteAnchorID: Anchor<CGRect>] = [:]

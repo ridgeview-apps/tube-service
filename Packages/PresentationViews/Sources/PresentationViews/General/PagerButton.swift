@@ -5,7 +5,6 @@ public struct PagerButton: View {
     public let title: LocalizedStringResource
     public let action: () -> Void
 
-    // swiftlint:disable identifier_name
     public enum Style {
         case up, down
 
@@ -18,7 +17,6 @@ public struct PagerButton: View {
             }
         }
     }
-    // swiftlint:enable identifier_name
 
     public init(
         style: Style,

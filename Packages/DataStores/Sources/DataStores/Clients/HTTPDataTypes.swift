@@ -41,7 +41,6 @@ extension URLComponents {
 
 extension URLSession {
 
-    // swiftlint:disable identifier_name
     func get<T: Decodable>(url: URL, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> HTTPResponse<T> {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
@@ -67,5 +66,4 @@ extension URLSession {
         let decodedModel: T = try jsonDecoder.decode(T.self, from: response.data)
         return HTTPResponse(statusCode: statusCode, decodedModel: decodedModel)
     }
-    // swiftlint:enable identifier_name
 }

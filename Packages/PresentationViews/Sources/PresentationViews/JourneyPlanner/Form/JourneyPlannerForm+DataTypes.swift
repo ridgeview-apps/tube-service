@@ -1,7 +1,6 @@
 import Foundation
 import Models
 
-// swiftlint:disable identifier_name
 public struct JourneyPlannerForm: Hashable, Sendable {
 
     public enum CurrentLocationAccessoryStatus {
@@ -121,4 +120,3 @@ public struct JourneyPlannerForm: Hashable, Sendable {
 
     public static let empty: JourneyPlannerForm = .init()
 }
-// swiftlint:enable identifier_name
