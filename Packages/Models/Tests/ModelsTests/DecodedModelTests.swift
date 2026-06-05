@@ -153,7 +153,7 @@ private extension ModelDecoderTests {
         let calendar = Calendar.iso8601(in: timeZone)
         let dateComponents = DateComponents(
             calendar: calendar,
-            timeZone: calendar.timeZone,
+            timeZone: timeZone,
             year: year,
             month: month,
             day: day,
