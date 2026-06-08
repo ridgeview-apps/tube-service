@@ -65,6 +65,13 @@
 			);
 			target = 31E6EEEC2C9DB4980042A66A /* TubeServiceTests */;
 		};
+		316C80092FD7077D00A42BD6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 315F89C62567BCB70069DD2D /* TubeServiceUITests */;
+		};
 		3192F9D72FCDA24D00D46C61 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -75,7 +82,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		310B4C572FCDA398000BA667 /* TubeServiceUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TubeServiceUITests; sourceTree = "<group>"; };
+		310B4C572FCDA398000BA667 /* TubeServiceUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (316C80092FD7077D00A42BD6 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeServiceUITests; sourceTree = "<group>"; };
 		310B4C642FCDA3A4000BA667 /* TubeServiceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (310B4C662FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 310B4C672FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeServiceTests; sourceTree = "<group>"; };
 		310B4C7D2FCDA47D000BA667 /* Config */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Config; sourceTree = "<group>"; };
 		3192F9AF2FCDA24C00D46C61 /* TubeService */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3192F9D72FCDA24D00D46C61 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeService; sourceTree = "<group>"; };
@@ -249,7 +256,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1510;
+				LastUpgradeCheck = 2650;
 				ORGANIZATIONNAME = "Shilan Patel";
 				TargetAttributes = {
 					315F89C62567BCB70069DD2D = {
@@ -470,6 +477,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -532,6 +540,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;

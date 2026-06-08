@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "PresentationViews",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v18)
     ],
