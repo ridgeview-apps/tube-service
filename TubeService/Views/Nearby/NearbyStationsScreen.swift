@@ -37,7 +37,7 @@ struct NearbyStationsScreen: View {
             sectionState: $sectionState
         )
         .withSettingsToolbarButton()
-        .navigationTitle(Text(.nearbyStationsNavigationTitle))
+        .navigationTitle(Text(L10n.nearbyStationsNavigationTitle))
         .refreshable {
             location.refreshCurrentLocation()
         }

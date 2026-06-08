@@ -40,7 +40,7 @@ struct LineStatusScreen: View {
             selectedFilterOption: $selectedFilterOption,
             selectedDate: $selectedDate
         )
-        .navigationTitle(Text(.lineStatusNavigationTitle))
+        .navigationTitle(Text(L10n.lineStatusNavigationTitle))
         .refreshable {
             await refreshDataForCurrentFilterOption()
         }

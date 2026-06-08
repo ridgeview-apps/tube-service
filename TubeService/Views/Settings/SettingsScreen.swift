@@ -25,7 +25,7 @@ struct SettingsScreen: View {
             systemStatus: systemStatusData.currentStatus,
             onDebugAction: handleDebugAction
         )
-        .navigationTitle(Text(.settingsNavigationTitle))
+        .navigationTitle(Text(L10n.settingsNavigationTitle))
     }
 
     private var editableValues: Binding<Settings.EditableValues> {

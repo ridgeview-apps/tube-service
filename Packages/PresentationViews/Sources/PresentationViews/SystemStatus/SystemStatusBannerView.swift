@@ -75,7 +75,7 @@ public struct SystemStatusBannerView: View {
                         onAction(.tappedOK(systemStatus))
                     }
                 } label: {
-                    Text(.globalOK)
+                    Text(.globalOk)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.white)

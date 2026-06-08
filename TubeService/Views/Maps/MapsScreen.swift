@@ -9,7 +9,7 @@ struct MapsScreen: View {
                 .navigationDestination(for: MapLink.self) { mapLink in
                     MapDetailView(mapLink: mapLink)
                 }
-                .navigationTitle(Text(.mapsNavigationTitle))
+                .navigationTitle(Text(L10n.mapsNavigationTitle))
                 .withSettingsToolbarButton()
         }
     }

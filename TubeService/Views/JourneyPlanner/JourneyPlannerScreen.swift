@@ -43,7 +43,7 @@ struct JourneyPlannerScreen: View {
             .onChange(of: userPreferences.recentlySavedJourneys) {
                 refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
             }
-            .navigationTitle(Text(.journeyPlannerNavigationTitle))
+            .navigationTitle(Text(L10n.journeyPlannerNavigationTitle))
             .withNavigationState($navigationState) { destinationID in
                 destinationScreen(for: destinationID)
             }
@@ -155,11 +155,11 @@ private extension JourneyPlannerForm.FieldID.LocationID {
     var navigationTitle: LocalizedStringResource {
         switch self {
         case .from:
-            .journeyPlannerLocationPickerScreenFromNavigationTitle
+            L10n.journeyPlannerLocationPickerScreenFromNavigationTitle
         case .to:
-            .journeyPlannerLocationPickerScreenToNavigationTitle
+            L10n.journeyPlannerLocationPickerScreenToNavigationTitle
         case .via:
-            .journeyPlannerLocationPickerScreenViaNavigationTitle
+            L10n.journeyPlannerLocationPickerScreenViaNavigationTitle
         }
     }
 }

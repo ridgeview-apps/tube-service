@@ -1,6 +1,25 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "%@ selected" : {
+
+    },
+    "%@-%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@-%2$@"
+          }
+        }
+      }
+    },
+    "Are you sure?" : {
+
+    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -168,6 +187,7 @@
       }
     },
     "arrivals.picker.no.selection" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -310,7 +330,7 @@
       }
     },
     "expansion.info.button.show.less.title" : {
-      "extractionState" : "pasted",
+      "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -407,6 +427,9 @@
           }
         }
       }
+    },
+    "Hello World" : {
+
     },
     "journey.location.picker.nearby.stations.section.title" : {
       "extractionState" : "manual",
@@ -972,6 +995,28 @@
         }
       }
     },
+    "journey.results.earlier.journeys.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier journeys"
+          }
+        }
+      }
+    },
+    "journey.results.later.journeys.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later journeys"
+          }
+        }
+      }
+    },
     "journey.results.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -979,6 +1024,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Journeys"
+          }
+        }
+      }
+    },
+    "journey.results.page.fetching.results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading journeys"
           }
         }
       }
@@ -1023,39 +1079,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Via "
-          }
-        }
-      }
-    },
-    "journey.results.earlier.journeys.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Earlier journeys"
-          }
-        }
-      }
-    },
-    "journey.results.later.journeys.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Later journeys"
-          }
-        }
-      }
-    },
-    "journey.results.page.fetching.results" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading journeys"
           }
         }
       }
@@ -1280,6 +1303,9 @@
         }
       }
     },
+    "List preview" : {
+
+    },
     "location.services.access.denied.message.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1503,6 +1529,9 @@
         }
       }
     },
+    "No" : {
+
+    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1513,6 +1542,15 @@
           }
         }
       }
+    },
+    "Permissions granted view" : {
+
+    },
+    "Picker preview" : {
+
+    },
+    "Preview" : {
+
     },
     "recent.journey.cell.to" : {
       "extractionState" : "manual",
@@ -1569,6 +1607,9 @@
         }
       }
     },
+    "Reset user defaults?" : {
+
+    },
     "search.suggestions.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1580,7 +1621,7 @@
         }
       }
     },
-    "Selected station" : {
+    "Selected %@" : {
 
     },
     "settings.acknowledgements.title" : {
@@ -1726,6 +1767,9 @@
         }
       }
     },
+    "Station preview" : {
+
+    },
     "station.arrivals.section.header.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1815,6 +1859,18 @@
         }
       }
     },
+    "Stop point circles" : {
+
+    },
+    "Stop point images" : {
+
+    },
+    "Stop point ticks" : {
+
+    },
+    "Straight lines" : {
+
+    },
     "swap.button.accessibility.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1869,6 +1925,15 @@
           }
         }
       }
+    },
+    "TfL Open Data" : {
+
+    },
+    "Warning" : {
+
+    },
+    "Yes" : {
+
     }
   },
   "version" : "1.2"

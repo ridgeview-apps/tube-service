@@ -38,7 +38,7 @@ struct ArrivalsPickerScreen: View {
                 }
                 .searchable(
                     text: $searchTerm,
-                    prompt: Text(.arrivalsPickerSearchPlaceholder)
+                    prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
                 ) {
                     searchSuggestionsView
                 }
@@ -60,14 +60,14 @@ struct ArrivalsPickerScreen: View {
 
     @ViewBuilder private var pickerListView: some View {
         if isSearching && selectableStations.isEmpty {
-            Text(.arrivalsPickerSearchNoResults)
+            Text(L10n.arrivalsPickerSearchNoResults)
         } else {
             ArrivalsPickerView(
                 allStations: selectableStations,
                 mode: pickerMode,
                 selection: $selection
             )
-            .navigationTitle(Text(.arrivalsPickerNavigationTitle))
+            .navigationTitle(Text(L10n.arrivalsPickerNavigationTitle))
             .withSettingsToolbarButton()
             .onAppear {
                 reloadStations()
@@ -109,7 +109,7 @@ struct ArrivalsPickerScreen: View {
                     } header: {
                         HStack(spacing: 4) {
                             Image(systemName: "sparkles")
-                            Text(.searchSuggestionsSectionTitle)
+                            Text(L10n.searchSuggestionsSectionTitle)
                                 .secondarySectionHeaderStyle()
                         }
                     }

@@ -35,7 +35,7 @@ struct JourneyResultsScreen: View {
             onAction: { handleAction($0) }
         )
         .navigationBarTitleDisplayMode(.inline)
-        .navigationTitle(Text(.journeyResultsNavigationTitle))
+        .navigationTitle(Text(L10n.journeyResultsNavigationTitle))
     }
 
     private func handleAction(_ action: JourneyResultsAction) {

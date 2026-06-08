@@ -1,10 +1,11 @@
 import Foundation
 import DataStores
+import PresentationViews
 
 extension Error {
 
     func toUIErrorMessage() -> String {
-        let defaultErrorMessage = String(localized: .errorSomethingWentWrong)
+        let defaultErrorMessage = String(localized: L10n.errorSomethingWentWrong)
 
         switch self {
         case let httpError as HTTPError:
@@ -20,7 +21,7 @@ private extension HTTPError {
     func toUIErrorMessage() -> String? {
         switch self {
         case let .connection(error as NSError) where offlineErrorCodes.contains(error.code):
-            return String(localized: .errorNoInternetConnection)
+            return String(localized: L10n.errorNoInternetConnection)
         default:
             return nil
         }

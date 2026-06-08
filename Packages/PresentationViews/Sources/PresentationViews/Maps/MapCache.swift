@@ -52,6 +52,6 @@ public enum MapCacheError: LocalizedError {
     case invalidPDF
 
     public var errorDescription: String? {
-        String(localized: .mapsLoadingErrorInvalidPDF)
+        String(localized: .mapsLoadingErrorInvalidPdf)
     }
 }

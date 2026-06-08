@@ -1,3 +1,4 @@
+import PresentationViews
 import SwiftUI
 
 struct RootScreen: View {
@@ -23,7 +24,7 @@ struct RootScreen: View {
         Tab {
             LineStatusScreen()
         } label: {
-            Label(.lineStatusTabTitle, systemImage: "info.circle")
+            Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
         }
         .accessibilityIdentifier("acc.id.line.status.tab.title")
     }
@@ -32,7 +33,7 @@ struct RootScreen: View {
         Tab {
             JourneyPlannerScreen()
         } label: {
-            Label(.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
+            Label(L10n.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
         }
         .accessibilityIdentifier("acc.id.journey.planner.tab.title")
     }
@@ -41,7 +42,7 @@ struct RootScreen: View {
         Tab {
             ArrivalsPickerScreen()
         } label: {
-            Label(.arrivalsTabTitle, systemImage: "tram")
+            Label(L10n.arrivalsTabTitle, systemImage: "tram")
         }
         .accessibilityIdentifier("acc.id.arrivals.tab.title")
     }
@@ -50,7 +51,7 @@ struct RootScreen: View {
         Tab {
             NearbyStationsScreen()
         } label: {
-            Label(.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
+            Label(L10n.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
         }
         .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
     }
@@ -59,7 +60,7 @@ struct RootScreen: View {
         Tab {
             MapsScreen()
         } label: {
-            Label(.mapsTabTitle, systemImage: "map")
+            Label(L10n.mapsTabTitle, systemImage: "map")
         }
         .accessibilityIdentifier("acc.id.maps.tab.title")
     }
