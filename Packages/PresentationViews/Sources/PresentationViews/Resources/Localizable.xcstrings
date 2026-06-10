@@ -307,6 +307,12 @@
         }
       }
     },
+    "Empty" : {
+
+    },
+    "Error" : {
+
+    },
     "error.no.internet.connection" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1306,6 +1312,15 @@
     "List preview" : {
 
     },
+    "Loaded" : {
+
+    },
+    "Loading" : {
+
+    },
+    "Loading status history..." : {
+
+    },
     "location.services.access.denied.message.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1349,6 +1364,9 @@
           }
         }
       }
+    },
+    "Locked" : {
+
     },
     "mail.not.supported" : {
       "extractionState" : "manual",
@@ -1532,6 +1550,9 @@
     "No" : {
 
     },
+    "No Status History" : {
+
+    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1550,6 +1571,9 @@
 
     },
     "Preview" : {
+
+    },
+    "Purchase and subscription details will appear here once the paywall is connected." : {
 
     },
     "recent.journey.cell.to" : {
@@ -1620,6 +1644,9 @@
           }
         }
       }
+    },
+    "See how the service has changed" : {
+
     },
     "Selected %@" : {
 
@@ -1767,6 +1794,9 @@
         }
       }
     },
+    "State" : {
+
+    },
     "Station preview" : {
 
     },
@@ -1859,6 +1889,12 @@
         }
       }
     },
+    "Status History" : {
+
+    },
+    "Status History Unavailable" : {
+
+    },
     "Stop point circles" : {
 
     },
@@ -1927,6 +1963,18 @@
       }
     },
     "TfL Open Data" : {
+
+    },
+    "There are no recorded service updates for the %@ yet." : {
+
+    },
+    "Try Again" : {
+
+    },
+    "Unlock Status History" : {
+
+    },
+    "Unlock status history to review recent service changes, disruptions and recovery updates for the %@." : {
 
     },
     "Warning" : {

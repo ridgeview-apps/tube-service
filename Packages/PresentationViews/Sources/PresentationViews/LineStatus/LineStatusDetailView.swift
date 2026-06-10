@@ -5,11 +5,18 @@ public struct LineStatusDetailView: View {
 
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
+        case statusHistoryTapped
+    }
+
+    public enum StatusHistoryAccess: Sendable {
+        case locked
+        case unlocked
     }
 
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
+    public let statusHistoryAccess: StatusHistoryAccess
 
     @Binding public var isFavourite: Bool
 
@@ -20,11 +27,13 @@ public struct LineStatusDetailView: View {
         isFavourite: Binding<Bool>,
         loadingState: LoadingState,
         refreshDate: Date?,
+        statusHistoryAccess: StatusHistoryAccess = .locked,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
         self.loadingState = loadingState
         self.refreshDate = refreshDate
+        self.statusHistoryAccess = statusHistoryAccess
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
@@ -36,7 +45,11 @@ public struct LineStatusDetailView: View {
                     statusHeaderCard
                 } header: {
                     loadingStatusView
-                } footer: {
+                }
+                Section {
+                    statusHistoryButton
+                }
+                Section {
                     favouritesButton
                 }
                 Section {
@@ -113,6 +126,72 @@ public struct LineStatusDetailView: View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
     }
 
+    private var statusHistoryButton: some View {
+        Button {
+            onAction(.statusHistoryTapped)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(line.id.backgroundColor)
+                    .frame(width: 36)
+
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Status History")
+                        .font(.headline)
+                        .foregroundStyle(.primary)
+
+                    Text(statusHistorySubtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+
+                Spacer(minLength: 8)
+
+                statusHistoryAccessory
+            }
+            .padding(16)
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .cardStyle()
+        .accessibilityHint(statusHistoryAccessibilityHint)
+    }
+
+    private var statusHistorySubtitle: String {
+        switch statusHistoryAccess {
+        case .locked:
+            "Unlock recent service changes and disruption updates"
+        case .unlocked:
+            "View recent service changes and disruption updates"
+        }
+    }
+
+    @ViewBuilder
+    private var statusHistoryAccessory: some View {
+        switch statusHistoryAccess {
+        case .locked:
+            Image(systemName: "lock.fill")
+                .foregroundStyle(.secondary)
+                .accessibilityLabel("Locked")
+        case .unlocked:
+            Image(systemName: "chevron.forward")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.tertiary)
+                .accessibilityHidden(true)
+        }
+    }
+
+    private var statusHistoryAccessibilityHint: String {
+        switch statusHistoryAccess {
+        case .locked:
+            "Opens information about unlocking status history"
+        case .unlocked:
+            "Opens status history"
+        }
+    }
+
     private var xPostsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(.lineStatusXPostsSectionTitle)
@@ -155,28 +234,6 @@ public struct LineStatusDetailView: View {
     }
 }
 
-
-// MARK: - Service Detail Additional Info
-
-private struct ServiceDetailAdditionalInfoView: View {
-    let textItem: Line.ServiceDetailTextItem
-    @State private var isExpanded = false
-
-    var body: some View {
-        if let additionalInfo = textItem.additionalInfo {
-            VStack(alignment: .leading, spacing: 8) {
-                ExpansionInfoButton(isExpanded: $isExpanded)
-                    .font(.caption)
-                    .buttonStyle(.borderless)
-
-                if isExpanded {
-                    Text(additionalInfo)
-                        .font(.caption)
-                }
-            }
-        }
-    }
-}
 
 private struct ServiceDetailTextView: View {
     let line: Line
@@ -239,6 +296,7 @@ private struct Previewer: View {
     let line: Line
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
+    var statusHistoryAccess = LineStatusDetailView.StatusHistoryAccess.locked
     @State var isFavourite = false
 
     var body: some View {
@@ -248,6 +306,7 @@ private struct Previewer: View {
                 isFavourite: $isFavourite,
                 loadingState: loadingState,
                 refreshDate: refreshDate,
+                statusHistoryAccess: statusHistoryAccess,
                 onAction: { print($0) }
             )
             .navigationTitle("Preview")
@@ -262,7 +321,10 @@ import ModelStubs
 }
 
 #Preview("Disrupted state") {
-    Previewer(line: ModelStubs.lineStatusDisrupted)
+    Previewer(
+        line: ModelStubs.lineStatusDisrupted,
+        statusHistoryAccess: .unlocked
+    )
 }
 
 #Preview("Disrupted state (dups. removed)") {

@@ -48,6 +48,8 @@ struct LineStatusDetailScreen: View {
         switch action {
         case .linkTapped(let link):
             openURL(link.url)
+        case .statusHistoryTapped:
+            break
         }
     }
 
