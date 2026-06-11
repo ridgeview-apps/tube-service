@@ -1,0 +1,38 @@
+import Foundation
+import Models
+import ModelStubs
+import Shared
+
+#if DEBUG
+
+    public final class StubTubeServiceAPIClient: TubeServiceAPIClientType, @unchecked Sendable {
+
+        public init() {}
+
+        public private(set) var fetchDailyLineTimelineCallCount = 0
+        public var stubbedDailyLineTimeline: HTTPResponse<DailyLineTimeline> = .success200(
+            .init(
+                lineId: .victoria,
+                date: .now,
+                timezone: "Europe/London",
+                snapshots: []
+            )
+        )
+        public var fetchDailyLineTimelineError: Error?
+        public func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
+            fetchDailyLineTimelineCallCount += 1
+            if let fetchDailyLineTimelineError { throw fetchDailyLineTimelineError }
+            return stubbedDailyLineTimeline
+        }
+
+        public private(set) var fetchDailyLineDisruptionSummaryCallCount = 0
+        public var stubbedDailyLineDisruptionSummary: HTTPResponse<[LineDisruptionSummary]> = .success200([])
+        public var fetchDailyLineDisruptionSummaryError: Error?
+        public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<[LineDisruptionSummary]> {
+            fetchDailyLineDisruptionSummaryCallCount += 1
+            if let fetchDailyLineDisruptionSummaryError { throw fetchDailyLineDisruptionSummaryError }
+            return stubbedDailyLineDisruptionSummary
+        }
+    }
+
+#endif
