@@ -15,16 +15,17 @@ public struct LineStatusHistoryEntry: Hashable, Identifiable, Sendable {
 
 public enum LineStatusHistoryState: Hashable, Sendable {
     case locked
-    case loading
-    case loaded([LineStatusHistoryEntry])
-    case empty
-    case failure(message: String)
+    case unlocked(
+        entries: [LineStatusHistoryEntry],
+        loadingState: LoadingState
+    )
 }
 
 public struct LineStatusHistoryView: View {
 
     public enum Action: Equatable, Sendable {
         case unlockTapped
+        case refreshTapped
         case retryTapped
     }
 
@@ -47,23 +48,16 @@ public struct LineStatusHistoryView: View {
             switch state {
             case .locked:
                 lockedView
-            case .loading:
-                loadingView
-            case let .loaded(entries):
-                if entries.isEmpty {
-                    emptyView
-                } else {
-                    historyList(entries)
-                }
-            case .empty:
-                emptyView
-            case let .failure(message):
-                failureView(message: message)
+            case let .unlocked(entries, loadingState):
+                unlockedView(
+                    entries: entries,
+                    loadingState: loadingState
+                )
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultMaxWidthWithFullBackground()
-        .navigationTitle("Status History")
+        .navigationTitle(.lineStatusHistoryNavigationTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -82,16 +76,11 @@ public struct LineStatusHistoryView: View {
                     }
 
                     VStack(spacing: 8) {
-                        Text("See how the service has changed")
+                        Text(.lineStatusHistoryLockedTitle)
                             .font(.title2.weight(.bold))
                             .multilineTextAlignment(.center)
 
-                        Text(
-                            """
-                            Unlock status history to review recent service changes, disruptions and \
-                            recovery updates for the \(lineID.longName).
-                            """
-                        )
+                        Text(.lineStatusHistoryLockedDescription(lineID.longName))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                     }
@@ -100,18 +89,18 @@ public struct LineStatusHistoryView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     featureRow(
                         systemImage: "calendar",
-                        title: "Recent status timeline",
-                        description: "See when each service update was recorded."
+                        title: .lineStatusHistoryFeatureTimelineTitle,
+                        description: .lineStatusHistoryFeatureTimelineDescription
                     )
                     featureRow(
                         systemImage: "exclamationmark.bubble",
-                        title: "Disruption summaries",
-                        description: "Review the reason recorded for each service update."
+                        title: .lineStatusHistoryFeatureDisruptionsTitle,
+                        description: .lineStatusHistoryFeatureDisruptionsDescription
                     )
                     featureRow(
                         systemImage: "arrow.trianglehead.2.clockwise.rotate.90",
-                        title: "Recovery updates",
-                        description: "Follow the service back to normal operation."
+                        title: .lineStatusHistoryFeatureRecoveryTitle,
+                        description: .lineStatusHistoryFeatureRecoveryDescription
                     )
                 }
                 .padding(20)
@@ -120,7 +109,7 @@ public struct LineStatusHistoryView: View {
                 Button {
                     onAction(.unlockTapped)
                 } label: {
-                    Label("Unlock Status History", systemImage: "lock.open.fill")
+                    Label(.lineStatusHistoryUnlockButtonTitle, systemImage: "lock.open.fill")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
@@ -128,7 +117,7 @@ public struct LineStatusHistoryView: View {
                 .controlSize(.large)
                 .tint(lineID.backgroundColor)
 
-                Text("Purchase and subscription details will appear here once the paywall is connected.")
+                Text(.lineStatusHistoryPurchasePlaceholder)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -140,47 +129,64 @@ public struct LineStatusHistoryView: View {
         .scrollBounceBehavior(.basedOnSize)
     }
 
-    private var loadingView: some View {
-        ContentUnavailableView {
-            ProgressView()
-                .controlSize(.large)
-        } description: {
-            Text("Loading status history...")
-        }
-    }
-
     private var emptyView: some View {
         ContentUnavailableView(
-            "No Status History",
+            .lineStatusHistoryEmptyTitle,
             systemImage: "clock.badge.questionmark",
-            description: Text("There are no recorded service updates for the \(lineID.longName) yet.")
+            description: Text(.lineStatusHistoryEmptyDescription(lineID.longName))
         )
     }
 
-    private func failureView(message: String) -> some View {
-        ContentUnavailableView {
-            Label("Status History Unavailable", systemImage: "exclamationmark.triangle.fill")
-        } description: {
-            Text(message)
-        } actions: {
-            Button("Try Again") {
-                onAction(.retryTapped)
-            }
-            .buttonStyle(.borderedProminent)
-        }
-    }
-
-    private func historyList(_ entries: [LineStatusHistoryEntry]) -> some View {
+    private func unlockedView(
+        entries: [LineStatusHistoryEntry],
+        loadingState: LoadingState
+    ) -> some View {
         ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                ForEach(entries.sorted { $0.date > $1.date }) { entry in
-                    historyRow(entry)
+            LazyVStack(alignment: .leading, spacing: 12) {
+                if loadingState != .loaded {
+                    LoadingStatusView(loadingState: loadingState)
+                        .defaultLoadingStatusStyle(verticalPadding: 0)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+
+                if entries.isEmpty {
+                    emptyUnlockedContent(loadingState: loadingState)
+                } else {
+                    historyRows(entries)
                 }
             }
             .padding(.horizontal)
             .padding(.vertical, 20)
             .frame(maxWidth: 700)
             .frame(maxWidth: .infinity)
+        }
+        .refreshable {
+            onAction(.refreshTapped)
+        }
+        .scrollBounceBehavior(.always)
+    }
+
+    @ViewBuilder
+    private func emptyUnlockedContent(loadingState: LoadingState) -> some View {
+        switch loadingState {
+        case .loading:
+            Color.clear
+                .frame(height: 1)
+        case .loaded:
+            emptyView
+                .frame(maxWidth: .infinity)
+        case .failure:
+            Button(.lineStatusHistoryRetryButtonTitle) {
+                onAction(.retryTapped)
+            }
+            .frame(maxWidth: .infinity)
+            .buttonStyle(.borderedProminent)
+        }
+    }
+
+    private func historyRows(_ entries: [LineStatusHistoryEntry]) -> some View {
+        ForEach(entries.sorted { $0.date > $1.date }) { entry in
+            historyRow(entry)
         }
     }
 
@@ -235,8 +241,8 @@ public struct LineStatusHistoryView: View {
 
     private func featureRow(
         systemImage: String,
-        title: String,
-        description: String
+        title: LocalizedStringResource,
+        description: LocalizedStringResource
     ) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: systemImage)
@@ -261,7 +267,7 @@ private struct HistoricStatusView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label {
-                Text(status.statusSeverityDescription ?? "Service update")
+                Text(status.statusSeverityDescription ?? String(localized: .lineStatusHistoryServiceUpdateFallback))
                     .font(.headline)
             } icon: {
                 (status.isDisrupted
@@ -295,19 +301,68 @@ private struct LineStatusHistoryPreview: View {
                 state: state,
                 onAction: { action in
                     if action == .unlockTapped {
-                        state = .loaded(Self.entries)
+                        state = .unlocked(
+                            entries: Self.entries,
+                            loadingState: .loaded
+                        )
                     }
                 }
             )
             .toolbar {
-                Menu("State") {
-                    Button("Locked") { state = .locked }
-                    Button("Loading") { state = .loading }
-                    Button("Loaded") { state = .loaded(Self.entries) }
-                    Button("Empty") { state = .empty }
-                    Button("Error") {
-                        state = .failure(message: "Status history could not be loaded.")
+                Menu {
+                    Button {
+                        state = .locked
+                    } label: {
+                        Text(verbatim: "Locked")
                     }
+                    Button {
+                        state = .unlocked(entries: [], loadingState: .loading)
+                    } label: {
+                        Text(verbatim: "Initial loading")
+                    }
+                    Button {
+                        state = .unlocked(
+                            entries: Self.entries,
+                            loadingState: .loaded
+                        )
+                    } label: {
+                        Text(verbatim: "Loaded")
+                    }
+                    Button {
+                        state = .unlocked(
+                            entries: Self.entries,
+                            loadingState: .loading
+                        )
+                    } label: {
+                        Text(verbatim: "Refreshing")
+                    }
+                    Button {
+                        state = .unlocked(entries: [], loadingState: .loaded)
+                    } label: {
+                        Text(verbatim: "Empty")
+                    }
+                    Button {
+                        state = .unlocked(
+                            entries: [],
+                            loadingState: .failure(
+                                errorMessage: "Status history could not be loaded."
+                            )
+                        )
+                    } label: {
+                        Text(verbatim: "Error")
+                    }
+                    Button {
+                        state = .unlocked(
+                            entries: Self.entries,
+                            loadingState: .failure(
+                                errorMessage: "Status history could not be refreshed."
+                            )
+                        )
+                    } label: {
+                        Text(verbatim: "Refresh error")
+                    }
+                } label: {
+                    Text(verbatim: "State")
                 }
             }
         }
@@ -343,7 +398,38 @@ private struct LineStatusHistoryPreview: View {
     NavigationStack {
         LineStatusHistoryView(
             lineID: .victoria,
-            state: .loaded(LineStatusHistoryPreview.entries),
+            state: .unlocked(
+                entries: LineStatusHistoryPreview.entries,
+                loadingState: .loaded
+            ),
+            onAction: { _ in }
+        )
+    }
+}
+
+#Preview("Refreshing with entries") {
+    NavigationStack {
+        LineStatusHistoryView(
+            lineID: .victoria,
+            state: .unlocked(
+                entries: LineStatusHistoryPreview.entries,
+                loadingState: .loading
+            ),
+            onAction: { _ in }
+        )
+    }
+}
+
+#Preview("Refresh error with entries") {
+    NavigationStack {
+        LineStatusHistoryView(
+            lineID: .victoria,
+            state: .unlocked(
+                entries: LineStatusHistoryPreview.entries,
+                loadingState: .failure(
+                    errorMessage: "Status history could not be refreshed."
+                )
+            ),
             onAction: { _ in }
         )
     }

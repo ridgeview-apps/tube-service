@@ -307,12 +307,6 @@
         }
       }
     },
-    "Empty" : {
-
-    },
-    "Error" : {
-
-    },
     "error.no.internet.connection" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1177,6 +1171,226 @@
         }
       }
     },
+    "line.status.history.empty.description %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There are no recorded service updates for the %@ yet."
+          }
+        }
+      }
+    },
+    "line.status.history.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Status History"
+          }
+        }
+      }
+    },
+    "line.status.history.entry.locked.accessibility.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens information about unlocking status history"
+          }
+        }
+      }
+    },
+    "line.status.history.entry.locked.accessibility.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Locked"
+          }
+        }
+      }
+    },
+    "line.status.history.entry.locked.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock recent service changes and disruption updates"
+          }
+        }
+      }
+    },
+    "line.status.history.entry.unlocked.accessibility.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens status history"
+          }
+        }
+      }
+    },
+    "line.status.history.entry.unlocked.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View recent service changes and disruption updates"
+          }
+        }
+      }
+    },
+    "line.status.history.feature.disruptions.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review the reason recorded for each service update."
+          }
+        }
+      }
+    },
+    "line.status.history.feature.disruptions.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disruption summaries"
+          }
+        }
+      }
+    },
+    "line.status.history.feature.recovery.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Follow the service back to normal operation."
+          }
+        }
+      }
+    },
+    "line.status.history.feature.recovery.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery updates"
+          }
+        }
+      }
+    },
+    "line.status.history.feature.timeline.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See when each service update was recorded."
+          }
+        }
+      }
+    },
+    "line.status.history.feature.timeline.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recent status timeline"
+          }
+        }
+      }
+    },
+    "line.status.history.locked.description %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock status history to review recent service changes, disruptions and recovery updates for the %@."
+          }
+        }
+      }
+    },
+    "line.status.history.locked.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See how the service has changed"
+          }
+        }
+      }
+    },
+    "line.status.history.navigation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status History"
+          }
+        }
+      }
+    },
+    "line.status.history.purchase.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchase and subscription details will appear here once the paywall is connected."
+          }
+        }
+      }
+    },
+    "line.status.history.retry.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        }
+      }
+    },
+    "line.status.history.service.update.fallback" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Service update"
+          }
+        }
+      }
+    },
+    "line.status.history.unlock.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock Status History"
+          }
+        }
+      }
+    },
     "line.status.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1312,15 +1526,6 @@
     "List preview" : {
 
     },
-    "Loaded" : {
-
-    },
-    "Loading" : {
-
-    },
-    "Loading status history..." : {
-
-    },
     "location.services.access.denied.message.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1364,9 +1569,6 @@
           }
         }
       }
-    },
-    "Locked" : {
-
     },
     "mail.not.supported" : {
       "extractionState" : "manual",
@@ -1550,9 +1752,6 @@
     "No" : {
 
     },
-    "No Status History" : {
-
-    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1571,9 +1770,6 @@
 
     },
     "Preview" : {
-
-    },
-    "Purchase and subscription details will appear here once the paywall is connected." : {
 
     },
     "recent.journey.cell.to" : {
@@ -1644,9 +1840,6 @@
           }
         }
       }
-    },
-    "See how the service has changed" : {
-
     },
     "Selected %@" : {
 
@@ -1794,9 +1987,6 @@
         }
       }
     },
-    "State" : {
-
-    },
     "Station preview" : {
 
     },
@@ -1889,12 +2079,6 @@
         }
       }
     },
-    "Status History" : {
-
-    },
-    "Status History Unavailable" : {
-
-    },
     "Stop point circles" : {
 
     },
@@ -1963,18 +2147,6 @@
       }
     },
     "TfL Open Data" : {
-
-    },
-    "There are no recorded service updates for the %@ yet." : {
-
-    },
-    "Try Again" : {
-
-    },
-    "Unlock Status History" : {
-
-    },
-    "Unlock status history to review recent service changes, disruptions and recovery updates for the %@." : {
 
     },
     "Warning" : {

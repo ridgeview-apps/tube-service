@@ -1,6 +1,6 @@
 import SwiftUI
 
-public enum LoadingState: Hashable {
+public enum LoadingState: Hashable, Sendable {
     case loading
     case loaded
     case failure(errorMessage: String)

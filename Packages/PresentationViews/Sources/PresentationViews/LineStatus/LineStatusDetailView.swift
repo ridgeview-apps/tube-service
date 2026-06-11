@@ -137,7 +137,7 @@ public struct LineStatusDetailView: View {
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text("Status History")
+                    Text(.lineStatusHistoryNavigationTitle)
                         .font(.headline)
                         .foregroundStyle(.primary)
 
@@ -159,12 +159,12 @@ public struct LineStatusDetailView: View {
         .accessibilityHint(statusHistoryAccessibilityHint)
     }
 
-    private var statusHistorySubtitle: String {
+    private var statusHistorySubtitle: LocalizedStringResource {
         switch statusHistoryAccess {
         case .locked:
-            "Unlock recent service changes and disruption updates"
+            .lineStatusHistoryEntryLockedSubtitle
         case .unlocked:
-            "View recent service changes and disruption updates"
+            .lineStatusHistoryEntryUnlockedSubtitle
         }
     }
 
@@ -174,7 +174,7 @@ public struct LineStatusDetailView: View {
         case .locked:
             Image(systemName: "lock.fill")
                 .foregroundStyle(.secondary)
-                .accessibilityLabel("Locked")
+                .accessibilityLabel(.lineStatusHistoryEntryLockedAccessibilityLabel)
         case .unlocked:
             Image(systemName: "chevron.forward")
                 .font(.subheadline.weight(.semibold))
@@ -183,12 +183,12 @@ public struct LineStatusDetailView: View {
         }
     }
 
-    private var statusHistoryAccessibilityHint: String {
+    private var statusHistoryAccessibilityHint: LocalizedStringResource {
         switch statusHistoryAccess {
         case .locked:
-            "Opens information about unlocking status history"
+            .lineStatusHistoryEntryLockedAccessibilityHint
         case .unlocked:
-            "Opens status history"
+            .lineStatusHistoryEntryUnlockedAccessibilityHint
         }
     }
 
