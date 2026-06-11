@@ -21,7 +21,7 @@ public final class StationsDataStore {
     // MARK: - Properties / outputs
 
     // Dependencies
-    public let transportAPI: TransportAPIClientType
+    public let tflAPI: TflAPIClientType
     public let now: () -> Date
 
     // Private
@@ -38,10 +38,10 @@ public final class StationsDataStore {
     // MARK: - Init
 
     public init(
-        transportAPI: TransportAPIClientType,
+        tflAPI: TflAPIClientType,
         now: @escaping () -> Date = { .now }
     ) {
-        self.transportAPI = transportAPI
+        self.tflAPI = tflAPI
         self.now = now
         loadStations()
     }
@@ -58,7 +58,7 @@ public final class StationsDataStore {
         fetchedDisruptionData.fetchState = .fetching
 
         do {
-            let disruptedPoints = try await transportAPI.fetchStationDisruptions().decodedModel
+            let disruptedPoints = try await tflAPI.fetchStationDisruptions().decodedModel
             fetchedDisruptionData.messagesByStationID = disruptedPoints.toMessagesGroupedByStationID(stationsByAtcoCode: stationsByAtcoCode)
             fetchedDisruptionData.fetchState = .success
             fetchedDisruptionData.fetchedAt = .now

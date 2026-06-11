@@ -5,7 +5,7 @@ import Shared
 
 #if DEBUG
 
-    public final class StubTransportAPIClient: TransportAPIClientType, @unchecked Sendable {
+    public final class StubTflAPIClient: TflAPIClientType, @unchecked Sendable {
 
         public init() {}
 

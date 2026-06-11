@@ -84,13 +84,13 @@ struct ArrivalsBoardListScreen: View {
         switch lineGroup.arrivalsDataType {
         case let .arrivalDepartures(lineIDs):
             guard let lineID = lineIDs.first else { return [] }  // ArrivalDepartures are only for a single line
-            return try await appData.transportAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
+            return try await appData.tflAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
                 .decodedModel
                 .removingDuplicates()
                 .filter { $0.scheduledTimeOfDeparture != nil }
                 .toPlatformBoardStates(forLineID: lineID)
         case .arrivalPredictions:
-            return try await appData.transportAPI.fetchArrivalPredictions(forLineGroup: lineGroup)
+            return try await appData.tflAPI.fetchArrivalPredictions(forLineGroup: lineGroup)
                 .decodedModel
                 .toPlatformBoardStates()
         }

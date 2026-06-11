@@ -13,7 +13,7 @@ import Foundation
             ]
 
             return AppDependencies(
-                transportAPI: StubTransportAPIClient(),
+                tflAPI: StubTflAPIClient(),
                 systemStatusAPI: StubSystemStatusAPIClient(),
                 locationManager: locationManager,
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),

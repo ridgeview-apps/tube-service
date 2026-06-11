@@ -4,8 +4,8 @@ import Foundation
 
     public extension StationsDataStore {
 
-        static func stub(transportAPI: TransportAPIClientType) -> StationsDataStore {
-            return .init(transportAPI: transportAPI)
+        static func stub(tflAPI: TflAPIClientType) -> StationsDataStore {
+            return .init(tflAPI: tflAPI)
         }
     }
 

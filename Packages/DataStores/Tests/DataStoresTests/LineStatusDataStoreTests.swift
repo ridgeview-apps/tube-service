@@ -11,9 +11,9 @@ struct LineStatusDataStoreTests {
     func refreshLineStatusesForToday() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
-        let transportAPI = StubTransportAPIClient()
+        let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
-            transportAPI: transportAPI,
+            tflAPI: tflAPI,
             now: { clock.currentTime },
             calendar: .london
         )
@@ -28,7 +28,7 @@ struct LineStatusDataStoreTests {
         #expect(requiredFetchedData.fetchState.isSuccess)
         #expect(requiredFetchedData.fetchedAt == clock.currentTime)
         #expect(!requiredFetchedData.lines.isEmpty)
-        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
     }
 
     @Test
@@ -36,9 +36,9 @@ struct LineStatusDataStoreTests {
         // Given
         let clock = FakeClock(initialTime: .now)
         let oneDay: TimeInterval = 60 * 60 * 24
-        let transportAPI = StubTransportAPIClient()
+        let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
-            transportAPI: transportAPI,
+            tflAPI: tflAPI,
             now: { clock.currentTime },
             calendar: .london
         )
@@ -53,22 +53,22 @@ struct LineStatusDataStoreTests {
         #expect(requiredFetchedData.fetchState.isSuccess)
         #expect(requiredFetchedData.fetchedAt == clock.currentTime)
         #expect(!requiredFetchedData.lines.isEmpty)
-        #expect(transportAPI.fetchLineStatusesForDateRangeCallCount == 1)
+        #expect(tflAPI.fetchLineStatusesForDateRangeCallCount == 1)
     }
 
     @Test
     func refreshLineStatusesFailure() async throws {
         // Given
         let clock = FakeClock(initialTime: .now)
-        let transportAPI = StubTransportAPIClient()
+        let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
-            transportAPI: transportAPI,
+            tflAPI: tflAPI,
             now: { clock.currentTime },
             calendar: .london
         )
 
         // When
-        transportAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
+        tflAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
         await model.refreshLineStatuses(for: .today)
         let fetchedData = model.fetchedData(for: .today)
 
@@ -77,16 +77,16 @@ struct LineStatusDataStoreTests {
         #expect(requiredFetchedData.fetchState.isError)
         #expect(requiredFetchedData.fetchedAt == nil)
         #expect(requiredFetchedData.lines.isEmpty)
-        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
     }
 
     @Test
     func refreshStaleLineStatuses() async throws {
         // Given
         var clock = FakeClock(initialTime: .now)
-        let transportAPI = StubTransportAPIClient()
+        let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
-            transportAPI: transportAPI,
+            tflAPI: tflAPI,
             now: { clock.currentTime },
             calendar: .london
         )
@@ -95,19 +95,19 @@ struct LineStatusDataStoreTests {
         #expect(model.fetchedData(for: .today) == nil)
         await model.refreshLineStatusesIfStale(for: .today)
         #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime)
-        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
 
         // After 4 minutes (no change - data NOT stale)
         clock.addingMinutes(4)
         await model.refreshLineStatusesIfStale(for: .today)
         #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime)  // No change
-        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 1)  // No change
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)  // No change
 
         // After 5 minutes (fetch expected - data IS now stale)
         clock.addingMinutes(5)
         await model.refreshLineStatusesIfStale(for: .today)
         #expect(model.fetchedData(for: .today)?.fetchedAt == clock.currentTime)
-        #expect(transportAPI.fetchCurrentLineStatusesCallCount == 2)
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 2)
     }
 
 }

@@ -20,9 +20,9 @@ struct JourneyResultsScreen: View {
 
     private var modeIDs: Set<ModeID> { userPreferences.journeyPlannerModeIDs }
 
-    init(form: Binding<JourneyPlannerForm>, transportAPI: TransportAPIClientType) {
+    init(form: Binding<JourneyPlannerForm>, tflAPI: TflAPIClientType) {
         self._form = form
-        self._model = State(initialValue: JourneyResultsModel(transportAPI: transportAPI))
+        self._model = State(initialValue: JourneyResultsModel(tflAPI: tflAPI))
     }
 
     var body: some View {

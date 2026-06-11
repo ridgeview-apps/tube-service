@@ -79,8 +79,8 @@ struct LocationDataStoreTests {
         locationManager: StubLocationManager = StubLocationManager(),
         geocoder: ReverseGeocoderType = StubReverseGeocoder()
     ) -> (StubLocationManager, LocationDataStore) {
-        let transportAPI = StubTransportAPIClient()
-        let stations = StationsDataStore.stub(transportAPI: transportAPI)
+        let tflAPI = StubTflAPIClient()
+        let stations = StationsDataStore.stub(tflAPI: tflAPI)
         let model = LocationDataStore(locationManager: locationManager, stations: stations, geocoder: geocoder)
         return (locationManager, model)
     }

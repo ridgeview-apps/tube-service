@@ -5,7 +5,7 @@ import Foundation
 
 extension AppDependencies {
     static let live = AppDependencies(
-        transportAPI: TransportAPIClient.live,
+        tflAPI: TflAPIClient.live,
         systemStatusAPI: SystemStatusAPIClient.live,
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),
@@ -17,10 +17,10 @@ extension AppDataStore {
     static let live: AppDataStore = .init(dependencies: .live)
 }
 
-extension TransportAPIClient {
-    static let live = TransportAPIClient(
-        baseURL: AppConfig.main.transportAPI.baseURL,
-        appKey: AppConfig.main.transportAPI.appKey
+extension TflAPIClient {
+    static let live = TflAPIClient(
+        baseURL: AppConfig.main.tflAPI.baseURL,
+        appKey: AppConfig.main.tflAPI.appKey
     )
 }
 

@@ -4,7 +4,7 @@ import Testing
 
 @testable import DataStores
 
-struct TransportAPIRouteTests {
+struct TflAPIRouteTests {
 
     private let baseURL = URL(string: "https://foo.com/")!
     private let appKey = "testAppKey"
@@ -12,7 +12,7 @@ struct TransportAPIRouteTests {
     @Test
     func getCurrentLineStatusesEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getCurrentLineStatuses(ModeID.trains)
+        let route: TflAPIRoute = .getCurrentLineStatuses(ModeID.trains)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -28,7 +28,7 @@ struct TransportAPIRouteTests {
         let startDate = dayMonthYear(1, 2, 2023, in: .london)
         let endDate = dayMonthYear(2, 2, 2023, in: .london)
         let dateInterval = DateInterval(start: startDate, end: endDate)
-        let route: TransportAPIRoute = .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval)
+        let route: TflAPIRoute = .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -42,7 +42,7 @@ struct TransportAPIRouteTests {
     @Test
     func arrivalPredictionsEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getArrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
+        let route: TflAPIRoute = .getArrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -55,7 +55,7 @@ struct TransportAPIRouteTests {
     @Test
     func arrivalDeparturesEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
+        let route: TflAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -69,7 +69,7 @@ struct TransportAPIRouteTests {
     @Test
     func stationDisruptionsEndpoint() throws {
         // Given
-        let route: TransportAPIRoute = .getStationDisruptions(ModeID.trains)
+        let route: TflAPIRoute = .getStationDisruptions(ModeID.trains)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -83,7 +83,7 @@ struct TransportAPIRouteTests {
 
 // MARK: - Private helpers
 
-private extension TransportAPIRouteTests {
+private extension TflAPIRouteTests {
 
 
     private func dayMonthYear(_ day: Int, _ month: Int, _ year: Int, in timeZone: TimeZone) -> Date {

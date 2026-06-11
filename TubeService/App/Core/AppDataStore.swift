@@ -15,18 +15,18 @@ final class AppDataStore {
 
     private let dependencies: AppDependencies
 
-    var transportAPI: TransportAPIClientType {
-        dependencies.transportAPI
+    var tflAPI: TflAPIClientType {
+        dependencies.tflAPI
     }
 
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
 
-        let stations = StationsDataStore(transportAPI: dependencies.transportAPI)
+        let stations = StationsDataStore(tflAPI: dependencies.tflAPI)
         self.stations = stations
 
         self.lineStatus = LineStatusDataStore(
-            transportAPI: dependencies.transportAPI,
+            tflAPI: dependencies.tflAPI,
             now: dependencies.now
         )
         self.location = LocationDataStore(

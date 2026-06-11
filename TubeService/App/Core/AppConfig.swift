@@ -4,7 +4,7 @@ struct AppConfig {
 
     let contactUsEmail: String
     let appStoreProductURL: URL
-    let transportAPI: TransportAPIConfig
+    let tflAPI: TflAPIConfig
     let systemStatusAPI: SystemStatusAPIConfig
 
     var appReviewURL: URL {
@@ -17,7 +17,7 @@ struct AppConfig {
 
     func validate() {
         #if !DEBUG
-            if transportAPI.appKey.trimmed().isEmpty {
+            if tflAPI.appKey.trimmed().isEmpty {
                 fatalError("Tfl API key is mandatory on Release builds")
             }
         #endif
@@ -36,9 +36,9 @@ extension AppConfig {
         let appConfig = AppConfig(
             contactUsEmail: config["contactUsEmail"],
             appStoreProductURL: config[url: "appStoreProductUrl"],
-            transportAPI: .init(
-                baseURL: config[url: "transportAPIBaseUrl"],
-                appKey: config["transportAPIAppKey"]
+            tflAPI: .init(
+                baseURL: config[url: "tflAPIBaseUrl"],
+                appKey: config["tflAPIAppKey"]
             ),
             systemStatusAPI: .init(
                 baseURL: config[url: "systemStatusAPIBaseUrl"],
@@ -54,7 +54,7 @@ extension AppConfig {
 
 extension AppConfig {
 
-    struct TransportAPIConfig {
+    struct TflAPIConfig {
         let baseURL: URL
         let appKey: String
     }

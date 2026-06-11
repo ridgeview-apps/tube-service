@@ -26,7 +26,7 @@ public final class LineStatusDataStore {
 
     // MARK: - Properties / outputs
 
-    public let transportAPI: TransportAPIClientType
+    public let tflAPI: TflAPIClientType
     public let now: () -> Date
     public let calendar: Calendar
 
@@ -36,11 +36,11 @@ public final class LineStatusDataStore {
     // MARK: - Init
 
     public init(
-        transportAPI: TransportAPIClientType,
+        tflAPI: TflAPIClientType,
         now: @escaping () -> Date = { .now },
         calendar: Calendar = .london
     ) {
-        self.transportAPI = transportAPI
+        self.tflAPI = tflAPI
         self.now = now
         self.calendar = calendar
     }
@@ -87,9 +87,9 @@ public final class LineStatusDataStore {
     private func fetchLineStatuses(for fetchType: FetchType) async throws -> [Line] {
         switch fetchType {
         case .today:
-            return try await transportAPI.fetchCurrentLineStatuses().decodedModel
+            return try await tflAPI.fetchCurrentLineStatuses().decodedModel
         case let .range(dateInterval):
-            let lines = try await transportAPI.fetchLineStatuses(for: dateInterval).decodedModel
+            let lines = try await tflAPI.fetchLineStatuses(for: dateInterval).decodedModel
             let isFutureDateRange = dateInterval.start > now()
             return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses() : lines
         }

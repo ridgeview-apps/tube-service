@@ -5,10 +5,10 @@ import Foundation
     public extension LineStatusDataStore {
 
         static func stub(
-            transportAPI: TransportAPIClientType,
+            tflAPI: TflAPIClientType,
             now: @escaping () -> Date = { Date() }
         ) -> LineStatusDataStore {
-            return .init(transportAPI: transportAPI, now: now)
+            return .init(tflAPI: tflAPI, now: now)
         }
     }
 

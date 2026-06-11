@@ -11,7 +11,7 @@ import Testing
 @MainActor
 struct JourneyResultsModelTests {
 
-    private let transportAPI = StubTransportAPIClient()
+    private let tflAPI = StubTflAPIClient()
     private let modeIDs: Set<ModeID> = ModeID.journeyPlannerModes
     private let requestParams = JourneyRequestParams(
         from: .icsCode("HUBKGX"),
@@ -22,7 +22,7 @@ struct JourneyResultsModelTests {
     )
 
     private func makeModel() -> JourneyResultsModel {
-        JourneyResultsModel(transportAPI: transportAPI)
+        JourneyResultsModel(tflAPI: tflAPI)
     }
 
     // MARK: - prepareForInitialFetch
@@ -58,7 +58,7 @@ struct JourneyResultsModelTests {
     func fetchInitialResults_success_populatesPagesAndSetsHasFetched() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
 
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
@@ -66,14 +66,14 @@ struct JourneyResultsModelTests {
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.loadingState == .loaded)
         #expect(model.pages.first?.cellItems.isEmpty == false)
-        #expect(transportAPI.fetchJourneyResultsCallCount == 1)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 1)
     }
 
     @Test
     func fetchInitialResults_404_keepsPageWithEmptyResults() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
+        tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
 
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
@@ -87,7 +87,7 @@ struct JourneyResultsModelTests {
     func fetchInitialResults_error_setsFailureState() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
+        tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
 
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
@@ -108,15 +108,15 @@ struct JourneyResultsModelTests {
 
         // Load initial page first (establishes time adjustments)
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         let initialPageCount = model.pages.first?.cellItems.count ?? 0
 
         // Fetch earlier
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooEarlier)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooEarlier)
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(transportAPI.fetchJourneyResultsCallCount == 2)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 2)
         #expect(model.pages.count >= 1)
         if model.pages.count == 2 {
             #expect(model.pages[0].id.hasPrefix("earlier"))
@@ -135,15 +135,15 @@ struct JourneyResultsModelTests {
 
         // Load initial page first
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         let initialPageCount = model.pages.first?.cellItems.count ?? 0
 
         // Fetch later
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooLater)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooLater)
         await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(transportAPI.fetchJourneyResultsCallCount == 2)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 2)
         #expect(model.pages.count >= 1)
         if model.pages.count == 2 {
             #expect(model.pages[0].id == "initial")
@@ -162,7 +162,7 @@ struct JourneyResultsModelTests {
 
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(transportAPI.fetchJourneyResultsCallCount == 0)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 0)
         #expect(model.pages.isEmpty)
     }
 
@@ -172,11 +172,11 @@ struct JourneyResultsModelTests {
     func fetchAdjacentResults_404_removesAdjacentPage() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         // Fetch later with 404
-        transportAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
+        tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
         await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 1)
@@ -187,11 +187,11 @@ struct JourneyResultsModelTests {
     func fetchAdjacentResults_error_setsFailureOnAdjacentPage() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         // Fetch earlier with error
-        transportAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
+        tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 2)
@@ -212,14 +212,14 @@ struct JourneyResultsModelTests {
 
         // Use the same results for both pages to guarantee overlap
         let results = ModelStubs.journeyResultsKingsXToWaterlooNow
-        transportAPI.stubbedJourneyResults = .success200(results)
+        tflAPI.stubbedJourneyResults = .success200(results)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         let initialCount = model.pages.first?.cellItems.count ?? 0
         #expect(initialCount > 0)
 
         // Fetch later with identical results — all should be deduped
-        transportAPI.fetchJourneyResultsError = nil
-        transportAPI.stubbedJourneyResults = .success200(results)
+        tflAPI.fetchJourneyResultsError = nil
+        tflAPI.stubbedJourneyResults = .success200(results)
         await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         // Adjacent page should be removed since all items were duplicates
@@ -233,11 +233,11 @@ struct JourneyResultsModelTests {
     func fetchAdjacentResults_ignoresRefreshAction() async {
         let model = makeModel()
         model.prepareForInitialFetch()
-        transportAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         await model.fetchAdjacentResults(action: .refresh, baseRequestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(transportAPI.fetchJourneyResultsCallCount == 1)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 1)
     }
 }

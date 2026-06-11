@@ -2,7 +2,7 @@ import DataStores
 import Foundation
 
 struct AppDependencies: Sendable {
-    let transportAPI: TransportAPIClientType
+    let tflAPI: TflAPIClientType
     let systemStatusAPI: SystemStatusAPIClientType
     let locationManager: LocationManagerType
     let localSearchCompleterClient: LocalSearchCompleterClientType
@@ -10,14 +10,14 @@ struct AppDependencies: Sendable {
     let now: @Sendable () -> Date
 
     init(
-        transportAPI: TransportAPIClientType,
+        tflAPI: TflAPIClientType,
         systemStatusAPI: SystemStatusAPIClientType,
         locationManager: LocationManagerType,
         localSearchCompleterClient: LocalSearchCompleterClientType,
         userDefaults: UserDefaultsProvider,
         now: @escaping @Sendable () -> Date = { .now }
     ) {
-        self.transportAPI = transportAPI
+        self.tflAPI = tflAPI
         self.systemStatusAPI = systemStatusAPI
         self.locationManager = locationManager
         self.localSearchCompleterClient = localSearchCompleterClient

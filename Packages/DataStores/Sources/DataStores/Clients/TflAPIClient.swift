@@ -3,7 +3,7 @@ import Models
 
 // MARK: - Data types
 
-public protocol TransportAPIClientType: Sendable {
+public protocol TflAPIClientType: Sendable {
     func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]>
     func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]>
     func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]>
@@ -15,7 +15,7 @@ public protocol TransportAPIClientType: Sendable {
 
 // MARK: - API Routes
 
-enum TransportAPIRoute {
+enum TflAPIRoute {
 
     case getCurrentLineStatuses([ModeID])
     case getLineStatusesForDateRange([TrainLineID], DateInterval)
@@ -95,9 +95,9 @@ enum TransportAPIRoute {
 }
 
 
-// MARK: - TransportAPIClient
+// MARK: - TflAPIClient
 
-public struct TransportAPIClient: TransportAPIClientType {
+public struct TflAPIClient: TflAPIClientType {
 
     public let baseURL: URL
     public let appKey: String
@@ -162,7 +162,7 @@ public struct TransportAPIClient: TransportAPIClientType {
         )
     }
 
-    private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
+    private func fetchData<T: Decodable>(for route: TflAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
         return try await urlSession.get(url: url, decodedBy: jsonDecoder, as: model)
     }

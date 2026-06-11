@@ -14,10 +14,10 @@ final class JourneyResultsModel {
     private var laterTimeAdjustment: JourneyTimeAdjustment?
     private var pageCounter = 0
 
-    private let transportAPI: TransportAPIClientType
+    private let tflAPI: TflAPIClientType
 
-    init(transportAPI: TransportAPIClientType) {
-        self.transportAPI = transportAPI
+    init(tflAPI: TflAPIClientType) {
+        self.tflAPI = tflAPI
     }
 
     // MARK: - Public
@@ -100,7 +100,7 @@ final class JourneyResultsModel {
         modeIDs: Set<ModeID>
     ) async -> Bool {
         do {
-            let results: JourneyResults = try await transportAPI.fetchJourneyResults(for: requestParams).decodedModel
+            let results: JourneyResults = try await tflAPI.fetchJourneyResults(for: requestParams).decodedModel
             let page = makePage(pageID: pageID, with: results, modeIDs: modeIDs)
             if page.cellItems.isEmpty {
                 clearPage(pageID: pageID)

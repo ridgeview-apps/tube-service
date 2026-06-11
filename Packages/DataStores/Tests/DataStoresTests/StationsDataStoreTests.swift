@@ -9,7 +9,7 @@ struct StationsModelTests {
 
     @Test
     func loadStationsByID() {
-        let stationsModel = StationsDataStore(transportAPI: StubTransportAPIClient())
+        let stationsModel = StationsDataStore(tflAPI: StubTflAPIClient())
 
         #expect(stationsModel.station(forID: "HUBKGX") == ModelStubs.kingsCrossStation)
         #expect(stationsModel.station(forID: "HUBPAD") == ModelStubs.paddingtonStation)
@@ -18,7 +18,7 @@ struct StationsModelTests {
 
     @Test
     func loadStationsByLineGroup() {
-        let stations = StationsDataStore(transportAPI: StubTransportAPIClient())
+        let stations = StationsDataStore(tflAPI: StubTflAPIClient())
 
         // King's X
         #expect(stations.station(forLineGroupID: "940GZZLUKSX-circle,hammersmith-city,metropolitan") == ModelStubs.kingsCrossStation)
@@ -38,7 +38,7 @@ struct StationsModelTests {
 
     @Test
     func filteredStationsByPartialName() {
-        let stations = StationsDataStore(transportAPI: StubTransportAPIClient())
+        let stations = StationsDataStore(tflAPI: StubTflAPIClient())
 
         func filteredStationsContainsKingsCross(forInputText partialName: String) -> Bool {
             stations.filteredStations(matchingName: partialName).contains(ModelStubs.kingsCrossStation)

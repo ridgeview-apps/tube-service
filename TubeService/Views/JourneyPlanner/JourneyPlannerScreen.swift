@@ -106,7 +106,7 @@ struct JourneyPlannerScreen: View {
         Group {
             switch destinationID {
             case .results:
-                JourneyResultsScreen(form: $form, transportAPI: appData.transportAPI)
+                JourneyResultsScreen(form: $form, tflAPI: appData.tflAPI)
             }
         }
     }
