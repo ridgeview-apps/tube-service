@@ -7,6 +7,7 @@ public struct LineStatusListView: View {
     public let loadingState: LoadingState
     public let lines: [Line]
     public let favouriteLineIDs: Set<TrainLineID>
+    public let earlierDisruptedLineIDs: Set<TrainLineID>
     public let refreshDate: Date?
 
     @Binding var selectedLine: Line?
@@ -24,6 +25,7 @@ public struct LineStatusListView: View {
         loadingState: LoadingState,
         lines: [Line],
         favouriteLineIDs: Set<TrainLineID>,
+        earlierDisruptedLineIDs: Set<TrainLineID> = [],
         refreshDate: Date?,
         selectedLine: Binding<Line?>,
         selectedFilterOption: Binding<LineStatusFilterOption>,
@@ -32,6 +34,7 @@ public struct LineStatusListView: View {
         self.loadingState = loadingState
         self.lines = lines
         self.favouriteLineIDs = favouriteLineIDs
+        self.earlierDisruptedLineIDs = earlierDisruptedLineIDs
         self.refreshDate = refreshDate
         self._selectedLine = selectedLine
         self._selectedFilterOption = selectedFilterOption
@@ -118,7 +121,8 @@ public struct LineStatusListView: View {
                 style: .singleLine(line),
                 showsAccessory: true,
                 animatedAccessoryImage: true,
-                isFavourite: isFavourite
+                isFavourite: isFavourite,
+                historyIndicator: historyIndicator(for: line)
             )
             .frame(minHeight: 52)
             .cardStyle()
@@ -130,6 +134,17 @@ public struct LineStatusListView: View {
 
     private func statusCellAnimationID(for line: Line) -> some Hashable {
         "\(line.id)_\(selectedFilterOption)_\(refreshDate ?? .distantPast)"
+    }
+
+    private func historyIndicator(for line: Line) -> LineStatusHistoryIndicator? {
+        guard selectedFilterOption == .today,
+            !line.isDisrupted,
+            earlierDisruptedLineIDs.contains(line.id)
+        else {
+            return nil
+        }
+
+        return .disruptionEarlierToday
     }
 
     private var shouldShowLineStatusCells: Bool {
@@ -313,6 +328,7 @@ private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
     var favouriteLineIDs: Set<TrainLineID> = []
+    var earlierDisruptedLineIDs: Set<TrainLineID> = []
     var refreshDate: Date? = .now
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
@@ -324,6 +340,7 @@ private struct WrapperView: View {
                 loadingState: loadingState,
                 lines: lines,
                 favouriteLineIDs: favouriteLineIDs,
+                earlierDisruptedLineIDs: earlierDisruptedLineIDs,
                 refreshDate: refreshDate,
                 selectedLine: $selectedLine,
                 selectedFilterOption: $selectedFilterOption,
@@ -341,7 +358,8 @@ private struct WrapperView: View {
     WrapperView(
         loadingState: .loaded,
         lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
-        favouriteLineIDs: [.jubilee, .northern, .metropolitan]
+        favouriteLineIDs: [.jubilee, .northern, .metropolitan],
+        earlierDisruptedLineIDs: Set(TrainLineID.allCases)
     )
 }
 

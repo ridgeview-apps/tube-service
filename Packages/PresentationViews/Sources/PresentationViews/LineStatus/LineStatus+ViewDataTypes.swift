@@ -10,6 +10,10 @@ public enum LineStatusAccessoryImageType {
     case goodService, disruption
 }
 
+public enum LineStatusHistoryIndicator: Hashable, Sendable {
+    case disruptionEarlierToday
+}
+
 public extension LineStatusAccessoryImageType {
     @ViewBuilder var image: some View {
         switch self {

@@ -8,7 +8,9 @@ public struct LineStatusCell: View {
     public var leadingColumnInset = 4.0
     public var animatedAccessoryImage: Bool = false
     public var isFavourite = false
+    public var historyIndicator: LineStatusHistoryIndicator?
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
 
     public enum Style: Hashable {
@@ -35,11 +37,21 @@ public struct LineStatusCell: View {
     }
 
 
-    public var body: some View {
-        HStack(spacing: 0) {
-            leadingColumn()
-            trailingColumn()
-            accessoryImage
+    @ViewBuilder public var body: some View {
+        if dynamicTypeSize.isAccessibilitySize {
+            HStack(spacing: 8) {
+                VStack(spacing: 0) {
+                    leadingColumn()
+                    trailingColumn()
+                }
+                accessoryImage
+            }
+        } else {
+            EqualColumnsWithAccessoryLayout(columnCount: 2) {
+                leadingColumn()
+                trailingColumn()
+                accessoryImage
+            }
         }
     }
 
@@ -69,14 +81,14 @@ public struct LineStatusCell: View {
             Text(line.id.name)
             Spacer()
         }
-        .toEqualWidthColumn(textColor: line.id.textColor)
+        .statusColumnStyle(textColor: line.id.textColor)
         .padding(.leading, leadingColumnInset)
         .background { line.id.backgroundColor }
     }
 
     private func multilineLeadingColumn(with lines: [Line]) -> some View {
         LineColourKeyView(lineIDs: lines.map(\.id))
-            .toEqualWidthColumn()
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
 
@@ -92,10 +104,27 @@ public struct LineStatusCell: View {
     }
 
     private func singleLineTrailingColumn(line: Line) -> some View {
-        Text(line.shortText)
-            .toEqualWidthColumn(
-                textColor: line.isDisrupted ? .adaptiveRed : .primary
-            )
+        VStack(alignment: .leading, spacing: 2) {
+            Text(line.shortText)
+                .foregroundStyle(line.isDisrupted ? .adaptiveRed : .primary)
+
+            if historyIndicator == .disruptionEarlierToday {
+                HStack(spacing: 4) {
+                    Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                        .foregroundStyle(.orange)
+
+                    Text(.lineStatusHistoryDisruptionEarlierToday)
+                        .foregroundStyle(.primary)
+                }
+                .font(.caption2.weight(.medium))
+                .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .font(.body)
+        .multilineTextAlignment(.leading)
+        .padding(8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
     }
 
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
@@ -106,7 +135,7 @@ public struct LineStatusCell: View {
                 Text(.lineStatusPlannedGoodServiceOtherLinesTitle)
             }
         }
-        .toEqualWidthColumn(textColor: .primary)
+        .statusColumnStyle(textColor: .primary)
     }
 
     private var allLineIDs: [TrainLineID] {
@@ -118,14 +147,18 @@ public struct LineStatusCell: View {
 
     @ViewBuilder private var accessoryImage: some View {
         if showsAccessory {
-            style
-                .accessoryImageType
-                .image
-                .padding(.trailing)
-                .frame(width: 30)
-                .bounceOnceSymbol(
-                    isEnabled: animatedAccessoryImage && style.supportsAnimation
-                )
+            HStack(spacing: 0) {
+                style
+                    .accessoryImageType
+                    .image
+                    .dynamicTypeSize(...DynamicTypeSize.accessibility3)
+                    .bounceOnceSymbol(
+                        isEnabled: animatedAccessoryImage && style.supportsAnimation
+                    )
+
+                Spacer(minLength: 12)
+            }
+            .frame(width: 44)
         }
 
     }
@@ -135,7 +168,7 @@ public struct LineStatusCell: View {
 
 private extension View {
 
-    @ViewBuilder func toEqualWidthColumn(
+    @ViewBuilder func statusColumnStyle(
         textColor: Color? = nil,
         isBold: Bool = false
     ) -> some View {
@@ -178,6 +211,13 @@ import ModelStubs
                     style: .singleLine(ModelStubs.lineStatusGoodService),
                     showsAccessory: true,
                     isFavourite: true
+                )
+            }
+            Section("Single line - disruption earlier") {
+                LineStatusCell(
+                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    showsAccessory: true,
+                    historyIndicator: .disruptionEarlierToday
                 )
             }
             Section("Single line - disrupted") {

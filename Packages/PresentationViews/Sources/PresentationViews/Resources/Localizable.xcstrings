@@ -1193,6 +1193,17 @@
         }
       }
     },
+    "line.status.history.disruption.earlier.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier disruption"
+          }
+        }
+      }
+    },
     "line.status.history.entry.locked.accessibility.hint" : {
       "extractionState" : "manual",
       "localizations" : {
