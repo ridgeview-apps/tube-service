@@ -25,6 +25,7 @@ public struct LineStatusListView: View {
         loadingState: LoadingState,
         lines: [Line],
         favouriteLineIDs: Set<TrainLineID>,
+        // TODO: Remove this default once all callers provide status history data.
         earlierDisruptedLineIDs: Set<TrainLineID> = [],
         refreshDate: Date?,
         selectedLine: Binding<Line?>,
