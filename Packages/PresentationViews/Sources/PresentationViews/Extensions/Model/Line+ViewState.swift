@@ -62,6 +62,16 @@ public extension Line {
             lineName: id.name
         )
     }
+
+    func historyIndicator(
+        earlierDisruptedLineIDs: Set<TrainLineID>
+    ) -> LineStatusHistoryIndicator? {
+        guard !isDisrupted, earlierDisruptedLineIDs.contains(id) else {
+            return nil
+        }
+
+        return .disruptionEarlierToday
+    }
 }
 
 

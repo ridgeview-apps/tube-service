@@ -137,14 +137,8 @@ public struct LineStatusListView: View {
     }
 
     private func historyIndicator(for line: Line) -> LineStatusHistoryIndicator? {
-        guard selectedFilterOption == .today,
-            !line.isDisrupted,
-            earlierDisruptedLineIDs.contains(line.id)
-        else {
-            return nil
-        }
-
-        return .disruptionEarlierToday
+        guard selectedFilterOption == .today else { return nil }
+        return line.historyIndicator(earlierDisruptedLineIDs: earlierDisruptedLineIDs)
     }
 
     private var shouldShowLineStatusCells: Bool {

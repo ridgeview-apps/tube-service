@@ -114,7 +114,7 @@ public struct LineStatusCell: View {
                         .foregroundStyle(.orange)
 
                     Text(.lineStatusHistoryDisruptionEarlierToday)
-                        .foregroundStyle(.primary)
+                        .foregroundStyle(Color.secondary)
                 }
                 .font(.caption2.weight(.medium))
                 .fixedSize(horizontal: false, vertical: true)

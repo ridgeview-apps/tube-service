@@ -12,17 +12,20 @@ public struct StationView: View {
     public let station: Station
     public let loadingState: LoadingState
     public let statusCells: [LineStatusCell.Style]
+    public let earlierDisruptedLineIDs: Set<TrainLineID>
     public let disruptionMessages: [String]
 
     public init(
         station: Station,
         loadingState: LoadingState,
         statusCells: [LineStatusCell.Style],
+        earlierDisruptedLineIDs: Set<TrainLineID> = [],
         disruptionMessages: [String]
     ) {
         self.station = station
         self.loadingState = loadingState
         self.statusCells = statusCells
+        self.earlierDisruptedLineIDs = earlierDisruptedLineIDs
         self.disruptionMessages = disruptionMessages
     }
 
@@ -141,8 +144,14 @@ public struct StationView: View {
                 ForEach(statusCells, id: \.self) { cellStyle in
                     if case let .singleLine(line) = cellStyle {
                         NavigationLink(value: Selection.lineStatusDetail(line)) {
-                            LineStatusCell(style: cellStyle, showsAccessory: true)
-                                .frame(minHeight: 52)
+                            LineStatusCell(
+                                style: cellStyle,
+                                showsAccessory: true,
+                                historyIndicator: line.historyIndicator(
+                                    earlierDisruptedLineIDs: earlierDisruptedLineIDs
+                                )
+                            )
+                            .frame(minHeight: 52)
                         }
                         .buttonStyle(.plain)
                         .cardStyle()
@@ -215,6 +224,7 @@ private struct WrapperView: View {
             .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService])),
             .singleLine(.init(id: .victoria, lineStatuses: [.goodService]))
         ]
+    var earlierDisruptedLineIDs: Set<TrainLineID> = []
     var disruptionMessages: [String] = []
 
     var body: some View {
@@ -223,6 +233,7 @@ private struct WrapperView: View {
                 station: ModelStubs.kingsCrossStation,
                 loadingState: loadingState,
                 statusCells: statusCells,
+                earlierDisruptedLineIDs: earlierDisruptedLineIDs,
                 disruptionMessages: disruptionMessages
             )
             .navigationTitle("Station preview")
@@ -242,6 +253,10 @@ private struct WrapperView: View {
         "The escalator to platform 5 is closed",
         "The lifts are bust"
     ])
+}
+
+#Preview("Loaded state - earlier disruption") {
+    WrapperView(earlierDisruptedLineIDs: [.circle])
 }
 
 
