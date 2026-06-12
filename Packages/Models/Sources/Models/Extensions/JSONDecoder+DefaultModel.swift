@@ -1,10 +1,14 @@
 import Foundation
+import Shared
 
 private extension DateFormatter {
     static let standardT: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        // TfL returns unzoned timestamps as London local time; pin the formatter
+        // so parsing doesn't depend on the host's current timezone (e.g. UTC on CI).
+        dateFormatter.timeZone = .london
         return dateFormatter
     }()
 }

@@ -78,7 +78,7 @@ struct ModelDecoderTests {
         #expect(journey.legs?[1].arrivalPoint?.commonName == "Leicester Square Underground Station")
     }
 
-    @Test(.disabled("Pending further investigation"))
+    @Test
     func decodedJourneyResults() async throws {
         let resultsNow = try decodeRawJSONString(journeyResultsKingsXToWaterlooNowJSON, asType: JourneyResults.self)
         let resultsEarlierJourneys = try decodeRawJSONString(journeyResultsKingsXToWaterlooEarlierJSON, asType: JourneyResults.self)
