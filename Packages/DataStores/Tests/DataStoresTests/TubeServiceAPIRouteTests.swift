@@ -11,7 +11,7 @@ struct TubeServiceAPIRouteTests {
     @Test
     func dailyLineTimelineEndpointWithoutDate() throws {
         // Given
-        let route: TubeServiceAPIRoute = .getDailyLineTimeline(lineID: .victoria, date: nil)
+        let route: TubeServiceAPIRoute = .dailyLineTimeline(lineID: .victoria, date: nil)
 
         // When
         let url = try route.toURL(relativeTo: baseURL)
@@ -25,7 +25,7 @@ struct TubeServiceAPIRouteTests {
     func dailyLineTimelineEndpointWithDate() throws {
         // Given
         let date = dayMonthYear(11, 6, 2026, in: .london)
-        let route: TubeServiceAPIRoute = .getDailyLineTimeline(lineID: .hammersmithAndCity, date: date)
+        let route: TubeServiceAPIRoute = .dailyLineTimeline(lineID: .hammersmithAndCity, date: date)
 
         // When
         let url = try route.toURL(relativeTo: baseURL)
@@ -38,7 +38,7 @@ struct TubeServiceAPIRouteTests {
     @Test
     func dailyLineDisruptionSummaryEndpointWithoutDate() throws {
         // Given
-        let route: TubeServiceAPIRoute = .getDailyLineDisruptionSummary(date: nil)
+        let route: TubeServiceAPIRoute = .dailyLineDisruptionSummary(date: nil)
 
         // When
         let url = try route.toURL(relativeTo: baseURL)
@@ -52,7 +52,7 @@ struct TubeServiceAPIRouteTests {
     func dailyLineDisruptionSummaryEndpointWithDate() throws {
         // Given
         let date = dayMonthYear(11, 6, 2026, in: .london)
-        let route: TubeServiceAPIRoute = .getDailyLineDisruptionSummary(date: date)
+        let route: TubeServiceAPIRoute = .dailyLineDisruptionSummary(date: date)
 
         // When
         let url = try route.toURL(relativeTo: baseURL)

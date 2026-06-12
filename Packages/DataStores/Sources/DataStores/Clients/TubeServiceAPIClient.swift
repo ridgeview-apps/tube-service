@@ -13,8 +13,8 @@ public protocol TubeServiceAPIClientType: Sendable {
 
 enum TubeServiceAPIRoute {
 
-    case getDailyLineTimeline(lineID: TrainLineID, date: Date?)
-    case getDailyLineDisruptionSummary(date: Date?)
+    case dailyLineTimeline(lineID: TrainLineID, date: Date?)
+    case dailyLineDisruptionSummary(date: Date?)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
         let urlComponents = try self.toURLComponents(relativeTo: baseURL)
@@ -39,13 +39,13 @@ enum TubeServiceAPIRoute {
         var queryItems = [URLQueryItem]()
 
         switch self {
-        case let .getDailyLineTimeline(lineID, date):
+        case let .dailyLineTimeline(lineID, date):
             pathComponents = ["v1", "line-status", "timeline"]
             queryItems.append(URLQueryItem(name: "line_id", value: lineID.rawValue))
             if let date {
                 queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
             }
-        case let .getDailyLineDisruptionSummary(date):
+        case let .dailyLineDisruptionSummary(date):
             pathComponents = ["v1", "line-status", "disruption-summary"]
             if let date {
                 queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
@@ -88,14 +88,14 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType {
 
     public func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
         try await fetchData(
-            for: .getDailyLineTimeline(lineID: lineID, date: date),
+            for: .dailyLineTimeline(lineID: lineID, date: date),
             mappedTo: DailyLineTimeline.self
         )
     }
 
     public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<[LineDisruptionSummary]> {
         try await fetchData(
-            for: .getDailyLineDisruptionSummary(date: date),
+            for: .dailyLineDisruptionSummary(date: date),
             mappedTo: [LineDisruptionSummary].self
         )
     }

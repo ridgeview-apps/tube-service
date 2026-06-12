@@ -17,12 +17,12 @@ public protocol TflAPIClientType: Sendable {
 
 enum TflAPIRoute {
 
-    case getCurrentLineStatuses([ModeID])
-    case getLineStatusesForDateRange([TrainLineID], DateInterval)
-    case getArrivalPredictions(stationCode: String, [TrainLineID])  // Tube lines only
-    case getArrivalDepartures(stationCode: String, [TrainLineID])  // Overground, Thameslink & Elizabeth line
-    case getStationDisruptions([ModeID])
-    case getJourneyResults(JourneyRequestParams)
+    case currentLineStatuses([ModeID])
+    case lineStatusesForDateRange([TrainLineID], DateInterval)
+    case arrivalPredictions(stationCode: String, [TrainLineID])  // Tube lines only
+    case arrivalDepartures(stationCode: String, [TrainLineID])  // Overground, Thameslink & Elizabeth line
+    case stationDisruptions([ModeID])
+    case journeyResults(JourneyRequestParams)
 
     func toURL(relativeTo baseURL: URL, appKey: String) throws -> URL {
         var urlComponents = try self.toURLComponents(relativeTo: baseURL)
@@ -52,13 +52,13 @@ enum TflAPIRoute {
 
     private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
         switch self {
-        case let .getCurrentLineStatuses(modes):
+        case let .currentLineStatuses(modes):
             let modesParam = modes.toURLPathParam()
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["Line", "Mode", modesParam, "Status"]
             )
-        case let .getLineStatusesForDateRange(lineIDs, dateInterval):
+        case let .lineStatusesForDateRange(lineIDs, dateInterval):
             let lineIDsParam = lineIDs.toURLPathParam()
             let fromDateParam = dateInterval.start.toAPIDateParam()
             let toDateParam = dateInterval.end.toAPIDateParam()
@@ -66,26 +66,26 @@ enum TflAPIRoute {
                 relativeTo: baseURL,
                 pathComponents: ["Line", lineIDsParam, "Status", fromDateParam, "to", toDateParam]
             )
-        case let .getArrivalPredictions(stationCode, lineIDs):
+        case let .arrivalPredictions(stationCode, lineIDs):
             let lineIDsParam = lineIDs.toURLPathParam()
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["Line", lineIDsParam, "Arrivals", stationCode]
             )
-        case let .getArrivalDepartures(stationCode, lineIDs):
+        case let .arrivalDepartures(stationCode, lineIDs):
             let lineIDsParam = lineIDs.toURLPathParam()
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["StopPoint", stationCode, "ArrivalDepartures"],
                 queryItems: [URLQueryItem(name: "lineIds", value: lineIDsParam)]
             )
-        case let .getStationDisruptions(modes):
+        case let .stationDisruptions(modes):
             let modesParam = modes.toURLPathParam()
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["StopPoint", "Mode", modesParam, "Disruption"]
             )
-        case let .getJourneyResults(params):
+        case let .journeyResults(params):
             return try journeyURLComponents(for: params, relativeTo: baseURL)
         }
     }
@@ -152,41 +152,41 @@ public struct TflAPIClient: TflAPIClientType {
     // MARK: - Data fetching
 
     public func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]> {
-        return try await fetchData(for: .getCurrentLineStatuses(ModeID.trains), mappedTo: [Line].self)
+        return try await fetchData(for: .currentLineStatuses(ModeID.trains), mappedTo: [Line].self)
     }
 
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
         let lineIDS = TrainLineID.allCases.filter { $0 != .overground }
         return try await fetchData(
-            for: .getLineStatusesForDateRange(lineIDS, dateInterval),
+            for: .lineStatusesForDateRange(lineIDS, dateInterval),
             mappedTo: [Line].self
         )
     }
 
     public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
         return try await fetchData(
-            for: .getArrivalPredictions(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
+            for: .arrivalPredictions(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
             mappedTo: [ArrivalPrediction].self
         )
     }
 
     public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
         return try await fetchData(
-            for: .getArrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
+            for: .arrivalDepartures(stationCode: lineGroup.atcoCode, lineGroup.lineIds),
             mappedTo: [ArrivalDeparture].self
         )
     }
 
     public func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]> {
         return try await fetchData(
-            for: .getStationDisruptions(ModeID.trains),
+            for: .stationDisruptions(ModeID.trains),
             mappedTo: [DisruptedPoint].self
         )
     }
 
     public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
         return try await fetchData(
-            for: .getJourneyResults(params),
+            for: .journeyResults(params),
             mappedTo: JourneyResults.self
         )
     }

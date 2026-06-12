@@ -12,7 +12,7 @@ public protocol SystemStatusAPIClientType: Sendable {
 
 enum SystemStatusAPIRoute {
 
-    case getSystemStatus(fileName: String)
+    case systemStatus(fileName: String)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
         let urlComponents = try self.toURLComponents(relativeTo: baseURL)
@@ -32,7 +32,7 @@ enum SystemStatusAPIRoute {
 
     private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
         switch self {
-        case let .getSystemStatus(fileName):
+        case let .systemStatus(fileName):
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["system-status", fileName]
@@ -69,7 +69,7 @@ public struct SystemStatusAPIClient: SystemStatusAPIClientType {
     // MARK: - Data fetching
 
     public func fetchSystemStatus() async throws -> HTTPResponse<SystemStatus> {
-        try await fetchData(for: .getSystemStatus(fileName: fileName), mappedTo: SystemStatus.self)
+        try await fetchData(for: .systemStatus(fileName: fileName), mappedTo: SystemStatus.self)
     }
 
     private func fetchData<T: Decodable>(for route: SystemStatusAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {

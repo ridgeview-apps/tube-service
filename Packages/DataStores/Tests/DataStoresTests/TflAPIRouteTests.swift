@@ -10,9 +10,9 @@ struct TflAPIRouteTests {
     private let appKey = "testAppKey"
 
     @Test
-    func getCurrentLineStatusesEndpoint() throws {
+    func currentLineStatusesEndpoint() throws {
         // Given
-        let route: TflAPIRoute = .getCurrentLineStatuses(ModeID.trains)
+        let route: TflAPIRoute = .currentLineStatuses(ModeID.trains)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -24,7 +24,7 @@ struct TflAPIRouteTests {
 
     @Test
     func routeBuildsJSONGetRequest() throws {
-        let route: TflAPIRoute = .getCurrentLineStatuses(ModeID.trains)
+        let route: TflAPIRoute = .currentLineStatuses(ModeID.trains)
 
         let request = try route.toURLRequest(relativeTo: baseURL, appKey: appKey)
 
@@ -38,7 +38,7 @@ struct TflAPIRouteTests {
         let startDate = dayMonthYear(1, 2, 2023, in: .london)
         let endDate = dayMonthYear(2, 2, 2023, in: .london)
         let dateInterval = DateInterval(start: startDate, end: endDate)
-        let route: TflAPIRoute = .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval)
+        let route: TflAPIRoute = .lineStatusesForDateRange(TrainLineID.allCases, dateInterval)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -52,7 +52,7 @@ struct TflAPIRouteTests {
     @Test
     func arrivalPredictionsEndpoint() throws {
         // Given
-        let route: TflAPIRoute = .getArrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
+        let route: TflAPIRoute = .arrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -64,7 +64,7 @@ struct TflAPIRouteTests {
 
     @Test
     func arrivalPredictionsEncodesStationCodeAsSinglePathComponent() throws {
-        let route: TflAPIRoute = .getArrivalPredictions(
+        let route: TflAPIRoute = .arrivalPredictions(
             stationCode: "station/with ?#%",
             [.northern]
         )
@@ -80,7 +80,7 @@ struct TflAPIRouteTests {
     @Test
     func routePreservesBaseURLPath() throws {
         let baseURL = URL(string: "https://foo.com/proxy/tfl/")!
-        let route: TflAPIRoute = .getCurrentLineStatuses([.tube])
+        let route: TflAPIRoute = .currentLineStatuses([.tube])
 
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
@@ -93,7 +93,7 @@ struct TflAPIRouteTests {
     @Test
     func arrivalDeparturesEndpoint() throws {
         // Given
-        let route: TflAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
+        let route: TflAPIRoute = .arrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -107,7 +107,7 @@ struct TflAPIRouteTests {
     @Test
     func stationDisruptionsEndpoint() throws {
         // Given
-        let route: TflAPIRoute = .getStationDisruptions(ModeID.trains)
+        let route: TflAPIRoute = .stationDisruptions(ModeID.trains)
 
         // When
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
@@ -127,7 +127,7 @@ struct TflAPIRouteTests {
             timeOption: .departing(queryDate: "20260612", queryTime: "1430"),
             routeBetweenEntrances: true
         )
-        let route: TflAPIRoute = .getJourneyResults(params)
+        let route: TflAPIRoute = .journeyResults(params)
 
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
         let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: true))
@@ -170,7 +170,7 @@ struct TflAPIRouteTests {
             modeIDs: [.walking],
             timeOption: nil
         )
-        let route: TflAPIRoute = .getJourneyResults(params)
+        let route: TflAPIRoute = .journeyResults(params)
 
         let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 

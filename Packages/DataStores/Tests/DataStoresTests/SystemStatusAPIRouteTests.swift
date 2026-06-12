@@ -9,7 +9,7 @@ struct SystemStatusAPIRouteTests {
 
     @Test
     func systemStatusEndpoint() throws {
-        let route: SystemStatusAPIRoute = .getSystemStatus(fileName: "status.json")
+        let route: SystemStatusAPIRoute = .systemStatus(fileName: "status.json")
 
         let url = try route.toURL(relativeTo: baseURL)
 
@@ -18,7 +18,7 @@ struct SystemStatusAPIRouteTests {
 
     @Test
     func systemStatusRouteBuildsJSONGetRequest() throws {
-        let route: SystemStatusAPIRoute = .getSystemStatus(fileName: "status.json")
+        let route: SystemStatusAPIRoute = .systemStatus(fileName: "status.json")
 
         let request = try route.toURLRequest(relativeTo: baseURL)
 
