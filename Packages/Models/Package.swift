@@ -29,7 +29,8 @@ let package = Package(
             dependencies: [
                 "Models"
             ],
-            path: "Sources/ModelStubs"
+            path: "Sources/ModelStubs",
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "ModelsTests",

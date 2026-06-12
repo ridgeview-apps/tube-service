@@ -22,7 +22,7 @@ private extension ModelStubs {
 public extension ModelStubs {
     // Elizabeth line
     static var elizabethLineBothPlatforms: [ArrivalDeparture] {
-        decodedValue(for: elizabethLineArrivalsJSON)
+        decodedValue(for: loadJSON(named: "elizabethLineArrivals", subdirectory: "Arrivals"))
     }
 
     static var elizabethLineArrivalsPlatformA: [ArrivalDeparture] {
@@ -34,12 +34,12 @@ public extension ModelStubs {
     }
 
     static var elizabethLineArrivalsWithDuplicates: [ArrivalDeparture] {
-        decodedValue(for: elizabethLineArrivalsWithDuplicatesJSON)
+        decodedValue(for: loadJSON(named: "elizabethLineArrivalsWithDuplicates", subdirectory: "Arrivals"))
     }
 
     // Mildmay line
     static var mildmayLineBothPlatforms: [ArrivalDeparture] {
-        decodedValue(for: mildmayLineArrivalsJSON)
+        decodedValue(for: loadJSON(named: "mildmayLineArrivals", subdirectory: "Arrivals"))
     }
 
     static var mildmayLineArrivalsPlatform1: [ArrivalDeparture] {
@@ -53,7 +53,7 @@ public extension ModelStubs {
 
     // Northern line (single tube-line platforms)
     static var northernLineBothPlatforms: [ArrivalPrediction] {
-        decodedValue(for: northernLineArrivalsJSON)
+        decodedValue(for: loadJSON(named: "northernLineArrivals", subdirectory: "Arrivals"))
     }
 
     static var northernLineNorthboundArrivals: [ArrivalPrediction] {
@@ -66,7 +66,7 @@ public extension ModelStubs {
 
     // Hammersmith, District & Circle (multi tube-line platforms)
     static var hammerDistrictAndCircleBothPlatforms: [ArrivalPrediction] {
-        decodedValue(for: hammerDistrictAndCircleArrivalsJSON)
+        decodedValue(for: loadJSON(named: "hammerDistrictAndCircleArrivals", subdirectory: "Arrivals"))
     }
 
     static var hammerDistrictAndCircleEastboundArrivals: [ArrivalPrediction] {
@@ -77,7 +77,6 @@ public extension ModelStubs {
         hammerDistrictAndCircleBothPlatforms.filter { $0.platformName == "Westbound - Platform 1" }
     }
 }
-
 
 // MARK: - Line status stubs
 
