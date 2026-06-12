@@ -56,9 +56,7 @@ extension URLSession {
             throw HTTPError.statusCodeMissing
         }
 
-        let isClientOrServerError = (400..<600).contains(statusCode)
-
-        guard !isClientOrServerError else {
+        guard (200..<300).contains(statusCode) else {
             let errorModel = try? jsonDecoder.decode(HTTPResponseErrorModel.self, from: response.data)
             throw HTTPError.statusCode(statusCode, errorModel)
         }
