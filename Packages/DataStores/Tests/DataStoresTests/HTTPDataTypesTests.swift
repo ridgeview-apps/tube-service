@@ -106,6 +106,31 @@ struct HTTPDataTypesTests {
         }
     }
 
+    @Test
+    func statusCodeErrorUsesServerMessage() {
+        let error = HTTPError.statusCode(
+            503,
+            HTTPResponseErrorModel(message: "Service unavailable")
+        )
+
+        #expect(error.localizedDescription == "Service unavailable")
+    }
+
+    @Test
+    func statusCodeErrorWithoutServerMessageUsesStatusCode() {
+        let error = HTTPError.statusCode(503, nil)
+
+        #expect(error.localizedDescription == "The server returned HTTP status code 503.")
+    }
+
+    @Test
+    func connectionErrorUsesUnderlyingDescription() {
+        let underlyingError = URLError(.notConnectedToInternet)
+        let error = HTTPError.connection(underlyingError)
+
+        #expect(error.localizedDescription == underlyingError.localizedDescription)
+    }
+
     private func makeURLSession(protocolClass: URLProtocol.Type) -> URLSession {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [protocolClass]

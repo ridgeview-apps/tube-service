@@ -27,6 +27,22 @@ public enum HTTPError: Error {
     case statusCode(Int, HTTPResponseErrorModel?)
 }
 
+extension HTTPError: LocalizedError {
+
+    public var errorDescription: String? {
+        switch self {
+        case .invalidRequestURL:
+            return "The request URL is invalid."
+        case .statusCodeMissing:
+            return "The server response did not include an HTTP status code."
+        case let .connection(error):
+            return error.localizedDescription
+        case let .statusCode(statusCode, errorModel):
+            return errorModel?.message ?? "The server returned HTTP status code \(statusCode)."
+        }
+    }
+}
+
 extension URLComponents {
 
     static func fromPath(_ path: String, queryParams: [String: String] = [:]) throws -> URLComponents {
