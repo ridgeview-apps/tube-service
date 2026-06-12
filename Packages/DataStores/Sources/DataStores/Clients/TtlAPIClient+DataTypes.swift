@@ -133,3 +133,9 @@ extension Sequence where Element == ModeID {
         self.map { $0.rawValue }.joined(separator: ",")
     }
 }
+extension Set where Element == ModeID {
+    func toURLPathParam() -> String {
+        self.map { $0.rawValue }.sorted().joined(separator: ",")
+    }
+}
+

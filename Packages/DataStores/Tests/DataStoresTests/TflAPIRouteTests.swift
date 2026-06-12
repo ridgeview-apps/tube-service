@@ -80,6 +80,18 @@ struct TflAPIRouteTests {
     }
 
     @Test
+    func modeIDSetURLPathParamIsSorted() {
+        // Given
+        let modeIDs: Set<ModeID> = [.walking, .bus, .nationalRail, .cycleHire]
+
+        // When
+        let value = modeIDs.toURLPathParam()
+
+        // Then
+        #expect(value == "bus,cycle-hire,national-rail,walking")
+    }
+
+    @Test
     func apiDateUsesLondonTimeZone() throws {
         // Given
         let date = try #require(
