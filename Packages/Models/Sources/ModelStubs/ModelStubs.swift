@@ -21,179 +21,111 @@ private extension ModelStubs {
 
 public extension ModelStubs {
     // Elizabeth line
-    static var elizabethLineBothPlatforms: [ArrivalDeparture] {
+    static let elizabethLineBothPlatforms: [ArrivalDeparture] =
         decodedValue(for: loadJSON(named: "elizabethLineArrivals"))
-    }
-
-    static var elizabethLineArrivalsPlatformA: [ArrivalDeparture] {
+    static let elizabethLineArrivalsPlatformA =
         elizabethLineBothPlatforms.filter { $0.platformName == "Platform A" }
-    }
-
-    static var elizabethLineArrivalsPlatformB: [ArrivalDeparture] {
+    static let elizabethLineArrivalsPlatformB =
         elizabethLineBothPlatforms.filter { $0.platformName == "Platform B" }
-    }
-
-    static var elizabethLineArrivalsWithDuplicates: [ArrivalDeparture] {
+    static let elizabethLineArrivalsWithDuplicates: [ArrivalDeparture] =
         decodedValue(for: loadJSON(named: "elizabethLineArrivalsWithDuplicates"))
-    }
 
     // Mildmay line
-    static var mildmayLineBothPlatforms: [ArrivalDeparture] {
+    static let mildmayLineBothPlatforms: [ArrivalDeparture] =
         decodedValue(for: loadJSON(named: "mildmayLineArrivals"))
-    }
-
-    static var mildmayLineArrivalsPlatform1: [ArrivalDeparture] {
+    static let mildmayLineArrivalsPlatform1 =
         mildmayLineBothPlatforms.filter { $0.platformName == "Platform 1" }
-    }
-
-    static var mildmayLineArrivalsPlatform2: [ArrivalDeparture] {
+    static let mildmayLineArrivalsPlatform2 =
         mildmayLineBothPlatforms.filter { $0.platformName == "Platform 2" }
-    }
-
 
     // Northern line (single tube-line platforms)
-    static var northernLineBothPlatforms: [ArrivalPrediction] {
+    static let northernLineBothPlatforms: [ArrivalPrediction] =
         decodedValue(for: loadJSON(named: "northernLineArrivals"))
-    }
-
-    static var northernLineNorthboundArrivals: [ArrivalPrediction] {
+    static let northernLineNorthboundArrivals =
         northernLineBothPlatforms.filter { $0.platformName == "Northbound - Platform 7" }
-    }
-
-    static var northernLineSouthboundArrivals: [ArrivalPrediction] {
+    static let northernLineSouthboundArrivals =
         northernLineBothPlatforms.filter { $0.platformName == "Southbound - Platform 8" }
-    }
 
     // Hammersmith, District & Circle (multi tube-line platforms)
-    static var hammerDistrictAndCircleBothPlatforms: [ArrivalPrediction] {
+    static let hammerDistrictAndCircleBothPlatforms: [ArrivalPrediction] =
         decodedValue(for: loadJSON(named: "hammerDistrictAndCircleArrivals"))
-    }
-
-    static var hammerDistrictAndCircleEastboundArrivals: [ArrivalPrediction] {
+    static let hammerDistrictAndCircleEastboundArrivals =
         hammerDistrictAndCircleBothPlatforms.filter { $0.platformName == "Eastbound - Platform 2" }
-    }
-
-    static var hammerDistrictAndCircleWestboundArrivals: [ArrivalPrediction] {
+    static let hammerDistrictAndCircleWestboundArrivals =
         hammerDistrictAndCircleBothPlatforms.filter { $0.platformName == "Westbound - Platform 1" }
-    }
 }
 
 // MARK: - Line status stubs
 
 public extension ModelStubs {
-    static var lineStatusesToday: [Line] { decodedValue(for: loadJSON(named: "lineStatusesToday")) }
-
-    static var lineStatusesFuture: [Line] { decodedValue(for: loadJSON(named: "lineStatusesFuture")) }
-
-    static var lineStatusGoodService: Line { decodedValue(for: loadJSON(named: "lineStatusGoodService")) }
-
-    static var lineStatusDisrupted: Line { decodedValue(for: loadJSON(named: "lineStatusDisrupted")) }
-
-    static var lineStatusDisruptedDuplicates: Line {
+    static let lineStatusesToday: [Line] = decodedValue(for: loadJSON(named: "lineStatusesToday"))
+    static let lineStatusesFuture: [Line] = decodedValue(for: loadJSON(named: "lineStatusesFuture"))
+    static let lineStatusGoodService: Line = decodedValue(for: loadJSON(named: "lineStatusGoodService"))
+    static let lineStatusDisrupted: Line = decodedValue(for: loadJSON(named: "lineStatusDisrupted"))
+    static let lineStatusDisruptedDuplicates: Line =
         decodedValue(for: loadJSON(named: "lineStatusDisruptedDuplicates"))
-    }
 }
 
 
 // MARK: - Stations
 
 public extension ModelStubs {
-    static var stations: [Station] { Station.allLondonTrains }
-    static var nationRailStopPoints: [StopPoint] { Station.allNationalRail }
+    static let stations = Station.allLondonTrains
+    static let nationRailStopPoints = Station.allNationalRail
 
-    static var angelStation: Station { stations.first { $0.id == "940GZZLUAGL" }! }
-    static var eastFinchleyStation: Station { stations.first { $0.id == "940GZZLUEFY" }! }
-    static var finchleyCentralStation: Station { stations.first { $0.id == "940GZZLUFYC" }! }
-    static var highBarnetStation: Station { stations.first { $0.id == "940GZZLUHBT" }! }
-    static var kingsCrossStation: Station { stations.first { $0.id == "HUBKGX" }! }
-    static var paddingtonStation: Station { stations.first { $0.id == "HUBPAD" }! }
-    static var russellSquareStation: Station { stations.first { $0.id == "940GZZLURSQ" }! }
-    static var totteridgeAndWhetstoneStation: Station { stations.first { $0.id == "940GZZLUTAW" }! }
-    static var westFinchleyStation: Station { stations.first { $0.id == "940GZZLUWFN" }! }
-    static var woodsideParkStation: Station { stations.first { $0.id == "940GZZLUWOP" }! }
+    static let angelStation = stations.first { $0.id == "940GZZLUAGL" }!
+    static let eastFinchleyStation = stations.first { $0.id == "940GZZLUEFY" }!
+    static let finchleyCentralStation = stations.first { $0.id == "940GZZLUFYC" }!
+    static let highBarnetStation = stations.first { $0.id == "940GZZLUHBT" }!
+    static let kingsCrossStation = stations.first { $0.id == "HUBKGX" }!
+    static let paddingtonStation = stations.first { $0.id == "HUBPAD" }!
+    static let russellSquareStation = stations.first { $0.id == "940GZZLURSQ" }!
+    static let totteridgeAndWhetstoneStation = stations.first { $0.id == "940GZZLUTAW" }!
+    static let westFinchleyStation = stations.first { $0.id == "940GZZLUWFN" }!
+    static let woodsideParkStation = stations.first { $0.id == "940GZZLUWOP" }!
 
-    static var twickenhamRailStation: StopPoint { nationRailStopPoints.first { $0.icsCode == "1001300" }! }
-    static var oakleighParkRailStation: StopPoint { nationRailStopPoints.first { $0.icsCode == "1001218" }! }
+    static let twickenhamRailStation = nationRailStopPoints.first { $0.icsCode == "1001300" }!
+    static let oakleighParkRailStation = nationRailStopPoints.first { $0.icsCode == "1001218" }!
 }
 
 
 // MARK: - Disrupted points
 
 public extension ModelStubs {
-
-    static var disruptedStations: [DisruptedPoint] {
+    static let disruptedStations: [DisruptedPoint] =
         decodedValue(for: loadJSON(named: "disruptedStations"))
-    }
 }
 
 
 // MARK: - Journey planner
 
 public extension ModelStubs {
-
-    static var journeyByBike: Journey {
-        decodedValue(for: loadJSON(named: "journeyByBike"))
-    }
-
-    static var journeyByBoat: Journey {
-        decodedValue(for: loadJSON(named: "journeyByBoat"))
-    }
-
-    static var journeyByBusLong: Journey {
-        decodedValue(for: loadJSON(named: "journeyByBusLong"))
-    }
-
-    static var journeyByBusShort: Journey {
-        decodedValue(for: loadJSON(named: "journeyByBusShort"))
-    }
-
-    static var journeyByCableCar: Journey {
-        decodedValue(for: loadJSON(named: "journeyByCableCar"))
-    }
-
-    static var journeyByNationalRail: Journey {
-        decodedValue(for: loadJSON(named: "journeyByNationalRail"))
-    }
-
-    static var journeyByOverground: Journey {
-        decodedValue(for: loadJSON(named: "journeyByOverground"))
-    }
-
-    static var journeyByTube: Journey {
-        decodedValue(for: loadJSON(named: "journeyByTube"))
-    }
-
-    static var journeyByWalking: Journey {
-        decodedValue(for: loadJSON(named: "journeyByWalking"))
-    }
-
-    static var journeyWithLongDisruptionMessage: Journey {
+    static let journeyByBike: Journey = decodedValue(for: loadJSON(named: "journeyByBike"))
+    static let journeyByBoat: Journey = decodedValue(for: loadJSON(named: "journeyByBoat"))
+    static let journeyByBusLong: Journey = decodedValue(for: loadJSON(named: "journeyByBusLong"))
+    static let journeyByBusShort: Journey = decodedValue(for: loadJSON(named: "journeyByBusShort"))
+    static let journeyByCableCar: Journey = decodedValue(for: loadJSON(named: "journeyByCableCar"))
+    static let journeyByNationalRail: Journey = decodedValue(for: loadJSON(named: "journeyByNationalRail"))
+    static let journeyByOverground: Journey = decodedValue(for: loadJSON(named: "journeyByOverground"))
+    static let journeyByTube: Journey = decodedValue(for: loadJSON(named: "journeyByTube"))
+    static let journeyByWalking: Journey = decodedValue(for: loadJSON(named: "journeyByWalking"))
+    static let journeyWithLongDisruptionMessage: Journey =
         decodedValue(for: loadJSON(named: "journeyWithLongDisruptionMessage"))
-    }
-
-    static var journeyWithLongTitleName: Journey {
+    static let journeyWithLongTitleName: Journey =
         decodedValue(for: loadJSON(named: "journeyWithLongTitleName"))
-    }
-
-    static var journeyResultsKingsXToWaterlooNow: JourneyResults {
+    static let journeyResultsKingsXToWaterlooNow: JourneyResults =
         decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooNow"))
-    }
-
-    static var journeyResultsKingsXToWaterlooEarlier: JourneyResults {
+    static let journeyResultsKingsXToWaterlooEarlier: JourneyResults =
         decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooEarlier"))
-    }
-
-    static var journeyResultsKingsXToWaterlooLater: JourneyResults {
+    static let journeyResultsKingsXToWaterlooLater: JourneyResults =
         decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooLater"))
-    }
 }
 
 
 // MARK: - System status
 
 public extension ModelStubs {
-
-    static var systemStatusOK: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusOK")) }
-    static var systemStatusOutage: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusOutage")) }
-    static var systemStatusResolved: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusResolved")) }
+    static let systemStatusOK: SystemStatus = decodedValue(for: loadJSON(named: "systemStatusOK"))
+    static let systemStatusOutage: SystemStatus = decodedValue(for: loadJSON(named: "systemStatusOutage"))
+    static let systemStatusResolved: SystemStatus = decodedValue(for: loadJSON(named: "systemStatusResolved"))
 }
