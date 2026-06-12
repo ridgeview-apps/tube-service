@@ -50,7 +50,7 @@ extension URLComponents {
         guard var components = URLComponents(string: sanitizedPath) else {
             throw HTTPError.invalidRequestURL
         }
-        components.queryItems = queryParams.map(URLQueryItem.init)
+        components.queryItems = queryParams.isEmpty ? nil : queryParams.map(URLQueryItem.init)
         return components
     }
 }

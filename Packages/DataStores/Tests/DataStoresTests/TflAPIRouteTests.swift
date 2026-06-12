@@ -90,6 +90,56 @@ struct TflAPIRouteTests {
     }
 
     @Test
+    func journeyResultsEndpointIncludesOptionalParameters() throws {
+        let params = JourneyRequestParams(
+            from: .icsCode("1000266"),
+            to: .icsCode("1000254"),
+            via: .icsCode("1000174"),
+            modeIDs: [.tube, .bus, .cycle],
+            timeOption: .departing(queryDate: "20260612", queryTime: "1430"),
+            routeBetweenEntrances: true
+        )
+        let route: TflAPIRoute = .getJourneyResults(params)
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+        let components = try #require(URLComponents(url: url, resolvingAgainstBaseURL: true))
+        let queryParameters = Dictionary(
+            uniqueKeysWithValues: (components.queryItems ?? []).compactMap { item in
+                item.value.map { (item.name, $0) }
+            }
+        )
+
+        #expect(components.path == "/Journey/JourneyResults/1000266/to/1000254")
+        #expect(queryParameters["app_key"] == appKey)
+        #expect(queryParameters["via"] == "1000174")
+        #expect(queryParameters["mode"] == "bus,cycle,tube")
+        #expect(queryParameters["alternativeCycle"] == "true")
+        #expect(queryParameters["routeBetweenEntrances"] == "true")
+        #expect(queryParameters["timeIs"] == "departing")
+        #expect(queryParameters["date"] == "20260612")
+        #expect(queryParameters["time"] == "1430")
+    }
+
+    @Test
+    func journeyResultsEndpointSupportsCoordinates() throws {
+        let params = JourneyRequestParams(
+            from: .coordinate(.init(lat: 51.5308, lon: -0.1238)),
+            to: .coordinate(.init(lat: 51.5033, lon: -0.1147)),
+            via: nil,
+            modeIDs: [.walking],
+            timeOption: nil
+        )
+        let route: TflAPIRoute = .getJourneyResults(params)
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+
+        #expect(
+            url.path
+                == "/Journey/JourneyResults/51.5308,-0.1238/to/51.5033,-0.1147"
+        )
+    }
+
+    @Test
     func modeIDSetURLPathParamIsSorted() {
         // Given
         let modeIDs: Set<ModeID> = [.walking, .bus, .nationalRail, .cycleHire]
