@@ -61,9 +61,9 @@
 		<key>transportAPIAppId</key>
 		<string>$(TRANSPORT_API_APP_ID)</string>
 		<key>transportAPIAppKey</key>
-		<string>$(TRANSPORT_API_APP_KEY)</string>
+		<string>$(TFL_API_APP_KEY)</string>
 		<key>transportAPIBaseUrl</key>
-		<string>$(TRANSPORT_API_BASE_URL)</string>
+		<string>$(TFL_API_BASE_URL)</string>
 	</dict>
 </dict>
 </plist>

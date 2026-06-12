@@ -61,6 +61,10 @@ lane :build do
 
   match_app_identifiers = ["#{main_target_bundle_id}"]
 
+  xcargs = [
+    "TFL_API_APP_KEY=#{ENV.fetch("TFL_API_APP_KEY")}"
+  ].join(" ")
+
   match(
     readonly: false,
     clone_branch_directly: true,
@@ -77,6 +81,7 @@ lane :build do
     clean: true,
     scheme: "TubeService",
     configuration: "Release",
+    xcargs: xcargs,
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     export_method: "app-store",
     skip_profile_detection: true

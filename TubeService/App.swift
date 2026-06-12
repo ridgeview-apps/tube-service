@@ -9,8 +9,12 @@ struct RootScene: App {
 
     var body: some Scene {
         WindowGroup {
-            RootScreen()
-                .withAppEnvironment(dataStore: appData)
+            if ProcessInfo.isRunningUnitTests {
+                Text("Running unit tests...")
+            } else {
+                RootScreen()
+                    .withAppEnvironment(dataStore: appData)
+            }
         }
     }
 }

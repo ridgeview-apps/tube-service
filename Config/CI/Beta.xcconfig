@@ -1,10 +1,12 @@
 #include "../Release.xcconfig"
-#include "Beta.secrets.xcconfig"
 
 // Build/archive settings
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service.beta
 
 // App config / Info.plist values
-TRANSPORT_API_BASE_URL = https:/$()/api.tfl.gov.uk
+TFL_API_BASE_URL = https:/$()/api.tfl.gov.uk
 SYSTEM_STATUS_API_BASE_URL = https:/$()/www.ridgeviewapps.com
 SYSTEM_STATUS_FILE_NAME = status-dev.json
+
+// The following are provided through the CI env
+// TFL_API_APP_KEY =

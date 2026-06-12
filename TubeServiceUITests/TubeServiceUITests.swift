@@ -22,7 +22,7 @@ class TubeServiceUITests: XCTestCase {
         continueAfterFailure = false
 
         app = XCUIApplication()
-        app.launchArguments = ["UITests"]
+        app.launchArguments = ["-ui-tests"]
         setupSnapshot(app)
         app.launch()
 

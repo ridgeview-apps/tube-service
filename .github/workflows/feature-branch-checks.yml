@@ -5,9 +5,6 @@ on:
     branches:
       - 'feature/**'    
 
-env:
-  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
   cancel-in-progress: true    
@@ -22,14 +19,6 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.5.app
       - name: Confirm Xcode version
         run: xcodebuild -version
-      - name: Install dependencies
-        run: |
-          brew install git-secret
-      - name: Git secret
-        run: |
-          echo "🔓 Unlocking secrets..."
-          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
-          git secret reveal
       - name: Swift format lint
         run: Scripts/swift-format-lint.sh          
       - name: Fastlane commands

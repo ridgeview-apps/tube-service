@@ -7,7 +7,7 @@ on:
 
 env:
   XCODE_CONFIG: Beta
-  GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+  TFL_API_APP_KEY: ${{ secrets.TFL_API_APP_KEY }}
   APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
   APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
   APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
@@ -30,14 +30,8 @@ jobs:
         run: xcodebuild -version
       - name: Install dependencies
         run: |
-          brew install git-secret
           brew install librsvg
           brew install imagemagick
-      - name: Git secret
-        run: |
-          echo "🔓 Unlocking secrets..."
-          echo -n "$GPG_PRIVATE_KEY" | base64 --decode | gpg --import
-          git secret reveal
       - name: Swift format lint
         run: Scripts/swift-format-lint.sh          
       - name: Fastlane commands
