@@ -22,7 +22,7 @@ private extension ModelStubs {
 public extension ModelStubs {
     // Elizabeth line
     static var elizabethLineBothPlatforms: [ArrivalDeparture] {
-        decodedValue(for: loadJSON(named: "elizabethLineArrivals", subdirectory: "Arrivals"))
+        decodedValue(for: loadJSON(named: "elizabethLineArrivals"))
     }
 
     static var elizabethLineArrivalsPlatformA: [ArrivalDeparture] {
@@ -34,12 +34,12 @@ public extension ModelStubs {
     }
 
     static var elizabethLineArrivalsWithDuplicates: [ArrivalDeparture] {
-        decodedValue(for: loadJSON(named: "elizabethLineArrivalsWithDuplicates", subdirectory: "Arrivals"))
+        decodedValue(for: loadJSON(named: "elizabethLineArrivalsWithDuplicates"))
     }
 
     // Mildmay line
     static var mildmayLineBothPlatforms: [ArrivalDeparture] {
-        decodedValue(for: loadJSON(named: "mildmayLineArrivals", subdirectory: "Arrivals"))
+        decodedValue(for: loadJSON(named: "mildmayLineArrivals"))
     }
 
     static var mildmayLineArrivalsPlatform1: [ArrivalDeparture] {
@@ -53,7 +53,7 @@ public extension ModelStubs {
 
     // Northern line (single tube-line platforms)
     static var northernLineBothPlatforms: [ArrivalPrediction] {
-        decodedValue(for: loadJSON(named: "northernLineArrivals", subdirectory: "Arrivals"))
+        decodedValue(for: loadJSON(named: "northernLineArrivals"))
     }
 
     static var northernLineNorthboundArrivals: [ArrivalPrediction] {
@@ -66,7 +66,7 @@ public extension ModelStubs {
 
     // Hammersmith, District & Circle (multi tube-line platforms)
     static var hammerDistrictAndCircleBothPlatforms: [ArrivalPrediction] {
-        decodedValue(for: loadJSON(named: "hammerDistrictAndCircleArrivals", subdirectory: "Arrivals"))
+        decodedValue(for: loadJSON(named: "hammerDistrictAndCircleArrivals"))
     }
 
     static var hammerDistrictAndCircleEastboundArrivals: [ArrivalPrediction] {
@@ -127,22 +127,61 @@ public extension ModelStubs {
 
 public extension ModelStubs {
 
-    static var journeyByBike: Journey { decodedValue(for: journeyByBikeJSON) }
-    static var journeyByBoat: Journey { decodedValue(for: journeyByBoatJSON) }
-    static var journeyByBusLong: Journey { decodedValue(for: journeyByBusLongJSON) }
-    static var journeyByBusShort: Journey { decodedValue(for: journeyByBusShortJSON) }
-    static var journeyByCableCar: Journey { decodedValue(for: journeyByCableCarJSON) }
-    static var journeyByNationalRail: Journey { decodedValue(for: journeyByNationalRailJSON) }
-    static var journeyByOverground: Journey { decodedValue(for: journeyByOvergroundJSON) }
-    static var journeyByTube: Journey { decodedValue(for: journeyByTubeJSON) }
-    static var journeyByWalking: Journey { decodedValue(for: journeyByWalkingJSON) }
-    static var journeyWithLongDisruptionMessage: Journey { decodedValue(for: journeyWithLongDisruptionMessageJSON) }
+    static var journeyByBike: Journey {
+        decodedValue(for: loadJSON(named: "journeyByBike"))
+    }
 
-    static var journeyWithLongTitleName: Journey { decodedValue(for: journeyWithLongTitleNameJSON) }
+    static var journeyByBoat: Journey {
+        decodedValue(for: loadJSON(named: "journeyByBoat"))
+    }
 
-    static var journeyResultsKingsXToWaterlooNow: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooNowJSON) }
-    static var journeyResultsKingsXToWaterlooEarlier: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooEarlierJSON) }
-    static var journeyResultsKingsXToWaterlooLater: JourneyResults { decodedValue(for: journeyResultsKingsXToWaterlooLaterJSON) }
+    static var journeyByBusLong: Journey {
+        decodedValue(for: loadJSON(named: "journeyByBusLong"))
+    }
+
+    static var journeyByBusShort: Journey {
+        decodedValue(for: loadJSON(named: "journeyByBusShort"))
+    }
+
+    static var journeyByCableCar: Journey {
+        decodedValue(for: loadJSON(named: "journeyByCableCar"))
+    }
+
+    static var journeyByNationalRail: Journey {
+        decodedValue(for: loadJSON(named: "journeyByNationalRail"))
+    }
+
+    static var journeyByOverground: Journey {
+        decodedValue(for: loadJSON(named: "journeyByOverground"))
+    }
+
+    static var journeyByTube: Journey {
+        decodedValue(for: loadJSON(named: "journeyByTube"))
+    }
+
+    static var journeyByWalking: Journey {
+        decodedValue(for: loadJSON(named: "journeyByWalking"))
+    }
+
+    static var journeyWithLongDisruptionMessage: Journey {
+        decodedValue(for: loadJSON(named: "journeyWithLongDisruptionMessage"))
+    }
+
+    static var journeyWithLongTitleName: Journey {
+        decodedValue(for: loadJSON(named: "journeyWithLongTitleName"))
+    }
+
+    static var journeyResultsKingsXToWaterlooNow: JourneyResults {
+        decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooNow"))
+    }
+
+    static var journeyResultsKingsXToWaterlooEarlier: JourneyResults {
+        decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooEarlier"))
+    }
+
+    static var journeyResultsKingsXToWaterlooLater: JourneyResults {
+        decodedValue(for: loadJSON(named: "journeyResultsKingsXToWaterlooLater"))
+    }
 }
 
 
