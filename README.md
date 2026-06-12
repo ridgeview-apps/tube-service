@@ -15,7 +15,6 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 ## Getting Started
 
 1. Install Xcode.
-1. Run `Scripts/quick-start.sh`
 1. Select an iOS simulator and tap "Run"
 
 ## Architecture
