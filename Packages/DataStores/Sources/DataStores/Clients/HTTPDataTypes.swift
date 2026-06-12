@@ -64,14 +64,45 @@ extension HTTPError: LocalizedError {
 
 extension URLComponents {
 
-    static func fromPath(_ path: String, queryParams: [String: String] = [:]) throws -> URLComponents {
-        let sanitizedPath = "\(path)".replacingOccurrences(of: "//", with: "/")
-        guard var components = URLComponents(string: sanitizedPath) else {
+    static func route(
+        relativeTo baseURL: URL,
+        pathComponents: [String],
+        queryParams: [String: String] = [:]
+    ) throws -> URLComponents {
+        guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
             throw HTTPError.invalidRequestURL
         }
+
+        let encodedPathComponents = try pathComponents.map { pathComponent in
+            guard
+                let encodedPathComponent = pathComponent.addingPercentEncoding(
+                    withAllowedCharacters: .urlPathComponentAllowed
+                )
+            else {
+                throw HTTPError.invalidRequestURL
+            }
+            return encodedPathComponent
+        }
+
+        let basePath = components.percentEncodedPath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        components.percentEncodedPath =
+            "/"
+            + ([basePath] + encodedPathComponents)
+            .filter { !$0.isEmpty }
+            .joined(separator: "/")
         components.queryItems = queryParams.isEmpty ? nil : queryParams.map(URLQueryItem.init)
+        components.fragment = nil
         return components
     }
+}
+
+private extension CharacterSet {
+
+    static let urlPathComponentAllowed: CharacterSet = {
+        var allowedCharacters = CharacterSet.urlPathAllowed
+        allowedCharacters.remove(charactersIn: "/?#%")
+        return allowedCharacters
+    }()
 }
 
 extension URLSession {

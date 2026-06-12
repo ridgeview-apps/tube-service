@@ -25,7 +25,7 @@ enum TflAPIRoute {
     case getJourneyResults(JourneyRequestParams)
 
     func toURL(relativeTo baseURL: URL, appKey: String) throws -> URL {
-        var urlComponents = try self.toURLComponents()
+        var urlComponents = try self.toURLComponents(relativeTo: baseURL)
 
         let fixedQueryItems = [
             URLQueryItem(name: "app_key", value: appKey)
@@ -35,7 +35,7 @@ enum TflAPIRoute {
 
         urlComponents.queryItems = fixedQueryItems + routeQueryItems
 
-        guard let url = urlComponents.url(relativeTo: baseURL) else {
+        guard let url = urlComponents.url else {
             throw HTTPError.invalidRequestURL
         }
 
@@ -50,28 +50,41 @@ enum TflAPIRoute {
     }
 
 
-    private func toURLComponents() throws -> URLComponents {
+    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
         switch self {
         case let .getCurrentLineStatuses(modes):
             let modesParam = modes.toURLPathParam()
-            return try .fromPath("/Line/Mode/\(modesParam)/Status")
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["Line", "Mode", modesParam, "Status"]
+            )
         case let .getLineStatusesForDateRange(lineIDs, dateInterval):
             let lineIDsParam = lineIDs.toURLPathParam()
             let fromDateParam = dateInterval.start.toAPIDateParam()
             let toDateParam = dateInterval.end.toAPIDateParam()
-            return try .fromPath("/Line/\(lineIDsParam)/Status/\(fromDateParam)/to/\(toDateParam)")
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["Line", lineIDsParam, "Status", fromDateParam, "to", toDateParam]
+            )
         case let .getArrivalPredictions(stationCode, lineIDs):
             let lineIDsParam = lineIDs.toURLPathParam()
-            return try .fromPath("/Line/\(lineIDsParam)/Arrivals/\(stationCode)")
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["Line", lineIDsParam, "Arrivals", stationCode]
+            )
         case let .getArrivalDepartures(stationCode, lineIDs):
             let lineIDsParam = lineIDs.toURLPathParam()
-            return try .fromPath(
-                "/StopPoint/\(stationCode)/ArrivalDepartures",
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["StopPoint", stationCode, "ArrivalDepartures"],
                 queryParams: ["lineIds": lineIDsParam]
             )
         case let .getStationDisruptions(modes):
             let modesParam = modes.toURLPathParam()
-            return try .fromPath("/StopPoint/Mode/\(modesParam)/Disruption")
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["StopPoint", "Mode", modesParam, "Disruption"]
+            )
         case let .getJourneyResults(params):
             let fromParam = params.from.toURLPathParam()
             let toParam = params.to.toURLPathParam()
@@ -92,8 +105,9 @@ enum TflAPIRoute {
                 queryParams.merge(timeOption.toAPIQueryParams) { _, newKey in newKey }
             }
 
-            return try .fromPath(
-                "/Journey/JourneyResults/\(fromParam)/to/\(toParam)",
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["Journey", "JourneyResults", fromParam, "to", toParam],
                 queryParams: queryParams
             )
 

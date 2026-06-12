@@ -15,8 +15,8 @@ enum SystemStatusAPIRoute {
     case getSystemStatus(fileName: String)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
-        let urlComponents = try self.toURLComponents()
-        guard let url = urlComponents.url(relativeTo: baseURL) else {
+        let urlComponents = try self.toURLComponents(relativeTo: baseURL)
+        guard let url = urlComponents.url else {
             throw HTTPError.invalidRequestURL
         }
         return url
@@ -30,10 +30,13 @@ enum SystemStatusAPIRoute {
     }
 
 
-    private func toURLComponents() throws -> URLComponents {
+    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
         switch self {
         case let .getSystemStatus(fileName):
-            return try .fromPath("/system-status/\(fileName)")
+            return try .route(
+                relativeTo: baseURL,
+                pathComponents: ["system-status", fileName]
+            )
         }
     }
 }

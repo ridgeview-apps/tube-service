@@ -63,6 +63,34 @@ struct TflAPIRouteTests {
     }
 
     @Test
+    func arrivalPredictionsEncodesStationCodeAsSinglePathComponent() throws {
+        let route: TflAPIRoute = .getArrivalPredictions(
+            stationCode: "station/with ?#%",
+            [.northern]
+        )
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+
+        #expect(
+            url.absoluteString
+                == "https://foo.com/Line/northern/Arrivals/station%2Fwith%20%3F%23%25?app_key=testAppKey"
+        )
+    }
+
+    @Test
+    func routePreservesBaseURLPath() throws {
+        let baseURL = URL(string: "https://foo.com/proxy/tfl/")!
+        let route: TflAPIRoute = .getCurrentLineStatuses([.tube])
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+
+        #expect(
+            url.absoluteString
+                == "https://foo.com/proxy/tfl/Line/Mode/tube/Status?app_key=testAppKey"
+        )
+    }
+
+    @Test
     func arrivalDeparturesEndpoint() throws {
         // Given
         let route: TflAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])

@@ -17,9 +17,9 @@ enum TubeServiceAPIRoute {
     case getDailyLineDisruptionSummary(date: Date?)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
-        let urlComponents = try self.toURLComponents()
+        let urlComponents = try self.toURLComponents(relativeTo: baseURL)
 
-        guard let url = urlComponents.url(relativeTo: baseURL) else {
+        guard let url = urlComponents.url else {
             throw HTTPError.invalidRequestURL
         }
 
@@ -34,27 +34,28 @@ enum TubeServiceAPIRoute {
     }
 
 
-    private func toURLComponents() throws -> URLComponents {
-        let path: String
+    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
+        let pathComponents: [String]
         var queryItems = [URLQueryItem]()
 
         switch self {
         case let .getDailyLineTimeline(lineID, date):
-            path = "/v1/line-status/timeline"
+            pathComponents = ["v1", "line-status", "timeline"]
             queryItems.append(URLQueryItem(name: "line_id", value: lineID.rawValue))
             if let date {
                 queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
             }
         case let .getDailyLineDisruptionSummary(date):
-            path = "/v1/line-status/disruption-summary"
+            pathComponents = ["v1", "line-status", "disruption-summary"]
             if let date {
                 queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
             }
         }
 
-        guard var components = URLComponents(string: path) else {
-            throw HTTPError.invalidRequestURL
-        }
+        var components = try URLComponents.route(
+            relativeTo: baseURL,
+            pathComponents: pathComponents
+        )
         components.queryItems = queryItems.isEmpty ? nil : queryItems
         return components
     }
