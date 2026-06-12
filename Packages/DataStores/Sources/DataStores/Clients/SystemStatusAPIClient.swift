@@ -22,6 +22,13 @@ enum SystemStatusAPIRoute {
         return url
     }
 
+    func toURLRequest(relativeTo baseURL: URL) throws -> URLRequest {
+        var request = URLRequest(url: try toURL(relativeTo: baseURL))
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        return request
+    }
+
 
     private func toURLComponents() throws -> URLComponents {
         switch self {
@@ -63,7 +70,7 @@ public struct SystemStatusAPIClient: SystemStatusAPIClientType {
     }
 
     private func fetchData<T: Decodable>(for route: SystemStatusAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
-        let url = try route.toURL(relativeTo: baseURL)
-        return try await urlSession.get(url: url, decodedBy: jsonDecoder, as: model)
+        let request = try route.toURLRequest(relativeTo: baseURL)
+        return try await urlSession.data(for: request, decodedBy: jsonDecoder, as: model)
     }
 }

@@ -23,6 +23,16 @@ struct TflAPIRouteTests {
     }
 
     @Test
+    func routeBuildsJSONGetRequest() throws {
+        let route: TflAPIRoute = .getCurrentLineStatuses(ModeID.trains)
+
+        let request = try route.toURLRequest(relativeTo: baseURL, appKey: appKey)
+
+        #expect(request.httpMethod == "GET")
+        #expect(request.value(forHTTPHeaderField: "Accept") == "application/json")
+    }
+
+    @Test
     func getFutureLineStatusesEndpoint() throws {
         // Given
         let startDate = dayMonthYear(1, 2, 2023, in: .london)

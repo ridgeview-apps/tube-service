@@ -41,10 +41,7 @@ extension URLComponents {
 
 extension URLSession {
 
-    func get<T: Decodable>(url: URL, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> HTTPResponse<T> {
-        var request = URLRequest(url: url)
-        request.setValue("application/json", forHTTPHeaderField: "Accept")
-
+    func data<T: Decodable>(for request: URLRequest, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> HTTPResponse<T> {
         let response: (data: Data, urlResponse: URLResponse)
         do {
             response = try await self.data(for: request)

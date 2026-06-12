@@ -9,8 +9,8 @@ struct HTTPDataTypesTests {
     func successfulResponseIsDecoded() async throws {
         let urlSession = makeURLSession(protocolClass: SuccessfulResponseURLProtocol.self)
 
-        let response = try await urlSession.get(
-            url: URL(string: "https://example.com/status")!,
+        let response = try await urlSession.data(
+            for: makeRequest(),
             decodedBy: JSONDecoder(),
             as: ResponseModel.self
         )
@@ -24,8 +24,8 @@ struct HTTPDataTypesTests {
         let urlSession = makeURLSession(protocolClass: RedirectResponseURLProtocol.self)
 
         do {
-            _ = try await urlSession.get(
-                url: URL(string: "https://example.com/status")!,
+            _ = try await urlSession.data(
+                for: makeRequest(),
                 decodedBy: JSONDecoder(),
                 as: ResponseModel.self
             )
@@ -43,8 +43,8 @@ struct HTTPDataTypesTests {
         let urlSession = makeURLSession(protocolClass: MalformedErrorResponseURLProtocol.self)
 
         do {
-            _ = try await urlSession.get(
-                url: URL(string: "https://example.com/status")!,
+            _ = try await urlSession.data(
+                for: makeRequest(),
                 decodedBy: JSONDecoder(),
                 as: ResponseModel.self
             )
@@ -62,8 +62,8 @@ struct HTTPDataTypesTests {
         let urlSession = makeURLSession(protocolClass: ConnectionFailureURLProtocol.self)
 
         do {
-            _ = try await urlSession.get(
-                url: URL(string: "https://example.com/status")!,
+            _ = try await urlSession.data(
+                for: makeRequest(),
                 decodedBy: JSONDecoder(),
                 as: ResponseModel.self
             )
@@ -80,8 +80,8 @@ struct HTTPDataTypesTests {
         let urlSession = makeURLSession(protocolClass: NonHTTPResponseURLProtocol.self)
 
         do {
-            _ = try await urlSession.get(
-                url: URL(string: "https://example.com/status")!,
+            _ = try await urlSession.data(
+                for: makeRequest(),
                 decodedBy: JSONDecoder(),
                 as: ResponseModel.self
             )
@@ -98,8 +98,8 @@ struct HTTPDataTypesTests {
         let urlSession = makeURLSession(protocolClass: MalformedSuccessResponseURLProtocol.self)
 
         await #expect(throws: DecodingError.self) {
-            _ = try await urlSession.get(
-                url: URL(string: "https://example.com/status")!,
+            _ = try await urlSession.data(
+                for: makeRequest(),
                 decodedBy: JSONDecoder(),
                 as: ResponseModel.self
             )
@@ -110,6 +110,10 @@ struct HTTPDataTypesTests {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [protocolClass]
         return URLSession(configuration: configuration)
+    }
+
+    private func makeRequest() -> URLRequest {
+        URLRequest(url: URL(string: "https://example.com/status")!)
     }
 }
 
