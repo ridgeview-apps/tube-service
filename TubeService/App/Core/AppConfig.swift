@@ -14,13 +14,13 @@ struct AppConfig {
         urlComponents.queryItems = [.init(name: "action", value: "write-review")]
         return urlComponents.url ?? appStoreProductURL
     }
-    
+
     func validate() {
-#if !DEBUG
-        if transportAPI.appKey.trimmed().isEmpty {
-            fatalError("Tfl API key is mandatory on Release builds")
-        }
-#endif
+        #if !DEBUG
+            if transportAPI.appKey.trimmed().isEmpty {
+                fatalError("Tfl API key is mandatory on Release builds")
+            }
+        #endif
     }
 }
 
@@ -46,7 +46,7 @@ extension AppConfig {
                 fileName: config["systemStatusAPIFileName"]
             )
         )
-        
+
         appConfig.validate()
 
         return appConfig

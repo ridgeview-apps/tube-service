@@ -19,7 +19,7 @@ struct RootScreen: View {
             appData.initialiseAppData()
         }
     }
-    
+
     private var lineStatusTab: some TabContent<Never> {
         Tab {
             LineStatusScreen()
@@ -28,7 +28,7 @@ struct RootScreen: View {
         }
         .accessibilityIdentifier("acc.id.line.status.tab.title")
     }
-    
+
     private var journeyPlannerTab: some TabContent<Never> {
         Tab {
             JourneyPlannerScreen()
@@ -37,7 +37,7 @@ struct RootScreen: View {
         }
         .accessibilityIdentifier("acc.id.journey.planner.tab.title")
     }
-    
+
     private var liveArrivalsTab: some TabContent<Never> {
         Tab {
             ArrivalsPickerScreen()
@@ -46,7 +46,7 @@ struct RootScreen: View {
         }
         .accessibilityIdentifier("acc.id.arrivals.tab.title")
     }
-    
+
     private var nearbyStationsTab: some TabContent<Never> {
         Tab {
             NearbyStationsScreen()
@@ -55,7 +55,7 @@ struct RootScreen: View {
         }
         .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
     }
-    
+
     private var mapsTab: some TabContent<Never> {
         Tab {
             MapsScreen()

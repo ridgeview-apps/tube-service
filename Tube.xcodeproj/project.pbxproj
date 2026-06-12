@@ -334,7 +334,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# \"$SRCROOT/Scripts/swift-format-lint.sh\"\n";
+			shellScript = "\"$SRCROOT/Scripts/swift-format-lint.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
