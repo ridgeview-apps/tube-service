@@ -81,8 +81,8 @@ public struct LineStatusHistoryView: View {
                             .multilineTextAlignment(.center)
 
                         Text(.lineStatusHistoryLockedDescription(lineID.longName))
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
                     }
                 }
 
@@ -272,8 +272,7 @@ private struct HistoricStatusView: View {
             } icon: {
                 (status.isDisrupted
                     ? LineStatusAccessoryImageType.disruption
-                    : LineStatusAccessoryImageType.goodService
-                ).image
+                    : LineStatusAccessoryImageType.goodService).image
             }
 
             if let reason = status.reason?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -380,7 +379,7 @@ private struct LineStatusHistoryPreview: View {
         LineStatusHistoryEntry(
             date: .now.addingTimeInterval(-10_800),
             statuses: ModelStubs.lineStatusDisruptedDuplicates.lineStatuses ?? []
-        ),
+        )
     ]
 }
 

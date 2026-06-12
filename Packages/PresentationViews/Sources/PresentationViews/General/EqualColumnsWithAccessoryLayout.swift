@@ -16,10 +16,12 @@ struct EqualColumnsWithAccessoryLayout: Layout {
         guard subviews.count == columnCount + 1 else { return .zero }
 
         let accessorySize = subviews[columnCount].sizeThatFits(.unspecified)
-        let proposedWidth = proposal.width ?? intrinsicWidth(
-            for: subviews,
-            accessoryWidth: accessorySize.width
-        )
+        let proposedWidth =
+            proposal.width
+            ?? intrinsicWidth(
+                for: subviews,
+                accessoryWidth: accessorySize.width
+            )
         let columnWidth = max(0, (proposedWidth - accessorySize.width) / CGFloat(columnCount))
         let columnProposal = ProposedViewSize(width: columnWidth, height: proposal.height)
         let columnHeight = subviews.dropLast().reduce(CGFloat.zero) { height, subview in
