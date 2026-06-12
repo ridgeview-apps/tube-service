@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import Shared
 
 // MARK: - Journey API models
 
@@ -113,6 +114,9 @@ extension Date {
 
     func toAPIDateParam(dateFormat: String = "yyyy-MM-dd") -> String {
         let formatter = DateFormatter()
+        formatter.calendar = Calendar(identifier: .gregorian)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = .london
         formatter.dateFormat = dateFormat
         return formatter.string(from: self)
     }

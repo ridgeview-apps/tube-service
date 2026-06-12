@@ -78,6 +78,29 @@ struct TflAPIRouteTests {
         let expectedValue = "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
+
+    @Test
+    func apiDateUsesLondonTimeZone() throws {
+        // Given
+        let date = try #require(
+            Calendar(identifier: .gregorian).date(
+                from: DateComponents(
+                    timeZone: .gmt,
+                    year: 2026,
+                    month: 6,
+                    day: 10,
+                    hour: 23,
+                    minute: 30
+                )
+            )
+        )
+
+        // When
+        let value = date.toAPIDateParam()
+
+        // Then
+        #expect(value == "2026-06-11")
+    }
 }
 
 
