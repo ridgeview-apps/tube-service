@@ -3,7 +3,7 @@ import Models
 
 // MARK: - Network API models
 
-public struct HTTPResponseErrorModel: Decodable, Sendable {
+public struct HTTPResponseErrorModel: Decodable, Equatable, Sendable {
     public let message: String?
 }
 
@@ -25,6 +25,25 @@ public enum HTTPError: Error {
     case statusCodeMissing
     case connection(Error)
     case statusCode(Int, HTTPResponseErrorModel?)
+}
+
+extension HTTPError: Equatable {
+
+    public static func == (lhs: HTTPError, rhs: HTTPError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidRequestURL, .invalidRequestURL),
+            (.statusCodeMissing, .statusCodeMissing):
+            return true
+        case let (.connection(lhsError), .connection(rhsError)):
+            let lhsError = lhsError as NSError
+            let rhsError = rhsError as NSError
+            return lhsError.domain == rhsError.domain && lhsError.code == rhsError.code
+        case let (.statusCode(lhsCode, lhsModel), .statusCode(rhsCode, rhsModel)):
+            return lhsCode == rhsCode && lhsModel == rhsModel
+        default:
+            return false
+        }
+    }
 }
 
 extension HTTPError: LocalizedError {

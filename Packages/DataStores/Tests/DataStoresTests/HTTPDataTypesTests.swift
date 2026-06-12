@@ -131,6 +131,32 @@ struct HTTPDataTypesTests {
         #expect(error.localizedDescription == underlyingError.localizedDescription)
     }
 
+    @Test
+    func statusCodeErrorsAreEquatable() {
+        let errorModel = HTTPResponseErrorModel(message: "Service unavailable")
+
+        #expect(
+            HTTPError.statusCode(503, errorModel)
+                == HTTPError.statusCode(503, errorModel)
+        )
+        #expect(
+            HTTPError.statusCode(503, errorModel)
+                != HTTPError.statusCode(500, errorModel)
+        )
+    }
+
+    @Test
+    func connectionErrorsCompareDomainAndCode() {
+        #expect(
+            HTTPError.connection(URLError(.notConnectedToInternet))
+                == HTTPError.connection(URLError(.notConnectedToInternet))
+        )
+        #expect(
+            HTTPError.connection(URLError(.notConnectedToInternet))
+                != HTTPError.connection(URLError(.timedOut))
+        )
+    }
+
     private func makeURLSession(protocolClass: URLProtocol.Type) -> URLSession {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [protocolClass]
