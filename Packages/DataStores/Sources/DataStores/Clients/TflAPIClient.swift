@@ -86,35 +86,40 @@ enum TflAPIRoute {
                 pathComponents: ["StopPoint", "Mode", modesParam, "Disruption"]
             )
         case let .getJourneyResults(params):
-            let fromParam = params.from.toURLPathParam()
-            let toParam = params.to.toURLPathParam()
-
-            let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
-
-            var queryItems = [
-                URLQueryItem(
-                    name: "routeBetweenEntrances",
-                    value: "\(params.routeBetweenEntrances)"
-                ),
-                URLQueryItem(name: "mode", value: params.modeIDs.toURLPathParam()),
-                URLQueryItem(name: "alternativeCycle", value: "\(alternativeCycle)")
-            ]
-
-            if let via = params.via {
-                queryItems.append(URLQueryItem(name: "via", value: via.toURLPathParam()))
-            }
-
-            if let timeOption = params.timeOption {
-                queryItems.append(contentsOf: timeOption.toURLQueryItems)
-            }
-
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["Journey", "JourneyResults", fromParam, "to", toParam],
-                queryItems: queryItems
-            )
-
+            return try journeyURLComponents(for: params, relativeTo: baseURL)
         }
+    }
+
+    private func journeyURLComponents(
+        for params: JourneyRequestParams,
+        relativeTo baseURL: URL
+    ) throws -> URLComponents {
+        let fromParam = params.from.toURLPathParam()
+        let toParam = params.to.toURLPathParam()
+        let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
+
+        var queryItems = [
+            URLQueryItem(
+                name: "routeBetweenEntrances",
+                value: "\(params.routeBetweenEntrances)"
+            ),
+            URLQueryItem(name: "mode", value: params.modeIDs.toURLPathParam()),
+            URLQueryItem(name: "alternativeCycle", value: "\(alternativeCycle)")
+        ]
+
+        if let via = params.via {
+            queryItems.append(URLQueryItem(name: "via", value: via.toURLPathParam()))
+        }
+
+        if let timeOption = params.timeOption {
+            queryItems.append(contentsOf: timeOption.toURLQueryItems)
+        }
+
+        return try .route(
+            relativeTo: baseURL,
+            pathComponents: ["Journey", "JourneyResults", fromParam, "to", toParam],
+            queryItems: queryItems
+        )
     }
 }
 
