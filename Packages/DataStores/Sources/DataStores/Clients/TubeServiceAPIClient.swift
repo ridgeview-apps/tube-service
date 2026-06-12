@@ -65,9 +65,9 @@ enum TubeServiceAPIRoute {
 
 public struct TubeServiceAPIClient: TubeServiceAPIClientType {
 
-    public let baseURL: URL
-    public let urlSession: URLSession
-    public let jsonDecoder: JSONDecoder
+    private let baseURL: URL
+    private let urlSession: URLSession
+    private let jsonDecoder: JSONDecoder
 
 
     // MARK: - Init

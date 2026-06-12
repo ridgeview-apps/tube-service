@@ -106,10 +106,10 @@ enum TflAPIRoute {
 
 public struct TflAPIClient: TflAPIClientType {
 
-    public let baseURL: URL
-    public let appKey: String
-    public let urlSession: URLSession
-    public let jsonDecoder: JSONDecoder
+    private let baseURL: URL
+    private let appKey: String
+    private let urlSession: URLSession
+    private let jsonDecoder: JSONDecoder
 
 
     // MARK: - Init

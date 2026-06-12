@@ -42,10 +42,10 @@ enum SystemStatusAPIRoute {
 
 public struct SystemStatusAPIClient: SystemStatusAPIClientType {
 
-    public let baseURL: URL
-    public let urlSession: URLSession
-    public let jsonDecoder: JSONDecoder
-    public let fileName: String
+    private let baseURL: URL
+    private let urlSession: URLSession
+    private let jsonDecoder: JSONDecoder
+    private let fileName: String
 
 
     // MARK: - Init
