@@ -7,7 +7,6 @@ import Testing
 struct TransportAPIRouteTests {
 
     private let baseURL = URL(string: "https://foo.com/")!
-    private let appID = "testAppID"
     private let appKey = "testAppKey"
 
     @Test
@@ -16,10 +15,10 @@ struct TransportAPIRouteTests {
         let route: TransportAPIRoute = .getCurrentLineStatuses(ModeID.trains)
 
         // When
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
         // Then
-        let expectedValue = "https://foo.com/Line/Mode/tube,dlr,overground,tram,elizabeth-line/Status?app_id=testAppID&app_key=testAppKey"
+        let expectedValue = "https://foo.com/Line/Mode/tube,dlr,overground,tram,elizabeth-line/Status?app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
 
@@ -32,11 +31,11 @@ struct TransportAPIRouteTests {
         let route: TransportAPIRoute = .getLineStatusesForDateRange(TrainLineID.allCases, dateInterval)
 
         // When
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
         // Then
         let expectedValue =
-            "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,liberty,lioness,metropolitan,mildmay,northern,piccadilly,suffragette,victoria,waterloo-city,weaver,windrush,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_id=testAppID&app_key=testAppKey"
+            "https://foo.com/Line/bakerloo,central,circle,district,dlr,elizabeth,hammersmith-city,jubilee,liberty,lioness,metropolitan,mildmay,northern,piccadilly,suffragette,victoria,waterloo-city,weaver,windrush,tram,london-overground/Status/2023-02-01/to/2023-02-02?app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
 
@@ -46,10 +45,10 @@ struct TransportAPIRouteTests {
         let route: TransportAPIRoute = .getArrivalPredictions(stationCode: "FAKE_STATION_CODE", [.circle, .hammersmithAndCity, .district, .northern])
 
         // When
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
         // Then
-        let expectedValue = "https://foo.com/Line/circle,hammersmith-city,district,northern/Arrivals/FAKE_STATION_CODE?app_id=testAppID&app_key=testAppKey"
+        let expectedValue = "https://foo.com/Line/circle,hammersmith-city,district,northern/Arrivals/FAKE_STATION_CODE?app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
 
@@ -59,10 +58,10 @@ struct TransportAPIRouteTests {
         let route: TransportAPIRoute = .getArrivalDepartures(stationCode: "FAKE_STATION_CODE", [.elizabeth])
 
         // When
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
         // Then
-        let expectedValue = "https://foo.com/StopPoint/FAKE_STATION_CODE/ArrivalDepartures?app_id=testAppID&app_key=testAppKey&lineIds=elizabeth"
+        let expectedValue = "https://foo.com/StopPoint/FAKE_STATION_CODE/ArrivalDepartures?app_key=testAppKey&lineIds=elizabeth"
         #expect(url.absoluteString == expectedValue)
     }
 
@@ -73,10 +72,10 @@ struct TransportAPIRouteTests {
         let route: TransportAPIRoute = .getStationDisruptions(ModeID.trains)
 
         // When
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
 
         // Then
-        let expectedValue = "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_id=testAppID&app_key=testAppKey"
+        let expectedValue = "https://foo.com/StopPoint/Mode/tube,dlr,overground,tram,elizabeth-line/Disruption?app_key=testAppKey"
         #expect(url.absoluteString == expectedValue)
     }
 }

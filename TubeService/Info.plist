@@ -58,8 +58,6 @@
 		<string>$(SYSTEM_STATUS_API_BASE_URL)</string>
 		<key>systemStatusAPIFileName</key>
 		<string>$(SYSTEM_STATUS_FILE_NAME)</string>
-		<key>transportAPIAppId</key>
-		<string>$(TRANSPORT_API_APP_ID)</string>
 		<key>transportAPIAppKey</key>
 		<string>$(TFL_API_APP_KEY)</string>
 		<key>transportAPIBaseUrl</key>

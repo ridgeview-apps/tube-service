@@ -992,28 +992,28 @@ let journeyResultsKingsXToWaterlooNowJSON = #"""
                     "date": "20260529",
                     "time": "0300",
                     "timeIs": "departing",
-                    "uri": "/journey/journeyresults/1000129/to/1000254?app_id=&app_key=&time=0300&date=20260529&timeIs=departing"
+                    "uri": "/journey/journeyresults/1000129/to/1000254?app_key=&time=0300&date=20260529&timeIs=departing"
                 },
                 "earlier": {
                     "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.TimeAdjustment, Tfl.Api.Presentation.Entities",
                     "date": "20260529",
                     "time": "1425",
                     "timeIs": "departing",
-                    "uri": "/journey/journeyresults/1000129/to/1000254?app_id=&app_key=&time=1425&date=20260529&timeIs=departing"
+                    "uri": "/journey/journeyresults/1000129/to/1000254?app_key=&time=1425&date=20260529&timeIs=departing"
                 },
                 "later": {
                     "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.TimeAdjustment, Tfl.Api.Presentation.Entities",
                     "date": "20260529",
                     "time": "1450",
                     "timeIs": "departing",
-                    "uri": "/journey/journeyresults/1000129/to/1000254?app_id=&app_key=&time=1450&date=20260529&timeIs=departing"
+                    "uri": "/journey/journeyresults/1000129/to/1000254?app_key=&time=1450&date=20260529&timeIs=departing"
                 },
                 "latest": {
                     "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.TimeAdjustment, Tfl.Api.Presentation.Entities",
                     "date": "20260530",
                     "time": "0300",
                     "timeIs": "departing",
-                    "uri": "/journey/journeyresults/1000129/to/1000254?app_id=&app_key=&time=0300&date=20260530&timeIs=departing"
+                    "uri": "/journey/journeyresults/1000129/to/1000254?app_key=&time=0300&date=20260530&timeIs=departing"
                 }
             }
         },
@@ -1022,7 +1022,7 @@ let journeyResultsKingsXToWaterlooNowJSON = #"""
             "from": "1000129",
             "to": "1000254",
             "via": "",
-            "uri": "/journey/journeyresults/1000129/to/1000254?app_id=&app_key="
+            "uri": "/journey/journeyresults/1000129/to/1000254?app_key="
         }
     }
     """#

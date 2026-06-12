@@ -20,7 +20,6 @@ extension AppDataStore {
 extension TransportAPIClient {
     static let live = TransportAPIClient(
         baseURL: AppConfig.main.transportAPI.baseURL,
-        appID: AppConfig.main.transportAPI.appID,
         appKey: AppConfig.main.transportAPI.appKey
     )
 }

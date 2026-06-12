@@ -38,7 +38,6 @@ extension AppConfig {
             appStoreProductURL: config[url: "appStoreProductUrl"],
             transportAPI: .init(
                 baseURL: config[url: "transportAPIBaseUrl"],
-                appID: config["transportAPIAppId"],
                 appKey: config["transportAPIAppKey"]
             ),
             systemStatusAPI: .init(
@@ -57,7 +56,6 @@ extension AppConfig {
 
     struct TransportAPIConfig {
         let baseURL: URL
-        let appID: String
         let appKey: String
     }
 

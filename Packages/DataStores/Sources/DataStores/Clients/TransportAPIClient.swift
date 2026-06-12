@@ -24,11 +24,10 @@ enum TransportAPIRoute {
     case getStationDisruptions([ModeID])
     case getJourneyResults(JourneyRequestParams)
 
-    func toURL(relativeTo baseURL: URL, appID: String, appKey: String) throws -> URL {
+    func toURL(relativeTo baseURL: URL, appKey: String) throws -> URL {
         var urlComponents = try self.toURLComponents()
 
         let fixedQueryItems = [
-            URLQueryItem(name: "app_id", value: appID),
             URLQueryItem(name: "app_key", value: appKey)
         ]
 
@@ -101,7 +100,6 @@ enum TransportAPIRoute {
 public struct TransportAPIClient: TransportAPIClientType {
 
     public let baseURL: URL
-    public let appID: String
     public let appKey: String
     public let urlSession: URLSession
     public let jsonDecoder: JSONDecoder
@@ -111,13 +109,11 @@ public struct TransportAPIClient: TransportAPIClientType {
 
     public init(
         baseURL: URL,
-        appID: String,
         appKey: String,
         urlSession: URLSession = .shared,
         jsonDecoder: JSONDecoder = .defaultModelDecoder
     ) {
         self.baseURL = baseURL
-        self.appID = appID
         self.appKey = appKey
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
@@ -167,7 +163,7 @@ public struct TransportAPIClient: TransportAPIClientType {
     }
 
     private func fetchData<T: Decodable>(for route: TransportAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
-        let url = try route.toURL(relativeTo: baseURL, appID: appID, appKey: appKey)
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
         return try await urlSession.get(url: url, decodedBy: jsonDecoder, as: model)
     }
 }
