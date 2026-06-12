@@ -8,5 +8,5 @@ TFL_API_BASE_URL = https:/$()/api.tfl.gov.uk
 SYSTEM_STATUS_API_BASE_URL = https:/$()/www.ridgeviewapps.com
 SYSTEM_STATUS_FILE_NAME = status-prod.json
 
-// The following are provided through the CI env
+// App config (supplied by CI)
 // TFL_API_APP_KEY =
