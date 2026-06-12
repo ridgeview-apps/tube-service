@@ -81,15 +81,17 @@ public extension ModelStubs {
 // MARK: - Line status stubs
 
 public extension ModelStubs {
-    static var lineStatusesToday: [Line] { decodedValue(for: lineStatusesTodayJSON) }
+    static var lineStatusesToday: [Line] { decodedValue(for: loadJSON(named: "lineStatusesToday")) }
 
-    static var lineStatusesFuture: [Line] { decodedValue(for: lineStatusesFutureJSON) }
+    static var lineStatusesFuture: [Line] { decodedValue(for: loadJSON(named: "lineStatusesFuture")) }
 
-    static var lineStatusGoodService: Line { decodedValue(for: lineStatusGoodServiceJSON) }
+    static var lineStatusGoodService: Line { decodedValue(for: loadJSON(named: "lineStatusGoodService")) }
 
-    static var lineStatusDisrupted: Line { decodedValue(for: lineStatusDisruptedJSON) }
+    static var lineStatusDisrupted: Line { decodedValue(for: loadJSON(named: "lineStatusDisrupted")) }
 
-    static var lineStatusDisruptedDuplicates: Line { decodedValue(for: lineStatusDisruptedDuplicatesJSON) }
+    static var lineStatusDisruptedDuplicates: Line {
+        decodedValue(for: loadJSON(named: "lineStatusDisruptedDuplicates"))
+    }
 }
 
 
@@ -119,7 +121,9 @@ public extension ModelStubs {
 
 public extension ModelStubs {
 
-    static var disruptedStations: [DisruptedPoint] { decodedValue(for: disruptedStationsJSON) }
+    static var disruptedStations: [DisruptedPoint] {
+        decodedValue(for: loadJSON(named: "disruptedStations"))
+    }
 }
 
 
@@ -189,7 +193,7 @@ public extension ModelStubs {
 
 public extension ModelStubs {
 
-    static var systemStatusOK: SystemStatus { decodedValue(for: systemStatusOKJSON) }
-    static var systemStatusOutage: SystemStatus { decodedValue(for: systemStatusOutageJSON) }
-    static var systemStatusResolved: SystemStatus { decodedValue(for: systemStatusResolvedJSON) }
+    static var systemStatusOK: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusOK")) }
+    static var systemStatusOutage: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusOutage")) }
+    static var systemStatusResolved: SystemStatus { decodedValue(for: loadJSON(named: "systemStatusResolved")) }
 }
