@@ -72,11 +72,11 @@ public struct JourneyRequestParams: Sendable {
 
 extension JourneyRequestParams.TimeOptionParam {
 
-    var toAPIQueryParams: [String: String] {
+    var toURLQueryItems: [URLQueryItem] {
         [
-            "timeIs": type.rawValue,
-            "date": queryDate,
-            "time": queryTime
+            URLQueryItem(name: "timeIs", value: type.rawValue),
+            URLQueryItem(name: "date", value: queryDate),
+            URLQueryItem(name: "time", value: queryTime)
         ]
     }
 }

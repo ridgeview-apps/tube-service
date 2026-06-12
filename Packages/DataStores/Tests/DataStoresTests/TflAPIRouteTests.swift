@@ -146,6 +146,19 @@ struct TflAPIRouteTests {
         #expect(queryParameters["timeIs"] == "departing")
         #expect(queryParameters["date"] == "20260612")
         #expect(queryParameters["time"] == "1430")
+        #expect(
+            components.queryItems?.map(\.name)
+                == [
+                    "app_key",
+                    "routeBetweenEntrances",
+                    "mode",
+                    "alternativeCycle",
+                    "via",
+                    "timeIs",
+                    "date",
+                    "time"
+                ]
+        )
     }
 
     @Test

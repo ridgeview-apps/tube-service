@@ -77,7 +77,7 @@ enum TflAPIRoute {
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["StopPoint", stationCode, "ArrivalDepartures"],
-                queryParams: ["lineIds": lineIDsParam]
+                queryItems: [URLQueryItem(name: "lineIds", value: lineIDsParam)]
             )
         case let .getStationDisruptions(modes):
             let modesParam = modes.toURLPathParam()
@@ -91,24 +91,27 @@ enum TflAPIRoute {
 
             let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
 
-            var queryParams = [
-                "routeBetweenEntrances": "\(params.routeBetweenEntrances)",
-                "mode": params.modeIDs.toURLPathParam(),
-                "alternativeCycle": "\(alternativeCycle)"
+            var queryItems = [
+                URLQueryItem(
+                    name: "routeBetweenEntrances",
+                    value: "\(params.routeBetweenEntrances)"
+                ),
+                URLQueryItem(name: "mode", value: params.modeIDs.toURLPathParam()),
+                URLQueryItem(name: "alternativeCycle", value: "\(alternativeCycle)")
             ]
 
             if let via = params.via {
-                queryParams["via"] = via.toURLPathParam()
+                queryItems.append(URLQueryItem(name: "via", value: via.toURLPathParam()))
             }
 
             if let timeOption = params.timeOption {
-                queryParams.merge(timeOption.toAPIQueryParams) { _, newKey in newKey }
+                queryItems.append(contentsOf: timeOption.toURLQueryItems)
             }
 
             return try .route(
                 relativeTo: baseURL,
                 pathComponents: ["Journey", "JourneyResults", fromParam, "to", toParam],
-                queryParams: queryParams
+                queryItems: queryItems
             )
 
         }

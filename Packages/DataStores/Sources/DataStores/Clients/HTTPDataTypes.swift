@@ -67,7 +67,7 @@ extension URLComponents {
     static func route(
         relativeTo baseURL: URL,
         pathComponents: [String],
-        queryParams: [String: String] = [:]
+        queryItems: [URLQueryItem] = []
     ) throws -> URLComponents {
         guard var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
             throw HTTPError.invalidRequestURL
@@ -90,7 +90,7 @@ extension URLComponents {
             + ([basePath] + encodedPathComponents)
             .filter { !$0.isEmpty }
             .joined(separator: "/")
-        components.queryItems = queryParams.isEmpty ? nil : queryParams.map(URLQueryItem.init)
+        components.queryItems = queryItems.isEmpty ? nil : queryItems
         components.fragment = nil
         return components
     }
