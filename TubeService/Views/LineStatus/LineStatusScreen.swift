@@ -65,15 +65,15 @@ struct LineStatusScreen: View {
     }
 
     private var loadingState: LoadingState {
-        return model.fetchedData(for: currentFetchType)?.fetchState.loadingState ?? .loaded
+        return model.result(for: currentFetchType)?.fetchState.loadingState ?? .loaded
     }
 
     private var lines: [Line] {
-        return (model.fetchedData(for: currentFetchType)?.lines ?? []).sortedByStatusSeverity()
+        return (model.result(for: currentFetchType)?.lines ?? []).sortedByStatusSeverity()
     }
 
     private var refreshDate: Date? {
-        return model.fetchedData(for: currentFetchType)?.fetchedAt
+        return model.result(for: currentFetchType)?.fetchedAt
     }
 
     private func fetchLineStatusesIfStale() {
@@ -95,31 +95,31 @@ struct LineStatusScreen: View {
     private var currentFetchType: LineStatusDataStore.FetchType {
         switch selectedFilterOption {
         case .today:
-            return .today
+            return .live
         case .tomorrow:
             guard let startDate = Calendar.london.startOfTomorrow(),
                 let endDate = Calendar.london.startOfNextDay(after: startDate)
             else {
                 assertionFailure("Failed to calculate tomorrow's date range (falling back to today instead)")
-                return .today
+                return .live
             }
-            return .range(.init(start: startDate, end: endDate))
+            return .planned(.init(start: startDate, end: endDate))
         case .thisWeekend:
             guard let weekendDateRange = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
                 assertionFailure("Failed to calculate next weekend dates (falling back to today instead)")
-                return .today
+                return .live
             }
-            return .range(weekendDateRange)
+            return .planned(weekendDateRange)
         case .future:
             if Calendar.london.isDateInToday(selectedDate) {
-                return .today
+                return .live
             } else {
                 let startDate = selectedDate
                 guard let endDate = Calendar.london.startOfNextDay(after: selectedDate) else {
                     assertionFailure("Failed to calculate next day - falling back to today instead")
-                    return .today
+                    return .live
                 }
-                return .range(.init(start: startDate, end: endDate))
+                return .planned(.init(start: startDate, end: endDate))
             }
         }
     }

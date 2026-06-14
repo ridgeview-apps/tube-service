@@ -9,18 +9,16 @@ public final class LineStatusDataStore {
     // MARK: - Data types
 
     public enum FetchType: Hashable {
-        case today
-        case range(DateInterval)
+        case live
+        case planned(DateInterval)
     }
 
-    public struct FetchedData {
+    public struct LineStatusResult: Sendable {
         public var lines: [Line]
         public var fetchedAt: Date?
         public var fetchState: DataFetchState
 
-        static var firstFetch: FetchedData {
-            .init(lines: [], fetchState: .fetching)
-        }
+        static let initial = LineStatusResult(lines: [], fetchState: .fetching)
     }
 
 
@@ -30,7 +28,7 @@ public final class LineStatusDataStore {
     public let now: () -> Date
     public let calendar: Calendar
 
-    private var fetchedData: [FetchType: FetchedData] = [:]
+    private var cache: [FetchType: LineStatusResult] = [:]
 
 
     // MARK: - Init
@@ -45,9 +43,8 @@ public final class LineStatusDataStore {
         self.calendar = calendar
     }
 
-    public func fetchedData(for fetchType: FetchType) -> FetchedData? {
-        let data = self.fetchedData[fetchType]
-        return data
+    public func result(for fetchType: FetchType) -> LineStatusResult? {
+        cache[fetchType]
     }
 
 
@@ -57,7 +54,7 @@ public final class LineStatusDataStore {
         let fiveMinutes = TimeInterval(5 * 60)
         let fiveMinutesAgo = now() - fiveMinutes
 
-        let lastFetchedAt = fetchedData[fetchType]?.fetchedAt ?? .distantPast
+        let lastFetchedAt = cache[fetchType]?.fetchedAt ?? .distantPast
         let lastFetchedOver5MinutesAgo = lastFetchedAt <= fiveMinutesAgo
 
         if lastFetchedOver5MinutesAgo {
@@ -66,37 +63,31 @@ public final class LineStatusDataStore {
     }
 
     public func refreshLineStatuses(for fetchType: FetchType) async {
-        if case .fetching = fetchedData[fetchType]?.fetchState {
+        if case .fetching = cache[fetchType]?.fetchState {
             return
         }
 
-        let currentOrDefaultValue = fetchedData[fetchType, default: .firstFetch]
-        fetchedData[fetchType] = currentOrDefaultValue
-        fetchedData[fetchType]?.fetchState = .fetching
+        cache[fetchType, default: .initial].fetchState = .fetching
 
         do {
             let refreshedLines = try await fetchLineStatuses(for: fetchType)
-            fetchedData[fetchType]?.lines = refreshedLines
-            fetchedData[fetchType]?.fetchState = .success
-            fetchedData[fetchType]?.fetchedAt = now()
+            cache[fetchType]?.lines = refreshedLines
+            cache[fetchType]?.fetchState = .success
+            cache[fetchType]?.fetchedAt = now()
         } catch {
-            fetchedData[fetchType]?.fetchState = .failure(error)
+            cache[fetchType]?.fetchState = .failure(error)
         }
     }
 
     private func fetchLineStatuses(for fetchType: FetchType) async throws -> [Line] {
         switch fetchType {
-        case .today:
+        case .live:
             return try await tflAPI.fetchCurrentLineStatuses().decodedModel
-        case let .range(dateInterval):
+        case let .planned(dateInterval):
             let lines = try await tflAPI.fetchLineStatuses(for: dateInterval).decodedModel
             let isFutureDateRange = dateInterval.start > now()
             return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses() : lines
         }
-    }
-
-    public func liveDisruptions() -> [Line] {
-        (fetchedData[.today]?.lines ?? []).filter(\.isDisrupted)
     }
 }
 

@@ -35,21 +35,21 @@ struct StationScreen: View {
     }
 
     private func refreshDataIfStale() async {
-        async let refreshLineStatuses: () = await lineStatus.refreshLineStatusesIfStale(for: .today)
+        async let refreshLineStatuses: () = await lineStatus.refreshLineStatusesIfStale(for: .live)
         async let refreshDisruptions: () = await stations.refreshStationDisruptionsIfStale()
 
         _ = await (refreshLineStatuses, refreshDisruptions)
     }
 
     private func refreshData() async {
-        async let refreshLineStatuses: () = await lineStatus.refreshLineStatuses(for: .today)
+        async let refreshLineStatuses: () = await lineStatus.refreshLineStatuses(for: .live)
         async let refreshDisruptions: () = await stations.refreshStationDisruptions()
 
         _ = await (refreshLineStatuses, refreshDisruptions)
     }
 
     private var loadingState: LoadingState {
-        let fetchedData = lineStatus.fetchedData(for: .today)
+        let fetchedData = lineStatus.result(for: .live)
 
         switch fetchedData?.fetchState {
         case .success:
@@ -62,7 +62,7 @@ struct StationScreen: View {
     }
 
     private var statusCells: [LineStatusCell.Style] {
-        let allLineStatuses = lineStatus.fetchedData(for: .today)?.lines ?? []
+        let allLineStatuses = lineStatus.result(for: .live)?.lines ?? []
         return allLineStatuses.toLineStatusCellStyles(for: station)
     }
 

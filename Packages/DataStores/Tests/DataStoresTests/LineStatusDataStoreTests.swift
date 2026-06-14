@@ -19,9 +19,9 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        #expect(model.fetchedData(for: .today) == nil)
-        await model.refreshLineStatuses(for: .today)
-        let fetchedData = model.fetchedData(for: .today)
+        #expect(model.result(for: .live) == nil)
+        await model.refreshLineStatuses(for: .live)
+        let fetchedData = model.result(for: .live)
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -45,8 +45,8 @@ struct LineStatusDataStoreTests {
 
         // When
         let dateInterval = DateInterval(start: Date(), duration: oneDay)
-        await model.refreshLineStatuses(for: .range(dateInterval))
-        let fetchedData = model.fetchedData(for: .range(dateInterval))
+        await model.refreshLineStatuses(for: .planned(dateInterval))
+        let fetchedData = model.result(for: .planned(dateInterval))
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -69,8 +69,8 @@ struct LineStatusDataStoreTests {
 
         // When
         tflAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
-        await model.refreshLineStatuses(for: .today)
-        let fetchedData = model.fetchedData(for: .today)
+        await model.refreshLineStatuses(for: .live)
+        let fetchedData = model.result(for: .live)
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -92,21 +92,21 @@ struct LineStatusDataStoreTests {
         )
 
         // Initial data refresh
-        #expect(model.fetchedData(for: .today) == nil)
-        await model.refreshLineStatusesIfStale(for: .today)
-        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime)
+        #expect(model.result(for: .live) == nil)
+        await model.refreshLineStatusesIfStale(for: .live)
+        #expect(model.result(for: .live)?.fetchedAt == clock.initialTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
 
         // After 4 minutes (no change - data NOT stale)
         clock.addingMinutes(4)
-        await model.refreshLineStatusesIfStale(for: .today)
-        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.initialTime)  // No change
+        await model.refreshLineStatusesIfStale(for: .live)
+        #expect(model.result(for: .live)?.fetchedAt == clock.initialTime)  // No change
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)  // No change
 
         // After 5 minutes (fetch expected - data IS now stale)
         clock.addingMinutes(5)
-        await model.refreshLineStatusesIfStale(for: .today)
-        #expect(model.fetchedData(for: .today)?.fetchedAt == clock.currentTime)
+        await model.refreshLineStatusesIfStale(for: .live)
+        #expect(model.result(for: .live)?.fetchedAt == clock.currentTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 2)
     }
 

@@ -22,11 +22,11 @@ struct LineStatusDetailScreen: View {
 
 
     private var loadingState: LoadingState {
-        return model.fetchedData(for: .today)?.fetchState.loadingState ?? .loaded
+        return model.result(for: .live)?.fetchState.loadingState ?? .loaded
     }
 
     private var refreshDate: Date? {
-        return model.fetchedData(for: .today)?.fetchedAt
+        return model.result(for: .live)?.fetchedAt
     }
 
     var body: some View {
