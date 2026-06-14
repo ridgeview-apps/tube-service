@@ -6,6 +6,7 @@ import Foundation
 extension AppDependencies {
     static let live = AppDependencies(
         tflAPI: TflAPIClient.live,
+        tubeServiceAPI: TubeServiceAPIClient.live,
         systemStatusAPI: SystemStatusAPIClient.live,
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),
@@ -21,6 +22,13 @@ extension TflAPIClient {
     static let live = TflAPIClient(
         baseURL: AppConfig.main.tflAPI.baseURL,
         appKey: AppConfig.main.tflAPI.appKey
+    )
+}
+
+extension TubeServiceAPIClient {
+    static let live = TubeServiceAPIClient(
+        baseURL: AppConfig.main.tubeServiceAPI.baseURL,
+        apiKey: AppConfig.main.tubeServiceAPI.apiKey
     )
 }
 

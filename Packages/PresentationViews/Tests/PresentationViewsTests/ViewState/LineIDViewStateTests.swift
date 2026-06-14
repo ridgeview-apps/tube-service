@@ -20,7 +20,6 @@ struct LineIDViewStateTests {
         #expect(TrainLineID.victoria.name == "Victoria")
         #expect(TrainLineID.waterlooAndCity.name == "Waterloo & City")
         #expect(TrainLineID.dlr.name == "DLR")
-        #expect(TrainLineID.overground.name == "Overground")
         #expect(TrainLineID.tram.name == "Tram")
     }
 
@@ -39,7 +38,6 @@ struct LineIDViewStateTests {
         #expect(TrainLineID.victoria.longName == "Victoria line")
         #expect(TrainLineID.waterlooAndCity.longName == "Waterloo & City line")
         #expect(TrainLineID.dlr.longName == "DLR")
-        #expect(TrainLineID.overground.longName == "Overground")
         #expect(TrainLineID.tram.longName == "Tram")
     }
 }

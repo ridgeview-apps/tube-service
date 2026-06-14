@@ -67,9 +67,9 @@
                     ],
                     "lineIdentifier": {
                         "$type": "Tfl.Api.Presentation.Entities.Identifier, Tfl.Api.Presentation.Entities",
-                        "id": "london-overground",
-                        "name": "London Overground",
-                        "uri": "/Line/london-overground",
+                        "id": "mildmay",
+                        "name": "Mildmay",
+                        "uri": "/Line/mildmay",
                         "type": "Line",
                         "crowding": {
                             "$type": "Tfl.Api.Presentation.Entities.Crowding, Tfl.Api.Presentation.Entities"

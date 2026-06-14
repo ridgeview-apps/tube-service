@@ -62,6 +62,10 @@
 		<string>$(TFL_API_APP_KEY)</string>
 		<key>tflAPIBaseUrl</key>
 		<string>$(TFL_API_BASE_URL)</string>
+		<key>tubeServiceAPIBaseUrl</key>
+		<string>$(TUBE_SERVICE_API_BASE_URL)</string>
+		<key>tubeServiceAPIKey</key>
+		<string>$(TUBE_SERVICE_API_KEY)</string>
 	</dict>
 </dict>
 </plist>

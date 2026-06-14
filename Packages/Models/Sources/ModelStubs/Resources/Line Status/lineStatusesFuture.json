@@ -289,8 +289,8 @@
   },
   {
     "$type": "Tfl.Api.Presentation.Entities.Line, Tfl.Api.Presentation.Entities",
-    "id": "london-overground",
-    "name": "London Overground",
+    "id": "windrush",
+    "name": "Windrush",
     "modeName": "overground",
     "disruptions": [],
     "created": "2023-10-10T15:08:36.863Z",
@@ -299,10 +299,10 @@
       {
         "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
         "id": 0,
-        "lineId": "london-overground",
+        "lineId": "windrush",
         "statusSeverity": 5,
         "statusSeverityDescription": "Part Closure",
-        "reason": "LONDON OVERGROUND: Sunday 22 October, no service between Sydenham and Crystal Palace. Please use local London Buses connections between Anerley and Crystal Palace",
+        "reason": "WINDRUSH: Sunday 22 October, no service between Sydenham and Crystal Palace. Please use local London Buses connections between Anerley and Crystal Palace",
         "created": "0001-01-01T00:00:00",
         "validityPeriods": [
           {
@@ -316,35 +316,8 @@
           "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
           "category": "PlannedWork",
           "categoryDescription": "PlannedWork",
-          "description": "LONDON OVERGROUND: Sunday 22 October, no service between Sydenham and Crystal Palace. Please use local London Buses connections between Anerley and Crystal Palace",
+          "description": "WINDRUSH: Sunday 22 October, no service between Sydenham and Crystal Palace. Please use local London Buses connections between Anerley and Crystal Palace",
           "created": "2023-09-08T16:29:00Z",
-          "affectedRoutes": [],
-          "affectedStops": [],
-          "closureText": "partClosure"
-        }
-      },
-      {
-        "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
-        "id": 0,
-        "lineId": "london-overground",
-        "statusSeverity": 5,
-        "statusSeverityDescription": "Part Closure",
-        "reason": "LONDON OVERGROUND: Sunday 22 October, no service between Richmond and Willesden Junction. Use District line services between Richmond, Kew Gardens and Gunnersbury. Replacement bus service R operates between Gunnersbury, South Acton (Acton Lane), Acton Central and Willesden Junction.",
-        "created": "0001-01-01T00:00:00",
-        "validityPeriods": [
-          {
-            "$type": "Tfl.Api.Presentation.Entities.ValidityPeriod, Tfl.Api.Presentation.Entities",
-            "fromDate": "2023-10-22T03:30:00Z",
-            "toDate": "2023-10-23T00:29:00Z",
-            "isNow": false
-          }
-        ],
-        "disruption": {
-          "$type": "Tfl.Api.Presentation.Entities.Disruption, Tfl.Api.Presentation.Entities",
-          "category": "PlannedWork",
-          "categoryDescription": "PlannedWork",
-          "description": "LONDON OVERGROUND: Sunday 22 October, no service between Richmond and Willesden Junction. Use District line services between Richmond, Kew Gardens and Gunnersbury. Replacement bus service R operates between Gunnersbury, South Acton (Acton Lane), Acton Central and Willesden Junction.",
-          "created": "2023-09-08T16:30:00Z",
           "affectedRoutes": [],
           "affectedStops": [],
           "closureText": "partClosure"

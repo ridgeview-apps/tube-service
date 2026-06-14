@@ -5,7 +5,7 @@ import Models
 
 public protocol TubeServiceAPIClientType: Sendable {
     func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline>
-    func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<[LineDisruptionSummary]>
+    func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary>
 }
 
 
@@ -26,10 +26,12 @@ enum TubeServiceAPIRoute {
         return url
     }
 
-    func toURLRequest(relativeTo baseURL: URL) throws -> URLRequest {
+
+    func toURLRequest(relativeTo baseURL: URL, apiKey: String) throws -> URLRequest {
         var request = URLRequest(url: try toURL(relativeTo: baseURL))
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
         return request
     }
 
@@ -67,6 +69,7 @@ enum TubeServiceAPIRoute {
 public struct TubeServiceAPIClient: TubeServiceAPIClientType {
 
     private let baseURL: URL
+    private let apiKey: String
     private let urlSession: URLSession
     private let jsonDecoder: JSONDecoder
 
@@ -75,10 +78,12 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType {
 
     public init(
         baseURL: URL,
+        apiKey: String,
         urlSession: URLSession = .shared,
         jsonDecoder: JSONDecoder = .tubeServiceModelDecoder
     ) {
         self.baseURL = baseURL
+        self.apiKey = apiKey
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
     }
@@ -93,15 +98,15 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType {
         )
     }
 
-    public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<[LineDisruptionSummary]> {
+    public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
         try await fetchData(
             for: .dailyLineDisruptionSummary(date: date),
-            mappedTo: [LineDisruptionSummary].self
+            mappedTo: DailyDisruptionSummary.self
         )
     }
 
     private func fetchData<T: Decodable>(for route: TubeServiceAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
-        let request = try route.toURLRequest(relativeTo: baseURL)
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: apiKey)
         return try await urlSession.data(for: request, decodedBy: jsonDecoder, as: model)
     }
 }

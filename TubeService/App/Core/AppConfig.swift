@@ -5,6 +5,7 @@ struct AppConfig {
     let contactUsEmail: String
     let appStoreProductURL: URL
     let tflAPI: TflAPIConfig
+    let tubeServiceAPI: TubeServiceAPIConfig
     let systemStatusAPI: SystemStatusAPIConfig
 
     var appReviewURL: URL {
@@ -40,6 +41,10 @@ extension AppConfig {
                 baseURL: config[url: "tflAPIBaseUrl"],
                 appKey: config["tflAPIAppKey"]
             ),
+            tubeServiceAPI: .init(
+                baseURL: config[url: "tubeServiceAPIBaseUrl"],
+                apiKey: config["tubeServiceAPIKey"]
+            ),
             systemStatusAPI: .init(
                 baseURL: config[url: "systemStatusAPIBaseUrl"],
                 fileName: config["systemStatusAPIFileName"]
@@ -57,6 +62,11 @@ extension AppConfig {
     struct TflAPIConfig {
         let baseURL: URL
         let appKey: String
+    }
+
+    struct TubeServiceAPIConfig {
+        let baseURL: URL
+        let apiKey: String
     }
 
     struct SystemStatusAPIConfig {
