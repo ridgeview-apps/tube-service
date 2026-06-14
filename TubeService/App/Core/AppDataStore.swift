@@ -27,6 +27,7 @@ final class AppDataStore {
 
         self.lineStatus = LineStatusDataStore(
             tflAPI: dependencies.tflAPI,
+            tubeServiceAPI: dependencies.tubeServiceAPI,
             now: dependencies.now
         )
         self.location = LocationDataStore(

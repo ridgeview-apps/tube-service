@@ -18,6 +18,7 @@ struct StationScreen: View {
             station: station,
             loadingState: loadingState,
             statusCells: statusCells,
+            earlierDisruptedLineIDs: lineStatus.earlierDisruptedLineIDs,
             disruptionMessages: disruptionMessages
         )
         .navigationTitle(station.name)
@@ -35,17 +36,17 @@ struct StationScreen: View {
     }
 
     private func refreshDataIfStale() async {
-        async let refreshLineStatuses: () = await lineStatus.refreshLineStatusesIfStale(for: .live)
-        async let refreshDisruptions: () = await stations.refreshStationDisruptionsIfStale()
-
-        _ = await (refreshLineStatuses, refreshDisruptions)
+        async let lineStatuses: () = lineStatus.refreshLineStatusesIfStale(for: .live)
+        async let disruptionSummary: () = lineStatus.refreshDisruptionSummaryIfStale()
+        async let stationDisruptions: () = stations.refreshStationDisruptionsIfStale()
+        _ = await (lineStatuses, disruptionSummary, stationDisruptions)
     }
 
     private func refreshData() async {
-        async let refreshLineStatuses: () = await lineStatus.refreshLineStatuses(for: .live)
-        async let refreshDisruptions: () = await stations.refreshStationDisruptions()
-
-        _ = await (refreshLineStatuses, refreshDisruptions)
+        async let lineStatuses: () = lineStatus.refreshLineStatuses(for: .live)
+        async let disruptionSummary: () = lineStatus.refreshDisruptionSummary()
+        async let stationDisruptions: () = stations.refreshStationDisruptions()
+        _ = await (lineStatuses, disruptionSummary, stationDisruptions)
     }
 
     private var loadingState: LoadingState {

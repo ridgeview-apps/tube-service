@@ -18,15 +18,19 @@ struct LineStatusScreen: View {
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
 
+    private var fetchType: LineStatusDataStore.FetchType {
+        selectedFilterOption.toFetchType(for: selectedDate)
+    }
+
     var body: some View {
         NavigationStack {
             statusListView
                 .navigationDestination(item: $selectedLine) { line in
-                    LineStatusDetailScreen(line: line, fetchType: currentFetchType)
+                    LineStatusDetailScreen(line: line, fetchType: fetchType)
                 }
         }
         .onSceneDidBecomeActive {
-            fetchLineStatusesIfStale()
+            fetchIfStale()
         }
     }
 
@@ -35,6 +39,7 @@ struct LineStatusScreen: View {
             loadingState: loadingState,
             lines: lines,
             favouriteLineIDs: userPreferences.favouriteLineIDs,
+            earlierDisruptedLineIDs: model.earlierDisruptedLineIDs,
             refreshDate: refreshDate,
             selectedLine: $selectedLine,
             selectedFilterOption: $selectedFilterOption,
@@ -42,21 +47,21 @@ struct LineStatusScreen: View {
         )
         .navigationTitle(Text(L10n.lineStatusNavigationTitle))
         .refreshable {
-            await refreshDataForCurrentFilterOption()
+            await model.refresh(for: fetchType, ignoringCache: true)
         }
         .withSettingsToolbarButton()
         .onAppear {
-            fetchLineStatusesIfStale()
+            fetchIfStale()
         }
         .onChange(of: lines) {
             refreshSelectedLine()
         }
         .onChange(of: selectedFilterOption) {
             selectedLine = nil
-            fetchLineStatusesIfStale()
+            fetchIfStale()
         }
         .onChange(of: selectedDate) {
-            fetchLineStatusesIfStale()
+            fetchIfStale()
         }
         .onCalendarDayChanged {
             selectedFilterOption = .today
@@ -65,62 +70,24 @@ struct LineStatusScreen: View {
     }
 
     private var loadingState: LoadingState {
-        return model.result(for: currentFetchType)?.fetchState.loadingState ?? .loaded
+        model.result(for: fetchType)?.fetchState.loadingState ?? .loaded
     }
 
     private var lines: [Line] {
-        return (model.result(for: currentFetchType)?.lines ?? []).sortedByStatusSeverity()
+        (model.result(for: fetchType)?.lines ?? []).sortedByStatusSeverity()
     }
 
     private var refreshDate: Date? {
-        return model.result(for: currentFetchType)?.fetchedAt
+        model.result(for: fetchType)?.fetchedAt
     }
 
-    private func fetchLineStatusesIfStale() {
-        Task {
-            await model.refreshLineStatusesIfStale(for: currentFetchType)
-        }
+    private func fetchIfStale() {
+        Task { await model.refresh(for: fetchType, ignoringCache: false) }
     }
 
     private func refreshSelectedLine() {
         if let selectedLine {
             self.selectedLine = lines.first { $0.id == selectedLine.id }
-        }
-    }
-
-    private func refreshDataForCurrentFilterOption() async {
-        await model.refreshLineStatuses(for: currentFetchType)
-    }
-
-    private var currentFetchType: LineStatusDataStore.FetchType {
-        switch selectedFilterOption {
-        case .today:
-            return .live
-        case .tomorrow:
-            guard let startDate = Calendar.london.startOfTomorrow(),
-                let endDate = Calendar.london.startOfNextDay(after: startDate)
-            else {
-                assertionFailure("Failed to calculate tomorrow's date range (falling back to today instead)")
-                return .live
-            }
-            return .planned(.init(start: startDate, end: endDate))
-        case .thisWeekend:
-            guard let weekendDateRange = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
-                assertionFailure("Failed to calculate next weekend dates (falling back to today instead)")
-                return .live
-            }
-            return .planned(weekendDateRange)
-        case .future:
-            if Calendar.london.isDateInToday(selectedDate) {
-                return .live
-            } else {
-                let startDate = selectedDate
-                guard let endDate = Calendar.london.startOfNextDay(after: selectedDate) else {
-                    assertionFailure("Failed to calculate next day - falling back to today instead")
-                    return .live
-                }
-                return .planned(.init(start: startDate, end: endDate))
-            }
         }
     }
 }

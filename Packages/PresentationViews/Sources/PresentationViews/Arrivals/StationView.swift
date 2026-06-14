@@ -19,8 +19,7 @@ public struct StationView: View {
         station: Station,
         loadingState: LoadingState,
         statusCells: [LineStatusCell.Style],
-        // TODO: Remove this default once all callers provide status history data.
-        earlierDisruptedLineIDs: Set<TrainLineID> = [],
+        earlierDisruptedLineIDs: Set<TrainLineID>,
         disruptionMessages: [String]
     ) {
         self.station = station

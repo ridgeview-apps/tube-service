@@ -9,7 +9,7 @@ DEVELOPMENT_TEAM = 3H5L23529U
 // App config / Info.plist values
 TFL_API_BASE_URL = https:/$()/api.tfl.gov.uk
 TFL_API_APP_KEY = // Blank OK for development (only required for release builds)
-TUBE_SERVICE_API_BASE_URL = https:/$()/localhost:3000/v1
+TUBE_SERVICE_API_BASE_URL = http:/$()/localhost:8000
 TUBE_SERVICE_API_KEY = // Blank OK for development (only required for release builds)
 SYSTEM_STATUS_API_BASE_URL = https:/$()/www.ridgeviewapps.com
 SYSTEM_STATUS_FILE_NAME = status-dev.json

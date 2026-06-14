@@ -6,7 +6,7 @@ import Testing
 
 struct TubeServiceAPIRouteTests {
 
-    private let baseURL = URL(string: "https://foo.com/")!
+    private let baseURL = URL(string: "https://foo.com/v1")!
 
     @Test
     func dailyLineTimelineEndpointWithoutDate() throws {

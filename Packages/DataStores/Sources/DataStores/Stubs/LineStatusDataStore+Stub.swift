@@ -6,9 +6,10 @@ import Foundation
 
         static func stub(
             tflAPI: TflAPIClientType,
+            tubeServiceAPI: TubeServiceAPIClientType = StubTubeServiceAPIClient(),
             now: @escaping () -> Date = { Date() }
         ) -> LineStatusDataStore {
-            return .init(tflAPI: tflAPI, now: now)
+            return .init(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: now)
         }
     }
 

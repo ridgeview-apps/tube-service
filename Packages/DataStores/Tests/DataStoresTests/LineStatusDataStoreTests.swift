@@ -1,4 +1,5 @@
 import Foundation
+import Models
 import Testing
 
 @testable import DataStores
@@ -7,6 +8,8 @@ import Testing
 @MainActor
 struct LineStatusDataStoreTests {
 
+    // MARK: - Line statuses
+
     @Test
     func refreshLineStatusesForToday() async throws {
         // Given
@@ -14,8 +17,8 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
             tflAPI: tflAPI,
-            now: { clock.currentTime },
-            calendar: .london
+            tubeServiceAPI: StubTubeServiceAPIClient(),
+            now: { clock.currentTime }
         )
 
         // When
@@ -39,8 +42,8 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
             tflAPI: tflAPI,
-            now: { clock.currentTime },
-            calendar: .london
+            tubeServiceAPI: StubTubeServiceAPIClient(),
+            now: { clock.currentTime }
         )
 
         // When
@@ -63,8 +66,8 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
             tflAPI: tflAPI,
-            now: { clock.currentTime },
-            calendar: .london
+            tubeServiceAPI: StubTubeServiceAPIClient(),
+            now: { clock.currentTime }
         )
 
         // When
@@ -87,8 +90,8 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         let model = LineStatusDataStore(
             tflAPI: tflAPI,
-            now: { clock.currentTime },
-            calendar: .london
+            tubeServiceAPI: StubTubeServiceAPIClient(),
+            now: { clock.currentTime }
         )
 
         // Initial data refresh
@@ -108,6 +111,93 @@ struct LineStatusDataStoreTests {
         await model.refreshLineStatusesIfStale(for: .live)
         #expect(model.result(for: .live)?.fetchedAt == clock.currentTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 2)
+    }
+
+    // MARK: - Disruption summary
+
+    @Test
+    func refreshDisruptionSummary() async {
+        // Given
+        let clock = FakeClock(initialTime: .now)
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
+            .init(
+                date: .now,
+                timezone: "Europe/London",
+                lines: [
+                    "central": .init(disrupted: true, disruptionCount: 2, latestDisruptionAt: nil),
+                    "victoria": .init(disrupted: false, disruptionCount: 0, latestDisruptionAt: nil)
+                ]
+            )
+        )
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { clock.currentTime }
+        )
+
+        // When
+        #expect(model.earlierDisruptedLineIDs.isEmpty)
+        await model.refreshDisruptionSummary()
+
+        // Then
+        #expect(model.earlierDisruptedLineIDs == [.central])
+        #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 1)
+    }
+
+    @Test
+    func refreshStaleDisruptionSummary() async {
+        // Given
+        var clock = FakeClock(initialTime: .now)
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { clock.currentTime }
+        )
+
+        // Initial fetch
+        await model.refreshDisruptionSummaryIfStale()
+        #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 1)
+
+        // After 29 minutes (no change - NOT stale)
+        clock.addingMinutes(29)
+        await model.refreshDisruptionSummaryIfStale()
+        #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 1)  // No change
+
+        // After 30 minutes (fetch expected - IS now stale)
+        clock.addingMinutes(30)
+        await model.refreshDisruptionSummaryIfStale()
+        #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 2)
+    }
+
+    @Test
+    func refreshDisruptionSummaryFailurePreservesCache() async {
+        // Given
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
+            .init(
+                date: .now,
+                timezone: "Europe/London",
+                lines: ["jubilee": .init(disrupted: true, disruptionCount: 1, latestDisruptionAt: nil)]
+            )
+        )
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { .now }
+        )
+
+        // Populate cache with a successful fetch
+        await model.refreshDisruptionSummary()
+        #expect(model.earlierDisruptedLineIDs == [.jubilee])
+
+        // Simulate failure on next fetch
+        tubeServiceAPI.fetchDailyLineDisruptionSummaryError = HTTPError.invalidRequestURL
+        await model.refreshDisruptionSummary()
+
+        // Cache should be preserved
+        #expect(model.earlierDisruptedLineIDs == [.jubilee])
     }
 
 }
