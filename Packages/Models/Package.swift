@@ -22,7 +22,8 @@ let package = Package(
         .target(
             name: "Models",
             dependencies: ["Shared"],
-            path: "Sources/Models"
+            path: "Sources/Models",
+            resources: [.process("Resources")]
         ),
         .target(
             name: "ModelStubs",
