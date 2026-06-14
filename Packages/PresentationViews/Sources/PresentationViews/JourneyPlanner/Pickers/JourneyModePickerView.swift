@@ -88,7 +88,7 @@ public struct JourneyModePickerView: View {
             case .elizabethLine:
                 lineColourKeyView(with: [.elizabeth])
             case .overground:
-                lineColourKeyView(with: [.overground])
+                lineColourKeyView(with: TrainLineID.overgroundLinesOnly)
             default:
                 modeID
                     .image
@@ -129,9 +129,12 @@ private extension Sequence where Element == ModeID {
 private extension TrainLineID {
     static var tubesOnly: [TrainLineID] {
         TrainLineID.allCases.filter {
-            ![TrainLineID.elizabeth, .dlr, .elizabeth, .overground].contains($0)
+            !(TrainLineID.overgroundLinesOnly + [.elizabeth, .dlr]).contains($0)
         }
     }
+
+    static let overgroundLinesOnly: [TrainLineID] =
+        [.liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush]
 }
 
 private extension ModeID {

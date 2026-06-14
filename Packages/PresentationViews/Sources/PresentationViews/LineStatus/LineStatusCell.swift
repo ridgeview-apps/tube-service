@@ -129,7 +129,7 @@ public struct LineStatusCell: View {
 
     private func multilineTrailingColumn(with lines: [Line]) -> some View {
         Group {
-            if lines.count == allLineIDs.count {
+            if lines.count == TrainLineID.allCases.count {
                 Text(.lineStatusPlannedGoodServiceAllLinesTitle)
             } else {
                 Text(.lineStatusPlannedGoodServiceOtherLinesTitle)
@@ -137,11 +137,6 @@ public struct LineStatusCell: View {
         }
         .statusColumnStyle(textColor: .primary)
     }
-
-    private var allLineIDs: [TrainLineID] {
-        TrainLineID.allCases.filter { $0 != .overground }
-    }
-
 
     // MARK: - Accessory image
 

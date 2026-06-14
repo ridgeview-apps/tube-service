@@ -129,13 +129,13 @@ extension Line {
 
     var xPostLinks: [LineStatusXPostLink] {
         var xPostLinks = [LineStatusXPostLink(style: .tflAllXPosts, url: .latestXPosts())]
-        if id.shouldShowFilteredXPosts {
-            let filteredPosts = LineStatusXPostLink(
-                style: .lineXPosts(lineId: id),
-                url: .latestXPosts(filteredBy: id)
-            )
-            xPostLinks.append(filteredPosts)
-        }
+
+        let filteredPosts = LineStatusXPostLink(
+            style: .lineXPosts(lineId: id),
+            url: .latestXPosts(filteredBy: id)
+        )
+        xPostLinks.append(filteredPosts)
+
         return xPostLinks
     }
 }

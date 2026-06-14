@@ -38,8 +38,6 @@ public extension TrainLineID {
             return "Waterloo & City"
         case .tram:
             return "Tram"
-        case .overground:
-            return "Overground"
         case .weaver:
             return "Weaver"
         case .windrush:

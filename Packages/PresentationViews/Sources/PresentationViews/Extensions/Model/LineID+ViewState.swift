@@ -45,8 +45,6 @@ public extension TrainLineID {
             return .dlr
         case .tram:
             return .tram
-        case .overground:
-            return .overground
         }
     }
 
@@ -54,7 +52,7 @@ public extension TrainLineID {
         switch self {
         case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
             return .white
-        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity, .overground:
+        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity:
             return .black
         }
     }
@@ -63,14 +61,14 @@ public extension TrainLineID {
         switch self {
         case .bakerloo, .central, .district, .elizabeth, .jubilee, .liberty, .metropolitan, .mildmay, .northern, .piccadilly, .tram, .weaver, .windrush:
             return (color: .clear, radius: 0, x: 0, y: 0)
-        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity, .overground:
+        case .circle, .dlr, .hammersmithAndCity, .lioness, .suffragette, .victoria, .waterlooAndCity:
             return (color: .white, radius: 0.5, x: 0, y: 0.5)
         }
     }
 
     var longName: String {
         switch self {
-        case .dlr, .overground, .tram:
+        case .dlr, .tram:
             return name
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
             .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
@@ -78,25 +76,13 @@ public extension TrainLineID {
         }
     }
 
-    var xPostsSearchNameFilter: String? {
+    var xPostsSearchNameFilter: String {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
             .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             return "\(rawValue) line"
         case .tram, .dlr:
             return rawValue
-        case .overground:
-            return nil
-        }
-    }
-
-    var shouldShowFilteredXPosts: Bool {
-        switch self {
-        case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
-            .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush, .tram, .dlr:
-            return true
-        case .overground:
-            return false
         }
     }
 }

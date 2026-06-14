@@ -28,7 +28,6 @@ public extension Color {
     static let tram = Color.rgb(95, 181, 38)
     static let weaverLine = Color.rgb(130, 58, 98)
     static let windrushLine = Color.rgb(237, 27, 0)
-    static let overground = Color.rgb(250, 123, 5)
 
     // As per "Colour standards": https://tfl.gov.uk/info-for/suppliers-and-contractors/design-standards
 
@@ -90,7 +89,6 @@ public extension ShapeStyle where Self == Color {
     static var waterlooAndCityLine: Color { .waterlooAndCityLine }
     static var dlr: Color { .dlr }
     static var tram: Color { .tram }
-    static var overground: Color { .overground }
 
     static var bus: Color { .bus }
     static var cableCar: Color { .cableCar }

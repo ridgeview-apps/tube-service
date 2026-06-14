@@ -280,7 +280,7 @@ private struct ServiceDetailTextView: View {
     @ViewBuilder private var goodServiceText: some View {
         switch line.id {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
-            .liberty, .lioness, .metropolitan, .mildmay, .overground, .northern, .piccadilly,
+            .liberty, .lioness, .metropolitan, .mildmay, .northern, .piccadilly,
             .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
             Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
         case .tram:

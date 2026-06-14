@@ -341,7 +341,7 @@ private struct Previewer: View {
                             stopPointsCount: 4
                         )
                     ),
-                    style: .straightLine(.init(trainLineID: .overground))
+                    style: .straightLine(.init(trainLineID: .mildmay))
                 )
                 makeItemView(
                     itemType: .legDetail(

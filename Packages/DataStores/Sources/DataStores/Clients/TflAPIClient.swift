@@ -156,9 +156,8 @@ public struct TflAPIClient: TflAPIClientType {
     }
 
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
-        let lineIDS = TrainLineID.allCases.filter { $0 != .overground }
         return try await fetchData(
-            for: .lineStatusesForDateRange(lineIDS, dateInterval),
+            for: .lineStatusesForDateRange(TrainLineID.allCases, dateInterval),
             mappedTo: [Line].self
         )
     }

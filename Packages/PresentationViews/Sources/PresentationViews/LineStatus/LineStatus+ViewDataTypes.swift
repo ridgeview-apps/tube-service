@@ -37,11 +37,11 @@ extension URL {
         urlComponents.scheme = "https"
         urlComponents.host = "x.com"
 
-        if let line = filteredLine, let searchNameFilter = line.xPostsSearchNameFilter {
+        if let line = filteredLine {
             urlComponents.path = "/search"
 
             var query: String = "(from:TfL OR to:TfL)"
-            query.append(" \(searchNameFilter)")
+            query.append(" \(line.xPostsSearchNameFilter)")
 
             urlComponents.queryItems = [
                 URLQueryItem(name: "q", value: query),
