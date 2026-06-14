@@ -152,14 +152,16 @@ public struct TflAPIClient: TflAPIClientType {
     // MARK: - Data fetching
 
     public func fetchCurrentLineStatuses() async throws -> HTTPResponse<[Line]> {
-        return try await fetchData(for: .currentLineStatuses(ModeID.trains), mappedTo: [Line].self)
+        let response = try await fetchData(for: .currentLineStatuses(ModeID.trains), mappedTo: LossyDecodableArray<Line>.self)
+        return HTTPResponse(statusCode: response.statusCode, decodedModel: response.decodedModel.elements)
     }
 
     public func fetchLineStatuses(for dateInterval: DateInterval) async throws -> HTTPResponse<[Line]> {
-        return try await fetchData(
+        let response = try await fetchData(
             for: .lineStatusesForDateRange(TrainLineID.allCases, dateInterval),
-            mappedTo: [Line].self
+            mappedTo: LossyDecodableArray<Line>.self
         )
+        return HTTPResponse(statusCode: response.statusCode, decodedModel: response.decodedModel.elements)
     }
 
     public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
