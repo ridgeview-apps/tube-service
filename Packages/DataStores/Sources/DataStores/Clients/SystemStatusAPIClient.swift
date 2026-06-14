@@ -56,7 +56,7 @@ public struct SystemStatusAPIClient: SystemStatusAPIClientType {
     public init(
         baseURL: URL,
         urlSession: URLSession = .shared,
-        jsonDecoder: JSONDecoder = .defaultModelDecoder,
+        jsonDecoder: JSONDecoder = .tflModelDecoder,
         fileName: String
     ) {
         self.baseURL = baseURL

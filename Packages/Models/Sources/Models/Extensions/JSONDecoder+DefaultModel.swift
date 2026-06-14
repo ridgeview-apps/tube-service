@@ -2,7 +2,7 @@ import Foundation
 import Shared
 
 private extension DateFormatter {
-    static let standardT: DateFormatter = {
+    static let tflLocalDateTime: DateFormatter = {
         var dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -21,13 +21,12 @@ private extension DateFormatter {
     }()
 }
 
-private let customDateFormatters: [DateFormatter] = [.standardT]
+private let tflDateFormatters: [DateFormatter] = [.tflLocalDateTime]
 private let tubeServiceDateFormatters: [DateFormatter] = [.dateOnly]
-nonisolated(unsafe) private let iso8601DateFormatter = ISO8601DateFormatter()
 
 public extension JSONDecoder {
 
-    static let defaultModelDecoder: JSONDecoder = {
+    static let tflModelDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .custom(tflDateDecodingStrategy)
         return decoder
@@ -41,33 +40,25 @@ public extension JSONDecoder {
     }()
 
     @Sendable static func tflDateDecodingStrategy(for decoder: Decoder) throws -> Date {
-        let container = try decoder.singleValueContainer()
-        let dateString = try container.decode(String.self)
-
-        // 1. Try to decode it as an ISO8601 date
-        if let iso8601Date = iso8601DateFormatter.date(from: dateString) {
-            return iso8601Date
-        }
-
-        // 2. Try all other date formats
-        for formatter in customDateFormatters {
-            if let date = formatter.date(from: dateString) {
-                return date
-            }
-        }
-
-        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString)")
+        try decodeDate(from: decoder, using: tflDateFormatters)
     }
 
     @Sendable static func tubeServiceDateDecodingStrategy(for decoder: Decoder) throws -> Date {
+        try decodeDate(from: decoder, using: tubeServiceDateFormatters)
+    }
+}
+
+private extension JSONDecoder {
+
+    @Sendable static func decodeDate(from decoder: Decoder, using formatters: [DateFormatter]) throws -> Date {
         let container = try decoder.singleValueContainer()
         let dateString = try container.decode(String.self)
 
-        if let iso8601Date = iso8601DateFormatter.date(from: dateString) {
-            return iso8601Date
+        if let date = try? Date(dateString, strategy: .iso8601) {
+            return date
         }
 
-        for formatter in tubeServiceDateFormatters {
+        for formatter in formatters {
             if let date = formatter.date(from: dateString) {
                 return date
             }

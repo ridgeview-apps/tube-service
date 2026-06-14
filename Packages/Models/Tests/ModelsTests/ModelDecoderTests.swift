@@ -30,7 +30,7 @@ struct ModelDecoderTests {
     func decodedArrivalDeparturesWithUnsupportedStatusValues() throws {
         let json = loadJSON(named: "elizabethLineArrivals")
             .replacingOccurrences(of: "\"departureStatus\": \"Delayed\"", with: "\"departureStatus\": \"BoardingSoon\"")
-        let arrivals = try JSONDecoder.defaultModelDecoder.decode([ArrivalDeparture].self, from: Data(json.utf8))
+        let arrivals = try JSONDecoder.tflModelDecoder.decode([ArrivalDeparture].self, from: Data(json.utf8))
         #expect(!arrivals.isEmpty)
     }
 
@@ -38,7 +38,7 @@ struct ModelDecoderTests {
     func decodedArrivalDeparturesWithInvalidStatusTypes() throws {
         let json = loadJSON(named: "elizabethLineArrivals")
             .replacingOccurrences(of: "\"departureStatus\": \"Delayed\"", with: "\"departureStatus\": 123")
-        let arrivals = try JSONDecoder.defaultModelDecoder.decode([ArrivalDeparture].self, from: Data(json.utf8))
+        let arrivals = try JSONDecoder.tflModelDecoder.decode([ArrivalDeparture].self, from: Data(json.utf8))
         #expect(!arrivals.isEmpty)
     }
 

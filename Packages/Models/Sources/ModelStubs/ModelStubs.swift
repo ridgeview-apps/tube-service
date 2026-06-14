@@ -7,7 +7,7 @@ private extension ModelStubs {
 
     static func decodedValue<D: Decodable>(for rawJSON: String) -> D {
         guard let jsonData = rawJSON.data(using: .utf8),
-            let decodedValue = try? JSONDecoder.defaultModelDecoder.decode(D.self, from: jsonData)
+            let decodedValue = try? JSONDecoder.tflModelDecoder.decode(D.self, from: jsonData)
         else {
             fatalError("Unable to decode JSON data to object of type \(D.self) - please check your JSON is valid for this object type.")
         }

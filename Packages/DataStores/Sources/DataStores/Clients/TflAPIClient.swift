@@ -140,7 +140,7 @@ public struct TflAPIClient: TflAPIClientType {
         baseURL: URL,
         appKey: String,
         urlSession: URLSession = .shared,
-        jsonDecoder: JSONDecoder = .defaultModelDecoder
+        jsonDecoder: JSONDecoder = .tflModelDecoder
     ) {
         self.baseURL = baseURL
         self.appKey = appKey
