@@ -204,4 +204,91 @@ struct LineStatusDataStoreTests {
         #expect(model.earlierDisruptedLineIDs == [.jubilee])
     }
 
+    // MARK: - Timeline
+
+    @Test
+    func refreshTimeline() async throws {
+        // Given
+        let clock = FakeClock(initialTime: .now)
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let timeline = DailyLineTimeline(
+            lineId: .victoria,
+            operationalDate: .now,
+            timezone: "Europe/London",
+            startsAt: .now,
+            endsAt: .now,
+            snapshots: []
+        )
+        tubeServiceAPI.stubbedDailyLineTimeline = .success200(timeline)
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { clock.currentTime }
+        )
+
+        // When
+        #expect(model.timelineResult(for: .victoria, operationalDate: nil) == nil)
+        await model.refreshTimeline(for: .victoria, operationalDate: nil)
+        let result = model.timelineResult(for: .victoria, operationalDate: nil)
+
+        // Then
+        let requiredResult = try #require(result)
+        #expect(requiredResult.fetchState.isSuccess)
+        #expect(requiredResult.fetchedAt == clock.currentTime)
+        #expect(requiredResult.timeline == timeline)
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
+    }
+
+    @Test
+    func refreshTimelineFailure() async throws {
+        // Given
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        tubeServiceAPI.fetchDailyLineTimelineError = HTTPError.invalidRequestURL
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { .now }
+        )
+
+        // When
+        await model.refreshTimeline(for: .victoria, operationalDate: nil)
+        let result = model.timelineResult(for: .victoria, operationalDate: nil)
+
+        // Then
+        let requiredResult = try #require(result)
+        #expect(requiredResult.fetchState.isError)
+        #expect(requiredResult.fetchedAt == nil)
+        #expect(requiredResult.timeline == nil)
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
+    }
+
+    @Test
+    func refreshStaleTimeline() async {
+        // Given
+        var clock = FakeClock(initialTime: .now)
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let model = LineStatusDataStore(
+            tflAPI: StubTflAPIClient(),
+            tubeServiceAPI: tubeServiceAPI,
+            now: { clock.currentTime }
+        )
+
+        // Initial fetch
+        #expect(model.timelineResult(for: .victoria, operationalDate: nil) == nil)
+        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
+        #expect(model.timelineResult(for: .victoria, operationalDate: nil)?.fetchedAt == clock.initialTime)
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
+
+        // After 29 minutes (no change - NOT stale)
+        clock.addingMinutes(29)
+        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
+        #expect(model.timelineResult(for: .victoria, operationalDate: nil)?.fetchedAt == clock.initialTime)  // No change
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)  // No change
+
+        // After 30 minutes (fetch expected - IS now stale)
+        clock.addingMinutes(30)
+        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 2)
+    }
+
 }

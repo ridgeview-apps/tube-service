@@ -17,6 +17,8 @@ struct LineStatusDetailScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @State private var isShowingStatusHistory = false
+
     let line: Line
     let fetchType: LineStatusDataStore.FetchType
 
@@ -41,6 +43,13 @@ struct LineStatusDetailScreen: View {
         }
     }
 
+    private var historyOperationalDate: Date? {
+        switch fetchType {
+        case .live: return nil
+        case .planned(let interval): return interval.start
+        }
+    }
+
     var body: some View {
         LineStatusDetailView(
             line: line,
@@ -52,6 +61,9 @@ struct LineStatusDetailScreen: View {
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)
+        .navigationDestination(isPresented: $isShowingStatusHistory) {
+            LineStatusHistoryScreen(lineID: line.id, operationalDate: historyOperationalDate)
+        }
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
         }
@@ -63,7 +75,7 @@ struct LineStatusDetailScreen: View {
         case .linkTapped(let link):
             openURL(link.url)
         case .statusHistoryTapped:
-            break
+            isShowingStatusHistory = true
         }
     }
 

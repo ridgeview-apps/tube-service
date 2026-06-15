@@ -1,56 +1,28 @@
 import Foundation
 
+public enum LineStatusTransition: String, Codable, Hashable, Sendable {
+    case baseline
+    case disruptionStarted = "disruption_started"
+    case disruptionChanged = "disruption_changed"
+    case serviceResumed = "service_resumed"
+    case statusChanged = "status_changed"
+}
+
 public struct LineStatusSnapshot: Codable, Hashable, Sendable {
     public let lineId: TrainLineID
-    public let lineName: String
-    public let modeName: String
     public let observedAt: Date
-    public let statuses: [Status]
+    public let transition: LineStatusTransition
+    public let statuses: [LineStatus]
 
     public init(
         lineId: TrainLineID,
-        lineName: String,
-        modeName: String,
         observedAt: Date,
-        statuses: [Status]
+        transition: LineStatusTransition,
+        statuses: [LineStatus]
     ) {
         self.lineId = lineId
-        self.lineName = lineName
-        self.modeName = modeName
         self.observedAt = observedAt
+        self.transition = transition
         self.statuses = statuses
-    }
-
-    public struct Status: Codable, Hashable, Sendable {
-        public let statusSeverity: Int
-        public let statusDescription: String
-        public let reason: String?
-        public let disruptionCategory: String?
-        public let additionalInfo: String?
-
-        public init(
-            statusSeverity: Int,
-            statusDescription: String,
-            reason: String?,
-            disruptionCategory: String?,
-            additionalInfo: String?
-        ) {
-            self.statusSeverity = statusSeverity
-            self.statusDescription = statusDescription
-            self.reason = reason
-            self.disruptionCategory = disruptionCategory
-            self.additionalInfo = additionalInfo
-        }
-    }
-}
-
-public extension LineStatusSnapshot.Status {
-
-    var severity: LineStatusSeverity? {
-        LineStatusSeverity(rawValue: statusSeverity)
-    }
-
-    var category: DisruptionCategory? {
-        disruptionCategory.flatMap(DisruptionCategory.init(rawValue:))
     }
 }

@@ -1,22 +1,10 @@
 import Models
 import SwiftUI
 
-public struct LineStatusHistoryEntry: Hashable, Identifiable, Sendable {
-    public var id: Date { date }
-
-    public let date: Date
-    public let statuses: [LineStatus]
-
-    public init(date: Date, statuses: [LineStatus]) {
-        self.date = date
-        self.statuses = statuses
-    }
-}
-
 public enum LineStatusHistoryState: Hashable, Sendable {
     case locked
     case unlocked(
-        entries: [LineStatusHistoryEntry],
+        snapshots: [LineStatusSnapshot],
         loadingState: LoadingState
     )
 }
@@ -48,9 +36,9 @@ public struct LineStatusHistoryView: View {
             switch state {
             case .locked:
                 lockedView
-            case let .unlocked(entries, loadingState):
+            case let .unlocked(snapshots, loadingState):
                 unlockedView(
-                    entries: entries,
+                    snapshots: snapshots,
                     loadingState: loadingState
                 )
             }
@@ -138,7 +126,7 @@ public struct LineStatusHistoryView: View {
     }
 
     private func unlockedView(
-        entries: [LineStatusHistoryEntry],
+        snapshots: [LineStatusSnapshot],
         loadingState: LoadingState
     ) -> some View {
         ScrollView {
@@ -149,10 +137,10 @@ public struct LineStatusHistoryView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                if entries.isEmpty {
+                if snapshots.isEmpty {
                     emptyUnlockedContent(loadingState: loadingState)
                 } else {
-                    historyRows(entries)
+                    historyRows(snapshots)
                 }
             }
             .padding(.horizontal)
@@ -184,20 +172,20 @@ public struct LineStatusHistoryView: View {
         }
     }
 
-    private func historyRows(_ entries: [LineStatusHistoryEntry]) -> some View {
-        ForEach(entries.sorted { $0.date > $1.date }) { entry in
-            historyRow(entry)
+    private func historyRows(_ snapshots: [LineStatusSnapshot]) -> some View {
+        ForEach(snapshots.sorted { $0.observedAt > $1.observedAt }, id: \.observedAt) { snapshot in
+            historyRow(snapshot)
         }
     }
 
-    private func historyRow(_ entry: LineStatusHistoryEntry) -> some View {
-        let line = Line(id: lineID, lineStatuses: entry.statuses)
+    private func historyRow(_ snapshot: LineStatusSnapshot) -> some View {
+        let line = Line(id: lineID, lineStatuses: snapshot.statuses)
 
         return HStack(alignment: .top, spacing: 12) {
             timelineMarker(isDisrupted: line.isDisrupted)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(entry.date.formatted(date: .abbreviated, time: .shortened))
+                Text(snapshot.observedAt.formatted(date: .abbreviated, time: .shortened))
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.secondary)
 
@@ -211,7 +199,7 @@ public struct LineStatusHistoryView: View {
                                 .padding(.vertical, 12)
                         }
 
-                        HistoricStatusView(status: status)
+                        HistoricStatusView(status: status, transition: snapshot.transition)
                     }
                 }
                 .padding(16)
@@ -263,16 +251,15 @@ public struct LineStatusHistoryView: View {
 
 private struct HistoricStatusView: View {
     let status: LineStatus
+    let transition: LineStatusTransition
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label {
-                Text(status.statusSeverityDescription ?? String(localized: .lineStatusHistoryServiceUpdateFallback))
+                Text(titleText)
                     .font(.headline)
             } icon: {
-                (status.isDisrupted
-                    ? LineStatusAccessoryImageType.disruption
-                    : LineStatusAccessoryImageType.goodService).image
+                statusIcon
             }
 
             if let reason = status.reason?.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -281,6 +268,25 @@ private struct HistoricStatusView: View {
                 Text(reason)
                     .font(.callout)
             }
+        }
+    }
+
+    private var titleText: String {
+        if transition == .serviceResumed {
+            return String(localized: .lineStatusHistoryServiceResumed)
+        }
+        return status.statusSeverityDescription
+            ?? String(localized: .lineStatusHistoryServiceUpdateFallback)
+    }
+
+    @ViewBuilder private var statusIcon: some View {
+        if transition == .serviceResumed {
+            Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
+                .foregroundColor(.green)
+        } else if status.isDisrupted {
+            LineStatusAccessoryImageType.disruption.image
+        } else {
+            LineStatusAccessoryImageType.goodService.image
         }
     }
 }
@@ -301,7 +307,7 @@ private struct LineStatusHistoryPreview: View {
                 onAction: { action in
                     if action == .unlockTapped {
                         state = .unlocked(
-                            entries: Self.entries,
+                            snapshots: Self.snapshots,
                             loadingState: .loaded
                         )
                     }
@@ -315,13 +321,13 @@ private struct LineStatusHistoryPreview: View {
                         Text(verbatim: "Locked")
                     }
                     Button {
-                        state = .unlocked(entries: [], loadingState: .loading)
+                        state = .unlocked(snapshots: [], loadingState: .loading)
                     } label: {
                         Text(verbatim: "Initial loading")
                     }
                     Button {
                         state = .unlocked(
-                            entries: Self.entries,
+                            snapshots: Self.snapshots,
                             loadingState: .loaded
                         )
                     } label: {
@@ -329,20 +335,20 @@ private struct LineStatusHistoryPreview: View {
                     }
                     Button {
                         state = .unlocked(
-                            entries: Self.entries,
+                            snapshots: Self.snapshots,
                             loadingState: .loading
                         )
                     } label: {
                         Text(verbatim: "Refreshing")
                     }
                     Button {
-                        state = .unlocked(entries: [], loadingState: .loaded)
+                        state = .unlocked(snapshots: [], loadingState: .loaded)
                     } label: {
                         Text(verbatim: "Empty")
                     }
                     Button {
                         state = .unlocked(
-                            entries: [],
+                            snapshots: [],
                             loadingState: .failure(
                                 errorMessage: "Status history could not be loaded."
                             )
@@ -352,7 +358,7 @@ private struct LineStatusHistoryPreview: View {
                     }
                     Button {
                         state = .unlocked(
-                            entries: Self.entries,
+                            snapshots: Self.snapshots,
                             loadingState: .failure(
                                 errorMessage: "Status history could not be refreshed."
                             )
@@ -367,17 +373,23 @@ private struct LineStatusHistoryPreview: View {
         }
     }
 
-    fileprivate static let entries = [
-        LineStatusHistoryEntry(
-            date: .now.addingTimeInterval(-900),
+    fileprivate static let snapshots = [
+        LineStatusSnapshot(
+            lineId: .victoria,
+            observedAt: .now.addingTimeInterval(-900),
+            transition: .serviceResumed,
             statuses: ModelStubs.lineStatusGoodService.lineStatuses ?? []
         ),
-        LineStatusHistoryEntry(
-            date: .now.addingTimeInterval(-3_600),
+        LineStatusSnapshot(
+            lineId: .victoria,
+            observedAt: .now.addingTimeInterval(-3_600),
+            transition: .disruptionStarted,
             statuses: ModelStubs.lineStatusDisrupted.lineStatuses ?? []
         ),
-        LineStatusHistoryEntry(
-            date: .now.addingTimeInterval(-10_800),
+        LineStatusSnapshot(
+            lineId: .victoria,
+            observedAt: .now.addingTimeInterval(-10_800),
+            transition: .baseline,
             statuses: ModelStubs.lineStatusDisruptedDuplicates.lineStatuses ?? []
         )
     ]
@@ -398,7 +410,7 @@ private struct LineStatusHistoryPreview: View {
         LineStatusHistoryView(
             lineID: .victoria,
             state: .unlocked(
-                entries: LineStatusHistoryPreview.entries,
+                snapshots: LineStatusHistoryPreview.snapshots,
                 loadingState: .loaded
             ),
             onAction: { _ in }
@@ -411,7 +423,7 @@ private struct LineStatusHistoryPreview: View {
         LineStatusHistoryView(
             lineID: .victoria,
             state: .unlocked(
-                entries: LineStatusHistoryPreview.entries,
+                snapshots: LineStatusHistoryPreview.snapshots,
                 loadingState: .loading
             ),
             onAction: { _ in }
@@ -424,7 +436,7 @@ private struct LineStatusHistoryPreview: View {
         LineStatusHistoryView(
             lineID: .victoria,
             state: .unlocked(
-                entries: LineStatusHistoryPreview.entries,
+                snapshots: LineStatusHistoryPreview.snapshots,
                 loadingState: .failure(
                     errorMessage: "Status history could not be refreshed."
                 )

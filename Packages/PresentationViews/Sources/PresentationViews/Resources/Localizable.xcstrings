@@ -1402,6 +1402,17 @@
         }
       }
     },
+    "line.status.history.service.resumed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good service resumed"
+          }
+        }
+      }
+    },
     "line.status.history.service.update.fallback" : {
       "extractionState" : "manual",
       "localizations" : {

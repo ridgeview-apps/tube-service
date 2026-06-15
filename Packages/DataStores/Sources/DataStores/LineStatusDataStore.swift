@@ -21,9 +21,22 @@ public final class LineStatusDataStore {
         static let initial = LineStatusResult(lines: [], fetchState: .fetching)
     }
 
+    public struct TimelineResult: Sendable {
+        public var timeline: DailyLineTimeline?
+        public var fetchedAt: Date?
+        public var fetchState: DataFetchState
+
+        static let initial = TimelineResult(timeline: nil, fetchedAt: nil, fetchState: .fetching)
+    }
+
     private struct DisruptionSummaryCache {
         var disruptedLineIDs: Set<TrainLineID>
         var fetchedAt: Date
+    }
+
+    private struct TimelineCacheKey: Hashable {
+        let lineID: TrainLineID
+        let operationalDate: Date?
     }
 
 
@@ -35,6 +48,7 @@ public final class LineStatusDataStore {
 
     private var lineStatusCache: [FetchType: LineStatusResult] = [:]
     private var disruptionSummaryCache: DisruptionSummaryCache?
+    private var timelineCache: [TimelineCacheKey: TimelineResult] = [:]
 
     public var earlierDisruptedLineIDs: Set<TrainLineID> {
         disruptionSummaryCache?.disruptedLineIDs ?? []
@@ -55,6 +69,10 @@ public final class LineStatusDataStore {
 
     public func result(for fetchType: FetchType) -> LineStatusResult? {
         lineStatusCache[fetchType]
+    }
+
+    public func timelineResult(for lineID: TrainLineID, operationalDate: Date?) -> TimelineResult? {
+        timelineCache[TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)]
     }
 
 
@@ -120,6 +138,32 @@ public final class LineStatusDataStore {
             disruptionSummaryCache = DisruptionSummaryCache(disruptedLineIDs: disruptedLineIDs, fetchedAt: now())
         } catch {
             // Preserve existing cache on failure rather than clearing it
+        }
+    }
+
+    public func refreshTimelineIfStale(for lineID: TrainLineID, operationalDate: Date?) async {
+        let thirtyMinutes: TimeInterval = 30 * 60
+        let key = TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)
+        if isStale(fetchedAt: timelineCache[key]?.fetchedAt, threshold: thirtyMinutes) {
+            await refreshTimeline(for: lineID, operationalDate: operationalDate)
+        }
+    }
+
+    public func refreshTimeline(for lineID: TrainLineID, operationalDate: Date?) async {
+        let key = TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)
+        if case .fetching = timelineCache[key]?.fetchState {
+            return
+        }
+
+        timelineCache[key, default: .initial].fetchState = .fetching
+
+        do {
+            let timeline = try await tubeServiceAPI.fetchDailyLineTimeline(lineID: lineID, operationalDate: operationalDate).decodedModel
+            timelineCache[key]?.timeline = timeline
+            timelineCache[key]?.fetchState = .success
+            timelineCache[key]?.fetchedAt = now()
+        } catch {
+            timelineCache[key]?.fetchState = .failure(error)
         }
     }
 
