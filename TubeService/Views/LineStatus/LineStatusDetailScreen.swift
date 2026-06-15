@@ -24,11 +24,11 @@ struct LineStatusDetailScreen: View {
 
 
     private var loadingState: LoadingState {
-        return model.result(for: .live)?.fetchState.loadingState ?? .loaded
+        return model.statusResult(for: .live)?.fetchState.loadingState ?? .loaded
     }
 
     private var refreshDate: Date? {
-        return model.result(for: .live)?.fetchedAt
+        return model.statusResult(for: .live)?.fetchedAt
     }
 
     private var statusHistoryAccess: StatusHistoryButton.Access {

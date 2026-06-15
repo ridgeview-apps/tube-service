@@ -89,7 +89,7 @@ public final class LineStatusDataStore {
         self.now = now
     }
 
-    public func result(for fetchType: FetchType) -> FetchResult<[Line]>? {
+    public func statusResult(for fetchType: FetchType) -> FetchResult<[Line]>? {
         guard let entry = lineStatusCache[fetchType] else { return nil }
         return FetchResult(value: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
