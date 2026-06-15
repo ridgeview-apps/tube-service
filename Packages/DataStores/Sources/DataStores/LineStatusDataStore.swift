@@ -61,7 +61,8 @@ public final class LineStatusDataStore {
     // MARK: - Actions / inputs
 
     public func refreshLineStatusesIfStale(for fetchType: FetchType) async {
-        if isStale(fetchedAt: lineStatusCache[fetchType]?.fetchedAt, threshold: 5 * 60) {
+        let fiveMinutes: TimeInterval = 5 * 60
+        if isStale(fetchedAt: lineStatusCache[fetchType]?.fetchedAt, threshold: fiveMinutes) {
             await refreshLineStatuses(for: fetchType)
         }
     }
@@ -102,7 +103,8 @@ public final class LineStatusDataStore {
     }
 
     public func refreshDisruptionSummaryIfStale() async {
-        if isStale(fetchedAt: disruptionSummaryCache?.fetchedAt, threshold: 30 * 60) {
+        let thirtyMinutes: TimeInterval = 30 * 60
+        if isStale(fetchedAt: disruptionSummaryCache?.fetchedAt, threshold: thirtyMinutes) {
             await refreshDisruptionSummary()
         }
     }

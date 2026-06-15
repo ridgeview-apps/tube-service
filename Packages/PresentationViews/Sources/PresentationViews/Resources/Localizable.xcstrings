@@ -1127,6 +1127,28 @@
         }
       }
     },
+    "line.status.detail.no.disruptions.planned.on.the %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No engineering works or disruptions planned on the %@."
+          }
+        }
+      }
+    },
+    "line.status.detail.no.disruptions.planned.on.trams" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No engineering works or disruptions planned on London Trams."
+          }
+        }
+      }
+    },
     "line.status.filter.option.future" : {
       "extractionState" : "manual",
       "localizations" : {

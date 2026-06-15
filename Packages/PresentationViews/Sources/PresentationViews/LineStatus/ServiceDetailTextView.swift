@@ -4,6 +4,7 @@ import SwiftUI
 struct ServiceDetailTextView: View {
     let line: Line
     let textItem: Line.ServiceDetailTextItem
+    let context: LineStatusDetailView.StatusContext
 
     @State private var isExpanded = false
 
@@ -48,9 +49,19 @@ struct ServiceDetailTextView: View {
         case .bakerloo, .central, .circle, .district, .dlr, .elizabeth, .hammersmithAndCity, .jubilee,
             .liberty, .lioness, .metropolitan, .mildmay, .northern, .piccadilly,
             .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
-            Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
+            switch context {
+            case .live:
+                Text(.lineStatusDetailGoodServiceOnThe(line.id.longName))
+            case .planned:
+                Text(.lineStatusDetailNoDisruptionsPlannedOnThe(line.id.longName))
+            }
         case .tram:
-            Text(.lineStatusDetailGoodServiceOnTrams)
+            switch context {
+            case .live:
+                Text(.lineStatusDetailGoodServiceOnTrams)
+            case .planned:
+                Text(.lineStatusDetailNoDisruptionsPlannedOnTrams)
+            }
         }
     }
 }
@@ -60,10 +71,18 @@ struct ServiceDetailTextView: View {
 
 import ModelStubs
 
-#Preview("Good service") {
+#Preview("Good service (live)") {
     let line = ModelStubs.lineStatusGoodService
     ForEach(line.serviceDetailTextItems) { item in
-        ServiceDetailTextView(line: line, textItem: item)
+        ServiceDetailTextView(line: line, textItem: item, context: .live)
+    }
+    .padding()
+}
+
+#Preview("Good service (planned)") {
+    let line = ModelStubs.lineStatusGoodService
+    ForEach(line.serviceDetailTextItems) { item in
+        ServiceDetailTextView(line: line, textItem: item, context: .planned)
     }
     .padding()
 }
@@ -71,7 +90,7 @@ import ModelStubs
 #Preview("Disrupted") {
     let line = ModelStubs.lineStatusDisrupted
     ForEach(line.serviceDetailTextItems) { item in
-        ServiceDetailTextView(line: line, textItem: item)
+        ServiceDetailTextView(line: line, textItem: item, context: .live)
     }
     .padding()
 }

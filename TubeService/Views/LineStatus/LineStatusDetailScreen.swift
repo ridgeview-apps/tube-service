@@ -29,10 +29,16 @@ struct LineStatusDetailScreen: View {
         return model.result(for: .live)?.fetchedAt
     }
 
-    private var statusHistoryState: LineStatusDetailView.StatusHistoryState {
-        // TODO: fix this once fetching logic behaviour is implemented
-        // It should ALWAYS be hidden for non-live states
-        fetchType != .live ? .hidden : .unlocked
+    private var statusHistoryAccess: StatusHistoryButton.Access {
+        // TODO: fix later (it's temporarily unlocked to accommodated local testing)
+        .unlocked
+    }
+
+    private var statusContext: LineStatusDetailView.StatusContext {
+        switch fetchType {
+        case .live: .live
+        case .planned: .planned
+        }
     }
 
     var body: some View {
@@ -41,7 +47,8 @@ struct LineStatusDetailScreen: View {
             isFavourite: isFavouriteLine(for: line.id),
             loadingState: loadingState,
             refreshDate: refreshDate,
-            statusHistoryState: statusHistoryState,
+            statusHistoryAccess: statusHistoryAccess,
+            statusContext: statusContext,
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)

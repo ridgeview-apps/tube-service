@@ -6,7 +6,6 @@ import Foundation
 
     extension AppDependencies {
         static let stub: AppDependencies = {
-            print("WTF")
             let locationManager = StubLocationManager()
             locationManager.locationsToReturnOnRequest = [
                 CLLocation(latitude: 51.530823, longitude: -0.123821)

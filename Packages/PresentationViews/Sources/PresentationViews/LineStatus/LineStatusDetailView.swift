@@ -8,16 +8,16 @@ public struct LineStatusDetailView: View {
         case statusHistoryTapped
     }
 
-    public enum StatusHistoryState: Sendable {
-        case hidden
-        case locked
-        case unlocked
+    public enum StatusContext: Sendable {
+        case live
+        case planned
     }
 
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
-    public let statusHistoryState: StatusHistoryState
+    public let statusHistoryAccess: StatusHistoryButton.Access
+    public let statusContext: StatusContext
 
     @Binding public var isFavourite: Bool
 
@@ -28,13 +28,15 @@ public struct LineStatusDetailView: View {
         isFavourite: Binding<Bool>,
         loadingState: LoadingState,
         refreshDate: Date?,
-        statusHistoryState: StatusHistoryState,
+        statusHistoryAccess: StatusHistoryButton.Access,
+        statusContext: StatusContext,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
         self.loadingState = loadingState
         self.refreshDate = refreshDate
-        self.statusHistoryState = statusHistoryState
+        self.statusHistoryAccess = statusHistoryAccess
+        self.statusContext = statusContext
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
@@ -47,20 +49,20 @@ public struct LineStatusDetailView: View {
                 } header: {
                     loadingStatusView
                 }
-                if let buttonAccess = statusHistoryState.buttonAccess {
+                if statusContext == .live {
                     Section {
                         StatusHistoryButton(
-                            access: buttonAccess,
+                            access: statusHistoryAccess,
                             lineColor: line.id.backgroundColor,
                             onTap: { onAction(.statusHistoryTapped) }
                         )
                     }
+                    Section {
+                        xPostsSection
+                    }
                 }
                 Section {
                     favouritesButton
-                }
-                Section {
-                    xPostsSection
                         .padding(.bottom, 30)
                 }
             }
@@ -113,7 +115,7 @@ public struct LineStatusDetailView: View {
             )
 
             ForEach(line.serviceDetailTextItems) { textItem in
-                ServiceDetailTextView(line: line, textItem: textItem)
+                ServiceDetailTextView(line: line, textItem: textItem, context: statusContext)
                 if textItem != line.serviceDetailTextItems.last {
                     Divider()
                         .padding(.vertical, 4)
@@ -182,7 +184,8 @@ private struct Previewer: View {
     let line: Line
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
-    var statusHistoryState = LineStatusDetailView.StatusHistoryState.locked
+    var statusHistoryAccess = StatusHistoryButton.Access.locked
+    var statusContext = LineStatusDetailView.StatusContext.live
     @State var isFavourite = false
 
     var body: some View {
@@ -192,7 +195,8 @@ private struct Previewer: View {
                 isFavourite: $isFavourite,
                 loadingState: loadingState,
                 refreshDate: refreshDate,
-                statusHistoryState: statusHistoryState,
+                statusHistoryAccess: statusHistoryAccess,
+                statusContext: statusContext,
                 onAction: { print($0) }
             )
             .navigationTitle("Preview")
@@ -206,10 +210,17 @@ import ModelStubs
     Previewer(line: ModelStubs.lineStatusGoodService)
 }
 
+#Preview("Good service state (planned)") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        statusContext: .planned
+    )
+}
+
 #Preview("Disrupted state") {
     Previewer(
         line: ModelStubs.lineStatusDisrupted,
-        statusHistoryState: .unlocked
+        statusHistoryAccess: .unlocked
     )
 }
 
@@ -220,7 +231,7 @@ import ModelStubs
 #Preview("Hidden status history") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        statusHistoryState: .hidden
+        statusHistoryAccess: .unlocked
     )
 }
 

@@ -3,9 +3,9 @@ import SwiftUI
 
 // MARK: - StatusHistoryButton
 
-struct StatusHistoryButton: View {
+public struct StatusHistoryButton: View {
 
-    enum Access {
+    public enum Access {
         case locked
         case unlocked
     }
@@ -14,7 +14,7 @@ struct StatusHistoryButton: View {
     let lineColor: Color
     let onTap: () -> Void
 
-    var body: some View {
+    public var body: some View {
         Button {
             onTap()
         } label: {
@@ -73,20 +73,6 @@ struct StatusHistoryButton: View {
         switch access {
         case .locked: .lineStatusHistoryEntryLockedAccessibilityHint
         case .unlocked: .lineStatusHistoryEntryUnlockedAccessibilityHint
-        }
-    }
-}
-
-
-// MARK: - StatusHistoryState conversion
-
-extension LineStatusDetailView.StatusHistoryState {
-
-    var buttonAccess: StatusHistoryButton.Access? {
-        switch self {
-        case .hidden: nil
-        case .locked: .locked
-        case .unlocked: .unlocked
         }
     }
 }
