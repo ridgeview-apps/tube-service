@@ -34,8 +34,10 @@ enum TubeServiceAPIRoute {
 
     private var pathComponents: [String] {
         switch self {
-        case .dailyLineTimeline:          return ["v1", "line-status", "timeline"]
-        case .dailyLineDisruptionSummary: return ["v1", "line-status", "disruption-summary"]
+        case .dailyLineTimeline:
+            return ["v1", "line-status", "timeline"]
+        case .dailyLineDisruptionSummary:
+            return ["v1", "line-status", "disruption-summary"]
         }
     }
 

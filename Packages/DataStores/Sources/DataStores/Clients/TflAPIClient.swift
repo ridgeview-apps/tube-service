@@ -47,8 +47,10 @@ enum TflAPIRoute {
         case let .currentLineStatuses(modes):
             return ["Line", "Mode", modes.toURLPathParam(), "Status"]
         case let .lineStatusesForDateRange(lineIDs, dateInterval):
-            return ["Line", lineIDs.toURLPathParam(), "Status",
-                    dateInterval.start.toAPIDateParam(), "to", dateInterval.end.toAPIDateParam()]
+            return [
+                "Line", lineIDs.toURLPathParam(), "Status",
+                dateInterval.start.toAPIDateParam(), "to", dateInterval.end.toAPIDateParam()
+            ]
         case let .arrivalPredictions(stationCode, lineIDs):
             return ["Line", lineIDs.toURLPathParam(), "Arrivals", stationCode]
         case let .arrivalDepartures(stationCode, _):
