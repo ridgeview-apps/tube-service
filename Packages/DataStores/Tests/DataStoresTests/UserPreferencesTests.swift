@@ -8,6 +8,48 @@ import Testing
 struct UserPreferencesTests {
 
     @Test
+    func rawValueRoundTripPreservesPreferences() throws {
+        var expected = UserPreferences.default
+        expected.addFavouriteLineGroup("line-group")
+        expected.addFavouriteLine(.bakerloo)
+        expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
+        expected.saveJourneyPlannerModes([.tube, .walking])
+        expected.markAsRead(systemStatusMessageID: "message")
+        expected.saveRecentJourney(
+            SavedJourney(
+                id: UUID(),
+                fromLocation: .station(id: ModelStubs.kingsCrossStation.id),
+                toLocation: .station(id: ModelStubs.angelStation.id),
+                viaLocation: nil,
+                lastUsed: Date(timeIntervalSince1970: 1_700_000_000)
+            )
+        )
+
+        let decoded = try #require(UserPreferences(rawValue: expected.rawValue))
+
+        #expect(decoded.favouriteLineGroupIDs == expected.favouriteLineGroupIDs)
+        #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
+        #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
+        #expect(decoded.journeyPlannerModeIDs == expected.journeyPlannerModeIDs)
+        #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
+        #expect(decoded.readSystemStatusMessage == expected.readSystemStatusMessage)
+    }
+
+    @Test
+    func decodingOlderStoredValueUsesDefaultsForMissingPreferences() throws {
+        let data = try #require(#"{"favourites":["line-group"]}"#.data(using: .utf8))
+
+        let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
+
+        #expect(decoded.favouriteLineGroupIDs == ["line-group"])
+        #expect(decoded.favouriteLineIDs.isEmpty)
+        #expect(decoded.recentlySelectedStations.isEmpty)
+        #expect(decoded.journeyPlannerModeIDs == ModeID.defaultJourneyPlannerModes)
+        #expect(decoded.recentlySavedJourneys.isEmpty)
+        #expect(decoded.readSystemStatusMessage == nil)
+    }
+
+    @Test
     func addingAndRemovingFavouriteLineIDs() throws {
         var userPreferences = UserPreferences.default
 

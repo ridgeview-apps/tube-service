@@ -3,52 +3,6 @@ import Models
 
 public struct UserPreferences: Equatable, Codable, Sendable {
 
-    enum CodingKeys: String, CodingKey {
-        case favouriteLineGroupIDs = "favourites"
-        case recentlySelectedStations
-        case favouriteLineIDs
-        case journeyPlannerModeIDs
-        case recentlySavedJourneys
-        case readSystemStatusMessage
-    }
-
-    public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
-    public var favouriteLineIDs: Set<Line.ID>
-    public var recentlySelectedStations: [Station.ID]
-    public var journeyPlannerModeIDs: Set<ModeID>
-    public var recentlySavedJourneys: [SavedJourney]
-    public var readSystemStatusMessage: SystemStatus.ID?
-
-    // N.B. Codable conformance needs to be implemented manually to play nicely with `RawRepresentable`
-    // and prevent infinite recursion. It also makes it easier to add new properties (with default values)
-    // and prevents decoding errors of older data structures.
-    //
-    // See:
-    // - https://stackoverflow.com/a/74191039
-    // - https://antran.app/2024/appstorage_codable/
-    //
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.favouriteLineGroupIDs = (try? container.decode(Set<Station.LineGroup.ID>.self, forKey: .favouriteLineGroupIDs)) ?? []
-        self.recentlySelectedStations = (try? container.decode([Station.ID].self, forKey: .recentlySelectedStations)) ?? []
-        let rawLineIDs = (try? container.decode([String].self, forKey: .favouriteLineIDs)) ?? []
-        self.favouriteLineIDs = Set(rawLineIDs.compactMap { TrainLineID(rawValue: $0) })
-        let rawModeIDs = try? container.decode([String].self, forKey: .journeyPlannerModeIDs)
-        self.journeyPlannerModeIDs = rawModeIDs.map { Set($0.compactMap { ModeID(rawValue: $0) }) } ?? ModeID.defaultJourneyPlannerModes
-        self.recentlySavedJourneys = (try? container.decode([SavedJourney].self, forKey: .recentlySavedJourneys)) ?? []
-        self.readSystemStatusMessage = (try? container.decodeIfPresent(SystemStatus.ID.self, forKey: .readSystemStatusMessage))
-    }
-
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.favouriteLineGroupIDs, forKey: .favouriteLineGroupIDs)
-        try container.encode(self.recentlySelectedStations, forKey: .recentlySelectedStations)
-        try container.encode(self.favouriteLineIDs, forKey: .favouriteLineIDs)
-        try container.encode(self.journeyPlannerModeIDs, forKey: .journeyPlannerModeIDs)
-        try container.encode(self.recentlySavedJourneys, forKey: .recentlySavedJourneys)
-        try container.encode(self.readSystemStatusMessage, forKey: .readSystemStatusMessage)
-    }
-
     public static let `default`: UserPreferences = .init(
         favouriteLineGroupIDs: [],
         favouriteLineIDs: [],
@@ -57,6 +11,13 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySavedJourneys: [],
         readSystemStatusMessage: nil
     )
+
+    public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
+    public var favouriteLineIDs: Set<Line.ID>
+    public var recentlySelectedStations: [Station.ID]
+    public var journeyPlannerModeIDs: Set<ModeID>
+    public var recentlySavedJourneys: [SavedJourney]
+    public var readSystemStatusMessage: SystemStatus.ID?
 
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
@@ -73,139 +34,43 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
     }
-}
 
-// MARK: - RawRepresentable (@AppStorage)
+    // MARK: - Favourite Lines
 
-extension UserPreferences: RawRepresentable {
-    public typealias RawValue = String
-
-    public init?(rawValue: RawValue) {
-        guard
-            let data = rawValue.data(using: .utf8),
-            let decoded = try? JSONDecoder().decode(Self.self, from: data)
-        else {
-            return nil
-        }
-        self = decoded
-    }
-
-    public var rawValue: RawValue {
-        guard
-            let data = try? JSONEncoder().encode(self),
-            let encodedValue = String(data: data, encoding: .utf8)
-        else {
-            return ""
-        }
-        return encodedValue
-    }
-}
-
-public struct SavedJourney: Identifiable, Hashable, Codable, Sendable {
-    public enum LocationType: Hashable, Codable, Sendable {
-        case station(id: Station.ID)
-        case nationalRail(icsCode: String)
-        case specific(LocationName, LocationCoordinate)
-
-
-        // MARK: - Custom Equatable conformance
-
-        public static func == (lhs: LocationType, rhs: LocationType) -> Bool {
-            switch (lhs, rhs) {
-            case let (.specific(lhsName, _), .specific(rhsName, _)):
-                return lhsName == rhsName
-            case let (.station(lhsID), .station(rhsID)):
-                return lhsID == rhsID
-            case let (.nationalRail(lhsID), .nationalRail(rhsID)):
-                return lhsID == rhsID
-            default:
-                return false
-            }
-        }
-
-        public func hash(into hasher: inout Hasher) {
-            switch self {
-            case .station(let stationID):
-                hasher.combine(stationID)
-            case .nationalRail(let stopPointID):
-                hasher.combine(stopPointID)
-            case .specific(let locationName, _):
-                hasher.combine(locationName)
-            }
-        }
-    }
-
-    public let id: UUID
-    public let fromLocation: LocationType
-    public let toLocation: LocationType
-    public let viaLocation: LocationType?
-    public let lastUsed: Date
-
-    public init(
-        id: UUID,
-        fromLocation: LocationType,
-        toLocation: LocationType,
-        viaLocation: LocationType?,
-        lastUsed: Date
-    ) {
-        self.id = id
-        self.fromLocation = fromLocation
-        self.toLocation = toLocation
-        self.viaLocation = viaLocation
-        self.lastUsed = lastUsed
-    }
-}
-
-
-// MARK: - Public API
-
-public extension UserPreferences {
-
-
-    // MARK: - Favourite line groups
-
-    func containsFavouriteLineGroup(_ lineGroupID: Station.LineGroup.ID) -> Bool {
+    public func containsFavouriteLineGroup(_ lineGroupID: Station.LineGroup.ID) -> Bool {
         favouriteLineGroupIDs.contains(lineGroupID)
     }
 
-    mutating func addFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
+    public mutating func addFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
         favouriteLineGroupIDs.insert(favouriteLineGroupID)
     }
 
-    mutating func removeFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
+    public mutating func removeFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
         favouriteLineGroupIDs.remove(favouriteLineGroupID)
     }
 
-
-    // MARK: - Favourite line IDS
-
-    func containsFavouriteLine(_ lineID: TrainLineID) -> Bool {
+    public func containsFavouriteLine(_ lineID: TrainLineID) -> Bool {
         favouriteLineIDs.contains(lineID)
     }
 
-    mutating func addFavouriteLine(_ favouriteLineID: TrainLineID) {
+    public mutating func addFavouriteLine(_ favouriteLineID: TrainLineID) {
         favouriteLineIDs.insert(favouriteLineID)
     }
 
-    mutating func removeFavouriteLine(_ favouriteLineID: TrainLineID) {
+    public mutating func removeFavouriteLine(_ favouriteLineID: TrainLineID) {
         favouriteLineIDs.remove(favouriteLineID)
     }
 
+    // MARK: - Recent Selections
 
-    // MARK: Recently selected stations
-
-    mutating func saveRecentlySelectedStation(_ stationID: Station.ID) {
-        var updateValues = recentlySelectedStations
-        updateValues.removeAll { $0 == stationID }
-        updateValues.insert(stationID, at: 0)
-
-        recentlySelectedStations = Array(updateValues.prefix(10))  // Save only the 10 most recent items
+    public mutating func saveRecentlySelectedStation(_ stationID: Station.ID) {
+        var updatedValues = recentlySelectedStations
+        updatedValues.removeAll { $0 == stationID }
+        updatedValues.insert(stationID, at: 0)
+        recentlySelectedStations = Array(updatedValues.prefix(10))
     }
 
-
-    // MARK: Recent journeys
-
-    mutating func saveRecentJourney(_ journey: SavedJourney) {
+    public mutating func saveRecentJourney(_ journey: SavedJourney) {
         var updatedValues = recentlySavedJourneys
 
         if let existingIndex = recentlySavedJourneys.firstIndex(where: {
@@ -219,11 +84,11 @@ public extension UserPreferences {
         recentlySavedJourneys = updatedValues
     }
 
-    mutating func cleanUpSavedJourneys() {
+    public mutating func cleanUpSavedJourneys() {
         var sanitizedJourneys = [SavedJourney]()
 
         recentlySavedJourneys
-            .sortedByLastUsedDateDescending()  // Sort by last used dates BEFORE removing duplicates (i.e. old duplicates rejected)
+            .sortedByLastUsedDateDescending()
             .forEach { recentJourney in
                 if !sanitizedJourneys.contains(where: {
                     $0.isSameOrReverseJourney(of: recentJourney)
@@ -232,62 +97,32 @@ public extension UserPreferences {
                 }
             }
 
-        recentlySavedJourneys = Array(sanitizedJourneys.prefix(10))  // Save only the 10 most recent journeys
+        recentlySavedJourneys = Array(sanitizedJourneys.prefix(10))
     }
 
-    mutating func removeRecentJourney(_ journeyID: SavedJourney.ID) {
+    public mutating func removeRecentJourney(_ journeyID: SavedJourney.ID) {
         recentlySavedJourneys.removeAll { $0.id == journeyID }
     }
 
+    // MARK: - Journey Planning
 
-    // MARK: Journey planner mode IDs
-
-    mutating func saveJourneyPlannerModes(_ modeIDs: Set<ModeID>) {
-        self.journeyPlannerModeIDs = modeIDs
+    public mutating func saveJourneyPlannerModes(_ modeIDs: Set<ModeID>) {
+        journeyPlannerModeIDs = modeIDs
     }
 
+    // MARK: - System Status
 
-    // MARK: Read system status messages
-
-    func hasReadSystemStatusMessage(id: SystemStatus.ID) -> Bool {
+    public func hasReadSystemStatusMessage(id: SystemStatus.ID) -> Bool {
         readSystemStatusMessage == id
     }
 
-    mutating func markAsRead(systemStatusMessageID: SystemStatus.ID) {
+    public mutating func markAsRead(systemStatusMessageID: SystemStatus.ID) {
         readSystemStatusMessage = systemStatusMessageID
     }
 }
 
-
 private extension Sequence where Element == SavedJourney {
     func sortedByLastUsedDateDescending() -> [SavedJourney] {
         sorted { $0.lastUsed > $1.lastUsed }
-    }
-}
-
-private extension SavedJourney {
-
-    func isSameOrReverseJourney(of otherJourney: SavedJourney) -> Bool {
-        isSameJourney(as: otherJourney) || isReverseJourney(of: otherJourney)
-    }
-
-    private func reverseJourney() -> SavedJourney {
-        .init(
-            id: id,
-            fromLocation: toLocation,
-            toLocation: fromLocation,
-            viaLocation: viaLocation,
-            lastUsed: lastUsed
-        )
-    }
-
-    func isSameJourney(as otherJourney: SavedJourney) -> Bool {
-        fromLocation == otherJourney.fromLocation
-            && toLocation == otherJourney.toLocation
-            && viaLocation == otherJourney.viaLocation
-    }
-
-    private func isReverseJourney(of otherJourney: SavedJourney) -> Bool {
-        return isSameJourney(as: otherJourney.reverseJourney())
     }
 }
