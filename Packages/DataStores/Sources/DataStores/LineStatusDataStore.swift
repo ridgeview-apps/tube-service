@@ -17,16 +17,12 @@ public final class LineStatusDataStore {
         public var lines: [Line]
         public var fetchedAt: Date?
         public var fetchState: DataFetchState
-
-        static let initial = LineStatusResult(lines: [], fetchState: .fetching)
     }
 
     public struct TimelineResult: Sendable {
         public var timeline: DailyLineTimeline?
         public var fetchedAt: Date?
         public var fetchState: DataFetchState
-
-        static let initial = TimelineResult(timeline: nil, fetchedAt: nil, fetchState: .fetching)
     }
 
     private struct DisruptionSummaryCache {
@@ -39,6 +35,38 @@ public final class LineStatusDataStore {
         let operationalDate: Date?
     }
 
+    private struct FetchCache<Key: Hashable, Value> {
+        struct Entry {
+            var value: Value?
+            var fetchedAt: Date?
+            var fetchState: DataFetchState
+
+            static var initial: Entry {
+                Entry(value: nil, fetchedAt: nil, fetchState: .fetching)
+            }
+        }
+
+        private var storage: [Key: Entry] = [:]
+
+        subscript(key: Key) -> Entry? { storage[key] }
+
+        mutating func beginFetch(for key: Key) -> Bool {
+            if case .fetching = storage[key]?.fetchState { return false }
+            storage[key, default: .initial].fetchState = .fetching
+            return true
+        }
+
+        mutating func setSuccess(for key: Key, value: Value, fetchedAt: Date) {
+            storage[key]?.value = value
+            storage[key]?.fetchState = .success
+            storage[key]?.fetchedAt = fetchedAt
+        }
+
+        mutating func setFailure(for key: Key, error: Error) {
+            storage[key]?.fetchState = .failure(error)
+        }
+    }
+
 
     // MARK: - Properties / outputs
 
@@ -46,9 +74,9 @@ public final class LineStatusDataStore {
     public let tubeServiceAPI: TubeServiceAPIClientType
     public let now: () -> Date
 
-    private var lineStatusCache: [FetchType: LineStatusResult] = [:]
+    private var lineStatusCache = FetchCache<FetchType, [Line]>()
     private var disruptionSummaryCache: DisruptionSummaryCache?
-    private var timelineCache: [TimelineCacheKey: TimelineResult] = [:]
+    private var timelineCache = FetchCache<TimelineCacheKey, DailyLineTimeline>()
 
     public var earlierDisruptedLineIDs: Set<TrainLineID> {
         disruptionSummaryCache?.disruptedLineIDs ?? []
@@ -68,11 +96,14 @@ public final class LineStatusDataStore {
     }
 
     public func result(for fetchType: FetchType) -> LineStatusResult? {
-        lineStatusCache[fetchType]
+        guard let entry = lineStatusCache[fetchType] else { return nil }
+        return LineStatusResult(lines: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
     public func timelineResult(for lineID: TrainLineID, operationalDate: Date?) -> TimelineResult? {
-        timelineCache[TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)]
+        let key = TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)
+        guard let entry = timelineCache[key] else { return nil }
+        return TimelineResult(timeline: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
 
@@ -86,19 +117,12 @@ public final class LineStatusDataStore {
     }
 
     public func refreshLineStatuses(for fetchType: FetchType) async {
-        if case .fetching = lineStatusCache[fetchType]?.fetchState {
-            return
-        }
-
-        lineStatusCache[fetchType, default: .initial].fetchState = .fetching
-
+        guard lineStatusCache.beginFetch(for: fetchType) else { return }
         do {
-            let refreshedLines = try await fetchLineStatuses(for: fetchType)
-            lineStatusCache[fetchType]?.lines = refreshedLines
-            lineStatusCache[fetchType]?.fetchState = .success
-            lineStatusCache[fetchType]?.fetchedAt = now()
+            let lines = try await fetchLineStatuses(for: fetchType)
+            lineStatusCache.setSuccess(for: fetchType, value: lines, fetchedAt: now())
         } catch {
-            lineStatusCache[fetchType]?.fetchState = .failure(error)
+            lineStatusCache.setFailure(for: fetchType, error: error)
         }
     }
 
@@ -151,19 +175,12 @@ public final class LineStatusDataStore {
 
     public func refreshTimeline(for lineID: TrainLineID, operationalDate: Date?) async {
         let key = TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)
-        if case .fetching = timelineCache[key]?.fetchState {
-            return
-        }
-
-        timelineCache[key, default: .initial].fetchState = .fetching
-
+        guard timelineCache.beginFetch(for: key) else { return }
         do {
             let timeline = try await tubeServiceAPI.fetchDailyLineTimeline(lineID: lineID, operationalDate: operationalDate).decodedModel
-            timelineCache[key]?.timeline = timeline
-            timelineCache[key]?.fetchState = .success
-            timelineCache[key]?.fetchedAt = now()
+            timelineCache.setSuccess(for: key, value: timeline, fetchedAt: now())
         } catch {
-            timelineCache[key]?.fetchState = .failure(error)
+            timelineCache.setFailure(for: key, error: error)
         }
     }
 
