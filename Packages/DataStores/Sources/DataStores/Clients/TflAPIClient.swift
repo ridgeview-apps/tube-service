@@ -25,20 +25,12 @@ enum TflAPIRoute {
     case journeyResults(JourneyRequestParams)
 
     func toURL(relativeTo baseURL: URL, appKey: String) throws -> URL {
-        var urlComponents = try self.toURLComponents(relativeTo: baseURL)
-
-        let fixedQueryItems = [
-            URLQueryItem(name: "app_key", value: appKey)
-        ]
-
-        let routeQueryItems = urlComponents.queryItems ?? []
-
-        urlComponents.queryItems = fixedQueryItems + routeQueryItems
+        var urlComponents = try toURLComponents(relativeTo: baseURL)
+        urlComponents.queryItems = [URLQueryItem(name: "app_key", value: appKey)] + (urlComponents.queryItems ?? [])
 
         guard let url = urlComponents.url else {
             throw HTTPError.invalidRequestURL
         }
-
         return url
     }
 
@@ -50,76 +42,49 @@ enum TflAPIRoute {
     }
 
 
-    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
+    private var pathComponents: [String] {
         switch self {
         case let .currentLineStatuses(modes):
-            let modesParam = modes.toURLPathParam()
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["Line", "Mode", modesParam, "Status"]
-            )
+            return ["Line", "Mode", modes.toURLPathParam(), "Status"]
         case let .lineStatusesForDateRange(lineIDs, dateInterval):
-            let lineIDsParam = lineIDs.toURLPathParam()
-            let fromDateParam = dateInterval.start.toAPIDateParam()
-            let toDateParam = dateInterval.end.toAPIDateParam()
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["Line", lineIDsParam, "Status", fromDateParam, "to", toDateParam]
-            )
+            return ["Line", lineIDs.toURLPathParam(), "Status",
+                    dateInterval.start.toAPIDateParam(), "to", dateInterval.end.toAPIDateParam()]
         case let .arrivalPredictions(stationCode, lineIDs):
-            let lineIDsParam = lineIDs.toURLPathParam()
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["Line", lineIDsParam, "Arrivals", stationCode]
-            )
-        case let .arrivalDepartures(stationCode, lineIDs):
-            let lineIDsParam = lineIDs.toURLPathParam()
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["StopPoint", stationCode, "ArrivalDepartures"],
-                queryItems: [URLQueryItem(name: "lineIds", value: lineIDsParam)]
-            )
+            return ["Line", lineIDs.toURLPathParam(), "Arrivals", stationCode]
+        case let .arrivalDepartures(stationCode, _):
+            return ["StopPoint", stationCode, "ArrivalDepartures"]
         case let .stationDisruptions(modes):
-            let modesParam = modes.toURLPathParam()
-            return try .route(
-                relativeTo: baseURL,
-                pathComponents: ["StopPoint", "Mode", modesParam, "Disruption"]
-            )
+            return ["StopPoint", "Mode", modes.toURLPathParam(), "Disruption"]
         case let .journeyResults(params):
-            return try journeyURLComponents(for: params, relativeTo: baseURL)
+            return ["Journey", "JourneyResults", params.from.toURLPathParam(), "to", params.to.toURLPathParam()]
         }
     }
 
-    private func journeyURLComponents(
-        for params: JourneyRequestParams,
-        relativeTo baseURL: URL
-    ) throws -> URLComponents {
-        let fromParam = params.from.toURLPathParam()
-        let toParam = params.to.toURLPathParam()
-        let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
-
-        var queryItems = [
-            URLQueryItem(
-                name: "routeBetweenEntrances",
-                value: "\(params.routeBetweenEntrances)"
-            ),
-            URLQueryItem(name: "mode", value: params.modeIDs.toURLPathParam()),
-            URLQueryItem(name: "alternativeCycle", value: "\(alternativeCycle)")
-        ]
-
-        if let via = params.via {
-            queryItems.append(URLQueryItem(name: "via", value: via.toURLPathParam()))
+    private var queryItems: [URLQueryItem] {
+        switch self {
+        case .currentLineStatuses, .lineStatusesForDateRange, .arrivalPredictions, .stationDisruptions:
+            return []
+        case let .arrivalDepartures(_, lineIDs):
+            return [URLQueryItem(name: "lineIds", value: lineIDs.toURLPathParam())]
+        case let .journeyResults(params):
+            let alternativeCycle = params.modeIDs.contains(.cycle) || params.modeIDs.contains(.cycleHire)
+            var items = [
+                URLQueryItem(name: "routeBetweenEntrances", value: "\(params.routeBetweenEntrances)"),
+                URLQueryItem(name: "mode", value: params.modeIDs.toURLPathParam()),
+                URLQueryItem(name: "alternativeCycle", value: "\(alternativeCycle)")
+            ]
+            if let via = params.via {
+                items.append(URLQueryItem(name: "via", value: via.toURLPathParam()))
+            }
+            if let timeOption = params.timeOption {
+                items.append(contentsOf: timeOption.toURLQueryItems)
+            }
+            return items
         }
+    }
 
-        if let timeOption = params.timeOption {
-            queryItems.append(contentsOf: timeOption.toURLQueryItems)
-        }
-
-        return try .route(
-            relativeTo: baseURL,
-            pathComponents: ["Journey", "JourneyResults", fromParam, "to", toParam],
-            queryItems: queryItems
-        )
+    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
+        try .route(relativeTo: baseURL, pathComponents: pathComponents, queryItems: queryItems)
     }
 }
 

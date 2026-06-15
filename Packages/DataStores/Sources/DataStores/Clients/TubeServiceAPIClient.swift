@@ -17,15 +17,11 @@ enum TubeServiceAPIRoute {
     case dailyLineDisruptionSummary(date: Date?)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
-        let urlComponents = try self.toURLComponents(relativeTo: baseURL)
-
-        guard let url = urlComponents.url else {
+        guard let url = try toURLComponents(relativeTo: baseURL).url else {
             throw HTTPError.invalidRequestURL
         }
-
         return url
     }
-
 
     func toURLRequest(relativeTo baseURL: URL, apiKey: String) throws -> URLRequest {
         var request = URLRequest(url: try toURL(relativeTo: baseURL))
@@ -36,30 +32,27 @@ enum TubeServiceAPIRoute {
     }
 
 
-    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
-        let pathComponents: [String]
-        var queryItems = [URLQueryItem]()
+    private var pathComponents: [String] {
+        switch self {
+        case .dailyLineTimeline:          return ["v1", "line-status", "timeline"]
+        case .dailyLineDisruptionSummary: return ["v1", "line-status", "disruption-summary"]
+        }
+    }
 
+    private var queryItems: [URLQueryItem] {
         switch self {
         case let .dailyLineTimeline(lineID, date):
-            pathComponents = ["v1", "line-status", "timeline"]
-            queryItems.append(URLQueryItem(name: "line_id", value: lineID.rawValue))
-            if let date {
-                queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
-            }
+            var items = [URLQueryItem(name: "line_id", value: lineID.rawValue)]
+            if let date { items.append(URLQueryItem(name: "date", value: date.toAPIDateParam())) }
+            return items
         case let .dailyLineDisruptionSummary(date):
-            pathComponents = ["v1", "line-status", "disruption-summary"]
-            if let date {
-                queryItems.append(URLQueryItem(name: "date", value: date.toAPIDateParam()))
-            }
+            guard let date else { return [] }
+            return [URLQueryItem(name: "date", value: date.toAPIDateParam())]
         }
+    }
 
-        var components = try URLComponents.route(
-            relativeTo: baseURL,
-            pathComponents: pathComponents
-        )
-        components.queryItems = queryItems.isEmpty ? nil : queryItems
-        return components
+    private func toURLComponents(relativeTo baseURL: URL) throws -> URLComponents {
+        try .route(relativeTo: baseURL, pathComponents: pathComponents, queryItems: queryItems)
     }
 }
 
