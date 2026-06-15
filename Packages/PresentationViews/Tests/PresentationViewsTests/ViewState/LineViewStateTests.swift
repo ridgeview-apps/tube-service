@@ -120,18 +120,18 @@ struct LineViewStateTests {
     }
 
     @Test
-    func serviceDetailTextItems_GoodService() {
+    func mergedLineStatuses_goodService() {
         let line = Line(
             id: .bakerloo,
             lineStatuses: [.with(statusSeverity: .goodService)]
         )
 
-        let expectedValues: [Line.ServiceDetailTextItem] = [.init(messageType: .goodService, additionalInfo: nil)]
-        #expect(line.serviceDetailTextItems == expectedValues)
+        #expect(line.mergedLineStatuses.count == 1)
+        #expect(line.mergedLineStatuses.first?.isDisrupted == false)
     }
 
     @Test
-    func serviceDetailTextItems_Disrupted_UniqueValues() {
+    func mergedLineStatuses_disrupted_uniqueReasons() {
         let line = Line(
             id: .bakerloo,
             lineStatuses: [
@@ -140,29 +140,44 @@ struct LineViewStateTests {
             ]
         )
 
-        let expectedValues: [Line.ServiceDetailTextItem] = [
-            .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil),
-            .init(messageType: .disrupted(reason: "Closure reason"), additionalInfo: nil)
-        ]
-        #expect(line.serviceDetailTextItems == expectedValues)
+        #expect(line.mergedLineStatuses.count == 2)
+        #expect(line.mergedLineStatuses[0].reason == "Suspension reason")
+        #expect(line.mergedLineStatuses[1].reason == "Closure reason")
     }
 
     @Test
-    func serviceDetailTextItems_Disrupted_DuplicateValues() {
+    func mergedLineStatuses_duplicateReasonsMergedToOneGroup() {
         let line = Line(
             id: .bakerloo,
             lineStatuses: [
-                .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
-                .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                 .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                 .with(statusSeverity: .partSuspended, reason: "Suspension reason"),
                 .with(statusSeverity: .partSuspended, reason: "Suspension reason")
             ]
         )
 
-        let expectedValues: [Line.ServiceDetailTextItem] = [
-            .init(messageType: .disrupted(reason: "Suspension reason"), additionalInfo: nil)  // Duplicates removed
-        ]
-        #expect(line.serviceDetailTextItems == expectedValues)
+        #expect(line.mergedLineStatuses.count == 1)
+        #expect(line.mergedLineStatuses.first?.reason == "Suspension reason")
+    }
+
+    @Test
+    func mergedLineStatuses_differentSeveritySameReason_combinedSeverityText() {
+        let status1 = LineStatus(
+            statusSeverity: .partSuspended,
+            statusSeverityDescription: "Part Suspended",
+            reason: "Signal failure",
+            disruption: nil
+        )
+        let status2 = LineStatus(
+            statusSeverity: .minorDelays,
+            statusSeverityDescription: "Minor Delays",
+            reason: "Signal failure",
+            disruption: nil
+        )
+        let line = Line(id: .bakerloo, lineStatuses: [status1, status2])
+
+        #expect(line.mergedLineStatuses.count == 1)
+        #expect(line.mergedLineStatuses.first?.reason == "Signal failure")
+        #expect(line.mergedLineStatuses.first?.severityText == "Part Suspended, Minor Delays")
     }
 }

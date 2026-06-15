@@ -3,7 +3,7 @@ import SwiftUI
 
 struct ServiceDetailTextView: View {
     let line: Line
-    let textItem: Line.ServiceDetailTextItem
+    let mergedStatus: Line.MergedStatus
     let context: LineStatusDetailView.StatusContext
 
     @State private var isExpanded = false
@@ -17,13 +17,12 @@ struct ServiceDetailTextView: View {
 
     @ViewBuilder private var descriptionText: some View {
         Group {
-            switch textItem.messageType {
-            case .goodService:
-                goodServiceText
-            case let .disrupted(reason):
-                if let reason {
-                    Text(reason)
+            if mergedStatus.isDisrupted {
+                if !mergedStatus.reason.isEmpty {
+                    Text(mergedStatus.reason)
                 }
+            } else {
+                goodServiceText
             }
         }
         .font(.body)
@@ -31,7 +30,7 @@ struct ServiceDetailTextView: View {
 
     @ViewBuilder
     private var expandableAdditionalInfoText: some View {
-        if let additionalInfo = textItem.additionalInfo {
+        if let additionalInfo = mergedStatus.additionalInfo, !additionalInfo.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
                 ExpansionInfoButton(isExpanded: $isExpanded)
                     .buttonStyle(.bordered)
@@ -73,24 +72,24 @@ import ModelStubs
 
 #Preview("Good service (live)") {
     let line = ModelStubs.lineStatusGoodService
-    ForEach(line.serviceDetailTextItems) { item in
-        ServiceDetailTextView(line: line, textItem: item, context: .live)
+    ForEach(line.mergedLineStatuses) { mergedStatus in
+        ServiceDetailTextView(line: line, mergedStatus: mergedStatus, context: .live)
     }
     .padding()
 }
 
 #Preview("Good service (planned)") {
     let line = ModelStubs.lineStatusGoodService
-    ForEach(line.serviceDetailTextItems) { item in
-        ServiceDetailTextView(line: line, textItem: item, context: .planned)
+    ForEach(line.mergedLineStatuses) { mergedStatus in
+        ServiceDetailTextView(line: line, mergedStatus: mergedStatus, context: .planned)
     }
     .padding()
 }
 
 #Preview("Disrupted") {
     let line = ModelStubs.lineStatusDisrupted
-    ForEach(line.serviceDetailTextItems) { item in
-        ServiceDetailTextView(line: line, textItem: item, context: .live)
+    ForEach(line.mergedLineStatuses) { mergedStatus in
+        ServiceDetailTextView(line: line, mergedStatus: mergedStatus, context: .live)
     }
     .padding()
 }

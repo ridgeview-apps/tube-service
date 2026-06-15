@@ -83,48 +83,49 @@ extension Line {
         isDisrupted ? .disruption : .goodService
     }
 
-    struct ServiceDetailTextItem: Hashable, Identifiable {
-        enum MessageType: Hashable {
-            case goodService
-            case disrupted(reason: String?)
-        }
-        var id: Self { self }
-        let messageType: MessageType
+    struct MergedStatus: Hashable, Identifiable {
+        fileprivate(set) var severityDescriptions: [String]
+        let isDisrupted: Bool
+        let reason: String
         let additionalInfo: String?
+
+        var severityText: String { severityDescriptions.joined(separator: ", ") }
+        var id: Self { self }
     }
 
-    var serviceDetailTextItems: [ServiceDetailTextItem] {
-        var uniqueTextItems = [ServiceDetailTextItem]()
+    var mergedLineStatuses: [MergedStatus] {
+        var groups = [MergedStatus]()
 
-        lineStatuses?.sortedByStatusSeverity().forEach {
-            let textItem: ServiceDetailTextItem
-            if $0.isDisrupted {
-                textItem = ServiceDetailTextItem(
-                    messageType: .disrupted(reason: $0.reason?.trimmed()),
-                    additionalInfo: $0.disruption?.additionalInfo?.trimmed()
-                )
+        for status in lineStatusesSortedBySeverity {
+            let reason = status.reason?.trimmed() ?? ""
+            let additionalInfo = status.disruption?.additionalInfo?.trimmed()
+
+            if let index = groups.firstIndex(
+                where: { $0.reason == reason && $0.additionalInfo == additionalInfo }
+            ) {
+                if let desc = status.statusSeverityDescription, !groups[index].severityDescriptions.contains(desc) {
+                    groups[index].severityDescriptions.append(desc)
+                }
             } else {
-                textItem = ServiceDetailTextItem(
-                    messageType: .goodService,
-                    additionalInfo: nil
+                groups.append(
+                    MergedStatus(
+                        severityDescriptions: status.statusSeverityDescription.map { [$0] } ?? [],
+                        isDisrupted: status.isDisrupted,
+                        reason: reason,
+                        additionalInfo: additionalInfo
+                    )
                 )
-            }
-            if !uniqueTextItems.contains(textItem) {
-                uniqueTextItems.append(textItem)
             }
         }
 
-        return uniqueTextItems
+        return groups
     }
 
     var shortText: String {
-        var uniqueDescriptions = [String?]()
-        (lineStatuses ?? []).sortedByStatusSeverity().forEach { status in
-            if !uniqueDescriptions.contains(status.statusSeverityDescription) {
-                uniqueDescriptions.append(status.statusSeverityDescription)
-            }
-        }
-        return uniqueDescriptions.compactMap { $0 }.joined(separator: ", ")
+        mergedLineStatuses
+            .flatMap(\.severityDescriptions)
+            .reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
+            .joined(separator: ", ")
     }
 
     var xPostLinks: [LineStatusXPostLink] {

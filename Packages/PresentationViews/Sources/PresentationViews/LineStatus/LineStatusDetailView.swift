@@ -114,9 +114,10 @@ public struct LineStatusDetailView: View {
                 line.isDisrupted ? .adaptiveRed : .primary
             )
 
-            ForEach(line.serviceDetailTextItems) { textItem in
-                ServiceDetailTextView(line: line, textItem: textItem, context: statusContext)
-                if textItem != line.serviceDetailTextItems.last {
+            let mergedStatuses = line.mergedLineStatuses
+            ForEach(mergedStatuses) { mergedStatus in
+                ServiceDetailTextView(line: line, mergedStatus: mergedStatus, context: statusContext)
+                if mergedStatus != mergedStatuses.last {
                     Divider()
                         .padding(.vertical, 4)
                         .foregroundStyle(.tertiary)

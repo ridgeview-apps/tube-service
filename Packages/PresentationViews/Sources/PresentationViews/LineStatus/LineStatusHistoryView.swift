@@ -190,16 +190,13 @@ public struct LineStatusHistoryView: View {
                     .foregroundStyle(.secondary)
 
                 VStack(alignment: .leading, spacing: 0) {
-                    ForEach(
-                        Array(line.lineStatusesSortedBySeverity.enumerated()),
-                        id: \.offset
-                    ) { index, status in
-                        if index > 0 {
+                    ForEach(line.mergedLineStatuses) { mergedStatus in
+                        if mergedStatus != line.mergedLineStatuses.first {
                             Divider()
                                 .padding(.vertical, 12)
                         }
 
-                        HistoricStatusView(status: status, transition: snapshot.transition)
+                        HistoricStatusView(mergedStatus: mergedStatus, transition: snapshot.transition)
                     }
                 }
                 .padding(16)
@@ -250,7 +247,7 @@ public struct LineStatusHistoryView: View {
 }
 
 private struct HistoricStatusView: View {
-    let status: LineStatus
+    let mergedStatus: Line.MergedStatus
     let transition: LineStatusTransition
 
     var body: some View {
@@ -262,10 +259,8 @@ private struct HistoricStatusView: View {
                 statusIcon
             }
 
-            if let reason = status.reason?.trimmingCharacters(in: .whitespacesAndNewlines),
-                !reason.isEmpty
-            {
-                Text(reason)
+            if !mergedStatus.reason.isEmpty {
+                Text(mergedStatus.reason)
                     .font(.callout)
             }
         }
@@ -275,15 +270,16 @@ private struct HistoricStatusView: View {
         if transition == .serviceResumed {
             return String(localized: .lineStatusHistoryServiceResumed)
         }
-        return status.statusSeverityDescription
-            ?? String(localized: .lineStatusHistoryServiceUpdateFallback)
+        return mergedStatus.severityText.isEmpty
+            ? String(localized: .lineStatusHistoryServiceUpdateFallback)
+            : mergedStatus.severityText
     }
 
     @ViewBuilder private var statusIcon: some View {
         if transition == .serviceResumed {
             Image(systemName: "arrow.trianglehead.2.clockwise.rotate.90")
                 .foregroundColor(.green)
-        } else if status.isDisrupted {
+        } else if mergedStatus.isDisrupted {
             LineStatusAccessoryImageType.disruption.image
         } else {
             LineStatusAccessoryImageType.goodService.image
