@@ -4,8 +4,40 @@ import Models
 import Observation
 import PresentationViews
 
-@Observable @MainActor
+@MainActor
+@Observable
 final class JourneyResultsModel {
+
+    private enum PageID: CustomStringConvertible {
+        case initial
+        case earlier(Int)
+        case later(Int)
+
+        var description: String {
+            switch self {
+            case .initial: "initial"
+            case .earlier(let pageCounter): "earlier-\(pageCounter)"
+            case .later(let pageCounter): "later-\(pageCounter)"
+            }
+        }
+    }
+
+    private struct JourneyTimePair: Hashable {
+        let start: Date
+        let arrival: Date
+
+        init?(_ journey: Journey) {
+            guard let start = journey.startDateTime,
+                let arrival = journey.arrivalDateTime
+            else { return nil }
+            self.start = start
+            self.arrival = arrival
+        }
+    }
+
+    // MARK: - State
+
+    private let tflAPI: TflAPIClientType
 
     var pages: [JourneyResultsPage] = []
     private(set) var hasFetchedInitialData = false
@@ -14,13 +46,11 @@ final class JourneyResultsModel {
     private var laterTimeAdjustment: JourneyTimeAdjustment?
     private var pageCounter = 0
 
-    private let tflAPI: TflAPIClientType
-
     init(tflAPI: TflAPIClientType) {
         self.tflAPI = tflAPI
     }
 
-    // MARK: - Public
+    // MARK: - Actions
 
     func prepareForInitialFetch() {
         pages = [JourneyResultsPage(id: PageID.initial.description, loadingState: .loading, cellItems: [])]
@@ -72,21 +102,7 @@ final class JourneyResultsModel {
         await fetchAndUpdatePage(pageID: pageID, action: action, requestParams: requestParams, modeIDs: modeIDs)
     }
 
-    // MARK: - Private
-
-    private enum PageID: CustomStringConvertible {
-        case initial
-        case earlier(Int)
-        case later(Int)
-
-        var description: String {
-            switch self {
-            case .initial: "initial"
-            case .earlier(let pageCounter): "earlier-\(pageCounter)"
-            case .later(let pageCounter): "later-\(pageCounter)"
-            }
-        }
-    }
+    // MARK: - Implementation
 
     private func pageIndex(for pageID: PageID) -> Int? {
         pages.firstIndex(where: { $0.id == pageID.description })
@@ -174,18 +190,5 @@ final class JourneyResultsModel {
             timeOption: timeOption,
             routeBetweenEntrances: params.routeBetweenEntrances
         )
-    }
-}
-
-private struct JourneyTimePair: Hashable {
-    let start: Date
-    let arrival: Date
-
-    init?(_ journey: Journey) {
-        guard let start = journey.startDateTime,
-            let arrival = journey.arrivalDateTime
-        else { return nil }
-        self.start = start
-        self.arrival = arrival
     }
 }
