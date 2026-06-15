@@ -15,6 +15,8 @@ import Shared
                 lineId: .victoria,
                 date: .now,
                 timezone: "Europe/London",
+                startsAt: .now,
+                endsAt: .now,
                 snapshots: []
             )
         )
@@ -27,7 +29,7 @@ import Shared
 
         public private(set) var fetchDailyLineDisruptionSummaryCallCount = 0
         public var stubbedDailyLineDisruptionSummary: HTTPResponse<DailyDisruptionSummary> = .success200(
-            .init(date: .now, timezone: "Europe/London", lines: [:])
+            .init(date: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, lines: [:])
         )
         public var fetchDailyLineDisruptionSummaryError: Error?
         public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
