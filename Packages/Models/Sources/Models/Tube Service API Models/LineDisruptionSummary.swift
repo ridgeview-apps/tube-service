@@ -1,20 +1,20 @@
 import Foundation
 
 public struct DailyDisruptionSummary: Codable, Hashable, Sendable {
-    public let date: Date
+    public let operationalDate: Date
     public let timezone: String
     public let startsAt: Date
     public let endsAt: Date
     public let lines: [String: LineDisruptionSummary]
 
     public init(
-        date: Date,
+        operationalDate: Date,
         timezone: String,
         startsAt: Date,
         endsAt: Date,
         lines: [String: LineDisruptionSummary]
     ) {
-        self.date = date
+        self.operationalDate = operationalDate
         self.timezone = timezone
         self.startsAt = startsAt
         self.endsAt = endsAt

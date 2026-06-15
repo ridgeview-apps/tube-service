@@ -13,7 +13,7 @@ import Shared
         public var stubbedDailyLineTimeline: HTTPResponse<DailyLineTimeline> = .success200(
             .init(
                 lineId: .victoria,
-                date: .now,
+                operationalDate: .now,
                 timezone: "Europe/London",
                 startsAt: .now,
                 endsAt: .now,
@@ -29,7 +29,7 @@ import Shared
 
         public private(set) var fetchDailyLineDisruptionSummaryCallCount = 0
         public var stubbedDailyLineDisruptionSummary: HTTPResponse<DailyDisruptionSummary> = .success200(
-            .init(date: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, lines: [:])
+            .init(operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, lines: [:])
         )
         public var fetchDailyLineDisruptionSummaryError: Error?
         public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {

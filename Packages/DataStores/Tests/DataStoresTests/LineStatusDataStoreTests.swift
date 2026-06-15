@@ -122,7 +122,7 @@ struct LineStatusDataStoreTests {
         let tubeServiceAPI = StubTubeServiceAPIClient()
         tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
             .init(
-                date: .now,
+                operationalDate: .now,
                 timezone: "Europe/London",
                 startsAt: .now,
                 endsAt: .now,
@@ -179,7 +179,7 @@ struct LineStatusDataStoreTests {
         let tubeServiceAPI = StubTubeServiceAPIClient()
         tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
             .init(
-                date: .now,
+                operationalDate: .now,
                 timezone: "Europe/London",
                 startsAt: .now,
                 endsAt: .now,
