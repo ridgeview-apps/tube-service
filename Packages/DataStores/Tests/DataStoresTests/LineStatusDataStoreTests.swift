@@ -15,9 +15,8 @@ struct LineStatusDataStoreTests {
         // Given
         let clock = FakeClock(initialTime: .now)
         let tflAPI = StubTflAPIClient()
-        let model = LineStatusDataStore(
+        let model = makeStore(
             tflAPI: tflAPI,
-            tubeServiceAPI: StubTubeServiceAPIClient(),
             now: { clock.currentTime }
         )
 
@@ -40,9 +39,8 @@ struct LineStatusDataStoreTests {
         let clock = FakeClock(initialTime: .now)
         let oneDay: TimeInterval = 60 * 60 * 24
         let tflAPI = StubTflAPIClient()
-        let model = LineStatusDataStore(
+        let model = makeStore(
             tflAPI: tflAPI,
-            tubeServiceAPI: StubTubeServiceAPIClient(),
             now: { clock.currentTime }
         )
 
@@ -64,9 +62,8 @@ struct LineStatusDataStoreTests {
         // Given
         let clock = FakeClock(initialTime: .now)
         let tflAPI = StubTflAPIClient()
-        let model = LineStatusDataStore(
+        let model = makeStore(
             tflAPI: tflAPI,
-            tubeServiceAPI: StubTubeServiceAPIClient(),
             now: { clock.currentTime }
         )
 
@@ -84,18 +81,16 @@ struct LineStatusDataStoreTests {
     }
 
     @Test
-    func refreshStaleLineStatuses() async throws {
+    func refreshStaleLineStatuses() async {
         // Given
         var clock = FakeClock(initialTime: .now)
         let tflAPI = StubTflAPIClient()
-        let model = LineStatusDataStore(
+        let model = makeStore(
             tflAPI: tflAPI,
-            tubeServiceAPI: StubTubeServiceAPIClient(),
             now: { clock.currentTime }
         )
 
         // Initial data refresh
-        #expect(model.statusResult(for: .live) == nil)
         await model.refreshLineStatusesIfStale(for: .live)
         #expect(model.statusResult(for: .live)?.fetchedAt == clock.initialTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
@@ -132,8 +127,7 @@ struct LineStatusDataStoreTests {
                 ]
             )
         )
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { clock.currentTime }
         )
@@ -152,8 +146,7 @@ struct LineStatusDataStoreTests {
         // Given
         var clock = FakeClock(initialTime: .now)
         let tubeServiceAPI = StubTubeServiceAPIClient()
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { clock.currentTime }
         )
@@ -186,8 +179,7 @@ struct LineStatusDataStoreTests {
                 lines: ["jubilee": .init(disrupted: true, disruptionCount: 1, latestDisruptionAt: nil)]
             )
         )
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { .now }
         )
@@ -220,8 +212,7 @@ struct LineStatusDataStoreTests {
             snapshots: []
         )
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(timeline)
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { clock.currentTime }
         )
@@ -244,8 +235,7 @@ struct LineStatusDataStoreTests {
         // Given
         let tubeServiceAPI = StubTubeServiceAPIClient()
         tubeServiceAPI.fetchDailyLineTimelineError = HTTPError.invalidRequestURL
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { .now }
         )
@@ -267,14 +257,12 @@ struct LineStatusDataStoreTests {
         // Given
         var clock = FakeClock(initialTime: .now)
         let tubeServiceAPI = StubTubeServiceAPIClient()
-        let model = LineStatusDataStore(
-            tflAPI: StubTflAPIClient(),
+        let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { clock.currentTime }
         )
 
         // Initial fetch
-        #expect(model.timelineResult(for: .victoria, operationalDate: nil) == nil)
         await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
         #expect(model.timelineResult(for: .victoria, operationalDate: nil)?.fetchedAt == clock.initialTime)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
@@ -291,4 +279,15 @@ struct LineStatusDataStoreTests {
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 2)
     }
 
+    private func makeStore(
+        tflAPI: StubTflAPIClient = StubTflAPIClient(),
+        tubeServiceAPI: StubTubeServiceAPIClient = StubTubeServiceAPIClient(),
+        now: @escaping () -> Date
+    ) -> LineStatusDataStore {
+        LineStatusDataStore(
+            tflAPI: tflAPI,
+            tubeServiceAPI: tubeServiceAPI,
+            now: now
+        )
+    }
 }

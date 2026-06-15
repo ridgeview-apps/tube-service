@@ -13,12 +13,6 @@ public final class LineStatusDataStore {
         case planned(DateInterval)
     }
 
-    public struct FetchResult<Value: Sendable>: Sendable {
-        public var value: Value
-        public var fetchedAt: Date?
-        public var fetchState: DataFetchState
-    }
-
     private struct DisruptionSummaryCache {
         var disruptedLineIDs: Set<TrainLineID>
         var fetchedAt: Date
@@ -28,39 +22,6 @@ public final class LineStatusDataStore {
         let lineID: TrainLineID
         let operationalDate: Date?
     }
-
-    private struct FetchCache<Key: Hashable, Value> {
-        struct Entry {
-            var value: Value?
-            var fetchedAt: Date?
-            var fetchState: DataFetchState
-
-            static var initial: Entry {
-                Entry(value: nil, fetchedAt: nil, fetchState: .fetching)
-            }
-        }
-
-        private var storage: [Key: Entry] = [:]
-
-        subscript(key: Key) -> Entry? { storage[key] }
-
-        mutating func beginFetch(for key: Key) -> Bool {
-            if case .fetching = storage[key]?.fetchState { return false }
-            storage[key, default: .initial].fetchState = .fetching
-            return true
-        }
-
-        mutating func setSuccess(for key: Key, value: Value, fetchedAt: Date) {
-            storage[key]?.value = value
-            storage[key]?.fetchState = .success
-            storage[key]?.fetchedAt = fetchedAt
-        }
-
-        mutating func setFailure(for key: Key, error: Error) {
-            storage[key]?.fetchState = .failure(error)
-        }
-    }
-
 
     // MARK: - Properties / outputs
 
