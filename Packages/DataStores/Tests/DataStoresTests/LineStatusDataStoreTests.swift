@@ -124,6 +124,8 @@ struct LineStatusDataStoreTests {
             .init(
                 date: .now,
                 timezone: "Europe/London",
+                startsAt: .now,
+                endsAt: .now,
                 lines: [
                     "central": .init(disrupted: true, disruptionCount: 2, latestDisruptionAt: nil),
                     "victoria": .init(disrupted: false, disruptionCount: 0, latestDisruptionAt: nil)
@@ -179,6 +181,8 @@ struct LineStatusDataStoreTests {
             .init(
                 date: .now,
                 timezone: "Europe/London",
+                startsAt: .now,
+                endsAt: .now,
                 lines: ["jubilee": .init(disrupted: true, disruptionCount: 1, latestDisruptionAt: nil)]
             )
         )
