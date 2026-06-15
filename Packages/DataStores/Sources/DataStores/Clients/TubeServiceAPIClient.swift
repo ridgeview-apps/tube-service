@@ -31,7 +31,7 @@ enum TubeServiceAPIRoute {
         var request = URLRequest(url: try toURL(relativeTo: baseURL))
         request.httpMethod = "GET"
         request.setValue("application/json", forHTTPHeaderField: "Accept")
-        request.setValue(apiKey, forHTTPHeaderField: "X-API-KEY")
+        request.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
         return request
     }
 
