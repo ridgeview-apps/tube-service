@@ -4,8 +4,8 @@ import Models
 // MARK: - Data types
 
 public protocol TubeServiceAPIClientType: Sendable {
-    func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline>
-    func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary>
+    func fetchDailyLineTimeline(lineID: TrainLineID, operationalDate: Date?) async throws -> HTTPResponse<DailyLineTimeline>
+    func fetchDailyLineDisruptionSummary(operationalDate: Date?) async throws -> HTTPResponse<DailyDisruptionSummary>
 }
 
 
@@ -13,8 +13,8 @@ public protocol TubeServiceAPIClientType: Sendable {
 
 enum TubeServiceAPIRoute {
 
-    case dailyLineTimeline(lineID: TrainLineID, date: Date?)
-    case dailyLineDisruptionSummary(date: Date?)
+    case dailyLineTimeline(lineID: TrainLineID, operationalDate: Date?)
+    case dailyLineDisruptionSummary(operationalDate: Date?)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
         guard let url = try toURLComponents(relativeTo: baseURL).url else {
@@ -43,13 +43,15 @@ enum TubeServiceAPIRoute {
 
     private var queryItems: [URLQueryItem] {
         switch self {
-        case let .dailyLineTimeline(lineID, date):
+        case let .dailyLineTimeline(lineID, operationalDate):
             var items = [URLQueryItem(name: "line_id", value: lineID.rawValue)]
-            if let date { items.append(URLQueryItem(name: "date", value: date.toAPIDateParam())) }
+            if let operationalDate {
+                items.append(URLQueryItem(name: "date", value: operationalDate.toOperationalDateParam()))
+            }
             return items
-        case let .dailyLineDisruptionSummary(date):
-            guard let date else { return [] }
-            return [URLQueryItem(name: "date", value: date.toAPIDateParam())]
+        case let .dailyLineDisruptionSummary(operationalDate):
+            guard let operationalDate else { return [] }
+            return [URLQueryItem(name: "date", value: operationalDate.toOperationalDateParam())]
         }
     }
 
@@ -86,16 +88,16 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType {
 
     // MARK: - Data fetching
 
-    public func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
+    public func fetchDailyLineTimeline(lineID: TrainLineID, operationalDate: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
         try await fetchData(
-            for: .dailyLineTimeline(lineID: lineID, date: date),
+            for: .dailyLineTimeline(lineID: lineID, operationalDate: operationalDate),
             mappedTo: DailyLineTimeline.self
         )
     }
 
-    public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
+    public func fetchDailyLineDisruptionSummary(operationalDate: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
         try await fetchData(
-            for: .dailyLineDisruptionSummary(date: date),
+            for: .dailyLineDisruptionSummary(operationalDate: operationalDate),
             mappedTo: DailyDisruptionSummary.self
         )
     }

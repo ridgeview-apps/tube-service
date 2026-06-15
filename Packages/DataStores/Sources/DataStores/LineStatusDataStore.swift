@@ -111,7 +111,7 @@ public final class LineStatusDataStore {
 
     public func refreshDisruptionSummary() async {
         do {
-            let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(date: nil).decodedModel
+            let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
             let disruptedLineIDs = Set(
                 summary.lines.compactMap { key, value in
                     value.disrupted ? TrainLineID(rawValue: key) : nil

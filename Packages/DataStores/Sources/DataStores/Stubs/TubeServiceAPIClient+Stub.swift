@@ -21,7 +21,7 @@ import Shared
             )
         )
         public var fetchDailyLineTimelineError: Error?
-        public func fetchDailyLineTimeline(lineID: TrainLineID, date: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
+        public func fetchDailyLineTimeline(lineID: TrainLineID, operationalDate: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
             fetchDailyLineTimelineCallCount += 1
             if let fetchDailyLineTimelineError { throw fetchDailyLineTimelineError }
             return stubbedDailyLineTimeline
@@ -32,7 +32,7 @@ import Shared
             .init(operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, lines: [:])
         )
         public var fetchDailyLineDisruptionSummaryError: Error?
-        public func fetchDailyLineDisruptionSummary(date: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
+        public func fetchDailyLineDisruptionSummary(operationalDate: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
             fetchDailyLineDisruptionSummaryCallCount += 1
             if let fetchDailyLineDisruptionSummaryError { throw fetchDailyLineDisruptionSummaryError }
             return stubbedDailyLineDisruptionSummary

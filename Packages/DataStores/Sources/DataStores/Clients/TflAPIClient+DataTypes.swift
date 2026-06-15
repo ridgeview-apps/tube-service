@@ -120,6 +120,12 @@ extension Date {
         formatter.dateFormat = dateFormat
         return formatter.string(from: self)
     }
+
+    // TfL operational days run 4AM–4AM; subtract 4 hours so times between midnight and 4AM
+    // are attributed to the previous calendar day.
+    func toOperationalDateParam() -> String {
+        addingTimeInterval(-4 * 60 * 60).toAPIDateParam()
+    }
 }
 
 extension Sequence where Element == TrainLineID {
