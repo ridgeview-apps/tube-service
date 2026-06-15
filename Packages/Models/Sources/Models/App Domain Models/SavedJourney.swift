@@ -1,5 +1,4 @@
 import Foundation
-import Models
 
 public struct SavedJourney: Identifiable, Hashable, Codable, Sendable {
     public enum LocationType: Hashable, Codable, Sendable {

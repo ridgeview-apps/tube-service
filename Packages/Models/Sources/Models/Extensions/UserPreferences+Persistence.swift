@@ -1,5 +1,4 @@
 import Foundation
-import Models
 
 extension UserPreferences {
     enum CodingKeys: String, CodingKey {
