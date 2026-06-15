@@ -20,7 +20,7 @@ struct LineStatusDetailScreen: View {
     @State private var isShowingStatusHistory = false
 
     let line: Line
-    let fetchType: LineStatusDataStore.FetchType
+    let request: LineStatusDataStore.LineStatusRequest
 
 
     private var loadingState: LoadingState {
@@ -37,14 +37,14 @@ struct LineStatusDetailScreen: View {
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {
-        switch fetchType {
+        switch request {
         case .live: .live
         case .planned: .planned
         }
     }
 
     private var historyOperationalDate: Date? {
-        switch fetchType {
+        switch request {
         case .live: return nil
         case .planned(let interval): return interval.start
         }

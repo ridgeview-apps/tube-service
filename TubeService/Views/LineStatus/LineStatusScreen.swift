@@ -18,15 +18,15 @@ struct LineStatusScreen: View {
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
 
-    private var fetchType: LineStatusDataStore.FetchType {
-        selectedFilterOption.toFetchType(for: selectedDate)
+    private var request: LineStatusDataStore.LineStatusRequest {
+        selectedFilterOption.toLineStatusRequest(for: selectedDate)
     }
 
     var body: some View {
         NavigationStack {
             statusListView
                 .navigationDestination(item: $selectedLine) { line in
-                    LineStatusDetailScreen(line: line, fetchType: fetchType)
+                    LineStatusDetailScreen(line: line, request: request)
                 }
         }
         .onSceneDidBecomeActive {
@@ -47,7 +47,7 @@ struct LineStatusScreen: View {
         )
         .navigationTitle(Text(L10n.lineStatusNavigationTitle))
         .refreshable {
-            await model.refresh(for: fetchType, ignoringCache: true)
+            await model.refresh(for: request, ignoringCache: true)
         }
         .withSettingsToolbarButton()
         .onAppear {
@@ -70,19 +70,19 @@ struct LineStatusScreen: View {
     }
 
     private var loadingState: LoadingState {
-        model.statusResult(for: fetchType)?.fetchState.loadingState ?? .loaded
+        model.statusResult(for: request)?.fetchState.loadingState ?? .loaded
     }
 
     private var lines: [Line] {
-        (model.statusResult(for: fetchType)?.value ?? []).sortedByStatusSeverity()
+        (model.statusResult(for: request)?.value ?? []).sortedByStatusSeverity()
     }
 
     private var refreshDate: Date? {
-        model.statusResult(for: fetchType)?.fetchedAt
+        model.statusResult(for: request)?.fetchedAt
     }
 
     private func fetchIfStale() {
-        Task { await model.refresh(for: fetchType, ignoringCache: false) }
+        Task { await model.refresh(for: request, ignoringCache: false) }
     }
 
     private func refreshSelectedLine() {

@@ -4,7 +4,7 @@ import PresentationViews
 import Shared
 
 extension LineStatusFilterOption {
-    func toFetchType(for date: Date = .now) -> LineStatusDataStore.FetchType {
+    func toLineStatusRequest(for date: Date = .now) -> LineStatusDataStore.LineStatusRequest {
         switch self {
         case .today:
             return .live

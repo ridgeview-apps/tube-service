@@ -8,14 +8,13 @@ public final class LineStatusDataStore {
 
     // MARK: - Data types
 
-    public enum FetchType: Hashable, Sendable {
+    public enum LineStatusRequest: Hashable, Sendable {
         case live
         case planned(DateInterval)
     }
 
-    private struct DisruptionSummaryCache {
-        var disruptedLineIDs: Set<TrainLineID>
-        var fetchedAt: Date
+    private enum DisruptionSummaryCacheKey {
+        case current
     }
 
     private struct TimelineCacheKey: Hashable {
@@ -29,12 +28,12 @@ public final class LineStatusDataStore {
     public let tubeServiceAPI: TubeServiceAPIClientType
     public let now: () -> Date
 
-    private var lineStatusCache = FetchCache<FetchType, [Line]>()
-    private var disruptionSummaryCache: DisruptionSummaryCache?
+    private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
+    private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, Set<TrainLineID>>()
     private var timelineCache = FetchCache<TimelineCacheKey, DailyLineTimeline>()
 
     public var earlierDisruptedLineIDs: Set<TrainLineID> {
-        disruptionSummaryCache?.disruptedLineIDs ?? []
+        disruptionSummaryCache[.current]?.value ?? []
     }
 
 
@@ -50,8 +49,8 @@ public final class LineStatusDataStore {
         self.now = now
     }
 
-    public func statusResult(for fetchType: FetchType) -> FetchResult<[Line]>? {
-        guard let entry = lineStatusCache[fetchType] else { return nil }
+    public func statusResult(for request: LineStatusRequest) -> FetchResult<[Line]>? {
+        guard let entry = lineStatusCache[request] else { return nil }
         return FetchResult(value: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
@@ -67,49 +66,50 @@ public final class LineStatusDataStore {
 
     // MARK: - Actions / inputs
 
-    public func refreshLineStatusesIfStale(for fetchType: FetchType) async {
+    public func refreshLineStatusesIfStale(for request: LineStatusRequest) async {
         let fiveMinutes: TimeInterval = 5 * 60
-        if isStale(fetchedAt: lineStatusCache[fetchType]?.fetchedAt, threshold: fiveMinutes) {
-            await refreshLineStatuses(for: fetchType)
+        if isStale(fetchedAt: lineStatusCache[request]?.fetchedAt, threshold: fiveMinutes) {
+            await refreshLineStatuses(for: request)
         }
     }
 
-    public func refreshLineStatuses(for fetchType: FetchType) async {
-        guard lineStatusCache.beginFetch(for: fetchType) else { return }
+    public func refreshLineStatuses(for request: LineStatusRequest) async {
+        guard lineStatusCache.beginFetch(for: request) else { return }
         do {
-            let lines = try await fetchLineStatuses(for: fetchType)
-            lineStatusCache.setSuccess(for: fetchType, value: lines, fetchedAt: now())
+            let lines = try await fetchLineStatuses(for: request)
+            lineStatusCache.setSuccess(for: request, value: lines, fetchedAt: now())
         } catch {
-            lineStatusCache.setFailure(for: fetchType, error: error)
+            lineStatusCache.setFailure(for: request, error: error)
         }
     }
 
-    public func refresh(for fetchType: FetchType, ignoringCache: Bool) async {
-        if case .live = fetchType {
+    public func refresh(for request: LineStatusRequest, ignoringCache: Bool) async {
+        if case .live = request {
             async let lineStatuses: () =
                 ignoringCache
-                ? refreshLineStatuses(for: fetchType)
-                : refreshLineStatusesIfStale(for: fetchType)
+                ? refreshLineStatuses(for: request)
+                : refreshLineStatusesIfStale(for: request)
             async let disruptionSummary: () =
                 ignoringCache
                 ? refreshDisruptionSummary()
                 : refreshDisruptionSummaryIfStale()
             _ = await (lineStatuses, disruptionSummary)
         } else if ignoringCache {
-            await refreshLineStatuses(for: fetchType)
+            await refreshLineStatuses(for: request)
         } else {
-            await refreshLineStatusesIfStale(for: fetchType)
+            await refreshLineStatusesIfStale(for: request)
         }
     }
 
     public func refreshDisruptionSummaryIfStale() async {
         let thirtyMinutes: TimeInterval = 30 * 60
-        if isStale(fetchedAt: disruptionSummaryCache?.fetchedAt, threshold: thirtyMinutes) {
+        if isStale(fetchedAt: disruptionSummaryCache[.current]?.fetchedAt, threshold: thirtyMinutes) {
             await refreshDisruptionSummary()
         }
     }
 
     public func refreshDisruptionSummary() async {
+        guard disruptionSummaryCache.beginFetch(for: .current) else { return }
         do {
             let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
             let disruptedLineIDs = Set(
@@ -117,9 +117,9 @@ public final class LineStatusDataStore {
                     value.disrupted ? TrainLineID(rawValue: key) : nil
                 }
             )
-            disruptionSummaryCache = DisruptionSummaryCache(disruptedLineIDs: disruptedLineIDs, fetchedAt: now())
+            disruptionSummaryCache.setSuccess(for: .current, value: disruptedLineIDs, fetchedAt: now())
         } catch {
-            // Preserve existing cache on failure rather than clearing it
+            disruptionSummaryCache.setFailure(for: .current, error: error)
         }
     }
 
@@ -146,8 +146,8 @@ public final class LineStatusDataStore {
         (fetchedAt ?? .distantPast) <= now() - threshold
     }
 
-    private func fetchLineStatuses(for fetchType: FetchType) async throws -> [Line] {
-        switch fetchType {
+    private func fetchLineStatuses(for request: LineStatusRequest) async throws -> [Line] {
+        switch request {
         case .live:
             return try await tflAPI.fetchCurrentLineStatuses().decodedModel
         case let .planned(dateInterval):

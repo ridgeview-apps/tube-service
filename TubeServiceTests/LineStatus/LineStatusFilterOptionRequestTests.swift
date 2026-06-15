@@ -6,16 +6,16 @@ import Testing
 
 @testable import Tube_Service
 
-struct LineStatusFilterOptionFetchTypeTests {
+struct LineStatusFilterOptionRequestTests {
 
     @Test
     func today_returnsLive() {
-        #expect(LineStatusFilterOption.today.toFetchType() == .live)
+        #expect(LineStatusFilterOption.today.toLineStatusRequest() == .live)
     }
 
     @Test
     func future_withToday_returnsLive() {
-        #expect(LineStatusFilterOption.future.toFetchType(for: .now) == .live)
+        #expect(LineStatusFilterOption.future.toLineStatusRequest(for: .now) == .live)
     }
 
     @Test
@@ -23,7 +23,7 @@ struct LineStatusFilterOptionFetchTypeTests {
         let tomorrow = try #require(Calendar.london.startOfTomorrow())
         let dayAfter = try #require(Calendar.london.startOfNextDay(after: tomorrow))
 
-        let result = LineStatusFilterOption.future.toFetchType(for: tomorrow)
+        let result = LineStatusFilterOption.future.toLineStatusRequest(for: tomorrow)
 
         #expect(result == .planned(.init(start: tomorrow, end: dayAfter)))
     }
@@ -33,7 +33,7 @@ struct LineStatusFilterOptionFetchTypeTests {
         let expectedStart = try #require(Calendar.london.startOfTomorrow())
         let expectedEnd = try #require(Calendar.london.startOfNextDay(after: expectedStart))
 
-        let result = LineStatusFilterOption.tomorrow.toFetchType()
+        let result = LineStatusFilterOption.tomorrow.toLineStatusRequest()
 
         #expect(result == .planned(.init(start: expectedStart, end: expectedEnd)))
     }
@@ -42,7 +42,7 @@ struct LineStatusFilterOptionFetchTypeTests {
     func thisWeekend_returnsPlannedWeekendInterval() throws {
         let expectedInterval = try #require(Calendar.london.thisOrNextWeekendDateInterval(for: .now))
 
-        let result = LineStatusFilterOption.thisWeekend.toFetchType()
+        let result = LineStatusFilterOption.thisWeekend.toLineStatusRequest()
 
         #expect(result == .planned(expectedInterval))
     }

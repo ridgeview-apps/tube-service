@@ -71,7 +71,7 @@ struct LocatedStationsScreen: View {
     @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
         switch selection {
         case let .lineStatusDetail(line):
-            LineStatusDetailScreen(line: line, fetchType: .live)
+            LineStatusDetailScreen(line: line, request: .live)
         case let .arrivalsBoards(stationName, lineGroup):
             ArrivalsBoardListScreen(
                 stationName: stationName,
