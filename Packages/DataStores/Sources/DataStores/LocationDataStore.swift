@@ -27,7 +27,7 @@ public final class LocationDataStore: NSObject {
     public private(set) var currentLocationCoordinate: LocationCoordinate?
     public private(set) var currentLocationName: LocationName?
     public private(set) var detectionState: DetectionState = .detected
-    public private(set) var nearbyStations: [NearbyStation] = []
+    public private(set) var nearestStations: [LocatedStation] = []
 
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false
@@ -91,7 +91,7 @@ public final class LocationDataStore: NSObject {
         if shouldRefreshLocationName(forOldCoordinate: oldValue, newCoordinate: newValue) {
             refreshLocationNameForChangedCoordinate()
         }
-        updateNearbyStations()
+        updateNearestStations()
     }
 
     private func refreshLocationNameForChangedCoordinate() {
@@ -148,13 +148,13 @@ public final class LocationDataStore: NSObject {
         currentLocationNameLastUpdated = .now
     }
 
-    private func updateNearbyStations() {
+    private func updateNearestStations() {
         guard let currentLocationCoordinate else {
             assertionFailure("Trying to update nearby stations without a location")
             return
         }
 
-        nearbyStations = stations.allLondon.nearestStations(to: currentLocationCoordinate)
+        nearestStations = stations.allLondon.nearestStations(to: currentLocationCoordinate)
     }
 
     private func resetLocationState() {
@@ -164,19 +164,20 @@ public final class LocationDataStore: NSObject {
         currentLocationName = nil
         currentLocationNameLastUpdated = .distantPast
         detectionState = .detected
-        nearbyStations = []
+        nearestStations = []
     }
 }
 
 extension Sequence where Element == Station {
-    func nearestStations(to location: LocationCoordinate) -> [NearbyStation] {
+    func nearestStations(to location: LocationCoordinate) -> [LocatedStation] {
         let userLocation = location.toCLLocation()
 
-        return map {
-            let stationLocation = $0.location.toCLLocation()
-            return NearbyStation(
+        return map { station in
+            let stationLocation = station.location.toCLLocation()
+            return LocatedStation(
+                station,
                 distance: userLocation.distance(from: stationLocation),
-                station: $0
+
             )
         }.sorted {
             $0.distance < $1.distance

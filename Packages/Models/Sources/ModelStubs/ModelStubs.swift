@@ -88,6 +88,26 @@ public extension ModelStubs {
     static let oakleighParkRailStation = nationRailStopPoints.first { $0.icsCode == "1001218" }!
 }
 
+// MARK: - Located stations
+public extension ModelStubs {
+    static let locatedStationWoodsidePark = LocatedStation(
+        woodsideParkStation,
+        distance: 606.16
+    )
+    static let locatedStationWestFinchley = LocatedStation(
+        westFinchleyStation,
+        distance: 1270.45
+    )
+    static let locatedStationTotteridgeAndWhetstone = LocatedStation(
+        totteridgeAndWhetstoneStation,
+        distance: 1387.44
+    )
+    static let locatedStationFinchleyCentral = LocatedStation(
+        finchleyCentralStation,
+        distance: 2216.50
+    )
+}
+
 
 // MARK: - Disrupted points
 

@@ -4,23 +4,21 @@ import SwiftUI
 
 // MARK: - Data types
 
-public struct NearbyStationsResultsSectionState {
+public struct LocatedStationsResultsSectionState: Sendable {
 
-    public var nearbyStations: [NearbyStation]
+    public var stations: [LocatedStation]
     public let pageSize: Int
     public var currentPageNo: Int
 
     public init(
-        nearbyStations: [NearbyStation],
+        stations: [LocatedStation],
         pageSize: Int = 5,
         currentPageNo: Int = 1
     ) {
-        self.nearbyStations = nearbyStations
+        self.stations = stations
         self.pageSize = pageSize
         self.currentPageNo = currentPageNo
     }
 
-    public static var empty: Self {
-        .init(nearbyStations: [])
-    }
+    public static let empty = LocatedStationsResultsSectionState(stations: [])
 }

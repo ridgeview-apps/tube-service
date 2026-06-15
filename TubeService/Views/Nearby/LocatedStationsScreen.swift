@@ -4,20 +4,20 @@ import PresentationViews
 import SwiftUI
 
 @MainActor
-struct NearbyStationsScreen: View {
+struct LocatedStationsScreen: View {
 
     @Environment(StationsDataStore.self) var stations
     @Environment(LocationDataStore.self) var location
 
-    @State private var selectedStation: NearbyStation?
-    @State private var sectionState: NearbyStationsResultsSectionState = .empty
+    @State private var selectedStation: LocatedStation?
+    @State private var sectionState: LocatedStationsResultsSectionState = .empty
 
     // MARK: - Layout
 
     var body: some View {
         NavigationStack {
             nearbyStationsListView
-                .navigationDestination(for: NearbyStation.self) { station in
+                .navigationDestination(for: LocatedStation.self) { station in
                     StationScreen(station: station.station)
                 }
                 .navigationDestination(for: StationView.Selection.self) { selection in
@@ -31,9 +31,9 @@ struct NearbyStationsScreen: View {
     }
 
     private var nearbyStationsListView: some View {
-        NearbyStationsView(
+        LocatedStationsView(
             locationUIStatus: locationUIStatus,
-            onAction: handleNearbyStationsViewAction,
+            onAction: handleLocatedStationsViewAction,
             sectionState: $sectionState
         )
         .withSettingsToolbarButton()
@@ -61,7 +61,7 @@ struct NearbyStationsScreen: View {
         }
     }
 
-    private func handleNearbyStationsViewAction(_ action: NearbyStationsView.Action) {
+    private func handleLocatedStationsViewAction(_ action: LocatedStationsView.Action) {
         switch action {
         case .tappedRefresh:
             location.refreshCurrentLocation()
@@ -81,12 +81,12 @@ struct NearbyStationsScreen: View {
     }
 
     private func updateResultsSectionState(reset: Bool = false) {
-        let nearbyStations = location.nearbyStations
+        let nearbyStations = location.nearestStations
 
         if reset {
-            sectionState = .init(nearbyStations: nearbyStations)
+            sectionState = .init(stations: nearbyStations)
         } else {
-            sectionState.nearbyStations = nearbyStations
+            sectionState.stations = nearbyStations
         }
     }
 }
@@ -96,7 +96,7 @@ struct NearbyStationsScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment {
-            NearbyStationsScreen()
+            LocatedStationsScreen()
         }
         .navigationTitle("Nearby stations")
     }

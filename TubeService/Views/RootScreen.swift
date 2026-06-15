@@ -49,7 +49,7 @@ struct RootScreen: View {
 
     private var nearbyStationsTab: some TabContent<Never> {
         Tab {
-            NearbyStationsScreen()
+            LocatedStationsScreen()
         } label: {
             Label(L10n.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
         }

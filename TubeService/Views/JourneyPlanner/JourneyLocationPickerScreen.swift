@@ -94,7 +94,7 @@ struct JourneyLocationPickerScreen: View {
 
     private func refreshNearbyStationSection() {
         nearbyStationsSection = .nearbyStations(
-            location.nearbyStations.prefix(3).map { .station($0.station) }
+            location.nearestStations.prefix(3).map { .station($0.station) }
         )
     }
 

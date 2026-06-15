@@ -2,7 +2,7 @@ import Shared
 import SwiftUI
 import Models
 
-public struct NearbyStationsView: View {
+public struct LocatedStationsView: View {
 
     public enum Action: Sendable {
         case tappedRefresh
@@ -11,14 +11,14 @@ public struct NearbyStationsView: View {
     let locationUIStatus: LocationUIStatus
     let onAction: (Action) -> Void
 
-    @Binding var sectionState: NearbyStationsResultsSectionState
+    @Binding var sectionState: LocatedStationsResultsSectionState
 
     // MARK: - Init
 
     public init(
         locationUIStatus: LocationUIStatus,
         onAction: @escaping (Action) -> Void,
-        sectionState: Binding<NearbyStationsResultsSectionState>
+        sectionState: Binding<LocatedStationsResultsSectionState>
     ) {
         self.locationUIStatus = locationUIStatus
         self.onAction = onAction
@@ -29,7 +29,7 @@ public struct NearbyStationsView: View {
     // MARK: Layout
 
     public var body: some View {
-        nearbyStationsListView
+        locatedStationsListView
             .locationUIStatus(locationUIStatus)
             .defaultMaxWidthWithFullBackground()
             .frame(maxHeight: .infinity)
@@ -37,7 +37,7 @@ public struct NearbyStationsView: View {
             .accessibilityIdentifier("acc.id.nearby.stations")
     }
 
-    @ViewBuilder private var nearbyStationsListView: some View {
+    @ViewBuilder private var locatedStationsListView: some View {
         ScrollViewReader { reader in
             List {
                 resultsSectionView
@@ -81,11 +81,11 @@ public struct NearbyStationsView: View {
         }
     }
 
-    private var visibleStations: [NearbyStation] {
+    private var visibleStations: [LocatedStation] {
         let currentPageNo = sectionState.currentPageNo
         let pageSize = sectionState.pageSize
 
-        return Array(sectionState.nearbyStations.prefix(currentPageNo * pageSize))
+        return Array(sectionState.stations.prefix(currentPageNo * pageSize))
     }
 
     private var zeroResultsView: some View {
@@ -97,11 +97,11 @@ public struct NearbyStationsView: View {
 
     @ViewBuilder
     private var populatedResultsView: some View {
-        ForEach(visibleStations, id: \.station.id) { nearbyStation in
-            NavigationLink(value: nearbyStation) {
+        ForEach(visibleStations, id: \.station.id) { locatedStation in
+            NavigationLink(value: locatedStation) {
                 StationLineGroupCell(
-                    style: .distance(metres: nearbyStation.distance),
-                    station: nearbyStation.station
+                    style: .distance(metres: locatedStation.distance),
+                    station: locatedStation.station
                 )
                 .frame(minHeight: 52)
             }
@@ -153,7 +153,7 @@ public struct NearbyStationsView: View {
         let currentPageNo = sectionState.currentPageNo
         let pageSize = sectionState.pageSize
 
-        return sectionState.nearbyStations.count > (currentPageNo * pageSize)
+        return sectionState.stations.count > (currentPageNo * pageSize)
     }
 }
 
@@ -163,9 +163,9 @@ import ModelStubs
 
 private struct Previewer: View {
     var locationUIStyle: LocationUIStatus.Style
-    var onAction: (NearbyStationsView.Action) -> Void = { print($0) }
+    var onAction: (LocatedStationsView.Action) -> Void = { print($0) }
     @State var currentPageNo = 1
-    @State var sectionState: NearbyStationsResultsSectionState = .init(nearbyStations: [])
+    @State var sectionState: LocatedStationsResultsSectionState = .init(stations: [])
     var pagedResultsSize: Int = 5
 
     var locationUIStatus: LocationUIStatus {
@@ -176,13 +176,13 @@ private struct Previewer: View {
 
     var body: some View {
         NavigationStack {
-            NearbyStationsView(
+            LocatedStationsView(
                 locationUIStatus: locationUIStatus,
                 onAction: onAction,
                 sectionState: $sectionState
             )
             .navigationTitle("Nearby stations")
-            .navigationDestination(for: NearbyStation.self) { selection in
+            .navigationDestination(for: LocatedStation.self) { selection in
                 Text("\(String(describing: selection)) selected")
             }
         }
@@ -201,7 +201,7 @@ private struct Previewer: View {
 #Preview("Loading") {
     Previewer(
         locationUIStyle: .locationAllowed(.loading),
-        sectionState: .init(nearbyStations: [])
+        sectionState: .init(stations: [])
     )
 }
 
@@ -209,11 +209,11 @@ private struct Previewer: View {
     Previewer(
         locationUIStyle: .locationAllowed(.loaded),
         sectionState: .init(
-            nearbyStations: [
-                .init(distance: 606.16, station: ModelStubs.woodsideParkStation),
-                .init(distance: 1270.45, station: ModelStubs.westFinchleyStation),
-                .init(distance: 1387.44, station: ModelStubs.totteridgeAndWhetstoneStation),
-                .init(distance: 2216.50, station: ModelStubs.finchleyCentralStation)
+            stations: [
+                ModelStubs.locatedStationWoodsidePark,
+                ModelStubs.locatedStationWestFinchley,
+                ModelStubs.locatedStationTotteridgeAndWhetstone,
+                ModelStubs.locatedStationFinchleyCentral
             ],
             pageSize: 2
         ),
@@ -224,7 +224,7 @@ private struct Previewer: View {
 #Preview("Error") {
     Previewer(
         locationUIStyle: .locationAllowed(.failure(errorMessage: "Oops something went wrong")),
-        sectionState: .init(nearbyStations: [])
+        sectionState: .init(stations: [])
     )
 }
 
@@ -232,6 +232,6 @@ private struct Previewer: View {
 #Preview("Loaded - zero results") {
     Previewer(
         locationUIStyle: .locationAllowed(.loaded),
-        sectionState: .init(nearbyStations: [])
+        sectionState: .init(stations: [])
     )
 }
