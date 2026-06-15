@@ -74,7 +74,7 @@ struct LineStatusScreen: View {
     }
 
     private var lines: [Line] {
-        (model.result(for: fetchType)?.lines ?? []).sortedByStatusSeverity()
+        (model.result(for: fetchType)?.value ?? []).sortedByStatusSeverity()
     }
 
     private var refreshDate: Date? {

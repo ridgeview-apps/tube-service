@@ -30,7 +30,7 @@ struct LineStatusDataStoreTests {
         let requiredFetchedData = try #require(fetchedData)
         #expect(requiredFetchedData.fetchState.isSuccess)
         #expect(requiredFetchedData.fetchedAt == clock.currentTime)
-        #expect(!requiredFetchedData.lines.isEmpty)
+        #expect(!requiredFetchedData.value.isEmpty)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
     }
 
@@ -55,7 +55,7 @@ struct LineStatusDataStoreTests {
         let requiredFetchedData = try #require(fetchedData)
         #expect(requiredFetchedData.fetchState.isSuccess)
         #expect(requiredFetchedData.fetchedAt == clock.currentTime)
-        #expect(!requiredFetchedData.lines.isEmpty)
+        #expect(!requiredFetchedData.value.isEmpty)
         #expect(tflAPI.fetchLineStatusesForDateRangeCallCount == 1)
     }
 
@@ -79,7 +79,7 @@ struct LineStatusDataStoreTests {
         let requiredFetchedData = try #require(fetchedData)
         #expect(requiredFetchedData.fetchState.isError)
         #expect(requiredFetchedData.fetchedAt == nil)
-        #expect(requiredFetchedData.lines.isEmpty)
+        #expect(requiredFetchedData.value.isEmpty)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
     }
 
@@ -235,7 +235,7 @@ struct LineStatusDataStoreTests {
         let requiredResult = try #require(result)
         #expect(requiredResult.fetchState.isSuccess)
         #expect(requiredResult.fetchedAt == clock.currentTime)
-        #expect(requiredResult.timeline == timeline)
+        #expect(requiredResult.value == timeline)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
     }
 
@@ -258,7 +258,7 @@ struct LineStatusDataStoreTests {
         let requiredResult = try #require(result)
         #expect(requiredResult.fetchState.isError)
         #expect(requiredResult.fetchedAt == nil)
-        #expect(requiredResult.timeline == nil)
+        #expect(requiredResult.value == nil)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
     }
 

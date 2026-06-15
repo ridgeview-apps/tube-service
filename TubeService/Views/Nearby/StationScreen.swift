@@ -63,7 +63,7 @@ struct StationScreen: View {
     }
 
     private var statusCells: [LineStatusCell.Style] {
-        let allLineStatuses = lineStatus.result(for: .live)?.lines ?? []
+        let allLineStatuses = lineStatus.result(for: .live)?.value ?? []
         return allLineStatuses.toLineStatusCellStyles(for: station)
     }
 

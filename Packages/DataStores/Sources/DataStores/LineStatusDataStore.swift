@@ -13,14 +13,8 @@ public final class LineStatusDataStore {
         case planned(DateInterval)
     }
 
-    public struct LineStatusResult: Sendable {
-        public var lines: [Line]
-        public var fetchedAt: Date?
-        public var fetchState: DataFetchState
-    }
-
-    public struct TimelineResult: Sendable {
-        public var timeline: DailyLineTimeline?
+    public struct FetchResult<Value: Sendable>: Sendable {
+        public var value: Value
         public var fetchedAt: Date?
         public var fetchState: DataFetchState
     }
@@ -95,15 +89,18 @@ public final class LineStatusDataStore {
         self.now = now
     }
 
-    public func result(for fetchType: FetchType) -> LineStatusResult? {
+    public func result(for fetchType: FetchType) -> FetchResult<[Line]>? {
         guard let entry = lineStatusCache[fetchType] else { return nil }
-        return LineStatusResult(lines: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
+        return FetchResult(value: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
-    public func timelineResult(for lineID: TrainLineID, operationalDate: Date?) -> TimelineResult? {
+    public func timelineResult(
+        for lineID: TrainLineID,
+        operationalDate: Date?
+    ) -> FetchResult<DailyLineTimeline?>? {
         let key = TimelineCacheKey(lineID: lineID, operationalDate: operationalDate)
         guard let entry = timelineCache[key] else { return nil }
-        return TimelineResult(timeline: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
+        return FetchResult(value: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
 

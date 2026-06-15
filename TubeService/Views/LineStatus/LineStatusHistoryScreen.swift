@@ -25,7 +25,7 @@ struct LineStatusHistoryScreen: View {
     private var historyState: LineStatusHistoryState {
         let result = model.timelineResult(for: lineID, operationalDate: operationalDate)
         let loadingState = result?.fetchState.loadingState ?? .loading
-        let snapshots = result?.timeline?.snapshots ?? []
+        let snapshots = result?.value?.snapshots ?? []
         return .unlocked(snapshots: snapshots, loadingState: loadingState)
     }
 
