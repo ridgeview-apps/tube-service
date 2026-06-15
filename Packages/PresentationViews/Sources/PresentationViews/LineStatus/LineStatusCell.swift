@@ -153,7 +153,7 @@ public struct LineStatusCell: View {
 
                 Spacer(minLength: 12)
             }
-            .frame(width: 44)
+            .frame(width: dynamicTypeSize.isAccessibilitySize ? 44 : nil)
         }
 
     }
