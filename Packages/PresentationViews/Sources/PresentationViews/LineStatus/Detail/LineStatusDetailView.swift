@@ -16,7 +16,7 @@ public struct LineStatusDetailView: View {
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
-    public let statusHistoryAccess: StatusHistoryButton.Access
+    public let statusHistoryAccess: LineStatusHistoryButton.Access
     public let statusContext: StatusContext
 
     @Binding public var isFavourite: Bool
@@ -28,7 +28,7 @@ public struct LineStatusDetailView: View {
         isFavourite: Binding<Bool>,
         loadingState: LoadingState,
         refreshDate: Date?,
-        statusHistoryAccess: StatusHistoryButton.Access,
+        statusHistoryAccess: LineStatusHistoryButton.Access,
         statusContext: StatusContext,
         onAction: @escaping (Action) -> Void
     ) {
@@ -51,7 +51,7 @@ public struct LineStatusDetailView: View {
                 }
                 if statusContext == .live {
                     Section {
-                        StatusHistoryButton(
+                        LineStatusHistoryButton(
                             access: statusHistoryAccess,
                             lineColor: line.id.backgroundColor,
                             onTap: { onAction(.statusHistoryTapped) }
@@ -185,7 +185,7 @@ private struct Previewer: View {
     let line: Line
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
-    var statusHistoryAccess = StatusHistoryButton.Access.locked
+    var statusHistoryAccess = LineStatusHistoryButton.Access.locked
     var statusContext = LineStatusDetailView.StatusContext.live
     @State var isFavourite = false
 

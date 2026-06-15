@@ -1,9 +1,7 @@
 import Models
 import SwiftUI
 
-// MARK: - StatusHistoryButton
-
-public struct StatusHistoryButton: View {
+public struct LineStatusHistoryButton: View {
 
     public enum Access {
         case locked
@@ -81,11 +79,11 @@ public struct StatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    StatusHistoryButton(access: .locked, lineColor: .red, onTap: {})
+    LineStatusHistoryButton(access: .locked, lineColor: .red, onTap: {})
         .padding()
 }
 
 #Preview("Unlocked") {
-    StatusHistoryButton(access: .unlocked, lineColor: .blue, onTap: {})
+    LineStatusHistoryButton(access: .unlocked, lineColor: .blue, onTap: {})
         .padding()
 }

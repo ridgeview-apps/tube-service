@@ -31,7 +31,7 @@ struct LineStatusDetailScreen: View {
         return model.statusResult(for: .live)?.fetchedAt
     }
 
-    private var statusHistoryAccess: StatusHistoryButton.Access {
+    private var statusHistoryAccess: LineStatusHistoryButton.Access {
         // TODO: fix later (it's temporarily unlocked to accommodated local testing)
         .unlocked
     }
