@@ -29,12 +29,19 @@ struct LineStatusDetailScreen: View {
         return model.result(for: .live)?.fetchedAt
     }
 
+    private var statusHistoryState: LineStatusDetailView.StatusHistoryState {
+        // TODO: fix this once fetching logic behaviour is implemented
+        // It should ALWAYS be hidden for non-live states
+        fetchType != .live ? .hidden : .unlocked
+    }
+
     var body: some View {
         LineStatusDetailView(
             line: line,
             isFavourite: isFavouriteLine(for: line.id),
             loadingState: loadingState,
             refreshDate: refreshDate,
+            statusHistoryState: statusHistoryState,
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)
