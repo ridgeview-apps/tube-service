@@ -6,18 +6,15 @@ import Shared
 @Observable
 public final class SystemStatusDataStore {
 
-    // MARK: - Properties / outputs
+    // MARK: - State
 
-    public let systemStatusAPI: SystemStatusAPIClientType
-    public let now: () -> Date
-    public let calendar: Calendar
+    private let systemStatusAPI: SystemStatusAPIClientType
+    private let now: () -> Date
+    private let calendar: Calendar
 
     public private(set) var currentStatus: SystemStatus?
     private(set) var lastFetchedAt: Date = .distantPast
     private(set) var fetchState: DataFetchState?
-
-
-    // MARK: - Init
 
     public init(
         systemStatusAPI: SystemStatusAPIClientType,
@@ -29,8 +26,7 @@ public final class SystemStatusDataStore {
         self.calendar = calendar
     }
 
-
-    // MARK: - Actions / inputs
+    // MARK: - Refreshing
 
     public func fetchSystemStatusIfStale() async {
         let tenMinutes = TimeInterval(10 * 60)

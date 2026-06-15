@@ -11,12 +11,6 @@ public enum LocalSearchError: Error {
 @Observable
 public final class LocalSearchResultsStore {
 
-    public private(set) var results: [LocationName] = []
-    public private(set) var lastErrorMessage: String?
-
-    private let completerClient: LocalSearchCompleterClientType
-    private let searchCompleterDelegate = LocalSearchCompleterDelegate()
-
     public static let london = MKCoordinateRegion(
         center: .init(
             latitude: 51.5007282,
@@ -28,7 +22,14 @@ public final class LocalSearchResultsStore {
         )
     )
 
-    public let searchRegion: MKCoordinateRegion
+    // MARK: - State
+
+    private let completerClient: LocalSearchCompleterClientType
+    private let searchCompleterDelegate = LocalSearchCompleterDelegate()
+    private let searchRegion: MKCoordinateRegion
+
+    public private(set) var results: [LocationName] = []
+    public private(set) var lastErrorMessage: String?
 
     public init(
         completerClient: LocalSearchCompleterClientType = MKLocalSearchCompleter(),
@@ -43,6 +44,8 @@ public final class LocalSearchResultsStore {
         }
         completerClient.setDelegate(searchCompleterDelegate)
     }
+
+    // MARK: - Actions
 
     public func searchForPlaces(matching searchTerm: String) {
         results = []
@@ -66,9 +69,19 @@ public final class LocalSearchResultsStore {
 
         return LocationCoordinate(lat: coordinate.latitude, lon: coordinate.longitude)
     }
-}
 
-// MARK: - MKLocalSearchCompleterDelegate
+    // MARK: - Implementation
+
+    private func handleLocalSearchCompleterDelegateAction(_ action: LocalSearchCompleterDelegate.Action) {
+        switch action {
+        case .didUpdateResults:
+            lastErrorMessage = nil
+            results = completerClient.searchResults.removingDuplicates()
+        case .didFailWithError(let error):
+            lastErrorMessage = error.localizedDescription
+        }
+    }
+}
 
 private class LocalSearchCompleterDelegate: NSObject, MKLocalSearchCompleterDelegate {
     enum Action {
@@ -85,20 +98,5 @@ private class LocalSearchCompleterDelegate: NSObject, MKLocalSearchCompleterDele
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
         onAction?(.didFailWithError(error))
-    }
-}
-
-private extension LocalSearchResultsStore {
-
-    func handleLocalSearchCompleterDelegateAction(_ action: LocalSearchCompleterDelegate.Action) {
-        switch action {
-        case .didUpdateResults:
-            lastErrorMessage = nil
-
-            results = completerClient.searchResults.removingDuplicates()
-
-        case .didFailWithError(let error):
-            lastErrorMessage = error.localizedDescription
-        }
     }
 }

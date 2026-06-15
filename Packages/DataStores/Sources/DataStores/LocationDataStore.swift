@@ -1,6 +1,6 @@
 import CoreLocation
-import Models
 import Foundation
+import Models
 
 public protocol ReverseGeocoderType: Sendable {
     func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark]
@@ -12,16 +12,18 @@ extension CLGeocoder: ReverseGeocoderType {}
 @MainActor
 public final class LocationDataStore: NSObject {
 
-    private let locationManager: LocationManagerType
-    private let locationManagerDelegate = LocationManagerDelegate()
-    private let stations: StationsDataStore
-    private let geocoder: ReverseGeocoderType
-
     public enum DetectionState {
         case detecting
         case failed(Error)
         case detected
     }
+
+    // MARK: - State
+
+    private let locationManager: LocationManagerType
+    private let locationManagerDelegate = LocationManagerDelegate()
+    private let stations: StationsDataStore
+    private let geocoder: ReverseGeocoderType
 
     public private(set) var authorizationStatus: CLAuthorizationStatus
     public private(set) var currentLocationCoordinate: LocationCoordinate?
@@ -32,14 +34,6 @@ public final class LocationDataStore: NSObject {
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false
     private var locationNameUpdateTask: Task<Void, Never>?
-
-    public var isAuthorized: Bool {
-        locationManager.isAuthorized
-    }
-
-    public var isAuthorizedOrUndetermined: Bool {
-        locationManager.isAuthorized || authorizationStatus == .notDetermined
-    }
 
     public init(
         locationManager: LocationManagerType,
@@ -57,6 +51,18 @@ public final class LocationDataStore: NSObject {
         }
         locationManager.setDelegate(locationManagerDelegate)
     }
+
+    // MARK: - Outputs
+
+    public var isAuthorized: Bool {
+        locationManager.isAuthorized
+    }
+
+    public var isAuthorizedOrUndetermined: Bool {
+        locationManager.isAuthorized || authorizationStatus == .notDetermined
+    }
+
+    // MARK: - Actions
 
     public func promptForPermissions() {
         detectionState = .detecting
@@ -83,6 +89,28 @@ public final class LocationDataStore: NSObject {
 
     public func stopLocationUpdates() {
         locationManager.stopMonitoringSignificantLocationChanges()
+    }
+
+    // MARK: - Implementation
+
+    private func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
+        switch action {
+        case .didChangeAuthorization:
+            authorizationStatus = locationManager.authorizationStatus
+            startLocationUpdatesIfAuthorized()
+
+            if !isAuthorized {
+                resetLocationState()
+            }
+        case .didFailWithError(_, let error):
+            detectionState = .failed(error)
+        case .didUpdateLocations(_, let locations):
+            guard let location = locations.last?.toLocation() else {
+                return
+            }
+            detectionState = .detected
+            processLocationUpdate(location)
+        }
     }
 
     private func processLocationUpdate(_ newValue: LocationCoordinate) {
@@ -200,8 +228,6 @@ private extension CLPlacemark {
 }
 
 
-// MARK: - CLLocationManagerDelegate
-
 private class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
     enum Action {
         case didChangeAuthorization(LocationManagerType)
@@ -221,28 +247,5 @@ private class LocationManagerDelegate: NSObject, CLLocationManagerDelegate {
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         onAction?(.didUpdateLocations(manager, locations))
-    }
-}
-
-private extension LocationDataStore {
-
-    func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
-        switch action {
-        case .didChangeAuthorization:
-            authorizationStatus = locationManager.authorizationStatus
-            startLocationUpdatesIfAuthorized()  // i.e. CHANGED to authorized (e.g. so permissions have just been granted)
-
-            if !isAuthorized {
-                resetLocationState()
-            }
-        case .didFailWithError(_, let error):
-            detectionState = .failed(error)
-        case .didUpdateLocations(_, let locations):
-            guard let location = locations.last?.toLocation() else {
-                return
-            }
-            detectionState = .detected
-            processLocationUpdate(location)
-        }
     }
 }

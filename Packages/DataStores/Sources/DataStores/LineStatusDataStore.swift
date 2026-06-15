@@ -6,8 +6,6 @@ import Shared
 @Observable
 public final class LineStatusDataStore {
 
-    // MARK: - Data types
-
     public enum LineStatusRequest: Hashable, Sendable {
         case live
         case planned(DateInterval)
@@ -22,22 +20,15 @@ public final class LineStatusDataStore {
         let operationalDate: Date?
     }
 
-    // MARK: - Properties / outputs
+    // MARK: - State
 
-    public let tflAPI: TflAPIClientType
-    public let tubeServiceAPI: TubeServiceAPIClientType
-    public let now: () -> Date
+    private let tflAPI: TflAPIClientType
+    private let tubeServiceAPI: TubeServiceAPIClientType
+    private let now: () -> Date
 
     private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
     private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, Set<TrainLineID>>()
     private var timelineCache = FetchCache<TimelineCacheKey, DailyLineTimeline>()
-
-    public var earlierDisruptedLineIDs: Set<TrainLineID> {
-        disruptionSummaryCache[.current]?.value ?? []
-    }
-
-
-    // MARK: - Init
 
     public init(
         tflAPI: TflAPIClientType,
@@ -47,6 +38,12 @@ public final class LineStatusDataStore {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
         self.now = now
+    }
+
+    // MARK: - Outputs
+
+    public var earlierDisruptedLineIDs: Set<TrainLineID> {
+        disruptionSummaryCache[.current]?.value ?? []
     }
 
     public func statusResult(for request: LineStatusRequest) -> FetchResult<[Line]>? {
@@ -63,25 +60,7 @@ public final class LineStatusDataStore {
         return FetchResult(value: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
-
-    // MARK: - Actions / inputs
-
-    public func refreshLineStatusesIfStale(for request: LineStatusRequest) async {
-        let fiveMinutes: TimeInterval = 5 * 60
-        if isStale(fetchedAt: lineStatusCache[request]?.fetchedAt, threshold: fiveMinutes) {
-            await refreshLineStatuses(for: request)
-        }
-    }
-
-    public func refreshLineStatuses(for request: LineStatusRequest) async {
-        guard lineStatusCache.beginFetch(for: request) else { return }
-        do {
-            let lines = try await fetchLineStatuses(for: request)
-            lineStatusCache.setSuccess(for: request, value: lines, fetchedAt: now())
-        } catch {
-            lineStatusCache.setFailure(for: request, error: error)
-        }
-    }
+    // MARK: - Refreshing
 
     public func refresh(for request: LineStatusRequest, ignoringCache: Bool) async {
         if case .live = request {
@@ -98,6 +77,23 @@ public final class LineStatusDataStore {
             await refreshLineStatuses(for: request)
         } else {
             await refreshLineStatusesIfStale(for: request)
+        }
+    }
+
+    public func refreshLineStatusesIfStale(for request: LineStatusRequest) async {
+        let fiveMinutes: TimeInterval = 5 * 60
+        if isStale(fetchedAt: lineStatusCache[request]?.fetchedAt, threshold: fiveMinutes) {
+            await refreshLineStatuses(for: request)
+        }
+    }
+
+    public func refreshLineStatuses(for request: LineStatusRequest) async {
+        guard lineStatusCache.beginFetch(for: request) else { return }
+        do {
+            let lines = try await fetchLineStatuses(for: request)
+            lineStatusCache.setSuccess(for: request, value: lines, fetchedAt: now())
+        } catch {
+            lineStatusCache.setFailure(for: request, error: error)
         }
     }
 
@@ -142,9 +138,7 @@ public final class LineStatusDataStore {
         }
     }
 
-    private func isStale(fetchedAt: Date?, threshold: TimeInterval) -> Bool {
-        (fetchedAt ?? .distantPast) <= now() - threshold
-    }
+    // MARK: - Implementation
 
     private func fetchLineStatuses(for request: LineStatusRequest) async throws -> [Line] {
         switch request {
@@ -155,6 +149,10 @@ public final class LineStatusDataStore {
             let isFutureDateRange = dateInterval.start > now()
             return isFutureDateRange ? lines.removingRealtimeDisruptionStatuses() : lines
         }
+    }
+
+    private func isStale(fetchedAt: Date?, threshold: TimeInterval) -> Bool {
+        (fetchedAt ?? .distantPast) <= now() - threshold
     }
 }
 

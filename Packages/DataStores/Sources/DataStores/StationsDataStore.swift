@@ -6,8 +6,6 @@ import RidgeviewCore
 @Observable
 public final class StationsDataStore {
 
-    // MARK: - Data types
-
     struct FetchedDisruptionData {
         var messagesByStationID: [Station.ID: [String]]
         var fetchedAt: Date?
@@ -18,24 +16,17 @@ public final class StationsDataStore {
         }
     }
 
-    // MARK: - Properties / outputs
+    // MARK: - State
 
-    // Dependencies
-    public let tflAPI: TflAPIClientType
-    public let now: () -> Date
+    private let tflAPI: TflAPIClientType
+    private let now: () -> Date
 
-    // Private
     private var nationRailStations: [StopPoint] { Station.allNationalRail }
     private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
     private var nationRailStationsByICSCode: [String: StopPoint] = [:]
-
-    // Public
-    public var allLondon: [Station] { Station.allLondonTrains }
     private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
-
-    // MARK: - Init
 
     public init(
         tflAPI: TflAPIClientType,
@@ -46,12 +37,58 @@ public final class StationsDataStore {
         loadStations()
     }
 
+    // MARK: - Outputs
 
-    private func loadStations() {
-        assert(!allLondon.isEmpty)
-        assert(!nationRailStations.isEmpty)
-        saveStationsByID()
-        saveNationalRailStationsByICSCode()
+    public var allLondon: [Station] {
+        Station.allLondonTrains
+    }
+
+    public func station(forID stationID: Station.ID) -> Station? {
+        stationsByID[stationID]
+    }
+
+    public func station(forLineGroupID lineGroupID: Station.LineGroup.ID) -> Station? {
+        stationsByLineGroupID[lineGroupID]
+    }
+
+    public func nationalRailStation(forICSCode icsCode: String) -> StopPoint? {
+        nationRailStationsByICSCode[icsCode]
+    }
+
+    public func filteredStations(matchingName name: String, limit: Int = 30) -> [Station] {
+        Array(
+            allLondon
+                .lazy
+                .filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics) }
+                .prefix(limit)
+        )
+    }
+
+    public func filteredNationalRailStations(matching name: String, limit: Int = 30) -> [StopPoint] {
+        Array(
+            nationRailStations
+                .lazy
+                .filter { ($0.commonName ?? "").alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics) }
+                .prefix(limit)
+        )
+    }
+
+    public func disruptions(forStationID stationID: Station.ID) -> [String] {
+        (fetchedDisruptionData.messagesByStationID[stationID] ?? []).map { $0.trimmed() }
+    }
+
+    // MARK: - Refreshing
+
+    public func refreshStationDisruptionsIfStale() async {
+        let thirtyMinutes = TimeInterval(30 * 60)
+        let thirtyMinutesAgo = now() - thirtyMinutes
+
+        let lastFetchedAt = fetchedDisruptionData.fetchedAt ?? .distantPast
+        let isStale = lastFetchedAt <= thirtyMinutesAgo
+
+        if isStale {
+            await refreshStationDisruptions()
+        }
     }
 
     public func refreshStationDisruptions() async {
@@ -67,16 +104,13 @@ public final class StationsDataStore {
         }
     }
 
-    public func refreshStationDisruptionsIfStale() async {
-        let thirtyMinutes = TimeInterval(30 * 60)
-        let thirtyMinutesAgo = now() - thirtyMinutes
+    // MARK: - Implementation
 
-        let lastFetchedAt = fetchedDisruptionData.fetchedAt ?? .distantPast
-        let isStale = lastFetchedAt <= thirtyMinutesAgo
-
-        if isStale {
-            await refreshStationDisruptions()
-        }
+    private func loadStations() {
+        assert(!allLondon.isEmpty)
+        assert(!nationRailStations.isEmpty)
+        saveStationsByID()
+        saveNationalRailStationsByICSCode()
     }
 
     private func saveStationsByID() {
@@ -101,40 +135,6 @@ public final class StationsDataStore {
                 nationRailStationsByICSCode[icsCode] = $0
             }
         }
-    }
-
-    public func station(forID stationID: Station.ID) -> Station? {
-        stationsByID[stationID]
-    }
-
-    public func station(forLineGroupID lineGroupID: Station.LineGroup.ID) -> Station? {
-        stationsByLineGroupID[lineGroupID]
-    }
-
-    public func filteredStations(matchingName name: String, limit: Int = 30) -> [Station] {
-        Array(
-            allLondon
-                .lazy
-                .filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics) }
-                .prefix(limit)
-        )
-    }
-
-    public func filteredNationalRailStations(matching name: String, limit: Int = 30) -> [StopPoint] {
-        Array(
-            nationRailStations
-                .lazy
-                .filter { ($0.commonName ?? "").alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics) }
-                .prefix(limit)
-        )
-    }
-
-    public func nationalRailStation(forICSCode icsCode: String) -> StopPoint? {
-        nationRailStationsByICSCode[icsCode]
-    }
-
-    public func disruptions(forStationID stationID: Station.ID) -> [String] {
-        (fetchedDisruptionData.messagesByStationID[stationID] ?? []).map { $0.trimmed() }
     }
 }
 
