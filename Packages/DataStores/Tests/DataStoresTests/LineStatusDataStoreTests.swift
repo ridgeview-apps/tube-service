@@ -218,9 +218,9 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        #expect(model.timelineResult(for: .victoria, operationalDate: nil) == nil)
-        await model.refreshTimeline(for: .victoria, operationalDate: nil)
-        let result = model.timelineResult(for: .victoria, operationalDate: nil)
+        #expect(model.timelineResult(for: .victoria) == nil)
+        await model.refreshTimeline(for: .victoria)
+        let result = model.timelineResult(for: .victoria)
 
         // Then
         let requiredResult = try #require(result)
@@ -241,8 +241,8 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        await model.refreshTimeline(for: .victoria, operationalDate: nil)
-        let result = model.timelineResult(for: .victoria, operationalDate: nil)
+        await model.refreshTimeline(for: .victoria)
+        let result = model.timelineResult(for: .victoria)
 
         // Then
         let requiredResult = try #require(result)
@@ -263,19 +263,19 @@ struct LineStatusDataStoreTests {
         )
 
         // Initial fetch
-        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
-        #expect(model.timelineResult(for: .victoria, operationalDate: nil)?.fetchedAt == clock.initialTime)
+        await model.refreshTimelineIfStale(for: .victoria)
+        #expect(model.timelineResult(for: .victoria)?.fetchedAt == clock.initialTime)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
 
         // After 29 minutes (no change - NOT stale)
         clock.addingMinutes(29)
-        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
-        #expect(model.timelineResult(for: .victoria, operationalDate: nil)?.fetchedAt == clock.initialTime)  // No change
+        await model.refreshTimelineIfStale(for: .victoria)
+        #expect(model.timelineResult(for: .victoria)?.fetchedAt == clock.initialTime)  // No change
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)  // No change
 
         // After 30 minutes (fetch expected - IS now stale)
         clock.addingMinutes(30)
-        await model.refreshTimelineIfStale(for: .victoria, operationalDate: nil)
+        await model.refreshTimelineIfStale(for: .victoria)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 2)
     }
 

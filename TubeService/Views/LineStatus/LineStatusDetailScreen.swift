@@ -43,13 +43,6 @@ struct LineStatusDetailScreen: View {
         }
     }
 
-    private var historyOperationalDate: Date? {
-        switch request {
-        case .live: return nil
-        case .planned(let interval): return interval.start
-        }
-    }
-
     var body: some View {
         LineStatusDetailView(
             line: line,
@@ -62,7 +55,7 @@ struct LineStatusDetailScreen: View {
         )
         .navigationTitle(line.id.name)
         .navigationDestination(isPresented: $isShowingStatusHistory) {
-            LineStatusHistoryScreen(lineID: line.id, operationalDate: historyOperationalDate)
+            LineStatusHistoryScreen(lineID: line.id)
         }
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
