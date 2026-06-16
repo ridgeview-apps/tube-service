@@ -58,7 +58,7 @@ public final class PurchaseStore {
 
     // MARK: - Private
 
-    private func refreshEntitlements() async {
+    public func refreshEntitlements() async {
         var entitled: Set<ProductID> = []
         for await result in Transaction.currentEntitlements {
             if case .verified(let tx) = result,

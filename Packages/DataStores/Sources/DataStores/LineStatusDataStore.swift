@@ -64,15 +64,14 @@ public final class LineStatusDataStore {
 
     public func refresh(for request: LineStatusRequest, ignoringCache: Bool) async {
         if case .live = request {
-            async let lineStatuses: () =
+            Task {
                 ignoringCache
-                ? refreshLineStatuses(for: request)
-                : refreshLineStatusesIfStale(for: request)
-            async let disruptionSummary: () =
-                ignoringCache
-                ? refreshDisruptionSummary()
-                : refreshDisruptionSummaryIfStale()
-            _ = await (lineStatuses, disruptionSummary)
+                    ? await refreshDisruptionSummary()
+                    : await refreshDisruptionSummaryIfStale()
+            }
+            ignoringCache
+                ? await refreshLineStatuses(for: request)
+                : await refreshLineStatusesIfStale(for: request)
         } else if ignoringCache {
             await refreshLineStatuses(for: request)
         } else {

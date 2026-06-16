@@ -3,8 +3,6 @@ import SwiftUI
 
 struct RootScreen: View {
 
-    @Environment(AppDataStore.self) var appData
-
     var body: some View {
         TabView {
             lineStatusTab
@@ -14,10 +12,8 @@ struct RootScreen: View {
             mapsTab
         }
         .tabViewStyle(.sidebarAdaptable)
+        .appLifecycle()
         .systemStatusRefreshable()
-        .task {
-            await appData.start()
-        }
     }
 
     private var lineStatusTab: some TabContent<Never> {

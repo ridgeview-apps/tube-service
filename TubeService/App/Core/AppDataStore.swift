@@ -47,4 +47,8 @@ final class AppDataStore {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
     }
+
+    func sceneDidBecomeActive() async {
+        await purchases.refreshEntitlements()
+    }
 }
