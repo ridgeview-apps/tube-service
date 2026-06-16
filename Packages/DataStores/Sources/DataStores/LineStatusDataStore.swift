@@ -54,17 +54,16 @@ public final class LineStatusDataStore {
     // MARK: - Refreshing
 
     public func refresh(for request: LineStatusRequest, forced: Bool) async {
-        if forced {
+        if case .live = request {
             Task {
-                await forceRefreshDisruptionSummary()
+                forced
+                    ? await forceRefreshDisruptionSummary()
+                    : await refreshDisruptionSummaryIfStale()
             }
-            await forceRefreshLineStatuses(for: request)
-        } else {
-            Task {
-                await refreshDisruptionSummaryIfStale()
-            }
-            await refreshLineStatusesIfStale(for: request)
         }
+        forced
+            ? await forceRefreshLineStatuses(for: request)
+            : await refreshLineStatusesIfStale(for: request)
     }
 
     func refreshLineStatusesIfStale(for request: LineStatusRequest) async {
