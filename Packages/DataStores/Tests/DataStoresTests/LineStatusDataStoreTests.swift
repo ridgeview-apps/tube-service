@@ -196,6 +196,59 @@ struct LineStatusDataStoreTests {
         #expect(model.earlierDisruptedLineIDs == [.jubilee])
     }
 
+    // MARK: - Timeline cache invalidation
+
+    @Test
+    func timelineCacheEvictedWhenLineStatusChanges() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now })
+
+        // Initial line status fetch (good service) and populate timeline cache
+        tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
+        await model.forceRefreshLineStatuses(for: .live)
+        tubeServiceAPI.stubbedDailyLineTimeline = .success200(
+            DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
+        )
+        await model.refreshTimeline(for: .victoria)
+        #expect(model.timelineResult(for: .victoria)?.fetchedAt != nil)
+
+        // When – line status changes (good service → disrupted)
+        tflAPI.stubbedLineStatuses = .success200([
+            Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
+        ])
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // Then – timeline cache entry for victoria is now stale
+        #expect(model.timelineResult(for: .victoria)?.fetchedAt == nil)
+    }
+
+    @Test
+    func timelineCachePreservedWhenLineStatusUnchanged() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let goodServiceLine = Line(id: .victoria, lineStatuses: [.goodService])
+        tflAPI.stubbedLineStatuses = .success200([goodServiceLine])
+        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now })
+
+        // Initial line status fetch + populate timeline cache
+        await model.forceRefreshLineStatuses(for: .live)
+        tubeServiceAPI.stubbedDailyLineTimeline = .success200(
+            DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
+        )
+        await model.refreshTimeline(for: .victoria)
+        let originalFetchedAt = model.timelineResult(for: .victoria)?.fetchedAt
+        #expect(originalFetchedAt != nil)
+
+        // When – line status fetched again with identical data
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // Then – timeline cache entry is untouched
+        #expect(model.timelineResult(for: .victoria)?.fetchedAt == originalFetchedAt)
+    }
+
     // MARK: - Timeline
 
     @Test

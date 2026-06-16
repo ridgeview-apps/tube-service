@@ -76,10 +76,24 @@ public final class LineStatusDataStore {
     func forceRefreshLineStatuses(for request: LineStatusRequest) async {
         guard lineStatusCache.beginFetch(for: request) else { return }
         do {
+            let previousLines = lineStatusCache[request]?.value
             let lines = try await fetchLineStatuses(for: request)
             lineStatusCache.setSuccess(for: request, value: lines, fetchedAt: now())
+            if case .live = request {
+                evictStaleTimelines(previousLines: previousLines, newLines: lines)
+            }
         } catch {
             lineStatusCache.setFailure(for: request, error: error)
+        }
+    }
+
+    private func evictStaleTimelines(previousLines: [Line]?, newLines: [Line]) {
+        guard let previousLines else { return }
+        let previousByID = Dictionary(uniqueKeysWithValues: previousLines.map { ($0.id, $0) })
+        for line in newLines {
+            if previousByID[line.id] != line {
+                timelineCache.markStale(for: line.id)
+            }
         }
     }
 

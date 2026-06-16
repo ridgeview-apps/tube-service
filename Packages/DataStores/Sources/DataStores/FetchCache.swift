@@ -30,4 +30,8 @@ struct FetchCache<Key: Hashable, Value> {
     mutating func setFailure(for key: Key, error: Error) {
         storage[key]?.fetchState = .failure(error)
     }
+
+    mutating func markStale(for key: Key) {
+        storage[key]?.fetchedAt = nil
+    }
 }
