@@ -3,6 +3,10 @@ import SwiftUI
 
 public struct SettingsView: View {
 
+    public enum Action {
+        case openDebugSettings
+    }
+
     public typealias ContactUs = Settings.ContactUs
     public typealias EditableValues = Settings.EditableValues
     public typealias DebugAction = Settings.DebugAction
@@ -11,12 +15,9 @@ public struct SettingsView: View {
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
-    public let onDebugAction: (Settings.DebugAction) -> Void
+    public let onAction: (Action) -> Void
 
     @Binding var editableValues: EditableValues
-
-    @State private var showDebugSection = false
-    @State private var showDebugConfirmAlert = false
 
     public init(
         appVersionNumber: String,
@@ -24,14 +25,14 @@ public struct SettingsView: View {
         contactUs: ContactUs,
         editableValues: Binding<EditableValues>,
         systemStatus: SystemStatus?,
-        onDebugAction: @escaping (Settings.DebugAction) -> Void
+        onAction: @escaping (Action) -> Void
     ) {
         self.appVersionNumber = appVersionNumber
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
         self._editableValues = editableValues
         self.systemStatus = systemStatus
-        self.onDebugAction = onDebugAction
+        self.onAction = onAction
     }
 
     public var body: some View {
@@ -39,10 +40,6 @@ public struct SettingsView: View {
             journeyPlannerSection
             supportSection
             aboutSection
-            debugSection
-        }
-        .onTapGesture(count: 10) {
-            showDebugSection = true
         }
     }
 
@@ -120,6 +117,9 @@ public struct SettingsView: View {
                 Text(appVersionNumber)
             }
             .contentShape(Rectangle())
+            .onTapGesture(count: 10) {
+                onAction(.openDebugSettings)
+            }
             NavigationLink {
                 acknowledgements
             } label: {
@@ -161,24 +161,6 @@ public struct SettingsView: View {
     private var osNameAndVersion: String {
         "\(UIDevice.current.systemName) \(UIDevice.current.systemVersion)"
     }
-
-    @ViewBuilder
-    private var debugSection: some View {
-        if showDebugSection {
-            Section {
-                Button("Reset user defaults?") {
-                    showDebugConfirmAlert = true
-                }
-            }
-            .alert("Are you sure?", isPresented: $showDebugConfirmAlert) {
-                Button("No", role: .cancel) {}
-                Button("Yes", role: .destructive) {
-                    print("Yes")
-                    onDebugAction(.resetUserDefaults)
-                }
-            }
-        }
-    }
 }
 
 
@@ -197,7 +179,7 @@ private struct Previewer: View {
                 contactUs: .empty,
                 editableValues: $editableValues,
                 systemStatus: ModelStubs.systemStatusOutage,
-                onDebugAction: { _ in }
+                onAction: { print("Action \($0)") }
             )
         }
     }

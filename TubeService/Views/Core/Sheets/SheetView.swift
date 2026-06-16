@@ -14,7 +14,6 @@ struct SheetView: View {
                 .defaultModalScreen(onTapClose: onDismiss)
         case .settings:
             SettingsScreen()
-                .defaultModalScreen(onTapClose: onDismiss)
         case let .safari(url):
             SafariView(url: url)
         case let .journeyLocationPicker(config):

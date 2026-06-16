@@ -17,9 +17,6 @@
         }
       }
     },
-    "Are you sure?" : {
-
-    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1193,6 +1190,17 @@
         }
       }
     },
+    "line.status.history.disruption.earlier.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Earlier disruption"
+          }
+        }
+      }
+    },
     "line.status.history.empty.description %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1211,17 +1219,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Status History"
-          }
-        }
-      }
-    },
-    "line.status.history.disruption.earlier.today" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Earlier disruption"
           }
         }
       }
@@ -1804,9 +1801,6 @@
         }
       }
     },
-    "No" : {
-
-    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1881,9 +1875,6 @@
           }
         }
       }
-    },
-    "Reset user defaults?" : {
-
     },
     "search.suggestions.section.title" : {
       "extractionState" : "manual",
@@ -2205,9 +2196,6 @@
 
     },
     "Warning" : {
-
-    },
-    "Yes" : {
 
     }
   },

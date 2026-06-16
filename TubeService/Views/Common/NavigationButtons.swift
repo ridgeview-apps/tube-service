@@ -38,9 +38,26 @@ struct SettingsToolBarButton: ViewModifier {
     }
 }
 
+struct CloseToolbarButtonModifier: ViewModifier {
+    @Environment(\.dismiss) var dismiss
+
+    func body(content: Content) -> some View {
+        content
+            .toolbar {
+                NavigationButton.Close {
+                    dismiss()
+                }
+            }
+    }
+}
+
 extension View {
     func withSettingsToolbarButton() -> some View {
         self.modifier(SettingsToolBarButton())
+    }
+
+    func withCloseToolbarButton() -> some View {
+        self.modifier(CloseToolbarButtonModifier())
     }
 
     func defaultModalScreen(onTapClose: (() -> Void)?) -> some View {

@@ -6,6 +6,11 @@ import SwiftUI
 
 struct SettingsScreen: View {
 
+    private enum DestinationID: Identifiable {
+        var id: Self { self }
+        case debugMenu
+    }
+
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
     @Environment(SystemStatusDataStore.self) var systemStatusData
@@ -16,16 +21,24 @@ struct SettingsScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @State private var navigationState = NavigationState<DestinationID>()
+
     var body: some View {
-        SettingsView(
-            appVersionNumber: Bundle.main.appVersionNumber,
-            appReviewURL: appConfig.appReviewURL,
-            contactUs: contactUsConfig,
-            editableValues: editableValues,
-            systemStatus: systemStatusData.currentStatus,
-            onDebugAction: handleDebugAction
-        )
-        .navigationTitle(Text(L10n.settingsNavigationTitle))
+        NavigationStack(path: $navigationState.navigationPath) {
+            SettingsView(
+                appVersionNumber: Bundle.main.appVersionNumber,
+                appReviewURL: appConfig.appReviewURL,
+                contactUs: contactUsConfig,
+                editableValues: editableValues,
+                systemStatus: systemStatusData.currentStatus,
+                onAction: handleAction
+            )
+            .withCloseToolbarButton()
+            .navigationTitle(Text(L10n.settingsNavigationTitle))
+            .navigationDestination(for: DestinationID.self) { destinationID in
+                destinationView(for: destinationID)
+            }
+        }
     }
 
     private var editableValues: Binding<Settings.EditableValues> {
@@ -53,8 +66,16 @@ struct SettingsScreen: View {
         )
     }
 
-    private func handleDebugAction(_ action: Settings.DebugAction) {
-        userPreferences = .default
+    private func handleAction(_ action: SettingsView.Action) {
+        navigationState.push(to: .debugMenu)
+    }
+
+    @ViewBuilder
+    private func destinationView(for destinationID: DestinationID) -> some View {
+        switch destinationID {
+        case .debugMenu:
+            DebugSettingsScreen()
+        }
     }
 }
 
