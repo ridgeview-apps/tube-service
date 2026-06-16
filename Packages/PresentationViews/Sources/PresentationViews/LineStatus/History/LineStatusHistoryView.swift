@@ -1,51 +1,37 @@
 import Models
 import SwiftUI
 
-public enum LineStatusHistoryState: Hashable, Sendable {
-    case locked
-    case unlocked(
-        snapshots: [LineStatusSnapshot],
-        loadingState: LoadingState
-    )
-}
-
 public struct LineStatusHistoryView: View {
 
     public enum Action: Equatable, Sendable {
-        case unlockTapped
-        case restoreTapped
         case refreshTapped
         case retryTapped
     }
 
     public let lineID: TrainLineID
-    public let state: LineStatusHistoryState
+    public let snapshots: [LineStatusSnapshot]
+    public let loadingState: LoadingState
     public let onAction: (Action) -> Void
 
     public init(
         lineID: TrainLineID,
-        state: LineStatusHistoryState,
+        snapshots: [LineStatusSnapshot],
+        loadingState: LoadingState,
         onAction: @escaping (Action) -> Void
     ) {
         self.lineID = lineID
-        self.state = state
+        self.snapshots = snapshots
+        self.loadingState = loadingState
         self.onAction = onAction
     }
 
     public var body: some View {
-        Group {
-            switch state {
-            case .locked:
-                LineStatusLockedView(lineID: lineID, onAction: onAction)
-            case let .unlocked(snapshots, loadingState):
-                LineStatusUnlockedView(
-                    lineID: lineID,
-                    snapshots: snapshots,
-                    loadingState: loadingState,
-                    onAction: onAction
-                )
-            }
-        }
+        LineStatusUnlockedView(
+            lineID: lineID,
+            snapshots: snapshots,
+            loadingState: loadingState,
+            onAction: onAction
+        )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultMaxWidthWithFullBackground()
         .navigationTitle(.lineStatusHistoryNavigationTitle)
@@ -53,77 +39,58 @@ public struct LineStatusHistoryView: View {
     }
 }
 
+
 // MARK: - Previews
 
 import ModelStubs
 
 private struct LineStatusHistoryPreview: View {
-    @State private var state = LineStatusHistoryState.locked
+    @State private var snapshots: [LineStatusSnapshot] = Self.allSnapshots
+    @State private var loadingState: LoadingState = .loaded
 
     var body: some View {
         NavigationStack {
             LineStatusHistoryView(
                 lineID: .victoria,
-                state: state,
-                onAction: { action in
-                    if action == .unlockTapped {
-                        state = .unlocked(
-                            snapshots: Self.snapshots,
-                            loadingState: .loaded
-                        )
-                    }
-                }
+                snapshots: snapshots,
+                loadingState: loadingState,
+                onAction: { _ in }
             )
             .toolbar {
                 Menu {
                     Button {
-                        state = .locked
-                    } label: {
-                        Text(verbatim: "Locked")
-                    }
-                    Button {
-                        state = .unlocked(snapshots: [], loadingState: .loading)
+                        snapshots = []
+                        loadingState = .loading
                     } label: {
                         Text(verbatim: "Initial loading")
                     }
                     Button {
-                        state = .unlocked(
-                            snapshots: Self.snapshots,
-                            loadingState: .loaded
-                        )
+                        snapshots = Self.allSnapshots
+                        loadingState = .loaded
                     } label: {
                         Text(verbatim: "Loaded")
                     }
                     Button {
-                        state = .unlocked(
-                            snapshots: Self.snapshots,
-                            loadingState: .loading
-                        )
+                        snapshots = Self.allSnapshots
+                        loadingState = .loading
                     } label: {
                         Text(verbatim: "Refreshing")
                     }
                     Button {
-                        state = .unlocked(snapshots: [], loadingState: .loaded)
+                        snapshots = []
+                        loadingState = .loaded
                     } label: {
                         Text(verbatim: "Empty")
                     }
                     Button {
-                        state = .unlocked(
-                            snapshots: [],
-                            loadingState: .failure(
-                                errorMessage: "Status history could not be loaded."
-                            )
-                        )
+                        snapshots = []
+                        loadingState = .failure(errorMessage: "Status history could not be loaded.")
                     } label: {
                         Text(verbatim: "Error")
                     }
                     Button {
-                        state = .unlocked(
-                            snapshots: Self.snapshots,
-                            loadingState: .failure(
-                                errorMessage: "Status history could not be refreshed."
-                            )
-                        )
+                        snapshots = Self.allSnapshots
+                        loadingState = .failure(errorMessage: "Status history could not be refreshed.")
                     } label: {
                         Text(verbatim: "Refresh error")
                     }
@@ -134,7 +101,7 @@ private struct LineStatusHistoryPreview: View {
         }
     }
 
-    fileprivate static let snapshots = [
+    fileprivate static let allSnapshots = [
         LineStatusSnapshot(
             lineId: .victoria,
             observedAt: .now.addingTimeInterval(-900),
@@ -160,20 +127,12 @@ private struct LineStatusHistoryPreview: View {
     LineStatusHistoryPreview()
 }
 
-#Preview("Locked") {
-    NavigationStack {
-        LineStatusHistoryView(lineID: .elizabeth, state: .locked, onAction: { _ in })
-    }
-}
-
 #Preview("Loaded") {
     NavigationStack {
         LineStatusHistoryView(
             lineID: .victoria,
-            state: .unlocked(
-                snapshots: LineStatusHistoryPreview.snapshots,
-                loadingState: .loaded
-            ),
+            snapshots: LineStatusHistoryPreview.allSnapshots,
+            loadingState: .loaded,
             onAction: { _ in }
         )
     }
@@ -183,10 +142,8 @@ private struct LineStatusHistoryPreview: View {
     NavigationStack {
         LineStatusHistoryView(
             lineID: .victoria,
-            state: .unlocked(
-                snapshots: LineStatusHistoryPreview.snapshots,
-                loadingState: .loading
-            ),
+            snapshots: LineStatusHistoryPreview.allSnapshots,
+            loadingState: .loading,
             onAction: { _ in }
         )
     }
@@ -196,12 +153,8 @@ private struct LineStatusHistoryPreview: View {
     NavigationStack {
         LineStatusHistoryView(
             lineID: .victoria,
-            state: .unlocked(
-                snapshots: LineStatusHistoryPreview.snapshots,
-                loadingState: .failure(
-                    errorMessage: "Status history could not be refreshed."
-                )
-            ),
+            snapshots: LineStatusHistoryPreview.allSnapshots,
+            loadingState: .failure(errorMessage: "Status history could not be refreshed."),
             onAction: { _ in }
         )
     }

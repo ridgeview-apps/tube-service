@@ -18,6 +18,7 @@ struct LineStatusDetailScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @State private var isShowingUpsellSheet = false
     @State private var isShowingStatusHistory = false
 
     let line: Line
@@ -62,6 +63,13 @@ struct LineStatusDetailScreen: View {
         .navigationDestination(isPresented: $isShowingStatusHistory) {
             LineStatusHistoryScreen(lineID: line.id)
         }
+        .sheet(isPresented: $isShowingUpsellSheet, onDismiss: handleUpsellDismissed) {
+            LineStatusHistoryUpsellScreen(lineID: line.id)
+                .defaultModalScreen(onTapClose: { isShowingUpsellSheet = false })
+                .onChange(of: purchases.hasTubeServicePlus) { _, isPlus in
+                    if isPlus { isShowingUpsellSheet = false }
+                }
+        }
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
         }
@@ -73,6 +81,16 @@ struct LineStatusDetailScreen: View {
         case .linkTapped(let link):
             openURL(link.url)
         case .statusHistoryTapped:
+            if purchases.hasTubeServicePlus {
+                isShowingStatusHistory = true
+            } else {
+                isShowingUpsellSheet = true
+            }
+        }
+    }
+
+    private func handleUpsellDismissed() {
+        if purchases.hasTubeServicePlus {
             isShowingStatusHistory = true
         }
     }

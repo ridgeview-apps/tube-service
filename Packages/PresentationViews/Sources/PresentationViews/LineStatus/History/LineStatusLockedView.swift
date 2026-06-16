@@ -1,13 +1,24 @@
 import Models
 import SwiftUI
 
-struct LineStatusLockedView: View {
+public struct LineStatusLockedView: View {
+
+    public enum Action: Sendable {
+        case unlockTapped
+        case restoreTapped
+    }
 
     let lineID: TrainLineID
-    let onAction: (LineStatusHistoryView.Action) -> Void
+    let onAction: (Action) -> Void
 
-    var body: some View {
+    public init(lineID: TrainLineID, onAction: @escaping (Action) -> Void) {
+        self.lineID = lineID
+        self.onAction = onAction
+    }
+
+    public var body: some View {
         ScrollView {
+
             VStack(spacing: 24) {
                 VStack(spacing: 16) {
                     ZStack {
@@ -81,6 +92,10 @@ struct LineStatusLockedView: View {
             .frame(maxWidth: .infinity)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .defaultMaxWidthWithFullBackground()
+        .navigationTitle(.lineStatusHistoryNavigationTitle)
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private func featureRow(

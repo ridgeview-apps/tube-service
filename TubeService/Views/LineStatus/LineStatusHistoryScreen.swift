@@ -1,33 +1,32 @@
 import DataStores
 import Models
 import PresentationViews
-import Shared
 import SwiftUI
 
 @MainActor
 struct LineStatusHistoryScreen: View {
 
     @Environment(LineStatusDataStore.self) var model
-    @Environment(PurchaseStore.self) var purchases
 
     let lineID: TrainLineID
 
     var body: some View {
         LineStatusHistoryView(
             lineID: lineID,
-            state: historyState,
+            snapshots: snapshots,
+            loadingState: loadingState,
             onAction: handleAction
         )
         .onAppear { fetchIfStale() }
         .onSceneDidBecomeActive { fetchIfStale() }
     }
 
-    private var historyState: LineStatusHistoryState {
-        guard purchases.hasTubeServicePlus else { return .locked }
-        let result = model.timelineResult(for: lineID)
-        let loadingState = result?.fetchState.loadingState ?? .loading
-        let snapshots = result?.value?.snapshots ?? []
-        return .unlocked(snapshots: snapshots, loadingState: loadingState)
+    private var snapshots: [LineStatusSnapshot] {
+        model.timelineResult(for: lineID)?.value?.snapshots ?? []
+    }
+
+    private var loadingState: LoadingState {
+        model.timelineResult(for: lineID)?.fetchState.loadingState ?? .loading
     }
 
     private func fetchIfStale() {
@@ -36,10 +35,6 @@ struct LineStatusHistoryScreen: View {
 
     private func handleAction(_ action: LineStatusHistoryView.Action) {
         switch action {
-        case .unlockTapped:
-            Task { try? await purchases.purchase(.tubeServicePlus) }
-        case .restoreTapped:
-            Task { try? await purchases.restorePurchases() }
         case .refreshTapped, .retryTapped:
             Task { await model.refreshTimeline(for: lineID, forced: true) }
         }
@@ -50,14 +45,6 @@ struct LineStatusHistoryScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-    #Preview("Locked") {
-        PreviewEnvironment {
-            NavigationStack {
-                LineStatusHistoryScreen(lineID: .victoria)
-            }
-        }
-    }
-
     #Preview("Unlocked") {
         PreviewEnvironment {
             NavigationStack {
