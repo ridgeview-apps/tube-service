@@ -1,42 +1,41 @@
 import Models
 import SwiftUI
 
-public struct LineStatusLockedView: View {
+public struct TubeServicePlusView: View {
 
     public enum Action: Sendable {
         case unlockTapped
         case restoreTapped
     }
 
-    let lineID: TrainLineID
+    let price: String?
     let onAction: (Action) -> Void
 
-    public init(lineID: TrainLineID, onAction: @escaping (Action) -> Void) {
-        self.lineID = lineID
+    public init(price: String? = nil, onAction: @escaping (Action) -> Void) {
+        self.price = price
         self.onAction = onAction
     }
 
     public var body: some View {
         ScrollView {
-
             VStack(spacing: 24) {
                 VStack(spacing: 16) {
                     ZStack {
                         Circle()
-                            .fill(lineID.backgroundColor.opacity(0.15))
+                            .fill(Color.accentColor.opacity(0.15))
                             .frame(width: 88, height: 88)
 
                         Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
                             .font(.system(size: 36, weight: .semibold))
-                            .foregroundStyle(lineID.backgroundColor)
+                            .foregroundStyle(Color.accentColor)
                     }
 
                     VStack(spacing: 8) {
-                        Text(.lineStatusHistoryLockedTitle)
+                        Text(.tubeServicePlusTitle)
                             .font(.title2.weight(.bold))
                             .multilineTextAlignment(.center)
 
-                        Text(.lineStatusHistoryLockedDescription(lineID.longName))
+                        Text(.tubeServicePlusDescription)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }
@@ -60,28 +59,40 @@ public struct LineStatusLockedView: View {
                     )
                 }
                 .padding(20)
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .cardStyle()
 
                 Button {
                     onAction(.unlockTapped)
                 } label: {
-                    Label(.lineStatusHistoryUnlockButtonTitle, systemImage: "lock.open.fill")
+                    Label(.tubeServicePlusUnlockButtonTitle, systemImage: "lock.open.fill")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
-                .tint(lineID.backgroundColor)
 
-                Text(.lineStatusHistoryPurchasePlaceholder)
+                if let price {
+                    Text(.tubeServicePlusPurchaseSubtitleWithPrice(price))
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                } else {
+                    Text(.tubeServicePlusPurchaseSubtitle)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                Text(.tubeServicePlusDeveloperNote)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(.tertiary)
                     .multilineTextAlignment(.center)
 
                 Button {
                     onAction(.restoreTapped)
                 } label: {
-                    Text(.lineStatusHistoryRestoreButtonTitle)
+                    Text(.tubeServicePlusRestoreButtonTitle)
                         .font(.footnote)
                 }
                 .buttonStyle(.plain)
@@ -94,7 +105,7 @@ public struct LineStatusLockedView: View {
         .scrollBounceBehavior(.basedOnSize)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultMaxWidthWithFullBackground()
-        .navigationTitle(.lineStatusHistoryNavigationTitle)
+        .navigationTitle(.tubeServicePlusTitle)
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -106,7 +117,7 @@ public struct LineStatusLockedView: View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: systemImage)
                 .font(.headline)
-                .foregroundStyle(lineID.backgroundColor)
+                .foregroundStyle(Color.accentColor)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 3) {
@@ -117,5 +128,20 @@ public struct LineStatusLockedView: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+}
+
+
+// MARK: - Previews
+
+#Preview("Price loaded") {
+    NavigationStack {
+        TubeServicePlusView(price: "£2.99", onAction: { _ in })
+    }
+}
+
+#Preview("Price loading") {
+    NavigationStack {
+        TubeServicePlusView(onAction: { _ in })
     }
 }

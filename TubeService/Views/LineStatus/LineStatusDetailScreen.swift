@@ -74,7 +74,7 @@ struct LineStatusDetailScreen: View {
             if purchases.hasTubeServicePlus {
                 isShowingStatusHistory = true
             } else {
-                showSheet(.lineStatusHistoryUpsell(line.id)) {
+                showSheet(.tubeServicePlus) {
                     if purchases.hasTubeServicePlus {
                         isShowingStatusHistory = true
                     }

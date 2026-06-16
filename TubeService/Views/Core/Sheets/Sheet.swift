@@ -9,12 +9,12 @@ enum Sheet {
     case settings
     case safari(URL)
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
-    case lineStatusHistoryUpsell(TrainLineID)
+    case tubeServicePlus
 }
 
 extension Sheet: Identifiable {
     enum ModalScreenID {
-        case systemStatusDetail, settings, safari, journeyLocationPicker, lineStatusHistoryUpsell
+        case systemStatusDetail, settings, safari, journeyLocationPicker, tubeServicePlus
     }
 
     var id: ModalScreenID {
@@ -23,7 +23,7 @@ extension Sheet: Identifiable {
         case .settings: .settings
         case .safari: .safari
         case .journeyLocationPicker: .journeyLocationPicker
-        case .lineStatusHistoryUpsell: .lineStatusHistoryUpsell
+        case .tubeServicePlus: .tubeServicePlus
         }
     }
 }

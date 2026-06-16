@@ -1,24 +1,21 @@
 import DataStores
-import Models
 import PresentationViews
 import SwiftUI
 
 @MainActor
-struct LineStatusHistoryUpsellScreen: View {
+struct TubeServicePlusScreen: View {
 
     @Environment(\.dismiss) var dismiss
     @Environment(PurchaseStore.self) var purchases
 
-    let lineID: TrainLineID
-
     var body: some View {
-        LineStatusLockedView(lineID: lineID, onAction: handleAction)
+        TubeServicePlusView(onAction: handleAction)
             .onChange(of: purchases.hasTubeServicePlus) { _, isPlus in
                 if isPlus { dismiss() }
             }
     }
 
-    private func handleAction(_ action: LineStatusLockedView.Action) {
+    private func handleAction(_ action: TubeServicePlusView.Action) {
         switch action {
         case .unlockTapped:
             Task { try? await purchases.purchase(.tubeServicePlus) }
@@ -35,7 +32,7 @@ struct LineStatusHistoryUpsellScreen: View {
     #Preview {
         PreviewEnvironment {
             NavigationStack {
-                LineStatusHistoryUpsellScreen(lineID: .victoria)
+                TubeServicePlusScreen()
             }
         }
     }

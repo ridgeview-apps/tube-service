@@ -1373,28 +1373,6 @@
         }
       }
     },
-    "line.status.history.locked.description %@": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock status history to review recent service changes, disruptions and recovery updates for the %@."
-          }
-        }
-      }
-    },
-    "line.status.history.locked.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "See how the service has changed"
-          }
-        }
-      }
-    },
     "line.status.history.navigation.title": {
       "extractionState": "manual",
       "localizations": {
@@ -1402,28 +1380,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Status History"
-          }
-        }
-      }
-    },
-    "line.status.history.purchase.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Purchase and subscription details will appear here once the paywall is connected."
-          }
-        }
-      }
-    },
-    "line.status.history.restore.button.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore Purchases"
           }
         }
       }
@@ -1457,17 +1413,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Service update"
-          }
-        }
-      }
-    },
-    "line.status.history.unlock.button.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock Status History"
           }
         }
       }
@@ -2184,6 +2129,83 @@
           "stringUnit": {
             "state": "translated",
             "value": "Problems reported"
+          }
+        }
+      }
+    },
+    "tube.service.plus.developer.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tube Service is built by one person. Plus helps cover server costs and keeps the app free for everyone."
+          }
+        }
+      }
+    },
+    "tube.service.plus.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get the full picture of today's service — when disruptions started, how long they lasted, and when things got back to normal."
+          }
+        }
+      }
+    },
+    "tube.service.plus.purchase.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annual subscription · Cancel anytime"
+          }
+        }
+      }
+    },
+    "tube.service.plus.purchase.subtitle.with.price %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ per year · Cancel anytime"
+          }
+        }
+      }
+    },
+    "tube.service.plus.restore.button.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restore Purchase"
+          }
+        }
+      }
+    },
+    "tube.service.plus.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Know Your Line, Better"
+          }
+        }
+      }
+    },
+    "tube.service.plus.unlock.button.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock Tube Service Plus"
           }
         }
       }

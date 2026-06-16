@@ -19,8 +19,8 @@ struct SheetView: View {
         case let .journeyLocationPicker(config):
             JourneyLocationPickerScreen(config: config)
                 .defaultModalScreen(onTapClose: onDismiss)
-        case let .lineStatusHistoryUpsell(lineID):
-            LineStatusHistoryUpsellScreen(lineID: lineID)
+        case .tubeServicePlus:
+            TubeServicePlusScreen()
                 .defaultModalScreen(onTapClose: onDismiss)
         }
     }
