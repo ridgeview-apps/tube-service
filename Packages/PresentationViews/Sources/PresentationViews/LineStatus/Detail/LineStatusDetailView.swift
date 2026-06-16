@@ -17,6 +17,7 @@ public struct LineStatusDetailView: View {
     public let loadingState: LoadingState
     public let refreshDate: Date?
     public let statusHistoryAccess: LineStatusHistoryButton.Access
+    public let earlierDisruptionAt: Date?
     public let statusContext: StatusContext
 
     @Binding public var isFavourite: Bool
@@ -29,6 +30,7 @@ public struct LineStatusDetailView: View {
         loadingState: LoadingState,
         refreshDate: Date?,
         statusHistoryAccess: LineStatusHistoryButton.Access,
+        earlierDisruptionAt: Date?,
         statusContext: StatusContext,
         onAction: @escaping (Action) -> Void
     ) {
@@ -36,6 +38,7 @@ public struct LineStatusDetailView: View {
         self.loadingState = loadingState
         self.refreshDate = refreshDate
         self.statusHistoryAccess = statusHistoryAccess
+        self.earlierDisruptionAt = earlierDisruptionAt
         self.statusContext = statusContext
         self._isFavourite = isFavourite
         self.onAction = onAction
@@ -54,6 +57,7 @@ public struct LineStatusDetailView: View {
                         LineStatusHistoryButton(
                             access: statusHistoryAccess,
                             lineColor: line.id.backgroundColor,
+                            earlierDisruptionAt: earlierDisruptionAt,
                             onTap: { onAction(.statusHistoryTapped) }
                         )
                     }
@@ -186,6 +190,7 @@ private struct Previewer: View {
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
     var statusHistoryAccess = LineStatusHistoryButton.Access.locked
+    var earlierDisruptionAt: Date? = nil
     var statusContext = LineStatusDetailView.StatusContext.live
     @State var isFavourite = false
 
@@ -197,6 +202,7 @@ private struct Previewer: View {
                 loadingState: loadingState,
                 refreshDate: refreshDate,
                 statusHistoryAccess: statusHistoryAccess,
+                earlierDisruptionAt: earlierDisruptionAt,
                 statusContext: statusContext,
                 onAction: { print($0) }
             )
@@ -233,6 +239,21 @@ import ModelStubs
     Previewer(
         line: ModelStubs.lineStatusGoodService,
         statusHistoryAccess: .unlocked
+    )
+}
+
+#Preview("Earlier disruption (locked)") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        earlierDisruptionAt: .now
+    )
+}
+
+#Preview("Earlier disruption (unlocked)") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        statusHistoryAccess: .unlocked,
+        earlierDisruptionAt: .now
     )
 }
 

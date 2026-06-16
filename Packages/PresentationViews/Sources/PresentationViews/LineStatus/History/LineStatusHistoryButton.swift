@@ -10,6 +10,7 @@ public struct LineStatusHistoryButton: View {
 
     let access: Access
     let lineColor: Color
+    let earlierDisruptionAt: Date?
     let onTap: () -> Void
 
     public var body: some View {
@@ -23,7 +24,7 @@ public struct LineStatusHistoryButton: View {
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(.lineStatusHistoryNavigationTitle)
+                    Text(title)
                         .font(.headline)
                         .foregroundStyle(.primary)
 
@@ -45,10 +46,23 @@ public struct LineStatusHistoryButton: View {
         .accessibilityHint(accessibilityHint)
     }
 
+    private var title: LocalizedStringResource {
+        if let earlierDisruptionAt {
+            return .lineStatusHistoryEntryEarlierDisruptionAt(
+                earlierDisruptionAt.formatted(.dateTime.hour().minute())
+            )
+        }
+        return .lineStatusHistoryNavigationTitle
+    }
+
     private var subtitle: LocalizedStringResource {
         switch access {
-        case .locked: .lineStatusHistoryEntryLockedSubtitle
-        case .unlocked: .lineStatusHistoryEntryUnlockedSubtitle
+        case .locked:
+            earlierDisruptionAt != nil
+                ? .lineStatusHistoryEntryLockedSubtitleWithDisruption
+                : .lineStatusHistoryEntryLockedSubtitle
+        case .unlocked:
+            .lineStatusHistoryEntryUnlockedSubtitle
         }
     }
 
@@ -79,11 +93,21 @@ public struct LineStatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineStatusHistoryButton(access: .locked, lineColor: .red, onTap: {})
+    LineStatusHistoryButton(access: .locked, lineColor: .red, earlierDisruptionAt: nil, onTap: {})
+        .padding()
+}
+
+#Preview("Locked (earlier disruption)") {
+    LineStatusHistoryButton(access: .locked, lineColor: .red, earlierDisruptionAt: .now, onTap: {})
         .padding()
 }
 
 #Preview("Unlocked") {
-    LineStatusHistoryButton(access: .unlocked, lineColor: .blue, onTap: {})
+    LineStatusHistoryButton(access: .unlocked, lineColor: .blue, earlierDisruptionAt: nil, onTap: {})
+        .padding()
+}
+
+#Preview("Unlocked (earlier disruption)") {
+    LineStatusHistoryButton(access: .unlocked, lineColor: .blue, earlierDisruptionAt: .now, onTap: {})
         .padding()
 }

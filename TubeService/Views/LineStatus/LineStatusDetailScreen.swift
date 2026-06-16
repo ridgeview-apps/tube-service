@@ -36,6 +36,10 @@ struct LineStatusDetailScreen: View {
         purchases.hasTubeServicePlus ? .unlocked : .locked
     }
 
+    private var earlierDisruptionAt: Date? {
+        model.disruptionSummary(for: line.id)?.latestDisruptionAt
+    }
+
     private var statusContext: LineStatusDetailView.StatusContext {
         switch request {
         case .live: .live
@@ -50,6 +54,7 @@ struct LineStatusDetailScreen: View {
             loadingState: loadingState,
             refreshDate: refreshDate,
             statusHistoryAccess: statusHistoryAccess,
+            earlierDisruptionAt: earlierDisruptionAt,
             statusContext: statusContext,
             onAction: handleDetailViewAction
         )

@@ -22,7 +22,7 @@ public final class LineStatusDataStore {
     private let now: () -> Date
 
     private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
-    private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, Set<TrainLineID>>()
+    private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, [TrainLineID: LineDisruptionSummary]>()
     private var timelineCache = FetchCache<TrainLineID, DailyLineTimeline>()
 
     public init(
@@ -38,7 +38,12 @@ public final class LineStatusDataStore {
     // MARK: - Outputs
 
     public var earlierDisruptedLineIDs: Set<TrainLineID> {
-        disruptionSummaryCache[.current]?.value ?? []
+        guard let value = disruptionSummaryCache[.current]?.value else { return [] }
+        return Set(value.keys)
+    }
+
+    public func disruptionSummary(for lineID: TrainLineID) -> LineDisruptionSummary? {
+        disruptionSummaryCache[.current]?.value?[lineID]
     }
 
     public func statusResult(for request: LineStatusRequest) -> FetchResult<[Line]>? {
@@ -108,12 +113,12 @@ public final class LineStatusDataStore {
         guard disruptionSummaryCache.beginFetch(for: .current) else { return }
         do {
             let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
-            let disruptedLineIDs = Set(
-                summary.lines.compactMap { key, value in
-                    value.disrupted ? TrainLineID(rawValue: key) : nil
-                }
-            )
-            disruptionSummaryCache.setSuccess(for: .current, value: disruptedLineIDs, fetchedAt: now())
+            let disruptedLines = summary.lines.reduce(into: [TrainLineID: LineDisruptionSummary]()) { result, pair in
+                let (key, value) = pair
+                guard value.disrupted, let lineID = TrainLineID(rawValue: key) else { return }
+                result[lineID] = value
+            }
+            disruptionSummaryCache.setSuccess(for: .current, value: disruptedLines, fetchedAt: now())
         } catch {
             disruptionSummaryCache.setFailure(for: .current, error: error)
         }
