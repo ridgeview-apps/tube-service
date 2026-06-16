@@ -9,11 +9,12 @@ enum Sheet {
     case settings
     case safari(URL)
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
+    case lineStatusHistoryUpsell(TrainLineID)
 }
 
 extension Sheet: Identifiable {
     enum ModalScreenID {
-        case systemStatusDetail, settings, safari, journeyLocationPicker
+        case systemStatusDetail, settings, safari, journeyLocationPicker, lineStatusHistoryUpsell
     }
 
     var id: ModalScreenID {
@@ -22,6 +23,7 @@ extension Sheet: Identifiable {
         case .settings: .settings
         case .safari: .safari
         case .journeyLocationPicker: .journeyLocationPicker
+        case .lineStatusHistoryUpsell: .lineStatusHistoryUpsell
         }
     }
 }
@@ -30,27 +32,35 @@ extension Sheet: Identifiable {
 // MARK: - View modifiers
 
 struct SheetAction {
-    typealias Action = (Sheet) -> Void
+    typealias Action = (Sheet, (() -> Void)?) -> Void
     let action: Action
 
-    func callAsFunction(_ sheet: Sheet) {
-        action(sheet)
+    func callAsFunction(_ sheet: Sheet, onDismiss: (() -> Void)? = nil) {
+        action(sheet, onDismiss)
     }
 }
 
 
 struct RootSheetPresenterModifier: ViewModifier {
     @State private var selectedSheet: Sheet?
+    @State private var onDismissCallback: (() -> Void)?
 
     func body(content: Content) -> some View {
         content
             .environment(
                 \.showSheet,
-                SheetAction { sheet in
+                SheetAction { sheet, onDismiss in
                     selectedSheet = sheet
+                    onDismissCallback = onDismiss
                 }
             )
-            .sheet(item: $selectedSheet) { sheet in
+            .sheet(
+                item: $selectedSheet,
+                onDismiss: {
+                    onDismissCallback?()
+                    onDismissCallback = nil
+                }
+            ) { sheet in
                 SheetView(sheet: sheet) {
                     selectedSheet = nil
                 }
