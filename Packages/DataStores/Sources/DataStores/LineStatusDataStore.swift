@@ -119,14 +119,20 @@ public final class LineStatusDataStore {
         }
     }
 
-    public func refreshTimelineIfStale(for lineID: TrainLineID) async {
+    public func refreshTimeline(for lineID: TrainLineID, forced: Bool) async {
+        forced
+            ? await forceRefreshTimeline(for: lineID)
+            : await refreshTimelineIfStale(for: lineID)
+    }
+
+    func refreshTimelineIfStale(for lineID: TrainLineID) async {
         let thirtyMinutes: TimeInterval = 30 * 60
         if isStale(fetchedAt: timelineCache[lineID]?.fetchedAt, threshold: thirtyMinutes) {
-            await refreshTimeline(for: lineID)
+            await forceRefreshTimeline(for: lineID)
         }
     }
 
-    public func refreshTimeline(for lineID: TrainLineID) async {
+    func forceRefreshTimeline(for lineID: TrainLineID) async {
         guard timelineCache.beginFetch(for: lineID) else { return }
         do {
             let timeline = try await tubeServiceAPI.fetchDailyLineTimeline(lineID: lineID, operationalDate: nil).decodedModel

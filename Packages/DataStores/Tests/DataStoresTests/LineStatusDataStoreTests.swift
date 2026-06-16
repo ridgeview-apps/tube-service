@@ -211,7 +211,7 @@ struct LineStatusDataStoreTests {
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
-        await model.refreshTimeline(for: .victoria)
+        await model.forceRefreshTimeline(for: .victoria)
         #expect(model.timelineResult(for: .victoria)?.fetchedAt != nil)
 
         // When – line status changes (good service → disrupted)
@@ -238,7 +238,7 @@ struct LineStatusDataStoreTests {
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
-        await model.refreshTimeline(for: .victoria)
+        await model.forceRefreshTimeline(for: .victoria)
         let originalFetchedAt = model.timelineResult(for: .victoria)?.fetchedAt
         #expect(originalFetchedAt != nil)
 
@@ -272,7 +272,7 @@ struct LineStatusDataStoreTests {
 
         // When
         #expect(model.timelineResult(for: .victoria) == nil)
-        await model.refreshTimeline(for: .victoria)
+        await model.forceRefreshTimeline(for: .victoria)
         let result = model.timelineResult(for: .victoria)
 
         // Then
@@ -294,7 +294,7 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        await model.refreshTimeline(for: .victoria)
+        await model.forceRefreshTimeline(for: .victoria)
         let result = model.timelineResult(for: .victoria)
 
         // Then
