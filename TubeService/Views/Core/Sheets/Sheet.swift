@@ -32,11 +32,16 @@ extension Sheet: Identifiable {
 // MARK: - View modifiers
 
 struct SheetAction {
-    typealias Action = (Sheet, (() -> Void)?) -> Void
-    let action: Action
+    typealias Handler = (Sheet, (() -> Void)?) -> Void
+
+    private let handler: Handler
+
+    init(_ handler: @escaping Handler) {
+        self.handler = handler
+    }
 
     func callAsFunction(_ sheet: Sheet, onDismiss: (() -> Void)? = nil) {
-        action(sheet, onDismiss)
+        handler(sheet, onDismiss)
     }
 }
 
