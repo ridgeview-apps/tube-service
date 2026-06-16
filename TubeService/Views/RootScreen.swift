@@ -16,7 +16,7 @@ struct RootScreen: View {
         .tabViewStyle(.sidebarAdaptable)
         .systemStatusRefreshable()
         .task {
-            appData.initialiseAppData()
+            await appData.start()
         }
     }
 

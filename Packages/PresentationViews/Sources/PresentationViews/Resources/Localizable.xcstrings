@@ -1391,6 +1391,17 @@
         }
       }
     },
+    "line.status.history.restore.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Purchases"
+          }
+        }
+      }
+    },
     "line.status.history.retry.button.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -8,6 +8,7 @@ import SwiftUI
 struct LineStatusHistoryScreen: View {
 
     @Environment(LineStatusDataStore.self) var model
+    @Environment(PurchaseStore.self) var purchases
 
     let lineID: TrainLineID
     let operationalDate: Date?
@@ -23,6 +24,7 @@ struct LineStatusHistoryScreen: View {
     }
 
     private var historyState: LineStatusHistoryState {
+        guard purchases.hasTubeServicePlus else { return .locked }
         let result = model.timelineResult(for: lineID, operationalDate: operationalDate)
         let loadingState = result?.fetchState.loadingState ?? .loading
         let snapshots = result?.value?.snapshots ?? []
@@ -36,7 +38,9 @@ struct LineStatusHistoryScreen: View {
     private func handleAction(_ action: LineStatusHistoryView.Action) {
         switch action {
         case .unlockTapped:
-            break
+            Task { try? await purchases.purchase(.tubeServicePlus) }
+        case .restoreTapped:
+            Task { try? await purchases.restorePurchases() }
         case .refreshTapped, .retryTapped:
             Task { await model.refreshTimeline(for: lineID, operationalDate: operationalDate) }
         }
@@ -47,10 +51,19 @@ struct LineStatusHistoryScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-    #Preview {
+    #Preview("Locked") {
         PreviewEnvironment {
             NavigationStack {
                 LineStatusHistoryScreen(lineID: .victoria, operationalDate: nil)
+            }
+        }
+    }
+
+    #Preview("Unlocked") {
+        PreviewEnvironment {
+            NavigationStack {
+                LineStatusHistoryScreen(lineID: .victoria, operationalDate: nil)
+                    .environment(PurchaseStore.stub(isPlus: true))
             }
         }
     }

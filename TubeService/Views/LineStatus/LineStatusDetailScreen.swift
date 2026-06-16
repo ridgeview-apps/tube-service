@@ -7,6 +7,7 @@ import SwiftUI
 @MainActor
 struct LineStatusDetailScreen: View {
 
+    @Environment(PurchaseStore.self) var purchases
     @Environment(LineStatusDataStore.self) var model
     @Environment(\.showSheet) var showSheet
     @Environment(\.openURL) var openURL
@@ -32,8 +33,7 @@ struct LineStatusDetailScreen: View {
     }
 
     private var statusHistoryAccess: LineStatusHistoryButton.Access {
-        // TODO: fix later (it's temporarily unlocked to accommodated local testing)
-        .unlocked
+        purchases.hasTubeServicePlus ? .unlocked : .locked
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {

@@ -30,5 +30,6 @@ extension View {
             .environment(dataStore.location)
             .environment(dataStore.localSearchResults)
             .environment(dataStore.systemStatus)
+            .environment(dataStore.purchases)
     }
 }

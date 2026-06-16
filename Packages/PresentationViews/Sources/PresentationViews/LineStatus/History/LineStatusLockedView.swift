@@ -66,6 +66,15 @@ struct LineStatusLockedView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
+
+                Button {
+                    onAction(.restoreTapped)
+                } label: {
+                    Text(.lineStatusHistoryRestoreButtonTitle)
+                        .font(.footnote)
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.secondary)
             }
             .padding(20)
             .frame(maxWidth: 560)

@@ -13,6 +13,7 @@ public struct LineStatusHistoryView: View {
 
     public enum Action: Equatable, Sendable {
         case unlockTapped
+        case restoreTapped
         case refreshTapped
         case retryTapped
     }

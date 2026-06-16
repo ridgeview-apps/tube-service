@@ -12,6 +12,7 @@ final class AppDataStore {
     private(set) var location: LocationDataStore
     private(set) var localSearchResults: LocalSearchResultsStore
     private(set) var systemStatus: SystemStatusDataStore
+    private(set) var purchases: PurchaseStore
 
     private let dependencies: AppDependencies
 
@@ -39,9 +40,11 @@ final class AppDataStore {
             systemStatusAPI: dependencies.systemStatusAPI,
             now: dependencies.now
         )
+        self.purchases = PurchaseStore()
     }
 
-    func initialiseAppData() {
+    func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
+        await purchases.start()
     }
 }
