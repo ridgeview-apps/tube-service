@@ -22,7 +22,7 @@ struct LineStatusDataStoreTests {
 
         // When
         #expect(model.statusResult(for: .live) == nil)
-        await model.refreshLineStatuses(for: .live)
+        await model.forceRefreshLineStatuses(for: .live)
         let fetchedData = model.statusResult(for: .live)
 
         // Then
@@ -46,7 +46,7 @@ struct LineStatusDataStoreTests {
 
         // When
         let dateInterval = DateInterval(start: Date(), duration: oneDay)
-        await model.refreshLineStatuses(for: .planned(dateInterval))
+        await model.forceRefreshLineStatuses(for: .planned(dateInterval))
         let fetchedData = model.statusResult(for: .planned(dateInterval))
 
         // Then
@@ -69,7 +69,7 @@ struct LineStatusDataStoreTests {
 
         // When
         tflAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
-        await model.refreshLineStatuses(for: .live)
+        await model.forceRefreshLineStatuses(for: .live)
         let fetchedData = model.statusResult(for: .live)
 
         // Then
@@ -134,7 +134,7 @@ struct LineStatusDataStoreTests {
 
         // When
         #expect(model.earlierDisruptedLineIDs.isEmpty)
-        await model.refreshDisruptionSummary()
+        await model.forceRefreshDisruptionSummary()
 
         // Then
         #expect(model.earlierDisruptedLineIDs == [.central])
@@ -185,12 +185,12 @@ struct LineStatusDataStoreTests {
         )
 
         // Populate cache with a successful fetch
-        await model.refreshDisruptionSummary()
+        await model.forceRefreshDisruptionSummary()
         #expect(model.earlierDisruptedLineIDs == [.jubilee])
 
         // Simulate failure on next fetch
         tubeServiceAPI.fetchDailyLineDisruptionSummaryError = HTTPError.invalidRequestURL
-        await model.refreshDisruptionSummary()
+        await model.forceRefreshDisruptionSummary()
 
         // Cache should be preserved
         #expect(model.earlierDisruptedLineIDs == [.jubilee])
