@@ -63,8 +63,8 @@
           ],
           "localizations" : [
             {
-              "description" : "",
-              "displayName" : "",
+              "description" : "Unlock status history for all lines.",
+              "displayName" : "Tube Service Plus",
               "locale" : "en_US"
             }
           ],

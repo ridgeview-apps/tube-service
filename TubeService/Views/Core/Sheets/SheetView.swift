@@ -20,8 +20,9 @@ struct SheetView: View {
             JourneyLocationPickerScreen(config: config)
                 .defaultModalScreen(onTapClose: onDismiss)
         case .tubeServicePlus:
-            TubeServicePlusScreen()
-                .defaultModalScreen(onTapClose: onDismiss)
+            NavigationStack {
+                TubeServicePlusScreen()
+            }
         }
     }
 }
