@@ -1,5 +1,6 @@
-import SwiftUI
+import DataStores
 import Models
+import SwiftUI
 
 struct DebugSettingsScreen: View {
     @AppStorage(
@@ -8,10 +9,21 @@ struct DebugSettingsScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @AppStorage(
+        UserDefaults.Keys.featureFlags.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var featureFlags: FeatureFlags = .default
+
     @State private var showDebugConfirmAlert = false
 
     var body: some View {
         Form {
+            Section {
+                Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
+            } header: {
+                Text("Feature Toggles")
+            }
             Section {
                 Button("Reset user defaults?") {
                     showDebugConfirmAlert = true

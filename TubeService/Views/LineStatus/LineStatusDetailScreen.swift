@@ -18,6 +18,12 @@ struct LineStatusDetailScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @AppStorage(
+        UserDefaults.Keys.featureFlags.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var featureFlags: FeatureFlags = .default
+
     @State private var isShowingStatusHistory = false
 
     let line: Line
@@ -55,6 +61,7 @@ struct LineStatusDetailScreen: View {
             statusHistoryAccess: statusHistoryAccess,
             earlierDisruptionAt: earlierDisruptionAt,
             statusContext: statusContext,
+            isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)

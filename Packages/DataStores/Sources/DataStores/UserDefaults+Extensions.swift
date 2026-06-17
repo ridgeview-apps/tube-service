@@ -5,10 +5,25 @@ public extension UserDefaults {
 
     enum Keys: String {
         case userPreferences = "userPreferences_v2"
+        case featureFlags = "featureFlags_v1"
     }
 
     // N.B. @AppStorage property wrapper is available from SwiftUI views and should be used whenever possible.
-    // This property is merely exposed for other scenarios where @AppStorage is more difficult to work with (e.g. widget timelines, SwiftUI Previews)
+    // These properties are exposed for scenarios where @AppStorage is more difficult to work with (e.g. widget timelines, SwiftUI Previews)
+
+    var featureFlags: FeatureFlags {
+        get {
+            guard let encodedRawValue = string(forKey: Keys.featureFlags.rawValue),
+                let decodedValue = FeatureFlags(rawValue: encodedRawValue)
+            else {
+                return .default
+            }
+            return decodedValue
+        }
+        set {
+            set(newValue.rawValue, forKey: Keys.featureFlags.rawValue)
+        }
+    }
 
     var userPreferences: UserPreferences {
         get {

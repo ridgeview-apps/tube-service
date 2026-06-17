@@ -20,6 +20,7 @@ public final class LineStatusDataStore {
     private let tflAPI: TflAPIClientType
     private let tubeServiceAPI: TubeServiceAPIClientType
     private let now: () -> Date
+    private let featureFlags: () -> FeatureFlags
 
     private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
     private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, [TrainLineID: LineDisruptionSummary]>()
@@ -28,11 +29,13 @@ public final class LineStatusDataStore {
     public init(
         tflAPI: TflAPIClientType,
         tubeServiceAPI: TubeServiceAPIClientType,
-        now: @escaping () -> Date = { .now }
+        now: @escaping () -> Date = { .now },
+        featureFlags: @escaping () -> FeatureFlags = { .default }
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
         self.now = now
+        self.featureFlags = featureFlags
     }
 
     // MARK: - Outputs
@@ -59,7 +62,7 @@ public final class LineStatusDataStore {
     // MARK: - Refreshing
 
     public func refresh(for request: LineStatusRequest, forced: Bool) async {
-        if case .live = request {
+        if case .live = request, featureFlags().isStatusHistoryEnabled {
             Task {
                 forced
                     ? await forceRefreshDisruptionSummary()
@@ -125,6 +128,7 @@ public final class LineStatusDataStore {
     }
 
     public func refreshTimeline(for lineID: TrainLineID, forced: Bool) async {
+        guard featureFlags().isStatusHistoryEnabled else { return }
         forced
             ? await forceRefreshTimeline(for: lineID)
             : await refreshTimelineIfStale(for: lineID)
