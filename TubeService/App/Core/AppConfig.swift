@@ -21,6 +21,9 @@ struct AppConfig {
             if tflAPI.appKey.trimmed().isEmpty {
                 fatalError("Tfl API key is mandatory on Release builds")
             }
+            if tubeServiceAPI.apiKey.trimmed().isEmpty {
+                fatalError("TubeService API key is mandatory on Release builds")
+            }
         #endif
     }
 }
