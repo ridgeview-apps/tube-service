@@ -2066,6 +2066,105 @@
           }
         }
       }
+    },
+    "tube.service.plus.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get the full picture of today's service — when disruptions started, how long they lasted, and when things got back to normal."
+          }
+        }
+      }
+    },
+    "tube.service.plus.developer.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tube Service is built by one person. Plus helps cover server costs and keeps the app free for everyone."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.disruptions.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Review recent disruptions, what caused them, and when they were resolved."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.disruptions.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disruption History"
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.recovery.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See when and how quickly the service returned to normal after disruptions."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.recovery.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery Tracking"
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.timeline.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See a timeline of service changes across the day, updated throughout."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.timeline.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily Timeline"
+          }
+        }
+      }
+    },
+    "tube.service.plus.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Know Your Line, Better"
+          }
+        }
+      }
     }
   },
   "version": "1.2"
