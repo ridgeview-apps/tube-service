@@ -6,6 +6,11 @@ public enum LineStatusFilterOption: Int, Identifiable, CaseIterable {
     case today, tomorrow, thisWeekend, future
 }
 
+public enum WeekendDayFilter: Int, Identifiable, CaseIterable {
+    public var id: Int { rawValue }
+    case both, saturday, sunday
+}
+
 public enum LineStatusAccessoryImageType {
     case goodService, disruption
 }

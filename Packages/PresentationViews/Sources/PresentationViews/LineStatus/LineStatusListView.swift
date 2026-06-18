@@ -13,6 +13,7 @@ public struct LineStatusListView: View {
     @Binding var selectedLine: Line?
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
+    @Binding var selectedWeekendDayFilter: WeekendDayFilter
 
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
@@ -27,7 +28,8 @@ public struct LineStatusListView: View {
         refreshDate: Date?,
         selectedLine: Binding<Line?>,
         selectedFilterOption: Binding<LineStatusFilterOption>,
-        selectedDate: Binding<Date>
+        selectedDate: Binding<Date>,
+        selectedWeekendDayFilter: Binding<WeekendDayFilter>
     ) {
         self.loadingState = loadingState
         self.lines = lines
@@ -37,6 +39,7 @@ public struct LineStatusListView: View {
         self._selectedLine = selectedLine
         self._selectedFilterOption = selectedFilterOption
         self._selectedDate = selectedDate
+        self._selectedWeekendDayFilter = selectedWeekendDayFilter
     }
 
     public var body: some View {
@@ -48,7 +51,8 @@ public struct LineStatusListView: View {
                 LineStatusFilterHeader(
                     refreshDate: refreshDate,
                     selectedFilterOption: $selectedFilterOption,
-                    selectedDate: $selectedDate
+                    selectedDate: $selectedDate,
+                    selectedWeekendDayFilter: $selectedWeekendDayFilter
                 )
             }
             .listRowInsets(.init(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -191,6 +195,7 @@ private struct WrapperView: View {
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
     @State var selectedDate: Date = .now
+    @State var selectedWeekendDayFilter: WeekendDayFilter = .both
 
     var body: some View {
         NavigationStack {
@@ -202,7 +207,8 @@ private struct WrapperView: View {
                 refreshDate: refreshDate,
                 selectedLine: $selectedLine,
                 selectedFilterOption: $selectedFilterOption,
-                selectedDate: $selectedDate
+                selectedDate: $selectedDate,
+                selectedWeekendDayFilter: $selectedWeekendDayFilter
             )
             .navigationTitle("Preview")
             .navigationDestination(item: $selectedLine) { selectedLine in
@@ -243,5 +249,14 @@ private struct WrapperView: View {
         lines: [],
         favouriteLineIDs: [.jubilee, .northern],
         selectedFilterOption: .future
+    )
+}
+
+#Preview("Weekend filter") {
+    WrapperView(
+        loadingState: .loaded,
+        lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
+        favouriteLineIDs: [],
+        selectedFilterOption: .thisWeekend
     )
 }

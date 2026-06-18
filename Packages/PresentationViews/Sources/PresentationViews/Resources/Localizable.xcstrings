@@ -1281,7 +1281,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Date"
+            "value": "Choose a date"
           }
         }
       }
@@ -1370,6 +1370,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "Tomorrow"
+          }
+        }
+      }
+    },
+    "line.status.filter.weekend.day.both": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both days"
+          }
+        }
+      }
+    },
+    "line.status.filter.weekend.day.saturday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturday"
+          }
+        }
+      }
+    },
+    "line.status.filter.weekend.day.sunday": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunday"
           }
         }
       }

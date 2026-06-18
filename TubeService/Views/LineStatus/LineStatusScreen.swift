@@ -17,9 +17,10 @@ struct LineStatusScreen: View {
     @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
+    @State private var selectedWeekendDayFilter: WeekendDayFilter = .both
 
     private var request: LineStatusDataStore.LineStatusRequest {
-        selectedFilterOption.toLineStatusRequest(for: selectedDate)
+        selectedFilterOption.toLineStatusRequest(for: selectedDate, weekendDayFilter: selectedWeekendDayFilter)
     }
 
     var body: some View {
@@ -43,7 +44,8 @@ struct LineStatusScreen: View {
             refreshDate: refreshDate,
             selectedLine: $selectedLine,
             selectedFilterOption: $selectedFilterOption,
-            selectedDate: $selectedDate
+            selectedDate: $selectedDate,
+            selectedWeekendDayFilter: $selectedWeekendDayFilter
         )
         .navigationTitle(Text(L10n.lineStatusNavigationTitle))
         .refreshable {
@@ -58,9 +60,13 @@ struct LineStatusScreen: View {
         }
         .onChange(of: selectedFilterOption) {
             selectedLine = nil
+            selectedWeekendDayFilter = .both
             fetchIfStale()
         }
         .onChange(of: selectedDate) {
+            fetchIfStale()
+        }
+        .onChange(of: selectedWeekendDayFilter) {
             fetchIfStale()
         }
         .onCalendarDayChanged {

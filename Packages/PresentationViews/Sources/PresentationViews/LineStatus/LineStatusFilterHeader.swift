@@ -8,15 +8,25 @@ struct LineStatusFilterHeader: View {
 
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
-
-    private var showsDatePicker: Bool { selectedFilterOption == .future }
+    @Binding var selectedWeekendDayFilter: WeekendDayFilter
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             filterOptionsPicker
-            HStack {
+            if selectedFilterOption == .thisWeekend {
+                weekendDayFilterPicker
+            } else if selectedFilterOption == .future {
+                DatePicker(
+                    selection: $selectedDate,
+                    in: .now...,
+                    displayedComponents: [.date]
+                ) {
+                    Text(.lineStatusDatePickerTitle)
+                        .font(.subheadline)
+                }
+                .withAutoDismissID(of: selectedDate)
+            } else {
                 headerTitleView
-                datePickerView
             }
         }
         .foregroundStyle(.foreground)
@@ -33,6 +43,32 @@ struct LineStatusFilterHeader: View {
             }
         }
         .pickerStyle(.segmented)
+    }
+
+    private var weekendDayFilterPicker: some View {
+        HStack(spacing: 8) {
+            ForEach(WeekendDayFilter.allCases) { filter in
+                Button {
+                    selectedWeekendDayFilter = filter
+                } label: {
+                    Text(filter.localized)
+                        .font(.subheadline.weight(.medium))
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .foregroundStyle(
+                            selectedWeekendDayFilter == filter
+                                ? Color.white : Color.secondary
+                        )
+                        .background(
+                            selectedWeekendDayFilter == filter
+                                ? Color.accentColor : Color.secondary.opacity(0.12),
+                            in: .capsule
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 
     @ViewBuilder private var headerTitleView: some View {
@@ -64,25 +100,8 @@ struct LineStatusFilterHeader: View {
             Text(.lineStatusServiceNow)
         case .tomorrow:
             Text(tomorrowFormatted())
-        case .thisWeekend:
-            Text(weekendDatesFormatted())
-        case .future:
+        case .thisWeekend, .future:
             EmptyView()
-        }
-    }
-
-    @ViewBuilder private var datePickerView: some View {
-        if showsDatePicker {
-            DatePicker(
-                selection: $selectedDate,
-                in: .now...,
-                displayedComponents: [.date]
-            ) {
-                Text(.lineStatusDatePickerTitle)
-                    .font(.subheadline)
-            }
-            .withAutoDismissID(of: selectedDate)
-            .labelsHidden()
         }
     }
 
@@ -93,15 +112,8 @@ struct LineStatusFilterHeader: View {
         return startOfTomorrow.formatted(date: .complete, time: .omitted)
     }
 
-    private func weekendDatesFormatted() -> String {
-        guard let thisOrNextWeekendDateInterval = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
-            return ""
-        }
-        let startOfSaturday = thisOrNextWeekendDateInterval.start
-        let endOfSunday = thisOrNextWeekendDateInterval.end - 1  // Subtract 1 from Monday midnight (start of day)
-        return DateIntervalFormatter.longDateIntervalStyle.string(from: startOfSaturday, to: endOfSunday)
-    }
 }
+
 
 private extension DatePicker {
 
@@ -141,6 +153,16 @@ private extension LineStatusFilterOption {
             "acc.id.filter.option.thisWeekend"
         case .future:
             "acc.id.filter.option.future"
+        }
+    }
+}
+
+private extension WeekendDayFilter {
+    var localized: LocalizedStringResource {
+        switch self {
+        case .both: .lineStatusFilterWeekendDayBoth
+        case .saturday: .lineStatusFilterWeekendDaySaturday
+        case .sunday: .lineStatusFilterWeekendDaySunday
         }
     }
 }
