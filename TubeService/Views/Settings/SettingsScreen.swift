@@ -29,7 +29,6 @@ struct SettingsScreen: View {
                 appVersionNumber: Bundle.main.appVersionNumber,
                 appReviewURL: appConfig.appReviewURL,
                 contactUs: contactUsConfig,
-                editableValues: editableValues,
                 systemStatus: systemStatusData.currentStatus,
                 onAction: handleAction
             )
@@ -39,21 +38,6 @@ struct SettingsScreen: View {
                 destinationView(for: destinationID)
             }
         }
-    }
-
-    private var editableValues: Binding<Settings.EditableValues> {
-        .init(
-            get: {
-                .init(
-                    journeyPlannerModesSelection: userPreferences.journeyPlannerModeIDs
-                )
-            },
-            set: { newValue in
-                userPreferences.saveJourneyPlannerModes(
-                    newValue.journeyPlannerModesSelection
-                )
-            }
-        )
     }
 
     private var contactUsConfig: Settings.ContactUs {

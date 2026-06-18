@@ -19,6 +19,8 @@ struct SheetView: View {
         case let .journeyLocationPicker(config):
             JourneyLocationPickerScreen(config: config)
                 .defaultModalScreen(onTapClose: onDismiss)
+        case let .journeyModePicker(initialModeIDs, onDone):
+            JourneyModePickerScreen(initialModeIDs: initialModeIDs, onDone: onDone)
         case .tubeServicePlus:
             NavigationStack {
                 TubeServicePlusScreen()

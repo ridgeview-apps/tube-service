@@ -9,6 +9,7 @@ struct JourneyResultsScreen: View {
     @State private var model: JourneyResultsModel
 
     @Environment(LocalSearchResultsStore.self) var localSearchResults
+    @Environment(\.showSheet) var showSheet
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -18,12 +19,12 @@ struct JourneyResultsScreen: View {
 
     @Binding var form: JourneyPlannerForm
 
-    private var modeIDs: Set<ModeID> { userPreferences.journeyPlannerModeIDs }
-
     init(form: Binding<JourneyPlannerForm>, tflAPI: TflAPIClientType) {
         self._form = form
         self._model = State(initialValue: JourneyResultsModel(tflAPI: tflAPI))
     }
+
+    private var sessionModeIDs: Set<ModeID> { userPreferences.journeyModePreset.modeIDs }
 
     var body: some View {
         JourneyResultsView(
@@ -31,11 +32,15 @@ struct JourneyResultsScreen: View {
             fromLocation: $form.from,
             toLocation: $form.to,
             viaLocation: form.via,
-            timeoption: form.timeSelection,
+            selectedPreset: $userPreferences.journeyModePreset,
             onAction: { handleAction($0) }
         )
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(L10n.journeyResultsNavigationTitle))
+        .onChange(of: userPreferences.journeyModePreset) { _, newValue in
+            guard !newValue.isCustom else { return }
+            Task { await fetchInitialData() }
+        }
     }
 
     private func handleAction(_ action: JourneyResultsAction) {
@@ -47,6 +52,22 @@ struct JourneyResultsScreen: View {
             Task { await fetchInitialData() }
         case .earlierJourneys, .laterJourneys:
             Task { await fetchAdjacentData(action: action) }
+        case .customPresetTapped:
+            let seedModeIDs: Set<ModeID>
+            if case .custom(let modeIDs) = userPreferences.journeyModePreset {
+                seedModeIDs = modeIDs
+            } else {
+                seedModeIDs = JourneyModePreset.trainAndBus.modeIDs
+            }
+            showSheet(
+                .journeyModePicker(
+                    initialModeIDs: seedModeIDs,
+                    onDone: { modeIDs in
+                        userPreferences.journeyModePreset = .custom(modeIDs)
+                        Task { await fetchInitialData() }
+                    }
+                )
+            )
         }
     }
 
@@ -55,8 +76,8 @@ struct JourneyResultsScreen: View {
 
         do {
             form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
-            let requestParams = try form.toJourneyRequestParams(withModeIDs: modeIDs)
-            await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+            let requestParams = try form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+            await model.fetchInitialResults(requestParams: requestParams, modeIDs: sessionModeIDs)
         } catch {
             model.setInitialPageError(error.toUIErrorMessage())
         }
@@ -65,8 +86,13 @@ struct JourneyResultsScreen: View {
     }
 
     private func fetchAdjacentData(action: JourneyResultsAction) async {
-        guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: modeIDs) else { return }
-        await model.fetchAdjacentResults(action: action, baseRequestParams: requestParams, modeIDs: modeIDs)
+        guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+        else { return }
+        await model.fetchAdjacentResults(
+            action: action,
+            baseRequestParams: requestParams,
+            modeIDs: sessionModeIDs
+        )
     }
 
     private func saveRecentJourney() {

@@ -413,6 +413,17 @@
         }
       }
     },
+    "global.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        }
+      }
+    },
     "global.ok": {
       "extractionState": "manual",
       "localizations": {
@@ -480,6 +491,28 @@
         }
       }
     },
+    "journey.mode.picker.additional.modes.section.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Additional Options"
+          }
+        }
+      }
+    },
+    "journey.mode.picker.all.modes.section.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modes"
+          }
+        }
+      }
+    },
     "journey.mode.picker.instruction.title": {
       "extractionState": "manual",
       "localizations": {
@@ -498,6 +531,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "You must select at least one mode of transport"
+          }
+        }
+      }
+    },
+    "journey.mode.picker.quick.select.section.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quick Select"
           }
         }
       }
@@ -641,6 +685,117 @@
           "stringUnit": {
             "state": "translated",
             "value": "Walk"
+          }
+        }
+      }
+    },
+    "journey.mode.preset.bus.only": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bus only"
+          }
+        }
+      }
+    },
+    "journey.mode.picker.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Modes"
+          }
+        }
+      }
+    },
+    "journey.mode.picker.discard.action": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Discard"
+          }
+        }
+      }
+    },
+    "journey.mode.picker.discard.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your mode selection will be lost."
+          }
+        }
+      }
+    },
+    "journey.mode.picker.keep.editing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Editing"
+          }
+        }
+      }
+    },
+    "journey.mode.preset.custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More…"
+          }
+        }
+      }
+    },
+    "journey.mode.preset.custom.modes.count %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "1 mode"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld modes"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "journey.mode.preset.train.and.bus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Train & Bus"
+          }
+        }
+      }
+    },
+    "journey.mode.preset.train.only": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Train only"
           }
         }
       }
@@ -1017,6 +1172,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Later journeys"
+          }
+        }
+      }
+    },
+    "journey.results.mode.filter.default.saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default saved"
+          }
+        }
+      }
+    },
+    "journey.results.mode.filter.save.as.default": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set as Default"
           }
         }
       }

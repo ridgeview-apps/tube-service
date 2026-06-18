@@ -8,7 +8,6 @@ public struct SettingsView: View {
     }
 
     public typealias ContactUs = Settings.ContactUs
-    public typealias EditableValues = Settings.EditableValues
     public typealias DebugAction = Settings.DebugAction
 
     public let appVersionNumber: String
@@ -17,27 +16,22 @@ public struct SettingsView: View {
     public let systemStatus: SystemStatus?
     public let onAction: (Action) -> Void
 
-    @Binding var editableValues: EditableValues
-
     public init(
         appVersionNumber: String,
         appReviewURL: URL,
         contactUs: ContactUs,
-        editableValues: Binding<EditableValues>,
         systemStatus: SystemStatus?,
         onAction: @escaping (Action) -> Void
     ) {
         self.appVersionNumber = appVersionNumber
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
-        self._editableValues = editableValues
         self.systemStatus = systemStatus
         self.onAction = onAction
     }
 
     public var body: some View {
         Form {
-            journeyPlannerSection
             supportSection
             aboutSection
         }
@@ -45,25 +39,6 @@ public struct SettingsView: View {
 
 
     // MARK: - Layout views
-
-    private var journeyPlannerSection: some View {
-        Section {
-            NavigationLink {
-                JourneyModePickerView(
-                    selection: $editableValues.journeyPlannerModesSelection
-                )
-                .navigationTitle(Text(.settingsJourneyModePickerNavigationTitle))
-            } label: {
-                HStack {
-                    Text(.settingsJourneyPlannerTransportModes)
-                    Spacer()
-                    modesDetailLabelTitle
-                }
-            }
-        } header: {
-            Text(.settingsJourneyPlannerTitle)
-        }
-    }
 
     private var supportSection: some View {
         Section {
@@ -96,14 +71,6 @@ public struct SettingsView: View {
             }
             Text(.settingsSystemStatusTitle)
             Spacer()
-        }
-    }
-
-    private var modesDetailLabelTitle: some View {
-        if editableValues.allJourneyPlannerModesSelected {
-            Text(.journeyPlannerTravelOptionsModesDetailAll)
-        } else {
-            Text(.journeyPlannerTravelOptionsModesSelectionCount(editableValues.journeyPlannerModesSelection.count))
         }
     }
 
@@ -169,15 +136,12 @@ public struct SettingsView: View {
 import ModelStubs
 
 private struct Previewer: View {
-    @State var editableValues: Settings.EditableValues = .default
-
     var body: some View {
         NavigationStack {
             SettingsView(
                 appVersionNumber: "1.1.1",
                 appReviewURL: URL(string: "https://www.google.com")!,
                 contactUs: .empty,
-                editableValues: $editableValues,
                 systemStatus: ModelStubs.systemStatusOutage,
                 onAction: { print("Action \($0)") }
             )

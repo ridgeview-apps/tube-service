@@ -7,8 +7,8 @@ public struct JourneyResultsView: View {
     @Binding public var fromLocation: JourneyLocationPicker.Value?
     @Binding public var toLocation: JourneyLocationPicker.Value?
     @Binding public var pages: [JourneyResultsPage]
+    @Binding public var selectedPreset: JourneyModePreset
     public let viaLocation: JourneyLocationPicker.Value?
-    public let timeOption: JourneyTimePickerSelection
     public let onAction: (JourneyResultsAction) -> Void
 
     @State private var headerCollapseProgress: CGFloat = 0
@@ -27,14 +27,14 @@ public struct JourneyResultsView: View {
         fromLocation: Binding<JourneyLocationPicker.Value?>,
         toLocation: Binding<JourneyLocationPicker.Value?>,
         viaLocation: JourneyLocationPicker.Value?,
-        timeoption: JourneyTimePickerSelection,
+        selectedPreset: Binding<JourneyModePreset>,
         onAction: @escaping (JourneyResultsAction) -> Void
     ) {
         self._pages = pages
         self._fromLocation = fromLocation
         self._toLocation = toLocation
         self.viaLocation = viaLocation
-        self.timeOption = timeoption
+        self._selectedPreset = selectedPreset
         self.onAction = onAction
     }
 
@@ -49,6 +49,8 @@ public struct JourneyResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             journeyHeaderView
+            JourneyModeFilterStrip(selectedPreset: $selectedPreset, isDisabled: isAnyPageLoading, onCustomTapped: { onAction(.customPresetTapped) })
+            Divider()
             ScrollView {
                 contentView
             }
@@ -95,28 +97,22 @@ public struct JourneyResultsView: View {
     private var contentView: some View {
         LazyVStack(
             alignment: .leading,
-            spacing: 12,
-            pinnedViews: [.sectionHeaders]
+            spacing: 12
         ) {
-            Section {
-                if hasLoadedResults {
-                    earlierJourneysButton
-                }
-                ForEach($pages) { $page in
-                    pageView(page: $page)
-                }
-                if hasLoadedResults {
-                    laterJourneysButton
-                } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
-                    zeroResultsView
-                }
-                Spacer().frame(height: 30 + headerHeightCompensation)  // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
-            } header: {
-                if hasLoadedResults {
-                    resultsSectionHeader
-                }
+            if hasLoadedResults {
+                earlierJourneysButton
             }
+            ForEach($pages) { $page in
+                pageView(page: $page)
+            }
+            if hasLoadedResults {
+                laterJourneysButton
+            } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
+                zeroResultsView
+            }
+            Spacer().frame(height: 30 + headerHeightCompensation)  // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
         }
+        .padding(.top, 8)
         .animation(.default, value: pages)
     }
 
@@ -193,34 +189,6 @@ public struct JourneyResultsView: View {
         .padding(.horizontal)
     }
 
-    private var resultsSectionHeader: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(.journeyPlannerResultsCount(totalCellItemCount))
-            Spacer()
-            HStack(spacing: 4) {
-                Image(systemName: "clock")
-                    .imageScale(.small)
-                timeOptionText
-                    .font(.caption)
-            }
-        }
-        .foregroundStyle(.secondary)
-        .secondarySectionHeaderStyle()
-        .lineLimit(2)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-        .background(Color.defaultBackground.opacity(0.9))
-    }
-
-    private var timeOptionText: some View {
-        switch timeOption.option {
-        case .leaveNow, .leaveAt:
-            Text(.journeyResultsTimeOptionLeavingAt(timeOption.formattedDate))
-        case .arriveBy:
-            Text(.journeyResultsTimeOptionArrivingBy(timeOption.formattedDate))
-        }
-    }
-
 }
 
 fileprivate extension Comparable {
@@ -239,6 +207,7 @@ private struct Previewer: View {
     @State var toLocation: JourneyLocationPicker.Value? = .station(
         ModelStubs.kingsCrossStation
     )
+    @State var selectedPreset: JourneyModePreset = .trainAndBus
     var viaLocation: JourneyLocationPicker.Value? = .namedLocation(
         .init(
             name: .init(title: "Random location", subtitle: ""),
@@ -246,7 +215,6 @@ private struct Previewer: View {
             isCurrentLocation: false
         )
     )
-    var timeOption: JourneyTimePickerSelection = .leaveNow()
 
     var body: some View {
         JourneyResultsView(
@@ -254,7 +222,7 @@ private struct Previewer: View {
             fromLocation: $fromLocation,
             toLocation: $toLocation,
             viaLocation: viaLocation,
-            timeoption: timeOption,
+            selectedPreset: $selectedPreset,
             onAction: { print("Action: \($0)") }
         )
     }

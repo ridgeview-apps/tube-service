@@ -6,7 +6,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteLineGroupIDs: [],
         favouriteLineIDs: [],
         recentlySelectedStations: [],
-        journeyPlannerModeIDs: ModeID.defaultJourneyPlannerModes,
+        journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
         readSystemStatusMessage: nil
     )
@@ -14,7 +14,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
     public var favouriteLineIDs: Set<Line.ID>
     public var recentlySelectedStations: [Station.ID]
-    public var journeyPlannerModeIDs: Set<ModeID>
+    public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
     public var readSystemStatusMessage: SystemStatus.ID?
 
@@ -22,14 +22,14 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
         favouriteLineIDs: Set<Line.ID> = [],
         recentlySelectedStations: [Station.ID] = [],
-        journeyPlannerModeIDs: Set<ModeID>,
+        journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
         readSystemStatusMessage: SystemStatus.ID?
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
         self.favouriteLineIDs = favouriteLineIDs
         self.recentlySelectedStations = recentlySelectedStations
-        self.journeyPlannerModeIDs = journeyPlannerModeIDs
+        self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
     }
@@ -101,12 +101,6 @@ public struct UserPreferences: Equatable, Codable, Sendable {
 
     public mutating func removeRecentJourney(_ journeyID: SavedJourney.ID) {
         recentlySavedJourneys.removeAll { $0.id == journeyID }
-    }
-
-    // MARK: - Journey Planning
-
-    public mutating func saveJourneyPlannerModes(_ modeIDs: Set<ModeID>) {
-        journeyPlannerModeIDs = modeIDs
     }
 
     // MARK: - System Status

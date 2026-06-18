@@ -42,9 +42,6 @@ public extension ModeID {
     }
 
     static var defaultJourneyPlannerModes: Set<ModeID> {
-        let excludedDefaultModes: Set<ModeID> = [.walking, cycle]
-        return journeyPlannerModes.filter {
-            !excludedDefaultModes.contains($0)
-        }
+        [.tube, .dlr, .elizabethLine, .overground, .nationalRail, .tram, .bus]
     }
 }

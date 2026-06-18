@@ -4,7 +4,6 @@ import SwiftUI
 
 public struct JourneyModePickerView: View {
 
-    @State private var minimumSelectionWarningID: ModeID?
     @Binding var selection: Set<ModeID>
 
     public init(selection: Binding<Set<ModeID>>) {
@@ -15,110 +14,78 @@ public struct JourneyModePickerView: View {
         List {
             Section {
                 ForEach(ModeID.journeyPlannerModes.sortedBySortValue(), id: \.self) { modeID in
-                    cell(forModeID: modeID)
+                    allModeCell(for: modeID)
                 }
             } header: {
-                sectionHeader
+                Text(.journeyModePickerAllModesSectionTitle)
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
     }
 
-    private var sectionHeader: some View {
-        VStack(alignment: .leading) {
-            Text(.journeyModePickerInstructionTitle)
-            selectAllButton
-        }
-    }
-
-    private func cell(forModeID modeID: ModeID) -> some View {
+    private func allModeCell(for modeID: ModeID) -> some View {
         Button {
             withAnimation {
-                toggleSelection(forModeID: modeID)
+                if selection.contains(modeID) {
+                    selection.remove(modeID)
+                } else {
+                    selection.insert(modeID)
+                }
             }
         } label: {
             HStack {
-                leadingImage(forModeID: modeID)
-                VStack(alignment: .leading) {
-                    if minimumSelectionWarningID == modeID {
-                        HStack(alignment: .top, spacing: 4) {
-                            Text(.journeyModePickerMinimumSelectionWarning)
-                        }
-                        .font(.footnote)
-                        .foregroundStyle(Color.adaptiveRed)
-                    }
-                    Text(modeID.localized)
+                if let lineIDs = modeID.pickerLineIDs {
+                    LineColourKeyView(lineIDs: lineIDs)
+                        .frame(width: 40, height: 40)
+                        .roundedBorder(.white)
+                } else {
+                    modeID.image
+                        .resizable()
+                        .scaledToFit()
+                        .padding(4)
+                        .foregroundStyle(modeID.foregroundColor ?? .accentColor)
+                        .frame(width: 40, height: 40)
                 }
+                Text(modeID.localized)
+                    .foregroundStyle(Color.primary)
                 Spacer()
                 if selection.contains(modeID) {
                     Image(systemName: "checkmark")
+                        .foregroundStyle(Color.accentColor)
                 }
             }
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
     }
+}
 
-    private func toggleSelection(forModeID modeID: ModeID) {
-        let isDeselectingLastItem = selection.contains(modeID) && selection.count == 1
-        guard !isDeselectingLastItem else {
-            minimumSelectionWarningID = modeID
-            return
-        }
+// MARK: - Private display helpers
 
-        minimumSelectionWarningID = nil
-        if selection.contains(modeID) {
-            selection.remove(modeID)
-        } else {
-            selection.insert(modeID)
-        }
-    }
+private extension ModeID {
 
-    private func selectAll() {
-        minimumSelectionWarningID = nil
-        selection = Set(ModeID.journeyPlannerModes)
-    }
-
-    @ViewBuilder
-    private func leadingImage(forModeID modeID: ModeID) -> some View {
-        Group {
-            switch modeID {
-            case .tube:
-                lineColourKeyView(with: TrainLineID.tubesOnly)
-            case .dlr:
-                lineColourKeyView(with: [.dlr])
-            case .elizabethLine:
-                lineColourKeyView(with: [.elizabeth])
-            case .overground:
-                lineColourKeyView(with: TrainLineID.overgroundLinesOnly)
-            default:
-                modeID
-                    .image
-                    .resizable()
-                    .scaledToFit()
-                    .padding(4)
-                    .foregroundStyle(modeID.foregroundColor ?? .blue)
-            }
-        }
-        .frame(width: 40, height: 40)
-    }
-
-    private func lineColourKeyView(with lineIDs: [TrainLineID]) -> some View {
-        LineColourKeyView(lineIDs: lineIDs)
-            .roundedBorder(.white)
-    }
-
-    private var selectAllButton: some View {
-        HStack {
-            Spacer()
-            Button {
-                selectAll()
-            } label: {
-                Text(.journeyModePickerSelectAllButtonTitle)
-            }
+    var pickerLineIDs: [TrainLineID]? {
+        switch self {
+        case .tube:
+            return [
+                .bakerloo, .central, .circle, .district, .hammersmithAndCity,
+                .jubilee, .metropolitan, .northern, .piccadilly, .victoria, .waterlooAndCity
+            ]
+        case .dlr:
+            return [.dlr]
+        case .elizabethLine:
+            return [.elizabeth]
+        case .overground:
+            return [.liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush]
+        default:
+            return nil
         }
     }
 }
 
-private extension Sequence where Element == ModeID {
+// MARK: - ModeID display utilities
+
+extension Sequence where Element == ModeID {
     func sortedBySortValue() -> [ModeID] {
         sorted {
             $0.sortValue < $1.sortValue
@@ -126,18 +93,7 @@ private extension Sequence where Element == ModeID {
     }
 }
 
-private extension TrainLineID {
-    static var tubesOnly: [TrainLineID] {
-        TrainLineID.allCases.filter {
-            !(TrainLineID.overgroundLinesOnly + [.elizabeth, .dlr]).contains($0)
-        }
-    }
-
-    static let overgroundLinesOnly: [TrainLineID] =
-        [.liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush]
-}
-
-private extension ModeID {
+extension ModeID {
 
     var localized: LocalizedStringResource {
         let resource: LocalizedStringResource =
@@ -194,10 +150,10 @@ private extension ModeID {
     }
 }
 
-
 // MARK: - Previews
+
 private struct Previewer: View {
-    @State var selection = Set(ModeID.defaultJourneyPlannerModes)
+    @State var selection = JourneyModePreset.trainAndBus.modeIDs
 
     var body: some View {
         NavigationStack {

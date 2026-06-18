@@ -33,12 +33,18 @@ public struct PagerButton: View {
             action()
         } label: {
             HStack(spacing: 4) {
+                if style == .up {
+                    Image(systemName: style.systemImageName)
+                }
                 Text(title)
-                Image(systemName: style.systemImageName)
+                if style == .down {
+                    Image(systemName: style.systemImageName)
+                }
             }
+            .font(.subheadline)
+            .foregroundStyle(Color.accentColor)
         }
-        .buttonStyle(.bordered)
-        .font(.caption)
+        .buttonStyle(.plain)
     }
 }
 

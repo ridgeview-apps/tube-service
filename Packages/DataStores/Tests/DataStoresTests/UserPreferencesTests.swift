@@ -13,7 +13,7 @@ struct UserPreferencesTests {
         expected.addFavouriteLineGroup("line-group")
         expected.addFavouriteLine(.bakerloo)
         expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
-        expected.saveJourneyPlannerModes([.tube, .walking])
+        expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
         expected.saveRecentJourney(
             SavedJourney(
@@ -30,7 +30,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteLineGroupIDs == expected.favouriteLineGroupIDs)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
-        #expect(decoded.journeyPlannerModeIDs == expected.journeyPlannerModeIDs)
+        #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
         #expect(decoded.readSystemStatusMessage == expected.readSystemStatusMessage)
     }
@@ -44,7 +44,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteLineGroupIDs == ["line-group"])
         #expect(decoded.favouriteLineIDs.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
-        #expect(decoded.journeyPlannerModeIDs == ModeID.defaultJourneyPlannerModes)
+        #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
         #expect(decoded.readSystemStatusMessage == nil)
     }
@@ -104,12 +104,12 @@ struct UserPreferencesTests {
     }
 
     @Test
-    func saveModeIDs() throws {
+    func saveJourneyModePreset() throws {
         var userPreferences = UserPreferences.default
 
-        userPreferences.saveJourneyPlannerModes([.tube, .walking])
+        userPreferences.journeyModePreset = .custom([.tube, .walking])
 
-        #expect(userPreferences.journeyPlannerModeIDs == [.tube, .walking])
+        #expect(userPreferences.journeyModePreset == .custom([.tube, .walking]))
     }
 
     @Test

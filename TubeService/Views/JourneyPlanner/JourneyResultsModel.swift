@@ -155,6 +155,8 @@ final class JourneyResultsModel {
             earlierTimeAdjustment = adjustments?.earlier
         case .laterJourneys:
             laterTimeAdjustment = adjustments?.later
+        case .customPresetTapped:
+            break
         }
     }
 

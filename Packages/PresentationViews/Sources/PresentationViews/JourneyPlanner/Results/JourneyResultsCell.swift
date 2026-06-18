@@ -6,6 +6,7 @@ public enum JourneyResultsAction {
     case refresh
     case earlierJourneys
     case laterJourneys
+    case customPresetTapped
 }
 
 public struct JourneyResultsPage: Identifiable, Hashable {
@@ -116,6 +117,17 @@ struct JourneyResultsCell: View {
                 journeyID: journeyID,
                 expandedStopJourneyItemIDs: $expandedStopJourneyItemIDs
             )
+            .overlay(alignment: .trailing) {
+                if !cellItem.isExpanded {
+                    LinearGradient(
+                        colors: [.clear, Color.defaultCellBackground],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .frame(width: 44)
+                    .allowsHitTesting(false)
+                }
+            }
             ExpansionInfoButton(
                 style: .imageOnly,
                 isExpanded: $cellItem.isExpanded
@@ -123,7 +135,6 @@ struct JourneyResultsCell: View {
             .buttonStyle(.bordered)
             .controlSize(.small)
         }
-
     }
 }
 

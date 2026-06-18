@@ -13,12 +13,22 @@ public enum L10n {
     public static let errorNoInternetConnection = LocalizedStringResource.errorNoInternetConnection
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
 
+    public static let globalCancel = LocalizedStringResource.globalCancel
+    public static let globalDone = LocalizedStringResource.globalDone
+
     public static let journeyPlannerLocationPickerScreenFromNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenFromNavigationTitle
     public static let journeyPlannerLocationPickerScreenToNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenToNavigationTitle
     public static let journeyPlannerLocationPickerScreenViaNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenViaNavigationTitle
     public static let journeyPlannerNavigationTitle = LocalizedStringResource.journeyPlannerNavigationTitle
     public static let journeyPlannerTabTitle = LocalizedStringResource.journeyPlannerTabTitle
 
+    public static let journeyModePickerDiscardAction = LocalizedStringResource.journeyModePickerDiscardAction
+    public static let journeyModePickerDiscardMessage = LocalizedStringResource.journeyModePickerDiscardMessage
+    public static let journeyModePickerKeepEditing = LocalizedStringResource.journeyModePickerKeepEditing
+    public static let journeyModePickerNavigationTitle = LocalizedStringResource.journeyModePickerNavigationTitle
+    public static let journeyModePresetCustom = LocalizedStringResource.journeyModePresetCustom
+
+    public static let journeyResultsModeFilterSaveAsDefault = LocalizedStringResource.journeyResultsModeFilterSaveAsDefault
     public static let journeyResultsNavigationTitle = LocalizedStringResource.journeyResultsNavigationTitle
 
     public static let lineStatusNavigationTitle = LocalizedStringResource.lineStatusNavigationTitle

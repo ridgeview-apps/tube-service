@@ -37,23 +37,6 @@ public extension Settings {
     }
 
 
-    // MARK: - Editable values
-
-    struct EditableValues: Equatable, Sendable {
-        public var journeyPlannerModesSelection: Set<ModeID>
-
-        var allJourneyPlannerModesSelected: Bool {
-            journeyPlannerModesSelection.count == ModeID.journeyPlannerModes.count
-        }
-
-        public init(journeyPlannerModesSelection: Set<ModeID>) {
-            self.journeyPlannerModesSelection = journeyPlannerModesSelection
-        }
-
-        public static let `default` = EditableValues(journeyPlannerModesSelection: Set(ModeID.defaultJourneyPlannerModes))
-    }
-
-
     // MARK: - Debug state
 
     enum DebugAction: Sendable {
