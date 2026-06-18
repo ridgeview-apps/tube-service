@@ -122,8 +122,8 @@ struct LineStatusDataStoreTests {
                 startsAt: .now,
                 endsAt: .now,
                 lines: [
-                    "central": .init(disrupted: true, disruptionCount: 2, latestDisruptionAt: nil),
-                    "victoria": .init(disrupted: false, disruptionCount: 0, latestDisruptionAt: nil)
+                    "central": [.init(lineId: .central, observedAt: .now, transition: .disruptionStarted, statuses: [])],
+                    "victoria": []
                 ]
             )
         )
@@ -176,7 +176,7 @@ struct LineStatusDataStoreTests {
                 timezone: "Europe/London",
                 startsAt: .now,
                 endsAt: .now,
-                lines: ["jubilee": .init(disrupted: true, disruptionCount: 1, latestDisruptionAt: nil)]
+                lines: ["jubilee": [.init(lineId: .jubilee, observedAt: .now, transition: .disruptionStarted, statuses: [])]]
             )
         )
         let model = makeStore(

@@ -42,7 +42,7 @@ struct LineStatusDetailScreen: View {
     }
 
     private var earlierDisruptionAt: Date? {
-        model.disruptionSummary(for: line.id)?.latestDisruptionAt
+        model.disruptionSnapshots(for: line.id)?.first?.observedAt
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {

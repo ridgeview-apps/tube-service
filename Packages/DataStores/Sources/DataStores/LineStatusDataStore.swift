@@ -23,7 +23,7 @@ public final class LineStatusDataStore {
     private let featureFlags: () -> FeatureFlags
 
     private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
-    private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, [TrainLineID: LineDisruptionSummary]>()
+    private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, DailyDisruptionSummary>()
     private var timelineCache = FetchCache<TrainLineID, DailyLineTimeline>()
 
     public init(
@@ -41,12 +41,19 @@ public final class LineStatusDataStore {
     // MARK: - Outputs
 
     public var earlierDisruptedLineIDs: Set<TrainLineID> {
-        guard let value = disruptionSummaryCache[.current]?.value else { return [] }
-        return Set(value.keys)
+        guard let summary = disruptionSummaryCache[.current]?.value else { return [] }
+        return Set(
+            summary.lines.compactMap { key, snapshots in
+                snapshots.isEmpty ? nil : TrainLineID(rawValue: key)
+            }
+        )
     }
 
-    public func disruptionSummary(for lineID: TrainLineID) -> LineDisruptionSummary? {
-        disruptionSummaryCache[.current]?.value?[lineID]
+    public func disruptionSnapshots(for lineID: TrainLineID) -> [LineStatusSnapshot]? {
+        guard let snapshots = disruptionSummaryCache[.current]?.value?.lines[lineID.rawValue],
+            !snapshots.isEmpty
+        else { return nil }
+        return snapshots
     }
 
     public func statusResult(for request: LineStatusRequest) -> FetchResult<[Line]>? {
@@ -116,12 +123,7 @@ public final class LineStatusDataStore {
         guard disruptionSummaryCache.beginFetch(for: .current) else { return }
         do {
             let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
-            let disruptedLines = summary.lines.reduce(into: [TrainLineID: LineDisruptionSummary]()) { result, pair in
-                let (key, value) = pair
-                guard value.disrupted, let lineID = TrainLineID(rawValue: key) else { return }
-                result[lineID] = value
-            }
-            disruptionSummaryCache.setSuccess(for: .current, value: disruptedLines, fetchedAt: now())
+            disruptionSummaryCache.setSuccess(for: .current, value: summary, fetchedAt: now())
         } catch {
             disruptionSummaryCache.setFailure(for: .current, error: error)
         }
