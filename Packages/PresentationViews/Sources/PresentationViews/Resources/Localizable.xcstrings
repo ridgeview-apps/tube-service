@@ -1541,6 +1541,17 @@
         }
       }
     },
+    "line.status.history.entry.unlocked.subtitle.with.disruption": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View the disruption timeline"
+          }
+        }
+      }
+    },
     "line.status.history.navigation.title": {
       "extractionState": "manual",
       "localizations": {

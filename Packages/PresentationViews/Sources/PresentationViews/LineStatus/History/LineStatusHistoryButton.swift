@@ -76,7 +76,9 @@ public struct LineStatusHistoryButton: View {
                 ? .lineStatusHistoryEntryLockedSubtitleWithDisruption
                 : .lineStatusHistoryEntryLockedSubtitle
         case .unlocked:
-            .lineStatusHistoryEntryUnlockedSubtitle
+            historyState != nil
+                ? .lineStatusHistoryEntryUnlockedSubtitleWithDisruption
+                : .lineStatusHistoryEntryUnlockedSubtitle
         }
     }
 
