@@ -39,7 +39,7 @@ struct LineStatusScreen: View {
             loadingState: loadingState,
             lines: lines,
             favouriteLineIDs: userPreferences.favouriteLineIDs,
-            earlierDisruptedLineIDs: model.earlierDisruptedLineIDs,
+            disruptionCountsByLineID: model.disruptionCountsByLineID,
             refreshDate: refreshDate,
             selectedLine: $selectedLine,
             selectedFilterOption: $selectedFilterOption,

@@ -41,8 +41,17 @@ struct LineStatusDetailScreen: View {
         purchases.hasTubeServicePlus ? .unlocked : .locked
     }
 
-    private var earlierDisruptionAt: Date? {
-        model.disruptionSnapshots(for: line.id)?.first?.observedAt
+    private var historyState: LineStatusHistoryButton.HistoryState? {
+        guard let snapshots = model.disruptionSnapshots(for: line.id) else { return nil }
+        let count = model.disruptionCountsByLineID[line.id] ?? 1
+        if count > 1 {
+            return .multipleDisruptions(count: count, firstAt: snapshots.last?.observedAt ?? snapshots[0].observedAt)
+        }
+        return snapshots.last.map {
+            line.isDisrupted
+                ? .ongoingDisruption(since: $0.observedAt)
+                : .resolvedDisruption(at: $0.observedAt)
+        }
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {
@@ -59,7 +68,7 @@ struct LineStatusDetailScreen: View {
             loadingState: loadingState,
             refreshDate: refreshDate,
             statusHistoryAccess: statusHistoryAccess,
-            earlierDisruptionAt: earlierDisruptionAt,
+            historyState: historyState,
             statusContext: statusContext,
             isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
             onAction: handleDetailViewAction

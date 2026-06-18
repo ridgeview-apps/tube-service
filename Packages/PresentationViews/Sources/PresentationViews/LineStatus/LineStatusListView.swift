@@ -7,7 +7,7 @@ public struct LineStatusListView: View {
     public let loadingState: LoadingState
     public let lines: [Line]
     public let favouriteLineIDs: Set<TrainLineID>
-    public let earlierDisruptedLineIDs: Set<TrainLineID>
+    public let disruptionCountsByLineID: [TrainLineID: Int]
     public let refreshDate: Date?
 
     @Binding var selectedLine: Line?
@@ -23,7 +23,7 @@ public struct LineStatusListView: View {
         loadingState: LoadingState,
         lines: [Line],
         favouriteLineIDs: Set<TrainLineID>,
-        earlierDisruptedLineIDs: Set<TrainLineID>,
+        disruptionCountsByLineID: [TrainLineID: Int],
         refreshDate: Date?,
         selectedLine: Binding<Line?>,
         selectedFilterOption: Binding<LineStatusFilterOption>,
@@ -32,7 +32,7 @@ public struct LineStatusListView: View {
         self.loadingState = loadingState
         self.lines = lines
         self.favouriteLineIDs = favouriteLineIDs
-        self.earlierDisruptedLineIDs = earlierDisruptedLineIDs
+        self.disruptionCountsByLineID = disruptionCountsByLineID
         self.refreshDate = refreshDate
         self._selectedLine = selectedLine
         self._selectedFilterOption = selectedFilterOption
@@ -140,7 +140,7 @@ public struct LineStatusListView: View {
 
     private func historyIndicator(for line: Line) -> LineStatusHistoryIndicator? {
         guard selectedFilterOption == .today else { return nil }
-        return line.historyIndicator(earlierDisruptedLineIDs: earlierDisruptedLineIDs)
+        return line.historyIndicator(disruptionCountsByLineID: disruptionCountsByLineID)
     }
 
     private var shouldShowLineStatusCells: Bool {
@@ -186,7 +186,7 @@ private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
     var favouriteLineIDs: Set<TrainLineID> = []
-    var earlierDisruptedLineIDs: Set<TrainLineID> = []
+    var disruptionCountsByLineID: [TrainLineID: Int] = [:]
     var refreshDate: Date? = .now
     @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
@@ -198,7 +198,7 @@ private struct WrapperView: View {
                 loadingState: loadingState,
                 lines: lines,
                 favouriteLineIDs: favouriteLineIDs,
-                earlierDisruptedLineIDs: earlierDisruptedLineIDs,
+                disruptionCountsByLineID: disruptionCountsByLineID,
                 refreshDate: refreshDate,
                 selectedLine: $selectedLine,
                 selectedFilterOption: $selectedFilterOption,
@@ -217,7 +217,7 @@ private struct WrapperView: View {
         loadingState: .loaded,
         lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity(),
         favouriteLineIDs: [.jubilee, .northern, .metropolitan],
-        earlierDisruptedLineIDs: Set(TrainLineID.allCases)
+        disruptionCountsByLineID: Dictionary(uniqueKeysWithValues: TrainLineID.allCases.map { ($0, 2) })
     )
 }
 

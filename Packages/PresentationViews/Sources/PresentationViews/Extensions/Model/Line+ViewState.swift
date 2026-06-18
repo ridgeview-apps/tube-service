@@ -64,12 +64,13 @@ public extension Line {
     }
 
     func historyIndicator(
-        earlierDisruptedLineIDs: Set<TrainLineID>
+        disruptionCountsByLineID: [TrainLineID: Int]
     ) -> LineStatusHistoryIndicator? {
-        guard !isDisrupted, earlierDisruptedLineIDs.contains(id) else {
-            return nil
+        guard let count = disruptionCountsByLineID[id] else { return nil }
+        if isDisrupted {
+            guard count > 1 else { return nil }
+            return .disruptionsToday(count: count)
         }
-
         return .disruptionEarlierToday
     }
 }

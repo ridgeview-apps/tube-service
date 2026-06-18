@@ -40,13 +40,15 @@ public final class LineStatusDataStore {
 
     // MARK: - Outputs
 
-    public var earlierDisruptedLineIDs: Set<TrainLineID> {
-        guard let summary = disruptionSummaryCache[.current]?.value else { return [] }
-        return Set(
-            summary.lines.compactMap { key, snapshots in
-                snapshots.isEmpty ? nil : TrainLineID(rawValue: key)
-            }
-        )
+    public var disruptionCountsByLineID: [TrainLineID: Int] {
+        guard let summary = disruptionSummaryCache[.current]?.value else { return [:] }
+        return summary.lines.reduce(into: [:]) { result, entry in
+            guard let lineID = TrainLineID(rawValue: entry.key),
+                !entry.value.isEmpty
+            else { return }
+            let count = max(1, entry.value.filter { $0.transition == .disruptionStarted }.count)
+            result[lineID] = count
+        }
     }
 
     public func disruptionSnapshots(for lineID: TrainLineID) -> [LineStatusSnapshot]? {

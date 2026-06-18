@@ -12,6 +12,7 @@ public enum LineStatusAccessoryImageType {
 
 public enum LineStatusHistoryIndicator: Hashable, Sendable {
     case disruptionEarlierToday
+    case disruptionsToday(count: Int)
 }
 
 public extension LineStatusAccessoryImageType {

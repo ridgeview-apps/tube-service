@@ -133,11 +133,11 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        #expect(model.earlierDisruptedLineIDs.isEmpty)
+        #expect(model.disruptionCountsByLineID.isEmpty)
         await model.forceRefreshDisruptionSummary()
 
         // Then
-        #expect(model.earlierDisruptedLineIDs == [.central])
+        #expect(model.disruptionCountsByLineID == [.central: 1])
         #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 1)
     }
 
@@ -186,14 +186,14 @@ struct LineStatusDataStoreTests {
 
         // Populate cache with a successful fetch
         await model.forceRefreshDisruptionSummary()
-        #expect(model.earlierDisruptedLineIDs == [.jubilee])
+        #expect(model.disruptionCountsByLineID == [.jubilee: 1])
 
         // Simulate failure on next fetch
         tubeServiceAPI.fetchDailyLineDisruptionSummaryError = HTTPError.invalidRequestURL
         await model.forceRefreshDisruptionSummary()
 
         // Cache should be preserved
-        #expect(model.earlierDisruptedLineIDs == [.jubilee])
+        #expect(model.disruptionCountsByLineID == [.jubilee: 1])
     }
 
     // MARK: - Timeline cache invalidation

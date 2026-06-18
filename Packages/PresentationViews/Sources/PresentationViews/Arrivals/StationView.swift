@@ -12,20 +12,20 @@ public struct StationView: View {
     public let station: Station
     public let loadingState: LoadingState
     public let statusCells: [LineStatusCell.Style]
-    public let earlierDisruptedLineIDs: Set<TrainLineID>
+    public let disruptionCountsByLineID: [TrainLineID: Int]
     public let disruptionMessages: [String]
 
     public init(
         station: Station,
         loadingState: LoadingState,
         statusCells: [LineStatusCell.Style],
-        earlierDisruptedLineIDs: Set<TrainLineID>,
+        disruptionCountsByLineID: [TrainLineID: Int],
         disruptionMessages: [String]
     ) {
         self.station = station
         self.loadingState = loadingState
         self.statusCells = statusCells
-        self.earlierDisruptedLineIDs = earlierDisruptedLineIDs
+        self.disruptionCountsByLineID = disruptionCountsByLineID
         self.disruptionMessages = disruptionMessages
     }
 
@@ -148,7 +148,7 @@ public struct StationView: View {
                                 style: cellStyle,
                                 showsAccessory: true,
                                 historyIndicator: line.historyIndicator(
-                                    earlierDisruptedLineIDs: earlierDisruptedLineIDs
+                                    disruptionCountsByLineID: disruptionCountsByLineID
                                 )
                             )
                             .frame(minHeight: 52)
@@ -224,7 +224,7 @@ private struct WrapperView: View {
             .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService])),
             .singleLine(.init(id: .victoria, lineStatuses: [.goodService]))
         ]
-    var earlierDisruptedLineIDs: Set<TrainLineID> = []
+    var disruptionCountsByLineID: [TrainLineID: Int] = [:]
     var disruptionMessages: [String] = []
 
     var body: some View {
@@ -233,7 +233,7 @@ private struct WrapperView: View {
                 station: ModelStubs.kingsCrossStation,
                 loadingState: loadingState,
                 statusCells: statusCells,
-                earlierDisruptedLineIDs: earlierDisruptedLineIDs,
+                disruptionCountsByLineID: disruptionCountsByLineID,
                 disruptionMessages: disruptionMessages
             )
             .navigationTitle("Station preview")
@@ -256,7 +256,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Loaded state - earlier disruption") {
-    WrapperView(earlierDisruptedLineIDs: [.circle])
+    WrapperView(disruptionCountsByLineID: [.circle: 2])
 }
 
 

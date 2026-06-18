@@ -17,7 +17,7 @@ public struct LineStatusDetailView: View {
     public let loadingState: LoadingState
     public let refreshDate: Date?
     public let statusHistoryAccess: LineStatusHistoryButton.Access
-    public let earlierDisruptionAt: Date?
+    public let historyState: LineStatusHistoryButton.HistoryState?
     public let statusContext: StatusContext
     public let isStatusHistoryEnabled: Bool
 
@@ -31,7 +31,7 @@ public struct LineStatusDetailView: View {
         loadingState: LoadingState,
         refreshDate: Date?,
         statusHistoryAccess: LineStatusHistoryButton.Access,
-        earlierDisruptionAt: Date?,
+        historyState: LineStatusHistoryButton.HistoryState?,
         statusContext: StatusContext,
         isStatusHistoryEnabled: Bool = true,
         onAction: @escaping (Action) -> Void
@@ -40,7 +40,7 @@ public struct LineStatusDetailView: View {
         self.loadingState = loadingState
         self.refreshDate = refreshDate
         self.statusHistoryAccess = statusHistoryAccess
-        self.earlierDisruptionAt = earlierDisruptionAt
+        self.historyState = historyState
         self.statusContext = statusContext
         self.isStatusHistoryEnabled = isStatusHistoryEnabled
         self._isFavourite = isFavourite
@@ -61,7 +61,7 @@ public struct LineStatusDetailView: View {
                             LineStatusHistoryButton(
                                 access: statusHistoryAccess,
                                 lineColor: line.id.backgroundColor,
-                                earlierDisruptionAt: earlierDisruptionAt,
+                                historyState: historyState,
                                 onTap: { onAction(.statusHistoryTapped) }
                             )
                         }
@@ -195,7 +195,7 @@ private struct Previewer: View {
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
     var statusHistoryAccess = LineStatusHistoryButton.Access.locked
-    var earlierDisruptionAt: Date? = nil
+    var historyState: LineStatusHistoryButton.HistoryState? = nil
     var statusContext = LineStatusDetailView.StatusContext.live
     var isStatusHistoryEnabled: Bool = true
     @State var isFavourite = false
@@ -208,7 +208,7 @@ private struct Previewer: View {
                 loadingState: loadingState,
                 refreshDate: refreshDate,
                 statusHistoryAccess: statusHistoryAccess,
-                earlierDisruptionAt: earlierDisruptionAt,
+                historyState: historyState,
                 statusContext: statusContext,
                 isStatusHistoryEnabled: isStatusHistoryEnabled,
                 onAction: { print($0) }
@@ -252,7 +252,7 @@ import ModelStubs
 #Preview("Earlier disruption (locked)") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        earlierDisruptionAt: .now
+        historyState: .resolvedDisruption(at: .now)
     )
 }
 
@@ -260,7 +260,15 @@ import ModelStubs
     Previewer(
         line: ModelStubs.lineStatusGoodService,
         statusHistoryAccess: .unlocked,
-        earlierDisruptionAt: .now
+        historyState: .resolvedDisruption(at: .now)
+    )
+}
+
+#Preview("Multiple disruptions (unlocked)") {
+    Previewer(
+        line: ModelStubs.lineStatusDisrupted,
+        statusHistoryAccess: .unlocked,
+        historyState: .multipleDisruptions(count: 3, firstAt: .now)
     )
 }
 

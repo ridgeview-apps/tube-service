@@ -18,7 +18,7 @@ struct StationScreen: View {
             station: station,
             loadingState: loadingState,
             statusCells: statusCells,
-            earlierDisruptedLineIDs: lineStatus.earlierDisruptedLineIDs,
+            disruptionCountsByLineID: lineStatus.disruptionCountsByLineID,
             disruptionMessages: disruptionMessages
         )
         .navigationTitle(station.name)
