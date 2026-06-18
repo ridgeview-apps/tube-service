@@ -63,7 +63,6 @@ lane :build do
 
   xcargs = [
     "TFL_API_APP_KEY=#{ENV.fetch("TFL_API_APP_KEY")}",
-    "TUBE_SERVICE_API_BASE_URL=#{ENV.fetch("TUBE_SERVICE_API_BASE_URL")}",
     "TUBE_SERVICE_API_KEY=#{ENV.fetch("TUBE_SERVICE_API_KEY")}",
   ].join(" ")
 
