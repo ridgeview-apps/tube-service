@@ -47,6 +47,10 @@ public enum L10n {
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
 
+    public static let notificationsConfirmationDescription = LocalizedStringResource.notificationsConfirmationDescription
+    public static let notificationsConfirmationNavigationTitle = LocalizedStringResource.notificationsConfirmationNavigationTitle
+    public static let notificationsConfirmationTitle = LocalizedStringResource.notificationsConfirmationTitle
+
     public static let notificationsLineSelectionNavigationTitle = LocalizedStringResource.notificationsLineSelectionNavigationTitle
     public static let notificationsLineSelectionSubtitle = LocalizedStringResource.notificationsLineSelectionSubtitle
 
@@ -60,6 +64,10 @@ public enum L10n {
     public static let notificationsOnboardingHeroTitle = LocalizedStringResource.notificationsOnboardingHeroTitle
     public static let notificationsOnboardingNavigationTitle = LocalizedStringResource.notificationsOnboardingNavigationTitle
 
+    public static let notificationsPermissionDeniedDescription = LocalizedStringResource.notificationsPermissionDeniedDescription
+    public static let notificationsPermissionDeniedNavigationTitle = LocalizedStringResource.notificationsPermissionDeniedNavigationTitle
+    public static let notificationsPermissionDeniedTitle = LocalizedStringResource.notificationsPermissionDeniedTitle
+
     public static let notificationsScheduleAnytimeDescription = LocalizedStringResource.notificationsScheduleAnytimeDescription
     public static let notificationsScheduleAnytimeTitle = LocalizedStringResource.notificationsScheduleAnytimeTitle
     public static let notificationsScheduleNavigationTitle = LocalizedStringResource.notificationsScheduleNavigationTitle
@@ -69,5 +77,7 @@ public enum L10n {
     public static let notificationsScheduleWeekdayPeakTitle = LocalizedStringResource.notificationsScheduleWeekdayPeakTitle
     public static let notificationsScheduleWeekendsDescription = LocalizedStringResource.notificationsScheduleWeekendsDescription
     public static let notificationsScheduleWeekendsTitle = LocalizedStringResource.notificationsScheduleWeekendsTitle
+
+    public static let openAppSettingsButtonTitle = LocalizedStringResource.openAppSettingsButtonTitle
 
 }

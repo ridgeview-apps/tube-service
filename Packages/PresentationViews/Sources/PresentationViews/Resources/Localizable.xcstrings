@@ -2080,6 +2080,39 @@
         }
       }
     },
+    "notifications.confirmation.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "We'll notify you about disruptions on your chosen lines."
+          }
+        }
+      }
+    },
+    "notifications.confirmation.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're All Set"
+          }
+        }
+      }
+    },
+    "notifications.confirmation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts Are Active"
+          }
+        }
+      }
+    },
     "notifications.line.selection.navigation.title": {
       "extractionState": "manual",
       "localizations": {
@@ -2197,6 +2230,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "Line Status Alerts"
+          }
+        }
+      }
+    },
+    "notifications.permission.denied.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "To receive disruption alerts, enable notifications for Tube Service in Settings."
+          }
+        }
+      }
+    },
+    "notifications.permission.denied.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications Blocked"
+          }
+        }
+      }
+    },
+    "notifications.permission.denied.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications Blocked"
           }
         }
       }

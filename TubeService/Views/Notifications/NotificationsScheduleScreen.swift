@@ -67,7 +67,7 @@ struct NotificationsScheduleScreen: View {
             title: L10n.notificationsScheduleAnytimeTitle,
             description: L10n.notificationsScheduleAnytimeDescription,
             systemImage: "bell.fill"
-        ),
+        )
     ]
 
     private func scheduleCard(_ item: PresetItem) -> some View {
