@@ -9,6 +9,7 @@ struct LineStatusDetailScreen: View {
 
     @Environment(PurchaseStore.self) var purchases
     @Environment(LineStatusDataStore.self) var model
+    @Environment(NotificationsDataStore.self) var notifications
     @Environment(\.showSheet) var showSheet
     @Environment(\.openURL) var openURL
 
@@ -61,6 +62,13 @@ struct LineStatusDetailScreen: View {
         }
     }
 
+    private var notificationButtonState: LineStatusNotificationButton.State? {
+        guard featureFlags.isNotificationsEnabled else { return nil }
+        guard let device = notifications.device, device.enabled else { return .notSubscribed }
+        guard let prefs = notifications.preferences else { return .notSubscribed }
+        return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
+    }
+
     var body: some View {
         LineStatusDetailView(
             line: line,
@@ -71,6 +79,7 @@ struct LineStatusDetailScreen: View {
             historyState: historyState,
             statusContext: statusContext,
             isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
+            notificationButtonState: notificationButtonState,
             onAction: handleDetailViewAction
         )
         .navigationTitle(line.id.name)
@@ -96,7 +105,42 @@ struct LineStatusDetailScreen: View {
                     }
                 }
             }
+        case .notifyMeTapped(let state):
+            switch state {
+            case .notSubscribed:
+                break  // Stage 4: showSheet(.notificationsOnboarding)
+            case .inactive:
+                Task { await addLineToNotifications() }
+            case .active:
+                Task { await removeLineFromNotifications() }
+            }
         }
+    }
+
+    private func addLineToNotifications() async {
+        guard let prefs = notifications.preferences else { return }
+        let update = NotificationPreferencesUpdate(
+            enabled: prefs.enabled,
+            lineIds: prefs.lineIds + [line.id.rawValue],
+            severityThreshold: prefs.severityThreshold,
+            notifyRecoveries: prefs.notifyRecoveries,
+            schedulePreset: prefs.schedulePreset,
+            customSchedules: prefs.customSchedules
+        )
+        await notifications.updatePreferences(update)
+    }
+
+    private func removeLineFromNotifications() async {
+        guard let prefs = notifications.preferences else { return }
+        let update = NotificationPreferencesUpdate(
+            enabled: prefs.enabled,
+            lineIds: prefs.lineIds.filter { $0 != line.id.rawValue },
+            severityThreshold: prefs.severityThreshold,
+            notifyRecoveries: prefs.notifyRecoveries,
+            schedulePreset: prefs.schedulePreset,
+            customSchedules: prefs.customSchedules
+        )
+        await notifications.updatePreferences(update)
     }
 
     private func isFavouriteLine(for lineID: TrainLineID) -> Binding<Bool> {

@@ -6,6 +6,7 @@ public struct LineStatusDetailView: View {
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
+        case notifyMeTapped(LineStatusNotificationButton.State)
     }
 
     public enum StatusContext: Sendable {
@@ -20,6 +21,7 @@ public struct LineStatusDetailView: View {
     public let historyState: LineStatusHistoryButton.HistoryState?
     public let statusContext: StatusContext
     public let isStatusHistoryEnabled: Bool
+    public let notificationButtonState: LineStatusNotificationButton.State?
 
     @Binding public var isFavourite: Bool
 
@@ -34,6 +36,7 @@ public struct LineStatusDetailView: View {
         historyState: LineStatusHistoryButton.HistoryState?,
         statusContext: StatusContext,
         isStatusHistoryEnabled: Bool = true,
+        notificationButtonState: LineStatusNotificationButton.State? = nil,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -43,6 +46,7 @@ public struct LineStatusDetailView: View {
         self.historyState = historyState
         self.statusContext = statusContext
         self.isStatusHistoryEnabled = isStatusHistoryEnabled
+        self.notificationButtonState = notificationButtonState
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
@@ -63,6 +67,15 @@ public struct LineStatusDetailView: View {
                                 lineColor: line.id.backgroundColor,
                                 historyState: historyState,
                                 onTap: { onAction(.statusHistoryTapped) }
+                            )
+                        }
+                    }
+                    if let state = notificationButtonState {
+                        Section {
+                            LineStatusNotificationButton(
+                                state: state,
+                                lineColor: line.id.backgroundColor,
+                                onTap: { onAction(.notifyMeTapped(state)) }
                             )
                         }
                     }
@@ -198,6 +211,7 @@ private struct Previewer: View {
     var historyState: LineStatusHistoryButton.HistoryState? = nil
     var statusContext = LineStatusDetailView.StatusContext.live
     var isStatusHistoryEnabled: Bool = true
+    var notificationButtonState: LineStatusNotificationButton.State? = nil
     @State var isFavourite = false
 
     var body: some View {
@@ -211,6 +225,7 @@ private struct Previewer: View {
                 historyState: historyState,
                 statusContext: statusContext,
                 isStatusHistoryEnabled: isStatusHistoryEnabled,
+                notificationButtonState: notificationButtonState,
                 onAction: { print($0) }
             )
             .navigationTitle("Preview")
@@ -278,4 +293,25 @@ import ModelStubs
 
 #Preview("Error state") {
     Previewer(line: ModelStubs.lineStatusGoodService, loadingState: .failure(errorMessage: "Oops"))
+}
+
+#Preview("Notifications — not subscribed") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .notSubscribed
+    )
+}
+
+#Preview("Notifications — inactive") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .inactive
+    )
+}
+
+#Preview("Notifications — active") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .active
+    )
 }

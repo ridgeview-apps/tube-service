@@ -1651,6 +1651,72 @@
         }
       }
     },
+    "line.status.notifications.active.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You're getting alerts for this line"
+          }
+        }
+      }
+    },
+    "line.status.notifications.active.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications on"
+          }
+        }
+      }
+    },
+    "line.status.notifications.inactive.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You'll be notified about delays on this line"
+          }
+        }
+      }
+    },
+    "line.status.notifications.inactive.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notify me about this line"
+          }
+        }
+      }
+    },
+    "line.status.notifications.not.subscribed.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up alerts for line disruptions"
+          }
+        }
+      }
+    },
+    "line.status.notifications.not.subscribed.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get disruption alerts"
+          }
+        }
+      }
+    },
     "line.status.planned.good.service.all.lines.title": {
       "extractionState": "manual",
       "localizations": {
