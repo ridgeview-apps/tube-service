@@ -1,25 +1,68 @@
+import DataStores
+import Models
+import PresentationViews
+import StoreKit
 import SwiftUI
-import UIKit
-import UserNotifications
 
 @MainActor
 struct NotificationsOnboardingScreen: View {
 
-    @Environment(\.dismiss) var dismiss
+    let preselectedLine: TrainLineID?
 
-    @State private var isRequesting = false
+    @Environment(\.dismiss) var dismiss
+    @Environment(PurchaseStore.self) var purchases
+
+    @State private var path: [OnboardingStep] = []
+    @State private var selectedLineIDs: Set<TrainLineID>
+    @State private var selectedPreset: NotificationSchedulePreset = .weekdayPeak
+
+    enum OnboardingStep: Hashable {
+        case paywall
+        case lineSelection
+        case schedule
+    }
+
+    init(preselectedLine: TrainLineID? = nil) {
+        self.preselectedLine = preselectedLine
+        _selectedLineIDs = State(initialValue: preselectedLine.map { [$0] } ?? [])
+    }
 
     var body: some View {
+        NavigationStack(path: $path) {
+            introContent
+                .navigationDestination(for: OnboardingStep.self) { step in
+                    switch step {
+                    case .paywall:
+                        paywallDestination
+                    case .lineSelection:
+                        NotificationsLineSelectionScreen(
+                            selectedLineIDs: $selectedLineIDs,
+                            onContinue: { path.append(.schedule) }
+                        )
+                    case .schedule:
+                        NotificationsScheduleScreen(
+                            selectedPreset: $selectedPreset,
+                            onContinue: {
+                                // Stage 4c: permission request + save
+                                dismiss()
+                            }
+                        )
+                    }
+                }
+        }
+    }
+
+    private var introContent: some View {
         ScrollView {
             VStack(spacing: 24) {
                 heroSection
                 featuresCard
-                enableButton
+                getStartedButton
                 notNowButton
             }
             .padding(20)
         }
-        .navigationTitle("Line Status Alerts")
+        .navigationTitle(Text(L10n.notificationsOnboardingNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
         .withCloseToolbarButton()
     }
@@ -37,11 +80,11 @@ struct NotificationsOnboardingScreen: View {
             }
 
             VStack(spacing: 8) {
-                Text("Stay Ahead of Disruptions")
+                Text(L10n.notificationsOnboardingHeroTitle)
                     .font(.title2.weight(.bold))
                     .multilineTextAlignment(.center)
 
-                Text("Get notified when your lines are disrupted and when service returns to normal.")
+                Text(L10n.notificationsOnboardingHeroDescription)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -52,18 +95,18 @@ struct NotificationsOnboardingScreen: View {
         VStack(alignment: .leading, spacing: 16) {
             featureRow(
                 systemImage: "exclamationmark.bubble",
-                title: "Disruption Alerts",
-                description: "Get notified when lines you follow are disrupted."
+                title: L10n.notificationsOnboardingFeatureDisruptionAlertsTitle,
+                description: L10n.notificationsOnboardingFeatureDisruptionAlertsDescription
             )
             featureRow(
                 systemImage: "checkmark.circle",
-                title: "Recovery Alerts",
-                description: "Know when service has returned to normal."
+                title: L10n.notificationsOnboardingFeatureRecoveryAlertsTitle,
+                description: L10n.notificationsOnboardingFeatureRecoveryAlertsDescription
             )
             featureRow(
                 systemImage: "clock",
-                title: "Customisable Schedule",
-                description: "Choose when you want to receive alerts."
+                title: L10n.notificationsOnboardingFeatureScheduleTitle,
+                description: L10n.notificationsOnboardingFeatureScheduleDescription
             )
         }
         .padding(20)
@@ -71,33 +114,49 @@ struct NotificationsOnboardingScreen: View {
         .cardStyle()
     }
 
-    private var enableButton: some View {
+    private var getStartedButton: some View {
         Button {
-            Task { await requestPermission() }
-        } label: {
-            Group {
-                if isRequesting {
-                    ProgressView()
-                } else {
-                    Text("Enable Notifications")
-                }
+            if purchases.hasTubeServicePlus {
+                path.append(.lineSelection)
+            } else {
+                path.append(.paywall)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 20)
+        } label: {
+            Text(L10n.globalGetStarted)
+                .frame(maxWidth: .infinity)
+                .frame(height: 20)
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
-        .disabled(isRequesting)
     }
 
     private var notNowButton: some View {
-        Button("Not Now") {
+        Button {
             dismiss()
+        } label: {
+            Text(L10n.globalNotNow)
         }
         .foregroundStyle(.secondary)
     }
 
-    private func featureRow(systemImage: String, title: String, description: String) -> some View {
+    private var paywallDestination: some View {
+        SubscriptionStoreView(productIDs: ["com.ridgeviewapps.tubeservice.plus"]) {
+            TubeServicePlusMarketingContent(context: .notifications)
+        }
+        .onChange(of: purchases.hasTubeServicePlus) { _, isPlus in
+            if isPlus {
+                path = [.lineSelection]
+            }
+        }
+        .navigationTitle("Tube Service Plus")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func featureRow(
+        systemImage: String,
+        title: LocalizedStringResource,
+        description: LocalizedStringResource
+    ) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: systemImage)
                 .font(.headline)
@@ -113,21 +172,6 @@ struct NotificationsOnboardingScreen: View {
             }
         }
     }
-
-    private func requestPermission() async {
-        isRequesting = true
-        defer { isRequesting = false }
-        do {
-            let granted = try await UNUserNotificationCenter.current()
-                .requestAuthorization(options: [.alert, .badge, .sound])
-            if granted {
-                UIApplication.shared.registerForRemoteNotifications()
-            }
-        } catch {
-            // Permission request failed; dismiss anyway
-        }
-        dismiss()
-    }
 }
 
 
@@ -136,9 +180,7 @@ struct NotificationsOnboardingScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment {
-            NavigationStack {
-                NotificationsOnboardingScreen()
-            }
+            NotificationsOnboardingScreen(preselectedLine: .victoria)
         }
     }
 #endif

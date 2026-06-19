@@ -11,7 +11,7 @@ enum Sheet {
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
     case journeyModePicker(initialModeIDs: Set<ModeID>, onDone: (Set<ModeID>) -> Void)
     case tubeServicePlus
-    case notificationsOnboarding
+    case notificationsOnboarding(preselectedLine: TrainLineID? = nil)
 }
 
 extension Sheet: Identifiable {
@@ -28,6 +28,7 @@ extension Sheet: Identifiable {
         case .journeyModePicker: .journeyModePicker
         case .tubeServicePlus: .tubeServicePlus
         case .notificationsOnboarding: .notificationsOnboarding
+
         }
     }
 }

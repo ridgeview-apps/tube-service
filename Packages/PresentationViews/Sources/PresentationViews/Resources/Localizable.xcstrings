@@ -413,6 +413,17 @@
         }
       }
     },
+    "global.continue": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        }
+      }
+    },
     "global.done": {
       "extractionState": "manual",
       "localizations": {
@@ -420,6 +431,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Done"
+          }
+        }
+      }
+    },
+    "global.get.started": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get Started"
+          }
+        }
+      }
+    },
+    "global.not.now": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not Now"
           }
         }
       }
@@ -2043,6 +2076,226 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nearby"
+          }
+        }
+      }
+    },
+    "notifications.line.selection.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Lines"
+          }
+        }
+      }
+    },
+    "notifications.line.selection.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the lines you want to follow."
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.disruption.alerts.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get notified when lines you follow are disrupted."
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.disruption.alerts.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disruption Alerts"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.recovery.alerts.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Know when service has returned to normal."
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.recovery.alerts.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recovery Alerts"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.schedule.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose when you want to receive alerts."
+          }
+        }
+      }
+    },
+    "notifications.onboarding.feature.schedule.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Customisable Schedule"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.hero.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get notified when your lines are disrupted and when service returns to normal."
+          }
+        }
+      }
+    },
+    "notifications.onboarding.hero.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay Ahead of Disruptions"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Line Status Alerts"
+          }
+        }
+      }
+    },
+    "notifications.schedule.anytime.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive alerts at any hour, any day."
+          }
+        }
+      }
+    },
+    "notifications.schedule.anytime.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Any Time"
+          }
+        }
+      }
+    },
+    "notifications.schedule.navigation.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "When to Alert Me"
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekday.all.day.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts at any time during weekdays."
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekday.all.day.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All Weekday Hours"
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekday.peak.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts during morning and evening rush hours on weekdays."
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekday.peak.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekday Peak Hours"
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekends.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerts on Saturdays and Sundays."
+          }
+        }
+      }
+    },
+    "notifications.schedule.weekends.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekends"
           }
         }
       }

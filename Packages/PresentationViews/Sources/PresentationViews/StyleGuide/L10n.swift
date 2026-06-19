@@ -14,7 +14,10 @@ public enum L10n {
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
 
     public static let globalCancel = LocalizedStringResource.globalCancel
+    public static let globalContinue = LocalizedStringResource.globalContinue
     public static let globalDone = LocalizedStringResource.globalDone
+    public static let globalGetStarted = LocalizedStringResource.globalGetStarted
+    public static let globalNotNow = LocalizedStringResource.globalNotNow
 
     public static let journeyPlannerLocationPickerScreenFromNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenFromNavigationTitle
     public static let journeyPlannerLocationPickerScreenToNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenToNavigationTitle
@@ -43,5 +46,28 @@ public enum L10n {
     public static let searchSuggestionsSectionTitle = LocalizedStringResource.searchSuggestionsSectionTitle
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
+
+    public static let notificationsLineSelectionNavigationTitle = LocalizedStringResource.notificationsLineSelectionNavigationTitle
+    public static let notificationsLineSelectionSubtitle = LocalizedStringResource.notificationsLineSelectionSubtitle
+
+    public static let notificationsOnboardingFeatureDisruptionAlertsDescription = LocalizedStringResource.notificationsOnboardingFeatureDisruptionAlertsDescription
+    public static let notificationsOnboardingFeatureDisruptionAlertsTitle = LocalizedStringResource.notificationsOnboardingFeatureDisruptionAlertsTitle
+    public static let notificationsOnboardingFeatureRecoveryAlertsDescription = LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsDescription
+    public static let notificationsOnboardingFeatureRecoveryAlertsTitle = LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsTitle
+    public static let notificationsOnboardingFeatureScheduleDescription = LocalizedStringResource.notificationsOnboardingFeatureScheduleDescription
+    public static let notificationsOnboardingFeatureScheduleTitle = LocalizedStringResource.notificationsOnboardingFeatureScheduleTitle
+    public static let notificationsOnboardingHeroDescription = LocalizedStringResource.notificationsOnboardingHeroDescription
+    public static let notificationsOnboardingHeroTitle = LocalizedStringResource.notificationsOnboardingHeroTitle
+    public static let notificationsOnboardingNavigationTitle = LocalizedStringResource.notificationsOnboardingNavigationTitle
+
+    public static let notificationsScheduleAnytimeDescription = LocalizedStringResource.notificationsScheduleAnytimeDescription
+    public static let notificationsScheduleAnytimeTitle = LocalizedStringResource.notificationsScheduleAnytimeTitle
+    public static let notificationsScheduleNavigationTitle = LocalizedStringResource.notificationsScheduleNavigationTitle
+    public static let notificationsScheduleWeekdayAllDayDescription = LocalizedStringResource.notificationsScheduleWeekdayAllDayDescription
+    public static let notificationsScheduleWeekdayAllDayTitle = LocalizedStringResource.notificationsScheduleWeekdayAllDayTitle
+    public static let notificationsScheduleWeekdayPeakDescription = LocalizedStringResource.notificationsScheduleWeekdayPeakDescription
+    public static let notificationsScheduleWeekdayPeakTitle = LocalizedStringResource.notificationsScheduleWeekdayPeakTitle
+    public static let notificationsScheduleWeekendsDescription = LocalizedStringResource.notificationsScheduleWeekendsDescription
+    public static let notificationsScheduleWeekendsTitle = LocalizedStringResource.notificationsScheduleWeekendsTitle
 
 }
