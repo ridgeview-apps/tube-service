@@ -21,6 +21,7 @@ struct DebugSettingsScreen: View {
         Form {
             Section {
                 Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
+                Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
             } header: {
                 Text("Feature Toggles")
             }

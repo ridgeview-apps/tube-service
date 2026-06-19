@@ -4,6 +4,7 @@ extension FeatureFlags {
 
     enum CodingKeys: String, CodingKey {
         case isStatusHistoryEnabled
+        case isNotificationsEnabled
     }
 
     // Manual decoding lets new flags gain their defaults when reading older stored values.
@@ -11,11 +12,14 @@ extension FeatureFlags {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         isStatusHistoryEnabled =
             (try? container.decode(Bool.self, forKey: .isStatusHistoryEnabled)) ?? false
+        isNotificationsEnabled =
+            (try? container.decode(Bool.self, forKey: .isNotificationsEnabled)) ?? false
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(isStatusHistoryEnabled, forKey: .isStatusHistoryEnabled)
+        try container.encode(isNotificationsEnabled, forKey: .isNotificationsEnabled)
     }
 }
 
