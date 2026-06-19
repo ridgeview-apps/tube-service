@@ -108,7 +108,7 @@ struct LineStatusDetailScreen: View {
         case .notifyMeTapped(let state):
             switch state {
             case .notSubscribed:
-                break  // Stage 4: showSheet(.notificationsOnboarding)
+                showSheet(.notificationsOnboarding)
             case .inactive:
                 Task { await addLineToNotifications() }
             case .active:

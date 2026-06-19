@@ -25,6 +25,10 @@ struct SheetView: View {
             NavigationStack {
                 TubeServicePlusScreen()
             }
+        case .notificationsOnboarding:
+            NavigationStack {
+                NotificationsOnboardingScreen()
+            }
         }
     }
 }
