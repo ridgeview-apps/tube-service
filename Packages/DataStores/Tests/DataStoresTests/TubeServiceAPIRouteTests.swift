@@ -75,6 +75,75 @@ struct TubeServiceAPIRouteTests {
         let expectedValue = "https://foo.com/v1/line-status/timeline?line_id=victoria&date=2026-06-10"
         #expect(url.absoluteString == expectedValue)
     }
+
+    // MARK: - Notification routes
+
+    @Test
+    func registerDeviceEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .registerDevice(deviceId: "device-abc", body: Data())
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc")
+        #expect(request.httpMethod == "PUT")
+        #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
+    }
+
+    @Test
+    func deleteDeviceEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .deleteDevice(deviceId: "device-abc")
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc")
+        #expect(request.httpMethod == "DELETE")
+    }
+
+    @Test
+    func disableDeviceEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .disableDevice(deviceId: "device-abc")
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc/disable")
+        #expect(request.httpMethod == "POST")
+    }
+
+    @Test
+    func fetchPreferencesEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .fetchPreferences(deviceId: "device-abc")
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc/preferences")
+        #expect(request.httpMethod == "GET")
+    }
+
+    @Test
+    func updatePreferencesEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .updatePreferences(deviceId: "device-abc", body: Data())
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc/preferences")
+        #expect(request.httpMethod == "PUT")
+        #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
+    }
 }
 
 

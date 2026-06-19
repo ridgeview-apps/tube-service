@@ -107,6 +107,23 @@ private extension CharacterSet {
 
 extension URLSession {
 
+    // For endpoints that return no body (e.g. DELETE → 204 No Content).
+    func send(request: URLRequest, decodedBy jsonDecoder: JSONDecoder) async throws {
+        let response: (data: Data, urlResponse: URLResponse)
+        do {
+            response = try await self.data(for: request)
+        } catch {
+            throw HTTPError.connection(error)
+        }
+        guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
+            throw HTTPError.statusCodeMissing
+        }
+        guard (200..<300).contains(statusCode) else {
+            let errorModel = try? jsonDecoder.decode(HTTPResponseErrorModel.self, from: response.data)
+            throw HTTPError.statusCode(statusCode, errorModel)
+        }
+    }
+
     func data<T: Decodable>(for request: URLRequest, decodedBy jsonDecoder: JSONDecoder, as: T.Type) async throws -> HTTPResponse<T> {
         let response: (data: Data, urlResponse: URLResponse)
         do {
