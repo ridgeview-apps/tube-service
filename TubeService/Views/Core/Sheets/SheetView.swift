@@ -23,7 +23,7 @@ struct SheetView: View {
             JourneyModePickerScreen(initialModeIDs: initialModeIDs, onDone: onDone)
         case .tubeServicePlus:
             NavigationStack {
-                TubeServicePlusScreen()
+                TubeServicePlusScreen(context: .statusHistory)
             }
         case .notificationsOnboarding:
             NavigationStack {

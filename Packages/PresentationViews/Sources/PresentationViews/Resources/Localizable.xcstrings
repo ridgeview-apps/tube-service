@@ -2499,6 +2499,28 @@
         }
       }
     },
+    "tube.service.plus.notifications.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get notified when your lines are disrupted, and when service returns to normal."
+          }
+        }
+      }
+    },
+    "tube.service.plus.notifications.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never Miss a Disruption"
+          }
+        }
+      }
+    },
     "tube.service.plus.title": {
       "extractionState": "manual",
       "localizations": {

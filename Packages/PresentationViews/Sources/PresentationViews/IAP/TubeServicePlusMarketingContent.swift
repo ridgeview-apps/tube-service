@@ -1,8 +1,18 @@
 import SwiftUI
 
+public enum PaywallContext: Sendable {
+    case general
+    case statusHistory
+    case notifications
+}
+
 public struct TubeServicePlusMarketingContent: View {
 
-    public init() {}
+    let context: PaywallContext
+
+    public init(context: PaywallContext = .statusHistory) {
+        self.context = context
+    }
 
     public var body: some View {
         VStack(spacing: 24) {
@@ -12,17 +22,17 @@ public struct TubeServicePlusMarketingContent: View {
                         .fill(Color.accentColor.opacity(0.15))
                         .frame(width: 88, height: 88)
 
-                    Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
+                    Image(systemName: iconName)
                         .font(.system(size: 36, weight: .semibold))
                         .foregroundStyle(Color.accentColor)
                 }
 
                 VStack(spacing: 8) {
-                    Text(.tubeServicePlusTitle)
+                    Text(title)
                         .font(.title2.weight(.bold))
                         .multilineTextAlignment(.center)
 
-                    Text(.tubeServicePlusDescription)
+                    Text(description)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                 }
@@ -57,6 +67,27 @@ public struct TubeServicePlusMarketingContent: View {
         .padding(20)
     }
 
+    private var iconName: String {
+        switch context {
+        case .general, .statusHistory: "clock.arrow.trianglehead.counterclockwise.rotate.90"
+        case .notifications: "bell.badge.fill"
+        }
+    }
+
+    private var title: LocalizedStringResource {
+        switch context {
+        case .general, .statusHistory: .tubeServicePlusTitle
+        case .notifications: .tubeServicePlusNotificationsTitle
+        }
+    }
+
+    private var description: LocalizedStringResource {
+        switch context {
+        case .general, .statusHistory: .tubeServicePlusDescription
+        case .notifications: .tubeServicePlusNotificationsDescription
+        }
+    }
+
     private func featureRow(
         systemImage: String,
         title: LocalizedStringResource,
@@ -82,7 +113,12 @@ public struct TubeServicePlusMarketingContent: View {
 
 // MARK: - Previews
 
-#Preview {
-    TubeServicePlusMarketingContent()
+#Preview("Status History") {
+    TubeServicePlusMarketingContent(context: .statusHistory)
+        .padding()
+}
+
+#Preview("Notifications") {
+    TubeServicePlusMarketingContent(context: .notifications)
         .padding()
 }
