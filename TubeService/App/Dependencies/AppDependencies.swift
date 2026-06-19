@@ -4,6 +4,7 @@ import Foundation
 struct AppDependencies: Sendable {
     let tflAPI: TflAPIClientType
     let tubeServiceAPI: TubeServiceAPIClientType
+    let notificationsAPI: NotificationsAPIClientType
     let systemStatusAPI: SystemStatusAPIClientType
     let locationManager: LocationManagerType
     let localSearchCompleterClient: LocalSearchCompleterClientType
@@ -13,6 +14,7 @@ struct AppDependencies: Sendable {
     init(
         tflAPI: TflAPIClientType,
         tubeServiceAPI: TubeServiceAPIClientType,
+        notificationsAPI: NotificationsAPIClientType,
         systemStatusAPI: SystemStatusAPIClientType,
         locationManager: LocationManagerType,
         localSearchCompleterClient: LocalSearchCompleterClientType,
@@ -21,6 +23,7 @@ struct AppDependencies: Sendable {
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
+        self.notificationsAPI = notificationsAPI
         self.systemStatusAPI = systemStatusAPI
         self.locationManager = locationManager
         self.localSearchCompleterClient = localSearchCompleterClient

@@ -5,6 +5,7 @@ import SwiftUI
 @MainActor
 struct RootScene: App {
 
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
 
     var body: some Scene {
@@ -13,6 +14,7 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
+                    .appLifecycle(appData: appData, appDelegate: appDelegate)
                     .withAppEnvironment(dataStore: appData)
             }
         }
@@ -31,5 +33,6 @@ extension View {
             .environment(dataStore.localSearchResults)
             .environment(dataStore.systemStatus)
             .environment(dataStore.purchases)
+            .environment(dataStore.notifications)
     }
 }

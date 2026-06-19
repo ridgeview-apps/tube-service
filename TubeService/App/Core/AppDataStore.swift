@@ -13,6 +13,7 @@ final class AppDataStore {
     private(set) var localSearchResults: LocalSearchResultsStore
     private(set) var systemStatus: SystemStatusDataStore
     private(set) var purchases: PurchaseStore
+    private(set) var notifications: NotificationsDataStore
 
     private let dependencies: AppDependencies
 
@@ -42,6 +43,7 @@ final class AppDataStore {
             now: dependencies.now
         )
         self.purchases = PurchaseStore()
+        self.notifications = NotificationsDataStore(api: dependencies.notificationsAPI)
     }
 
     func start() async {

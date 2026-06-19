@@ -2,12 +2,19 @@ import SwiftUI
 
 struct AppLifecycleModifier: ViewModifier {
 
-    @Environment(AppDataStore.self) var appData
+    let appData: AppDataStore
+    let appDelegate: AppDelegate
 
     func body(content: Content) -> some View {
         content
             .task {
                 await appData.start()
+            }
+            .task {
+                for await token in appDelegate.pushTokens {
+                    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+                    await appData.notifications.registerDevice(pushToken: token, appVersion: appVersion)
+                }
             }
             .onSceneDidBecomeActive {
                 Task { await appData.sceneDidBecomeActive() }
@@ -17,7 +24,7 @@ struct AppLifecycleModifier: ViewModifier {
 
 extension View {
 
-    func appLifecycle() -> some View {
-        modifier(AppLifecycleModifier())
+    func appLifecycle(appData: AppDataStore, appDelegate: AppDelegate) -> some View {
+        modifier(AppLifecycleModifier(appData: appData, appDelegate: appDelegate))
     }
 }

@@ -7,6 +7,7 @@ extension AppDependencies {
     static let live = AppDependencies(
         tflAPI: TflAPIClient.live,
         tubeServiceAPI: TubeServiceAPIClient.live,
+        notificationsAPI: TubeServiceAPIClient.live,
         systemStatusAPI: SystemStatusAPIClient.live,
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),

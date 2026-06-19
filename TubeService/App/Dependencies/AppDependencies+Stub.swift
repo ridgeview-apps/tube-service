@@ -14,6 +14,7 @@ import Foundation
             return AppDependencies(
                 tflAPI: StubTflAPIClient(),
                 tubeServiceAPI: StubTubeServiceAPIClient(),
+                notificationsAPI: StubNotificationsAPIClient(),
                 systemStatusAPI: StubSystemStatusAPIClient(),
                 locationManager: locationManager,
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),

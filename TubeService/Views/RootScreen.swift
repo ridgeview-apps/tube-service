@@ -12,7 +12,6 @@ struct RootScreen: View {
             mapsTab
         }
         .tabViewStyle(.sidebarAdaptable)
-        .appLifecycle()
         .systemStatusRefreshable()
     }
 
