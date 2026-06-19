@@ -18,7 +18,6 @@ struct NotificationsOnboardingScreen: View {
     @State private var path: [OnboardingStep] = []
     @State private var selectedLineIDs: Set<TrainLineID>
     @State private var selectedPreset: NotificationSchedulePreset = .weekdayPeak
-    @State private var hasSaved = false
 
     enum OnboardingStep: Hashable {
         case paywall
@@ -206,10 +205,6 @@ struct NotificationsOnboardingScreen: View {
                 }
             }
         }
-        .task { await trySavePreferences() }
-        .onChange(of: notifications.device) { _, _ in
-            Task { await trySavePreferences() }
-        }
     }
 
     private var selectedLinesCard: some View {
@@ -284,6 +279,7 @@ struct NotificationsOnboardingScreen: View {
 
         switch currentStatus {
         case .authorized, .ephemeral, .provisional:
+            notifications.pendingPreferencesUpdate = makePreferencesUpdate()
             UIApplication.shared.registerForRemoteNotifications()
             path.append(.confirmation)
         case .denied:
@@ -292,6 +288,7 @@ struct NotificationsOnboardingScreen: View {
             do {
                 let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
                 if granted {
+                    notifications.pendingPreferencesUpdate = makePreferencesUpdate()
                     UIApplication.shared.registerForRemoteNotifications()
                     path.append(.confirmation)
                 } else {
@@ -305,10 +302,8 @@ struct NotificationsOnboardingScreen: View {
         }
     }
 
-    private func trySavePreferences() async {
-        guard !hasSaved, notifications.device != nil else { return }
-        hasSaved = true
-        let update = NotificationPreferencesUpdate(
+    private func makePreferencesUpdate() -> NotificationPreferencesUpdate {
+        NotificationPreferencesUpdate(
             enabled: true,
             lineIds: selectedLineIDs.map(\.rawValue),
             severityThreshold: .minorDelays,
@@ -316,7 +311,6 @@ struct NotificationsOnboardingScreen: View {
             schedulePreset: selectedPreset,
             customSchedules: []
         )
-        await notifications.updatePreferences(update)
     }
 
     private func featureRow(

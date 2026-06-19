@@ -17,6 +17,10 @@ public final class NotificationsDataStore {
     public internal(set) var isSavingPreferences = false
     public internal(set) var registrationError: Error?
 
+    /// Preferences to apply immediately after the next successful device registration.
+    /// Set by the onboarding flow so choices survive the async APNs token delivery.
+    public var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+
     private static let keychainDeviceIdKey = "device_id"
 
     // Lazily cached to avoid hitting Keychain on every access.
@@ -62,7 +66,10 @@ public final class NotificationsDataStore {
         defer { isRegistering = false }
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
-            if preferences == nil {
+            if let pending = pendingPreferencesUpdate {
+                pendingPreferencesUpdate = nil
+                await updatePreferences(pending)
+            } else if preferences == nil {
                 await fetchPreferences()
             }
         } catch {
