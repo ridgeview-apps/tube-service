@@ -147,14 +147,14 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     // MARK: - Tube service data
 
     public func fetchDailyLineTimeline(lineID: TrainLineID, operationalDate: Date?) async throws -> HTTPResponse<DailyLineTimeline> {
-        try await fetchData(
+        try await perform(
             for: .dailyLineTimeline(lineID: lineID, operationalDate: operationalDate),
             mappedTo: DailyLineTimeline.self
         )
     }
 
     public func fetchDailyLineDisruptionSummary(operationalDate: Date?) async throws -> HTTPResponse<DailyDisruptionSummary> {
-        try await fetchData(
+        try await perform(
             for: .dailyLineDisruptionSummary(operationalDate: operationalDate),
             mappedTo: DailyDisruptionSummary.self
         )
@@ -165,7 +165,7 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
 
     public func registerDevice(deviceId: String, pushToken: String, appVersion: String?) async throws -> HTTPResponse<NotificationDevice> {
         let body = try jsonEncoder.encode(NotificationDeviceRegistration(platform: "ios", pushToken: pushToken, appVersion: appVersion))
-        return try await fetchData(for: .registerDevice(deviceId: deviceId, body: body), mappedTo: NotificationDevice.self)
+        return try await perform(for: .registerDevice(deviceId: deviceId, body: body), mappedTo: NotificationDevice.self)
     }
 
     public func deleteDevice(deviceId: String) async throws {
@@ -174,22 +174,22 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     }
 
     public func disableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
-        try await fetchData(for: .disableDevice(deviceId: deviceId), mappedTo: NotificationDevice.self)
+        try await perform(for: .disableDevice(deviceId: deviceId), mappedTo: NotificationDevice.self)
     }
 
     public func fetchPreferences(deviceId: String) async throws -> HTTPResponse<NotificationPreferences> {
-        try await fetchData(for: .fetchPreferences(deviceId: deviceId), mappedTo: NotificationPreferences.self)
+        try await perform(for: .fetchPreferences(deviceId: deviceId), mappedTo: NotificationPreferences.self)
     }
 
     public func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
         let body = try jsonEncoder.encode(update)
-        return try await fetchData(for: .updatePreferences(deviceId: deviceId, body: body), mappedTo: NotificationPreferences.self)
+        return try await perform(for: .updatePreferences(deviceId: deviceId, body: body), mappedTo: NotificationPreferences.self)
     }
 
 
     // MARK: - Helpers
 
-    private func fetchData<T: Decodable>(for route: TubeServiceAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
+    private func perform<T: Decodable>(for route: TubeServiceAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
         let request = try route.toURLRequest(relativeTo: baseURL, apiKey: apiKey)
         return try await urlSession.data(for: request, decodedBy: jsonDecoder, as: model)
     }
