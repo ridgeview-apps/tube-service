@@ -19,10 +19,30 @@ private extension DateFormatter {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         return dateFormatter
     }()
+
+    static let tubeServiceDateTimeMicroseconds: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        return dateFormatter
+    }()
+
+    static let tubeServiceDateTimeMilliseconds: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(identifier: "UTC")
+        return dateFormatter
+    }()
 }
 
 private let tflDateFormatters: [DateFormatter] = [.tflLocalDateTime]
-private let tubeServiceDateFormatters: [DateFormatter] = [.dateOnly]
+private let tubeServiceDateFormatters: [DateFormatter] = [
+    .tubeServiceDateTimeMicroseconds,
+    .tubeServiceDateTimeMilliseconds,
+    .dateOnly
+]
 
 public extension JSONDecoder {
 

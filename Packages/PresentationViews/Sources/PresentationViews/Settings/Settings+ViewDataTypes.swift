@@ -39,7 +39,7 @@ public extension Settings {
 
     // MARK: - Notifications row state
 
-    public enum NotificationsRowState: Sendable {
+    enum NotificationsRowState: Sendable {
         case notSetUp
         case active
     }

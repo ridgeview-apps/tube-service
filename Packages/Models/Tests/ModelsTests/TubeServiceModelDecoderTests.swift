@@ -74,6 +74,41 @@ struct TubeServiceModelDecoderTests {
         #expect(snapshot.observedAt == iso8601("2026-06-18T09:00:00Z"))
     }
 
+    @Test
+    func decodedNotificationDeviceDatesWithMicroseconds() throws {
+        let json = """
+            {
+                "device_id": "abc123",
+                "platform": "ios",
+                "enabled": true,
+                "app_version": "1.0.0",
+                "created_at": "2026-06-20T09:49:14.794457",
+                "updated_at": "2026-06-20T09:49:14.794457",
+                "last_seen_at": "2026-06-20T09:49:14.794457"
+            }
+            """
+        let device = try decode(NotificationDevice.self, from: json)
+        #expect(device.createdAt == utcDateTime("2026-06-20T09:49:14.794457", format: "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
+    }
+
+    @Test
+    func decodedNotificationDeviceDatesWithMilliseconds() throws {
+        let json = """
+            {
+                "device_id": "abc123",
+                "platform": "ios",
+                "enabled": true,
+                "app_version": null,
+                "created_at": "2026-06-20T09:49:14.794",
+                "updated_at": "2026-06-20T09:49:14.794",
+                "last_seen_at": "2026-06-20T09:49:14.794"
+            }
+            """
+        let device = try decode(NotificationDevice.self, from: json)
+        #expect(device.createdAt == utcDateTime("2026-06-20T09:49:14.794", format: "yyyy-MM-dd'T'HH:mm:ss.SSS"))
+        #expect(device.appVersion == nil)
+    }
+
     // MARK: - LineStatusSnapshot (via DailyDisruptionSummary)
 
     @Test
@@ -270,6 +305,14 @@ private extension TubeServiceModelDecoderTests {
 
     func iso8601(_ string: String) -> Date {
         try! Date(string, strategy: .iso8601)
+    }
+
+    func utcDateTime(_ string: String, format: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = format
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(identifier: "UTC")
+        return formatter.date(from: string)!
     }
 
     func timelineJSON(snapshotCount: Int) -> String {

@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import Shared
 
 @MainActor
 @Observable
@@ -73,6 +74,7 @@ public final class NotificationsDataStore {
                 await fetchPreferences()
             }
         } catch {
+            AppLogger.notifications.error("Failed to register Device \(error)")
             registrationError = error
         }
     }
