@@ -1750,6 +1750,17 @@
         }
       }
     },
+    "line.status.notifications.remove.confirm.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stop notifications for this line?"
+          }
+        }
+      }
+    },
     "line.status.planned.good.service.all.lines.title": {
       "extractionState": "manual",
       "localizations": {

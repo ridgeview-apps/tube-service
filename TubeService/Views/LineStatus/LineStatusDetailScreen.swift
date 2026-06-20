@@ -62,7 +62,7 @@ struct LineStatusDetailScreen: View {
         }
     }
 
-    private var notificationButtonState: LineStatusNotificationButton.State? {
+    private var notificationButtonState: LineStatusNotificationButton.SubscriptionState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
         guard let prefs = notifications.preferences, prefs.enabled else { return .notSubscribed }
@@ -105,13 +105,13 @@ struct LineStatusDetailScreen: View {
                     }
                 }
             }
-        case .notifyMeTapped(let state):
-            switch state {
-            case .notSubscribed:
+        case .notifyMeTapped(let action):
+            switch action {
+            case .notSubscribedTapped:
                 showSheet(.notificationsOnboarding(preselectedLine: line.id))
-            case .inactive:
+            case .addLine:
                 Task { await addLineToNotifications() }
-            case .active:
+            case .removeLine:
                 Task { await removeLineFromNotifications() }
             }
         }

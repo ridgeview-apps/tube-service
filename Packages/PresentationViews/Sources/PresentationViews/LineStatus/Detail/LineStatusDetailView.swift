@@ -6,7 +6,7 @@ public struct LineStatusDetailView: View {
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
-        case notifyMeTapped(LineStatusNotificationButton.State)
+        case notifyMeTapped(LineStatusNotificationButton.Action)
     }
 
     public enum StatusContext: Sendable {
@@ -21,7 +21,7 @@ public struct LineStatusDetailView: View {
     public let historyState: LineStatusHistoryButton.HistoryState?
     public let statusContext: StatusContext
     public let isStatusHistoryEnabled: Bool
-    public let notificationButtonState: LineStatusNotificationButton.State?
+    public let notificationButtonState: LineStatusNotificationButton.SubscriptionState?
 
     @Binding public var isFavourite: Bool
 
@@ -36,7 +36,7 @@ public struct LineStatusDetailView: View {
         historyState: LineStatusHistoryButton.HistoryState?,
         statusContext: StatusContext,
         isStatusHistoryEnabled: Bool = true,
-        notificationButtonState: LineStatusNotificationButton.State? = nil,
+        notificationButtonState: LineStatusNotificationButton.SubscriptionState? = nil,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -75,7 +75,7 @@ public struct LineStatusDetailView: View {
                             LineStatusNotificationButton(
                                 state: state,
                                 lineColor: line.id.backgroundColor,
-                                onTap: { onAction(.notifyMeTapped(state)) }
+                                onAction: { onAction(.notifyMeTapped($0)) }
                             )
                         }
                     }
@@ -211,7 +211,7 @@ private struct Previewer: View {
     var historyState: LineStatusHistoryButton.HistoryState? = nil
     var statusContext = LineStatusDetailView.StatusContext.live
     var isStatusHistoryEnabled: Bool = true
-    var notificationButtonState: LineStatusNotificationButton.State? = nil
+    var notificationButtonState: LineStatusNotificationButton.SubscriptionState? = nil
     @State var isFavourite = false
 
     var body: some View {

@@ -3,24 +3,34 @@ import SwiftUI
 
 public struct LineStatusNotificationButton: View {
 
-    public enum State: Sendable {
+    public enum SubscriptionState: Sendable, Equatable {
         case notSubscribed
         case inactive
         case active
     }
 
-    let state: State
+    public enum Action: Sendable {
+        case notSubscribedTapped
+        case addLine
+        case removeLine
+    }
+
+    let state: SubscriptionState
     let lineColor: Color
-    let onTap: () -> Void
+    let onAction: (Action) -> Void
+
+    @State private var showsRemoveConfirmDialog = false
+    @State private var showingConfirmation = false
 
     public var body: some View {
         Button {
-            onTap()
+            buttonTapped()
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: iconName)
+                    .contentTransition(.symbolEffect(.replace))
                     .font(.title2.weight(.semibold))
-                    .foregroundStyle(lineColor)
+                    .foregroundStyle(showingConfirmation ? Color.green : lineColor)
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -43,46 +53,81 @@ public struct LineStatusNotificationButton: View {
         }
         .buttonStyle(.plain)
         .cardStyle()
+        .confirmationDialog(
+            .lineStatusNotificationsRemoveConfirmTitle,
+            isPresented: $showsRemoveConfirmDialog,
+            titleVisibility: .visible
+        ) {
+            Button(.globalCancel, role: .cancel) {}
+            Button(.globalRemove, role: .destructive) {
+                onAction(.removeLine)
+            }
+        }
+        .sensoryFeedback(.success, trigger: showingConfirmation) { _, newValue in newValue }
+        .sensoryFeedback(.warning, trigger: state) { (old: SubscriptionState, new: SubscriptionState) in
+            old == .active && new == .inactive
+        }
     }
 
     private var iconName: String {
         switch state {
         case .notSubscribed: "bell"
-        case .inactive: "bell.badge"
+        case .inactive: showingConfirmation ? "bell.fill" : "bell.badge"
         case .active: "bell.fill"
         }
     }
 
     private var title: LocalizedStringResource {
+        if showingConfirmation { return .lineStatusNotificationsActiveTitle }
         switch state {
-        case .notSubscribed: .lineStatusNotificationsNotSubscribedTitle
-        case .inactive: .lineStatusNotificationsInactiveTitle
-        case .active: .lineStatusNotificationsActiveTitle
+        case .notSubscribed: return .lineStatusNotificationsNotSubscribedTitle
+        case .inactive: return .lineStatusNotificationsInactiveTitle
+        case .active: return .lineStatusNotificationsActiveTitle
         }
     }
 
     private var subtitle: LocalizedStringResource {
+        if showingConfirmation { return .lineStatusNotificationsActiveSubtitle }
         switch state {
-        case .notSubscribed: .lineStatusNotificationsNotSubscribedSubtitle
-        case .inactive: .lineStatusNotificationsInactiveSubtitle
-        case .active: .lineStatusNotificationsActiveSubtitle
+        case .notSubscribed: return .lineStatusNotificationsNotSubscribedSubtitle
+        case .inactive: return .lineStatusNotificationsInactiveSubtitle
+        case .active: return .lineStatusNotificationsActiveSubtitle
         }
     }
 
     @ViewBuilder
     private var accessory: some View {
-        switch state {
-        case .notSubscribed:
+        if state == .notSubscribed {
             Image(systemName: "chevron.forward")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)
-        case .inactive:
+        } else if state == .active || showingConfirmation {
+            Image(systemName: "checkmark.circle.fill")
+                .foregroundStyle(showingConfirmation ? Color.green : lineColor)
+        } else {
             Image(systemName: "plus.circle")
                 .foregroundStyle(.secondary)
+        }
+    }
+
+    private func buttonTapped() {
+        switch state {
+        case .notSubscribed:
+            onAction(.notSubscribedTapped)
+        case .inactive:
+            withAnimation(.snappy(duration: 0.35)) {
+                showingConfirmation = true
+            }
+            onAction(.addLine)
+            Task {
+                try? await Task.sleep(for: .seconds(1.2))
+                withAnimation(.snappy(duration: 0.35)) {
+                    showingConfirmation = false
+                }
+            }
         case .active:
-            Image(systemName: "checkmark.circle.fill")
-                .foregroundStyle(lineColor)
+            showsRemoveConfirmDialog = true
         }
     }
 }
@@ -91,16 +136,16 @@ public struct LineStatusNotificationButton: View {
 // MARK: - Previews
 
 #Preview("Not subscribed") {
-    LineStatusNotificationButton(state: .notSubscribed, lineColor: .red, onTap: {})
+    LineStatusNotificationButton(state: .notSubscribed, lineColor: .red, onAction: { _ in })
         .padding()
 }
 
 #Preview("Inactive") {
-    LineStatusNotificationButton(state: .inactive, lineColor: .blue, onTap: {})
+    LineStatusNotificationButton(state: .inactive, lineColor: .blue, onAction: { _ in })
         .padding()
 }
 
 #Preview("Active") {
-    LineStatusNotificationButton(state: .active, lineColor: .blue, onTap: {})
+    LineStatusNotificationButton(state: .active, lineColor: .blue, onAction: { _ in })
         .padding()
 }
