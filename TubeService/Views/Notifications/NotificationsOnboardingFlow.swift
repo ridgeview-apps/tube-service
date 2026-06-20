@@ -123,7 +123,7 @@ struct NotificationsOnboardingFlow: View {
 
         switch currentStatus {
         case .authorized, .ephemeral, .provisional:
-            notifications.pendingPreferencesUpdate = makePreferencesUpdate()
+            notifications.schedulePreferencesUpdate(makePreferencesUpdate())
             UIApplication.shared.registerForRemoteNotifications()
             path.append(.confirmation)
         case .denied:
@@ -132,7 +132,7 @@ struct NotificationsOnboardingFlow: View {
             do {
                 let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
                 if granted {
-                    notifications.pendingPreferencesUpdate = makePreferencesUpdate()
+                    notifications.schedulePreferencesUpdate(makePreferencesUpdate())
                     UIApplication.shared.registerForRemoteNotifications()
                     path.append(.confirmation)
                 } else {
@@ -150,7 +150,7 @@ struct NotificationsOnboardingFlow: View {
         let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
         switch status {
         case .authorized, .ephemeral, .provisional:
-            notifications.pendingPreferencesUpdate = makePreferencesUpdate()
+            notifications.schedulePreferencesUpdate(makePreferencesUpdate())
             UIApplication.shared.registerForRemoteNotifications()
             path = [.confirmation]
         default:

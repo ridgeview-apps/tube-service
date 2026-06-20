@@ -6,26 +6,24 @@ import Shared
 @Observable
 public final class NotificationsDataStore {
 
-    // MARK: - State
+    // MARK: - Public state
+
+    public internal(set) var preferences: NotificationPreferences?
+    public internal(set) var isFetchingPreferences = false
+    public internal(set) var isSavingPreferences = false
+
+    private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+
+    // MARK: - Private state
 
     private let api: NotificationsAPIClientType
     private let keychain: any KeychainService
     private let userDefaults: UserDefaults
 
-    public internal(set) var device: NotificationDevice?
-    public internal(set) var preferences: NotificationPreferences?
-    public internal(set) var isRegistering = false
-    public internal(set) var isFetchingPreferences = false
-    public internal(set) var isSavingPreferences = false
-    public internal(set) var registrationError: Error?
-
-    /// Preferences to apply immediately after the next successful device registration.
-    /// Set by the onboarding flow so choices survive the async APNs token delivery.
-    public var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+    private var device: NotificationDevice?
+    private var isRegistering = false
 
     private static let keychainDeviceIdKey = "device_id"
-
-    // Lazily cached to avoid hitting Keychain on every access.
     private var cachedDeviceId: String?
 
 
@@ -49,8 +47,7 @@ public final class NotificationsDataStore {
 
     // MARK: - Device ID
 
-    /// A stable UUID persisted in the Keychain. Survives app reinstalls.
-    public var deviceId: String {
+    private var deviceId: String {
         if let cached = cachedDeviceId { return cached }
         if let existing = keychain.read(key: Self.keychainDeviceIdKey) {
             cachedDeviceId = existing
@@ -68,7 +65,6 @@ public final class NotificationsDataStore {
     public func registerDevice(pushToken: String, appVersion: String? = nil) async {
         guard !isRegistering else { return }
         isRegistering = true
-        registrationError = nil
         defer { isRegistering = false }
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
@@ -79,8 +75,7 @@ public final class NotificationsDataStore {
                 await fetchPreferences()
             }
         } catch {
-            AppLogger.notifications.error("Failed to register Device \(error)")
-            registrationError = error
+            AppLogger.notifications.error("Failed to register device: \(error)")
         }
     }
 
@@ -88,7 +83,7 @@ public final class NotificationsDataStore {
         do {
             device = try await api.disableDevice(deviceId: deviceId).decodedModel
         } catch {
-            AppLogger.notifications.error("Failed to disable device \(error)")
+            AppLogger.notifications.error("Failed to disable device: \(error)")
         }
     }
 
@@ -99,8 +94,13 @@ public final class NotificationsDataStore {
             preferences = nil
             userDefaults.notificationPreferences = nil
         } catch {
-            AppLogger.notifications.error("Failed to delete device \(error)")
+            AppLogger.notifications.error("Failed to delete device: \(error)")
         }
+    }
+
+
+    public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
+        pendingPreferencesUpdate = update
     }
 
 
@@ -114,8 +114,7 @@ public final class NotificationsDataStore {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
             userDefaults.notificationPreferences = preferences
         } catch {
-            AppLogger.notifications.error("Failed to fetch notification preferences \(error)")
-            // Keep existing preferences on error
+            AppLogger.notifications.error("Failed to fetch notification preferences: \(error)")
         }
     }
 
@@ -128,7 +127,7 @@ public final class NotificationsDataStore {
             preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
             userDefaults.notificationPreferences = preferences
         } catch {
-            AppLogger.notifications.error("Failed to update notification preferences \(error)")
+            AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             preferences = previousPreferences
         }
     }

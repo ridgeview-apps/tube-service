@@ -17,13 +17,9 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
 
         // When
-        #expect(store.device == nil)
         await store.registerDevice(pushToken: "test-push-token")
 
         // Then
-        #expect(store.device != nil)
-        #expect(store.registrationError == nil)
-        #expect(!store.isRegistering)
         #expect(api.registerDeviceCallCount == 1)
     }
 
@@ -42,7 +38,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func registerDeviceFailure() async {
+    func registerDeviceFailureDoesNotFetchPreferences() async {
         // Given
         let api = StubNotificationsAPIClient()
         api.registerDeviceError = HTTPError.invalidRequestURL
@@ -52,29 +48,18 @@ struct NotificationsDataStoreTests {
         await store.registerDevice(pushToken: "test-push-token")
 
         // Then
-        #expect(store.device == nil)
-        #expect(store.registrationError != nil)
-        #expect(!store.isRegistering)
+        #expect(store.preferences == nil)
         #expect(api.registerDeviceCallCount == 1)
+        #expect(api.fetchPreferencesCallCount == 0)
     }
 
 
     // MARK: - Device management
 
     @Test
-    func disableDeviceUpdatesDeviceFromResponse() async throws {
+    func disableDeviceCallsAPI() async {
         // Given
         let api = StubNotificationsAPIClient()
-        let disabledDevice = NotificationDevice(
-            deviceId: "test-id",
-            platform: "ios",
-            enabled: false,
-            appVersion: nil,
-            createdAt: .now,
-            updatedAt: .now,
-            lastSeenAt: .now
-        )
-        api.stubbedDevice = .success200(disabledDevice)
         let store = makeStore(api: api)
 
         // When
@@ -82,8 +67,6 @@ struct NotificationsDataStoreTests {
 
         // Then
         #expect(api.disableDeviceCallCount == 1)
-        let device = try #require(store.device)
-        #expect(!device.enabled)
     }
 
     @Test
@@ -92,14 +75,12 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token")
-        #expect(store.device != nil)
         #expect(store.preferences != nil)
 
         // When
         await store.deleteDevice()
 
         // Then
-        #expect(store.device == nil)
         #expect(store.preferences == nil)
         #expect(api.deleteDeviceCallCount == 1)
     }
@@ -177,20 +158,41 @@ struct NotificationsDataStoreTests {
     }
 
 
-    // MARK: - Device ID
+    // MARK: - Pending preferences update
 
     @Test
-    func deviceIdIsStableWithinSameInstance() {
+    func scheduledPreferencesUpdateIsAppliedAfterRegistration() async {
         // Given
-        let store = makeStore()
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lineIds: ["victoria"], schedulePreset: .weekends)
 
-        // When
-        let id1 = store.deviceId
-        let id2 = store.deviceId
+        // When – schedule an update before the APNs token arrives
+        store.schedulePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token")
 
-        // Then
-        #expect(id1 == id2)
-        #expect(!id1.isEmpty)
+        // Then – update is applied instead of fetching defaults
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(api.fetchPreferencesCallCount == 0)
+        #expect(store.preferences?.lineIds == ["victoria"])
+        #expect(store.preferences?.schedulePreset == .weekends)
+    }
+
+    @Test
+    func scheduledPreferencesUpdateIsConsumedOnce() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lineIds: ["victoria"], schedulePreset: .weekends)
+        store.schedulePreferencesUpdate(update)
+
+        // When – register twice (second registration is a no-op due to isRegistering guard,
+        // but if called after the first completes it should not re-apply the pending update)
+        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token")
+
+        // Then – update was only applied once
+        #expect(api.updatePreferencesCallCount == 1)
     }
 
 
