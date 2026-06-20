@@ -5,6 +5,7 @@ public struct SettingsView: View {
 
     public enum Action {
         case openDebugSettings
+        case notificationsTapped
     }
 
     public typealias ContactUs = Settings.ContactUs
@@ -14,6 +15,7 @@ public struct SettingsView: View {
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
+    public let notificationsRowState: Settings.NotificationsRowState?
     public let onAction: (Action) -> Void
 
     public init(
@@ -21,12 +23,14 @@ public struct SettingsView: View {
         appReviewURL: URL,
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
+        notificationsRowState: Settings.NotificationsRowState? = nil,
         onAction: @escaping (Action) -> Void
     ) {
         self.appVersionNumber = appVersionNumber
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
         self.systemStatus = systemStatus
+        self.notificationsRowState = notificationsRowState
         self.onAction = onAction
     }
 
@@ -42,6 +46,21 @@ public struct SettingsView: View {
 
     private var supportSection: some View {
         Section {
+            if let notificationsRowState {
+                Button {
+                    onAction(.notificationsTapped)
+                } label: {
+                    HStack {
+                        Text(.settingsNotificationsRowTitle)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.tertiary)
+                    }
+                }
+                .foregroundStyle(.primary)
+                .opacity(notificationsRowState == .notSetUp ? 0.6 : 1)
+            }
             MailButton(
                 to: [contactUs.emailAddress],
                 subject: emailSubject,

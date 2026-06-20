@@ -46,6 +46,7 @@ public enum L10n {
     public static let searchSuggestionsSectionTitle = LocalizedStringResource.searchSuggestionsSectionTitle
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
+    public static let settingsNotificationsRowTitle = LocalizedStringResource.settingsNotificationsRowTitle
 
     public static let notificationsConfirmationDescription = LocalizedStringResource.notificationsConfirmationDescription
     public static let notificationsConfirmationNavigationTitle = LocalizedStringResource.notificationsConfirmationNavigationTitle
@@ -67,6 +68,9 @@ public enum L10n {
     public static let notificationsPermissionDeniedDescription = LocalizedStringResource.notificationsPermissionDeniedDescription
     public static let notificationsPermissionDeniedNavigationTitle = LocalizedStringResource.notificationsPermissionDeniedNavigationTitle
     public static let notificationsPermissionDeniedTitle = LocalizedStringResource.notificationsPermissionDeniedTitle
+
+    public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
+    public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle
 
     public static let notificationsScheduleAnytimeDescription = LocalizedStringResource.notificationsScheduleAnytimeDescription
     public static let notificationsScheduleAnytimeTitle = LocalizedStringResource.notificationsScheduleAnytimeTitle

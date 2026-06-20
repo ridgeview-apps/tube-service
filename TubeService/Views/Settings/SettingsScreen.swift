@@ -9,17 +9,26 @@ struct SettingsScreen: View {
     private enum DestinationID: Identifiable {
         var id: Self { self }
         case debugMenu
+        case notificationsPreferences
     }
 
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
+    @Environment(\.showSheet) var showSheet
     @Environment(SystemStatusDataStore.self) var systemStatusData
+    @Environment(NotificationsDataStore.self) var notifications
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
         store: AppDependencies.current.userDefaults.value
     )
     private var userPreferences: UserPreferences = .default
+
+    @AppStorage(
+        UserDefaults.Keys.featureFlags.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var featureFlags: FeatureFlags = .default
 
     @State private var navigationState = NavigationState<DestinationID>()
 
@@ -30,6 +39,7 @@ struct SettingsScreen: View {
                 appReviewURL: appConfig.appReviewURL,
                 contactUs: contactUsConfig,
                 systemStatus: systemStatusData.currentStatus,
+                notificationsRowState: notificationsRowState,
                 onAction: handleAction
             )
             .withCloseToolbarButton()
@@ -38,6 +48,11 @@ struct SettingsScreen: View {
                 destinationView(for: destinationID)
             }
         }
+    }
+
+    private var notificationsRowState: Settings.NotificationsRowState? {
+        guard featureFlags.isNotificationsEnabled else { return nil }
+        return notifications.device?.enabled == true ? .active : .notSetUp
     }
 
     private var contactUsConfig: Settings.ContactUs {
@@ -51,7 +66,16 @@ struct SettingsScreen: View {
     }
 
     private func handleAction(_ action: SettingsView.Action) {
-        navigationState.push(to: .debugMenu)
+        switch action {
+        case .openDebugSettings:
+            navigationState.push(to: .debugMenu)
+        case .notificationsTapped:
+            if notifications.device?.enabled == true {
+                navigationState.push(to: .notificationsPreferences)
+            } else {
+                showSheet(.notificationsOnboarding())
+            }
+        }
     }
 
     @ViewBuilder
@@ -59,6 +83,10 @@ struct SettingsScreen: View {
         switch destinationID {
         case .debugMenu:
             DebugSettingsScreen()
+        case .notificationsPreferences:
+            if let preferences = notifications.preferences {
+                NotificationsPreferencesScreen(preferences: preferences)
+            }
         }
     }
 }

@@ -37,6 +37,14 @@ public extension Settings {
     }
 
 
+    // MARK: - Notifications row state
+
+    public enum NotificationsRowState: Sendable {
+        case notSetUp
+        case active
+    }
+
+
     // MARK: - Debug state
 
     enum DebugAction: Sendable {
