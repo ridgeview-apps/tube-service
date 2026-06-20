@@ -50,6 +50,7 @@ public enum L10n {
 
     public static let notificationsConfirmationDescription = LocalizedStringResource.notificationsConfirmationDescription
     public static let notificationsConfirmationNavigationTitle = LocalizedStringResource.notificationsConfirmationNavigationTitle
+    public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
     public static let notificationsConfirmationTitle = LocalizedStringResource.notificationsConfirmationTitle
 
     public static let notificationsLineSelectionNavigationTitle = LocalizedStringResource.notificationsLineSelectionNavigationTitle

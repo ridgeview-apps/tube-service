@@ -2113,6 +2113,17 @@
         }
       }
     },
+    "notifications.confirmation.schedule.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule"
+          }
+        }
+      }
+    },
     "notifications.line.selection.navigation.title": {
       "extractionState": "manual",
       "localizations": {

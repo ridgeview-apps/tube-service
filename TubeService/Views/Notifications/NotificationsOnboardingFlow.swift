@@ -61,6 +61,7 @@ struct NotificationsOnboardingFlow: View {
                     case .confirmation:
                         NotificationsOnboardingConfirmationView(
                             selectedLineIDs: selectedLineIDs,
+                            selectedSchedulePreset: selectedPreset,
                             onDone: { dismiss() }
                         )
                     case .permissionDenied:
