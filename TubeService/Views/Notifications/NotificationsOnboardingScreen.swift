@@ -1,6 +1,7 @@
 import DataStores
 import Models
 import PresentationViews
+import RidgeviewCore
 import StoreKit
 import SwiftUI
 import UIKit
@@ -269,6 +270,9 @@ struct NotificationsOnboardingScreen: View {
         }
         .navigationTitle(Text(L10n.notificationsPermissionDeniedNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
+        .onSceneDidBecomeActive {
+            Task { await recheckPermissionAndAdvance() }
+        }
     }
 
     // MARK: - Helpers
@@ -299,6 +303,18 @@ struct NotificationsOnboardingScreen: View {
             }
         @unknown default:
             path.append(.permissionDenied)
+        }
+    }
+
+    private func recheckPermissionAndAdvance() async {
+        let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+        switch status {
+        case .authorized, .ephemeral, .provisional:
+            notifications.pendingPreferencesUpdate = makePreferencesUpdate()
+            UIApplication.shared.registerForRemoteNotifications()
+            path = [.confirmation]
+        default:
+            break
         }
     }
 
