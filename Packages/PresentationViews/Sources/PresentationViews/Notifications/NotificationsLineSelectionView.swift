@@ -16,7 +16,7 @@ public struct NotificationsLineSelectionView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                Text(L10n.notificationsLineSelectionSubtitle)
+                Text(.notificationsLineSelectionSubtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 20)
@@ -35,7 +35,7 @@ public struct NotificationsLineSelectionView: View {
             Button {
                 onContinue(selectedLineIDs)
             } label: {
-                Text(L10n.globalContinue)
+                Text(.globalContinue)
                     .frame(maxWidth: .infinity)
                     .frame(height: 20)
             }
@@ -45,7 +45,7 @@ public struct NotificationsLineSelectionView: View {
             .padding(20)
             .background(.bar)
         }
-        .navigationTitle(Text(L10n.notificationsLineSelectionNavigationTitle))
+        .navigationTitle(Text(.notificationsLineSelectionNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
     }
 

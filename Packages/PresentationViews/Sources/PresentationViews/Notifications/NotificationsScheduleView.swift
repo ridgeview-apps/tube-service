@@ -24,7 +24,7 @@ public struct NotificationsScheduleView: View {
             Button {
                 onContinue(selectedPreset)
             } label: {
-                Text(L10n.globalContinue)
+                Text(.globalContinue)
                     .frame(maxWidth: .infinity)
                     .frame(height: 20)
             }
@@ -33,7 +33,7 @@ public struct NotificationsScheduleView: View {
             .padding(20)
             .background(.bar)
         }
-        .navigationTitle(Text(L10n.notificationsScheduleNavigationTitle))
+        .navigationTitle(Text(.notificationsScheduleNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -49,26 +49,26 @@ public struct NotificationsScheduleView: View {
     private let presets: [PresetItem] = [
         .init(
             preset: .weekdayPeak,
-            title: L10n.notificationsScheduleWeekdayPeakTitle,
-            description: L10n.notificationsScheduleWeekdayPeakDescription,
+            title: .notificationsScheduleWeekdayPeakTitle,
+            description: .notificationsScheduleWeekdayPeakDescription,
             systemImage: "person.2.wave.2"
         ),
         .init(
             preset: .weekdayAllDay,
-            title: L10n.notificationsScheduleWeekdayAllDayTitle,
-            description: L10n.notificationsScheduleWeekdayAllDayDescription,
+            title: .notificationsScheduleWeekdayAllDayTitle,
+            description: .notificationsScheduleWeekdayAllDayDescription,
             systemImage: "sun.max"
         ),
         .init(
             preset: .weekends,
-            title: L10n.notificationsScheduleWeekendsTitle,
-            description: L10n.notificationsScheduleWeekendsDescription,
+            title: .notificationsScheduleWeekendsTitle,
+            description: .notificationsScheduleWeekendsDescription,
             systemImage: "calendar"
         ),
         .init(
             preset: .anytime,
-            title: L10n.notificationsScheduleAnytimeTitle,
-            description: L10n.notificationsScheduleAnytimeDescription,
+            title: .notificationsScheduleAnytimeTitle,
+            description: .notificationsScheduleAnytimeDescription,
             systemImage: "bell.fill"
         )
     ]

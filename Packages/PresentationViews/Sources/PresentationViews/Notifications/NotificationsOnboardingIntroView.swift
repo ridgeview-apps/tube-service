@@ -24,7 +24,7 @@ public struct NotificationsOnboardingIntroView: View {
             }
             .padding(20)
         }
-        .navigationTitle(Text(L10n.notificationsOnboardingNavigationTitle))
+        .navigationTitle(Text(.notificationsOnboardingNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -41,11 +41,11 @@ public struct NotificationsOnboardingIntroView: View {
             }
 
             VStack(spacing: 8) {
-                Text(L10n.notificationsOnboardingHeroTitle)
+                Text(.notificationsOnboardingHeroTitle)
                     .font(.title2.weight(.bold))
                     .multilineTextAlignment(.center)
 
-                Text(L10n.notificationsOnboardingHeroDescription)
+                Text(.notificationsOnboardingHeroDescription)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
@@ -56,18 +56,18 @@ public struct NotificationsOnboardingIntroView: View {
         VStack(alignment: .leading, spacing: 16) {
             featureRow(
                 systemImage: "exclamationmark.bubble",
-                title: L10n.notificationsOnboardingFeatureDisruptionAlertsTitle,
-                description: L10n.notificationsOnboardingFeatureDisruptionAlertsDescription
+                title: .notificationsOnboardingFeatureDisruptionAlertsTitle,
+                description: .notificationsOnboardingFeatureDisruptionAlertsDescription
             )
             featureRow(
                 systemImage: "checkmark.circle",
-                title: L10n.notificationsOnboardingFeatureRecoveryAlertsTitle,
-                description: L10n.notificationsOnboardingFeatureRecoveryAlertsDescription
+                title: .notificationsOnboardingFeatureRecoveryAlertsTitle,
+                description: .notificationsOnboardingFeatureRecoveryAlertsDescription
             )
             featureRow(
                 systemImage: "clock",
-                title: L10n.notificationsOnboardingFeatureScheduleTitle,
-                description: L10n.notificationsOnboardingFeatureScheduleDescription
+                title: .notificationsOnboardingFeatureScheduleTitle,
+                description: .notificationsOnboardingFeatureScheduleDescription
             )
         }
         .padding(20)
@@ -79,7 +79,7 @@ public struct NotificationsOnboardingIntroView: View {
         Button {
             onAction(.getStarted)
         } label: {
-            Text(L10n.globalGetStarted)
+            Text(.globalGetStarted)
                 .frame(maxWidth: .infinity)
                 .frame(height: 20)
         }
@@ -91,7 +91,7 @@ public struct NotificationsOnboardingIntroView: View {
         Button {
             onAction(.notNow)
         } label: {
-            Text(L10n.globalNotNow)
+            Text(.globalNotNow)
         }
         .foregroundStyle(.secondary)
     }

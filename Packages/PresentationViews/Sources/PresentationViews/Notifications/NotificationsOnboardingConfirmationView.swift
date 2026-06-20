@@ -32,11 +32,11 @@ public struct NotificationsOnboardingConfirmationView: View {
                     }
 
                     VStack(spacing: 8) {
-                        Text(L10n.notificationsConfirmationTitle)
+                        Text(.notificationsConfirmationTitle)
                             .font(.title2.weight(.bold))
                             .multilineTextAlignment(.center)
 
-                        Text(L10n.notificationsConfirmationDescription)
+                        Text(.notificationsConfirmationDescription)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }
@@ -47,12 +47,12 @@ public struct NotificationsOnboardingConfirmationView: View {
             }
             .padding(20)
         }
-        .navigationTitle(Text(L10n.notificationsConfirmationNavigationTitle))
+        .navigationTitle(Text(.notificationsConfirmationNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button(String(localized: L10n.globalDone)) {
+                Button(String(localized: .globalDone)) {
                     onDone()
                 }
             }
@@ -67,7 +67,7 @@ public struct NotificationsOnboardingConfirmationView: View {
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(L10n.notificationsConfirmationScheduleLabel)
+                Text(.notificationsConfirmationScheduleLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 Text(selectedSchedulePreset.title)

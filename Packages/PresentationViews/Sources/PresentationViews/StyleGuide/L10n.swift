@@ -14,10 +14,7 @@ public enum L10n {
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
 
     public static let globalCancel = LocalizedStringResource.globalCancel
-    public static let globalContinue = LocalizedStringResource.globalContinue
     public static let globalDone = LocalizedStringResource.globalDone
-    public static let globalGetStarted = LocalizedStringResource.globalGetStarted
-    public static let globalNotNow = LocalizedStringResource.globalNotNow
 
     public static let journeyPlannerLocationPickerScreenFromNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenFromNavigationTitle
     public static let journeyPlannerLocationPickerScreenToNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenToNavigationTitle
@@ -29,9 +26,7 @@ public enum L10n {
     public static let journeyModePickerDiscardMessage = LocalizedStringResource.journeyModePickerDiscardMessage
     public static let journeyModePickerKeepEditing = LocalizedStringResource.journeyModePickerKeepEditing
     public static let journeyModePickerNavigationTitle = LocalizedStringResource.journeyModePickerNavigationTitle
-    public static let journeyModePresetCustom = LocalizedStringResource.journeyModePresetCustom
 
-    public static let journeyResultsModeFilterSaveAsDefault = LocalizedStringResource.journeyResultsModeFilterSaveAsDefault
     public static let journeyResultsNavigationTitle = LocalizedStringResource.journeyResultsNavigationTitle
 
     public static let lineStatusNavigationTitle = LocalizedStringResource.lineStatusNavigationTitle
@@ -48,28 +43,6 @@ public enum L10n {
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
     public static let settingsNotificationsRowTitle = LocalizedStringResource.settingsNotificationsRowTitle
 
-    public static let notificationsConfirmationDescription = LocalizedStringResource.notificationsConfirmationDescription
-    public static let notificationsConfirmationNavigationTitle = LocalizedStringResource.notificationsConfirmationNavigationTitle
-    public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
-    public static let notificationsConfirmationTitle = LocalizedStringResource.notificationsConfirmationTitle
-
-    public static let notificationsLineSelectionNavigationTitle = LocalizedStringResource.notificationsLineSelectionNavigationTitle
-    public static let notificationsLineSelectionSubtitle = LocalizedStringResource.notificationsLineSelectionSubtitle
-
-    public static let notificationsOnboardingFeatureDisruptionAlertsDescription = LocalizedStringResource.notificationsOnboardingFeatureDisruptionAlertsDescription
-    public static let notificationsOnboardingFeatureDisruptionAlertsTitle = LocalizedStringResource.notificationsOnboardingFeatureDisruptionAlertsTitle
-    public static let notificationsOnboardingFeatureRecoveryAlertsDescription = LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsDescription
-    public static let notificationsOnboardingFeatureRecoveryAlertsTitle = LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsTitle
-    public static let notificationsOnboardingFeatureScheduleDescription = LocalizedStringResource.notificationsOnboardingFeatureScheduleDescription
-    public static let notificationsOnboardingFeatureScheduleTitle = LocalizedStringResource.notificationsOnboardingFeatureScheduleTitle
-    public static let notificationsOnboardingHeroDescription = LocalizedStringResource.notificationsOnboardingHeroDescription
-    public static let notificationsOnboardingHeroTitle = LocalizedStringResource.notificationsOnboardingHeroTitle
-    public static let notificationsOnboardingNavigationTitle = LocalizedStringResource.notificationsOnboardingNavigationTitle
-
-    public static let notificationsPermissionDeniedDescription = LocalizedStringResource.notificationsPermissionDeniedDescription
-    public static let notificationsPermissionDeniedNavigationTitle = LocalizedStringResource.notificationsPermissionDeniedNavigationTitle
-    public static let notificationsPermissionDeniedTitle = LocalizedStringResource.notificationsPermissionDeniedTitle
-
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle
 
@@ -82,7 +55,5 @@ public enum L10n {
     public static let notificationsScheduleWeekdayPeakTitle = LocalizedStringResource.notificationsScheduleWeekdayPeakTitle
     public static let notificationsScheduleWeekendsDescription = LocalizedStringResource.notificationsScheduleWeekendsDescription
     public static let notificationsScheduleWeekendsTitle = LocalizedStringResource.notificationsScheduleWeekendsTitle
-
-    public static let openAppSettingsButtonTitle = LocalizedStringResource.openAppSettingsButtonTitle
 
 }

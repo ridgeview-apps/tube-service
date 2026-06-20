@@ -28,11 +28,11 @@ public struct NotificationsOnboardingPermissionDeniedView: View {
                     }
 
                     VStack(spacing: 8) {
-                        Text(L10n.notificationsPermissionDeniedTitle)
+                        Text(.notificationsPermissionDeniedTitle)
                             .font(.title2.weight(.bold))
                             .multilineTextAlignment(.center)
 
-                        Text(L10n.notificationsPermissionDeniedDescription)
+                        Text(.notificationsPermissionDeniedDescription)
                             .foregroundStyle(.secondary)
                             .multilineTextAlignment(.center)
                     }
@@ -41,7 +41,7 @@ public struct NotificationsOnboardingPermissionDeniedView: View {
                 Button {
                     onAction(.openSettings)
                 } label: {
-                    Text(L10n.openAppSettingsButtonTitle)
+                    Text(.openAppSettingsButtonTitle)
                         .frame(maxWidth: .infinity)
                         .frame(height: 20)
                 }
@@ -51,13 +51,13 @@ public struct NotificationsOnboardingPermissionDeniedView: View {
                 Button {
                     onAction(.notNow)
                 } label: {
-                    Text(L10n.globalNotNow)
+                    Text(.globalNotNow)
                 }
                 .foregroundStyle(.secondary)
             }
             .padding(20)
         }
-        .navigationTitle(Text(L10n.notificationsPermissionDeniedNavigationTitle))
+        .navigationTitle(Text(.notificationsPermissionDeniedNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
