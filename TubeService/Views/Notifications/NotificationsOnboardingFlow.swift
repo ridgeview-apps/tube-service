@@ -44,13 +44,19 @@ struct NotificationsOnboardingFlow: View {
                         paywallDestination
                     case .lineSelection:
                         NotificationsLineSelectionView(
-                            selectedLineIDs: $selectedLineIDs,
-                            onContinue: { path.append(.schedule) }
+                            initialSelection: selectedLineIDs,
+                            onContinue: { selected in
+                                selectedLineIDs = selected
+                                path.append(.schedule)
+                            }
                         )
                     case .schedule:
                         NotificationsScheduleView(
-                            selectedPreset: $selectedPreset,
-                            onContinue: { Task { await requestPermissionAndAdvance() } }
+                            initialPreset: selectedPreset,
+                            onContinue: { preset in
+                                selectedPreset = preset
+                                Task { await requestPermissionAndAdvance() }
+                            }
                         )
                     case .confirmation:
                         NotificationsOnboardingConfirmationView(

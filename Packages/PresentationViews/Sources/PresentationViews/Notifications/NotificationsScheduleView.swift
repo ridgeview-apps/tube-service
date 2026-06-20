@@ -3,11 +3,11 @@ import SwiftUI
 
 public struct NotificationsScheduleView: View {
 
-    @Binding public var selectedPreset: NotificationSchedulePreset
-    public let onContinue: () -> Void
+    @State private var selectedPreset: NotificationSchedulePreset
+    public let onContinue: (NotificationSchedulePreset) -> Void
 
-    public init(selectedPreset: Binding<NotificationSchedulePreset>, onContinue: @escaping () -> Void) {
-        self._selectedPreset = selectedPreset
+    public init(initialPreset: NotificationSchedulePreset, onContinue: @escaping (NotificationSchedulePreset) -> Void) {
+        _selectedPreset = State(initialValue: initialPreset)
         self.onContinue = onContinue
     }
 
@@ -22,7 +22,7 @@ public struct NotificationsScheduleView: View {
         }
         .safeAreaInset(edge: .bottom) {
             Button {
-                onContinue()
+                onContinue(selectedPreset)
             } label: {
                 Text(L10n.globalContinue)
                     .frame(maxWidth: .infinity)
@@ -112,13 +112,11 @@ public struct NotificationsScheduleView: View {
 
 #if DEBUG
     private struct Previewer: View {
-        @State var selectedPreset: NotificationSchedulePreset = .weekdayPeak
-
         var body: some View {
             NavigationStack {
                 NotificationsScheduleView(
-                    selectedPreset: $selectedPreset,
-                    onContinue: {}
+                    initialPreset: .weekdayPeak,
+                    onContinue: { _ in }
                 )
             }
         }

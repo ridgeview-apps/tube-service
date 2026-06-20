@@ -3,13 +3,13 @@ import SwiftUI
 
 public struct NotificationsLineSelectionView: View {
 
-    @Binding public var selectedLineIDs: Set<TrainLineID>
-    public let onContinue: () -> Void
+    @State private var selectedLineIDs: Set<TrainLineID>
+    public let onContinue: (Set<TrainLineID>) -> Void
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
-    public init(selectedLineIDs: Binding<Set<TrainLineID>>, onContinue: @escaping () -> Void) {
-        self._selectedLineIDs = selectedLineIDs
+    public init(initialSelection: Set<TrainLineID>, onContinue: @escaping (Set<TrainLineID>) -> Void) {
+        _selectedLineIDs = State(initialValue: initialSelection)
         self.onContinue = onContinue
     }
 
@@ -33,7 +33,7 @@ public struct NotificationsLineSelectionView: View {
         }
         .safeAreaInset(edge: .bottom) {
             Button {
-                onContinue()
+                onContinue(selectedLineIDs)
             } label: {
                 Text(L10n.globalContinue)
                     .frame(maxWidth: .infinity)
@@ -85,20 +85,12 @@ public struct NotificationsLineSelectionView: View {
 // MARK: - Previews
 
 #if DEBUG
-    private struct Previewer: View {
-        @State var selectedLineIDs: Set<TrainLineID> = [.victoria, .jubilee]
-
-        var body: some View {
-            NavigationStack {
-                NotificationsLineSelectionView(
-                    selectedLineIDs: $selectedLineIDs,
-                    onContinue: {}
-                )
-            }
-        }
-    }
-
     #Preview {
-        Previewer()
+        NavigationStack {
+            NotificationsLineSelectionView(
+                initialSelection: [.victoria, .jubilee],
+                onContinue: { _ in }
+            )
+        }
     }
 #endif
