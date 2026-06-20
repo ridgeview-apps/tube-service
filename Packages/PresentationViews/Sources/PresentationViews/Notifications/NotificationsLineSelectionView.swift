@@ -1,16 +1,19 @@
 import Models
-import PresentationViews
 import SwiftUI
 
-@MainActor
-struct NotificationsLineSelectionScreen: View {
+public struct NotificationsLineSelectionView: View {
 
-    @Binding var selectedLineIDs: Set<TrainLineID>
-    let onContinue: () -> Void
+    @Binding public var selectedLineIDs: Set<TrainLineID>
+    public let onContinue: () -> Void
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
-    var body: some View {
+    public init(selectedLineIDs: Binding<Set<TrainLineID>>, onContinue: @escaping () -> Void) {
+        self._selectedLineIDs = selectedLineIDs
+        self.onContinue = onContinue
+    }
+
+    public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 Text(L10n.notificationsLineSelectionSubtitle)
@@ -82,14 +85,20 @@ struct NotificationsLineSelectionScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-    #Preview {
-        PreviewEnvironment {
+    private struct Previewer: View {
+        @State var selectedLineIDs: Set<TrainLineID> = [.victoria, .jubilee]
+
+        var body: some View {
             NavigationStack {
-                NotificationsLineSelectionScreen(
-                    selectedLineIDs: .constant([.victoria, .jubilee]),
+                NotificationsLineSelectionView(
+                    selectedLineIDs: $selectedLineIDs,
                     onContinue: {}
                 )
             }
         }
+    }
+
+    #Preview {
+        Previewer()
     }
 #endif

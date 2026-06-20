@@ -1,14 +1,17 @@
 import Models
-import PresentationViews
 import SwiftUI
 
-@MainActor
-struct NotificationsScheduleScreen: View {
+public struct NotificationsScheduleView: View {
 
-    @Binding var selectedPreset: NotificationSchedulePreset
-    let onContinue: () -> Void
+    @Binding public var selectedPreset: NotificationSchedulePreset
+    public let onContinue: () -> Void
 
-    var body: some View {
+    public init(selectedPreset: Binding<NotificationSchedulePreset>, onContinue: @escaping () -> Void) {
+        self._selectedPreset = selectedPreset
+        self.onContinue = onContinue
+    }
+
+    public var body: some View {
         ScrollView {
             VStack(spacing: 12) {
                 ForEach(presets, id: \.preset) { item in
@@ -108,14 +111,20 @@ struct NotificationsScheduleScreen: View {
 // MARK: - Previews
 
 #if DEBUG
-    #Preview {
-        PreviewEnvironment {
+    private struct Previewer: View {
+        @State var selectedPreset: NotificationSchedulePreset = .weekdayPeak
+
+        var body: some View {
             NavigationStack {
-                NotificationsScheduleScreen(
-                    selectedPreset: .constant(.weekdayPeak),
+                NotificationsScheduleView(
+                    selectedPreset: $selectedPreset,
                     onContinue: {}
                 )
             }
         }
+    }
+
+    #Preview {
+        Previewer()
     }
 #endif
