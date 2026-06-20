@@ -43,12 +43,13 @@ final class AppDataStore {
             now: dependencies.now
         )
         self.purchases = PurchaseStore()
-        self.notifications = NotificationsDataStore(api: dependencies.notificationsAPI)
+        self.notifications = NotificationsDataStore(api: dependencies.notificationsAPI, userDefaults: dependencies.userDefaults.value)
     }
 
     func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
+        await notifications.fetchPreferences()
     }
 
     func sceneDidBecomeActive() async {

@@ -10,6 +10,7 @@ public final class NotificationsDataStore {
 
     private let api: NotificationsAPIClientType
     private let keychain: any KeychainService
+    private let userDefaults: UserDefaults
 
     public internal(set) var device: NotificationDevice?
     public internal(set) var preferences: NotificationPreferences?
@@ -30,15 +31,19 @@ public final class NotificationsDataStore {
 
     // MARK: - Init
 
-    public init(api: NotificationsAPIClientType) {
+    public init(api: NotificationsAPIClientType, userDefaults: UserDefaults = .standard) {
         self.api = api
         self.keychain = SecurityKeychain(service: "com.ridgeviewapps.tubeservice.notifications")
+        self.userDefaults = userDefaults
+        self.preferences = userDefaults.notificationPreferences
     }
 
     // Internal init allows test/stub code within the package to inject a custom keychain.
-    init(api: NotificationsAPIClientType, keychain: any KeychainService) {
+    init(api: NotificationsAPIClientType, keychain: any KeychainService, userDefaults: UserDefaults = .standard) {
         self.api = api
         self.keychain = keychain
+        self.userDefaults = userDefaults
+        self.preferences = userDefaults.notificationPreferences
     }
 
 
@@ -83,7 +88,7 @@ public final class NotificationsDataStore {
         do {
             device = try await api.disableDevice(deviceId: deviceId).decodedModel
         } catch {
-            // Treat errors silently; device state unchanged on failure
+            AppLogger.notifications.error("Failed to disable device \(error)")
         }
     }
 
@@ -92,8 +97,9 @@ public final class NotificationsDataStore {
             try await api.deleteDevice(deviceId: deviceId)
             device = nil
             preferences = nil
+            userDefaults.notificationPreferences = nil
         } catch {
-            // Device may already be deleted; treat as success
+            AppLogger.notifications.error("Failed to delete device \(error)")
         }
     }
 
@@ -106,7 +112,9 @@ public final class NotificationsDataStore {
         defer { isFetchingPreferences = false }
         do {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
+            userDefaults.notificationPreferences = preferences
         } catch {
+            AppLogger.notifications.error("Failed to fetch notification preferences \(error)")
             // Keep existing preferences on error
         }
     }
@@ -118,7 +126,9 @@ public final class NotificationsDataStore {
         defer { isSavingPreferences = false }
         do {
             preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
+            userDefaults.notificationPreferences = preferences
         } catch {
+            AppLogger.notifications.error("Failed to update notification preferences \(error)")
             preferences = previousPreferences
         }
     }

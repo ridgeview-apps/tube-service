@@ -64,8 +64,8 @@ struct LineStatusDetailScreen: View {
 
     private var notificationButtonState: LineStatusNotificationButton.State? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard let device = notifications.device, device.enabled else { return .notSubscribed }
-        guard let prefs = notifications.preferences else { return .notSubscribed }
+        if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
+        guard let prefs = notifications.preferences, prefs.enabled else { return .notSubscribed }
         return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
     }
 

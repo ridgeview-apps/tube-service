@@ -52,7 +52,8 @@ struct SettingsScreen: View {
 
     private var notificationsRowState: Settings.NotificationsRowState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        return notifications.device?.enabled == true ? .active : .notSetUp
+        if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
+        return notifications.preferences?.enabled == true ? .active : .notSetUp
     }
 
     private var contactUsConfig: Settings.ContactUs {
@@ -70,7 +71,7 @@ struct SettingsScreen: View {
         case .openDebugSettings:
             navigationState.push(to: .debugMenu)
         case .notificationsTapped:
-            if notifications.device?.enabled == true {
+            if notifications.preferences?.enabled == true {
                 navigationState.push(to: .notificationsPreferences)
             } else {
                 showSheet(.notificationsOnboarding())
