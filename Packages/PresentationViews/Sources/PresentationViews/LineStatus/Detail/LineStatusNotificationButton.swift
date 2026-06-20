@@ -5,12 +5,14 @@ public struct LineStatusNotificationButton: View {
 
     public enum SubscriptionState: Sendable, Equatable {
         case notSubscribed
+        case permissionDenied
         case inactive
         case active
     }
 
     public enum Action: Sendable {
         case notSubscribedTapped
+        case permissionDeniedTapped
         case addLine
         case removeLine
     }
@@ -30,7 +32,7 @@ public struct LineStatusNotificationButton: View {
                 Image(systemName: iconName)
                     .contentTransition(.symbolEffect(.replace))
                     .font(.title2.weight(.semibold))
-                    .foregroundStyle(showingConfirmation ? Color.green : lineColor)
+                    .foregroundStyle(iconColor)
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -69,9 +71,16 @@ public struct LineStatusNotificationButton: View {
         }
     }
 
+    private var iconColor: Color {
+        if showingConfirmation { return .green }
+        if state == .permissionDenied { return .orange }
+        return lineColor
+    }
+
     private var iconName: String {
         switch state {
         case .notSubscribed: "bell"
+        case .permissionDenied: "bell.slash.fill"
         case .inactive: showingConfirmation ? "bell.fill" : "bell.badge"
         case .active: "bell.fill"
         }
@@ -81,6 +90,7 @@ public struct LineStatusNotificationButton: View {
         if showingConfirmation { return .lineStatusNotificationsActiveTitle }
         switch state {
         case .notSubscribed: return .lineStatusNotificationsNotSubscribedTitle
+        case .permissionDenied: return .lineStatusNotificationsPermissionDeniedTitle
         case .inactive: return .lineStatusNotificationsInactiveTitle
         case .active: return .lineStatusNotificationsActiveTitle
         }
@@ -90,6 +100,7 @@ public struct LineStatusNotificationButton: View {
         if showingConfirmation { return .lineStatusNotificationsActiveSubtitle }
         switch state {
         case .notSubscribed: return .lineStatusNotificationsNotSubscribedSubtitle
+        case .permissionDenied: return .lineStatusNotificationsPermissionDeniedSubtitle
         case .inactive: return .lineStatusNotificationsInactiveSubtitle
         case .active: return .lineStatusNotificationsActiveSubtitle
         }
@@ -97,17 +108,26 @@ public struct LineStatusNotificationButton: View {
 
     @ViewBuilder
     private var accessory: some View {
-        if state == .notSubscribed {
+        switch state {
+        case .notSubscribed:
             Image(systemName: "chevron.forward")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(.tertiary)
                 .accessibilityHidden(true)
-        } else if state == .active || showingConfirmation {
+        case .permissionDenied:
+            Image(systemName: "arrow.up.forward.app")
+                .foregroundStyle(.secondary)
+        case .inactive:
+            if showingConfirmation {
+                Image(systemName: "checkmark.circle.fill")
+                    .foregroundStyle(Color.green)
+            } else {
+                Image(systemName: "plus.circle")
+                    .foregroundStyle(.secondary)
+            }
+        case .active:
             Image(systemName: "checkmark.circle.fill")
                 .foregroundStyle(showingConfirmation ? Color.green : lineColor)
-        } else {
-            Image(systemName: "plus.circle")
-                .foregroundStyle(.secondary)
         }
     }
 
@@ -115,6 +135,8 @@ public struct LineStatusNotificationButton: View {
         switch state {
         case .notSubscribed:
             onAction(.notSubscribedTapped)
+        case .permissionDenied:
+            onAction(.permissionDeniedTapped)
         case .inactive:
             withAnimation(.snappy(duration: 0.35)) {
                 showingConfirmation = true
@@ -137,6 +159,11 @@ public struct LineStatusNotificationButton: View {
 
 #Preview("Not subscribed") {
     LineStatusNotificationButton(state: .notSubscribed, lineColor: .red, onAction: { _ in })
+        .padding()
+}
+
+#Preview("Permission denied") {
+    LineStatusNotificationButton(state: .permissionDenied, lineColor: .blue, onAction: { _ in })
         .padding()
 }
 

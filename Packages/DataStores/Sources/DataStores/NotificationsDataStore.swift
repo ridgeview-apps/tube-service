@@ -1,6 +1,7 @@
 import Foundation
 import Models
 import Shared
+import UserNotifications
 
 @MainActor
 @Observable
@@ -9,6 +10,7 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public internal(set) var preferences: NotificationPreferences?
+    public internal(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
     public internal(set) var isFetchingPreferences = false
     public internal(set) var isSavingPreferences = false
 
@@ -99,6 +101,10 @@ public final class NotificationsDataStore {
     }
 
 
+    public func refreshAuthorizationStatus() async {
+        authorizationStatus = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+    }
+
     public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
         pendingPreferencesUpdate = update
     }
@@ -110,6 +116,7 @@ public final class NotificationsDataStore {
         guard !isFetchingPreferences else { return }
         isFetchingPreferences = true
         defer { isFetchingPreferences = false }
+        await refreshAuthorizationStatus()
         do {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
             userDefaults.notificationPreferences = preferences

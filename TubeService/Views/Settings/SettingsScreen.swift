@@ -3,6 +3,7 @@ import Models
 import PresentationViews
 import RidgeviewCore
 import SwiftUI
+import UIKit
 
 struct SettingsScreen: View {
 
@@ -14,6 +15,7 @@ struct SettingsScreen: View {
 
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
+    @Environment(\.openURL) var openURL
     @Environment(\.showSheet) var showSheet
     @Environment(SystemStatusDataStore.self) var systemStatusData
     @Environment(NotificationsDataStore.self) var notifications
@@ -53,7 +55,13 @@ struct SettingsScreen: View {
     private var notificationsRowState: Settings.NotificationsRowState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
-        return notifications.preferences?.enabled == true ? .active : .notSetUp
+        guard notifications.preferences?.enabled == true else { return .notSetUp }
+        switch notifications.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            return .active
+        default:
+            return .permissionDenied
+        }
     }
 
     private var contactUsConfig: Settings.ContactUs {
@@ -71,9 +79,16 @@ struct SettingsScreen: View {
         case .openDebugSettings:
             navigationState.push(to: .debugMenu)
         case .notificationsTapped:
-            if notifications.preferences?.enabled == true {
+            switch notificationsRowState {
+            case .active:
                 navigationState.push(to: .notificationsPreferences)
-            } else {
+            case .permissionDenied:
+                if notifications.authorizationStatus == .denied {
+                    openURL(URL(string: UIApplication.openSettingsURLString)!)
+                } else {
+                    showSheet(.notificationsOnboarding())
+                }
+            default:
                 showSheet(.notificationsOnboarding())
             }
         }

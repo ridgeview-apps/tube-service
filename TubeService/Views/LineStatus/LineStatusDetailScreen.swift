@@ -66,7 +66,12 @@ struct LineStatusDetailScreen: View {
         guard featureFlags.isNotificationsEnabled else { return nil }
         if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
         guard let prefs = notifications.preferences, prefs.enabled else { return .notSubscribed }
-        return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
+        switch notifications.authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
+        default:
+            return .permissionDenied
+        }
     }
 
     var body: some View {
@@ -109,6 +114,12 @@ struct LineStatusDetailScreen: View {
             switch action {
             case .notSubscribedTapped:
                 showSheet(.notificationsOnboarding(preselectedLine: line.id))
+            case .permissionDeniedTapped:
+                if notifications.authorizationStatus == .denied {
+                    openURL(URL(string: UIApplication.openSettingsURLString)!)
+                } else {
+                    showSheet(.notificationsOnboarding(preselectedLine: line.id))
+                }
             case .addLine:
                 Task { await addLineToNotifications() }
             case .removeLine:

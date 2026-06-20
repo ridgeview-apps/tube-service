@@ -52,6 +52,11 @@ public struct SettingsView: View {
                 } label: {
                     HStack {
                         Text(.settingsNotificationsRowTitle)
+                        if notificationsRowState == .permissionDenied {
+                            Image(systemName: "exclamationmark.circle.fill")
+                                .foregroundStyle(.orange)
+                                .font(.footnote)
+                        }
                         Spacer()
                         Image(systemName: "chevron.right")
                             .font(.footnote.weight(.semibold))

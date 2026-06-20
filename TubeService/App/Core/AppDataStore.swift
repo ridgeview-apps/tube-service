@@ -54,5 +54,6 @@ final class AppDataStore {
 
     func sceneDidBecomeActive() async {
         await purchases.refreshEntitlements()
+        await notifications.refreshAuthorizationStatus()
     }
 }

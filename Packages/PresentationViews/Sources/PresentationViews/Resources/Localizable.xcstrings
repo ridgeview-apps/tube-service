@@ -1750,6 +1750,28 @@
         }
       }
     },
+    "line.status.notifications.permission.denied.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enable in Settings to receive alerts"
+          }
+        }
+      }
+    },
+    "line.status.notifications.permission.denied.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications paused"
+          }
+        }
+      }
+    },
     "line.status.notifications.remove.confirm.title": {
       "extractionState": "manual",
       "localizations": {
