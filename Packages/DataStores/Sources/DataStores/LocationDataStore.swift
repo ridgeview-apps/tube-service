@@ -1,6 +1,7 @@
 import CoreLocation
 import Foundation
 import Models
+import Shared
 
 public protocol ReverseGeocoderType: Sendable {
     func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark]
@@ -133,7 +134,7 @@ public final class LocationDataStore: NSObject {
                 if Task.isCancelled {
                     return
                 }
-                print("Failed to update location name for new location: \(error)")
+                AppLogger.networking.error("Failed to update location name for new location: \(error)")
             }
         }
     }

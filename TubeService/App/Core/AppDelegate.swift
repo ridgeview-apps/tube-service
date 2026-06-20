@@ -1,4 +1,5 @@
 import DataStores
+import Shared
 import UIKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
@@ -22,7 +23,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
     ) {
-        // Token unavailable; nothing to yield
+        AppLogger.notifications.error("Failed to register for remote notifications: \(error)")
     }
 }
 

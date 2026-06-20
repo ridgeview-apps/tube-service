@@ -1,5 +1,6 @@
 import Foundation
 import Models
+import Shared
 
 public extension UserDefaults {
 
@@ -54,7 +55,7 @@ public extension UserDefaults {
             if let encoded = try? JSONEncoder().encode(legacyDecodedValue),
                 let string = String(data: encoded, encoding: .utf8)
             {
-                print("Migrating legacy user values defaults to new key: \(UserDefaults.Keys.userPreferences.rawValue)")
+                AppLogger.networking.info("Migrating legacy user defaults to new key: \(UserDefaults.Keys.userPreferences.rawValue)")
                 setValue(string, forKey: UserDefaults.Keys.userPreferences.rawValue)
             }
         }
