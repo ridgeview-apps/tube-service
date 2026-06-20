@@ -69,11 +69,11 @@ public struct SystemStatusAPIClient: SystemStatusAPIClientType {
     // MARK: - Data fetching
 
     public func fetchSystemStatus() async throws -> HTTPResponse<SystemStatus> {
-        try await fetchData(for: .systemStatus(fileName: fileName), mappedTo: SystemStatus.self)
+        try await perform(.systemStatus(fileName: fileName), as: SystemStatus.self)
     }
 
-    private func fetchData<T: Decodable>(for route: SystemStatusAPIRoute, mappedTo model: T.Type) async throws -> HTTPResponse<T> {
+    private func perform<T: Decodable>(_ route: SystemStatusAPIRoute, as type: T.Type) async throws -> HTTPResponse<T> {
         let request = try route.toURLRequest(relativeTo: baseURL)
-        return try await urlSession.data(for: request, decodedBy: jsonDecoder, as: model)
+        return try await urlSession.data(for: request, decodedBy: jsonDecoder, as: type)
     }
 }
