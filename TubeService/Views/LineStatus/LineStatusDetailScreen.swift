@@ -12,6 +12,7 @@ struct LineStatusDetailScreen: View {
     @Environment(NotificationsDataStore.self) var notifications
     @Environment(\.showSheet) var showSheet
     @Environment(\.openURL) var openURL
+    @Environment(\.openSettings) var openSettings
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -69,8 +70,10 @@ struct LineStatusDetailScreen: View {
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
             return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
-        default:
+        case .denied:
             return .permissionDenied
+        default:
+            return .notSubscribed
         }
     }
 
@@ -115,11 +118,7 @@ struct LineStatusDetailScreen: View {
             case .notSubscribedTapped:
                 showSheet(.notificationsOnboarding(preselectedLine: line.id))
             case .permissionDeniedTapped:
-                if notifications.authorizationStatus == .denied {
-                    openURL(URL(string: UIApplication.openSettingsURLString)!)
-                } else {
-                    showSheet(.notificationsOnboarding(preselectedLine: line.id))
-                }
+                openSettings()
             case .addLine:
                 Task { await addLineToNotifications() }
             case .removeLine:

@@ -3,7 +3,6 @@ import Models
 import PresentationViews
 import RidgeviewCore
 import SwiftUI
-import UIKit
 
 struct SettingsScreen: View {
 
@@ -15,7 +14,7 @@ struct SettingsScreen: View {
 
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
-    @Environment(\.openURL) var openURL
+    @Environment(\.openSettings) var openSettings
     @Environment(\.showSheet) var showSheet
     @Environment(SystemStatusDataStore.self) var systemStatusData
     @Environment(NotificationsDataStore.self) var notifications
@@ -59,8 +58,10 @@ struct SettingsScreen: View {
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
             return .active
-        default:
+        case .denied:
             return .permissionDenied
+        default:
+            return .notSetUp
         }
     }
 
@@ -83,11 +84,7 @@ struct SettingsScreen: View {
             case .active:
                 navigationState.push(to: .notificationsPreferences)
             case .permissionDenied:
-                if notifications.authorizationStatus == .denied {
-                    openURL(URL(string: UIApplication.openSettingsURLString)!)
-                } else {
-                    showSheet(.notificationsOnboarding())
-                }
+                openSettings()
             default:
                 showSheet(.notificationsOnboarding())
             }
