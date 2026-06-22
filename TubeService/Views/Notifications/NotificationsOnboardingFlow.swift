@@ -4,8 +4,6 @@ import PresentationViews
 import RidgeviewCore
 import StoreKit
 import SwiftUI
-import UIKit
-import UserNotifications
 
 @MainActor
 struct NotificationsOnboardingFlow: View {
@@ -13,7 +11,7 @@ struct NotificationsOnboardingFlow: View {
     let preselectedLine: TrainLineID?
 
     @Environment(\.dismiss) var dismiss
-    @Environment(\.openURL) private var openURL
+    @Environment(\.openSettings) var openSettings
     @Environment(PurchaseStore.self) var purchases
     @Environment(NotificationsDataStore.self) var notifications
 
@@ -55,7 +53,7 @@ struct NotificationsOnboardingFlow: View {
                             initialPreset: selectedPreset,
                             onContinue: { preset in
                                 selectedPreset = preset
-                                Task { await requestPermissionAndAdvance() }
+                                Task { await checkPermissionAndAdvance() }
                             }
                         )
                     case .confirmation:
@@ -67,7 +65,7 @@ struct NotificationsOnboardingFlow: View {
                     case .permissionDenied:
                         NotificationsOnboardingPermissionDeniedView(onAction: handlePermissionDeniedAction)
                             .onSceneDidBecomeActive {
-                                Task { await recheckPermissionAndAdvance() }
+                                Task { await checkPermissionAndAdvance() }
                             }
                     }
                 }
@@ -107,9 +105,7 @@ struct NotificationsOnboardingFlow: View {
     private func handlePermissionDeniedAction(_ action: NotificationsOnboardingPermissionDeniedView.Action) {
         switch action {
         case .openSettings:
-            if let url = URL(string: UIApplication.openSettingsURLString) {
-                openURL(url)
-            }
+            openSettings()
         case .notNow:
             dismiss()
         }
@@ -117,44 +113,16 @@ struct NotificationsOnboardingFlow: View {
 
     // MARK: - Permission
 
-    private func requestPermissionAndAdvance() async {
-        let center = UNUserNotificationCenter.current()
-        let currentStatus = await center.notificationSettings().authorizationStatus
-
-        switch currentStatus {
+    private func checkPermissionAndAdvance() async {
+        await notifications.requestAuthorization()
+        switch notifications.authorizationStatus {
         case .authorized, .ephemeral, .provisional:
             notifications.schedulePreferencesUpdate(makePreferencesUpdate())
-            UIApplication.shared.registerForRemoteNotifications()
-            path.append(.confirmation)
-        case .denied:
-            path.append(.permissionDenied)
-        case .notDetermined:
-            do {
-                let granted = try await center.requestAuthorization(options: [.alert, .badge, .sound])
-                if granted {
-                    notifications.schedulePreferencesUpdate(makePreferencesUpdate())
-                    UIApplication.shared.registerForRemoteNotifications()
-                    path.append(.confirmation)
-                } else {
-                    path.append(.permissionDenied)
-                }
-            } catch {
-                path.append(.permissionDenied)
-            }
-        @unknown default:
-            path.append(.permissionDenied)
-        }
-    }
-
-    private func recheckPermissionAndAdvance() async {
-        let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
-        switch status {
-        case .authorized, .ephemeral, .provisional:
-            notifications.schedulePreferencesUpdate(makePreferencesUpdate())
-            UIApplication.shared.registerForRemoteNotifications()
             path = [.confirmation]
         default:
-            break
+            if path.last != .permissionDenied {
+                path.append(.permissionDenied)
+            }
         }
     }
 

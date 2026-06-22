@@ -20,7 +20,7 @@ public final class NotificationsDataStore {
     private let api: NotificationsAPIClientType
     private let keychain: any KeychainService
     private let userDefaults: UserDefaults
-    private let authorizationProvider: AuthorizationProvider
+    private let pushNotificationEnvironment: PushNotificationEnvironment
 
     private var device: NotificationDevice?
     private var isRegistering = false
@@ -34,13 +34,13 @@ public final class NotificationsDataStore {
     public init(
         api: NotificationsAPIClientType,
         userDefaults: UserDefaults = .standard,
-        authorizationProvider: AuthorizationProvider
+        pushNotificationEnvironment: PushNotificationEnvironment
     ) {
         self.api = api
         self.keychain = SecurityKeychain(service: "com.ridgeviewapps.tubeservice.notifications")
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
-        self.authorizationProvider = authorizationProvider
+        self.pushNotificationEnvironment = pushNotificationEnvironment
     }
 
     // Internal init allows test/stub code within the package to inject a custom keychain.
@@ -48,13 +48,13 @@ public final class NotificationsDataStore {
         api: NotificationsAPIClientType,
         keychain: any KeychainService,
         userDefaults: UserDefaults = .standard,
-        authorizationProvider: AuthorizationProvider
+        pushNotificationEnvironment: PushNotificationEnvironment
     ) {
         self.api = api
         self.keychain = keychain
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
-        self.authorizationProvider = authorizationProvider
+        self.pushNotificationEnvironment = pushNotificationEnvironment
     }
 
 
@@ -115,8 +115,17 @@ public final class NotificationsDataStore {
 
 
     public func updateAuthorizationStatus() async {
-        authorizationStatus = await authorizationProvider.readAuthStatus()
-        authorizationProvider.registerPushNotifications()
+        authorizationStatus = await pushNotificationEnvironment.readAuthStatus()
+        pushNotificationEnvironment.registerForRemoteNotifications()
+    }
+
+    public func requestAuthorization() async {
+        do {
+            _ = try await pushNotificationEnvironment.requestAuthorization()
+        } catch {
+            AppLogger.notifications.error("Authorization request failed: \(error)")
+        }
+        await updateAuthorizationStatus()
     }
 
     public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {

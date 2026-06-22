@@ -12,7 +12,7 @@ import UserNotifications
         ) -> NotificationsDataStore {
             let store = NotificationsDataStore(
                 api: api,
-                authorizationProvider: AuthorizationProvider(readAuthStatus: { .notDetermined }, registerPushNotifications: {})
+                pushNotificationEnvironment: PushNotificationEnvironment(readAuthStatus: { .notDetermined }, requestAuthorization: { true }, registerForRemoteNotifications: {})
             )
             store.authorizationStatus = authorizationStatus
             return store

@@ -47,7 +47,7 @@ final class AppDataStore {
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
             userDefaults: dependencies.userDefaults.value,
-            authorizationProvider: dependencies.authorizationProvider
+            pushNotificationEnvironment: dependencies.pushNotificationEnvironment
         )
     }
 

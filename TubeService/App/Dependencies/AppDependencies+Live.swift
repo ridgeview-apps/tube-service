@@ -14,7 +14,7 @@ extension AppDependencies {
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),
         userDefaults: .live,
-        authorizationProvider: .live
+        pushNotificationEnvironment: .live
     )
 }
 
@@ -47,12 +47,15 @@ extension UserDefaultsProvider {
     static let live = UserDefaultsProvider(.standard)
 }
 
-extension AuthorizationProvider {
-    static let live = AuthorizationProvider(
+extension PushNotificationEnvironment {
+    static let live = PushNotificationEnvironment(
         readAuthStatus: {
             await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
         },
-        registerPushNotifications: { @MainActor in
+        requestAuthorization: {
+            try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+        },
+        registerForRemoteNotifications: { @MainActor in
             UIApplication.shared.registerForRemoteNotifications()
         }
     )

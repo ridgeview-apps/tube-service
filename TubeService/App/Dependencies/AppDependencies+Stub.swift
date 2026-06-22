@@ -19,7 +19,7 @@ import Foundation
                 locationManager: locationManager,
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),
                 userDefaults: .stub,
-                authorizationProvider: .stub
+                pushNotificationEnvironment: .stub
             )
         }()
     }
@@ -32,10 +32,11 @@ import Foundation
         static let stub = UserDefaultsProvider(.init(suiteName: "StubbedSuite")!)
     }
 
-    extension AuthorizationProvider {
-        static let stub = AuthorizationProvider(
+    extension PushNotificationEnvironment {
+        static let stub = PushNotificationEnvironment(
             readAuthStatus: { .authorized },
-            registerPushNotifications: {}
+            requestAuthorization: { true },
+            registerForRemoteNotifications: {}
         )
     }
 

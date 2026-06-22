@@ -110,7 +110,7 @@ struct NotificationsDataStoreTests {
         let store = NotificationsDataStore(
             api: api,
             keychain: keychain,
-            authorizationProvider: AuthorizationProvider(readAuthStatus: { .authorized }, registerPushNotifications: {})
+            pushNotificationEnvironment: PushNotificationEnvironment(readAuthStatus: { .authorized }, requestAuthorization: { true }, registerForRemoteNotifications: {})
         )
         await store.registerDevice(pushToken: "test-push-token")
         #expect(keychain.read(key: "push_device_id") != nil)
@@ -224,7 +224,7 @@ struct NotificationsDataStoreTests {
         NotificationsDataStore(
             api: api,
             keychain: InMemoryKeychain(),
-            authorizationProvider: AuthorizationProvider(readAuthStatus: { authorizationStatus }, registerPushNotifications: {})
+            authorizationProvider: PushNotificationEnvironment(readAuthStatus: { authorizationStatus }, requestAuthorization: { true }, registerForRemoteNotifications: {})
         )
     }
 }
