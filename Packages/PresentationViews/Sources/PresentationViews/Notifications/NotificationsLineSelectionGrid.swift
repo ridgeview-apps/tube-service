@@ -13,7 +13,7 @@ public struct NotificationsLineSelectionGrid: View {
 
     public var body: some View {
         LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(TrainLineID.allCases, id: \.rawValue) { lineID in
+            ForEach(TrainLineID.allCases.sorted(by: { $0.name < $1.name }), id: \.rawValue) { lineID in
                 lineButton(lineID)
             }
         }
@@ -28,23 +28,25 @@ public struct NotificationsLineSelectionGrid: View {
                 selectedLineIDs.insert(lineID)
             }
         } label: {
-            HStack(spacing: 6) {
-                Text(lineID.name)
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(isSelected ? lineID.textColor : .primary)
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(1)
-                Spacer(minLength: 0)
-                if isSelected {
-                    Image(systemName: "checkmark")
-                        .font(.caption.weight(.bold))
-                        .foregroundStyle(lineID.textColor)
+            HStack(spacing: 0) {
+                lineID.backgroundColor
+                    .frame(width: 5)
+                HStack(spacing: 8) {
+                    Text(lineID.name)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                        .minimumScaleFactor(0.75)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 16, weight: .regular))
+                        .foregroundStyle(isSelected ? lineID.backgroundColor : Color(.tertiaryLabel))
                 }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 10)
+                .frame(maxWidth: .infinity)
+                .background(Color(.systemFill))
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .frame(maxWidth: .infinity)
-            .background(isSelected ? lineID.backgroundColor : Color(.systemFill))
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .buttonStyle(.plain)
