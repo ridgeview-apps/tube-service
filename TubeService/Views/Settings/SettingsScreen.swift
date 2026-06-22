@@ -9,8 +9,7 @@ struct SettingsScreen: View {
     private enum DestinationID: Identifiable, Hashable {
         var id: Self { self }
         case debugMenu
-        case notificationsPreferences
-        case notificationsOnboarding(preselectedLine: TrainLineID?)
+        case notificationsOnboarding(NotificationsFlowEntry)
     }
 
     @Environment(\.appConfig) var appConfig
@@ -40,7 +39,7 @@ struct SettingsScreen: View {
                 appReviewURL: appConfig.appReviewURL,
                 contactUs: contactUsConfig,
                 systemStatus: systemStatusData.currentStatus,
-                notificationsRowState: notificationsRowState,
+                notificationsButtonState: notificationsButtonState,
                 onAction: handleAction
             )
             .withCloseToolbarButton()
@@ -51,7 +50,7 @@ struct SettingsScreen: View {
         }
     }
 
-    private var notificationsRowState: Settings.NotificationsRowState? {
+    private var notificationsButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         guard notifications.preferences?.enabled == true else { return .notSetUp }
         switch notifications.authorizationStatus {
@@ -79,13 +78,22 @@ struct SettingsScreen: View {
         case .openDebugSettings:
             navigationState.push(to: .debugMenu)
         case .notificationsTapped:
-            switch notificationsRowState {
-            case .active:
-                navigationState.push(to: .notificationsPreferences)
+            switch notificationsButtonState {
             case .permissionDenied:
                 openSettings()
+            case .active:
+                guard let prefs = notifications.preferences else { return }
+                navigationState.push(
+                    to: .notificationsOnboarding(
+                        .editExisting(
+                            preselectedLine: nil,
+                            selectedLineIDs: Set(prefs.lineIds.compactMap(TrainLineID.init(rawValue:))),
+                            schedulePreset: prefs.schedulePreset
+                        )
+                    )
+                )
             default:
-                navigationState.push(to: .notificationsOnboarding(preselectedLine: nil))
+                navigationState.push(to: .notificationsOnboarding(.fullOnboarding(preselectedLine: nil)))
             }
         }
     }
@@ -95,13 +103,32 @@ struct SettingsScreen: View {
         switch destinationID {
         case .debugMenu:
             DebugSettingsScreen()
-        case .notificationsPreferences:
-            if let preferences = notifications.preferences {
-                NotificationsPreferencesScreen(preferences: preferences)
-            }
-        case .notificationsOnboarding(let preselectedLine):
+        case .notificationsOnboarding(let entry):
+            notificationsOnboardingContent(for: entry)
+        }
+    }
+
+    @ViewBuilder
+    private func notificationsOnboardingContent(for entry: NotificationsFlowEntry) -> some View {
+        switch entry {
+        case .fullOnboarding(let preselectedLine):
             NotificationsOnboardingContent(
                 preselectedLine: preselectedLine,
+                onDismiss: { navigationState = NavigationState<DestinationID>() },
+                onNavigate: { step in navigationState.navigationPath.append(step) },
+                onReplaceStack: { steps in
+                    while navigationState.navigationPath.count > 1 {
+                        navigationState.pop()
+                    }
+                    steps.forEach { navigationState.navigationPath.append($0) }
+                }
+            )
+        case .editExisting(let preselectedLine, let selectedLineIDs, let schedulePreset):
+            NotificationsOnboardingContent(
+                preselectedLine: preselectedLine,
+                isEditMode: true,
+                initialSelectedLineIDs: selectedLineIDs,
+                initialPreset: schedulePreset,
                 onDismiss: { navigationState = NavigationState<DestinationID>() },
                 onNavigate: { step in navigationState.navigationPath.append(step) },
                 onReplaceStack: { steps in

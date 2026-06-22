@@ -37,15 +37,6 @@ public extension Settings {
     }
 
 
-    // MARK: - Notifications row state
-
-    enum NotificationsRowState: Sendable, Equatable {
-        case notSetUp
-        case active
-        case permissionDenied
-    }
-
-
     // MARK: - Debug state
 
     enum DebugAction: Sendable {

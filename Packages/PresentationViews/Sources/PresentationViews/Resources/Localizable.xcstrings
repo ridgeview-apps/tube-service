@@ -1684,72 +1684,6 @@
         }
       }
     },
-    "line.status.notifications.active.subtitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You're getting alerts for this line"
-          }
-        }
-      }
-    },
-    "line.status.notifications.active.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notifications on"
-          }
-        }
-      }
-    },
-    "line.status.notifications.inactive.subtitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "You'll be notified about delays on this line"
-          }
-        }
-      }
-    },
-    "line.status.notifications.inactive.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notify me about this line"
-          }
-        }
-      }
-    },
-    "line.status.notifications.not.subscribed.subtitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Set up alerts for line disruptions"
-          }
-        }
-      }
-    },
-    "line.status.notifications.not.subscribed.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Get disruption alerts"
-          }
-        }
-      }
-    },
     "line.status.notifications.permission.denied.subtitle": {
       "extractionState": "manual",
       "localizations": {
@@ -1768,17 +1702,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Notifications paused"
-          }
-        }
-      }
-    },
-    "line.status.notifications.remove.confirm.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stop notifications for this line?"
           }
         }
       }
@@ -2109,6 +2032,116 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nearby"
+          }
+        }
+      }
+    },
+    "notifications.button.line.active.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to edit your alerts"
+          }
+        }
+      }
+    },
+    "notifications.button.line.active.title %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notified about %@"
+          }
+        }
+      }
+    },
+    "notifications.button.line.inactive.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add this line to your alerts"
+          }
+        }
+      }
+    },
+    "notifications.button.line.inactive.title %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notify me about %@"
+          }
+        }
+      }
+    },
+    "notifications.button.line.not.set.up.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up alerts for this line"
+          }
+        }
+      }
+    },
+    "notifications.button.line.not.set.up.title %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get notified about %@"
+          }
+        }
+      }
+    },
+    "notifications.button.settings.active.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap to manage your settings"
+          }
+        }
+      }
+    },
+    "notifications.button.settings.active.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notifications active"
+          }
+        }
+      }
+    },
+    "notifications.button.settings.not.set.up.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get service alerts for your lines"
+          }
+        }
+      }
+    },
+    "notifications.button.settings.not.set.up.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Set up notifications"
           }
         }
       }

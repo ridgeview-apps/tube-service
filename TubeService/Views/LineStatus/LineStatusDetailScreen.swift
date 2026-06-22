@@ -63,16 +63,16 @@ struct LineStatusDetailScreen: View {
         }
     }
 
-    private var notificationButtonState: LineStatusNotificationButton.SubscriptionState? {
+    private var notificationButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard let prefs = notifications.preferences, prefs.enabled else { return .notSubscribed }
+        guard let prefs = notifications.preferences, prefs.enabled else { return .notSetUp }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
             return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
         case .denied:
             return .permissionDenied
         default:
-            return .notSubscribed
+            return .notSetUp
         }
     }
 
@@ -112,44 +112,25 @@ struct LineStatusDetailScreen: View {
                     }
                 }
             }
-        case .notifyMeTapped(let action):
-            switch action {
-            case .notSubscribedTapped:
-                showSheet(.notificationsOnboarding(preselectedLine: line.id))
-            case .permissionDeniedTapped:
+        case .notifyMeTapped:
+            switch notificationButtonState {
+            case .permissionDenied:
                 openSettings()
-            case .addLine:
-                Task { await addLineToNotifications() }
-            case .removeLine:
-                Task { await removeLineFromNotifications() }
+            case .notSetUp, nil:
+                showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: line.id)))
+            case .inactive, .active:
+                guard let prefs = notifications.preferences else { return }
+                showSheet(
+                    .notificationsOnboarding(
+                        .editExisting(
+                            preselectedLine: line.id,
+                            selectedLineIDs: Set(prefs.lineIds.compactMap(TrainLineID.init(rawValue:))),
+                            schedulePreset: prefs.schedulePreset
+                        )
+                    )
+                )
             }
         }
-    }
-
-    private func addLineToNotifications() async {
-        guard let prefs = notifications.preferences else { return }
-        let update = NotificationPreferencesUpdate(
-            enabled: prefs.enabled,
-            lineIds: prefs.lineIds + [line.id.rawValue],
-            severityThreshold: prefs.severityThreshold,
-            notifyRecoveries: prefs.notifyRecoveries,
-            schedulePreset: prefs.schedulePreset,
-            customSchedules: prefs.customSchedules
-        )
-        await notifications.updatePreferences(update)
-    }
-
-    private func removeLineFromNotifications() async {
-        guard let prefs = notifications.preferences else { return }
-        let update = NotificationPreferencesUpdate(
-            enabled: prefs.enabled,
-            lineIds: prefs.lineIds.filter { $0 != line.id.rawValue },
-            severityThreshold: prefs.severityThreshold,
-            notifyRecoveries: prefs.notifyRecoveries,
-            schedulePreset: prefs.schedulePreset,
-            customSchedules: prefs.customSchedules
-        )
-        await notifications.updatePreferences(update)
     }
 
     private func isFavouriteLine(for lineID: TrainLineID) -> Binding<Bool> {

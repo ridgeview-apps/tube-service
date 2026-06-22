@@ -6,7 +6,7 @@ public struct LineStatusDetailView: View {
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
-        case notifyMeTapped(LineStatusNotificationButton.Action)
+        case notifyMeTapped
     }
 
     public enum StatusContext: Sendable {
@@ -21,7 +21,7 @@ public struct LineStatusDetailView: View {
     public let historyState: LineStatusHistoryButton.HistoryState?
     public let statusContext: StatusContext
     public let isStatusHistoryEnabled: Bool
-    public let notificationButtonState: LineStatusNotificationButton.SubscriptionState?
+    public let notificationButtonState: NotificationsButtonState?
 
     @Binding public var isFavourite: Bool
 
@@ -36,7 +36,7 @@ public struct LineStatusDetailView: View {
         historyState: LineStatusHistoryButton.HistoryState?,
         statusContext: StatusContext,
         isStatusHistoryEnabled: Bool = true,
-        notificationButtonState: LineStatusNotificationButton.SubscriptionState? = nil,
+        notificationButtonState: NotificationsButtonState? = nil,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -72,10 +72,10 @@ public struct LineStatusDetailView: View {
                     }
                     if let state = notificationButtonState {
                         Section {
-                            LineStatusNotificationButton(
+                            NotificationsButton(
                                 state: state,
-                                lineColor: line.id.backgroundColor,
-                                onAction: { onAction(.notifyMeTapped($0)) }
+                                context: .lineStatus(name: line.shortText, color: line.id.backgroundColor),
+                                onTap: { onAction(.notifyMeTapped) }
                             )
                         }
                     }
@@ -211,7 +211,7 @@ private struct Previewer: View {
     var historyState: LineStatusHistoryButton.HistoryState? = nil
     var statusContext = LineStatusDetailView.StatusContext.live
     var isStatusHistoryEnabled: Bool = true
-    var notificationButtonState: LineStatusNotificationButton.SubscriptionState? = nil
+    var notificationButtonState: NotificationsButtonState? = nil
     @State var isFavourite = false
 
     var body: some View {
@@ -295,10 +295,10 @@ import ModelStubs
     Previewer(line: ModelStubs.lineStatusGoodService, loadingState: .failure(errorMessage: "Oops"))
 }
 
-#Preview("Notifications — not subscribed") {
+#Preview("Notifications — not set up") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        notificationButtonState: .notSubscribed
+        notificationButtonState: .notSetUp
     )
 }
 

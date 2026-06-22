@@ -1,28 +1,47 @@
 import Models
 import SwiftUI
 
-@MainActor
-struct NotificationsOnboardingFlow: View {
+enum NotificationsFlowEntry: Hashable {
+    case fullOnboarding(preselectedLine: TrainLineID?)
+    case editExisting(preselectedLine: TrainLineID?, selectedLineIDs: Set<TrainLineID>, schedulePreset: NotificationSchedulePreset)
+}
 
-    let preselectedLine: TrainLineID?
+@MainActor
+struct NotificationsFlow: View {
+
+    let entry: NotificationsFlowEntry
 
     @Environment(\.dismiss) var dismiss
 
     @State private var path: [NotificationsOnboardingContent.Step] = []
 
-    init(preselectedLine: TrainLineID? = nil) {
-        self.preselectedLine = preselectedLine
-    }
-
     var body: some View {
         NavigationStack(path: $path) {
+            content
+                .withCloseToolbarButton()
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        switch entry {
+        case .fullOnboarding(let preselectedLine):
             NotificationsOnboardingContent(
                 preselectedLine: preselectedLine,
                 onDismiss: { dismiss() },
                 onNavigate: { step in path.append(step) },
                 onReplaceStack: { steps in path = steps }
             )
-            .withCloseToolbarButton()
+        case .editExisting(let preselectedLine, let selectedLineIDs, let schedulePreset):
+            NotificationsOnboardingContent(
+                preselectedLine: preselectedLine,
+                isEditMode: true,
+                initialSelectedLineIDs: selectedLineIDs,
+                initialPreset: schedulePreset,
+                onDismiss: { dismiss() },
+                onNavigate: { step in path.append(step) },
+                onReplaceStack: { steps in path = steps }
+            )
         }
     }
 }
@@ -31,9 +50,21 @@ struct NotificationsOnboardingFlow: View {
 // MARK: - Previews
 
 #if DEBUG
-    #Preview {
+    #Preview("Full onboarding") {
         PreviewEnvironment {
-            NotificationsOnboardingFlow(preselectedLine: .victoria)
+            NotificationsFlow(entry: .fullOnboarding(preselectedLine: .victoria))
+        }
+    }
+
+    #Preview("Edit existing") {
+        PreviewEnvironment {
+            NotificationsFlow(
+                entry: .editExisting(
+                    preselectedLine: .victoria,
+                    selectedLineIDs: [.victoria, .jubilee],
+                    schedulePreset: .weekdayPeak
+                )
+            )
         }
     }
 #endif

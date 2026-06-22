@@ -25,8 +25,8 @@ struct SheetView: View {
             NavigationStack {
                 TubeServicePlusScreen(context: .statusHistory)
             }
-        case let .notificationsOnboarding(preselectedLine):
-            NotificationsOnboardingFlow(preselectedLine: preselectedLine)
+        case let .notificationsOnboarding(entry):
+            NotificationsFlow(entry: entry)
         }
     }
 }

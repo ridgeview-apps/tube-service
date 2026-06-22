@@ -15,7 +15,7 @@ public struct SettingsView: View {
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
-    public let notificationsRowState: Settings.NotificationsRowState?
+    public let notificationsButtonState: NotificationsButtonState?
     public let onAction: (Action) -> Void
 
     public init(
@@ -23,19 +23,30 @@ public struct SettingsView: View {
         appReviewURL: URL,
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
-        notificationsRowState: Settings.NotificationsRowState? = nil,
+        notificationsButtonState: NotificationsButtonState? = nil,
         onAction: @escaping (Action) -> Void
     ) {
         self.appVersionNumber = appVersionNumber
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
         self.systemStatus = systemStatus
-        self.notificationsRowState = notificationsRowState
+        self.notificationsButtonState = notificationsButtonState
         self.onAction = onAction
     }
 
     public var body: some View {
         Form {
+            if let state = notificationsButtonState {
+                Section {
+                    NotificationsButton(
+                        state: state,
+                        context: .settings,
+                        onTap: { onAction(.notificationsTapped) }
+                    )
+                    .listRowBackground(Color.clear)
+                    .listRowInsets(EdgeInsets())
+                }
+            }
             supportSection
             aboutSection
         }
@@ -46,26 +57,6 @@ public struct SettingsView: View {
 
     private var supportSection: some View {
         Section {
-            if let notificationsRowState {
-                Button {
-                    onAction(.notificationsTapped)
-                } label: {
-                    HStack {
-                        Text(.settingsNotificationsRowTitle)
-                        if notificationsRowState == .permissionDenied {
-                            Image(systemName: "exclamationmark.circle.fill")
-                                .foregroundStyle(.orange)
-                                .font(.footnote)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.footnote.weight(.semibold))
-                            .foregroundStyle(.tertiary)
-                    }
-                }
-                .foregroundStyle(.primary)
-                .opacity(notificationsRowState == .notSetUp ? 0.6 : 1)
-            }
             MailButton(
                 to: [contactUs.emailAddress],
                 subject: emailSubject,
