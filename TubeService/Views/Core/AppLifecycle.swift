@@ -9,11 +9,8 @@ struct AppLifecycleModifier: ViewModifier {
         content
             .task {
                 await appData.start()
-            }
-            .task {
                 for await token in appDelegate.pushTokens {
-                    let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                    await appData.notifications.registerDevice(pushToken: token, appVersion: appVersion)
+                    await appData.handlePushToken(token)
                 }
             }
             .onSceneDidBecomeActive {

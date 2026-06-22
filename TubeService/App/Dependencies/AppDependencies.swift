@@ -9,6 +9,7 @@ struct AppDependencies: Sendable {
     let locationManager: LocationManagerType
     let localSearchCompleterClient: LocalSearchCompleterClientType
     let userDefaults: UserDefaultsProvider
+    let authorizationProvider: AuthorizationProvider
     let now: @Sendable () -> Date
 
     init(
@@ -19,6 +20,7 @@ struct AppDependencies: Sendable {
         locationManager: LocationManagerType,
         localSearchCompleterClient: LocalSearchCompleterClientType,
         userDefaults: UserDefaultsProvider,
+        authorizationProvider: AuthorizationProvider,
         now: @escaping @Sendable () -> Date = { .now }
     ) {
         self.tflAPI = tflAPI
@@ -28,6 +30,7 @@ struct AppDependencies: Sendable {
         self.locationManager = locationManager
         self.localSearchCompleterClient = localSearchCompleterClient
         self.userDefaults = userDefaults
+        self.authorizationProvider = authorizationProvider
         self.now = now
     }
 }

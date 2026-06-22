@@ -1,6 +1,7 @@
 import Foundation
 import Models
 import Testing
+import UserNotifications
 
 @testable import DataStores
 
@@ -53,6 +54,22 @@ struct NotificationsDataStoreTests {
         #expect(api.fetchPreferencesCallCount == 0)
     }
 
+    @Test
+    func registerDevicePreferencesFetchFailureKeepsPreferencesNil() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        api.fetchPreferencesError = HTTPError.invalidRequestURL
+        let store = makeStore(api: api)
+
+        // When
+        await store.registerDevice(pushToken: "test-push-token")
+
+        // Then – device registered but preferences remain nil if fetch fails
+        #expect(api.registerDeviceCallCount == 1)
+        #expect(api.fetchPreferencesCallCount == 1)
+        #expect(store.preferences == nil)
+    }
+
 
     // MARK: - Device management
 
@@ -85,48 +102,35 @@ struct NotificationsDataStoreTests {
         #expect(api.deleteDeviceCallCount == 1)
     }
 
-
-    // MARK: - Preferences
-
     @Test
-    func fetchPreferencesSuccess() async {
+    func deleteDeviceClearsKeychainDeviceId() async {
         // Given
         let api = StubNotificationsAPIClient()
-        let store = makeStore(api: api)
+        let keychain = InMemoryKeychain()
+        let store = NotificationsDataStore(
+            api: api,
+            keychain: keychain,
+            authorizationProvider: AuthorizationProvider(readAuthStatus: { .authorized }, registerPushNotifications: {})
+        )
+        await store.registerDevice(pushToken: "test-push-token")
+        #expect(keychain.read(key: "push_device_id") != nil)
 
         // When
-        #expect(store.preferences == nil)
-        await store.fetchPreferences()
+        await store.deleteDevice()
 
-        // Then
-        #expect(store.preferences != nil)
-        #expect(!store.isFetchingPreferences)
-        #expect(api.fetchPreferencesCallCount == 1)
+        // Then – keychain entry is cleared so a fresh device ID is generated on re-registration
+        #expect(keychain.read(key: "push_device_id") == nil)
     }
 
-    @Test
-    func fetchPreferencesFailurePreservesExisting() async {
-        // Given
-        let api = StubNotificationsAPIClient()
-        let store = makeStore(api: api)
-        await store.fetchPreferences()
-        let originalPreferences = store.preferences
-        #expect(originalPreferences != nil)
 
-        // When – simulate failure on second fetch
-        api.fetchPreferencesError = HTTPError.invalidRequestURL
-        await store.fetchPreferences()
-
-        // Then – existing preferences are preserved, not cleared
-        #expect(store.preferences == originalPreferences)
-    }
+    // MARK: - Preferences
 
     @Test
     func updatePreferencesSuccess() async {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.fetchPreferences()
+        await store.registerDevice(pushToken: "test-push-token")
 
         // When
         let update = NotificationPreferencesUpdate(lineIds: ["victoria", "jubilee"], schedulePreset: .weekends)
@@ -144,7 +148,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.fetchPreferences()
+        await store.registerDevice(pushToken: "test-push-token")
         let originalPreferences = store.preferences
 
         // When – update fails
@@ -155,6 +159,21 @@ struct NotificationsDataStoreTests {
         // Then – preferences roll back to what they were before the update
         #expect(store.preferences == originalPreferences)
         #expect(!store.isSavingPreferences)
+    }
+
+
+    // MARK: - Authorization status
+
+    @Test
+    func updateAuthorizationStatusReflectsInjectedStatus() async {
+        // Given
+        let store = makeStore(authorizationStatus: .denied)
+
+        // When
+        await store.updateAuthorizationStatus()
+
+        // Then
+        #expect(store.authorizationStatus == .denied)
     }
 
 
@@ -198,8 +217,15 @@ struct NotificationsDataStoreTests {
 
     // MARK: - Helpers
 
-    private func makeStore(api: StubNotificationsAPIClient = StubNotificationsAPIClient()) -> NotificationsDataStore {
-        .init(api: api, keychain: InMemoryKeychain())
+    private func makeStore(
+        api: StubNotificationsAPIClient = StubNotificationsAPIClient(),
+        authorizationStatus: UNAuthorizationStatus = .authorized
+    ) -> NotificationsDataStore {
+        NotificationsDataStore(
+            api: api,
+            keychain: InMemoryKeychain(),
+            authorizationProvider: AuthorizationProvider(readAuthStatus: { authorizationStatus }, registerPushNotifications: {})
+        )
     }
 }
 

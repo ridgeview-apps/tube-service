@@ -10,7 +10,10 @@ import UserNotifications
             api: NotificationsAPIClientType = StubNotificationsAPIClient(),
             authorizationStatus: UNAuthorizationStatus = .authorized
         ) -> NotificationsDataStore {
-            let store = NotificationsDataStore(api: api)
+            let store = NotificationsDataStore(
+                api: api,
+                authorizationProvider: AuthorizationProvider(readAuthStatus: { .notDetermined }, registerPushNotifications: {})
+            )
             store.authorizationStatus = authorizationStatus
             return store
         }

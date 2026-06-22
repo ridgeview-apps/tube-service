@@ -18,7 +18,8 @@ import Foundation
                 systemStatusAPI: StubSystemStatusAPIClient(),
                 locationManager: locationManager,
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),
-                userDefaults: .stub
+                userDefaults: .stub,
+                authorizationProvider: .stub
             )
         }()
     }
@@ -29,6 +30,13 @@ import Foundation
 
     extension UserDefaultsProvider {
         static let stub = UserDefaultsProvider(.init(suiteName: "StubbedSuite")!)
+    }
+
+    extension AuthorizationProvider {
+        static let stub = AuthorizationProvider(
+            readAuthStatus: { .authorized },
+            registerPushNotifications: {}
+        )
     }
 
 #endif

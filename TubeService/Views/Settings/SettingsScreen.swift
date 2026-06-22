@@ -53,7 +53,6 @@ struct SettingsScreen: View {
 
     private var notificationsRowState: Settings.NotificationsRowState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
         guard notifications.preferences?.enabled == true else { return .notSetUp }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:

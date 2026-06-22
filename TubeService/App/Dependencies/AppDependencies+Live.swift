@@ -2,6 +2,8 @@ import CoreLocation
 import DataStores
 import Foundation
 @preconcurrency import MapKit
+import UIKit
+import UserNotifications
 
 extension AppDependencies {
     static let live = AppDependencies(
@@ -11,7 +13,8 @@ extension AppDependencies {
         systemStatusAPI: SystemStatusAPIClient.live,
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),
-        userDefaults: .live
+        userDefaults: .live,
+        authorizationProvider: .live
     )
 }
 
@@ -42,4 +45,15 @@ extension SystemStatusAPIClient {
 
 extension UserDefaultsProvider {
     static let live = UserDefaultsProvider(.standard)
+}
+
+extension AuthorizationProvider {
+    static let live = AuthorizationProvider(
+        readAuthStatus: {
+            await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+        },
+        registerPushNotifications: { @MainActor in
+            UIApplication.shared.registerForRemoteNotifications()
+        }
+    )
 }

@@ -65,7 +65,6 @@ struct LineStatusDetailScreen: View {
 
     private var notificationButtonState: LineStatusNotificationButton.SubscriptionState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        if notifications.preferences == nil && notifications.isFetchingPreferences { return nil }
         guard let prefs = notifications.preferences, prefs.enabled else { return .notSubscribed }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:

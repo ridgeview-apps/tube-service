@@ -11,7 +11,6 @@ public final class NotificationsDataStore {
 
     public internal(set) var preferences: NotificationPreferences?
     public internal(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
-    public internal(set) var isFetchingPreferences = false
     public internal(set) var isSavingPreferences = false
 
     private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
@@ -21,29 +20,41 @@ public final class NotificationsDataStore {
     private let api: NotificationsAPIClientType
     private let keychain: any KeychainService
     private let userDefaults: UserDefaults
+    private let authorizationProvider: AuthorizationProvider
 
     private var device: NotificationDevice?
     private var isRegistering = false
 
-    private static let keychainDeviceIdKey = "device_id"
+    private static let keychainDeviceIdKey = "push_device_id"
     private var cachedDeviceId: String?
 
 
     // MARK: - Init
 
-    public init(api: NotificationsAPIClientType, userDefaults: UserDefaults = .standard) {
+    public init(
+        api: NotificationsAPIClientType,
+        userDefaults: UserDefaults = .standard,
+        authorizationProvider: AuthorizationProvider
+    ) {
         self.api = api
         self.keychain = SecurityKeychain(service: "com.ridgeviewapps.tubeservice.notifications")
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
+        self.authorizationProvider = authorizationProvider
     }
 
     // Internal init allows test/stub code within the package to inject a custom keychain.
-    init(api: NotificationsAPIClientType, keychain: any KeychainService, userDefaults: UserDefaults = .standard) {
+    init(
+        api: NotificationsAPIClientType,
+        keychain: any KeychainService,
+        userDefaults: UserDefaults = .standard,
+        authorizationProvider: AuthorizationProvider
+    ) {
         self.api = api
         self.keychain = keychain
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
+        self.authorizationProvider = authorizationProvider
     }
 
 
@@ -74,7 +85,7 @@ public final class NotificationsDataStore {
                 pendingPreferencesUpdate = nil
                 await updatePreferences(pending)
             } else if preferences == nil {
-                await fetchPreferences()
+                await fetchInitialPreferences()
             }
         } catch {
             AppLogger.notifications.error("Failed to register device: \(error)")
@@ -95,14 +106,17 @@ public final class NotificationsDataStore {
             device = nil
             preferences = nil
             userDefaults.notificationPreferences = nil
+            keychain.delete(key: Self.keychainDeviceIdKey)
+            cachedDeviceId = nil
         } catch {
             AppLogger.notifications.error("Failed to delete device: \(error)")
         }
     }
 
 
-    public func refreshAuthorizationStatus() async {
-        authorizationStatus = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+    public func updateAuthorizationStatus() async {
+        authorizationStatus = await authorizationProvider.readAuthStatus()
+        authorizationProvider.registerPushNotifications()
     }
 
     public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
@@ -112,11 +126,7 @@ public final class NotificationsDataStore {
 
     // MARK: - Preferences
 
-    public func fetchPreferences() async {
-        guard !isFetchingPreferences else { return }
-        isFetchingPreferences = true
-        defer { isFetchingPreferences = false }
-        await refreshAuthorizationStatus()
+    private func fetchInitialPreferences() async {
         do {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
             userDefaults.notificationPreferences = preferences

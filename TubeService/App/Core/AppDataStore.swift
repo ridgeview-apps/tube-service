@@ -2,6 +2,7 @@ import CoreLocation
 import DataStores
 import Foundation
 @preconcurrency import MapKit
+import Shared
 
 @MainActor
 @Observable
@@ -43,17 +44,24 @@ final class AppDataStore {
             now: dependencies.now
         )
         self.purchases = PurchaseStore()
-        self.notifications = NotificationsDataStore(api: dependencies.notificationsAPI, userDefaults: dependencies.userDefaults.value)
+        self.notifications = NotificationsDataStore(
+            api: dependencies.notificationsAPI,
+            userDefaults: dependencies.userDefaults.value,
+            authorizationProvider: dependencies.authorizationProvider
+        )
     }
 
     func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
-        await notifications.fetchPreferences()
+    }
+
+    func handlePushToken(_ token: String) async {
+        await notifications.registerDevice(pushToken: token, appVersion: Bundle.main.shortVersion)
     }
 
     func sceneDidBecomeActive() async {
         await purchases.refreshEntitlements()
-        await notifications.refreshAuthorizationStatus()
+        await notifications.updateAuthorizationStatus()
     }
 }

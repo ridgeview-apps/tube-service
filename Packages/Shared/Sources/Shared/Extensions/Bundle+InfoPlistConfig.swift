@@ -29,6 +29,10 @@ public struct InfoPlistConfig {
 
 public extension Bundle {
 
+    var shortVersion: String? {
+        infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+
     func loadInfoPlistConfig(forKey key: String) -> InfoPlistConfig {
         guard let infoDictionary = infoDictionary?[key] as? [String: Any] else {
             fatalError("Unable to load \(key) key from info.plist file")
