@@ -6,16 +6,16 @@ import SwiftUI
 
 struct SettingsScreen: View {
 
-    private enum DestinationID: Identifiable {
+    private enum DestinationID: Identifiable, Hashable {
         var id: Self { self }
         case debugMenu
         case notificationsPreferences
+        case notificationsOnboarding(preselectedLine: TrainLineID?)
     }
 
     @Environment(\.appConfig) var appConfig
     @Environment(\.locale) var locale
     @Environment(\.openSettings) var openSettings
-    @Environment(\.showSheet) var showSheet
     @Environment(SystemStatusDataStore.self) var systemStatusData
     @Environment(NotificationsDataStore.self) var notifications
 
@@ -85,7 +85,7 @@ struct SettingsScreen: View {
             case .permissionDenied:
                 openSettings()
             default:
-                showSheet(.notificationsOnboarding())
+                navigationState.push(to: .notificationsOnboarding(preselectedLine: nil))
             }
         }
     }
@@ -99,6 +99,18 @@ struct SettingsScreen: View {
             if let preferences = notifications.preferences {
                 NotificationsPreferencesScreen(preferences: preferences)
             }
+        case .notificationsOnboarding(let preselectedLine):
+            NotificationsOnboardingContent(
+                preselectedLine: preselectedLine,
+                onDismiss: { navigationState = NavigationState<DestinationID>() },
+                onNavigate: { step in navigationState.navigationPath.append(step) },
+                onReplaceStack: { steps in
+                    while navigationState.navigationPath.count > 1 {
+                        navigationState.pop()
+                    }
+                    steps.forEach { navigationState.navigationPath.append($0) }
+                }
+            )
         }
     }
 }
