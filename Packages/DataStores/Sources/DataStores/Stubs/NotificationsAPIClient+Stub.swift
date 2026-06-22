@@ -46,12 +46,7 @@ import ModelStubs
         public var stubbedPreferences: HTTPResponse<NotificationPreferences> = .success200(
             .init(
                 deviceId: UUID().uuidString,
-                enabled: true,
-                lineIds: [],
-                severityThreshold: .minorDelays,
-                notifyRecoveries: true,
-                schedulePreset: .weekdayPeak,
-                customSchedules: [],
+                lines: [],
                 createdAt: .now,
                 updatedAt: .now
             )
@@ -70,12 +65,16 @@ import ModelStubs
             if let updatePreferencesError { throw updatePreferencesError }
             let updated = NotificationPreferences(
                 deviceId: deviceId,
-                enabled: update.enabled,
-                lineIds: update.lineIds,
-                severityThreshold: update.severityThreshold,
-                notifyRecoveries: update.notifyRecoveries,
-                schedulePreset: update.schedulePreset,
-                customSchedules: update.customSchedules,
+                lines: update.lines.map { lineUpdate in
+                    NotificationLinePreference(
+                        lineId: lineUpdate.lineId,
+                        enabled: lineUpdate.enabled,
+                        severityThreshold: lineUpdate.severityThreshold,
+                        notifyRecoveries: lineUpdate.notifyRecoveries,
+                        schedulePreset: lineUpdate.schedulePreset,
+                        customSchedules: lineUpdate.customSchedules
+                    )
+                },
                 createdAt: stubbedPreferences.decodedModel.createdAt,
                 updatedAt: .now
             )

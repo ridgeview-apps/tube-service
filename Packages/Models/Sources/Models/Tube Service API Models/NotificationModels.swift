@@ -15,7 +15,13 @@ public enum NotificationSeverityThreshold: String, Codable, CaseIterable, Hashab
 }
 
 public enum NotificationWeekday: String, Codable, CaseIterable, Hashable, Sendable {
-    case monday, tuesday, wednesday, thursday, friday, saturday, sunday
+    case monday = "mon"
+    case tuesday = "tue"
+    case wednesday = "wed"
+    case thursday = "thu"
+    case friday = "fri"
+    case saturday = "sat"
+    case sunday = "sun"
 }
 
 public struct NotificationScheduleWindow: Codable, Hashable, Sendable {
@@ -58,61 +64,87 @@ public struct NotificationDevice: Codable, Hashable, Sendable {
     }
 }
 
-public struct NotificationPreferences: Codable, Hashable, Sendable {
-    public let deviceId: String
+public struct NotificationLinePreference: Codable, Hashable, Sendable {
+    public let lineId: String
     public let enabled: Bool
-    public let lineIds: [String]
-    public let severityThreshold: NotificationSeverityThreshold
-    public let notifyRecoveries: Bool
-    public let schedulePreset: NotificationSchedulePreset
-    public let customSchedules: [NotificationScheduleWindow]
-    public let createdAt: Date
-    public let updatedAt: Date
-
-    public init(
-        deviceId: String,
-        enabled: Bool,
-        lineIds: [String],
-        severityThreshold: NotificationSeverityThreshold,
-        notifyRecoveries: Bool,
-        schedulePreset: NotificationSchedulePreset,
-        customSchedules: [NotificationScheduleWindow],
-        createdAt: Date,
-        updatedAt: Date
-    ) {
-        self.deviceId = deviceId
-        self.enabled = enabled
-        self.lineIds = lineIds
-        self.severityThreshold = severityThreshold
-        self.notifyRecoveries = notifyRecoveries
-        self.schedulePreset = schedulePreset
-        self.customSchedules = customSchedules
-        self.createdAt = createdAt
-        self.updatedAt = updatedAt
-    }
-}
-
-public struct NotificationPreferencesUpdate: Codable, Hashable, Sendable {
-    public let enabled: Bool
-    public let lineIds: [String]
     public let severityThreshold: NotificationSeverityThreshold
     public let notifyRecoveries: Bool
     public let schedulePreset: NotificationSchedulePreset
     public let customSchedules: [NotificationScheduleWindow]
 
     public init(
+        lineId: String,
         enabled: Bool = true,
-        lineIds: [String],
         severityThreshold: NotificationSeverityThreshold = .minorDelays,
         notifyRecoveries: Bool = true,
         schedulePreset: NotificationSchedulePreset = .weekdayPeak,
         customSchedules: [NotificationScheduleWindow] = []
     ) {
+        self.lineId = lineId
         self.enabled = enabled
-        self.lineIds = lineIds
         self.severityThreshold = severityThreshold
         self.notifyRecoveries = notifyRecoveries
         self.schedulePreset = schedulePreset
         self.customSchedules = customSchedules
+    }
+}
+
+public struct NotificationPreferences: Codable, Hashable, Sendable {
+    public let deviceId: String
+    public let timezone: String
+    public let lines: [NotificationLinePreference]
+    public let createdAt: Date
+    public let updatedAt: Date
+
+    public init(
+        deviceId: String,
+        timezone: String = "Europe/London",
+        lines: [NotificationLinePreference],
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        self.deviceId = deviceId
+        self.timezone = timezone
+        self.lines = lines
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
+}
+
+public struct NotificationLinePreferenceUpdate: Codable, Hashable, Sendable {
+    public let lineId: String
+    public let enabled: Bool
+    public let severityThreshold: NotificationSeverityThreshold
+    public let notifyRecoveries: Bool
+    public let schedulePreset: NotificationSchedulePreset
+    public let customSchedules: [NotificationScheduleWindow]
+
+    public init(
+        lineId: String,
+        enabled: Bool = true,
+        severityThreshold: NotificationSeverityThreshold = .minorDelays,
+        notifyRecoveries: Bool = true,
+        schedulePreset: NotificationSchedulePreset = .weekdayPeak,
+        customSchedules: [NotificationScheduleWindow] = []
+    ) {
+        self.lineId = lineId
+        self.enabled = enabled
+        self.severityThreshold = severityThreshold
+        self.notifyRecoveries = notifyRecoveries
+        self.schedulePreset = schedulePreset
+        self.customSchedules = customSchedules
+    }
+}
+
+public struct NotificationPreferencesUpdate: Codable, Hashable, Sendable {
+    public let timezone: String?
+    public let lines: [NotificationLinePreferenceUpdate]
+
+    public init(
+        timezone: String? = nil,
+        lines: [NotificationLinePreferenceUpdate]
+    ) {
+        self.timezone = timezone
+        self.lines = lines
     }
 }

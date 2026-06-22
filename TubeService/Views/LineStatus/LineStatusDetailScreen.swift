@@ -65,10 +65,10 @@ struct LineStatusDetailScreen: View {
 
     private var notificationButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard let prefs = notifications.preferences, prefs.enabled else { return .notSetUp }
+        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else { return .notSetUp }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
-            return prefs.lineIds.contains(line.id.rawValue) ? .active : .inactive
+            return prefs.lines.contains(where: { $0.lineId == line.id.rawValue && $0.enabled }) ? .active : .inactive
         case .denied:
             return .permissionDenied
         default:
@@ -119,16 +119,7 @@ struct LineStatusDetailScreen: View {
             case .notSetUp, nil:
                 showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: line.id)))
             case .inactive, .active:
-                guard let prefs = notifications.preferences else { return }
-                showSheet(
-                    .notificationsOnboarding(
-                        .editExisting(
-                            preselectedLine: line.id,
-                            selectedLineIDs: Set(prefs.lineIds.compactMap(TrainLineID.init(rawValue:))),
-                            schedulePreset: prefs.schedulePreset
-                        )
-                    )
-                )
+                showSheet(.notificationsOnboarding(.manage))
             }
         }
     }

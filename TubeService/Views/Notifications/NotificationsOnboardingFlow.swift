@@ -1,9 +1,10 @@
+import DataStores
 import Models
 import SwiftUI
 
 enum NotificationsFlowEntry: Hashable {
     case fullOnboarding(preselectedLine: TrainLineID?)
-    case editExisting(preselectedLine: TrainLineID?, selectedLineIDs: Set<TrainLineID>, schedulePreset: NotificationSchedulePreset)
+    case manage
 }
 
 @MainActor
@@ -12,6 +13,7 @@ struct NotificationsFlow: View {
     let entry: NotificationsFlowEntry
 
     @Environment(\.dismiss) var dismiss
+    @Environment(NotificationsDataStore.self) var notifications
 
     @State private var path: [NotificationsOnboardingContent.Step] = []
 
@@ -32,16 +34,10 @@ struct NotificationsFlow: View {
                 onNavigate: { step in path.append(step) },
                 onReplaceStack: { steps in path = steps }
             )
-        case .editExisting(let preselectedLine, let selectedLineIDs, let schedulePreset):
-            NotificationsOnboardingContent(
-                preselectedLine: preselectedLine,
-                isEditMode: true,
-                initialSelectedLineIDs: selectedLineIDs,
-                initialPreset: schedulePreset,
-                onDismiss: { dismiss() },
-                onNavigate: { step in path.append(step) },
-                onReplaceStack: { steps in path = steps }
-            )
+        case .manage:
+            if let prefs = notifications.preferences {
+                ManageNotificationsScreen(preferences: prefs)
+            }
         }
     }
 }
@@ -56,15 +52,9 @@ struct NotificationsFlow: View {
         }
     }
 
-    #Preview("Edit existing") {
+    #Preview("Manage") {
         PreviewEnvironment {
-            NotificationsFlow(
-                entry: .editExisting(
-                    preselectedLine: .victoria,
-                    selectedLineIDs: [.victoria, .jubilee],
-                    schedulePreset: .weekdayPeak
-                )
-            )
+            NotificationsFlow(entry: .manage)
         }
     }
 #endif

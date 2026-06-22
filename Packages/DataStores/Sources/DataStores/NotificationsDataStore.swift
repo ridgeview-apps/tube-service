@@ -95,6 +95,8 @@ public final class NotificationsDataStore {
     public func disableDevice() async {
         do {
             device = try await api.disableDevice(deviceId: deviceId).decodedModel
+            preferences = nil
+            userDefaults.notificationPreferences = nil
         } catch {
             AppLogger.notifications.error("Failed to disable device: \(error)")
         }

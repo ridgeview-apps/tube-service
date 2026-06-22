@@ -133,12 +133,15 @@ struct NotificationsDataStoreTests {
         await store.registerDevice(pushToken: "test-push-token")
 
         // When
-        let update = NotificationPreferencesUpdate(lineIds: ["victoria", "jubilee"], schedulePreset: .weekends)
+        let update = NotificationPreferencesUpdate(lines: [
+            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
+            NotificationLinePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
+        ])
         await store.updatePreferences(update)
 
         // Then
-        #expect(store.preferences?.lineIds == ["victoria", "jubilee"])
-        #expect(store.preferences?.schedulePreset == .weekends)
+        #expect(store.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
+        #expect(store.preferences?.lines.allSatisfy { $0.schedulePreset == .weekends } == true)
         #expect(!store.isSavingPreferences)
         #expect(api.updatePreferencesCallCount == 1)
     }
@@ -153,7 +156,9 @@ struct NotificationsDataStoreTests {
 
         // When – update fails
         api.updatePreferencesError = HTTPError.invalidRequestURL
-        let update = NotificationPreferencesUpdate(lineIds: ["victoria"], schedulePreset: .anytime)
+        let update = NotificationPreferencesUpdate(lines: [
+            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
+        ])
         await store.updatePreferences(update)
 
         // Then – preferences roll back to what they were before the update
@@ -184,7 +189,9 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lineIds: ["victoria"], schedulePreset: .weekends)
+        let update = NotificationPreferencesUpdate(lines: [
+            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+        ])
 
         // When – schedule an update before the APNs token arrives
         store.schedulePreferencesUpdate(update)
@@ -193,8 +200,8 @@ struct NotificationsDataStoreTests {
         // Then – update is applied instead of fetching defaults
         #expect(api.updatePreferencesCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
-        #expect(store.preferences?.lineIds == ["victoria"])
-        #expect(store.preferences?.schedulePreset == .weekends)
+        #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
+        #expect(store.preferences?.lines.first?.schedulePreset == .weekends)
     }
 
     @Test
@@ -202,7 +209,9 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lineIds: ["victoria"], schedulePreset: .weekends)
+        let update = NotificationPreferencesUpdate(lines: [
+            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+        ])
         store.schedulePreferencesUpdate(update)
 
         // When – register twice (second registration is a no-op due to isRegistering guard,

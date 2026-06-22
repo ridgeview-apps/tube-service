@@ -9,7 +9,8 @@ struct SettingsScreen: View {
     private enum DestinationID: Identifiable, Hashable {
         var id: Self { self }
         case debugMenu
-        case notificationsOnboarding(NotificationsFlowEntry)
+        case notificationsOnboarding(preselectedLine: TrainLineID?)
+        case manageNotifications
     }
 
     @Environment(\.appConfig) var appConfig
@@ -52,7 +53,7 @@ struct SettingsScreen: View {
 
     private var notificationsButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard notifications.preferences?.enabled == true else { return .notSetUp }
+        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else { return .notSetUp }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
             return .active
@@ -82,18 +83,9 @@ struct SettingsScreen: View {
             case .permissionDenied:
                 openSettings()
             case .active:
-                guard let prefs = notifications.preferences else { return }
-                navigationState.push(
-                    to: .notificationsOnboarding(
-                        .editExisting(
-                            preselectedLine: nil,
-                            selectedLineIDs: Set(prefs.lineIds.compactMap(TrainLineID.init(rawValue:))),
-                            schedulePreset: prefs.schedulePreset
-                        )
-                    )
-                )
+                navigationState.push(to: .manageNotifications)
             default:
-                navigationState.push(to: .notificationsOnboarding(.fullOnboarding(preselectedLine: nil)))
+                navigationState.push(to: .notificationsOnboarding(preselectedLine: nil))
             }
         }
     }
@@ -103,15 +95,7 @@ struct SettingsScreen: View {
         switch destinationID {
         case .debugMenu:
             DebugSettingsScreen()
-        case .notificationsOnboarding(let entry):
-            notificationsOnboardingContent(for: entry)
-        }
-    }
-
-    @ViewBuilder
-    private func notificationsOnboardingContent(for entry: NotificationsFlowEntry) -> some View {
-        switch entry {
-        case .fullOnboarding(let preselectedLine):
+        case .notificationsOnboarding(let preselectedLine):
             NotificationsOnboardingContent(
                 preselectedLine: preselectedLine,
                 onDismiss: { navigationState = NavigationState<DestinationID>() },
@@ -123,21 +107,10 @@ struct SettingsScreen: View {
                     steps.forEach { navigationState.navigationPath.append($0) }
                 }
             )
-        case .editExisting(let preselectedLine, let selectedLineIDs, let schedulePreset):
-            NotificationsOnboardingContent(
-                preselectedLine: preselectedLine,
-                isEditMode: true,
-                initialSelectedLineIDs: selectedLineIDs,
-                initialPreset: schedulePreset,
-                onDismiss: { navigationState = NavigationState<DestinationID>() },
-                onNavigate: { step in navigationState.navigationPath.append(step) },
-                onReplaceStack: { steps in
-                    while navigationState.navigationPath.count > 1 {
-                        navigationState.pop()
-                    }
-                    steps.forEach { navigationState.navigationPath.append($0) }
-                }
-            )
+        case .manageNotifications:
+            if let prefs = notifications.preferences {
+                ManageNotificationsScreen(preferences: prefs)
+            }
         }
     }
 }
