@@ -28,23 +28,32 @@ struct ManageNotificationsScreen: View {
             }
             .padding(20)
         }
-        .safeAreaInset(edge: .bottom) {
-            bottomActions
-        }
         .navigationTitle(Text(L10n.settingsNotificationsRowTitle))
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(L10n.globalDone) {
+                    Task { await saveChanges() }
+                }
+                .disabled(selectedLineIDs.isEmpty || notifications.isSavingPreferences)
+            }
+        }
     }
 
 
-    // MARK: - Layout views
+    // MARK: - Views
 
     private var linesSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(L10n.notificationsPreferencesLinesSectionTitle)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
+            Text("Select the lines you'd like to receive disruption alerts for.")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             NotificationsLineSelectionGrid(selectedLineIDs: $selectedLineIDs)
+                .padding(.top, 4)
         }
     }
 
@@ -57,30 +66,6 @@ struct ManageNotificationsScreen: View {
             NotificationsSchedulePicker(selectedPreset: $selectedPreset)
                 .cardStyle()
         }
-    }
-
-    private var bottomActions: some View {
-        VStack(spacing: 12) {
-            Button {
-                Task { await saveChanges() }
-            } label: {
-                Text(L10n.globalDone)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 20)
-            }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
-            .disabled(selectedLineIDs.isEmpty || notifications.isSavingPreferences)
-
-            Button(role: .destructive) {
-                Task { await disableNotifications() }
-            } label: {
-                Text(L10n.notificationsPreferencesDisableButtonTitle)
-                    .font(.subheadline)
-            }
-        }
-        .padding(20)
-        .background(.bar)
     }
 
 
@@ -100,10 +85,6 @@ struct ManageNotificationsScreen: View {
             }
         )
         await notifications.updatePreferences(update)
-    }
-
-    private func disableNotifications() async {
-        await notifications.disableDevice()
     }
 }
 
