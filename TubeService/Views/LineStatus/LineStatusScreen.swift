@@ -7,6 +7,7 @@ import SwiftUI
 @MainActor
 struct LineStatusScreen: View {
     @Environment(LineStatusDataStore.self) var model
+    @Environment(AppRouter.self) private var router
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -14,7 +15,6 @@ struct LineStatusScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    @State private var selectedLine: Line?
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     @State private var selectedDate: Date = .now
     @State private var selectedWeekendDayFilter: WeekendDayFilter = .both
@@ -24,14 +24,25 @@ struct LineStatusScreen: View {
     }
 
     var body: some View {
-        NavigationStack {
+        @Bindable var router = router
+        NavigationStack(path: $router.lineStatusPath) {
             statusListView
-                .navigationDestination(item: $selectedLine) { line in
-                    LineStatusDetailScreen(line: line, request: request)
+                .navigationDestination(for: AppRoute.self) { route in
+                    destinationScreen(for: route)
                 }
         }
         .onSceneDidBecomeActive {
             fetchIfStale()
+        }
+    }
+
+    @ViewBuilder
+    private func destinationScreen(for route: AppRoute) -> some View {
+        switch route {
+        case .journeyResults:
+            EmptyView()
+        case .lineStatusDetail(let line, let request):
+            LineStatusDetailScreen(line: line, request: request)
         }
     }
 
@@ -42,7 +53,7 @@ struct LineStatusScreen: View {
             favouriteLineIDs: userPreferences.favouriteLineIDs,
             disruptionCountsByLineID: model.disruptionCountsByLineID,
             refreshDate: refreshDate,
-            selectedLine: $selectedLine,
+            onSelectLine: { line in router.push(.lineStatusDetail(line: line, request: request)) },
             selectedFilterOption: $selectedFilterOption,
             selectedDate: $selectedDate,
             selectedWeekendDayFilter: $selectedWeekendDayFilter
@@ -59,7 +70,7 @@ struct LineStatusScreen: View {
             refreshSelectedLine()
         }
         .onChange(of: selectedFilterOption) {
-            selectedLine = nil
+            router.lineStatusPath = []
             selectedWeekendDayFilter = .both
             fetchIfStale()
         }
@@ -92,9 +103,10 @@ struct LineStatusScreen: View {
     }
 
     private func refreshSelectedLine() {
-        if let selectedLine {
-            self.selectedLine = lines.first { $0.id == selectedLine.id }
-        }
+        guard case .lineStatusDetail(let current, let req) = router.lineStatusPath.last,
+            let updated = lines.first(where: { $0.id == current.id })
+        else { return }
+        router.lineStatusPath[router.lineStatusPath.count - 1] = .lineStatusDetail(line: updated, request: req)
     }
 }
 

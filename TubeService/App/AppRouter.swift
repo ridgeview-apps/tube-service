@@ -1,3 +1,5 @@
+import DataStores
+import Models
 import SwiftUI
 
 // MARK: - AppTab
@@ -14,6 +16,7 @@ enum AppTab: Hashable {
 
 enum AppRoute: Hashable {
     case journeyResults
+    case lineStatusDetail(line: Line, request: LineStatusDataStore.LineStatusRequest)
 }
 
 // MARK: - AppRouter

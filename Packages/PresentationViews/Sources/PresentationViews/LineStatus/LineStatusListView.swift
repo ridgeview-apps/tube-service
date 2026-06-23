@@ -10,7 +10,7 @@ public struct LineStatusListView: View {
     public let disruptionCountsByLineID: [TrainLineID: Int]
     public let refreshDate: Date?
 
-    @Binding var selectedLine: Line?
+    public let onSelectLine: (Line) -> Void
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
     @Binding var selectedWeekendDayFilter: WeekendDayFilter
@@ -26,7 +26,7 @@ public struct LineStatusListView: View {
         favouriteLineIDs: Set<TrainLineID>,
         disruptionCountsByLineID: [TrainLineID: Int],
         refreshDate: Date?,
-        selectedLine: Binding<Line?>,
+        onSelectLine: @escaping (Line) -> Void,
         selectedFilterOption: Binding<LineStatusFilterOption>,
         selectedDate: Binding<Date>,
         selectedWeekendDayFilter: Binding<WeekendDayFilter>
@@ -36,14 +36,14 @@ public struct LineStatusListView: View {
         self.favouriteLineIDs = favouriteLineIDs
         self.disruptionCountsByLineID = disruptionCountsByLineID
         self.refreshDate = refreshDate
-        self._selectedLine = selectedLine
+        self.onSelectLine = onSelectLine
         self._selectedFilterOption = selectedFilterOption
         self._selectedDate = selectedDate
         self._selectedWeekendDayFilter = selectedWeekendDayFilter
     }
 
     public var body: some View {
-        List(selection: $selectedLine) {
+        List {
             Section {
                 loadingStatusView
                 lineStatusCells
@@ -121,7 +121,7 @@ public struct LineStatusListView: View {
         isFavourite: Bool
     ) -> some View {
         Button {
-            selectedLine = line
+            onSelectLine(line)
         } label: {
             LineStatusCell(
                 style: .singleLine(line),
@@ -192,7 +192,6 @@ private struct WrapperView: View {
     var favouriteLineIDs: Set<TrainLineID> = []
     var disruptionCountsByLineID: [TrainLineID: Int] = [:]
     var refreshDate: Date? = .now
-    @State var selectedLine: Line?
     @State var selectedFilterOption: LineStatusFilterOption = .today
     @State var selectedDate: Date = .now
     @State var selectedWeekendDayFilter: WeekendDayFilter = .both
@@ -205,15 +204,12 @@ private struct WrapperView: View {
                 favouriteLineIDs: favouriteLineIDs,
                 disruptionCountsByLineID: disruptionCountsByLineID,
                 refreshDate: refreshDate,
-                selectedLine: $selectedLine,
+                onSelectLine: { _ in },
                 selectedFilterOption: $selectedFilterOption,
                 selectedDate: $selectedDate,
                 selectedWeekendDayFilter: $selectedWeekendDayFilter
             )
             .navigationTitle("Preview")
-            .navigationDestination(item: $selectedLine) { selectedLine in
-                Text("\(selectedLine.id.longName) selected")
-            }
         }
     }
 }

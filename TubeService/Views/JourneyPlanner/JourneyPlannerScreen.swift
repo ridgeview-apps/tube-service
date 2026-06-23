@@ -100,6 +100,8 @@ struct JourneyPlannerScreen: View {
         switch route {
         case .journeyResults:
             JourneyResultsScreen(form: $form, tflAPI: appData.tflAPI)
+        case .lineStatusDetail:
+            EmptyView()
         }
     }
 
