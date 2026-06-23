@@ -10,7 +10,7 @@ enum Sheet {
     case safari(URL)
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
     case journeyModePicker(initialModeIDs: Set<ModeID>, onDone: (Set<ModeID>) -> Void)
-    case tubeServicePlus(PaywallContext)
+    case tubeServicePlus(PaywallContext, onAction: (TubeServicePlusView.Action) -> Void)
     case notificationsOnboarding(NotificationsFlowEntry)
 }
 
@@ -29,22 +29,5 @@ extension Sheet: Identifiable {
         case .tubeServicePlus: .tubeServicePlus
         case .notificationsOnboarding: .notificationsOnboarding
         }
-    }
-}
-
-
-// MARK: - Actions
-
-struct SheetAction {
-    typealias Handler = (Sheet, (() -> Void)?) -> Void
-
-    private let handler: Handler
-
-    init(_ handler: @escaping Handler) {
-        self.handler = handler
-    }
-
-    func callAsFunction(_ sheet: Sheet, onDismiss: (() -> Void)? = nil) {
-        handler(sheet, onDismiss)
     }
 }

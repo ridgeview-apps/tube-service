@@ -15,8 +15,9 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
+                    .appPresentedSheet($router.presentedSheet)
                     .appLifecycle(appData: appData, appDelegate: appDelegate)
-                    .withAppEnvironment(dataStore: appData, router: router)
+                    .appEnvironment(dataStore: appData, router: router)
             }
         }
     }
@@ -24,15 +25,18 @@ struct RootScene: App {
 
 extension View {
 
-    func withAppEnvironment(dataStore: AppDataStore, router: AppRouter) -> some View {
+    func appPresentedSheet(_ sheet: Binding<Sheet?>) -> some View {
+        self.sheet(item: sheet) { sheet in
+            SheetView(sheet: sheet)
+        }
+    }
+
+    func appEnvironment(
+        dataStore: AppDataStore,
+        router: AppRouter
+    ) -> some View {
         self
             .environment(router)
-            .environment(
-                \.showSheet,
-                SheetAction { sheet, onDismiss in
-                    router.showSheet(sheet, onDismiss: onDismiss)
-                }
-            )
             .environment(dataStore)
             .environment(dataStore.lineStatus)
             .environment(dataStore.stations)

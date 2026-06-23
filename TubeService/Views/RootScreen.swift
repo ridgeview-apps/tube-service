@@ -16,9 +16,6 @@ struct RootScreen: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         .systemStatusRefreshable()
-        .sheet(item: $router.presentedSheet, onDismiss: { router.handleSheetDismiss() }) { sheet in
-            SheetView(sheet: sheet)
-        }
     }
 
     private var lineStatusTab: some TabContent<AppTab> {

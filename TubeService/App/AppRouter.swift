@@ -31,14 +31,8 @@ final class AppRouter {
     var presentedSheet: Sheet?
     private var onSheetDismiss: (() -> Void)?
 
-    func showSheet(_ sheet: Sheet, onDismiss: (() -> Void)? = nil) {
+    func showSheet(_ sheet: Sheet) {
         presentedSheet = sheet
-        onSheetDismiss = onDismiss
-    }
-
-    func handleSheetDismiss() {
-        onSheetDismiss?()
-        onSheetDismiss = nil
     }
 
     func dismissSheet() {

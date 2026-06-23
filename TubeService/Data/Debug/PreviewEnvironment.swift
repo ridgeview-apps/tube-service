@@ -19,7 +19,7 @@ import SwiftUI
 
         var body: some View {
             content
-                .withAppEnvironment(dataStore: appData, router: router)
+                .appEnvironment(dataStore: appData, router: router)
         }
     }
 

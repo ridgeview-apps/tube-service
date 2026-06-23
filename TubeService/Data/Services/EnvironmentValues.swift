@@ -11,6 +11,5 @@ struct OpenSettingsAction {
 
 extension EnvironmentValues {
     @Entry var appConfig = AppConfig.main
-    @Entry var showSheet: SheetAction = SheetAction { _, _ in }
     @Entry var openSettings = OpenSettingsAction()
 }

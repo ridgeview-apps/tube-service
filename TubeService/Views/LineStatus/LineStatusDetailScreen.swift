@@ -10,7 +10,7 @@ struct LineStatusDetailScreen: View {
     @Environment(PurchaseStore.self) var purchases
     @Environment(LineStatusDataStore.self) var model
     @Environment(NotificationsDataStore.self) var notifications
-    @Environment(\.showSheet) var showSheet
+    @Environment(AppRouter.self) var router
     @Environment(\.openURL) var openURL
     @Environment(\.openSettings) var openSettings
 
@@ -106,21 +106,29 @@ struct LineStatusDetailScreen: View {
             if purchases.hasTubeServicePlus {
                 isShowingStatusHistory = true
             } else {
-                showSheet(.tubeServicePlus(.statusHistory)) {
-                    if purchases.hasTubeServicePlus {
-                        isShowingStatusHistory = true
-                    }
-                }
+                router.showSheet(
+                    .tubeServicePlus(
+                        .statusHistory,
+                        onAction: handleTubeServicePlusAction
+                    )
+                )
             }
         case .notifyMeTapped:
             switch notificationButtonState {
             case .permissionDenied:
                 openSettings()
             case .notSetUp, nil:
-                showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: line.id)))
+                router.showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: line.id)))
             case .inactive, .active:
-                showSheet(.notificationsOnboarding(.manage))
+                router.showSheet(.notificationsOnboarding(.manage))
             }
+        }
+    }
+
+    private func handleTubeServicePlusAction(_ action: TubeServicePlusView.Action) {
+        switch action {
+        case .purchaseSuccess:
+            isShowingStatusHistory = true
         }
     }
 

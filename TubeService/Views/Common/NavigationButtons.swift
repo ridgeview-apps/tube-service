@@ -25,13 +25,13 @@ enum NavigationButton {
 }
 
 struct SettingsToolBarButton: ViewModifier {
-    @Environment(\.showSheet) var showSheet
+    @Environment(AppRouter.self) private var router
 
     func body(content: Content) -> some View {
         content
             .toolbar {
                 NavigationButton.Settings {
-                    showSheet(.settings)
+                    router.showSheet(.settings)
                 }
             }
     }

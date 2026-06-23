@@ -9,7 +9,7 @@ struct JourneyResultsScreen: View {
     @State private var model: JourneyResultsModel
 
     @Environment(LocalSearchResultsStore.self) var localSearchResults
-    @Environment(\.showSheet) var showSheet
+    @Environment(AppRouter.self) var router
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -59,7 +59,7 @@ struct JourneyResultsScreen: View {
             } else {
                 seedModeIDs = JourneyModePreset.trainAndBus.modeIDs
             }
-            showSheet(
+            router.showSheet(
                 .journeyModePicker(
                     initialModeIDs: seedModeIDs,
                     onDone: { modeIDs in

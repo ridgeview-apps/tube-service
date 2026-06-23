@@ -11,11 +11,10 @@ struct JourneyPlannerScreen: View {
     @State private var hasLoaded = false
 
     @Environment(AppRouter.self) private var router
-    @Environment(AppDataStore.self) var appData
-    @Environment(LocationDataStore.self) var location
-    @Environment(StationsDataStore.self) var stations
-    @Environment(LocalSearchResultsStore.self) var localSearchResults
-    @Environment(\.showSheet) var showSheet
+    @Environment(AppDataStore.self) private var appData
+    @Environment(LocationDataStore.self) private var location
+    @Environment(StationsDataStore.self) private var stations
+    @Environment(LocalSearchResultsStore.self) private var localSearchResults
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -126,7 +125,7 @@ struct JourneyPlannerScreen: View {
                 recentJourneys: recentJourneys,
                 currentSelection: currentFormValue(forLocationFieldID: locationFieldID)
             )
-            showSheet(.journeyLocationPicker(config))
+            router.showSheet(.journeyLocationPicker(config))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
@@ -139,7 +138,7 @@ struct JourneyPlannerScreen: View {
 
     private func showResults() {
         form.adjustCurrentTimeIfNeeded()
-        router.push(.journeyResults, on: .journeyPlanner)
+        router.push(.journeyResults)
     }
 }
 

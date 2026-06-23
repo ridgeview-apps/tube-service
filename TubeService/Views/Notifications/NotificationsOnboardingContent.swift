@@ -75,16 +75,15 @@ struct NotificationsOnboardingContent: View {
     // MARK: - Paywall
 
     private var paywallDestination: some View {
-        SubscriptionStoreView(productIDs: ["com.ridgeviewapps.tubeservice.plus"]) {
-            TubeServicePlusMarketingContent(context: .notifications)
-        }
-        .onChange(of: purchases.hasTubeServicePlus) { _, isPlus in
-            if isPlus {
+        TubeServicePlusView(
+            context: .notifications,
+            autoDismissesOnPurchase: false
+        ) {
+            switch $0 {
+            case .purchaseSuccess:
                 onReplaceStack([.lineSelection])
             }
         }
-        .navigationTitle("Tube Service Plus")
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Actions

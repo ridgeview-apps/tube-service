@@ -20,8 +20,8 @@ struct SheetView: View {
                 .asModalScreen()
         case let .journeyModePicker(initialModeIDs, onDone):
             JourneyModePickerScreen(initialModeIDs: initialModeIDs, onDone: onDone)
-        case .tubeServicePlus(let context):
-            TubeServicePlusScreen(context: context)
+        case let .tubeServicePlus(context, onAction):
+            TubeServicePlusView(context: context, onAction: onAction)
         case let .notificationsOnboarding(entry):
             NotificationsFlow(entry: entry)
         }
