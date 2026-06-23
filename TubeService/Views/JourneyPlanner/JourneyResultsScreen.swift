@@ -6,11 +6,8 @@ import SwiftUI
 @MainActor
 struct JourneyResultsScreen: View {
 
-    @State private var model: JourneyResultsModel
-
-    @Environment(LocalSearchResultsStore.self) private var localSearchResults
+    @Environment(AppDataStore.self) private var appData
     @Environment(AppRouter.self) private var router
-    @Environment(JourneyPlannerSession.self) private var session
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -18,19 +15,15 @@ struct JourneyResultsScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    init(tflAPI: TflAPIClientType) {
-        self._model = State(initialValue: JourneyResultsModel(tflAPI: tflAPI))
-    }
-
     private var sessionModeIDs: Set<ModeID> { userPreferences.journeyModePreset.modeIDs }
 
     var body: some View {
-        @Bindable var session = session
+        @Bindable var journeyPlanner = appData.journeyPlanner
         JourneyResultsView(
-            pages: $model.pages,
-            fromLocation: $session.form.from,
-            toLocation: $session.form.to,
-            viaLocation: session.form.via,
+            pages: $journeyPlanner.pages,
+            fromLocation: $journeyPlanner.form.from,
+            toLocation: $journeyPlanner.form.to,
+            viaLocation: journeyPlanner.form.via,
             selectedPreset: $userPreferences.journeyModePreset,
             onAction: { handleAction($0) }
         )
@@ -45,12 +38,12 @@ struct JourneyResultsScreen: View {
     private func handleAction(_ action: JourneyResultsAction) {
         switch action {
         case .initialFetch:
-            guard !model.hasFetchedInitialData else { return }
+            guard !appData.journeyPlanner.hasFetchedInitialData else { return }
             Task { await fetchInitialData() }
         case .refresh:
             Task { await fetchInitialData() }
         case .earlierJourneys, .laterJourneys:
-            Task { await fetchAdjacentData(action: action) }
+            Task { await appData.journeyPlanner.fetchAdjacentData(action: action, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
             let seedModeIDs: Set<ModeID>
             if case .custom(let modeIDs) = userPreferences.journeyModePreset {
@@ -71,31 +64,12 @@ struct JourneyResultsScreen: View {
     }
 
     private func fetchInitialData() async {
-        model.prepareForInitialFetch()
-
-        do {
-            session.form = try await localSearchResults.resolveLocationCoordinates(forForm: session.form)
-            let requestParams = try session.form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
-            await model.fetchInitialResults(requestParams: requestParams, modeIDs: sessionModeIDs)
-        } catch {
-            model.setInitialPageError(error.toUIErrorMessage())
-        }
-
+        await appData.journeyPlanner.fetchInitialData(modeIDs: sessionModeIDs)
         saveRecentJourney()
     }
 
-    private func fetchAdjacentData(action: JourneyResultsAction) async {
-        guard let requestParams = try? session.form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
-        else { return }
-        await model.fetchAdjacentResults(
-            action: action,
-            baseRequestParams: requestParams,
-            modeIDs: sessionModeIDs
-        )
-    }
-
     private func saveRecentJourney() {
-        if let savedJourney = session.form.toNewSavedJourney() {
+        if let savedJourney = appData.journeyPlanner.form.toNewSavedJourney() {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")

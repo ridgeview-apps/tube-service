@@ -6,7 +6,7 @@ import PresentationViews
 
 @MainActor
 @Observable
-final class JourneyResultsModel {
+final class JourneyPlannerStore {
 
     private enum PageID: CustomStringConvertible {
         case initial
@@ -37,22 +37,51 @@ final class JourneyResultsModel {
 
     // MARK: - State
 
-    private let tflAPI: TflAPIClientType
-
+    var form: JourneyPlannerForm = .empty
     var pages: [JourneyResultsPage] = []
     private(set) var hasFetchedInitialData = false
+
+    private let tflAPI: TflAPIClientType
+    private let localSearchResults: LocalSearchResultsStore
 
     private var earlierTimeAdjustment: JourneyTimeAdjustment?
     private var laterTimeAdjustment: JourneyTimeAdjustment?
     private var pageCounter = 0
 
-    init(tflAPI: TflAPIClientType) {
+    init(tflAPI: TflAPIClientType, localSearchResults: LocalSearchResultsStore) {
         self.tflAPI = tflAPI
+        self.localSearchResults = localSearchResults
     }
 
-    // MARK: - Actions
+    // MARK: - High-level (screen-facing)
+
+    /// Resets the initial-fetch guard so the next push of results triggers a fresh fetch.
+    func resetForNewJourney() {
+        hasFetchedInitialData = false
+    }
+
+    /// Resolves form coordinates then fetches results. Calls prepareForInitialFetch internally.
+    func fetchInitialData(modeIDs: Set<ModeID>) async {
+        prepareForInitialFetch()
+        do {
+            form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
+            let requestParams = try form.toJourneyRequestParams(withModeIDs: modeIDs)
+            await fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        } catch {
+            setInitialPageError(error.toUIErrorMessage())
+        }
+    }
+
+    /// Derives request params from the current form and fetches an adjacent page.
+    func fetchAdjacentData(action: JourneyResultsAction, modeIDs: Set<ModeID>) async {
+        guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: modeIDs) else { return }
+        await fetchAdjacentResults(action: action, baseRequestParams: requestParams, modeIDs: modeIDs)
+    }
+
+    // MARK: - Lower-level (also used by unit tests)
 
     func prepareForInitialFetch() {
+        hasFetchedInitialData = false
         pages = [JourneyResultsPage(id: PageID.initial.description, loadingState: .loading, cellItems: [])]
         earlierTimeAdjustment = nil
         laterTimeAdjustment = nil
@@ -102,7 +131,7 @@ final class JourneyResultsModel {
         await fetchAndUpdatePage(pageID: pageID, action: action, requestParams: requestParams, modeIDs: modeIDs)
     }
 
-    // MARK: - Implementation
+    // MARK: - Private implementation
 
     private func pageIndex(for pageID: PageID) -> Int? {
         pages.firstIndex(where: { $0.id == pageID.description })

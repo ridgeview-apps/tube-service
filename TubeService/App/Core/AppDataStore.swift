@@ -15,6 +15,7 @@ final class AppDataStore {
     private(set) var systemStatus: SystemStatusDataStore
     private(set) var purchases: PurchaseStore
     private(set) var notifications: NotificationsDataStore
+    private(set) var journeyPlanner: JourneyPlannerStore
 
     private let dependencies: AppDependencies
 
@@ -38,7 +39,8 @@ final class AppDataStore {
             locationManager: dependencies.locationManager,
             stations: stations
         )
-        self.localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
+        let localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
+        self.localSearchResults = localSearchResults
         self.systemStatus = SystemStatusDataStore(
             systemStatusAPI: dependencies.systemStatusAPI,
             now: dependencies.now
@@ -48,6 +50,10 @@ final class AppDataStore {
             api: dependencies.notificationsAPI,
             userDefaults: dependencies.userDefaults.value,
             pushNotificationEnvironment: dependencies.pushNotificationEnvironment
+        )
+        self.journeyPlanner = JourneyPlannerStore(
+            tflAPI: dependencies.tflAPI,
+            localSearchResults: localSearchResults
         )
     }
 

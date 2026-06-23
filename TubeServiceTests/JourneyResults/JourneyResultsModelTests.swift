@@ -9,7 +9,7 @@ import Testing
 @testable import Tube_Service
 
 @MainActor
-struct JourneyResultsModelTests {
+struct JourneyPlannerStoreTests {
 
     private let tflAPI = StubTflAPIClient()
     private let modeIDs: Set<ModeID> = ModeID.journeyPlannerModes
@@ -21,8 +21,11 @@ struct JourneyResultsModelTests {
         timeOption: nil
     )
 
-    private func makeModel() -> JourneyResultsModel {
-        JourneyResultsModel(tflAPI: tflAPI)
+    private func makeModel() -> JourneyPlannerStore {
+        JourneyPlannerStore(
+            tflAPI: tflAPI,
+            localSearchResults: LocalSearchResultsStore(completerClient: StubLocalSearchCompleterClient())
+        )
     }
 
     // MARK: - prepareForInitialFetch

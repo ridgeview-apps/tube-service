@@ -8,7 +8,7 @@ private struct AppRouteDestinationsModifier: ViewModifier {
         content.navigationDestination(for: AppRoute.self) { route in
             switch route {
             case .journeyResults:
-                JourneyResultsScreen(tflAPI: appData.tflAPI)
+                JourneyResultsScreen()
             case .lineStatusDetail(let lineID, let request):
                 LineStatusDetailScreen(lineID: lineID, request: request)
             case .lineStatusHistory(let lineID):
