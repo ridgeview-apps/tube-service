@@ -16,7 +16,8 @@ enum AppTab: Hashable {
 
 enum AppRoute: Hashable {
     case journeyResults
-    case lineStatusDetail(line: Line, request: LineStatusDataStore.LineStatusRequest)
+    case lineStatusDetail(lineID: TrainLineID, request: LineStatusDataStore.LineStatusRequest)
+    case lineStatusHistory(lineID: TrainLineID)
 }
 
 // MARK: - AppRouter
@@ -32,7 +33,6 @@ final class AppRouter {
     var nearbyPath: [AppRoute] = []
     var mapsPath: [AppRoute] = []
     var presentedSheet: Sheet?
-    private var onSheetDismiss: (() -> Void)?
 
     func showSheet(_ sheet: Sheet) {
         presentedSheet = sheet

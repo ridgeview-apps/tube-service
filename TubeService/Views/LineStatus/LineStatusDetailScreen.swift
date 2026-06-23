@@ -26,10 +26,12 @@ struct LineStatusDetailScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
-    @State private var isShowingStatusHistory = false
-
-    let line: Line
+    let lineID: TrainLineID
     let request: LineStatusDataStore.LineStatusRequest
+
+    private var line: Line? {
+        model.statusResult(for: request)?.value.first { $0.id == lineID }
+    }
 
     private var loadingState: LoadingState {
         return model.statusResult(for: .live)?.fetchState.loadingState ?? .loaded
@@ -44,13 +46,13 @@ struct LineStatusDetailScreen: View {
     }
 
     private var historyState: LineStatusHistoryButton.HistoryState? {
-        guard let snapshots = model.disruptionSnapshots(for: line.id) else { return nil }
-        let count = model.disruptionCountsByLineID[line.id] ?? 1
+        guard let snapshots = model.disruptionSnapshots(for: lineID) else { return nil }
+        let count = model.disruptionCountsByLineID[lineID] ?? 1
         if count > 1 {
             return .multipleDisruptions(count: count, firstAt: snapshots.last?.observedAt ?? snapshots[0].observedAt)
         }
         return snapshots.last.map {
-            line.isDisrupted
+            line?.isDisrupted == true
                 ? .ongoingDisruption(since: $0.observedAt)
                 : .resolvedDisruption(at: $0.observedAt)
         }
@@ -68,7 +70,7 @@ struct LineStatusDetailScreen: View {
         guard let prefs = notifications.preferences, !prefs.lines.isEmpty else { return .notSetUp }
         switch notifications.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
-            return prefs.lines.contains(where: { $0.lineId == line.id.rawValue && $0.enabled }) ? .active : .inactive
+            return prefs.lines.contains(where: { $0.lineId == lineID.rawValue && $0.enabled }) ? .active : .inactive
         case .denied:
             return .permissionDenied
         default:
@@ -77,24 +79,25 @@ struct LineStatusDetailScreen: View {
     }
 
     var body: some View {
-        LineStatusDetailView(
-            line: line,
-            isFavourite: isFavouriteLine(for: line.id),
-            loadingState: loadingState,
-            refreshDate: refreshDate,
-            statusHistoryAccess: statusHistoryAccess,
-            historyState: historyState,
-            statusContext: statusContext,
-            isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
-            notificationButtonState: notificationButtonState,
-            onAction: handleDetailViewAction
-        )
-        .navigationTitle(line.id.name)
-        .navigationDestination(isPresented: $isShowingStatusHistory) {
-            LineStatusHistoryScreen(lineID: line.id)
+        Group {
+            if let line {
+                LineStatusDetailView(
+                    line: line,
+                    isFavourite: isFavouriteLine(for: lineID),
+                    loadingState: loadingState,
+                    refreshDate: refreshDate,
+                    statusHistoryAccess: statusHistoryAccess,
+                    historyState: historyState,
+                    statusContext: statusContext,
+                    isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
+                    notificationButtonState: notificationButtonState,
+                    onAction: handleDetailViewAction
+                )
+            }
         }
+        .navigationTitle(lineID.name)
         .toolbar {
-            FavouritesButton(style: .small, isSelected: isFavouriteLine(for: line.id))
+            FavouritesButton(style: .small, isSelected: isFavouriteLine(for: lineID))
         }
     }
 
@@ -104,7 +107,7 @@ struct LineStatusDetailScreen: View {
             openURL(link.url)
         case .statusHistoryTapped:
             if purchases.hasTubeServicePlus {
-                isShowingStatusHistory = true
+                router.push(.lineStatusHistory(lineID: lineID))
             } else {
                 router.showSheet(
                     .tubeServicePlus(
@@ -118,7 +121,7 @@ struct LineStatusDetailScreen: View {
             case .permissionDenied:
                 openSettings()
             case .notSetUp, nil:
-                router.showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: line.id)))
+                router.showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: lineID)))
             case .inactive, .active:
                 router.showSheet(.notificationsOnboarding(.manage))
             }
@@ -128,7 +131,7 @@ struct LineStatusDetailScreen: View {
     private func handleTubeServicePlusAction(_ action: TubeServicePlusView.Action) {
         switch action {
         case .purchaseSuccess:
-            isShowingStatusHistory = true
+            router.push(.lineStatusHistory(lineID: lineID))
         }
     }
 

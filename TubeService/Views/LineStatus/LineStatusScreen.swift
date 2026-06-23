@@ -41,8 +41,10 @@ struct LineStatusScreen: View {
         switch route {
         case .journeyResults:
             EmptyView()
-        case .lineStatusDetail(let line, let request):
-            LineStatusDetailScreen(line: line, request: request)
+        case .lineStatusDetail(let lineID, let request):
+            LineStatusDetailScreen(lineID: lineID, request: request)
+        case .lineStatusHistory(let lineID):
+            LineStatusHistoryScreen(lineID: lineID)
         }
     }
 
@@ -53,7 +55,7 @@ struct LineStatusScreen: View {
             favouriteLineIDs: userPreferences.favouriteLineIDs,
             disruptionCountsByLineID: model.disruptionCountsByLineID,
             refreshDate: refreshDate,
-            onSelectLine: { line in router.push(.lineStatusDetail(line: line, request: request)) },
+            onSelectLine: { line in router.push(.lineStatusDetail(lineID: line.id, request: request)) },
             selectedFilterOption: $selectedFilterOption,
             selectedDate: $selectedDate,
             selectedWeekendDayFilter: $selectedWeekendDayFilter
@@ -65,9 +67,6 @@ struct LineStatusScreen: View {
         .withSettingsToolbarButton()
         .onAppear {
             fetchIfStale()
-        }
-        .onChange(of: lines) {
-            refreshSelectedLine()
         }
         .onChange(of: selectedFilterOption) {
             router.lineStatusPath = []
@@ -102,12 +101,6 @@ struct LineStatusScreen: View {
         Task { await model.refresh(for: request, forced: false) }
     }
 
-    private func refreshSelectedLine() {
-        guard case .lineStatusDetail(let current, let req) = router.lineStatusPath.last,
-            let updated = lines.first(where: { $0.id == current.id })
-        else { return }
-        router.lineStatusPath[router.lineStatusPath.count - 1] = .lineStatusDetail(line: updated, request: req)
-    }
 }
 
 extension DataFetchState {
