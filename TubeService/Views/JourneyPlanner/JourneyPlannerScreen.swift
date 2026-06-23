@@ -6,6 +6,7 @@ import SwiftUI
 @MainActor
 struct JourneyPlannerScreen: View {
 
+    @State private var session = JourneyPlannerSession()
     @State private var recentJourneys: [RecentJourneyItem] = []
     @State private var hasLoaded = false
 
@@ -23,9 +24,10 @@ struct JourneyPlannerScreen: View {
 
     var body: some View {
         @Bindable var router = router
+        @Bindable var session = session
         NavigationStack(path: $router.journeyPath) {
             JourneyPlannerFormView(
-                form: $router.journeyForm,
+                form: $session.form,
                 recentJourneys: $recentJourneys,
                 locationAccessoryStatus: .loadingState(location.detectionState.toLoadingState()),
                 onAction: handleFormAction
@@ -46,6 +48,7 @@ struct JourneyPlannerScreen: View {
             }
             .task { initialLoad() }
         }
+        .environment(session)
     }
 
     private func initialLoad() {
@@ -65,15 +68,15 @@ struct JourneyPlannerScreen: View {
     }
 
     private func resetTimeSelection() {
-        if router.journeyForm.timeSelection.date < .now {
-            router.journeyForm.timeSelection = .leaveNow()
+        if session.form.timeSelection.date < .now {
+            session.form.timeSelection = .leaveNow()
         }
     }
 
     private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
         switch action {
         case .nameChanged, .coordinateChanged, .authorizationStatusChanged:
-            router.journeyForm.updateCurrentLocationInfo(
+            session.form.updateCurrentLocationInfo(
                 name: location.currentLocationName,
                 coordinate: location.currentLocationCoordinate,
                 updatesAllowed: location.isAuthorizedOrUndetermined
@@ -93,10 +96,10 @@ struct JourneyPlannerScreen: View {
     private func currentFormValue(forLocationFieldID locationFieldID: JourneyPlannerForm.FieldID.LocationID) -> Binding<JourneyLocationPicker.Value?> {
         .init(
             get: {
-                router.journeyForm.locationPickerValue(for: locationFieldID)
+                session.form.locationPickerValue(for: locationFieldID)
             },
             set: { newValue in
-                router.journeyForm.populate(locationFieldID: locationFieldID, withValue: newValue)
+                session.form.populate(locationFieldID: locationFieldID, withValue: newValue)
             }
         )
     }
@@ -116,7 +119,7 @@ struct JourneyPlannerScreen: View {
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
-            router.journeyForm.populate(with: recentJourneyItem)
+            session.form.populate(with: recentJourneyItem)
             showResults()
         case .tappedSubmit:
             showResults()
@@ -124,7 +127,7 @@ struct JourneyPlannerScreen: View {
     }
 
     private func showResults() {
-        router.journeyForm.adjustCurrentTimeIfNeeded()
+        session.form.adjustCurrentTimeIfNeeded()
         router.push(.journeyResults)
     }
 }

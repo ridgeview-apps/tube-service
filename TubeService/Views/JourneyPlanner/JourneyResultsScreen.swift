@@ -10,6 +10,7 @@ struct JourneyResultsScreen: View {
 
     @Environment(LocalSearchResultsStore.self) private var localSearchResults
     @Environment(AppRouter.self) private var router
+    @Environment(JourneyPlannerSession.self) private var session
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -24,12 +25,12 @@ struct JourneyResultsScreen: View {
     private var sessionModeIDs: Set<ModeID> { userPreferences.journeyModePreset.modeIDs }
 
     var body: some View {
-        @Bindable var router = router
+        @Bindable var session = session
         JourneyResultsView(
             pages: $model.pages,
-            fromLocation: $router.journeyForm.from,
-            toLocation: $router.journeyForm.to,
-            viaLocation: router.journeyForm.via,
+            fromLocation: $session.form.from,
+            toLocation: $session.form.to,
+            viaLocation: session.form.via,
             selectedPreset: $userPreferences.journeyModePreset,
             onAction: { handleAction($0) }
         )
@@ -73,8 +74,8 @@ struct JourneyResultsScreen: View {
         model.prepareForInitialFetch()
 
         do {
-            router.journeyForm = try await localSearchResults.resolveLocationCoordinates(forForm: router.journeyForm)
-            let requestParams = try router.journeyForm.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+            session.form = try await localSearchResults.resolveLocationCoordinates(forForm: session.form)
+            let requestParams = try session.form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
             await model.fetchInitialResults(requestParams: requestParams, modeIDs: sessionModeIDs)
         } catch {
             model.setInitialPageError(error.toUIErrorMessage())
@@ -84,7 +85,7 @@ struct JourneyResultsScreen: View {
     }
 
     private func fetchAdjacentData(action: JourneyResultsAction) async {
-        guard let requestParams = try? router.journeyForm.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+        guard let requestParams = try? session.form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
         else { return }
         await model.fetchAdjacentResults(
             action: action,
@@ -94,7 +95,7 @@ struct JourneyResultsScreen: View {
     }
 
     private func saveRecentJourney() {
-        if let savedJourney = router.journeyForm.toNewSavedJourney() {
+        if let savedJourney = session.form.toNewSavedJourney() {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")
