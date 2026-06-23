@@ -27,24 +27,10 @@ struct LineStatusScreen: View {
         @Bindable var router = router
         NavigationStack(path: $router.lineStatusPath) {
             statusListView
-                .navigationDestination(for: AppRoute.self) { route in
-                    destinationScreen(for: route)
-                }
+                .appRouteDestinations()
         }
         .onSceneDidBecomeActive {
             fetchIfStale()
-        }
-    }
-
-    @ViewBuilder
-    private func destinationScreen(for route: AppRoute) -> some View {
-        switch route {
-        case .journeyResults:
-            EmptyView()
-        case .lineStatusDetail(let lineID, let request):
-            LineStatusDetailScreen(lineID: lineID, request: request)
-        case .lineStatusHistory(let lineID):
-            LineStatusHistoryScreen(lineID: lineID)
         }
     }
 

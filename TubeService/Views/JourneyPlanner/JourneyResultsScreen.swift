@@ -8,8 +8,8 @@ struct JourneyResultsScreen: View {
 
     @State private var model: JourneyResultsModel
 
-    @Environment(LocalSearchResultsStore.self) var localSearchResults
-    @Environment(AppRouter.self) var router
+    @Environment(LocalSearchResultsStore.self) private var localSearchResults
+    @Environment(AppRouter.self) private var router
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -17,21 +17,19 @@ struct JourneyResultsScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    @Binding var form: JourneyPlannerForm
-
-    init(form: Binding<JourneyPlannerForm>, tflAPI: TflAPIClientType) {
-        self._form = form
+    init(tflAPI: TflAPIClientType) {
         self._model = State(initialValue: JourneyResultsModel(tflAPI: tflAPI))
     }
 
     private var sessionModeIDs: Set<ModeID> { userPreferences.journeyModePreset.modeIDs }
 
     var body: some View {
+        @Bindable var router = router
         JourneyResultsView(
             pages: $model.pages,
-            fromLocation: $form.from,
-            toLocation: $form.to,
-            viaLocation: form.via,
+            fromLocation: $router.journeyForm.from,
+            toLocation: $router.journeyForm.to,
+            viaLocation: router.journeyForm.via,
             selectedPreset: $userPreferences.journeyModePreset,
             onAction: { handleAction($0) }
         )
@@ -75,8 +73,8 @@ struct JourneyResultsScreen: View {
         model.prepareForInitialFetch()
 
         do {
-            form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
-            let requestParams = try form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+            router.journeyForm = try await localSearchResults.resolveLocationCoordinates(forForm: router.journeyForm)
+            let requestParams = try router.journeyForm.toJourneyRequestParams(withModeIDs: sessionModeIDs)
             await model.fetchInitialResults(requestParams: requestParams, modeIDs: sessionModeIDs)
         } catch {
             model.setInitialPageError(error.toUIErrorMessage())
@@ -86,7 +84,7 @@ struct JourneyResultsScreen: View {
     }
 
     private func fetchAdjacentData(action: JourneyResultsAction) async {
-        guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: sessionModeIDs)
+        guard let requestParams = try? router.journeyForm.toJourneyRequestParams(withModeIDs: sessionModeIDs)
         else { return }
         await model.fetchAdjacentResults(
             action: action,
@@ -96,7 +94,7 @@ struct JourneyResultsScreen: View {
     }
 
     private func saveRecentJourney() {
-        if let savedJourney = form.toNewSavedJourney() {
+        if let savedJourney = router.journeyForm.toNewSavedJourney() {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")

@@ -1,5 +1,6 @@
 import DataStores
 import Models
+import PresentationViews
 import SwiftUI
 
 // MARK: - AppTab
@@ -27,6 +28,7 @@ enum AppRoute: Hashable {
 final class AppRouter {
 
     var selectedTab: AppTab = .lineStatus
+    var journeyForm: JourneyPlannerForm = .empty
     var lineStatusPath: [AppRoute] = []
     var journeyPath: [AppRoute] = []
     var arrivalsPath: [AppRoute] = []
