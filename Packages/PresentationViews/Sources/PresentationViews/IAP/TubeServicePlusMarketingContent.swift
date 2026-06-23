@@ -1,7 +1,6 @@
 import SwiftUI
 
 public enum PaywallContext: Sendable {
-    case general
     case statusHistory
     case notifications
 }
@@ -69,21 +68,21 @@ public struct TubeServicePlusMarketingContent: View {
 
     private var iconName: String {
         switch context {
-        case .general, .statusHistory: "clock.arrow.trianglehead.counterclockwise.rotate.90"
+        case .statusHistory: "clock.arrow.trianglehead.counterclockwise.rotate.90"
         case .notifications: "bell.badge.fill"
         }
     }
 
     private var title: LocalizedStringResource {
         switch context {
-        case .general, .statusHistory: .tubeServicePlusTitle
+        case .statusHistory: .tubeServicePlusTitle
         case .notifications: .tubeServicePlusNotificationsTitle
         }
     }
 
     private var description: LocalizedStringResource {
         switch context {
-        case .general, .statusHistory: .tubeServicePlusDescription
+        case .statusHistory: .tubeServicePlusDescription
         case .notifications: .tubeServicePlusNotificationsDescription
         }
     }

@@ -3,8 +3,11 @@ import SwiftUI
 
 struct RootScreen: View {
 
+    @Environment(AppRouter.self) private var router
+
     var body: some View {
-        TabView {
+        @Bindable var router = router
+        TabView(selection: $router.selectedTab) {
             lineStatusTab
             journeyPlannerTab
             liveArrivalsTab
@@ -13,10 +16,13 @@ struct RootScreen: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         .systemStatusRefreshable()
+        .sheet(item: $router.presentedSheet, onDismiss: { router.handleSheetDismiss() }) { sheet in
+            SheetView(sheet: sheet)
+        }
     }
 
-    private var lineStatusTab: some TabContent<Never> {
-        Tab {
+    private var lineStatusTab: some TabContent<AppTab> {
+        Tab(value: AppTab.lineStatus) {
             LineStatusScreen()
         } label: {
             Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
@@ -24,8 +30,8 @@ struct RootScreen: View {
         .accessibilityIdentifier("acc.id.line.status.tab.title")
     }
 
-    private var journeyPlannerTab: some TabContent<Never> {
-        Tab {
+    private var journeyPlannerTab: some TabContent<AppTab> {
+        Tab(value: AppTab.journeyPlanner) {
             JourneyPlannerScreen()
         } label: {
             Label(L10n.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
@@ -33,8 +39,8 @@ struct RootScreen: View {
         .accessibilityIdentifier("acc.id.journey.planner.tab.title")
     }
 
-    private var liveArrivalsTab: some TabContent<Never> {
-        Tab {
+    private var liveArrivalsTab: some TabContent<AppTab> {
+        Tab(value: AppTab.arrivals) {
             ArrivalsPickerScreen()
         } label: {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
@@ -42,8 +48,8 @@ struct RootScreen: View {
         .accessibilityIdentifier("acc.id.arrivals.tab.title")
     }
 
-    private var nearbyStationsTab: some TabContent<Never> {
-        Tab {
+    private var nearbyStationsTab: some TabContent<AppTab> {
+        Tab(value: AppTab.nearby) {
             LocatedStationsScreen()
         } label: {
             Label(L10n.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
@@ -51,8 +57,8 @@ struct RootScreen: View {
         .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
     }
 
-    private var mapsTab: some TabContent<Never> {
-        Tab {
+    private var mapsTab: some TabContent<AppTab> {
+        Tab(value: AppTab.maps) {
             MapsScreen()
         } label: {
             Label(L10n.mapsTabTitle, systemImage: "map")
@@ -69,5 +75,6 @@ struct RootScreen: View {
         PreviewEnvironment {
             RootScreen()
         }
+        .environment(AppRouter())
     }
 #endif

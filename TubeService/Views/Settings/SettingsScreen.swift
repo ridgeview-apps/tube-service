@@ -31,10 +31,10 @@ struct SettingsScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
-    @State private var navigationState = NavigationState<DestinationID>()
+    @State private var path = NavigationPath()
 
     var body: some View {
-        NavigationStack(path: $navigationState.navigationPath) {
+        NavigationStack(path: $path) {
             SettingsView(
                 appVersionNumber: Bundle.main.appVersionNumber,
                 appReviewURL: appConfig.appReviewURL,
@@ -77,15 +77,15 @@ struct SettingsScreen: View {
     private func handleAction(_ action: SettingsView.Action) {
         switch action {
         case .openDebugSettings:
-            navigationState.push(to: .debugMenu)
+            path.append(DestinationID.debugMenu)
         case .notificationsTapped:
             switch notificationsButtonState {
             case .permissionDenied:
                 openSettings()
             case .active:
-                navigationState.push(to: .manageNotifications)
+                path.append(DestinationID.manageNotifications)
             default:
-                navigationState.push(to: .notificationsOnboarding(preselectedLine: nil))
+                path.append(DestinationID.notificationsOnboarding(preselectedLine: nil))
             }
         }
     }
@@ -98,13 +98,13 @@ struct SettingsScreen: View {
         case .notificationsOnboarding(let preselectedLine):
             NotificationsOnboardingContent(
                 preselectedLine: preselectedLine,
-                onDismiss: { navigationState = NavigationState<DestinationID>() },
-                onNavigate: { step in navigationState.navigationPath.append(step) },
+                onDismiss: { path = NavigationPath() },
+                onNavigate: { step in path.append(step) },
                 onReplaceStack: { steps in
-                    while navigationState.navigationPath.count > 1 {
-                        navigationState.pop()
+                    while path.count > 1 {
+                        path.removeLast()
                     }
-                    steps.forEach { navigationState.navigationPath.append($0) }
+                    steps.forEach { path.append($0) }
                 }
             )
         case .manageNotifications:

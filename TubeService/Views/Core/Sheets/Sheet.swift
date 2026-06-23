@@ -10,7 +10,7 @@ enum Sheet {
     case safari(URL)
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
     case journeyModePicker(initialModeIDs: Set<ModeID>, onDone: (Set<ModeID>) -> Void)
-    case tubeServicePlus
+    case tubeServicePlus(PaywallContext)
     case notificationsOnboarding(NotificationsFlowEntry)
 }
 
@@ -28,13 +28,12 @@ extension Sheet: Identifiable {
         case .journeyModePicker: .journeyModePicker
         case .tubeServicePlus: .tubeServicePlus
         case .notificationsOnboarding: .notificationsOnboarding
-
         }
     }
 }
 
 
-// MARK: - View modifiers
+// MARK: - Actions
 
 struct SheetAction {
     typealias Handler = (Sheet, (() -> Void)?) -> Void
@@ -47,39 +46,5 @@ struct SheetAction {
 
     func callAsFunction(_ sheet: Sheet, onDismiss: (() -> Void)? = nil) {
         handler(sheet, onDismiss)
-    }
-}
-
-
-struct RootSheetPresenterModifier: ViewModifier {
-    @State private var selectedSheet: Sheet?
-    @State private var onDismissCallback: (() -> Void)?
-
-    func body(content: Content) -> some View {
-        content
-            .environment(
-                \.showSheet,
-                SheetAction { sheet, onDismiss in
-                    selectedSheet = sheet
-                    onDismissCallback = onDismiss
-                }
-            )
-            .sheet(
-                item: $selectedSheet,
-                onDismiss: {
-                    onDismissCallback?()
-                    onDismissCallback = nil
-                }
-            ) { sheet in
-                SheetView(sheet: sheet) {
-                    selectedSheet = nil
-                }
-            }
-    }
-}
-
-extension View {
-    func rootSheetPresenter() -> some View {
-        modifier(RootSheetPresenterModifier())
     }
 }

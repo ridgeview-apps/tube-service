@@ -17,9 +17,8 @@ enum NavigationButton {
 
         var body: some View {
             Button(action: action) {
-                Image(systemName: "xmark.circle.fill")
+                Image(systemName: "xmark")
             }
-            .foregroundStyle(.secondary)
         }
     }
 
@@ -60,13 +59,9 @@ extension View {
         self.modifier(CloseToolbarButtonModifier())
     }
 
-    func defaultModalScreen(onTapClose: (() -> Void)?) -> some View {
+    func asModalScreen() -> some View {
         NavigationStack {
-            toolbar {
-                NavigationButton.Close {
-                    onTapClose?()
-                }
-            }
+            self.withCloseToolbarButton()
         }
     }
 }

@@ -6,17 +6,11 @@ import SwiftUI
 @MainActor
 struct JourneyPlannerScreen: View {
 
-    enum DestinationID: Identifiable, Hashable {
-        var id: Self { self }
-        case results
-    }
-
     @State private var form: JourneyPlannerForm = .empty
     @State private var recentJourneys: [RecentJourneyItem] = []
     @State private var hasLoaded = false
 
-    @State private var navigationState = NavigationState<DestinationID>()
-
+    @Environment(AppRouter.self) private var router
     @Environment(AppDataStore.self) var appData
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
@@ -30,7 +24,8 @@ struct JourneyPlannerScreen: View {
     private var userPreferences: UserPreferences = .default
 
     var body: some View {
-        NavigationStack(path: $navigationState.navigationPath) {
+        @Bindable var router = router
+        NavigationStack(path: $router.journeyPath) {
             JourneyPlannerFormView(
                 form: $form,
                 recentJourneys: $recentJourneys,
@@ -44,8 +39,8 @@ struct JourneyPlannerScreen: View {
                 refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
             }
             .navigationTitle(Text(L10n.journeyPlannerNavigationTitle))
-            .withNavigationState($navigationState) { destinationID in
-                destinationScreen(for: destinationID)
+            .navigationDestination(for: AppRoute.self) { route in
+                destinationScreen(for: route)
             }
             .detectsLocationChanges {
                 handleLocationChangeAction($0)
@@ -102,12 +97,10 @@ struct JourneyPlannerScreen: View {
     // MARK: - Navigation
 
     @ViewBuilder
-    private func destinationScreen(for destinationID: DestinationID) -> some View {
-        Group {
-            switch destinationID {
-            case .results:
-                JourneyResultsScreen(form: $form, tflAPI: appData.tflAPI)
-            }
+    private func destinationScreen(for route: AppRoute) -> some View {
+        switch route {
+        case .journeyResults:
+            JourneyResultsScreen(form: $form, tflAPI: appData.tflAPI)
         }
     }
 
@@ -146,7 +139,7 @@ struct JourneyPlannerScreen: View {
 
     private func showResults() {
         form.adjustCurrentTimeIfNeeded()
-        navigationState.push(to: .results)
+        router.push(.journeyResults, on: .journeyPlanner)
     }
 }
 
@@ -172,5 +165,6 @@ private extension JourneyPlannerForm.FieldID.LocationID {
         PreviewEnvironment {
             JourneyPlannerScreen()
         }
+        .environment(AppRouter())
     }
 #endif

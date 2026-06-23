@@ -6,6 +6,7 @@ import SwiftUI
     struct PreviewEnvironment<Content: View>: View {
         private let content: Content
         @State private var appData: AppDataStore
+        @State private var router = AppRouter()
 
         init(
             dependencies: AppDependencies = .stub,
@@ -18,7 +19,7 @@ import SwiftUI
 
         var body: some View {
             content
-                .withAppEnvironment(dataStore: appData)
+                .withAppEnvironment(dataStore: appData, router: router)
         }
     }
 

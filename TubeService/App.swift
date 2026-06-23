@@ -7,6 +7,7 @@ struct RootScene: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
+    @State private var router = AppRouter()
 
     var body: some Scene {
         WindowGroup {
@@ -15,7 +16,7 @@ struct RootScene: App {
             } else {
                 RootScreen()
                     .appLifecycle(appData: appData, appDelegate: appDelegate)
-                    .withAppEnvironment(dataStore: appData)
+                    .withAppEnvironment(dataStore: appData, router: router)
             }
         }
     }
@@ -23,9 +24,15 @@ struct RootScene: App {
 
 extension View {
 
-    func withAppEnvironment(dataStore: AppDataStore) -> some View {
+    func withAppEnvironment(dataStore: AppDataStore, router: AppRouter) -> some View {
         self
-            .rootSheetPresenter()
+            .environment(router)
+            .environment(
+                \.showSheet,
+                SheetAction { sheet, onDismiss in
+                    router.showSheet(sheet, onDismiss: onDismiss)
+                }
+            )
             .environment(dataStore)
             .environment(dataStore.lineStatus)
             .environment(dataStore.stations)
