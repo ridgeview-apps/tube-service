@@ -8,11 +8,15 @@ struct MapsScreen: View {
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.mapsPath) {
-            MapsListView(onSelectMap: { router.push(.mapDetail(mapLink: $0)) })
+            rootView
                 .appRouteDestinations()
-                .navigationTitle(Text(L10n.mapsNavigationTitle))
-                .withSettingsToolbarButton()
         }
+    }
+
+    private var rootView: some View {
+        MapsListView(onSelectMap: { router.push(.mapDetail(mapLink: $0)) })
+            .navigationTitle(Text(L10n.mapsNavigationTitle))
+            .withSettingsToolbarButton()
     }
 }
 

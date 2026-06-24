@@ -22,30 +22,33 @@ struct JourneyPlannerScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        @Bindable var journeyPlanner = journeyPlanner
         NavigationStack(path: $router.journeyPath) {
-            JourneyPlannerFormView(
-                form: $journeyPlanner.form,
-                recentJourneys: $recentJourneys,
-                locationAccessoryStatus: .loadingState(location.detectionState.toLoadingState()),
-                onAction: handleFormAction
-            )
-            .withSettingsToolbarButton()
-            .onSceneDidBecomeActive { restoreUIState() }
-            .onSceneDidBecomeInactive { saveUIState() }
-            .onChange(of: userPreferences.recentlySavedJourneys) {
-                refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
-            }
-            .navigationTitle(Text(L10n.journeyPlannerNavigationTitle))
-            .appRouteDestinations()
-            .detectsLocationChanges {
-                handleLocationChangeAction($0)
-            }
-            .onCalendarDayChanged {
-                journeyPlanner.resetTimeSelectionIfNeeded()
-            }
-            .task { initialLoad() }
+            rootView
+                .appRouteDestinations()
         }
+    }
+
+    private var rootView: some View {
+        JourneyPlannerFormView(
+            form: Bindable(journeyPlanner).form,
+            recentJourneys: $recentJourneys,
+            locationAccessoryStatus: .loadingState(location.detectionState.toLoadingState()),
+            onAction: handleFormAction
+        )
+        .withSettingsToolbarButton()
+        .onSceneDidBecomeActive { restoreUIState() }
+        .onSceneDidBecomeInactive { saveUIState() }
+        .onChange(of: userPreferences.recentlySavedJourneys) {
+            refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
+        }
+        .navigationTitle(Text(L10n.journeyPlannerNavigationTitle))
+        .detectsLocationChanges {
+            handleLocationChangeAction($0)
+        }
+        .onCalendarDayChanged {
+            journeyPlanner.resetTimeSelectionIfNeeded()
+        }
+        .task { initialLoad() }
     }
 
     private func initialLoad() {

@@ -56,4 +56,14 @@ final class AppRouter {
         case .maps: mapsPath.append(route)
         }
     }
+
+    func popToRoot(on tab: AppTab) {
+        switch tab {
+        case .lineStatus: lineStatusPath = []
+        case .journeyPlanner: journeyPath = []
+        case .arrivals: arrivalsPath = []
+        case .nearby: nearbyPath = []
+        case .maps: mapsPath = []
+        }
+    }
 }

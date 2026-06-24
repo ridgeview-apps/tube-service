@@ -29,9 +29,6 @@ struct LineStatusScreen: View {
             statusListView
                 .appRouteDestinations()
         }
-        .onSceneDidBecomeActive {
-            fetchIfStale()
-        }
     }
 
     private var statusListView: some View {
@@ -54,8 +51,11 @@ struct LineStatusScreen: View {
         .onAppear {
             fetchIfStale()
         }
+        .onSceneDidBecomeActive {
+            fetchIfStale()
+        }
         .onChange(of: selectedFilterOption) {
-            router.lineStatusPath = []
+            router.popToRoot(on: .lineStatus)
             selectedWeekendDayFilter = .both
             fetchIfStale()
         }

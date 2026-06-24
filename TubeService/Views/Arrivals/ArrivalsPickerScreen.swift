@@ -30,14 +30,7 @@ struct ArrivalsPickerScreen: View {
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.arrivalsPath) {
-            pickerListView
-                .searchable(
-                    text: $searchTerm,
-                    prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
-                ) {
-                    searchSuggestionsView
-                }
-                .autocorrectionDisabled()
+            rootView
                 .appRouteDestinations()
         }
         .onChange(of: searchTerm) {
@@ -55,6 +48,17 @@ struct ArrivalsPickerScreen: View {
             router.push(.arrivalsBoard(lineGroup: newValue, stationName: stationName(for: newValue)))
             selection = nil
         }
+    }
+
+    private var rootView: some View {
+        pickerListView
+            .searchable(
+                text: $searchTerm,
+                prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
+            ) {
+                searchSuggestionsView
+            }
+            .autocorrectionDisabled()
     }
 
     @ViewBuilder private var pickerListView: some View {
