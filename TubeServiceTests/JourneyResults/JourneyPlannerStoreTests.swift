@@ -21,18 +21,90 @@ struct JourneyPlannerStoreTests {
         timeOption: nil
     )
 
-    private func makeModel() -> JourneyPlannerStore {
+    private func makeStore() -> JourneyPlannerStore {
         JourneyPlannerStore(
             tflAPI: tflAPI,
             localSearchResults: LocalSearchResultsStore(completerClient: StubLocalSearchCompleterClient())
         )
     }
 
+    // MARK: - resetForNewJourney
+
+    @Test
+    func resetForNewJourney_resetsHasFetchedInitialData() async {
+        let model = makeStore()
+        model.prepareForInitialFetch()
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        #expect(model.hasFetchedInitialData == true)
+
+        model.resetForNewJourney()
+
+        #expect(model.hasFetchedInitialData == false)
+    }
+
+    // MARK: - resetTimeSelectionIfNeeded
+
+    @Test
+    func resetTimeSelectionIfNeeded_withPastDate_resetsToLeaveNow() {
+        let model = makeStore()
+        model.form.timeSelection = JourneyTimePickerSelection(option: .leaveAt, date: Date(timeIntervalSince1970: 0))
+
+        model.resetTimeSelectionIfNeeded()
+
+        #expect(model.form.timeSelection.option == .leaveNow)
+    }
+
+    @Test
+    func resetTimeSelectionIfNeeded_withFutureDate_doesNotReset() {
+        let model = makeStore()
+        model.form.timeSelection = JourneyTimePickerSelection(option: .leaveAt, date: Date.distantFuture)
+
+        model.resetTimeSelectionIfNeeded()
+
+        #expect(model.form.timeSelection.option == .leaveAt)
+    }
+
+    // MARK: - fetchInitialData (high-level)
+
+    @Test
+    func fetchInitialData_success_resolvesAndPopulatesPages() async {
+        let model = makeStore()
+        model.form.from = .station(ModelStubs.angelStation)
+        model.form.to = .station(ModelStubs.kingsCrossStation)
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+
+        await model.fetchInitialData(modeIDs: modeIDs)
+
+        #expect(model.hasFetchedInitialData == true)
+        #expect(model.pages.count == 1)
+        #expect(model.pages.first?.loadingState == .loaded)
+        #expect(model.pages.first?.cellItems.isEmpty == false)
+        #expect(tflAPI.fetchJourneyResultsCallCount == 1)
+    }
+
+    @Test
+    func fetchInitialData_networkError_setsFailureState() async {
+        let model = makeStore()
+        model.form.from = .station(ModelStubs.angelStation)
+        model.form.to = .station(ModelStubs.kingsCrossStation)
+        tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
+
+        await model.fetchInitialData(modeIDs: modeIDs)
+
+        #expect(model.hasFetchedInitialData == false)
+        if case .failure = model.pages.first?.loadingState {
+            // expected
+        } else {
+            Issue.record("Expected failure loading state")
+        }
+    }
+
     // MARK: - prepareForInitialFetch
 
     @Test
     func prepareForInitialFetch_setsLoadingState() {
-        let model = makeModel()
+        let model = makeStore()
 
         model.prepareForInitialFetch()
 
@@ -42,11 +114,24 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.first?.cellItems.isEmpty == true)
     }
 
+    @Test
+    func prepareForInitialFetch_resetsHasFetchedInitialData() async {
+        let model = makeStore()
+        model.prepareForInitialFetch()
+        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        #expect(model.hasFetchedInitialData == true)
+
+        model.prepareForInitialFetch()
+
+        #expect(model.hasFetchedInitialData == false)
+    }
+
     // MARK: - setInitialPageError
 
     @Test
     func setInitialPageError_setsFailureState() {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
 
         model.setInitialPageError("Something went wrong")
@@ -59,7 +144,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchInitialResults_success_populatesPagesAndSetsHasFetched() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
 
@@ -74,7 +159,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchInitialResults_404_keepsPageWithEmptyResults() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
 
@@ -88,7 +173,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchInitialResults_error_setsFailureState() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
 
@@ -107,7 +192,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_earlier_prependsPage() async {
-        let model = makeModel()
+        let model = makeStore()
 
         // Load initial page first (establishes time adjustments)
         model.prepareForInitialFetch()
@@ -134,7 +219,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_later_appendsPage() async {
-        let model = makeModel()
+        let model = makeStore()
 
         // Load initial page first
         model.prepareForInitialFetch()
@@ -161,7 +246,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_withoutPriorFetch_doesNothing() async {
-        let model = makeModel()
+        let model = makeStore()
 
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
@@ -173,7 +258,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_404_removesAdjacentPage() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
@@ -188,7 +273,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_error_setsFailureOnAdjacentPage() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
@@ -210,7 +295,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_deduplicatesJourneysAcrossPages() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
 
         // Use the same results for both pages to guarantee overlap
@@ -234,7 +319,7 @@ struct JourneyPlannerStoreTests {
 
     @Test
     func fetchAdjacentResults_ignoresRefreshAction() async {
-        let model = makeModel()
+        let model = makeStore()
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)

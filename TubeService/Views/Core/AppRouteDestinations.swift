@@ -2,8 +2,6 @@ import DataStores
 import SwiftUI
 
 private struct AppRouteDestinationsModifier: ViewModifier {
-    @Environment(AppDataStore.self) private var appData
-
     func body(content: Content) -> some View {
         content.navigationDestination(for: AppRoute.self) { route in
             switch route {

@@ -53,7 +53,7 @@
 		310B4C662FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				JourneyResults/JourneyResultsModelTests.swift,
+				JourneyResults/JourneyPlannerStoreTests.swift,
 				LineStatus/LineStatusFilterOptionRequestTests.swift,
 			);
 			target = 318D482524EFC4900026B5F4 /* TubeService */;
@@ -61,7 +61,7 @@
 		310B4C672FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				JourneyResults/JourneyResultsModelTests.swift,
+				JourneyResults/JourneyPlannerStoreTests.swift,
 				LineStatus/LineStatusFilterOptionRequestTests.swift,
 			);
 			target = 31E6EEEC2C9DB4980042A66A /* TubeServiceTests */;

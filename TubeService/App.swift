@@ -45,5 +45,6 @@ extension View {
             .environment(dataStore.systemStatus)
             .environment(dataStore.purchases)
             .environment(dataStore.notifications)
+            .environment(dataStore.journeyPlanner)
     }
 }

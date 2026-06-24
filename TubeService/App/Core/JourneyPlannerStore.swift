@@ -60,6 +60,23 @@ final class JourneyPlannerStore {
         hasFetchedInitialData = false
     }
 
+    /// Adjusts the current time if needed and resets the fetch guard — call before pushing results.
+    func prepareForSubmission() {
+        form.adjustCurrentTimeIfNeeded()
+        resetForNewJourney()
+    }
+
+    /// Resets the time selection to Leave Now if the selected date has passed — call on calendar day change.
+    func resetTimeSelectionIfNeeded() {
+        if form.timeSelection.date < .now {
+            form.timeSelection = .leaveNow()
+        }
+    }
+
+    func updateCurrentLocationInfo(name: LocationName?, coordinate: LocationCoordinate?, updatesAllowed: Bool) {
+        form.updateCurrentLocationInfo(name: name, coordinate: coordinate, updatesAllowed: updatesAllowed)
+    }
+
     /// Resolves form coordinates then fetches results. Calls prepareForInitialFetch internally.
     func fetchInitialData(modeIDs: Set<ModeID>) async {
         prepareForInitialFetch()

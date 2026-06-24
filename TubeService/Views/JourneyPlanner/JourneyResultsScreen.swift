@@ -6,7 +6,7 @@ import SwiftUI
 @MainActor
 struct JourneyResultsScreen: View {
 
-    @Environment(AppDataStore.self) private var appData
+    @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(AppRouter.self) private var router
 
     @AppStorage(
@@ -18,7 +18,7 @@ struct JourneyResultsScreen: View {
     private var sessionModeIDs: Set<ModeID> { userPreferences.journeyModePreset.modeIDs }
 
     var body: some View {
-        @Bindable var journeyPlanner = appData.journeyPlanner
+        @Bindable var journeyPlanner = journeyPlanner
         JourneyResultsView(
             pages: $journeyPlanner.pages,
             fromLocation: $journeyPlanner.form.from,
@@ -38,12 +38,12 @@ struct JourneyResultsScreen: View {
     private func handleAction(_ action: JourneyResultsAction) {
         switch action {
         case .initialFetch:
-            guard !appData.journeyPlanner.hasFetchedInitialData else { return }
+            guard !journeyPlanner.hasFetchedInitialData else { return }
             Task { await fetchInitialData() }
         case .refresh:
             Task { await fetchInitialData() }
         case .earlierJourneys, .laterJourneys:
-            Task { await appData.journeyPlanner.fetchAdjacentData(action: action, modeIDs: sessionModeIDs) }
+            Task { await journeyPlanner.fetchAdjacentData(action: action, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
             let seedModeIDs: Set<ModeID>
             if case .custom(let modeIDs) = userPreferences.journeyModePreset {
@@ -64,12 +64,12 @@ struct JourneyResultsScreen: View {
     }
 
     private func fetchInitialData() async {
-        await appData.journeyPlanner.fetchInitialData(modeIDs: sessionModeIDs)
+        await journeyPlanner.fetchInitialData(modeIDs: sessionModeIDs)
         saveRecentJourney()
     }
 
     private func saveRecentJourney() {
-        if let savedJourney = appData.journeyPlanner.form.toNewSavedJourney() {
+        if let savedJourney = journeyPlanner.form.toNewSavedJourney() {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")
