@@ -4,9 +4,9 @@ import MapKit
 
 public struct StationView: View {
 
-    public enum Selection: Hashable {
-        case lineStatusDetail(Line)
-        case arrivalsBoards(stationName: String, Station.LineGroup)
+    public enum Action {
+        case tappedLine(Line)
+        case tappedLineGroup(Station.LineGroup)
     }
 
     public let station: Station
@@ -14,19 +14,22 @@ public struct StationView: View {
     public let statusCells: [LineStatusCell.Style]
     public let disruptionCountsByLineID: [TrainLineID: Int]
     public let disruptionMessages: [String]
+    public let onAction: (Action) -> Void
 
     public init(
         station: Station,
         loadingState: LoadingState,
         statusCells: [LineStatusCell.Style],
         disruptionCountsByLineID: [TrainLineID: Int],
-        disruptionMessages: [String]
+        disruptionMessages: [String],
+        onAction: @escaping (Action) -> Void
     ) {
         self.station = station
         self.loadingState = loadingState
         self.statusCells = statusCells
         self.disruptionCountsByLineID = disruptionCountsByLineID
         self.disruptionMessages = disruptionMessages
+        self.onAction = onAction
     }
 
     private var mapURL: URL? {
@@ -143,7 +146,9 @@ public struct StationView: View {
             VStack(spacing: 8) {
                 ForEach(statusCells, id: \.self) { cellStyle in
                     if case let .singleLine(line) = cellStyle {
-                        NavigationLink(value: Selection.lineStatusDetail(line)) {
+                        Button {
+                            onAction(.tappedLine(line))
+                        } label: {
                             LineStatusCell(
                                 style: cellStyle,
                                 showsAccessory: true,
@@ -180,7 +185,9 @@ public struct StationView: View {
         return section {
             VStack(spacing: 0) {
                 ForEach(Array(lineGroups.enumerated()), id: \.element.id) { index, lineGroup in
-                    NavigationLink(value: Selection.arrivalsBoards(stationName: station.name, lineGroup)) {
+                    Button {
+                        onAction(.tappedLineGroup(lineGroup))
+                    } label: {
                         HStack(spacing: 8) {
                             LineGroupCell(
                                 style: .plain,
@@ -213,7 +220,6 @@ public struct StationView: View {
 import ModelStubs
 
 private struct WrapperView: View {
-    @State var selection: StationView.Selection?
     var loadingState: LoadingState = .loaded
     var statusCells: [LineStatusCell.Style] =
         [
@@ -234,12 +240,10 @@ private struct WrapperView: View {
                 loadingState: loadingState,
                 statusCells: statusCells,
                 disruptionCountsByLineID: disruptionCountsByLineID,
-                disruptionMessages: disruptionMessages
+                disruptionMessages: disruptionMessages,
+                onAction: { print($0) }
             )
             .navigationTitle("Station preview")
-            .navigationDestination(for: StationView.Selection.self) { selection in
-                Text("Selected \(String(describing: selection))")
-            }
         }
     }
 }

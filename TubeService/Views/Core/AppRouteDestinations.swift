@@ -14,6 +14,8 @@ private struct AppRouteDestinationsModifier: ViewModifier {
                 LineStatusHistoryScreen(lineID: lineID)
             case .arrivalsBoard(let lineGroup, let stationName):
                 ArrivalsBoardListScreen(stationName: stationName, lineGroup: lineGroup)
+            case .stationDetail(let station):
+                StationScreen(station: station)
             }
         }
     }

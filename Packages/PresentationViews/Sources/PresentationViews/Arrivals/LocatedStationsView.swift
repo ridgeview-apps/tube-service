@@ -6,6 +6,7 @@ public struct LocatedStationsView: View {
 
     public enum Action: Sendable {
         case tappedRefresh
+        case tappedStation(Station)
     }
 
     let locationUIStatus: LocationUIStatus
@@ -98,13 +99,16 @@ public struct LocatedStationsView: View {
     @ViewBuilder
     private var populatedResultsView: some View {
         ForEach(visibleStations, id: \.station.id) { locatedStation in
-            NavigationLink(value: locatedStation) {
+            Button {
+                onAction(.tappedStation(locatedStation.station))
+            } label: {
                 StationLineGroupCell(
                     style: .distance(metres: locatedStation.distance),
                     station: locatedStation.station
                 )
                 .frame(minHeight: 52)
             }
+            .buttonStyle(.plain)
         }
     }
 
@@ -182,9 +186,6 @@ private struct Previewer: View {
                 sectionState: $sectionState
             )
             .navigationTitle("Nearby stations")
-            .navigationDestination(for: LocatedStation.self) { selection in
-                Text("\(String(describing: selection)) selected")
-            }
         }
     }
 }

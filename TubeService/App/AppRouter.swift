@@ -19,6 +19,7 @@ enum AppRoute: Hashable {
     case lineStatusDetail(lineID: TrainLineID, request: LineStatusDataStore.LineStatusRequest)
     case lineStatusHistory(lineID: TrainLineID)
     case arrivalsBoard(lineGroup: Station.LineGroup, stationName: String)
+    case stationDetail(station: Station)
 }
 
 // MARK: - AppRouter

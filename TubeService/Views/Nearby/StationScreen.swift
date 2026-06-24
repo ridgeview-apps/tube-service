@@ -6,6 +6,7 @@ import SwiftUI
 @MainActor
 struct StationScreen: View {
 
+    @Environment(AppRouter.self) private var router
     @Environment(LineStatusDataStore.self) var lineStatus
     @Environment(StationsDataStore.self) var stations
 
@@ -19,7 +20,8 @@ struct StationScreen: View {
             loadingState: loadingState,
             statusCells: statusCells,
             disruptionCountsByLineID: lineStatus.disruptionCountsByLineID,
-            disruptionMessages: disruptionMessages
+            disruptionMessages: disruptionMessages,
+            onAction: handleAction
         )
         .navigationTitle(station.name)
         .refreshable {
@@ -68,6 +70,15 @@ struct StationScreen: View {
     private var disruptionMessages: [String] {
         stations.disruptions(forStationID: station.id)
     }
+
+    private func handleAction(_ action: StationView.Action) {
+        switch action {
+        case .tappedLine(let line):
+            router.push(.lineStatusDetail(lineID: line.id, request: .live))
+        case .tappedLineGroup(let lineGroup):
+            router.push(.arrivalsBoard(lineGroup: lineGroup, stationName: station.name))
+        }
+    }
 }
 
 private extension Sequence where Element == Line {
@@ -86,21 +97,13 @@ private extension Sequence where Element == Line {
 
 import ModelStubs
 
-private struct WrapperView: View {
-    var station: Station = ModelStubs.kingsCrossStation
-    @State var selection: StationView.Selection?
-
-    var body: some View {
-        StationScreen(station: station)
-    }
-}
-
 #if DEBUG
     #Preview {
         NavigationStack {
             PreviewEnvironment {
-                WrapperView()
+                StationScreen(station: ModelStubs.kingsCrossStation)
             }
+            .environment(AppRouter())
             .navigationTitle("Selected station")
         }
     }

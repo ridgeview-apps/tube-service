@@ -6,23 +6,19 @@ import SwiftUI
 @MainActor
 struct LocatedStationsScreen: View {
 
+    @Environment(AppRouter.self) private var router
     @Environment(StationsDataStore.self) var stations
     @Environment(LocationDataStore.self) var location
 
-    @State private var selectedStation: LocatedStation?
     @State private var sectionState: LocatedStationsResultsSectionState = .empty
 
     // MARK: - Layout
 
     var body: some View {
-        NavigationStack {
+        @Bindable var router = router
+        NavigationStack(path: $router.nearbyPath) {
             nearbyStationsListView
-                .navigationDestination(for: LocatedStation.self) { station in
-                    StationScreen(station: station.station)
-                }
-                .navigationDestination(for: StationView.Selection.self) { selection in
-                    destinationView(for: selection)
-                }
+                .appRouteDestinations()
         }
         .detectsLocationChanges(action: handleLocationChangeAction)
         .task {
@@ -65,18 +61,8 @@ struct LocatedStationsScreen: View {
         switch action {
         case .tappedRefresh:
             location.refreshCurrentLocation()
-        }
-    }
-
-    @ViewBuilder private func destinationView(for selection: StationView.Selection) -> some View {
-        switch selection {
-        case let .lineStatusDetail(line):
-            LineStatusDetailScreen(lineID: line.id, request: .live)
-        case let .arrivalsBoards(stationName, lineGroup):
-            ArrivalsBoardListScreen(
-                stationName: stationName,
-                lineGroup: lineGroup
-            )
+        case .tappedStation(let station):
+            router.push(.stationDetail(station: station))
         }
     }
 
@@ -98,6 +84,6 @@ struct LocatedStationsScreen: View {
         PreviewEnvironment {
             LocatedStationsScreen()
         }
-        .navigationTitle("Nearby stations")
+        .environment(AppRouter())
     }
 #endif
