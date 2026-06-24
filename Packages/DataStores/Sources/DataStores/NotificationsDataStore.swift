@@ -10,7 +10,7 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public internal(set) var preferences: NotificationPreferences?
-    public internal(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
+    public private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
     public internal(set) var isSavingPreferences = false
 
     private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
@@ -33,22 +33,9 @@ public final class NotificationsDataStore {
 
     public init(
         api: NotificationsAPIClientType,
-        userDefaults: UserDefaults = .standard,
-        pushNotificationEnvironment: PushNotificationEnvironment
-    ) {
-        self.api = api
-        self.keychain = SecurityKeychain(service: "com.ridgeviewapps.tubeservice.notifications")
-        self.userDefaults = userDefaults
-        self.preferences = userDefaults.notificationPreferences
-        self.pushNotificationEnvironment = pushNotificationEnvironment
-    }
-
-    // Internal init allows test/stub code within the package to inject a custom keychain.
-    init(
-        api: NotificationsAPIClientType,
-        keychain: any KeychainService,
-        userDefaults: UserDefaults = .standard,
-        pushNotificationEnvironment: PushNotificationEnvironment
+        pushNotificationEnvironment: PushNotificationEnvironment,
+        userDefaults: UserDefaults,
+        keychain: any KeychainService = SecurityKeychain(service: "com.ridgeviewapps.tubeservice.notifications"),
     ) {
         self.api = api
         self.keychain = keychain

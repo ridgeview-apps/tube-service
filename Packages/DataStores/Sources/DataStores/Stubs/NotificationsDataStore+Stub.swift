@@ -8,14 +8,18 @@ import UserNotifications
 
         static func stub(
             api: NotificationsAPIClientType = StubNotificationsAPIClient(),
-            authorizationStatus: UNAuthorizationStatus = .authorized
+            pushNotificationEnvironment: PushNotificationEnvironment = .init(
+                readAuthStatus: { .notDetermined },
+                requestAuthorization: { true },
+                registerForRemoteNotifications: {}
+            ),
+            userDefaults: UserDefaults
         ) -> NotificationsDataStore {
-            let store = NotificationsDataStore(
+            NotificationsDataStore(
                 api: api,
-                pushNotificationEnvironment: PushNotificationEnvironment(readAuthStatus: { .notDetermined }, requestAuthorization: { true }, registerForRemoteNotifications: {})
+                pushNotificationEnvironment: pushNotificationEnvironment,
+                userDefaults: userDefaults
             )
-            store.authorizationStatus = authorizationStatus
-            return store
         }
     }
 

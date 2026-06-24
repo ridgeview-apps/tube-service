@@ -105,13 +105,8 @@ struct NotificationsDataStoreTests {
     @Test
     func deleteDeviceClearsKeychainDeviceId() async {
         // Given
-        let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
-        let store = NotificationsDataStore(
-            api: api,
-            keychain: keychain,
-            pushNotificationEnvironment: PushNotificationEnvironment(readAuthStatus: { .authorized }, requestAuthorization: { true }, registerForRemoteNotifications: {})
-        )
+        let store = makeStore(keychain: keychain)
         await store.registerDevice(pushToken: "test-push-token")
         #expect(keychain.read(key: "push_device_id") != nil)
 
@@ -172,7 +167,7 @@ struct NotificationsDataStoreTests {
     @Test
     func updateAuthorizationStatusReflectsInjectedStatus() async {
         // Given
-        let store = makeStore(authorizationStatus: .denied)
+        let store = makeStore(pushNotificationEnvironment: .stub(authorizationStatus: .denied))
 
         // When
         await store.updateAuthorizationStatus()
@@ -228,18 +223,31 @@ struct NotificationsDataStoreTests {
 
     private func makeStore(
         api: StubNotificationsAPIClient = StubNotificationsAPIClient(),
-        authorizationStatus: UNAuthorizationStatus = .authorized
+        pushNotificationEnvironment: PushNotificationEnvironment = .stub(),
+        keychain: KeychainService = InMemoryKeychain(),
+        userDefaults: UserDefaults = .init(suiteName: UUID().uuidString)!
     ) -> NotificationsDataStore {
         NotificationsDataStore(
             api: api,
-            keychain: InMemoryKeychain(),
-            authorizationProvider: PushNotificationEnvironment(readAuthStatus: { authorizationStatus }, requestAuthorization: { true }, registerForRemoteNotifications: {})
+            pushNotificationEnvironment: pushNotificationEnvironment,
+            userDefaults: userDefaults,
+            keychain: keychain
         )
     }
 }
 
 
 // MARK: - In-memory keychain for tests
+
+private extension PushNotificationEnvironment {
+    static func stub(authorizationStatus: UNAuthorizationStatus = .notDetermined) -> Self {
+        .init(
+            readAuthStatus: { authorizationStatus },
+            requestAuthorization: { true },
+            registerForRemoteNotifications: {}
+        )
+    }
+}
 
 final class InMemoryKeychain: KeychainService, @unchecked Sendable {
     private var storage: [String: String] = [:]

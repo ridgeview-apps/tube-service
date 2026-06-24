@@ -45,7 +45,7 @@ struct JourneyPlannerStoreTests {
     @Test
     func resetTimeSelectionIfNeeded_withPastDate_resetsToLeaveNow() {
         let model = makeStore()
-        model.form.timeSelection = JourneyTimeSelection(option: .leaveAt, date: Date(timeIntervalSince1970: 0))
+        model.form.timeSelection = JourneyTimeSelection.leaveAt(Date(timeIntervalSince1970: 0))
 
         model.resetTimeSelectionIfNeeded()
 
@@ -55,7 +55,7 @@ struct JourneyPlannerStoreTests {
     @Test
     func resetTimeSelectionIfNeeded_withFutureDate_doesNotReset() {
         let model = makeStore()
-        model.form.timeSelection = JourneyTimeSelection(option: .leaveAt, date: Date.distantFuture)
+        model.form.timeSelection = JourneyTimeSelection.leaveAt(.distantFuture)
 
         model.resetTimeSelectionIfNeeded()
 
@@ -104,7 +104,7 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
         #expect(model.pages.first?.isLoading == true)
-        #expect(model.pages.first?.cellItems?.isEmpty == true)
+        #expect(model.pages.first?.cellItems == nil)
     }
 
     @Test

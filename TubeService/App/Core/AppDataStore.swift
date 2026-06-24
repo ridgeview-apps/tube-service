@@ -48,8 +48,8 @@ final class AppDataStore {
         self.purchases = PurchaseStore()
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
+            pushNotificationEnvironment: dependencies.pushNotificationEnvironment,
             userDefaults: dependencies.userDefaults.value,
-            pushNotificationEnvironment: dependencies.pushNotificationEnvironment
         )
         self.journeyPlanner = JourneyPlannerStore(
             tflAPI: dependencies.tflAPI,

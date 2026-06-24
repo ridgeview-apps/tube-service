@@ -12,11 +12,11 @@ public struct JourneyTimeSelection: Hashable, Sendable {
     public static func leaveNow() -> JourneyTimeSelection {
         .init(option: .leaveNow, date: .now)
     }
-    
+
     public static func leaveAt(_ date: Date) -> JourneyTimeSelection {
         .init(option: .leaveAt, date: date)
     }
-    
+
     public static func arriveBy(_ date: Date) -> JourneyTimeSelection {
         .init(option: .arriveBy, date: date)
     }

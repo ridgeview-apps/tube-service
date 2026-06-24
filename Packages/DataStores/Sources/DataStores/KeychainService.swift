@@ -3,7 +3,7 @@ import Security
 
 // MARK: - Protocol
 
-protocol KeychainService: Sendable {
+public protocol KeychainService: Sendable {
     func read(key: String) -> String?
     @discardableResult func write(key: String, value: String) -> Bool
     func delete(key: String)
@@ -12,11 +12,15 @@ protocol KeychainService: Sendable {
 
 // MARK: - Security framework implementation
 
-struct SecurityKeychain: KeychainService {
+public struct SecurityKeychain: KeychainService {
 
-    let service: String
+    private let service: String
 
-    func read(key: String) -> String? {
+    public init(service: String) {
+        self.service = service
+    }
+
+    public func read(key: String) -> String? {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
@@ -32,7 +36,7 @@ struct SecurityKeychain: KeychainService {
     }
 
     @discardableResult
-    func write(key: String, value: String) -> Bool {
+    public func write(key: String, value: String) -> Bool {
         let attributes: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
@@ -43,7 +47,7 @@ struct SecurityKeychain: KeychainService {
         return SecItemAdd(attributes as CFDictionary, nil) == errSecSuccess
     }
 
-    func delete(key: String) {
+    public func delete(key: String) {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
