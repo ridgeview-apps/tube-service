@@ -27,15 +27,19 @@ import Shared
 
         public private(set) var fetchArrivalPredictionsCallCount = 0
         public var stubbedArrivalPredictions: HTTPResponse<[ArrivalPrediction]> = .success200(ModelStubs.northernLineBothPlatforms)
+        public var fetchArrivalPredictionsError: Error?
         public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
             fetchArrivalPredictionsCallCount += 1
+            if let fetchArrivalPredictionsError { throw fetchArrivalPredictionsError }
             return stubbedArrivalPredictions
         }
 
         public private(set) var fetchArrivalDeparturesCallCount = 0
         public var stubbedArrivalDepartures: HTTPResponse<[ArrivalDeparture]> = .success200(ModelStubs.elizabethLineBothPlatforms)
+        public var fetchArrivalDeparturesError: Error?
         public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
             fetchArrivalDeparturesCallCount += 1
+            if let fetchArrivalDeparturesError { throw fetchArrivalDeparturesError }
             return stubbedArrivalDepartures
         }
 

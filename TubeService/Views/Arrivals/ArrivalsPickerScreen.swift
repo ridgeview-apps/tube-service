@@ -6,6 +6,7 @@ import SwiftUI
 @MainActor
 struct ArrivalsPickerScreen: View {
 
+    @Environment(AppRouter.self) private var router
     @Environment(StationsDataStore.self) var stations
 
     @AppStorage(
@@ -27,15 +28,9 @@ struct ArrivalsPickerScreen: View {
     // MARK: - Layout
 
     var body: some View {
-        NavigationStack {
+        @Bindable var router = router
+        NavigationStack(path: $router.arrivalsPath) {
             pickerListView
-                .navigationDestination(item: $selection) { lineGroup in
-                    ArrivalsBoardListScreen(
-                        stationName: stationName(for: lineGroup),
-                        lineGroup: lineGroup
-                    )
-                    .id(lineGroup.id)
-                }
                 .searchable(
                     text: $searchTerm,
                     prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
@@ -43,6 +38,7 @@ struct ArrivalsPickerScreen: View {
                     searchSuggestionsView
                 }
                 .autocorrectionDisabled()
+                .appRouteDestinations()
         }
         .onChange(of: searchTerm) {
             reloadStations()
@@ -54,7 +50,10 @@ struct ArrivalsPickerScreen: View {
             reloadStations()
         }
         .onChange(of: selection) { _, newValue in
+            guard let newValue else { return }
             saveRecentSelection(for: newValue)
+            router.push(.arrivalsBoard(lineGroup: newValue, stationName: stationName(for: newValue)))
+            selection = nil
         }
     }
 
@@ -87,8 +86,8 @@ struct ArrivalsPickerScreen: View {
         stations.station(forLineGroupID: lineGroup.id)?.name ?? ""
     }
 
-    private func saveRecentSelection(for lineGroup: Station.LineGroup?) {
-        if let lineGroup, let station = stations.station(forLineGroupID: lineGroup.id) {
+    private func saveRecentSelection(for lineGroup: Station.LineGroup) {
+        if let station = stations.station(forLineGroupID: lineGroup.id) {
             userPreferences.saveRecentlySelectedStation(station.id)
         }
     }
@@ -128,5 +127,6 @@ struct ArrivalsPickerScreen: View {
         PreviewEnvironment {
             ArrivalsPickerScreen()
         }
+        .environment(AppRouter())
     }
 #endif

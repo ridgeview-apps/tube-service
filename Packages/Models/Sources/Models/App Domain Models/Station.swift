@@ -50,3 +50,31 @@ extension Station.LineGroup: Identifiable {
             .map(\.rawValue).joined(separator: ",")
     }
 }
+
+public extension Station.LineGroup {
+
+    enum ArrivalsDataType: Equatable, Sendable {
+        case arrivalPredictions
+        case arrivalDepartures([TrainLineID])
+    }
+
+    var arrivalsDataType: ArrivalsDataType {
+        let departureDataTypes: [TrainLineID] = [
+            .elizabeth,
+            .liberty,
+            .lioness,
+            .mildmay,
+            .suffragette,
+            .windrush,
+            .weaver
+        ]
+        let useDepartures = lineIds.containsAny(of: departureDataTypes)
+        return useDepartures ? .arrivalDepartures(lineIds) : .arrivalPredictions
+    }
+}
+
+private extension Array where Element: Hashable {
+    func containsAny(of other: [Element]) -> Bool {
+        !Set(self).isDisjoint(with: other)
+    }
+}

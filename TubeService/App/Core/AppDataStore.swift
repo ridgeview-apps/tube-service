@@ -19,10 +19,6 @@ final class AppDataStore {
 
     private let dependencies: AppDependencies
 
-    var tflAPI: TflAPIClientType {
-        dependencies.tflAPI
-    }
-
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
 

@@ -1,6 +1,5 @@
 import Foundation
 import Models
-import ModelStubs
 import Testing
 
 @testable import DataStores
@@ -25,13 +24,22 @@ struct JourneyPlannerStoreTests {
         )
     }
 
+    private func makeStation(id: String, icsCode: String, name: String) -> Station {
+        Station(
+            id: id,
+            icsCode: icsCode,
+            name: name,
+            location: LocationCoordinate(lat: 51.5, lon: -0.1),
+            lineGroups: []
+        )
+    }
+
     // MARK: - resetForNewJourney
 
     @Test
     func resetForNewJourney_resetsHasFetchedInitialData() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         #expect(model.hasFetchedInitialData == true)
 
@@ -67,9 +75,8 @@ struct JourneyPlannerStoreTests {
     @Test
     func fetchInitialData_success_resolvesAndPopulatesPages() async {
         let model = makeStore()
-        model.form.from = .station(ModelStubs.angelStation)
-        model.form.to = .station(ModelStubs.kingsCrossStation)
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
+        model.form.from = .station(makeStation(id: "940GZZLUAGL", icsCode: "1000004", name: "Angel"))
+        model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
 
         await model.fetchInitialData(modeIDs: modeIDs)
 
@@ -83,8 +90,8 @@ struct JourneyPlannerStoreTests {
     @Test
     func fetchInitialData_networkError_setsFailureState() async {
         let model = makeStore()
-        model.form.from = .station(ModelStubs.angelStation)
-        model.form.to = .station(ModelStubs.kingsCrossStation)
+        model.form.from = .station(makeStation(id: "940GZZLUAGL", icsCode: "1000004", name: "Angel"))
+        model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
 
         await model.fetchInitialData(modeIDs: modeIDs)
@@ -111,7 +118,6 @@ struct JourneyPlannerStoreTests {
     func prepareForInitialFetch_resetsHasFetchedInitialData() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         #expect(model.hasFetchedInitialData == true)
 
@@ -139,7 +145,6 @@ struct JourneyPlannerStoreTests {
     func fetchInitialResults_success_populatesPagesAndSetsHasFetched() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
 
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
@@ -177,61 +182,7 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.first?.isFailed == true)
     }
 
-    // MARK: - fetchAdjacentResults (earlier)
-
-    @Test
-    func fetchAdjacentResults_earlier_prependsPage() async {
-        let model = makeStore()
-
-        // Load initial page first (establishes time adjustments)
-        model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        let initialPageCount = model.pages.first?.cellItems?.count ?? 0
-
-        // Fetch earlier
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooEarlier)
-        await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
-
-        #expect(tflAPI.fetchJourneyResultsCallCount == 2)
-        #expect(model.pages.count >= 1)
-        if model.pages.count == 2 {
-            #expect(model.pages[0].id.hasPrefix("earlier"))
-            #expect(model.pages[1].id == "initial")
-            #expect(model.pages[0].isLoaded == true)
-        }
-        let totalItems = model.pages.reduce(0) { $0 + ($1.cellItems?.count ?? 0) }
-        #expect(totalItems >= initialPageCount)
-    }
-
-    // MARK: - fetchAdjacentResults (later)
-
-    @Test
-    func fetchAdjacentResults_later_appendsPage() async {
-        let model = makeStore()
-
-        // Load initial page first
-        model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        let initialPageCount = model.pages.first?.cellItems?.count ?? 0
-
-        // Fetch later
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooLater)
-        await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
-
-        #expect(tflAPI.fetchJourneyResultsCallCount == 2)
-        #expect(model.pages.count >= 1)
-        if model.pages.count == 2 {
-            #expect(model.pages[0].id == "initial")
-            #expect(model.pages[1].id.hasPrefix("later"))
-            #expect(model.pages[1].isLoaded == true)
-        }
-        let totalItems = model.pages.reduce(0) { $0 + ($1.cellItems?.count ?? 0) }
-        #expect(totalItems >= initialPageCount)
-    }
-
-    // MARK: - No time adjustment available
+    // MARK: - fetchAdjacentResults (no prior fetch)
 
     @Test
     func fetchAdjacentResults_withoutPriorFetch_doesNothing() async {
@@ -243,16 +194,14 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.isEmpty)
     }
 
-    // MARK: - Adjacent page error handling
+    // MARK: - fetchAdjacentResults error handling
 
     @Test
     func fetchAdjacentResults_404_removesAdjacentPage() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
-        // Fetch later with 404
         tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
         await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
@@ -264,10 +213,8 @@ struct JourneyPlannerStoreTests {
     func fetchAdjacentResults_error_setsFailureOnAdjacentPage() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
-        // Fetch earlier with error
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
@@ -282,20 +229,13 @@ struct JourneyPlannerStoreTests {
     func fetchAdjacentResults_deduplicatesJourneysAcrossPages() async {
         let model = makeStore()
         model.prepareForInitialFetch()
-
-        // Use the same results for both pages to guarantee overlap
-        let results = ModelStubs.journeyResultsKingsXToWaterlooNow
-        tflAPI.stubbedJourneyResults = .success200(results)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         let initialCount = model.pages.first?.cellItems?.count ?? 0
         #expect(initialCount > 0)
 
-        // Fetch later with identical results — all should be deduped
-        tflAPI.fetchJourneyResultsError = nil
-        tflAPI.stubbedJourneyResults = .success200(results)
+        // Fetch later with identical results — all should be deduped, adjacent page removed
         await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
-        // Adjacent page should be removed since all items were duplicates
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
     }

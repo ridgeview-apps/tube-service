@@ -1,4 +1,5 @@
 import DataStores
+import Models
 import SwiftUI
 
 private struct AppRouteDestinationsModifier: ViewModifier {
@@ -11,6 +12,8 @@ private struct AppRouteDestinationsModifier: ViewModifier {
                 LineStatusDetailScreen(lineID: lineID, request: request)
             case .lineStatusHistory(let lineID):
                 LineStatusHistoryScreen(lineID: lineID)
+            case .arrivalsBoard(let lineGroup, let stationName):
+                ArrivalsBoardListScreen(stationName: stationName, lineGroup: lineGroup)
             }
         }
     }

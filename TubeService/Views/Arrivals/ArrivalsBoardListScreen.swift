@@ -1,22 +1,13 @@
 import DataStores
 import Models
 import PresentationViews
-import Shared
 import SwiftUI
 
 struct ArrivalsBoardListScreen: View {
     let stationName: String
     let lineGroup: Station.LineGroup
 
-    @State private var loadingState: LoadingState = .loaded
-    @State private var loadedBoardID: Station.LineGroup.ID?
-    @State private var boardStates: [ArrivalsBoardState] = []
-    @State private var refreshDate: Date?
-    @State private var autoRefreshTimer: ObservableTimer?
-
-    private let timerSecondsInterval = 20.0
-
-    @Environment(AppDataStore.self) var appData
+    @State private var store = ArrivalsBoardStore(tflAPI: AppDependencies.current.tflAPI)
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -28,7 +19,7 @@ struct ArrivalsBoardListScreen: View {
         ArrivalsBoardListView(
             boardStates: boardStates,
             lineGroupName: lineGroup.name,
-            refreshDate: refreshDate,
+            refreshDate: store.fetchedAt,
             loadingState: loadingState,
             isFavourite: isFavouriteLineGroup
         )
@@ -37,63 +28,32 @@ struct ArrivalsBoardListScreen: View {
             FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
         }
         .refreshable {
-            refreshData(startNewTimer: true)
+            await store.refresh(for: lineGroup)
+            store.resetAutoRefreshTimer(for: lineGroup)
         }
         .onAppear {
-            refreshData(startNewTimer: true)
+            store.startAutoRefresh(for: lineGroup)
         }
         .onDisappear {
-            autoRefreshTimer?.invalidate()
-        }
-        .onChange(of: autoRefreshTimer?.firedAt) {
-            refreshData(startNewTimer: false)
-        }
-
-    }
-
-    private func refreshData(startNewTimer: Bool) {
-        guard loadingState != .loading else {
-            return
-        }
-
-        let boardIDHasChanged = loadedBoardID != lineGroup.id  // e.g. split view selection
-        if boardIDHasChanged {
-            boardStates = []
-        }
-
-        loadingState = .loading
-
-        Task {
-            do {
-                boardStates = try await fetchBoards()
-                refreshDate = .now
-                loadedBoardID = lineGroup.id
-                loadingState = .loaded
-            } catch {
-                loadingState = .failure(errorMessage: error.toUIErrorMessage())
-            }
-
-            if startNewTimer {
-                autoRefreshTimer?.invalidate()
-                autoRefreshTimer = .repeating(every: timerSecondsInterval)
-            }
+            store.stopAutoRefresh()
         }
     }
 
-    private func fetchBoards() async throws -> [ArrivalsBoardState] {
-        switch lineGroup.arrivalsDataType {
-        case let .arrivalDepartures(lineIDs):
-            guard let lineID = lineIDs.first else { return [] }  // ArrivalDepartures are only for a single line
-            return try await appData.tflAPI.fetchArrivalDepartures(forLineGroup: lineGroup)
-                .decodedModel
-                .removingDuplicates()
-                .filter { $0.scheduledTimeOfDeparture != nil }
-                .toPlatformBoardStates(forLineID: lineID)
-        case .arrivalPredictions:
-            return try await appData.tflAPI.fetchArrivalPredictions(forLineGroup: lineGroup)
-                .decodedModel
-                .toPlatformBoardStates()
+    private var boardStates: [ArrivalsBoardState] {
+        switch store.boardData {
+        case .predictions(let predictions):
+            return predictions.toPlatformBoardStates()
+        case .departures(let lineID, let items):
+            return items.toPlatformBoardStates(forLineID: lineID)
+        case nil:
+            return []
         }
+    }
+
+    private var loadingState: LoadingState {
+        if store.isFetching { return .loading }
+        if let error = store.fetchError { return .failure(errorMessage: error.toUIErrorMessage()) }
+        return .loaded
     }
 
     private var isFavouriteLineGroup: Binding<Bool> {
