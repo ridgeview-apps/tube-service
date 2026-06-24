@@ -72,15 +72,15 @@ struct LineStatusScreen: View {
     }
 
     private var loadingState: LoadingState {
-        model.statusResult(for: request)?.fetchState.loadingState ?? .loaded
+        model.lineStatusData(for: request)?.fetchState.loadingState ?? .loaded
     }
 
     private var lines: [Line] {
-        (model.statusResult(for: request)?.value ?? []).sortedByStatusSeverity()
+        (model.lineStatusData(for: request)?.value ?? []).sortedByStatusSeverity()
     }
 
     private var refreshDate: Date? {
-        model.statusResult(for: request)?.fetchedAt
+        model.lineStatusData(for: request)?.fetchedAt
     }
 
     private func fetchIfStale() {

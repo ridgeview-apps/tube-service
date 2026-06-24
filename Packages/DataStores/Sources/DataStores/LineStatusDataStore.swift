@@ -58,14 +58,14 @@ public final class LineStatusDataStore {
         return snapshots
     }
 
-    public func statusResult(for request: LineStatusRequest) -> FetchResult<[Line]>? {
+    public func lineStatusData(for request: LineStatusRequest) -> RemoteData<[Line]>? {
         guard let entry = lineStatusCache[request] else { return nil }
-        return FetchResult(value: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
+        return RemoteData(value: entry.value ?? [], fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
-    public func timelineResult(for lineID: TrainLineID) -> FetchResult<DailyLineTimeline?>? {
+    public func timelineData(for lineID: TrainLineID) -> RemoteData<DailyLineTimeline?>? {
         guard let entry = timelineCache[lineID] else { return nil }
-        return FetchResult(value: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
+        return RemoteData(value: entry.value, fetchedAt: entry.fetchedAt, fetchState: entry.fetchState)
     }
 
     // MARK: - Refreshing

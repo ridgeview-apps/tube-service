@@ -30,15 +30,15 @@ struct LineStatusDetailScreen: View {
     let request: LineStatusDataStore.LineStatusRequest
 
     private var line: Line? {
-        model.statusResult(for: request)?.value.first { $0.id == lineID }
+        model.lineStatusData(for: request)?.value.first { $0.id == lineID }
     }
 
     private var loadingState: LoadingState {
-        return model.statusResult(for: .live)?.fetchState.loadingState ?? .loaded
+        return model.lineStatusData(for: .live)?.fetchState.loadingState ?? .loaded
     }
 
     private var refreshDate: Date? {
-        return model.statusResult(for: .live)?.fetchedAt
+        return model.lineStatusData(for: .live)?.fetchedAt
     }
 
     private var statusHistoryAccess: LineStatusHistoryButton.Access {

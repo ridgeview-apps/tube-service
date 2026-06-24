@@ -21,9 +21,9 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        #expect(model.statusResult(for: .live) == nil)
+        #expect(model.lineStatusData(for: .live) == nil)
         await model.forceRefreshLineStatuses(for: .live)
-        let fetchedData = model.statusResult(for: .live)
+        let fetchedData = model.lineStatusData(for: .live)
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -47,7 +47,7 @@ struct LineStatusDataStoreTests {
         // When
         let dateInterval = DateInterval(start: Date(), duration: oneDay)
         await model.forceRefreshLineStatuses(for: .planned(dateInterval))
-        let fetchedData = model.statusResult(for: .planned(dateInterval))
+        let fetchedData = model.lineStatusData(for: .planned(dateInterval))
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -70,7 +70,7 @@ struct LineStatusDataStoreTests {
         // When
         tflAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
         await model.forceRefreshLineStatuses(for: .live)
-        let fetchedData = model.statusResult(for: .live)
+        let fetchedData = model.lineStatusData(for: .live)
 
         // Then
         let requiredFetchedData = try #require(fetchedData)
@@ -92,19 +92,19 @@ struct LineStatusDataStoreTests {
 
         // Initial data refresh
         await model.refreshLineStatusesIfStale(for: .live)
-        #expect(model.statusResult(for: .live)?.fetchedAt == clock.initialTime)
+        #expect(model.lineStatusData(for: .live)?.fetchedAt == clock.initialTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)
 
         // After 4 minutes (no change - data NOT stale)
         clock.addingMinutes(4)
         await model.refreshLineStatusesIfStale(for: .live)
-        #expect(model.statusResult(for: .live)?.fetchedAt == clock.initialTime)  // No change
+        #expect(model.lineStatusData(for: .live)?.fetchedAt == clock.initialTime)  // No change
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 1)  // No change
 
         // After 5 minutes (fetch expected - data IS now stale)
         clock.addingMinutes(5)
         await model.refreshLineStatusesIfStale(for: .live)
-        #expect(model.statusResult(for: .live)?.fetchedAt == clock.currentTime)
+        #expect(model.lineStatusData(for: .live)?.fetchedAt == clock.currentTime)
         #expect(tflAPI.fetchCurrentLineStatusesCallCount == 2)
     }
 
@@ -212,7 +212,7 @@ struct LineStatusDataStoreTests {
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
         await model.forceRefreshTimeline(for: .victoria)
-        #expect(model.timelineResult(for: .victoria)?.fetchedAt != nil)
+        #expect(model.timelineData(for: .victoria)?.fetchedAt != nil)
 
         // When – line status changes (good service → disrupted)
         tflAPI.stubbedLineStatuses = .success200([
@@ -221,7 +221,7 @@ struct LineStatusDataStoreTests {
         await model.forceRefreshLineStatuses(for: .live)
 
         // Then – timeline cache entry for victoria is now stale
-        #expect(model.timelineResult(for: .victoria)?.fetchedAt == nil)
+        #expect(model.timelineData(for: .victoria)?.fetchedAt == nil)
     }
 
     @Test
@@ -239,14 +239,14 @@ struct LineStatusDataStoreTests {
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
         await model.forceRefreshTimeline(for: .victoria)
-        let originalFetchedAt = model.timelineResult(for: .victoria)?.fetchedAt
+        let originalFetchedAt = model.timelineData(for: .victoria)?.fetchedAt
         #expect(originalFetchedAt != nil)
 
         // When – line status fetched again with identical data
         await model.forceRefreshLineStatuses(for: .live)
 
         // Then – timeline cache entry is untouched
-        #expect(model.timelineResult(for: .victoria)?.fetchedAt == originalFetchedAt)
+        #expect(model.timelineData(for: .victoria)?.fetchedAt == originalFetchedAt)
     }
 
     // MARK: - Timeline
@@ -271,9 +271,9 @@ struct LineStatusDataStoreTests {
         )
 
         // When
-        #expect(model.timelineResult(for: .victoria) == nil)
+        #expect(model.timelineData(for: .victoria) == nil)
         await model.forceRefreshTimeline(for: .victoria)
-        let result = model.timelineResult(for: .victoria)
+        let result = model.timelineData(for: .victoria)
 
         // Then
         let requiredResult = try #require(result)
@@ -295,7 +295,7 @@ struct LineStatusDataStoreTests {
 
         // When
         await model.forceRefreshTimeline(for: .victoria)
-        let result = model.timelineResult(for: .victoria)
+        let result = model.timelineData(for: .victoria)
 
         // Then
         let requiredResult = try #require(result)
@@ -317,13 +317,13 @@ struct LineStatusDataStoreTests {
 
         // Initial fetch
         await model.refreshTimelineIfStale(for: .victoria)
-        #expect(model.timelineResult(for: .victoria)?.fetchedAt == clock.initialTime)
+        #expect(model.timelineData(for: .victoria)?.fetchedAt == clock.initialTime)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)
 
         // After 29 minutes (no change - NOT stale)
         clock.addingMinutes(29)
         await model.refreshTimelineIfStale(for: .victoria)
-        #expect(model.timelineResult(for: .victoria)?.fetchedAt == clock.initialTime)  // No change
+        #expect(model.timelineData(for: .victoria)?.fetchedAt == clock.initialTime)  // No change
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 1)  // No change
 
         // After 30 minutes (fetch expected - IS now stale)

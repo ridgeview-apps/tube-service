@@ -50,7 +50,7 @@ struct StationScreen: View {
     }
 
     private var loadingState: LoadingState {
-        let fetchedData = lineStatus.statusResult(for: .live)
+        let fetchedData = lineStatus.lineStatusData(for: .live)
 
         switch fetchedData?.fetchState {
         case .success:
@@ -63,7 +63,7 @@ struct StationScreen: View {
     }
 
     private var statusCells: [LineStatusCell.Style] {
-        let allLineStatuses = lineStatus.statusResult(for: .live)?.value ?? []
+        let allLineStatuses = lineStatus.lineStatusData(for: .live)?.value ?? []
         return allLineStatuses.toLineStatusCellStyles(for: station)
     }
 

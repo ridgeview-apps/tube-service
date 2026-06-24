@@ -22,11 +22,11 @@ struct LineStatusHistoryScreen: View {
     }
 
     private var snapshots: [LineStatusSnapshot] {
-        model.timelineResult(for: lineID)?.value?.snapshots ?? []
+        model.timelineData(for: lineID)?.value?.snapshots ?? []
     }
 
     private var loadingState: LoadingState {
-        model.timelineResult(for: lineID)?.fetchState.loadingState ?? .loading
+        model.timelineData(for: lineID)?.fetchState.loadingState ?? .loading
     }
 
     private func fetchIfStale() {
