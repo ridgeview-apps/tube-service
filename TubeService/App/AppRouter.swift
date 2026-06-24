@@ -1,5 +1,6 @@
 import DataStores
 import Models
+import PresentationViews
 import SwiftUI
 
 // MARK: - AppTab
@@ -20,6 +21,7 @@ enum AppRoute: Hashable {
     case lineStatusHistory(lineID: TrainLineID)
     case arrivalsBoard(lineGroup: Station.LineGroup, stationName: String)
     case stationDetail(station: Station)
+    case mapDetail(mapLink: MapLink)
 }
 
 // MARK: - AppRouter

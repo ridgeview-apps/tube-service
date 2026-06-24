@@ -1,5 +1,6 @@
 import DataStores
 import Models
+import PresentationViews
 import SwiftUI
 
 private struct AppRouteDestinationsModifier: ViewModifier {
@@ -16,6 +17,8 @@ private struct AppRouteDestinationsModifier: ViewModifier {
                 ArrivalsBoardListScreen(stationName: stationName, lineGroup: lineGroup)
             case .stationDetail(let station):
                 StationScreen(station: station)
+            case .mapDetail(let mapLink):
+                MapDetailView(mapLink: mapLink)
             }
         }
     }

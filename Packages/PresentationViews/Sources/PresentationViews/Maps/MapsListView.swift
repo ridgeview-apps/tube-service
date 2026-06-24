@@ -3,8 +3,11 @@ import SwiftUI
 public struct MapsListView: View {
 
     @State private var cachedMapIDs: Set<String> = []
+    let onSelectMap: (MapLink) -> Void
 
-    public init() {}
+    public init(onSelectMap: @escaping (MapLink) -> Void) {
+        self.onSelectMap = onSelectMap
+    }
 
     public var body: some View {
         ScrollView {
@@ -22,7 +25,9 @@ public struct MapsListView: View {
     }
 
     private func mapCard(for mapLink: MapLink) -> some View {
-        NavigationLink(value: mapLink) {
+        Button {
+            onSelectMap(mapLink)
+        } label: {
             HStack(spacing: 16) {
                 Image(systemName: mapLink.iconName)
                     .font(.title2)
@@ -98,7 +103,7 @@ public struct MapLink: Identifiable, Hashable, Sendable {
 
 #Preview {
     NavigationStack {
-        MapsListView()
+        MapsListView(onSelectMap: { print($0.id) })
             .navigationTitle("Maps")
     }
 }
