@@ -19,7 +19,7 @@ struct ArrivalsBoardListScreen: View {
         ArrivalsBoardListView(
             boardStates: boardStates,
             lineGroupName: lineGroup.name,
-            refreshDate: store.fetchedAt,
+            refreshDate: store.boardData.fetchedAt,
             loadingState: loadingState,
             isFavourite: isFavouriteLineGroup
         )
@@ -40,7 +40,7 @@ struct ArrivalsBoardListScreen: View {
     }
 
     private var boardStates: [ArrivalsBoardState] {
-        switch store.boardData {
+        switch store.boardData.value {
         case .predictions(let predictions):
             return predictions.toPlatformBoardStates()
         case .departures(let lineID, let items):
@@ -51,9 +51,7 @@ struct ArrivalsBoardListScreen: View {
     }
 
     private var loadingState: LoadingState {
-        if store.isFetching { return .loading }
-        if let error = store.fetchError { return .failure(errorMessage: error.toUIErrorMessage()) }
-        return .loaded
+        store.boardData.fetchState.loadingState
     }
 
     private var isFavouriteLineGroup: Binding<Bool> {

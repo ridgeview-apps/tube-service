@@ -14,10 +14,7 @@ public final class ArrivalsBoardStore {
 
     private static let refreshInterval: TimeInterval = 20
 
-    public private(set) var boardData: BoardData?
-    public private(set) var isFetching = false
-    public private(set) var fetchError: (any Error)?
-    public private(set) var fetchedAt: Date?
+    public private(set) var boardData = FetchResult<BoardData?>(value: nil, fetchedAt: nil, fetchState: .fetching)
 
     private let tflAPI: TflAPIClientType
     private var initialFetchTask: Task<Void, Never>?
@@ -51,18 +48,16 @@ public final class ArrivalsBoardStore {
     }
 
     public func refresh(for lineGroup: Station.LineGroup) async {
-        guard !isFetching else { return }
-        isFetching = true
-        fetchError = nil
+        if case .fetching = boardData.fetchState { return }
+        let previousFetchState = boardData.fetchState
+        boardData.fetchState = .fetching
         do {
-            boardData = try await fetchBoardData(for: lineGroup)
-            fetchedAt = .now
+            boardData.succeed(with: try await fetchBoardData(for: lineGroup))
         } catch is CancellationError {
-            // Task was cancelled — reset without surfacing an error
+            boardData.fetchState = previousFetchState
         } catch {
-            fetchError = error
+            boardData.fetchState = .failure(error)
         }
-        isFetching = false
     }
 
     private func startPeriodicRefresh(for lineGroup: Station.LineGroup) {

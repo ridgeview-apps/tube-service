@@ -26,13 +26,13 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: predictionsLineGroup)
 
-        guard case .predictions(let results) = store.boardData else {
+        guard case .predictions(let results) = store.boardData.value else {
             Issue.record("Expected .predictions board data")
             return
         }
         #expect(!results.isEmpty)
-        #expect(store.fetchError == nil)
-        #expect(store.fetchedAt != nil)
+        #expect(store.boardData.fetchState.isSuccess == true)
+        #expect(store.boardData.fetchedAt != nil)
         #expect(tflAPI.fetchArrivalPredictionsCallCount == 1)
     }
 
@@ -44,9 +44,9 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: predictionsLineGroup)
 
-        #expect(store.boardData == nil)
-        #expect(store.fetchError != nil)
-        #expect(store.fetchedAt == nil)
+        #expect(store.boardData.value == nil)
+        #expect(store.boardData.fetchState.isError == true)
+        #expect(store.boardData.fetchedAt == nil)
         #expect(tflAPI.fetchArrivalPredictionsCallCount == 1)
     }
 
@@ -59,14 +59,14 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: departuresLineGroup)
 
-        guard case .departures(let lineID, let items) = store.boardData else {
+        guard case .departures(let lineID, let items) = store.boardData.value else {
             Issue.record("Expected .departures board data")
             return
         }
         #expect(lineID == .elizabeth)
         #expect(!items.isEmpty)
-        #expect(store.fetchError == nil)
-        #expect(store.fetchedAt != nil)
+        #expect(store.boardData.fetchState.isSuccess == true)
+        #expect(store.boardData.fetchedAt != nil)
         #expect(tflAPI.fetchArrivalDeparturesCallCount == 1)
     }
 
@@ -78,9 +78,9 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: departuresLineGroup)
 
-        #expect(store.boardData == nil)
-        #expect(store.fetchError != nil)
-        #expect(store.fetchedAt == nil)
+        #expect(store.boardData.value == nil)
+        #expect(store.boardData.fetchState.isError == true)
+        #expect(store.boardData.fetchedAt == nil)
         #expect(tflAPI.fetchArrivalDeparturesCallCount == 1)
     }
 
@@ -121,7 +121,7 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: departuresLineGroup)
 
-        guard case .departures(_, let items) = store.boardData else {
+        guard case .departures(_, let items) = store.boardData.value else {
             Issue.record("Expected .departures board data")
             return
         }
@@ -138,7 +138,7 @@ struct ArrivalsBoardStoreTests {
         await store.refresh(for: predictionsLineGroup)
 
         let after = Date.now
-        guard let fetchedAt = store.fetchedAt else {
+        guard let fetchedAt = store.boardData.fetchedAt else {
             Issue.record("Expected fetchedAt to be set")
             return
         }
@@ -154,25 +154,25 @@ struct ArrivalsBoardStoreTests {
 
         await store.refresh(for: predictionsLineGroup)
 
-        #expect(store.fetchedAt == nil)
+        #expect(store.boardData.fetchedAt == nil)
     }
 
     // MARK: - Error recovery
 
     @Test
-    func refresh_afterError_clearsFetchError() async {
+    func refresh_afterError_clearsFetchState() async {
         let tflAPI = StubTflAPIClient()
         tflAPI.fetchArrivalPredictionsError = URLError(.notConnectedToInternet)
         let store = makeStore(tflAPI: tflAPI)
 
         await store.refresh(for: predictionsLineGroup)
-        #expect(store.fetchError != nil)
+        #expect(store.boardData.fetchState.isError == true)
 
         tflAPI.fetchArrivalPredictionsError = nil
         await store.refresh(for: predictionsLineGroup)
 
-        #expect(store.fetchError == nil)
-        if case .predictions = store.boardData {
+        #expect(store.boardData.fetchState.isSuccess == true)
+        if case .predictions = store.boardData.value {
         } else {
             Issue.record("Expected .predictions board data after recovery")
         }
@@ -197,11 +197,13 @@ struct ArrivalsBoardStoreTests {
     // MARK: - stopAutoRefresh
 
     @Test
-    func stopAutoRefresh_clearsIsFetching() async {
+    func stopAutoRefresh_notFetching() async {
         let store = makeStore()
         store.startAutoRefresh(for: predictionsLineGroup)
         store.stopAutoRefresh()
 
-        #expect(store.isFetching == false)
+        if case .fetching = store.boardData.fetchState {
+            Issue.record("Expected fetchState to not be .fetching after stopAutoRefresh")
+        }
     }
 }
