@@ -4,16 +4,18 @@ import SwiftUI
 
 public struct JourneyResultsView: View {
 
-    @Binding public var fromLocation: JourneyLocationPicker.Value?
-    @Binding public var toLocation: JourneyLocationPicker.Value?
-    @Binding public var pages: [JourneyResultsPage]
+    @Binding public var fromLocation: JourneyLocation?
+    @Binding public var toLocation: JourneyLocation?
+    public var pages: [JourneyPage]
     @Binding public var selectedPreset: JourneyModePreset
-    public let viaLocation: JourneyLocationPicker.Value?
+    public let viaLocation: JourneyLocation?
+    public let errorFormatter: (any Error) -> String
     public let onAction: (JourneyResultsAction) -> Void
 
     @State private var headerCollapseProgress: CGFloat = 0
     @State private var headerHeight: CGFloat = 0
     @State private var maxHeaderHeight: CGFloat = 0
+    @State private var expandedJourneyIDs: Set<String> = []
 
     private let headerCollapseThreshold: CGFloat = 60
 
@@ -23,23 +25,25 @@ public struct JourneyResultsView: View {
 
 
     public init(
-        pages: Binding<[JourneyResultsPage]>,
-        fromLocation: Binding<JourneyLocationPicker.Value?>,
-        toLocation: Binding<JourneyLocationPicker.Value?>,
-        viaLocation: JourneyLocationPicker.Value?,
+        pages: [JourneyPage],
+        fromLocation: Binding<JourneyLocation?>,
+        toLocation: Binding<JourneyLocation?>,
+        viaLocation: JourneyLocation?,
         selectedPreset: Binding<JourneyModePreset>,
+        errorFormatter: @escaping (any Error) -> String,
         onAction: @escaping (JourneyResultsAction) -> Void
     ) {
-        self._pages = pages
+        self.pages = pages
         self._fromLocation = fromLocation
         self._toLocation = toLocation
         self.viaLocation = viaLocation
         self._selectedPreset = selectedPreset
+        self.errorFormatter = errorFormatter
         self.onAction = onAction
     }
 
     private var isAnyPageLoading: Bool {
-        pages.contains { $0.loadingState == .loading }
+        pages.contains { $0.isLoading }
     }
 
     private var hasLoadedResults: Bool {
@@ -91,7 +95,7 @@ public struct JourneyResultsView: View {
     }
 
     private var totalCellItemCount: Int {
-        pages.reduce(0) { $0 + $1.cellItems.count }
+        pages.reduce(0) { $0 + ($1.cellItems?.count ?? 0) }
     }
 
     private var contentView: some View {
@@ -102,12 +106,12 @@ public struct JourneyResultsView: View {
             if hasLoadedResults {
                 earlierJourneysButton
             }
-            ForEach($pages) { $page in
-                pageView(page: $page)
+            ForEach(pages) { page in
+                pageView(page: page)
             }
             if hasLoadedResults {
                 laterJourneysButton
-            } else if !pages.isEmpty && pages.allSatisfy({ $0.loadingState == .loaded }) {
+            } else if !pages.isEmpty && pages.allSatisfy({ $0.isLoaded }) {
                 zeroResultsView
             }
             Spacer().frame(height: 30 + headerHeightCompensation)  // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
@@ -125,8 +129,8 @@ public struct JourneyResultsView: View {
     }
 
     @ViewBuilder
-    private func pageView(page: Binding<JourneyResultsPage>) -> some View {
-        switch page.wrappedValue.loadingState {
+    private func pageView(page: JourneyPage) -> some View {
+        switch page {
         case .loading:
             HStack(spacing: 4) {
                 Spacer()
@@ -137,19 +141,31 @@ public struct JourneyResultsView: View {
             }
             .defaultLoadingStatusStyle(verticalPadding: hasLoadedResults ? 2 : 12)
             .padding(.horizontal)
-        case .failure:
+        case .failed(_, let error):
             HStack {
                 Spacer()
-                LoadingStatusView(loadingState: page.wrappedValue.loadingState)
+                LoadingStatusView(loadingState: .failure(errorMessage: errorFormatter(error)))
                     .defaultLoadingStatusStyle(verticalPadding: 12)
                 Spacer()
             }
             .padding(.horizontal)
-        case .loaded:
-            ForEach(page.cellItems) { $cellItem in
-                JourneyResultsCell(cellItem: $cellItem)
-                    .padding(.horizontal)
+        case .loaded(_, let cellItems):
+            ForEach(cellItems) { cellItem in
+                JourneyResultsCell(
+                    value: cellItem,
+                    isExpanded: expandedJourneyIDs.contains(cellItem.id),
+                    onToggle: { toggleExpansion(for: cellItem) }
+                )
+                .padding(.horizontal)
             }
+        }
+    }
+
+    private func toggleExpansion(for cellItem: JourneyResultsCellItem) {
+        if expandedJourneyIDs.contains(cellItem.id) {
+            expandedJourneyIDs.remove(cellItem.id)
+        } else {
+            expandedJourneyIDs.insert(cellItem.id)
         }
     }
 
@@ -200,15 +216,15 @@ fileprivate extension Comparable {
 // MARK: - Previews
 
 private struct Previewer: View {
-    @State var pages: [JourneyResultsPage]
-    @State var fromLocation: JourneyLocationPicker.Value? = .station(
+    @State var pages: [JourneyPage]
+    @State var fromLocation: JourneyLocation? = .station(
         ModelStubs.angelStation
     )
-    @State var toLocation: JourneyLocationPicker.Value? = .station(
+    @State var toLocation: JourneyLocation? = .station(
         ModelStubs.kingsCrossStation
     )
     @State var selectedPreset: JourneyModePreset = .trainAndBus
-    var viaLocation: JourneyLocationPicker.Value? = .namedLocation(
+    var viaLocation: JourneyLocation? = .namedLocation(
         .init(
             name: .init(title: "Random location", subtitle: ""),
             coordinate: nil,
@@ -218,42 +234,37 @@ private struct Previewer: View {
 
     var body: some View {
         JourneyResultsView(
-            pages: $pages,
+            pages: pages,
             fromLocation: $fromLocation,
             toLocation: $toLocation,
             viaLocation: viaLocation,
             selectedPreset: $selectedPreset,
+            errorFormatter: { $0.localizedDescription },
             onAction: { print("Action: \($0)") }
         )
     }
 }
 
-extension JourneyResultsPage {
+extension JourneyPage {
     fileprivate static func loadedPage(
         id: String,
         results: JourneyResults
     ) -> Self {
-        JourneyResultsPage(
+        .loaded(
             id: id,
-            loadingState: .loaded,
             cellItems: (results.journeys ?? [])
                 .removingDuplicates()
                 .map {
                     JourneyResultsCellItem(
                         journey: $0,
-                        journeyDiagramID: UUID().uuidString,
-                        isExpanded: false
+                        journeyDiagramID: UUID().uuidString
                     )
                 }
         )
     }
 
     fileprivate static func loadingPage(id: String) -> Self {
-        JourneyResultsPage(
-            id: id,
-            loadingState: .loading,
-            cellItems: []
-        )
+        .loading(id: id)
     }
 }
 
@@ -309,13 +320,7 @@ extension JourneyResultsPage {
 #Preview("Loading error") {
     Previewer(
         pages: [
-            JourneyResultsPage(
-                id: "initial",
-                loadingState: .failure(
-                    errorMessage: "Oops, something bad happened"
-                ),
-                cellItems: []
-            )
+            .failed(id: "initial", error: URLError(.notConnectedToInternet))
         ]
     )
 }
@@ -323,11 +328,7 @@ extension JourneyResultsPage {
 #Preview("No results") {
     Previewer(
         pages: [
-            JourneyResultsPage(
-                id: "initial",
-                loadingState: .loaded,
-                cellItems: []
-            )
+            .loaded(id: "initial", cellItems: [])
         ]
     )
 }

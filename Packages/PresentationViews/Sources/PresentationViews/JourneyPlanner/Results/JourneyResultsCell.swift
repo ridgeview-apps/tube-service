@@ -9,41 +9,14 @@ public enum JourneyResultsAction {
     case customPresetTapped
 }
 
-public struct JourneyResultsPage: Identifiable, Hashable {
-    public let id: String
-    public var loadingState: LoadingState
-    public var cellItems: [JourneyResultsCellItem]
-
-    public init(id: String, loadingState: LoadingState, cellItems: [JourneyResultsCellItem]) {
-        self.id = id
-        self.loadingState = loadingState
-        self.cellItems = cellItems
-    }
-}
-
-public struct JourneyResultsCellItem: Identifiable, Hashable {
-    public var id: LineDiagramItemJourneyID { journeyDiagramID }
-    public let journey: Journey
-    public let journeyDiagramID: LineDiagramItemJourneyID
-    public var isExpanded: Bool
-
-    public init(
-        journey: Journey,
-        journeyDiagramID: LineDiagramItemJourneyID,
-        isExpanded: Bool
-    ) {
-        self.journey = journey
-        self.journeyDiagramID = journeyDiagramID
-        self.isExpanded = isExpanded
-    }
-}
-
 struct JourneyResultsCell: View {
 
-    @Binding var cellItem: JourneyResultsCellItem
+    let value: JourneyResultsCellItem
+    let isExpanded: Bool
+    let onToggle: () -> Void
 
-    private var journey: Journey { cellItem.journey }
-    private var journeyID: LineDiagramItem.JourneyID { cellItem.journeyDiagramID }
+    private var journey: Journey { value.journey }
+    private var journeyID: LineDiagramItem.JourneyID { value.journeyDiagramID }
 
     @Namespace private var cellViewNameSpace
 
@@ -52,7 +25,7 @@ struct JourneyResultsCell: View {
     var body: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.5)) {
-                cellItem.isExpanded.toggle()
+                onToggle()
             }
         } label: {
             VStack(alignment: .leading, spacing: 16) {
@@ -109,16 +82,16 @@ struct JourneyResultsCell: View {
     }
 
     private var lineDiagram: some View {
-        HStack(alignment: cellItem.isExpanded ? .firstTextBaseline : .center) {
+        HStack(alignment: isExpanded ? .firstTextBaseline : .center) {
             LineDiagramView(
                 animationNamespace: cellViewNameSpace,
-                orientation: cellItem.isExpanded ? .vertical : .horizontal,
+                orientation: isExpanded ? .vertical : .horizontal,
                 journey: journey,
                 journeyID: journeyID,
                 expandedStopJourneyItemIDs: $expandedStopJourneyItemIDs
             )
             .overlay(alignment: .trailing) {
-                if !cellItem.isExpanded {
+                if !isExpanded {
                     LinearGradient(
                         colors: [.clear, Color.defaultCellBackground],
                         startPoint: .leading,
@@ -130,7 +103,7 @@ struct JourneyResultsCell: View {
             }
             ExpansionInfoButton(
                 style: .imageOnly,
-                isExpanded: $cellItem.isExpanded
+                isExpanded: Binding(get: { isExpanded }, set: { _ in onToggle() })
             )
             .buttonStyle(.bordered)
             .controlSize(.small)
@@ -161,22 +134,15 @@ private extension Journey {
 import ModelStubs
 
 private struct Previewer: View {
-    @State var item: JourneyResultsCellItem
-
-    init(
-        journey: Journey,
-        journeyDiagramID: LineDiagramItem.JourneyID = UUID().uuidString,
-        isExpanded: Bool = false
-    ) {
-        item = .init(
-            journey: journey,
-            journeyDiagramID: journeyDiagramID,
-            isExpanded: isExpanded
-        )
-    }
+    let journey: Journey
+    @State private var isExpanded: Bool = false
 
     var body: some View {
-        JourneyResultsCell(cellItem: $item)
+        JourneyResultsCell(
+            value: JourneyResultsCellItem(journey: journey, journeyDiagramID: UUID().uuidString),
+            isExpanded: isExpanded,
+            onToggle: { isExpanded.toggle() }
+        )
     }
 }
 

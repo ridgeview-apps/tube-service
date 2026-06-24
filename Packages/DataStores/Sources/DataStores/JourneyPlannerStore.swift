@@ -1,12 +1,15 @@
-import DataStores
 import Foundation
 import Models
 import Observation
-import PresentationViews
 
 @MainActor
 @Observable
-final class JourneyPlannerStore {
+public final class JourneyPlannerStore {
+
+    private enum FetchContext {
+        case initial
+        case adjacent(JourneyPaginationAction)
+    }
 
     private enum PageID: CustomStringConvertible {
         case initial
@@ -37,9 +40,9 @@ final class JourneyPlannerStore {
 
     // MARK: - State
 
-    var form: JourneyPlannerForm = .empty
-    var pages: [JourneyResultsPage] = []
-    private(set) var hasFetchedInitialData = false
+    public var form: JourneyPlannerForm = .empty
+    public var pages: [JourneyPage] = []
+    public private(set) var hasFetchedInitialData = false
 
     private let tflAPI: TflAPIClientType
     private let localSearchResults: LocalSearchResultsStore
@@ -48,76 +51,67 @@ final class JourneyPlannerStore {
     private var laterTimeAdjustment: JourneyTimeAdjustment?
     private var pageCounter = 0
 
-    init(tflAPI: TflAPIClientType, localSearchResults: LocalSearchResultsStore) {
+    public init(tflAPI: TflAPIClientType, localSearchResults: LocalSearchResultsStore) {
         self.tflAPI = tflAPI
         self.localSearchResults = localSearchResults
     }
 
     // MARK: - High-level (screen-facing)
 
-    /// Resets the initial-fetch guard so the next push of results triggers a fresh fetch.
-    func resetForNewJourney() {
-        hasFetchedInitialData = false
-    }
-
-    /// Adjusts the current time if needed and resets the fetch guard — call before pushing results.
-    func prepareForSubmission() {
+    public func resetForNewJourney() {
         form.adjustCurrentTimeIfNeeded()
-        resetForNewJourney()
+        prepareForInitialFetch()
     }
 
-    /// Resets the time selection to Leave Now if the selected date has passed — call on calendar day change.
-    func resetTimeSelectionIfNeeded() {
+    public func resetTimeSelectionIfNeeded() {
         if form.timeSelection.date < .now {
             form.timeSelection = .leaveNow()
         }
     }
 
-    func updateCurrentLocationInfo(name: LocationName?, coordinate: LocationCoordinate?, updatesAllowed: Bool) {
+    public func updateCurrentLocationInfo(name: LocationName?, coordinate: LocationCoordinate?, updatesAllowed: Bool) {
         form.updateCurrentLocationInfo(name: name, coordinate: coordinate, updatesAllowed: updatesAllowed)
     }
 
-    /// Resolves form coordinates then fetches results. Calls prepareForInitialFetch internally.
-    func fetchInitialData(modeIDs: Set<ModeID>) async {
+    public func fetchInitialData(modeIDs: Set<ModeID>) async {
         prepareForInitialFetch()
         do {
             form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
             let requestParams = try form.toJourneyRequestParams(withModeIDs: modeIDs)
             await fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         } catch {
-            setInitialPageError(error.toUIErrorMessage())
+            setInitialPageError(error)
         }
     }
 
-    /// Derives request params from the current form and fetches an adjacent page.
-    func fetchAdjacentData(action: JourneyResultsAction, modeIDs: Set<ModeID>) async {
+    public func fetchAdjacentData(action: JourneyPaginationAction, modeIDs: Set<ModeID>) async {
         guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: modeIDs) else { return }
         await fetchAdjacentResults(action: action, baseRequestParams: requestParams, modeIDs: modeIDs)
     }
 
     // MARK: - Lower-level (also used by unit tests)
 
-    func prepareForInitialFetch() {
+    public func prepareForInitialFetch() {
         hasFetchedInitialData = false
-        pages = [JourneyResultsPage(id: PageID.initial.description, loadingState: .loading, cellItems: [])]
+        pages = [.loading(id: PageID.initial.description)]
         earlierTimeAdjustment = nil
         laterTimeAdjustment = nil
         pageCounter = 0
     }
 
-    func setInitialPageError(_ message: String) {
+    public func setInitialPageError(_ error: any Error) {
         if let index = pageIndex(for: .initial) {
-            pages[index].loadingState = .failure(errorMessage: message)
+            pages[index] = .failed(id: PageID.initial.description, error: error)
         }
     }
 
-    func fetchInitialResults(requestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
-        if await fetchAndUpdatePage(pageID: .initial, action: .initialFetch, requestParams: requestParams, modeIDs: modeIDs) {
+    public func fetchInitialResults(requestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
+        if await fetchAndUpdatePage(pageID: .initial, context: .initial, requestParams: requestParams, modeIDs: modeIDs) {
             hasFetchedInitialData = true
         }
     }
 
-    func fetchAdjacentResults(action: JourneyResultsAction, baseRequestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
+    public func fetchAdjacentResults(action: JourneyPaginationAction, baseRequestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
         let timeAdjustment: JourneyTimeAdjustment
         let pageID: PageID
 
@@ -132,20 +126,16 @@ final class JourneyPlannerStore {
             timeAdjustment = later
             pageCounter += 1
             pageID = .later(pageCounter)
-        default:
-            return
         }
 
-        let loadingPage = JourneyResultsPage(id: pageID.description, loadingState: .loading, cellItems: [])
-
         if case .earlier = pageID {
-            pages.insert(loadingPage, at: 0)
+            pages.insert(.loading(id: pageID.description), at: 0)
         } else {
-            pages.append(loadingPage)
+            pages.append(.loading(id: pageID.description))
         }
 
         let requestParams = Self.applyTimeAdjustment(timeAdjustment, to: baseRequestParams)
-        await fetchAndUpdatePage(pageID: pageID, action: action, requestParams: requestParams, modeIDs: modeIDs)
+        await fetchAndUpdatePage(pageID: pageID, context: .adjacent(action), requestParams: requestParams, modeIDs: modeIDs)
     }
 
     // MARK: - Private implementation
@@ -157,26 +147,26 @@ final class JourneyPlannerStore {
     @discardableResult
     private func fetchAndUpdatePage(
         pageID: PageID,
-        action: JourneyResultsAction,
+        context: FetchContext,
         requestParams: JourneyRequestParams,
         modeIDs: Set<ModeID>
     ) async -> Bool {
         do {
             let results: JourneyResults = try await tflAPI.fetchJourneyResults(for: requestParams).decodedModel
             let page = makePage(pageID: pageID, with: results, modeIDs: modeIDs)
-            if page.cellItems.isEmpty {
+            if page.cellItems?.isEmpty == true {
                 clearPage(pageID: pageID)
             } else if let index = pageIndex(for: pageID) {
                 pages[index] = page
             }
-            updateTimeAdjustments(from: results, for: action)
+            updateTimeAdjustments(from: results, for: context)
             return true
         } catch HTTPError.statusCode(404, _) {
             clearPage(pageID: pageID)
             return true
         } catch {
             if let index = pageIndex(for: pageID) {
-                pages[index].loadingState = .failure(errorMessage: error.toUIErrorMessage())
+                pages[index] = .failed(id: pageID.description, error: error)
             }
             return false
         }
@@ -185,31 +175,36 @@ final class JourneyPlannerStore {
     private func clearPage(pageID: PageID) {
         guard let index = pageIndex(for: pageID) else { return }
         if case .initial = pageID {
-            pages[index] = JourneyResultsPage(id: pageID.description, loadingState: .loaded, cellItems: [])
+            pages[index] = .loaded(id: pageID.description, cellItems: [])
         } else {
             pages.remove(at: index)
         }
     }
 
-    private func updateTimeAdjustments(from results: JourneyResults, for action: JourneyResultsAction) {
+    private func updateTimeAdjustments(from results: JourneyResults, for context: FetchContext) {
         let adjustments = results.searchCriteria?.timeAdjustments
-        switch action {
-        case .initialFetch, .refresh:
+        switch context {
+        case .initial:
             earlierTimeAdjustment = adjustments?.earlier
             laterTimeAdjustment = adjustments?.later
-        case .earlierJourneys:
-            earlierTimeAdjustment = adjustments?.earlier
-        case .laterJourneys:
-            laterTimeAdjustment = adjustments?.later
-        case .customPresetTapped:
-            break
+        case .adjacent(let action):
+            switch action {
+            case .earlierJourneys:
+                earlierTimeAdjustment = adjustments?.earlier
+            case .laterJourneys:
+                laterTimeAdjustment = adjustments?.later
+            }
         }
     }
 
-    private func makePage(pageID: PageID, with results: JourneyResults, modeIDs: Set<ModeID>) -> JourneyResultsPage {
+    private func makePage(pageID: PageID, with results: JourneyResults, modeIDs: Set<ModeID>) -> JourneyPage {
         let existingTimePairs: Set<JourneyTimePair> = Set(
-            pages.flatMap { $0.cellItems.map(\.journey) }
-                .compactMap(JourneyTimePair.init)
+            pages.compactMap { page -> [Journey]? in
+                if case .loaded(_, let items) = page { return items.map(\.journey) }
+                return nil
+            }
+            .flatMap { $0 }
+            .compactMap(JourneyTimePair.init)
         )
         let cellItems = (results.journeys ?? [])
             .sanitizedAndSortedByArrivalTime(forModeIDs: modeIDs)
@@ -221,11 +216,10 @@ final class JourneyPlannerStore {
             .map { index, journey in
                 JourneyResultsCellItem(
                     journey: journey,
-                    journeyDiagramID: "\(pageID)-\(index)",
-                    isExpanded: false
+                    journeyDiagramID: "\(pageID)-\(index)"
                 )
             }
-        return JourneyResultsPage(id: pageID.description, loadingState: .loaded, cellItems: cellItems)
+        return .loaded(id: pageID.description, cellItems: cellItems)
     }
 
     private static func applyTimeAdjustment(_ timeAdjustment: JourneyTimeAdjustment, to params: JourneyRequestParams) -> JourneyRequestParams {

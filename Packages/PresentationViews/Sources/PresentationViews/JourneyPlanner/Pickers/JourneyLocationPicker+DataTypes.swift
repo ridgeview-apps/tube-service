@@ -3,35 +3,8 @@ import Models
 
 public enum JourneyLocationPicker: Sendable {
 
-    public struct NamedLocationValue: Hashable, Sendable {
-        public let name: LocationName?
-        public let coordinate: LocationCoordinate?
-        public let isCurrentLocation: Bool
-
-        public var isResolved: Bool { coordinate != nil }
-
-        public init(
-            name: LocationName?,
-            coordinate: LocationCoordinate?,
-            isCurrentLocation: Bool
-        ) {
-            self.name = name
-            self.coordinate = coordinate
-            self.isCurrentLocation = isCurrentLocation
-        }
-    }
-
-    public enum Value: Hashable, Sendable {
-        case station(Station)
-        case nationalRail(StopPoint)
-        case namedLocation(NamedLocationValue)
-
-        public static func currentLocation(name: LocationName?, coordinate: LocationCoordinate?) -> Value {
-            .namedLocation(.init(name: name, coordinate: coordinate, isCurrentLocation: true))
-        }
-
-        public static let unknownCurrentLocation = Value.namedLocation(.init(name: nil, coordinate: nil, isCurrentLocation: true))
-    }
+    public typealias NamedLocationValue = JourneyNamedLocation
+    public typealias Value = JourneyLocation
 
     public struct SectionState: Hashable, Identifiable {
         public enum SectionID: Hashable {
@@ -62,7 +35,7 @@ public enum JourneyLocationPicker: Sendable {
     }
 }
 
-extension JourneyLocationPicker.Value {
+extension JourneyLocation {
 
     var name: String {
         switch self {
@@ -89,7 +62,7 @@ extension LocationName {
     }
 }
 
-private extension JourneyLocationPicker.Value {
+private extension JourneyLocation {
 
     typealias SortProperties = (sortValue: Int, name: String)
 
@@ -115,25 +88,22 @@ private let timestampFormatter: DateFormatter = Formatter.relative(
     context: .middleOfSentence
 )
 
-public struct JourneyTimePickerSelection: Hashable, Sendable {
+public typealias JourneyTimePickerSelection = JourneyTimeSelection
 
-    public enum Option: CaseIterable, Sendable {
-        case leaveNow, leaveAt, arriveBy
-
-        var title: LocalizedStringResource {
-            switch self {
-            case .leaveNow:
-                .journeyPlannerTimePickerOptionLeaveNow
-            case .leaveAt:
-                .journeyPlannerTimePickerOptionLeaveLater
-            case .arriveBy:
-                .journeyPlannerTimePickerOptionArriveBy
-            }
+extension JourneyTimeSelection.Option {
+    var title: LocalizedStringResource {
+        switch self {
+        case .leaveNow:
+            .journeyPlannerTimePickerOptionLeaveNow
+        case .leaveAt:
+            .journeyPlannerTimePickerOptionLeaveLater
+        case .arriveBy:
+            .journeyPlannerTimePickerOptionArriveBy
         }
     }
-    public var option: Option
-    public var date: Date = .now
+}
 
+extension JourneyTimeSelection {
     var formattedDate: String {
         switch option {
         case .leaveNow:
@@ -142,13 +112,9 @@ public struct JourneyTimePickerSelection: Hashable, Sendable {
             timestampFormatter.string(from: date)
         }
     }
-
-    public static func leaveNow() -> JourneyTimePickerSelection {
-        .init(option: .leaveNow)
-    }
 }
 
-public extension Sequence where Element == JourneyLocationPicker.Value {
+public extension Sequence where Element == JourneyLocation {
     func sortedByName() -> [Element] {
         sorted {
             $0.sortProperties < $1.sortProperties

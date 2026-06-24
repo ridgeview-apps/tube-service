@@ -20,11 +20,12 @@ struct JourneyResultsScreen: View {
     var body: some View {
         @Bindable var journeyPlanner = journeyPlanner
         JourneyResultsView(
-            pages: $journeyPlanner.pages,
+            pages: journeyPlanner.pages,
             fromLocation: $journeyPlanner.form.from,
             toLocation: $journeyPlanner.form.to,
             viaLocation: journeyPlanner.form.via,
             selectedPreset: $userPreferences.journeyModePreset,
+            errorFormatter: { $0.toUIErrorMessage() },
             onAction: { handleAction($0) }
         )
         .navigationBarTitleDisplayMode(.inline)
@@ -42,8 +43,10 @@ struct JourneyResultsScreen: View {
             Task { await fetchInitialData() }
         case .refresh:
             Task { await fetchInitialData() }
-        case .earlierJourneys, .laterJourneys:
-            Task { await journeyPlanner.fetchAdjacentData(action: action, modeIDs: sessionModeIDs) }
+        case .earlierJourneys:
+            Task { await journeyPlanner.fetchAdjacentData(action: .earlierJourneys, modeIDs: sessionModeIDs) }
+        case .laterJourneys:
+            Task { await journeyPlanner.fetchAdjacentData(action: .laterJourneys, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
             let seedModeIDs: Set<ModeID>
             if case .custom(let modeIDs) = userPreferences.journeyModePreset {

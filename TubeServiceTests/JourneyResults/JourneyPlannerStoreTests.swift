@@ -1,12 +1,9 @@
 import Foundation
 import Models
 import ModelStubs
-import PresentationViews
 import Testing
 
 @testable import DataStores
-
-@testable import Tube_Service
 
 @MainActor
 struct JourneyPlannerStoreTests {
@@ -48,7 +45,7 @@ struct JourneyPlannerStoreTests {
     @Test
     func resetTimeSelectionIfNeeded_withPastDate_resetsToLeaveNow() {
         let model = makeStore()
-        model.form.timeSelection = JourneyTimePickerSelection(option: .leaveAt, date: Date(timeIntervalSince1970: 0))
+        model.form.timeSelection = JourneyTimeSelection(option: .leaveAt, date: Date(timeIntervalSince1970: 0))
 
         model.resetTimeSelectionIfNeeded()
 
@@ -58,7 +55,7 @@ struct JourneyPlannerStoreTests {
     @Test
     func resetTimeSelectionIfNeeded_withFutureDate_doesNotReset() {
         let model = makeStore()
-        model.form.timeSelection = JourneyTimePickerSelection(option: .leaveAt, date: Date.distantFuture)
+        model.form.timeSelection = JourneyTimeSelection(option: .leaveAt, date: Date.distantFuture)
 
         model.resetTimeSelectionIfNeeded()
 
@@ -78,8 +75,8 @@ struct JourneyPlannerStoreTests {
 
         #expect(model.hasFetchedInitialData == true)
         #expect(model.pages.count == 1)
-        #expect(model.pages.first?.loadingState == .loaded)
-        #expect(model.pages.first?.cellItems.isEmpty == false)
+        #expect(model.pages.first?.isLoaded == true)
+        #expect(model.pages.first?.cellItems?.isEmpty == false)
         #expect(tflAPI.fetchJourneyResultsCallCount == 1)
     }
 
@@ -93,11 +90,7 @@ struct JourneyPlannerStoreTests {
         await model.fetchInitialData(modeIDs: modeIDs)
 
         #expect(model.hasFetchedInitialData == false)
-        if case .failure = model.pages.first?.loadingState {
-            // expected
-        } else {
-            Issue.record("Expected failure loading state")
-        }
+        #expect(model.pages.first?.isFailed == true)
     }
 
     // MARK: - prepareForInitialFetch
@@ -110,8 +103,8 @@ struct JourneyPlannerStoreTests {
 
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
-        #expect(model.pages.first?.loadingState == .loading)
-        #expect(model.pages.first?.cellItems.isEmpty == true)
+        #expect(model.pages.first?.isLoading == true)
+        #expect(model.pages.first?.cellItems?.isEmpty == true)
     }
 
     @Test
@@ -134,10 +127,10 @@ struct JourneyPlannerStoreTests {
         let model = makeStore()
         model.prepareForInitialFetch()
 
-        model.setInitialPageError("Something went wrong")
+        model.setInitialPageError(URLError(.notConnectedToInternet))
 
         #expect(model.pages.count == 1)
-        #expect(model.pages.first?.loadingState == .failure(errorMessage: "Something went wrong"))
+        #expect(model.pages.first?.isFailed == true)
     }
 
     // MARK: - fetchInitialResults
@@ -152,8 +145,8 @@ struct JourneyPlannerStoreTests {
 
         #expect(model.hasFetchedInitialData == true)
         #expect(model.pages.count == 1)
-        #expect(model.pages.first?.loadingState == .loaded)
-        #expect(model.pages.first?.cellItems.isEmpty == false)
+        #expect(model.pages.first?.isLoaded == true)
+        #expect(model.pages.first?.cellItems?.isEmpty == false)
         #expect(tflAPI.fetchJourneyResultsCallCount == 1)
     }
 
@@ -167,8 +160,8 @@ struct JourneyPlannerStoreTests {
 
         #expect(model.hasFetchedInitialData == true)
         #expect(model.pages.count == 1)
-        #expect(model.pages.first?.loadingState == .loaded)
-        #expect(model.pages.first?.cellItems.isEmpty == true)
+        #expect(model.pages.first?.isLoaded == true)
+        #expect(model.pages.first?.cellItems?.isEmpty == true)
     }
 
     @Test
@@ -181,11 +174,7 @@ struct JourneyPlannerStoreTests {
 
         #expect(model.hasFetchedInitialData == false)
         #expect(model.pages.count == 1)
-        if case .failure = model.pages.first?.loadingState {
-            // expected
-        } else {
-            Issue.record("Expected failure loading state")
-        }
+        #expect(model.pages.first?.isFailed == true)
     }
 
     // MARK: - fetchAdjacentResults (earlier)
@@ -198,7 +187,7 @@ struct JourneyPlannerStoreTests {
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        let initialPageCount = model.pages.first?.cellItems.count ?? 0
+        let initialPageCount = model.pages.first?.cellItems?.count ?? 0
 
         // Fetch earlier
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooEarlier)
@@ -209,9 +198,9 @@ struct JourneyPlannerStoreTests {
         if model.pages.count == 2 {
             #expect(model.pages[0].id.hasPrefix("earlier"))
             #expect(model.pages[1].id == "initial")
-            #expect(model.pages[0].loadingState == .loaded)
+            #expect(model.pages[0].isLoaded == true)
         }
-        let totalItems = model.pages.reduce(0) { $0 + $1.cellItems.count }
+        let totalItems = model.pages.reduce(0) { $0 + ($1.cellItems?.count ?? 0) }
         #expect(totalItems >= initialPageCount)
     }
 
@@ -225,7 +214,7 @@ struct JourneyPlannerStoreTests {
         model.prepareForInitialFetch()
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        let initialPageCount = model.pages.first?.cellItems.count ?? 0
+        let initialPageCount = model.pages.first?.cellItems?.count ?? 0
 
         // Fetch later
         tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooLater)
@@ -236,9 +225,9 @@ struct JourneyPlannerStoreTests {
         if model.pages.count == 2 {
             #expect(model.pages[0].id == "initial")
             #expect(model.pages[1].id.hasPrefix("later"))
-            #expect(model.pages[1].loadingState == .loaded)
+            #expect(model.pages[1].isLoaded == true)
         }
-        let totalItems = model.pages.reduce(0) { $0 + $1.cellItems.count }
+        let totalItems = model.pages.reduce(0) { $0 + ($1.cellItems?.count ?? 0) }
         #expect(totalItems >= initialPageCount)
     }
 
@@ -283,12 +272,8 @@ struct JourneyPlannerStoreTests {
         await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 2)
-        if case .failure = model.pages[0].loadingState {
-            // expected — earlier page shows error
-        } else {
-            Issue.record("Expected failure loading state on earlier page")
-        }
-        #expect(model.pages[1].loadingState == .loaded)
+        #expect(model.pages[0].isFailed == true)
+        #expect(model.pages[1].isLoaded == true)
     }
 
     // MARK: - Deduplication
@@ -302,7 +287,7 @@ struct JourneyPlannerStoreTests {
         let results = ModelStubs.journeyResultsKingsXToWaterlooNow
         tflAPI.stubbedJourneyResults = .success200(results)
         await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        let initialCount = model.pages.first?.cellItems.count ?? 0
+        let initialCount = model.pages.first?.cellItems?.count ?? 0
         #expect(initialCount > 0)
 
         // Fetch later with identical results — all should be deduped
@@ -313,19 +298,5 @@ struct JourneyPlannerStoreTests {
         // Adjacent page should be removed since all items were duplicates
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
-    }
-
-    // MARK: - Ignores invalid actions
-
-    @Test
-    func fetchAdjacentResults_ignoresRefreshAction() async {
-        let model = makeStore()
-        model.prepareForInitialFetch()
-        tflAPI.stubbedJourneyResults = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-
-        await model.fetchAdjacentResults(action: .refresh, baseRequestParams: requestParams, modeIDs: modeIDs)
-
-        #expect(tflAPI.fetchJourneyResultsCallCount == 1)
     }
 }

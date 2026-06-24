@@ -83,8 +83,8 @@ struct JourneyPlannerScreen: View {
 
     private func currentFormValue(forLocationFieldID locationFieldID: JourneyPlannerForm.FieldID.LocationID) -> Binding<JourneyLocationPicker.Value?> {
         .init(
-            get: { journeyPlanner.form.locationPickerValue(for: locationFieldID) },
-            set: { newValue in journeyPlanner.form.populate(locationFieldID: locationFieldID, withValue: newValue) }
+            get: { journeyPlanner.form.locationValue(for: locationFieldID) },
+            set: { newValue in journeyPlanner.form.populate(locationFieldID: locationFieldID, with: newValue) }
         )
     }
 
@@ -110,7 +110,7 @@ struct JourneyPlannerScreen: View {
     }
 
     private func showResults() {
-        journeyPlanner.prepareForSubmission()
+        journeyPlanner.resetForNewJourney()
         router.push(.journeyResults)
     }
 }

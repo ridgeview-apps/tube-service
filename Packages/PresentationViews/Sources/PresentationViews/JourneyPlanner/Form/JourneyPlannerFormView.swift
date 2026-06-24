@@ -238,7 +238,7 @@ private struct Previewer: View {
             ),
             to: .station(ModelStubs.kingsCrossStation),
             via: .station(ModelStubs.eastFinchleyStation),
-            timeSelection: .init(option: .arriveBy, date: .now + 3600)
+            timeSelection: .arriveBy(.now + 3600)
         )
     )
 }

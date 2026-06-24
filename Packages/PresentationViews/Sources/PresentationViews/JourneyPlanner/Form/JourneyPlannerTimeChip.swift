@@ -55,6 +55,6 @@ struct JourneyPlannerTimeChip: View {
 
 #Preview("Arrive by") {
     JourneyPlannerTimeChip(
-        timeSelection: .constant(.init(option: .arriveBy, date: .now + 3600))
+        timeSelection: .constant(.arriveBy(.now + 3600))
     )
 }
