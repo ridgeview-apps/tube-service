@@ -17,6 +17,22 @@ struct ArrivalsBoardStoreTests {
         ArrivalsBoardStore(tflAPI: tflAPI)
     }
 
+    // MARK: - Initial state
+
+    @Test
+    func refresh_fromIdleState_completesSuccessfully() async {
+        // Regression: guard must not block the first fetch from .idle initial state.
+        let store = makeStore()
+        guard case .idle = store.boardData.fetchState else {
+            Issue.record("Precondition: expected initial fetchState to be .idle")
+            return
+        }
+
+        await store.refresh(for: predictionsLineGroup)
+
+        #expect(store.boardData.fetchState.isSuccess == true)
+    }
+
     // MARK: - refresh (predictions)
 
     @Test

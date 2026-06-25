@@ -7,7 +7,7 @@ struct FetchCache<Key: Hashable, Value> {
         var fetchState: DataFetchState
 
         static var initial: Entry {
-            Entry(value: nil, fetchedAt: nil, fetchState: .fetching)
+            Entry(value: nil, fetchedAt: nil, fetchState: .idle)
         }
     }
 

@@ -5,7 +5,7 @@ extension DataFetchState {
 
     var loadingState: LoadingState {
         switch self {
-        case .fetching:
+        case .idle, .fetching:
             return .loading
         case .success:
             return .loaded

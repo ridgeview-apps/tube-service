@@ -14,7 +14,7 @@ public final class ArrivalsBoardStore {
 
     private static let refreshInterval: TimeInterval = 20
 
-    public private(set) var boardData = RemoteData<BoardData?>(value: nil, fetchedAt: nil, fetchState: .fetching)
+    public private(set) var boardData = RemoteData<BoardData?>(value: nil, fetchedAt: nil, fetchState: .idle)
 
     private let tflAPI: TflAPIClientType
     private var initialFetchTask: Task<Void, Never>?
