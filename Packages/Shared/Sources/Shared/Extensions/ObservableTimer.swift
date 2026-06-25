@@ -1,8 +1,9 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
-public final class ObservableTimer: @unchecked Sendable {
+public final class ObservableTimer {
     public private(set) var firedAt: Date?
     public let timeInterval: TimeInterval
 
@@ -13,9 +14,15 @@ public final class ObservableTimer: @unchecked Sendable {
         repeats: Bool
     ) {
         self.timeInterval = timeInterval
-        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true) { [weak self] _ in
-            self?.firedAt = .now
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: repeats) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.firedAt = .now
+            }
         }
+    }
+
+    isolated deinit {
+        timer?.invalidate()
     }
 
     public func invalidate() {
