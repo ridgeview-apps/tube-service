@@ -74,11 +74,11 @@ public struct NotificationLinePreference: Codable, Hashable, Sendable {
 
     public init(
         lineId: String,
-        enabled: Bool = true,
-        severityThreshold: NotificationSeverityThreshold = .minorDelays,
-        notifyRecoveries: Bool = true,
-        schedulePreset: NotificationSchedulePreset = .weekdayPeak,
-        customSchedules: [NotificationScheduleWindow] = []
+        enabled: Bool,
+        severityThreshold: NotificationSeverityThreshold,
+        notifyRecoveries: Bool,
+        schedulePreset: NotificationSchedulePreset,
+        customSchedules: [NotificationScheduleWindow]
     ) {
         self.lineId = lineId
         self.enabled = enabled

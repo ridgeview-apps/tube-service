@@ -3,33 +3,33 @@ import SwiftUI
 
 public struct NotificationsOnboardingScheduleView: View {
 
-    public let selectedLineIDs: Set<TrainLineID>
-    public let onDone: (NotificationSchedulePreset) -> Void
+    public let onDone: ([TrainLineID: NotificationSchedulePreset]) -> Void
 
-    @State private var selectedPreset: NotificationSchedulePreset
+    @State private var presets: [TrainLineID: NotificationSchedulePreset]
+
+    private let sortedLineIDs: [TrainLineID]
 
     public init(
-        selectedLineIDs: Set<TrainLineID>,
-        initialPreset: NotificationSchedulePreset,
-        onDone: @escaping (NotificationSchedulePreset) -> Void
+        initialPresets: [TrainLineID: NotificationSchedulePreset],
+        onDone: @escaping ([TrainLineID: NotificationSchedulePreset]) -> Void
     ) {
-        self.selectedLineIDs = selectedLineIDs
         self.onDone = onDone
-        _selectedPreset = State(initialValue: initialPreset)
+        _presets = State(initialValue: initialPresets)
+        sortedLineIDs = initialPresets.keys.sorted(by: { $0.name < $1.name })
     }
 
     public var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                selectedLinesCard
-                NotificationsSchedulePicker(selectedPreset: $selectedPreset)
-                    .cardStyle()
+                ForEach(sortedLineIDs, id: \.rawValue) { lineID in
+                    lineScheduleCard(for: lineID)
+                }
             }
             .padding(20)
         }
         .safeAreaInset(edge: .bottom) {
             Button {
-                onDone(selectedPreset)
+                onDone(presets)
             } label: {
                 Text(.globalDone)
                     .frame(maxWidth: .infinity)
@@ -44,24 +44,66 @@ public struct NotificationsOnboardingScheduleView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 
-    private var selectedLinesCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ForEach(selectedLineIDs.sorted(by: { $0.name < $1.name }), id: \.rawValue) { lineID in
-                HStack(spacing: 10) {
-                    Circle()
-                        .fill(lineID.backgroundColor)
-                        .frame(width: 12, height: 12)
-                    Text(lineID.name)
-                        .font(.subheadline)
+    private func preset(for lineID: TrainLineID) -> NotificationSchedulePreset {
+        presets[lineID] ?? .weekdayPeak
+    }
+
+    private func lineScheduleCard(for lineID: TrainLineID) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(lineID.name)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.bottom, 10)
+
+            Divider()
+
+            HStack {
+                Text(L10n.notificationsConfirmationScheduleLabel)
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: 8)
+                Menu {
+                    Picker(L10n.notificationsConfirmationScheduleLabel, selection: presetBinding(for: lineID)) {
+                        ForEach(NotificationSchedulePreset.allDisplayCases, id: \.self) { p in
+                            Text(p.title).tag(p)
+                        }
+                    }
+                    .labelsHidden()
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(preset(for: lineID).title)
+                            .multilineTextAlignment(.trailing)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .imageScale(.small)
+                    }
+                    .foregroundStyle(.tint)
                 }
+                .menuOrder(.fixed)
+                .buttonStyle(.plain)
             }
+            .font(.subheadline)
+            .padding(.vertical, 10)
+
+            Text(preset(for: lineID).description)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.top, 2)
         }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(alignment: .leading) {
+            lineID.backgroundColor.frame(width: 6)
+        }
         .cardStyle()
     }
-}
 
+    private func presetBinding(for lineID: TrainLineID) -> Binding<NotificationSchedulePreset> {
+        Binding(
+            get: { preset(for: lineID) },
+            set: { presets[lineID] = $0 }
+        )
+    }
+}
 
 // MARK: - Previews
 
@@ -69,8 +111,11 @@ public struct NotificationsOnboardingScheduleView: View {
     #Preview {
         NavigationStack {
             NotificationsOnboardingScheduleView(
-                selectedLineIDs: [.victoria, .jubilee, .central],
-                initialPreset: .weekdayPeak,
+                initialPresets: [
+                    .victoria: .weekdayPeak,
+                    .jubilee: .anytime,
+                    .central: .weekends
+                ],
                 onDone: { _ in }
             )
         }

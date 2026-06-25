@@ -6,7 +6,10 @@ public struct NotificationsLineSelectionView: View {
     @State private var selectedLineIDs: Set<TrainLineID>
     public let onContinue: (Set<TrainLineID>) -> Void
 
-    public init(initialSelection: Set<TrainLineID>, onContinue: @escaping (Set<TrainLineID>) -> Void) {
+    public init(
+        initialSelection: Set<TrainLineID>,
+        onContinue: @escaping (Set<TrainLineID>) -> Void
+    ) {
         _selectedLineIDs = State(initialValue: initialSelection)
         self.onContinue = onContinue
     }

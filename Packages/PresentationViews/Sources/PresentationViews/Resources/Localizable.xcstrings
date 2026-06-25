@@ -2371,7 +2371,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Receive alerts at any hour, any day."
+            "value" : "All hours"
           }
         }
       }
@@ -2382,7 +2382,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Any Time"
+            "value" : "Every day"
           }
         }
       }
@@ -2404,7 +2404,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts at any time during weekdays."
+            "value" : "All hours"
           }
         }
       }
@@ -2415,7 +2415,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All Weekday Hours"
+            "value" : "Mon–Fri (all day)"
           }
         }
       }
@@ -2426,7 +2426,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts during morning and evening rush hours on weekdays."
+            "value" : "6:30–9:30 AM & 4–7 PM"
           }
         }
       }
@@ -2437,7 +2437,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weekday Peak Hours"
+            "value" : "Mon–Fri (peak hours)"
           }
         }
       }
@@ -2448,7 +2448,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts on Saturdays and Sundays."
+            "value" : "All hours"
           }
         }
       }
@@ -2459,7 +2459,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weekends"
+            "value" : "Sat–Sun (all day)"
           }
         }
       }

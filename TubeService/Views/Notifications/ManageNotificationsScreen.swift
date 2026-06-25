@@ -63,8 +63,6 @@ struct ManageNotificationsScreen: View {
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.secondary)
                 .textCase(.uppercase)
-            NotificationsSchedulePicker(selectedPreset: $selectedPreset)
-                .cardStyle()
         }
     }
 
@@ -99,8 +97,22 @@ struct ManageNotificationsScreen: View {
                     preferences: NotificationPreferences(
                         deviceId: "preview-device",
                         lines: [
-                            NotificationLinePreference(lineId: "victoria", schedulePreset: .weekdayPeak),
-                            NotificationLinePreference(lineId: "central", schedulePreset: .weekdayPeak)
+                            .init(
+                                lineId: "victoria",
+                                enabled: true,
+                                severityThreshold: .minorDelays,
+                                notifyRecoveries: true,
+                                schedulePreset: .weekends,
+                                customSchedules: []
+                            ),
+                            .init(
+                                lineId: "central",
+                                enabled: true,
+                                severityThreshold: .minorDelays,
+                                notifyRecoveries: true,
+                                schedulePreset: .weekends,
+                                customSchedules: []
+                            )
                         ],
                         createdAt: .now,
                         updatedAt: .now

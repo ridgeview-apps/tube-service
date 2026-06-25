@@ -4,6 +4,97 @@ import PresentationViews
 import StoreKit
 import SwiftUI
 
+enum NotificationOnboardingFlowStep {
+    case intro
+    case paywall
+    case lineSelection
+    case schedule
+    case permissionDenied
+}
+
+@Observable
+@MainActor
+final class NotificationFlowStore {
+
+    private(set) var selectedLines: Set<TrainLineID> = []
+    private(set) var currentStep: NotificationOnboardingFlowStep = .intro
+
+    func begin(
+        with initialLineSelections: Set<TrainLineID>,
+        skipIntro: Bool
+    ) {
+        self.selectedLines = initialLineSelections
+
+        if skipIntro {
+            proceed(to: .lineSelection)
+        } else {
+            proceed(to: .intro)
+        }
+    }
+
+    func proceed(to nextStep: NotificationOnboardingFlowStep) {
+        currentStep = nextStep
+    }
+
+    func lineSelectionDone(with newValues: Set<TrainLineID>) {
+        self.selectedLines = newValues
+        proceed(to: .schedule)
+    }
+}
+
+struct NotificationsOnboardingFlowView: View {
+    @Environment(\.dismiss) private var dismiss
+    @Environment(PurchaseStore.self) private var purchaseStore
+
+    @State private var flow: NotificationFlowStore!
+
+    var body: some View {
+        switch flow.currentStep {
+        case .intro:
+            NotificationsOnboardingIntroView(onAction: handleIntroAction)
+        case .paywall:
+            TubeServicePlusView(
+                context: .notifications,
+                autoDismissesOnPurchase: false,
+                onAction: handlePaywallAction
+            )
+        case .lineSelection:
+            NotificationsLineSelectionView(
+                initialSelection: flow.selectedLines,
+                onContinue: handleLineSelectionDone
+            )
+        case .schedule:
+            EmptyView()  // TODO
+        case .permissionDenied:
+            EmptyView()  // TODO
+        }
+    }
+
+    private func handleIntroAction(_ action: NotificationsOnboardingIntroView.Action) {
+        switch action {
+        case .getStarted:
+            if purchaseStore.hasTubeServicePlus {
+                flow.proceed(to: .lineSelection)
+            } else {
+                flow.proceed(to: .paywall)
+            }
+        case .notNow:
+            dismiss()
+        }
+    }
+
+    private func handleLineSelectionDone(_ selectedLines: Set<TrainLineID>) {
+        flow.lineSelectionDone(with: selectedLines)
+    }
+
+    private func handlePaywallAction(_ action: TubeServicePlusView.Action) {
+        switch action {
+        case .purchaseSuccess:
+            flow.proceed(to: .lineSelection)
+        }
+    }
+}
+
 @MainActor
 struct NotificationsOnboardingContent: View {
 
@@ -55,14 +146,7 @@ struct NotificationsOnboardingContent: View {
                         }
                     )
                 case .schedule:
-                    NotificationsOnboardingScheduleView(
-                        selectedLineIDs: selectedLineIDs,
-                        initialPreset: selectedPreset,
-                        onDone: { preset in
-                            selectedPreset = preset
-                            Task { await checkPermissionAndAdvance() }
-                        }
-                    )
+                    EmptyView()  // To be fixed later
                 case .permissionDenied:
                     NotificationsOnboardingPermissionDeniedView(onAction: handlePermissionDeniedAction)
                         .onSceneDidBecomeActive {

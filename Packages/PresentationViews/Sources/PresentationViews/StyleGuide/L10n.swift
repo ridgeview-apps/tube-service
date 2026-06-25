@@ -43,6 +43,8 @@ public enum L10n {
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
     public static let settingsNotificationsRowTitle = LocalizedStringResource.settingsNotificationsRowTitle
 
+    public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
+
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle
 

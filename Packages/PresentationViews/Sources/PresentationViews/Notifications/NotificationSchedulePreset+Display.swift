@@ -3,6 +3,10 @@ import SwiftUI
 
 extension NotificationSchedulePreset {
 
+    static let allDisplayCases: [NotificationSchedulePreset] = [
+        .weekdayPeak, .weekdayAllDay, .weekends, .anytime
+    ]
+
     var title: LocalizedStringResource {
         switch self {
         case .weekdayPeak: L10n.notificationsScheduleWeekdayPeakTitle
@@ -13,13 +17,13 @@ extension NotificationSchedulePreset {
         }
     }
 
-    var systemImage: String {
+    var description: LocalizedStringResource {
         switch self {
-        case .weekdayPeak: "person.2.wave.2"
-        case .weekdayAllDay: "sun.max"
-        case .weekends: "calendar"
-        case .anytime: "bell.fill"
-        case .custom: "slider.horizontal.3"
+        case .weekdayPeak: L10n.notificationsScheduleWeekdayPeakDescription
+        case .weekdayAllDay: L10n.notificationsScheduleWeekdayAllDayDescription
+        case .weekends: L10n.notificationsScheduleWeekendsDescription
+        case .anytime: L10n.notificationsScheduleAnytimeDescription
+        case .custom: L10n.notificationsScheduleAnytimeDescription
         }
     }
 }
