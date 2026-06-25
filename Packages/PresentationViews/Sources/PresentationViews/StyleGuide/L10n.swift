@@ -14,7 +14,9 @@ public enum L10n {
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
 
     public static let globalCancel = LocalizedStringResource.globalCancel
+    public static let globalDeselectAll = LocalizedStringResource.globalDeselectAll
     public static let globalDone = LocalizedStringResource.globalDone
+    public static let globalSelectAll = LocalizedStringResource.globalSelectAll
 
     public static let journeyPlannerLocationPickerScreenFromNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenFromNavigationTitle
     public static let journeyPlannerLocationPickerScreenToNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenToNavigationTitle
@@ -44,6 +46,9 @@ public enum L10n {
     public static let settingsNotificationsRowTitle = LocalizedStringResource.settingsNotificationsRowTitle
 
     public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
+    public static let notificationsLineRecoveryAlertsLabel = LocalizedStringResource.notificationsLineRecoveryAlertsLabel
+    public static let notificationsOnboardingFeatureRecoveryAlertsDescription =
+        LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsDescription
 
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle

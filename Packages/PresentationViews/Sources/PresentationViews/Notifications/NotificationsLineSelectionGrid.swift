@@ -6,15 +6,33 @@ public struct NotificationsLineSelectionGrid: View {
     @Binding public var selectedLineIDs: Set<TrainLineID>
 
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
+    private let allLineIDs = TrainLineID.allCases.sorted(by: { $0.name < $1.name })
 
     public init(selectedLineIDs: Binding<Set<TrainLineID>>) {
         self._selectedLineIDs = selectedLineIDs
     }
 
+    private var allSelected: Bool {
+        selectedLineIDs.count == allLineIDs.count
+    }
+
     public var body: some View {
-        LazyVGrid(columns: columns, spacing: 10) {
-            ForEach(TrainLineID.allCases.sorted(by: { $0.name < $1.name }), id: \.rawValue) { lineID in
-                lineButton(lineID)
+        VStack(alignment: .trailing, spacing: 10) {
+            Button {
+                if allSelected {
+                    selectedLineIDs.removeAll()
+                } else {
+                    selectedLineIDs = Set(allLineIDs)
+                }
+            } label: {
+                Text(allSelected ? L10n.globalDeselectAll : L10n.globalSelectAll)
+                    .font(.subheadline)
+            }
+
+            LazyVGrid(columns: columns, spacing: 10) {
+                ForEach(allLineIDs, id: \.rawValue) { lineID in
+                    lineButton(lineID)
+                }
             }
         }
     }

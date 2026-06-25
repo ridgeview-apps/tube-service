@@ -458,6 +458,17 @@
         }
       }
     },
+    "global.deselect.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deselect all"
+          }
+        }
+      }
+    },
     "global.remove" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -465,6 +476,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove"
+          }
+        }
+      }
+    },
+    "global.select.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select all"
           }
         }
       }
@@ -2185,6 +2207,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerts Are Active"
+          }
+        }
+      }
+    },
+    "notifications.line.enabled.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.recovery.alerts.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery alerts"
           }
         }
       }
