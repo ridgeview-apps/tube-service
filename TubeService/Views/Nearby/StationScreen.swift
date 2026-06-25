@@ -57,7 +57,7 @@ struct StationScreen: View {
             return .loaded
         case .failure(let error):
             return .failure(errorMessage: error.toUIErrorMessage())
-        case .fetching, nil:
+        case .idle, .fetching, nil:
             return .loading
         }
     }

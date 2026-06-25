@@ -12,7 +12,7 @@ public final class StationsDataStore {
         var fetchState: DataFetchState
 
         static var defaultValue: FetchedDisruptionData {
-            .init(messagesByStationID: [:], fetchState: .fetching)
+            .init(messagesByStationID: [:], fetchState: .idle)
         }
     }
 
