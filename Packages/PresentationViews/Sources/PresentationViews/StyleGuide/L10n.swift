@@ -47,6 +47,11 @@ public enum L10n {
 
     public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
     public static let notificationsLineRecoveryAlertsLabel = LocalizedStringResource.notificationsLineRecoveryAlertsLabel
+    public static let notificationsLineAlertsLabel = LocalizedStringResource.notificationsLineAlertsLabel
+    public static let notificationsOtherLinesSectionTitle = LocalizedStringResource.notificationsOtherLinesSectionTitle
+    public static let notificationsLineStatusAlertsOff = LocalizedStringResource.notificationsLineStatusAlertsOff
+    public static let notificationsLineStatusAlertsOn = LocalizedStringResource.notificationsLineStatusAlertsOn
+    public static let notificationsLineStatusNotSetUp = LocalizedStringResource.notificationsLineStatusNotSetUp
     public static let notificationsOnboardingFeatureRecoveryAlertsDescription =
         LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsDescription
 

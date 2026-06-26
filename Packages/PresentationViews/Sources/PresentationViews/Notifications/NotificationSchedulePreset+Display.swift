@@ -17,13 +17,10 @@ extension NotificationSchedulePreset {
         }
     }
 
-    var description: LocalizedStringResource {
+    var description: LocalizedStringResource? {
         switch self {
         case .weekdayPeak: L10n.notificationsScheduleWeekdayPeakDescription
-        case .weekdayAllDay: L10n.notificationsScheduleWeekdayAllDayDescription
-        case .weekends: L10n.notificationsScheduleWeekendsDescription
-        case .anytime: L10n.notificationsScheduleAnytimeDescription
-        case .custom: L10n.notificationsScheduleAnytimeDescription
+        default: nil
         }
     }
 }

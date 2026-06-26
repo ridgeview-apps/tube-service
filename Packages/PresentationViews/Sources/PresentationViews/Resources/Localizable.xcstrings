@@ -2255,6 +2255,50 @@
         }
       }
     },
+    "notifications.line.status.alerts.off" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts off"
+          }
+        }
+      }
+    },
+    "notifications.line.status.alerts.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts on"
+          }
+        }
+      }
+    },
+    "notifications.line.status.not.set.up" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not set up"
+          }
+        }
+      }
+    },
+    "notifications.line.alerts.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts"
+          }
+        }
+      }
+    },
     "notifications.onboarding.feature.disruption.alerts.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2383,6 +2427,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications Blocked"
+          }
+        }
+      }
+    },
+    "notifications.other.lines.section.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other lines"
           }
         }
       }

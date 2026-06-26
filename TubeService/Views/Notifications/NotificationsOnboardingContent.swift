@@ -59,10 +59,7 @@ struct NotificationsOnboardingFlowView: View {
                 onAction: handlePaywallAction
             )
         case .lineSelection:
-            NotificationsLineSelectionView(
-                initialSelection: flow.selectedLines,
-                onContinue: handleLineSelectionDone
-            )
+            EmptyView() // TODO
         case .schedule:
             EmptyView()  // TODO
         case .permissionDenied:
@@ -138,13 +135,7 @@ struct NotificationsOnboardingContent: View {
                 case .paywall:
                     paywallDestination
                 case .lineSelection:
-                    NotificationsLineSelectionView(
-                        initialSelection: selectedLineIDs,
-                        onContinue: { selected in
-                            selectedLineIDs = selected
-                            onNavigate(.schedule)
-                        }
-                    )
+                    EmptyView() // TODO
                 case .schedule:
                     EmptyView()  // To be fixed later
                 case .permissionDenied:
