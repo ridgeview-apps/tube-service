@@ -264,6 +264,7 @@ public struct NotificationsScheduleView: View {
         }
         .font(.subheadline)
         .padding(.vertical, 10)
+        .tint(lineID.backgroundColor)
     }
 
     private func settingsBinding(for lineID: TrainLineID) -> Binding<LineNotificationSettings> {
