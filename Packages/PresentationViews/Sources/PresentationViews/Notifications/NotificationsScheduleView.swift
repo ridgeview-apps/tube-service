@@ -173,6 +173,7 @@ public struct NotificationsScheduleView: View {
                     Text(lineID.longName)
                 }
                 .labelsHidden()
+                .tint(lineID.backgroundColor)
             }
         }
         .padding(.bottom, 10)
