@@ -10,10 +10,23 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public internal(set) var preferences: NotificationPreferences?
-    public private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
     public internal(set) var isSavingPreferences = false
+    public private(set) var device: NotificationDevice?
 
-    private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+    public var isPermissionDenied: Bool { authorizationStatus == .denied }
+
+    public var canReceivePushNotifications: Bool {
+        switch authorizationStatus {
+        case .authorized, .provisional, .ephemeral:
+            true
+        case .notDetermined, .denied:
+            false
+        @unknown default:
+            false
+        }
+    }
+
+    private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
 
     // MARK: - Private state
 
@@ -22,12 +35,11 @@ public final class NotificationsDataStore {
     private let userDefaults: UserDefaults
     private let pushNotificationEnvironment: PushNotificationEnvironment
 
-    private var device: NotificationDevice?
     private var isRegistering = false
 
     private static let keychainDeviceIdKey = "push_device_id"
     private var cachedDeviceId: String?
-
+    private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
 
     // MARK: - Init
 
@@ -62,7 +74,7 @@ public final class NotificationsDataStore {
 
     // MARK: - Registration
 
-    public func registerDevice(pushToken: String, appVersion: String? = nil) async {
+    public func registerDevice(pushToken: String, appVersion: String?) async {
         guard !isRegistering else { return }
         isRegistering = true
         defer { isRegistering = false }
@@ -103,18 +115,20 @@ public final class NotificationsDataStore {
     }
 
 
-    public func updateAuthorizationStatus() async {
+    public func refreshAuthorizationStatus() async {
         authorizationStatus = await pushNotificationEnvironment.readAuthStatus()
-        pushNotificationEnvironment.registerForRemoteNotifications()
+        if canReceivePushNotifications {
+            pushNotificationEnvironment.registerForRemoteNotifications()
+        }
     }
 
-    public func requestAuthorization() async {
+    public func requestAuthorizationAndRefreshStatus() async {
         do {
             _ = try await pushNotificationEnvironment.requestAuthorization()
         } catch {
             AppLogger.notifications.error("Authorization request failed: \(error)")
         }
-        await updateAuthorizationStatus()
+        await refreshAuthorizationStatus()
     }
 
     public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {

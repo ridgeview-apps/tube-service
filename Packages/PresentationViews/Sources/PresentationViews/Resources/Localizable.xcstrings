@@ -183,17 +183,6 @@
         }
       }
     },
-    "arrivals.picker.no.selection" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select a station"
-          }
-        }
-      }
-    },
     "arrivals.picker.search.no.results" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -414,6 +403,17 @@
         }
       }
     },
+    "global.deselect.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deselect all"
+          }
+        }
+      }
+    },
     "global.done" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -454,17 +454,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
-          }
-        }
-      }
-    },
-    "global.deselect.all" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Deselect all"
           }
         }
       }
@@ -2211,6 +2200,17 @@
         }
       }
     },
+    "notifications.line.alerts.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts"
+          }
+        }
+      }
+    },
     "notifications.line.enabled.label" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2288,13 +2288,156 @@
         }
       }
     },
-    "notifications.line.alerts.label" : {
+    "notifications.manage.add.line.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add line…"
+          }
+        }
+      }
+    },
+    "notifications.manage.discard.changes.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard Changes"
+          }
+        }
+      }
+    },
+    "notifications.manage.discard.changes.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard Changes?"
+          }
+        }
+      }
+    },
+    "notifications.manage.keep.editing" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep Editing"
+          }
+        }
+      }
+    },
+    "notifications.manage.navigation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification Settings"
+          }
+        }
+      }
+    },
+    "notifications.manage.open.settings.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Settings"
+          }
+        }
+      }
+    },
+    "notifications.manage.permission.warning.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are disabled in iOS Settings. You won't receive any line alerts."
+          }
+        }
+      }
+    },
+    "notifications.manage.permission.warning.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications are turned off"
+          }
+        }
+      }
+    },
+    "notifications.manage.alerts.paused.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your line notifications are temporarily silenced."
+          }
+        }
+      }
+    },
+    "notifications.manage.alerts.paused.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All alerts paused"
+          }
+        }
+      }
+    },
+    "notifications.manage.resume.alerts.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume alerts"
+          }
+        }
+      }
+    },
+    "notifications.manage.pause.all.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receive notifications for your selected lines"
+          }
+        }
+      }
+    },
+    "notifications.manage.pause.all.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerts"
+          }
+        }
+      }
+    },
+    "notifications.manage.schedule.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alert times"
           }
         }
       }
@@ -2327,7 +2470,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Know when service has returned to normal."
+            "value" : "Notify me when service returns to normal"
           }
         }
       }
@@ -2398,6 +2541,17 @@
         }
       }
     },
+    "notifications.other.lines.section.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other lines"
+          }
+        }
+      }
+    },
     "notifications.permission.denied.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2427,17 +2581,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications Blocked"
-          }
-        }
-      }
-    },
-    "notifications.other.lines.section.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other lines"
           }
         }
       }

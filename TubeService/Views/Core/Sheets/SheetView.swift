@@ -13,6 +13,7 @@ struct SheetView: View {
                 .asModalScreen()
         case .settings:
             SettingsScreen()
+                .asModalScreen()
         case let .safari(url):
             SafariView(url: url)
         case let .journeyLocationPicker(config):
@@ -22,8 +23,9 @@ struct SheetView: View {
             JourneyModePickerScreen(initialModeIDs: initialModeIDs, onDone: onDone)
         case let .tubeServicePlus(context, onAction):
             TubeServicePlusView(context: context, onAction: onAction)
-        case let .notificationsOnboarding(entry):
-            NotificationsFlow(entry: entry)
+                .asModalScreen()
+        case let .notificationSettings(context, mode):
+            NotificationsFlow(context: context, mode: mode)
         }
     }
 }

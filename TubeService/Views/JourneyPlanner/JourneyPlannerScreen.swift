@@ -22,7 +22,7 @@ struct JourneyPlannerScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        NavigationStack(path: $router.journeyPath) {
+        NavigationStack(path: $router.journeyPlanner.path) {
             rootView
                 .appRouteDestinations()
         }

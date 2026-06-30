@@ -16,7 +16,7 @@ struct LocatedStationsScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        NavigationStack(path: $router.nearbyPath) {
+        NavigationStack(path: $router.nearby.path) {
             nearbyStationsListView
                 .appRouteDestinations()
         }

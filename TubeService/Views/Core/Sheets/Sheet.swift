@@ -11,12 +11,17 @@ enum Sheet {
     case journeyLocationPicker(JourneyLocationPickerScreen.Config)
     case journeyModePicker(initialModeIDs: Set<ModeID>, onDone: (Set<ModeID>) -> Void)
     case tubeServicePlus(PaywallContext, onAction: (TubeServicePlusView.Action) -> Void)
-    case notificationsOnboarding(NotificationsFlowEntry)
+    case notificationSettings(NotificationsFlow.Context, NotificationsFlow.Mode)
 }
 
 extension Sheet: Identifiable {
+    enum ModalStyle {
+        case standard
+        case fullScreen
+    }
+
     enum ModalScreenID {
-        case systemStatusDetail, settings, safari, journeyLocationPicker, journeyModePicker, tubeServicePlus, notificationsOnboarding
+        case systemStatusDetail, settings, safari, journeyLocationPicker, journeyModePicker, tubeServicePlus, notificationSettings
     }
 
     var id: ModalScreenID {
@@ -27,7 +32,7 @@ extension Sheet: Identifiable {
         case .journeyLocationPicker: .journeyLocationPicker
         case .journeyModePicker: .journeyModePicker
         case .tubeServicePlus: .tubeServicePlus
-        case .notificationsOnboarding: .notificationsOnboarding
+        case .notificationSettings: .notificationSettings
         }
     }
 }

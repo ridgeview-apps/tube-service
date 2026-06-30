@@ -25,7 +25,7 @@ struct LineStatusScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        NavigationStack(path: $router.lineStatusPath) {
+        NavigationStack(path: $router.lineStatus.path) {
             statusListView
                 .appRouteDestinations()
         }

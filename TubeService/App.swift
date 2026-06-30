@@ -15,7 +15,7 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
-                    .appPresentedSheet($router.presentedSheet)
+                    .appSheetRouter($router.sheetRouter)
                     .appLifecycle(appData: appData, appDelegate: appDelegate)
                     .appEnvironment(dataStore: appData, router: router)
             }
@@ -25,10 +25,14 @@ struct RootScene: App {
 
 extension View {
 
-    func appPresentedSheet(_ sheet: Binding<Sheet?>) -> some View {
-        self.sheet(item: sheet) { sheet in
-            SheetView(sheet: sheet)
-        }
+    func appSheetRouter(_ sheetRouter: Binding<SheetRouter>) -> some View {
+        self
+            .sheet(item: sheetRouter.presentedSheet) { sheet in
+                SheetView(sheet: sheet)
+            }
+            .fullScreenCover(item: sheetRouter.presentedFullScreenSheet) { sheet in
+                SheetView(sheet: sheet)
+            }
     }
 
     func appEnvironment(

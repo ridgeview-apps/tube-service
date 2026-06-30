@@ -9,8 +9,8 @@ struct AppLifecycleModifier: ViewModifier {
         content
             .task {
                 await appData.start()
-                for await token in appDelegate.pushTokens {
-                    await appData.handlePushToken(token)
+                for await token in appDelegate.registeredPushTokens {
+                    await appData.handleRegisteredPushToken(token)
                 }
             }
             .onSceneDidBecomeActive {

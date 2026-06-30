@@ -105,7 +105,7 @@ public struct LineStatusCell: View {
 
     private func singleLineTrailingColumn(line: Line) -> some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text(line.shortText)
+            Text(line.shortStatusText)
                 .foregroundStyle(line.isDisrupted ? .adaptiveRed : .primary)
 
             if let historyIndicator {

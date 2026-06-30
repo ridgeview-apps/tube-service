@@ -58,12 +58,12 @@ final class AppDataStore {
         await purchases.start()
     }
 
-    func handlePushToken(_ token: String) async {
+    func handleRegisteredPushToken(_ token: String) async {
         await notifications.registerDevice(pushToken: token, appVersion: Bundle.main.shortVersion)
     }
 
     func sceneDidBecomeActive() async {
         await purchases.refreshEntitlements()
-        await notifications.updateAuthorizationStatus()
+        await notifications.refreshAuthorizationStatus()
     }
 }

@@ -1,28 +1,5 @@
 import SwiftUI
-
-enum NavigationButton {
-
-    struct Settings: View {
-        let action: () -> Void
-
-        var body: some View {
-            Button(action: action) {
-                Image(systemName: "gearshape")
-            }
-        }
-    }
-
-    struct Close: View {
-        let action: () -> Void
-
-        var body: some View {
-            Button(action: action) {
-                Image(systemName: "xmark")
-            }
-        }
-    }
-
-}
+import PresentationViews
 
 struct SettingsToolBarButton: ViewModifier {
     @Environment(AppRouter.self) private var router

@@ -7,7 +7,7 @@ struct MapsScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        NavigationStack(path: $router.mapsPath) {
+        NavigationStack(path: $router.maps.path) {
             rootView
                 .appRouteDestinations()
         }

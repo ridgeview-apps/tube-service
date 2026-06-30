@@ -122,7 +122,7 @@ extension Line {
         return groups
     }
 
-    var shortText: String {
+    var shortStatusText: String {
         mergedLineStatuses
             .flatMap(\.severityDescriptions)
             .reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }

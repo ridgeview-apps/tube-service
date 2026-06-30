@@ -67,13 +67,14 @@ struct LineStatusDetailScreen: View {
 
     private var notificationButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else { return .notSetUp }
-        switch notifications.authorizationStatus {
-        case .authorized, .provisional, .ephemeral:
+        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
+            return .notSetUp
+        }
+        if notifications.canReceivePushNotifications {
             return prefs.lines.contains(where: { $0.lineId == lineID.rawValue && $0.enabled }) ? .active : .inactive
-        case .denied:
+        } else if notifications.isPermissionDenied {
             return .permissionDenied
-        default:
+        } else {
             return .notSetUp
         }
     }
@@ -117,20 +118,16 @@ struct LineStatusDetailScreen: View {
                 )
             }
         case .notifyMeTapped:
-            switch notificationButtonState {
-            case .permissionDenied:
-                openSettings()
-            case .notSetUp, nil:
-                router.showSheet(.notificationsOnboarding(.fullOnboarding(preselectedLine: lineID)))
-            case .inactive, .active:
-                router.showSheet(.notificationsOnboarding(.manage))
-            }
+            router.showSheet(
+                .notificationSettings(.lineDetail(lineID), notifications.preferences == nil ? .onboarding : .manage)
+            )
         }
     }
 
     private func handleTubeServicePlusAction(_ action: TubeServicePlusView.Action) {
         switch action {
         case .purchaseSuccess:
+            router.dismissSheets()
             router.push(.lineStatusHistory(lineID: lineID))
         }
     }

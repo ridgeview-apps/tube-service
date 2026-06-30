@@ -8,6 +8,7 @@ extension UserPreferences {
         case journeyModePreset
         case recentlySavedJourneys
         case readSystemStatusMessage
+        case notificationsOnboardingDone
     }
 
     // Manual decoding allows new preferences to gain defaults when reading older stored values.

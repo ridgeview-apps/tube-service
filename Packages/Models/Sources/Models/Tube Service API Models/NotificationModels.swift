@@ -114,24 +114,24 @@ public struct NotificationPreferences: Codable, Hashable, Sendable {
 public struct NotificationLinePreferenceUpdate: Codable, Hashable, Sendable {
     public let lineId: String
     public let enabled: Bool
-    public let severityThreshold: NotificationSeverityThreshold
     public let notifyRecoveries: Bool
     public let schedulePreset: NotificationSchedulePreset
+    public let severityThreshold: NotificationSeverityThreshold
     public let customSchedules: [NotificationScheduleWindow]
 
     public init(
         lineId: String,
-        enabled: Bool = true,
-        severityThreshold: NotificationSeverityThreshold = .minorDelays,
-        notifyRecoveries: Bool = true,
-        schedulePreset: NotificationSchedulePreset = .weekdayPeak,
-        customSchedules: [NotificationScheduleWindow] = []
+        enabled: Bool,
+        notifyRecoveries: Bool,
+        schedulePreset: NotificationSchedulePreset,
+        severityThreshold: NotificationSeverityThreshold,
+        customSchedules: [NotificationScheduleWindow]
     ) {
         self.lineId = lineId
         self.enabled = enabled
-        self.severityThreshold = severityThreshold
         self.notifyRecoveries = notifyRecoveries
         self.schedulePreset = schedulePreset
+        self.severityThreshold = severityThreshold
         self.customSchedules = customSchedules
     }
 }

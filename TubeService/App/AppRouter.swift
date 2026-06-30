@@ -30,40 +30,51 @@ enum AppRoute: Hashable {
 @MainActor
 final class AppRouter {
 
+    // Tabs
     var selectedTab: AppTab = .lineStatus
-    var lineStatusPath: [AppRoute] = []
-    var journeyPath: [AppRoute] = []
-    var arrivalsPath: [AppRoute] = []
-    var nearbyPath: [AppRoute] = []
-    var mapsPath: [AppRoute] = []
-    var presentedSheet: Sheet?
+
+    // Paths
+    var lineStatus = NavigationRouter<AppRoute>()
+    var journeyPlanner = NavigationRouter<AppRoute>()
+    var arrivals = NavigationRouter<AppRoute>()
+    var nearby = NavigationRouter<AppRoute>()
+    var maps = NavigationRouter<AppRoute>()
+
+    // Sheets
+    var sheetRouter = SheetRouter()
 
     func showSheet(_ sheet: Sheet) {
-        presentedSheet = sheet
+        sheetRouter.show(sheet)
     }
 
-    func dismissSheet() {
-        presentedSheet = nil
+    func dismissSheets(
+        closePresentedSheet: Bool = true,
+        closeFullScreenSheet: Bool = true
+    ) {
+        sheetRouter.dismiss(
+            closePresentedSheet: closePresentedSheet,
+            closeFullScreenSheet: closeFullScreenSheet
+        )
     }
 
     func push(_ route: AppRoute, on targetTab: AppTab? = nil) {
         selectedTab = targetTab ?? selectedTab
         switch selectedTab {
-        case .lineStatus: lineStatusPath.append(route)
-        case .journeyPlanner: journeyPath.append(route)
-        case .arrivals: arrivalsPath.append(route)
-        case .nearby: nearbyPath.append(route)
-        case .maps: mapsPath.append(route)
+        case .lineStatus: lineStatus.push(route)
+        case .journeyPlanner: journeyPlanner.push(route)
+        case .arrivals: arrivals.push(route)
+        case .nearby: nearby.push(route)
+        case .maps: maps.push(route)
         }
     }
 
     func popToRoot(on tab: AppTab) {
         switch tab {
-        case .lineStatus: lineStatusPath = []
-        case .journeyPlanner: journeyPath = []
-        case .arrivals: arrivalsPath = []
-        case .nearby: nearbyPath = []
-        case .maps: mapsPath = []
+        case .lineStatus: lineStatus.popToRoot()
+        case .journeyPlanner: journeyPlanner.popToRoot()
+        case .arrivals: arrivals.popToRoot()
+        case .nearby: nearby.popToRoot()
+        case .maps: maps.popToRoot()
         }
     }
 }

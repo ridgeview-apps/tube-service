@@ -4,11 +4,11 @@ import UIKit
 
 final class AppDelegate: NSObject, UIApplicationDelegate {
 
-    let pushTokens: AsyncStream<String>
+    let registeredPushTokens: AsyncStream<String>
     private let pushTokenContinuation: AsyncStream<String>.Continuation
 
     override init() {
-        (pushTokens, pushTokenContinuation) = AsyncStream.makeStream(of: String.self)
+        (registeredPushTokens, pushTokenContinuation) = AsyncStream.makeStream(of: String.self)
         super.init()
     }
 

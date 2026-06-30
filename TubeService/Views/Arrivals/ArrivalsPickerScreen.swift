@@ -29,7 +29,7 @@ struct ArrivalsPickerScreen: View {
 
     var body: some View {
         @Bindable var router = router
-        NavigationStack(path: $router.arrivalsPath) {
+        NavigationStack(path: $router.arrivals.path) {
             rootView
                 .appRouteDestinations()
         }

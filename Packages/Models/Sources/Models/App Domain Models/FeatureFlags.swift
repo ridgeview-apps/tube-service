@@ -7,7 +7,8 @@ public struct FeatureFlags: Codable, Sendable {
     public var isStatusHistoryEnabled: Bool
     public var isNotificationsEnabled: Bool
 
-    public init(isStatusHistoryEnabled: Bool = false, isNotificationsEnabled: Bool = false) {
+    // TODO: switch off later
+    public init(isStatusHistoryEnabled: Bool = true, isNotificationsEnabled: Bool = true) {
         self.isStatusHistoryEnabled = isStatusHistoryEnabled
         self.isNotificationsEnabled = isNotificationsEnabled
     }

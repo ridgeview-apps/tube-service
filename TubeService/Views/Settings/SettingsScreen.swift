@@ -6,18 +6,13 @@ import SwiftUI
 
 struct SettingsScreen: View {
 
-    private enum DestinationID: Identifiable, Hashable {
-        var id: Self { self }
-        case debugMenu
-        case notificationsOnboarding(preselectedLine: TrainLineID?)
-        case manageNotifications
-    }
+    @Environment(\.appConfig) private var appConfig
+    @Environment(\.locale) private var locale
+    @Environment(\.openSettings) private var openSettings
+    @Environment(SystemStatusDataStore.self) private var systemStatusData
+    @Environment(NotificationsDataStore.self) private var notifications
 
-    @Environment(\.appConfig) var appConfig
-    @Environment(\.locale) var locale
-    @Environment(\.openSettings) var openSettings
-    @Environment(SystemStatusDataStore.self) var systemStatusData
-    @Environment(NotificationsDataStore.self) var notifications
+    @State private var router = Router<SettingsRoute>()
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -31,35 +26,38 @@ struct SettingsScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
-    @State private var path = NavigationPath()
-
     var body: some View {
-        NavigationStack(path: $path) {
-            SettingsView(
-                appVersionNumber: Bundle.main.appVersionNumber,
-                appReviewURL: appConfig.appReviewURL,
-                contactUs: contactUsConfig,
-                systemStatus: systemStatusData.currentStatus,
-                notificationsButtonState: notificationsButtonState,
-                onAction: handleAction
-            )
-            .withCloseToolbarButton()
-            .navigationTitle(Text(L10n.settingsNavigationTitle))
-            .navigationDestination(for: DestinationID.self) { destinationID in
-                destinationView(for: destinationID)
-            }
+        NavigationStack(path: $router.navigation.path) {
+            rootView
+                .appSheetRouter($router.sheetRouter)
+                .navigationDestination(for: SettingsRoute.self) { route in
+                    destinationView(for: route)
+                }
         }
+    }
+
+    private var rootView: some View {
+        SettingsView(
+            appVersionNumber: Bundle.main.appVersionNumber,
+            appReviewURL: appConfig.appReviewURL,
+            contactUs: contactUsConfig,
+            systemStatus: systemStatusData.currentStatus,
+            notificationsButtonState: notificationsButtonState,
+            onAction: handleAction
+        )
+        .navigationTitle(Text(L10n.settingsNavigationTitle))
     }
 
     private var notificationsButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
-        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else { return .notSetUp }
-        switch notifications.authorizationStatus {
-        case .authorized, .provisional, .ephemeral:
+        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
+            return .notSetUp
+        }
+        if notifications.canReceivePushNotifications {
             return .active
-        case .denied:
+        } else if notifications.isPermissionDenied {
             return .permissionDenied
-        default:
+        } else {
             return .notSetUp
         }
     }
@@ -77,40 +75,25 @@ struct SettingsScreen: View {
     private func handleAction(_ action: SettingsView.Action) {
         switch action {
         case .openDebugSettings:
-            path.append(DestinationID.debugMenu)
+            router.navigation.push(.debugSettings)
         case .notificationsTapped:
             switch notificationsButtonState {
             case .permissionDenied:
                 openSettings()
-            case .active:
-                path.append(DestinationID.manageNotifications)
-            default:
-                path.append(DestinationID.notificationsOnboarding(preselectedLine: nil))
+            case .active, .inactive, .notSetUp, nil:
+                router.sheetRouter.show(
+                    .notificationSettings(.globalSettings, notifications.preferences == nil ? .onboarding : .manage),
+                    style: .fullScreen
+                )
             }
         }
     }
 
     @ViewBuilder
-    private func destinationView(for destinationID: DestinationID) -> some View {
-        switch destinationID {
-        case .debugMenu:
+    private func destinationView(for route: SettingsRoute) -> some View {
+        switch route {
+        case .debugSettings:
             DebugSettingsScreen()
-        case .notificationsOnboarding(let preselectedLine):
-            NotificationsOnboardingContent(
-                preselectedLine: preselectedLine,
-                onDismiss: { path = NavigationPath() },
-                onNavigate: { step in path.append(step) },
-                onReplaceStack: { steps in
-                    while path.count > 1 {
-                        path.removeLast()
-                    }
-                    steps.forEach { path.append($0) }
-                }
-            )
-        case .manageNotifications:
-            if let prefs = notifications.preferences {
-                ManageNotificationsScreen(preferences: prefs)
-            }
         }
     }
 }

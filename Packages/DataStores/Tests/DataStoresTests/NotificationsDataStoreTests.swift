@@ -18,7 +18,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then
         #expect(api.registerDeviceCallCount == 1)
@@ -31,7 +31,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – preferences are fetched automatically after a successful registration
         #expect(store.preferences != nil)
@@ -46,7 +46,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then
         #expect(store.preferences == nil)
@@ -62,7 +62,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – device registered but preferences remain nil if fetch fails
         #expect(api.registerDeviceCallCount == 1)
@@ -91,7 +91,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         #expect(store.preferences != nil)
 
         // When
@@ -107,7 +107,7 @@ struct NotificationsDataStoreTests {
         // Given
         let keychain = InMemoryKeychain()
         let store = makeStore(keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         #expect(keychain.read(key: "push_device_id") != nil)
 
         // When
@@ -125,12 +125,12 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // When
         let update = NotificationPreferencesUpdate(lines: [
-            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
-            NotificationLinePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
+            makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
         ])
         await store.updatePreferences(update)
 
@@ -146,13 +146,13 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         let originalPreferences = store.preferences
 
         // When – update fails
         api.updatePreferencesError = HTTPError.invalidRequestURL
         let update = NotificationPreferencesUpdate(lines: [
-            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
+            makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
         ])
         await store.updatePreferences(update)
 
@@ -170,7 +170,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(pushNotificationEnvironment: .stub(authorizationStatus: .denied))
 
         // When
-        await store.updateAuthorizationStatus()
+        await store.refreshAuthorizationStatus()
 
         // Then
         #expect(store.authorizationStatus == .denied)
@@ -185,12 +185,12 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [
-            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
 
         // When – schedule an update before the APNs token arrives
         store.schedulePreferencesUpdate(update)
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – update is applied instead of fetching defaults
         #expect(api.updatePreferencesCallCount == 1)
@@ -205,14 +205,14 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [
-            NotificationLinePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
         store.schedulePreferencesUpdate(update)
 
         // When – register twice (second registration is a no-op due to isRegistering guard,
         // but if called after the first completes it should not re-apply the pending update)
-        await store.registerDevice(pushToken: "test-push-token")
-        await store.registerDevice(pushToken: "test-push-token")
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – update was only applied once
         #expect(api.updatePreferencesCallCount == 1)
@@ -232,6 +232,21 @@ struct NotificationsDataStoreTests {
             pushNotificationEnvironment: pushNotificationEnvironment,
             userDefaults: userDefaults,
             keychain: keychain
+        )
+    }
+
+    private func makePreferenceUpdate(
+        lineId: String,
+        schedulePreset: NotificationSchedulePreset,
+        severityThreshold: NotificationSeverityThreshold = .minorDelays
+    ) -> NotificationLinePreferenceUpdate {
+        NotificationLinePreferenceUpdate(
+            lineId: lineId,
+            enabled: true,
+            notifyRecoveries: true,
+            schedulePreset: .weekends,
+            severityThreshold: severityThreshold,
+            customSchedules: []
         )
     }
 }

@@ -32,6 +32,24 @@ public extension View {
         )
     }
 
+    func dashedCardStyle(
+        cornerRadius: CGFloat = 12,
+        color: Color = .secondary.opacity(0.5),
+        lineWidth: CGFloat = 1.5,
+        dash: [CGFloat] = [6, 4]
+    ) -> some View {
+        self
+            .clipShape(.rect(cornerRadius: cornerRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .strokeBorder(
+                        style: StrokeStyle(lineWidth: lineWidth, dash: dash),
+                        antialiased: true
+                    )
+                    .foregroundStyle(color)
+            }
+    }
+
     func defaultListRowStyle(
         edgeInsets: EdgeInsets = .zero,
         listRowSeparator separatorVisibility: Visibility = .hidden,
@@ -127,6 +145,14 @@ public extension View {
             .font(.footnote.weight(.semibold))
             .foregroundStyle(.secondary)
             .textCase(textCase)
+    }
+
+    func navigationLinkStyle() -> some View {
+        NavigationLink {
+            EmptyView()
+        } label: {
+            self
+        }
     }
 }
 

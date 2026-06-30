@@ -74,7 +74,10 @@ public struct LineStatusDetailView: View {
                         Section {
                             NotificationsButton(
                                 state: state,
-                                context: .lineStatus(name: line.shortText, color: line.id.backgroundColor),
+                                context: .lineStatus(
+                                    name: line.id.longName,
+                                    color: line.id.backgroundColor
+                                ),
                                 onTap: { onAction(.notifyMeTapped) }
                             )
                         }
@@ -126,7 +129,7 @@ public struct LineStatusDetailView: View {
     private var statusHeaderContent: some View {
         VStack(alignment: .leading, spacing: 12) {
             Label {
-                Text(line.shortText)
+                Text(line.shortStatusText)
                     .font(.title3.weight(.semibold))
             } icon: {
                 line.accessoryImageType.image
