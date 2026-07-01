@@ -9,6 +9,7 @@ struct SettingsScreen: View {
     @Environment(\.appConfig) private var appConfig
     @Environment(\.locale) private var locale
     @Environment(\.openSettings) private var openSettings
+    @Environment(PurchaseStore.self) private var purchases
     @Environment(SystemStatusDataStore.self) private var systemStatusData
     @Environment(NotificationsDataStore.self) private var notifications
 
@@ -50,6 +51,7 @@ struct SettingsScreen: View {
 
     private var notificationsButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
+        guard purchases.hasTubeServicePlus else { return .locked }
         guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
             return .notSetUp
         }
@@ -80,7 +82,7 @@ struct SettingsScreen: View {
             switch notificationsButtonState {
             case .permissionDenied:
                 openSettings()
-            case .active, .inactive, .notSetUp, nil:
+            case .locked, .active, .inactive, .notSetUp, nil:
                 router.sheetRouter.show(
                     .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
                     style: .fullScreen

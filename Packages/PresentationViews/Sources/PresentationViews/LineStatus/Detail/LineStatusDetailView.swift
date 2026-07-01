@@ -17,10 +17,8 @@ public struct LineStatusDetailView: View {
     public let line: Line
     public let loadingState: LoadingState
     public let refreshDate: Date?
-    public let statusHistoryAccess: LineStatusHistoryButton.Access
-    public let historyState: LineStatusHistoryButton.HistoryState?
+    public let historyButtonState: LineStatusHistoryButton.ButtonState?
     public let statusContext: StatusContext
-    public let isStatusHistoryEnabled: Bool
     public let notificationButtonState: NotificationsButtonState?
 
     @Binding public var isFavourite: Bool
@@ -32,20 +30,16 @@ public struct LineStatusDetailView: View {
         isFavourite: Binding<Bool>,
         loadingState: LoadingState,
         refreshDate: Date?,
-        statusHistoryAccess: LineStatusHistoryButton.Access,
-        historyState: LineStatusHistoryButton.HistoryState?,
+        historyButtonState: LineStatusHistoryButton.ButtonState?,
         statusContext: StatusContext,
-        isStatusHistoryEnabled: Bool = true,
-        notificationButtonState: NotificationsButtonState? = nil,
+        notificationButtonState: NotificationsButtonState?,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
         self.loadingState = loadingState
         self.refreshDate = refreshDate
-        self.statusHistoryAccess = statusHistoryAccess
-        self.historyState = historyState
+        self.historyButtonState = historyButtonState
         self.statusContext = statusContext
-        self.isStatusHistoryEnabled = isStatusHistoryEnabled
         self.notificationButtonState = notificationButtonState
         self._isFavourite = isFavourite
         self.onAction = onAction
@@ -60,12 +54,11 @@ public struct LineStatusDetailView: View {
                     loadingStatusView
                 }
                 if statusContext == .live {
-                    if isStatusHistoryEnabled {
+                    if let historyButtonState {
                         Section {
                             LineStatusHistoryButton(
-                                access: statusHistoryAccess,
+                                buttonState: historyButtonState,
                                 lineColor: line.id.backgroundColor,
-                                historyState: historyState,
                                 onTap: { onAction(.statusHistoryTapped) }
                             )
                         }
@@ -210,10 +203,8 @@ private struct Previewer: View {
     let line: Line
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
-    var statusHistoryAccess = LineStatusHistoryButton.Access.locked
-    var historyState: LineStatusHistoryButton.HistoryState? = nil
+    var historyButtonState: LineStatusHistoryButton.ButtonState? = .locked(nil)
     var statusContext = LineStatusDetailView.StatusContext.live
-    var isStatusHistoryEnabled: Bool = true
     var notificationButtonState: NotificationsButtonState? = nil
     @State var isFavourite = false
 
@@ -224,10 +215,8 @@ private struct Previewer: View {
                 isFavourite: $isFavourite,
                 loadingState: loadingState,
                 refreshDate: refreshDate,
-                statusHistoryAccess: statusHistoryAccess,
-                historyState: historyState,
+                historyButtonState: historyButtonState,
                 statusContext: statusContext,
-                isStatusHistoryEnabled: isStatusHistoryEnabled,
                 notificationButtonState: notificationButtonState,
                 onAction: { print($0) }
             )
@@ -252,7 +241,7 @@ import ModelStubs
 #Preview("Disrupted state") {
     Previewer(
         line: ModelStubs.lineStatusDisrupted,
-        statusHistoryAccess: .unlocked
+        historyButtonState: .unlocked(nil)
     )
 }
 
@@ -263,30 +252,28 @@ import ModelStubs
 #Preview("Hidden status history") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        isStatusHistoryEnabled: false
+        historyButtonState: nil
     )
 }
 
 #Preview("Earlier disruption (locked)") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        historyState: .resolvedDisruption(at: .now)
+        historyButtonState: .locked(.resolvedDisruption(at: .now))
     )
 }
 
 #Preview("Earlier disruption (unlocked)") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        statusHistoryAccess: .unlocked,
-        historyState: .resolvedDisruption(at: .now)
+        historyButtonState: .unlocked(.resolvedDisruption(at: .now))
     )
 }
 
 #Preview("Multiple disruptions (unlocked)") {
     Previewer(
         line: ModelStubs.lineStatusDisrupted,
-        statusHistoryAccess: .unlocked,
-        historyState: .multipleDisruptions(count: 3, firstAt: .now)
+        historyButtonState: .unlocked(.multipleDisruptions(count: 3, firstAt: .now))
     )
 }
 
@@ -296,6 +283,13 @@ import ModelStubs
 
 #Preview("Error state") {
     Previewer(line: ModelStubs.lineStatusGoodService, loadingState: .failure(errorMessage: "Oops"))
+}
+
+#Preview("Notifications — locked") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .locked
+    )
 }
 
 #Preview("Notifications — not set up") {

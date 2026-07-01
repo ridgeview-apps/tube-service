@@ -1,6 +1,7 @@
 import SwiftUI
 
 public enum NotificationsButtonState: Sendable, Equatable {
+    case locked
     case notSetUp
     case permissionDenied
     case inactive
@@ -62,7 +63,7 @@ public struct NotificationsButton: View {
         switch state {
         case .permissionDenied:
             return .orange
-        case .notSetUp, .inactive, .active:
+        case .locked, .notSetUp, .inactive, .active:
             switch context {
             case .lineStatus(_, let color): return color
             case .settings: return .accentColor
@@ -72,8 +73,8 @@ public struct NotificationsButton: View {
 
     private var iconName: String {
         switch state {
-        case .notSetUp: return "bell"
-        case .permissionDenied: return "bell.slash.fill"
+        case .locked, .notSetUp: return "bell"
+        case .permissionDenied: return "exclamationmark.triangle.fill"
         case .inactive: return "bell.badge"
         case .active: return "bell.fill"
         }
@@ -81,6 +82,7 @@ public struct NotificationsButton: View {
 
     private var accessoryIconName: String {
         switch state {
+        case .locked: return "lock.fill"
         case .permissionDenied: return "arrow.up.forward.app"
         default: return "chevron.forward"
         }
@@ -88,14 +90,14 @@ public struct NotificationsButton: View {
 
     private var accessoryShapeStyle: AnyShapeStyle {
         switch state {
-        case .permissionDenied: return AnyShapeStyle(.secondary)
+        case .locked, .permissionDenied: return AnyShapeStyle(.secondary)
         default: return AnyShapeStyle(.tertiary)
         }
     }
 
     private var title: LocalizedStringResource {
         switch state {
-        case .notSetUp:
+        case .locked, .notSetUp:
             switch context {
             case .lineStatus(let name, _): return .notificationsButtonLineNotSetUpTitle(name)
             case .settings: return .notificationsButtonSettingsNotSetUpTitle
@@ -117,6 +119,8 @@ public struct NotificationsButton: View {
 
     private var subtitle: LocalizedStringResource {
         switch state {
+        case .locked:
+            return .notificationsButtonLockedSubtitle
         case .notSetUp:
             switch context {
             case .lineStatus: return .notificationsButtonLineNotSetUpSubtitle
@@ -144,6 +148,15 @@ public struct NotificationsButton: View {
 #Preview("Not set up — line") {
     NotificationsButton(
         state: .notSetUp,
+        context: .lineStatus(name: "Victoria", color: .blue),
+        onTap: {}
+    )
+    .padding()
+}
+
+#Preview("Locked — line") {
+    NotificationsButton(
+        state: .locked,
         context: .lineStatus(name: "Victoria", color: .blue),
         onTap: {}
     )
@@ -182,7 +195,17 @@ public struct NotificationsButton: View {
         .padding()
 }
 
+#Preview("Locked — settings") {
+    NotificationsButton(state: .locked, context: .settings, onTap: {})
+        .padding()
+}
+
 #Preview("Active — settings") {
     NotificationsButton(state: .active, context: .settings, onTap: {})
+        .padding()
+}
+
+#Preview("Inactive — settings") {
+    NotificationsButton(state: .inactive, context: .settings, onTap: {})
         .padding()
 }

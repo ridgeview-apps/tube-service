@@ -41,10 +41,6 @@ struct LineStatusDetailScreen: View {
         return model.lineStatusData(for: .live)?.fetchedAt
     }
 
-    private var statusHistoryAccess: LineStatusHistoryButton.Access {
-        purchases.hasTubeServicePlus ? .unlocked : .locked
-    }
-
     private var historyState: LineStatusHistoryButton.HistoryState? {
         guard let snapshots = model.disruptionSnapshots(for: lineID) else { return nil }
         let count = model.disruptionCountsByLineID[lineID] ?? 1
@@ -58,6 +54,11 @@ struct LineStatusDetailScreen: View {
         }
     }
 
+    private var historyButtonState: LineStatusHistoryButton.ButtonState? {
+        guard featureFlags.isStatusHistoryEnabled else { return nil }
+        return purchases.hasTubeServicePlus ? .unlocked(historyState) : .locked(historyState)
+    }
+
     private var statusContext: LineStatusDetailView.StatusContext {
         switch request {
         case .live: .live
@@ -67,6 +68,7 @@ struct LineStatusDetailScreen: View {
 
     private var notificationButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
+        guard purchases.hasTubeServicePlus else { return .locked }
         guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
             return .notSetUp
         }
@@ -87,10 +89,8 @@ struct LineStatusDetailScreen: View {
                     isFavourite: isFavouriteLine(for: lineID),
                     loadingState: loadingState,
                     refreshDate: refreshDate,
-                    statusHistoryAccess: statusHistoryAccess,
-                    historyState: historyState,
+                    historyButtonState: historyButtonState,
                     statusContext: statusContext,
-                    isStatusHistoryEnabled: featureFlags.isStatusHistoryEnabled,
                     notificationButtonState: notificationButtonState,
                     onAction: handleDetailViewAction
                 )

@@ -1705,7 +1705,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications paused"
+            "value" : "Notifications blocked"
           }
         }
       }
@@ -2111,6 +2111,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Get notified about %@"
+          }
+        }
+      }
+    },
+    "notifications.button.locked.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock to get disruption alerts"
           }
         }
       }
