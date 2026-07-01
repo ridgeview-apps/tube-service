@@ -9,9 +9,14 @@ public final class NotificationsDataStore {
 
     // MARK: - Public state
 
-    public internal(set) var preferences: NotificationPreferences?
-    public internal(set) var isSavingPreferences = false
+    public internal(set) var preferences: NotificationPreferences? {
+        didSet { userDefaults.notificationPreferences = preferences }
+    }
+    private var isSavingPreferences = false
     public private(set) var device: NotificationDevice?
+    public private(set) var hasCompletedOnboarding: Bool {
+        didSet { userDefaults.hasCompletedNotificationsOnboarding = hasCompletedOnboarding }
+    }
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
@@ -39,7 +44,7 @@ public final class NotificationsDataStore {
 
     private static let keychainDeviceIdKey = "push_device_id"
     private var cachedDeviceId: String?
-    private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+    private var queuedPreferencesUpdate: NotificationPreferencesUpdate?
 
     // MARK: - Init
 
@@ -53,6 +58,7 @@ public final class NotificationsDataStore {
         self.keychain = keychain
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
+        self.hasCompletedOnboarding = userDefaults.hasCompletedNotificationsOnboarding
         self.pushNotificationEnvironment = pushNotificationEnvironment
     }
 
@@ -80,9 +86,9 @@ public final class NotificationsDataStore {
         defer { isRegistering = false }
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
-            if let pending = pendingPreferencesUpdate {
-                pendingPreferencesUpdate = nil
-                await updatePreferences(pending)
+            if let queuedPreferences = queuedPreferencesUpdate {
+                queuedPreferencesUpdate = nil
+                await updatePreferences(with: queuedPreferences)
             } else if preferences == nil {
                 await fetchInitialPreferences()
             }
@@ -95,7 +101,6 @@ public final class NotificationsDataStore {
         do {
             device = try await api.disableDevice(deviceId: deviceId).decodedModel
             preferences = nil
-            userDefaults.notificationPreferences = nil
         } catch {
             AppLogger.notifications.error("Failed to disable device: \(error)")
         }
@@ -106,12 +111,16 @@ public final class NotificationsDataStore {
             try await api.deleteDevice(deviceId: deviceId)
             device = nil
             preferences = nil
-            userDefaults.notificationPreferences = nil
+            hasCompletedOnboarding = false
             keychain.delete(key: Self.keychainDeviceIdKey)
             cachedDeviceId = nil
         } catch {
             AppLogger.notifications.error("Failed to delete device: \(error)")
         }
+    }
+
+    private func markOnboardingCompleted() {
+        hasCompletedOnboarding = true
     }
 
 
@@ -131,8 +140,8 @@ public final class NotificationsDataStore {
         await refreshAuthorizationStatus()
     }
 
-    public func schedulePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
-        pendingPreferencesUpdate = update
+    public func queuePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
+        queuedPreferencesUpdate = update
     }
 
 
@@ -141,20 +150,19 @@ public final class NotificationsDataStore {
     private func fetchInitialPreferences() async {
         do {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
-            userDefaults.notificationPreferences = preferences
         } catch {
             AppLogger.notifications.error("Failed to fetch notification preferences: \(error)")
         }
     }
 
-    public func updatePreferences(_ update: NotificationPreferencesUpdate) async {
+    public func updatePreferences(with update: NotificationPreferencesUpdate) async {
         guard !isSavingPreferences else { return }
         let previousPreferences = preferences
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
             preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
-            userDefaults.notificationPreferences = preferences
+            if !hasCompletedOnboarding { markOnboardingCompleted() }
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             preferences = previousPreferences

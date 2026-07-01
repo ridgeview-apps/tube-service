@@ -82,7 +82,7 @@ struct SettingsScreen: View {
                 openSettings()
             case .active, .inactive, .notSetUp, nil:
                 router.sheetRouter.show(
-                    .notificationSettings(.globalSettings, notifications.preferences == nil ? .onboarding : .manage),
+                    .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
                     style: .fullScreen
                 )
             }

@@ -57,7 +57,7 @@ struct ManageNotificationsFlow: View {
         Task {
             await notifications.requestAuthorizationAndRefreshStatus()
             if notifications.isPermissionDenied {
-                notifications.schedulePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
+                notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
                 dismiss()
             }
         }

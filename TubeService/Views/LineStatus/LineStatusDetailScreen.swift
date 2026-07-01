@@ -119,7 +119,7 @@ struct LineStatusDetailScreen: View {
             }
         case .notifyMeTapped:
             router.showSheet(
-                .notificationSettings(.lineDetail(lineID), notifications.preferences == nil ? .onboarding : .manage)
+                .notificationSettings(.lineDetail(lineID), notifications.hasCompletedOnboarding ? .manage : .onboarding)
             )
         }
     }

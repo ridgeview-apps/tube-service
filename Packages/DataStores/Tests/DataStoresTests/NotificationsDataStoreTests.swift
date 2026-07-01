@@ -132,12 +132,11 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
             makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
         ])
-        await store.updatePreferences(update)
+        await store.updatePreferences(with: update)
 
         // Then
         #expect(store.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
         #expect(store.preferences?.lines.allSatisfy { $0.schedulePreset == .weekends } == true)
-        #expect(!store.isSavingPreferences)
         #expect(api.updatePreferencesCallCount == 1)
     }
 
@@ -154,11 +153,10 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
         ])
-        await store.updatePreferences(update)
+        await store.updatePreferences(with: update)
 
         // Then – preferences roll back to what they were before the update
         #expect(store.preferences == originalPreferences)
-        #expect(!store.isSavingPreferences)
     }
 
 
@@ -189,7 +187,7 @@ struct NotificationsDataStoreTests {
         ])
 
         // When – schedule an update before the APNs token arrives
-        store.schedulePreferencesUpdate(update)
+        store.queuePreferencesUpdate(update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – update is applied instead of fetching defaults
@@ -207,7 +205,7 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
-        store.schedulePreferencesUpdate(update)
+        store.queuePreferencesUpdate(update)
 
         // When – register twice (second registration is a no-op due to isRegistering guard,
         // but if called after the first completes it should not re-apply the pending update)

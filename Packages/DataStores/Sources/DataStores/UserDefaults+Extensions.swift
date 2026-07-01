@@ -27,6 +27,15 @@ public extension UserDefaults {
         }
     }
 
+    var hasCompletedNotificationsOnboarding: Bool {
+        get { userPreferences.hasCompletedNotificationsOnboarding }
+        set {
+            var prefs = userPreferences
+            prefs.hasCompletedNotificationsOnboarding = newValue
+            userPreferences = prefs
+        }
+    }
+
     var notificationPreferences: NotificationPreferences? {
         get {
             guard let data = data(forKey: Keys.notificationPreferences.rawValue),
