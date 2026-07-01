@@ -2066,7 +2066,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notified about %@"
+            "value" : "Alerts are on for the %@"
           }
         }
       }
@@ -2088,7 +2088,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notify me about %@"
+            "value" : "Alerts are off for the %@"
           }
         }
       }
@@ -2110,7 +2110,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get notified about %@"
+            "value" : "Notify me about the %@"
           }
         }
       }

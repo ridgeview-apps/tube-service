@@ -67,10 +67,7 @@ public struct LineStatusDetailView: View {
                         Section {
                             NotificationsButton(
                                 state: state,
-                                context: .lineStatus(
-                                    name: line.id.longName,
-                                    color: line.id.backgroundColor
-                                ),
+                                context: .lineStatus(line.id),
                                 onTap: { onAction(.notifyMeTapped) }
                             )
                         }

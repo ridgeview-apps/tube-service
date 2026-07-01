@@ -1,3 +1,4 @@
+import Models
 import SwiftUI
 
 public enum NotificationsButtonState: Sendable, Equatable {
@@ -11,7 +12,7 @@ public enum NotificationsButtonState: Sendable, Equatable {
 public struct NotificationsButton: View {
 
     public enum Context: Sendable {
-        case lineStatus(name: String, color: Color)
+        case lineStatus(TrainLineID)
         case settings
     }
 
@@ -44,8 +45,7 @@ public struct NotificationsButton: View {
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
                 }
-
-                Spacer(minLength: 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 Image(systemName: accessoryIconName)
                     .font(.subheadline.weight(.semibold))
@@ -65,7 +65,7 @@ public struct NotificationsButton: View {
             return .orange
         case .locked, .notSetUp, .inactive, .active:
             switch context {
-            case .lineStatus(_, let color): return color
+            case .lineStatus(let lineID): return lineID.backgroundColor
             case .settings: return .accentColor
             }
         }
@@ -75,7 +75,7 @@ public struct NotificationsButton: View {
         switch state {
         case .locked, .notSetUp: return "bell"
         case .permissionDenied: return "exclamationmark.triangle.fill"
-        case .inactive: return "bell.badge"
+        case .inactive: return "bell.slash"
         case .active: return "bell.fill"
         }
     }
@@ -99,19 +99,19 @@ public struct NotificationsButton: View {
         switch state {
         case .locked, .notSetUp:
             switch context {
-            case .lineStatus(let name, _): return .notificationsButtonLineNotSetUpTitle(name)
+            case .lineStatus(let lineID): return .notificationsButtonLineNotSetUpTitle(lineID.longName)
             case .settings: return .notificationsButtonSettingsNotSetUpTitle
             }
         case .permissionDenied:
             return .lineStatusNotificationsPermissionDeniedTitle
         case .inactive:
             switch context {
-            case .lineStatus(let name, _): return .notificationsButtonLineInactiveTitle(name)
+            case .lineStatus(let lineID): return .notificationsButtonLineInactiveTitle(lineID.longName)
             case .settings: return .notificationsButtonSettingsNotSetUpTitle
             }
         case .active:
             switch context {
-            case .lineStatus(let name, _): return .notificationsButtonLineActiveTitle(name)
+            case .lineStatus(let lineID): return .notificationsButtonLineActiveTitle(lineID.longName)
             case .settings: return .notificationsButtonSettingsActiveTitle
             }
         }
@@ -148,7 +148,7 @@ public struct NotificationsButton: View {
 #Preview("Not set up — line") {
     NotificationsButton(
         state: .notSetUp,
-        context: .lineStatus(name: "Victoria", color: .blue),
+        context: .lineStatus(.victoria),
         onTap: {}
     )
     .padding()
@@ -157,7 +157,7 @@ public struct NotificationsButton: View {
 #Preview("Locked — line") {
     NotificationsButton(
         state: .locked,
-        context: .lineStatus(name: "Victoria", color: .blue),
+        context: .lineStatus(.victoria),
         onTap: {}
     )
     .padding()
@@ -166,7 +166,7 @@ public struct NotificationsButton: View {
 #Preview("Permission denied — line") {
     NotificationsButton(
         state: .permissionDenied,
-        context: .lineStatus(name: "Victoria", color: .blue),
+        context: .lineStatus(.victoria),
         onTap: {}
     )
     .padding()
@@ -175,7 +175,7 @@ public struct NotificationsButton: View {
 #Preview("Inactive — line") {
     NotificationsButton(
         state: .inactive,
-        context: .lineStatus(name: "Victoria", color: .blue),
+        context: .lineStatus(.victoria),
         onTap: {}
     )
     .padding()
@@ -184,7 +184,7 @@ public struct NotificationsButton: View {
 #Preview("Active — line") {
     NotificationsButton(
         state: .active,
-        context: .lineStatus(name: "Victoria", color: .blue),
+        context: .lineStatus(.victoria),
         onTap: {}
     )
     .padding()

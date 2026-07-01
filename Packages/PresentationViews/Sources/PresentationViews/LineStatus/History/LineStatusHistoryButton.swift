@@ -38,8 +38,7 @@ public struct LineStatusHistoryButton: View {
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
                 }
-
-                Spacer(minLength: 8)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 accessory
             }
