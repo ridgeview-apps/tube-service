@@ -2176,7 +2176,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We'll notify you about disruptions on your chosen lines."
+            "value" : "You'll receive service alerts for your chosen lines."
           }
         }
       }
@@ -2209,7 +2209,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts Are Active"
+            "value" : "Your alerts are now active"
           }
         }
       }
