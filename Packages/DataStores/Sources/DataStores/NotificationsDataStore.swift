@@ -12,7 +12,9 @@ public final class NotificationsDataStore {
     public internal(set) var preferences: NotificationPreferences? {
         didSet { userDefaults.notificationPreferences = preferences }
     }
-    public private(set) var device: NotificationDevice?
+    public private(set) var device: NotificationDevice? {
+        didSet { userDefaults.notificationDevice = device }
+    }
     public private(set) var hasCompletedOnboarding: Bool {
         didSet { userDefaults.hasCompletedNotificationsOnboarding = hasCompletedOnboarding }
     }
@@ -59,6 +61,7 @@ public final class NotificationsDataStore {
         self.keychain = keychain
         self.userDefaults = userDefaults
         self.preferences = userDefaults.notificationPreferences
+        self.device = userDefaults.notificationDevice
         self.hasCompletedOnboarding = userDefaults.hasCompletedNotificationsOnboarding
         self.pushNotificationEnvironment = pushNotificationEnvironment
     }

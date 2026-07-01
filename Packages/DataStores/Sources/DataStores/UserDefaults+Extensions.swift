@@ -8,6 +8,7 @@ public extension UserDefaults {
         case userPreferences = "userPreferences_v2"
         case featureFlags = "featureFlags_v1"
         case notificationPreferences = "notificationPreferences_v1"
+        case notificationDevice = "notificationDevice_v1"
     }
 
     // N.B. @AppStorage property wrapper is available from SwiftUI views and should be used whenever possible.
@@ -33,6 +34,24 @@ public extension UserDefaults {
             var prefs = userPreferences
             prefs.hasCompletedNotificationsOnboarding = newValue
             userPreferences = prefs
+        }
+    }
+
+    var notificationDevice: NotificationDevice? {
+        get {
+            guard let data = data(forKey: Keys.notificationDevice.rawValue),
+                let decoded = try? JSONDecoder().decode(NotificationDevice.self, from: data)
+            else {
+                return nil
+            }
+            return decoded
+        }
+        set {
+            if let newValue, let data = try? JSONEncoder().encode(newValue) {
+                set(data, forKey: Keys.notificationDevice.rawValue)
+            } else {
+                removeObject(forKey: Keys.notificationDevice.rawValue)
+            }
         }
     }
 
