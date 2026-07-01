@@ -1,7 +1,6 @@
 import DataStores
 import Models
 import PresentationViews
-import StoreKit
 import SwiftUI
 
 struct NotificationsFlow: View {
@@ -24,7 +23,7 @@ struct NotificationsFlow: View {
     let context: Context
     let mode: Mode
 
-    var onboardingInitialSettings: [LineNotificationSettings] {
+    private var onboardingInitialSettings: [LineNotificationSettings] {
         switch context {
         case .lineDetail(let trainLineID):
             return [.defaultValue(lineID: trainLineID)]
@@ -36,22 +35,23 @@ struct NotificationsFlow: View {
     var body: some View {
         switch mode {
         case .onboarding:
-            OnboardingNotificationsFlow(
-                initialNotificationSettings: onboardingInitialSettings
-            )
+            OnboardingNotificationsFlow(initialNotificationSettings: onboardingInitialSettings)
         case .manage:
-            let saved = savedNotificationSettings
-            ManageNotificationsFlow(
-                savedNotificationSettings: saved,
-                pendingNotificationSettings: pendingItems(savedItems: saved),
-                initialIsMuted: notifications.device?.enabled ?? true
-            )
+            manageFlow
         }
     }
 
-    private func pendingItems(savedItems: [LineNotificationSettings]) -> [LineNotificationSettings] {
+    private var manageFlow: some View {
+        ManageNotificationsFlow(
+            savedNotificationSettings: savedNotificationSettings,
+            pendingNotificationSettings: pendingItems,
+            initialIsMuted: !(notifications.device?.enabled ?? false)
+        )
+    }
+
+    private var pendingItems: [LineNotificationSettings] {
         guard case .lineDetail(let lineID) = context,
-            !savedItems.contains(where: { $0.lineID == lineID })
+            !savedNotificationSettings.contains(where: { $0.lineID == lineID })
         else { return [] }
         return [.defaultValue(lineID: lineID)]
     }
