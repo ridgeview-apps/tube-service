@@ -59,7 +59,7 @@ struct ManageNotificationsFlow: View {
         Task {
             await notifications.requestAuthorizationAndRefreshStatus()
             if notifications.canReceivePushNotifications {
-                notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
+                await notifications.updatePreferences(with: updatedNotificationSettings.toNotificationPreferencesUpdate())
                 dismiss()
             }
         }

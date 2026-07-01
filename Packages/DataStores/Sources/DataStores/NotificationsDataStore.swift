@@ -12,7 +12,6 @@ public final class NotificationsDataStore {
     public internal(set) var preferences: NotificationPreferences? {
         didSet { userDefaults.notificationPreferences = preferences }
     }
-    private var isSavingPreferences = false
     public private(set) var device: NotificationDevice?
     public private(set) var hasCompletedOnboarding: Bool {
         didSet { userDefaults.hasCompletedNotificationsOnboarding = hasCompletedOnboarding }
@@ -41,8 +40,10 @@ public final class NotificationsDataStore {
     private let pushNotificationEnvironment: PushNotificationEnvironment
 
     private var isRegistering = false
+    private var isSavingPreferences = false
 
     private static let keychainDeviceIdKey = "push_device_id"
+    private static let keychainPushTokenKey = "push_registered_token"
     private var cachedDeviceId: String?
     private var queuedPreferencesUpdate: NotificationPreferencesUpdate?
 
@@ -81,11 +82,14 @@ public final class NotificationsDataStore {
     // MARK: - Registration
 
     public func registerDevice(pushToken: String, appVersion: String?) async {
-        guard !isRegistering else { return }
+        guard !isRegistering,
+            pushToken != keychain.read(key: Self.keychainPushTokenKey)
+        else { return }
         isRegistering = true
         defer { isRegistering = false }
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
+            keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
             if let queuedPreferences = queuedPreferencesUpdate {
                 queuedPreferencesUpdate = nil
                 await updatePreferences(with: queuedPreferences)
@@ -96,6 +100,9 @@ public final class NotificationsDataStore {
             AppLogger.notifications.error("Failed to register device: \(error)")
         }
     }
+
+
+    // MARK: - Device Management
 
     public func disableDevice() async {
         do {
@@ -113,16 +120,15 @@ public final class NotificationsDataStore {
             preferences = nil
             hasCompletedOnboarding = false
             keychain.delete(key: Self.keychainDeviceIdKey)
+            keychain.delete(key: Self.keychainPushTokenKey)
             cachedDeviceId = nil
         } catch {
             AppLogger.notifications.error("Failed to delete device: \(error)")
         }
     }
 
-    private func markOnboardingCompleted() {
-        hasCompletedOnboarding = true
-    }
 
+    // MARK: - Authorization
 
     public func refreshAuthorizationStatus() async {
         authorizationStatus = await pushNotificationEnvironment.readAuthStatus()
@@ -140,12 +146,12 @@ public final class NotificationsDataStore {
         await refreshAuthorizationStatus()
     }
 
+
+    // MARK: - Preferences
+
     public func queuePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
         queuedPreferencesUpdate = update
     }
-
-
-    // MARK: - Preferences
 
     private func fetchInitialPreferences() async {
         do {
@@ -162,7 +168,7 @@ public final class NotificationsDataStore {
         defer { isSavingPreferences = false }
         do {
             preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
-            if !hasCompletedOnboarding { markOnboardingCompleted() }
+            if !hasCompletedOnboarding { hasCompletedOnboarding = true }
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             preferences = previousPreferences

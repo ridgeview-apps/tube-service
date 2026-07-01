@@ -207,13 +207,60 @@ struct NotificationsDataStoreTests {
         ])
         store.queuePreferencesUpdate(update)
 
-        // When – register twice (second registration is a no-op due to isRegistering guard,
-        // but if called after the first completes it should not re-apply the pending update)
+        // When – register twice with the same token; second call is skipped by the token deduplication guard
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – update was only applied once
         #expect(api.updatePreferencesCallCount == 1)
+    }
+
+    @Test
+    func registerDeviceSkippedWhenTokenUnchanged() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(api.registerDeviceCallCount == 1)
+
+        // When – same token delivered again (e.g. on app resume)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – backend is not called again
+        #expect(api.registerDeviceCallCount == 1)
+    }
+
+    @Test
+    func registerDeviceCalledAgainAfterTokenChanges() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "token-v1", appVersion: nil)
+        #expect(api.registerDeviceCallCount == 1)
+
+        // When – APNs rotates the token
+        await store.registerDevice(pushToken: "token-v2", appVersion: nil)
+
+        // Then – backend is called with the new token
+        #expect(api.registerDeviceCallCount == 2)
+    }
+
+    @Test
+    func deleteDeviceAllowsReregistrationWithSameToken() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(api.registerDeviceCallCount == 1)
+
+        // When – device is deleted (e.g. user removes account) then re-registers
+        await store.deleteDevice()
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – backend is called again because the cached token was cleared on delete
+        #expect(api.registerDeviceCallCount == 2)
     }
 
 
