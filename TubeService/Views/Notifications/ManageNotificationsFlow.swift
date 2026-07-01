@@ -45,9 +45,12 @@ struct ManageNotificationsFlow: View {
             switch action {
             case .cancel:
                 dismiss()
-            case .done(let updatedValues, _):
+            case .done(let updatedValues, let isMuted):
                 Task {
-                    await notifications.updatePreferences(with: updatedValues.toNotificationPreferencesUpdate())
+                    await notifications.savePreferences(
+                        update: updatedValues.toNotificationPreferencesUpdate(),
+                        isMuted: isMuted
+                    )
                     dismiss()
                 }
             case .openSettings:

@@ -308,6 +308,77 @@ struct NotificationsDataStoreTests {
     }
 
 
+    // MARK: - Save preferences with mute state
+
+    @Test
+    func savePreferencesWhenUnmutedAndStaysUnmuted() async {
+        // Given – device registered (enabled = true)
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // When – save with isMuted: false (no mute change)
+        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), isMuted: false)
+
+        // Then – only updatePreferences called, no enable/disable
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(api.enableDeviceCallCount == 0)
+        #expect(api.disableDeviceCallCount == 0)
+    }
+
+    @Test
+    func savePreferencesMutingCallsUpdateThenDisable() async {
+        // Given – device registered (enabled = true)
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // When – save with isMuted: true (muting)
+        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), isMuted: true)
+
+        // Then – updatePreferences fires before disableDevice
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(api.disableDeviceCallCount == 1)
+        #expect(api.enableDeviceCallCount == 0)
+        #expect(api.invocations.suffix(2) == ["updatePreferences", "disableDevice"])
+    }
+
+    @Test
+    func savePreferencesUnmutingCallsEnableThenUpdate() async {
+        // Given – device disabled (muted)
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.disableDevice()
+        #expect(store.device?.enabled == false)
+
+        // When – save with isMuted: false (unmuting)
+        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), isMuted: false)
+
+        // Then – enableDevice fires before updatePreferences
+        // (enableDevice also triggers fetchPreferences since preferences were nil after disabling)
+        #expect(api.enableDeviceCallCount == 1)
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(Array(api.invocations.suffix(3)) == ["enableDevice", "fetchPreferences", "updatePreferences"])
+    }
+
+    @Test
+    func savePreferencesWhenAlreadyMutedAndStaysMuted() async {
+        // Given – device disabled (muted)
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.disableDevice()
+
+        // When – save with isMuted: true (no mute change)
+        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), isMuted: true)
+
+        // Then – only updatePreferences called, no further enable/disable
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(api.disableDeviceCallCount == 1)  // only from setup
+        #expect(api.enableDeviceCallCount == 0)
+    }
+
     // MARK: - Helpers
 
     private func makeStore(

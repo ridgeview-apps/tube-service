@@ -185,4 +185,19 @@ public final class NotificationsDataStore {
             preferences = previousPreferences
         }
     }
+
+    public func savePreferences(update: NotificationPreferencesUpdate, isMuted: Bool) async {
+        guard let device else {
+            await updatePreferences(with: update)
+            return
+        }
+        let currentlyMuted = !device.enabled
+        if !isMuted, currentlyMuted {
+            await enableDevice()
+        }
+        await updatePreferences(with: update)
+        if isMuted, !currentlyMuted {
+            await disableDevice()
+        }
+    }
 }
