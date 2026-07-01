@@ -113,6 +113,17 @@ public final class NotificationsDataStore {
         }
     }
 
+    public func enableDevice() async {
+        do {
+            device = try await api.enableDevice(deviceId: deviceId).decodedModel
+            if preferences == nil {
+                await fetchInitialPreferences()
+            }
+        } catch {
+            AppLogger.notifications.error("Failed to enable device: \(error)")
+        }
+    }
+
     public func deleteDevice() async {
         do {
             try await api.deleteDevice(deviceId: deviceId)

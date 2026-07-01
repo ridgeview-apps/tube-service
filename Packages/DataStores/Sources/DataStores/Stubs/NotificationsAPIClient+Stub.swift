@@ -42,6 +42,14 @@ import ModelStubs
             return stubbedDevice
         }
 
+        public private(set) var enableDeviceCallCount = 0
+        public var enableDeviceError: Error?
+        public func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
+            enableDeviceCallCount += 1
+            if let enableDeviceError { throw enableDeviceError }
+            return stubbedDevice
+        }
+
         public private(set) var fetchPreferencesCallCount = 0
         public var stubbedPreferences: HTTPResponse<NotificationPreferences> = .success200(
             .init(

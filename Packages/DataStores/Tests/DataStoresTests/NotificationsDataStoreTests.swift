@@ -87,6 +87,50 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
+    func enableDeviceCallsAPI() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+
+        // When
+        await store.enableDevice()
+
+        // Then
+        #expect(api.enableDeviceCallCount == 1)
+    }
+
+    @Test
+    func enableDeviceFetchesPreferencesWhenNil() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+
+        // When
+        await store.enableDevice()
+
+        // Then – preferences are fetched after enabling since they were nil
+        #expect(api.fetchPreferencesCallCount == 1)
+        #expect(store.preferences != nil)
+    }
+
+    @Test
+    func enableDeviceDoesNotFetchPreferencesWhenAlreadyLoaded() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(store.preferences != nil)
+
+        // When – disable then re-enable; preferences were cleared by disable
+        await store.disableDevice()
+        #expect(store.preferences == nil)
+        await store.enableDevice()
+
+        // Then – preferences are re-fetched after enable
+        #expect(api.fetchPreferencesCallCount == 2)  // once after register, once after enable
+    }
+
+    @Test
     func deleteDeviceClearsState() async {
         // Given
         let api = StubNotificationsAPIClient()
