@@ -8,7 +8,6 @@ extension UserPreferences {
         case journeyModePreset
         case recentlySavedJourneys
         case readSystemStatusMessage
-        case notificationsOnboardingDone
     }
 
     // Manual decoding allows new preferences to gain defaults when reading older stored values.
@@ -24,7 +23,6 @@ extension UserPreferences {
 
         recentlySavedJourneys = (try? container.decode([SavedJourney].self, forKey: .recentlySavedJourneys)) ?? []
         readSystemStatusMessage = try? container.decodeIfPresent(SystemStatus.ID.self, forKey: .readSystemStatusMessage)
-        hasCompletedNotificationsOnboarding = (try? container.decode(Bool.self, forKey: .notificationsOnboardingDone)) ?? false
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -35,7 +33,6 @@ extension UserPreferences {
         try container.encode(journeyModePreset, forKey: .journeyModePreset)
         try container.encode(recentlySavedJourneys, forKey: .recentlySavedJourneys)
         try container.encode(readSystemStatusMessage, forKey: .readSystemStatusMessage)
-        try container.encode(hasCompletedNotificationsOnboarding, forKey: .notificationsOnboardingDone)
     }
 }
 

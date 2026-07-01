@@ -10,13 +10,13 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public internal(set) var preferences: NotificationPreferences? {
-        didSet { userDefaults.notificationPreferences = preferences }
+        didSet { persistNotificationState() }
     }
     public private(set) var device: NotificationDevice? {
-        didSet { userDefaults.notificationDevice = device }
+        didSet { persistNotificationState() }
     }
     public private(set) var hasCompletedOnboarding: Bool {
-        didSet { userDefaults.hasCompletedNotificationsOnboarding = hasCompletedOnboarding }
+        didSet { persistNotificationState() }
     }
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
@@ -60,10 +60,22 @@ public final class NotificationsDataStore {
         self.api = api
         self.keychain = keychain
         self.userDefaults = userDefaults
-        self.preferences = userDefaults.notificationPreferences
-        self.device = userDefaults.notificationDevice
-        self.hasCompletedOnboarding = userDefaults.hasCompletedNotificationsOnboarding
+        let state = userDefaults.notificationState
+        self.preferences = state.preferences
+        self.device = state.device
+        self.hasCompletedOnboarding = state.hasCompletedOnboarding
         self.pushNotificationEnvironment = pushNotificationEnvironment
+    }
+
+
+    // MARK: - Persistence
+
+    private func persistNotificationState() {
+        userDefaults.notificationState = NotificationState(
+            device: device,
+            preferences: preferences,
+            hasCompletedOnboarding: hasCompletedOnboarding
+        )
     }
 
 

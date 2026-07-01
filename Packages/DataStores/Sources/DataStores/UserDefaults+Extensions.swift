@@ -7,8 +7,7 @@ public extension UserDefaults {
     enum Keys: String {
         case userPreferences = "userPreferences_v2"
         case featureFlags = "featureFlags_v1"
-        case notificationPreferences = "notificationPreferences_v1"
-        case notificationDevice = "notificationDevice_v1"
+        case notificationState = "notificationState_v1"
     }
 
     // N.B. @AppStorage property wrapper is available from SwiftUI views and should be used whenever possible.
@@ -28,47 +27,18 @@ public extension UserDefaults {
         }
     }
 
-    var hasCompletedNotificationsOnboarding: Bool {
-        get { userPreferences.hasCompletedNotificationsOnboarding }
-        set {
-            var prefs = userPreferences
-            prefs.hasCompletedNotificationsOnboarding = newValue
-            userPreferences = prefs
-        }
-    }
-
-    var notificationDevice: NotificationDevice? {
+    var notificationState: NotificationState {
         get {
-            guard let data = data(forKey: Keys.notificationDevice.rawValue),
-                let decoded = try? JSONDecoder().decode(NotificationDevice.self, from: data)
+            guard let data = data(forKey: Keys.notificationState.rawValue),
+                let decoded = try? JSONDecoder().decode(NotificationState.self, from: data)
             else {
-                return nil
+                return .default
             }
             return decoded
         }
         set {
-            if let newValue, let data = try? JSONEncoder().encode(newValue) {
-                set(data, forKey: Keys.notificationDevice.rawValue)
-            } else {
-                removeObject(forKey: Keys.notificationDevice.rawValue)
-            }
-        }
-    }
-
-    var notificationPreferences: NotificationPreferences? {
-        get {
-            guard let data = data(forKey: Keys.notificationPreferences.rawValue),
-                let decoded = try? JSONDecoder().decode(NotificationPreferences.self, from: data)
-            else {
-                return nil
-            }
-            return decoded
-        }
-        set {
-            if let newValue, let data = try? JSONEncoder().encode(newValue) {
-                set(data, forKey: Keys.notificationPreferences.rawValue)
-            } else {
-                removeObject(forKey: Keys.notificationPreferences.rawValue)
+            if let data = try? JSONEncoder().encode(newValue) {
+                set(data, forKey: Keys.notificationState.rawValue)
             }
         }
     }

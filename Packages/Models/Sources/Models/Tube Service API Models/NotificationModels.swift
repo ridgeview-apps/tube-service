@@ -148,3 +148,17 @@ public struct NotificationPreferencesUpdate: Codable, Hashable, Sendable {
         self.lines = lines
     }
 }
+
+public struct NotificationState: Codable, Sendable {
+    public var device: NotificationDevice?
+    public var preferences: NotificationPreferences?
+    public var hasCompletedOnboarding: Bool
+
+    public static let `default` = NotificationState(device: nil, preferences: nil, hasCompletedOnboarding: false)
+
+    public init(device: NotificationDevice?, preferences: NotificationPreferences?, hasCompletedOnboarding: Bool) {
+        self.device = device
+        self.preferences = preferences
+        self.hasCompletedOnboarding = hasCompletedOnboarding
+    }
+}

@@ -8,8 +8,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySelectedStations: [],
         journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
-        readSystemStatusMessage: nil,
-        hasCompletedNotificationsOnboarding: false
+        readSystemStatusMessage: nil
     )
 
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
@@ -18,7 +17,6 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
     public var readSystemStatusMessage: SystemStatus.ID?
-    public var hasCompletedNotificationsOnboarding: Bool
 
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
@@ -26,8 +24,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySelectedStations: [Station.ID] = [],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
-        readSystemStatusMessage: SystemStatus.ID?,
-        hasCompletedNotificationsOnboarding: Bool = false
+        readSystemStatusMessage: SystemStatus.ID?
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
         self.favouriteLineIDs = favouriteLineIDs
@@ -35,7 +32,6 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
-        self.hasCompletedNotificationsOnboarding = hasCompletedNotificationsOnboarding
     }
 
     // MARK: - Favourite Lines
