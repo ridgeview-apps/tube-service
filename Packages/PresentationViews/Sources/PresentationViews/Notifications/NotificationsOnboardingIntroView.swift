@@ -40,15 +40,9 @@ public struct NotificationsOnboardingIntroView: View {
                     .foregroundStyle(Color.accentColor)
             }
 
-            VStack(spacing: 8) {
-                Text(.notificationsOnboardingHeroTitle)
-                    .font(.title2.weight(.bold))
-                    .multilineTextAlignment(.center)
-
-                Text(.notificationsOnboardingHeroDescription)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-            }
+            Text(.notificationsOnboardingHeroTitle)
+                .font(.title2.weight(.bold))
+                .multilineTextAlignment(.center)
         }
     }
 

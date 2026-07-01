@@ -2462,7 +2462,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get notified when lines you follow are disrupted."
+            "value" : "When your lines are disrupted"
           }
         }
       }
@@ -2484,7 +2484,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notify me when service returns to normal"
+            "value" : "When service is back to normal"
           }
         }
       }
@@ -2506,7 +2506,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose when you want to receive alerts."
+            "value" : "Morning, evening, or all day"
           }
         }
       }
