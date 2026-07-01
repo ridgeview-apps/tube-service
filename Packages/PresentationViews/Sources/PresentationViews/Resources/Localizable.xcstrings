@@ -3128,7 +3128,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get the full picture of today's service — when disruptions started, how long they lasted, and when things got back to normal."
+            "value" : "Today's full service picture — when disruptions started, how long they lasted, and when things recovered."
           }
         }
       }
@@ -3139,7 +3139,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tube Service is built by one person. Plus helps cover server costs and keeps the app free for everyone."
+            "value" : "Built by one developer. A Plus subscription helps cover server costs and keeps the app free."
           }
         }
       }
@@ -3150,7 +3150,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Review recent disruptions, what caused them, and when they were resolved."
+            "value" : "Recent disruptions, their causes, and when they cleared."
           }
         }
       }
@@ -3172,7 +3172,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See when and how quickly the service returned to normal after disruptions."
+            "value" : "How quickly service recovered after each disruption."
           }
         }
       }
@@ -3194,7 +3194,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See a timeline of service changes across the day, updated throughout."
+            "value" : "A full-day view of service changes, updated as they happen."
           }
         }
       }
@@ -3216,7 +3216,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get notified when your lines are disrupted, and when service returns to normal."
+            "value" : "Know when your lines are disrupted — and when they recover."
           }
         }
       }

@@ -30,6 +30,7 @@ struct TubeServicePlusView: View {
             TubeServicePlusMarketingContent(context: context)
         }
         .storeButton(.hidden, for: .cancellation)
+        .subscriptionStoreControlStyle(.compactPicker)
         .onChange(of: purchases.hasTubeServicePlus) { _, hasNowSubscribed in
             if hasNowSubscribed {
                 onAction(.purchaseSuccess)
