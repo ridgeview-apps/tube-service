@@ -15,10 +15,11 @@ public struct NotificationSettingsView: View {
     }
 
     private let mode: Mode
-    private let initialItems: [LineNotificationSettings]
+    private let savedItems: [LineNotificationSettings]
     private let initialIsMuted: Bool
     private let showPermissionWarning: Bool
     private let onAction: (Action) -> Void
+    private let pendingLineIDs: Set<TrainLineID>
 
     @State private var items: [LineNotificationSettings]
     @State private var isMuted: Bool
@@ -27,17 +28,21 @@ public struct NotificationSettingsView: View {
 
     public init(
         mode: Mode,
-        initialItems: [LineNotificationSettings],
+        savedItems: [LineNotificationSettings],
+        pendingItems: [LineNotificationSettings] = [],
         initialIsMuted: Bool,
         showPermissionWarning: Bool,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
-        self.initialItems = initialItems
+        self.savedItems = savedItems
         self.initialIsMuted = initialIsMuted
         self.showPermissionWarning = showPermissionWarning
         self.onAction = onAction
-        _items = State(initialValue: initialItems)
+        self.pendingLineIDs = Set(pendingItems.map(\.lineID))
+        let savedIDs = Set(savedItems.map(\.lineID))
+        let merged = pendingItems.filter { !savedIDs.contains($0.lineID) } + savedItems
+        _items = State(initialValue: merged)
         _isMuted = State(initialValue: initialIsMuted)
     }
 
@@ -132,7 +137,7 @@ public struct NotificationSettingsView: View {
     // MARK: - Computed Properties
 
     private var hasUnsavedChanges: Bool {
-        items != initialItems || isMuted != initialIsMuted
+        items != savedItems || isMuted != initialIsMuted
     }
 
     private var unaddedLineIDs: [TrainLineID] {
@@ -251,10 +256,15 @@ public struct NotificationSettingsView: View {
     @ViewBuilder
     private func lineScheduleCard(for lineID: TrainLineID) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text(lineID.longName)
-                .font(.subheadline)
-                .fontWeight(.semibold)
-                .padding(.bottom, 10)
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(lineID.longName)
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                if mode == .manage && pendingLineIDs.contains(lineID) {
+                    PendingBadge()
+                }
+            }
+            .padding(.bottom, 10)
 
             Divider()
 
@@ -343,6 +353,34 @@ public struct NotificationSettingsView: View {
 }
 
 
+// MARK: - Pending Badge
+
+private struct PendingBadge: View {
+    @State private var triggered = false
+
+    var body: some View {
+        Text("New")
+            .font(.caption2)
+            .fontWeight(.semibold)
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(.tint, in: Capsule())
+            .foregroundStyle(.white)
+            .keyframeAnimator(initialValue: CGFloat(1.0), trigger: triggered) { content, scale in
+                content.scaleEffect(scale)
+            } keyframes: { _ in
+                KeyframeTrack {
+                    SpringKeyframe(1.12, duration: 0.3, spring: .bouncy)
+                    SpringKeyframe(1.0, duration: 0.3, spring: .bouncy)
+                    SpringKeyframe(1.12, duration: 0.3, spring: .bouncy)
+                    SpringKeyframe(1.0, duration: 0.3, spring: .bouncy)
+                }
+            }
+            .onAppear { triggered = true }
+    }
+}
+
+
 // MARK: - Previews
 
 #if DEBUG
@@ -350,8 +388,20 @@ public struct NotificationSettingsView: View {
         NavigationStack {
             NotificationSettingsView(
                 mode: .manage,
-                initialItems: [.victoria, .jubilee, .central, .northern]
+                savedItems: [.victoria, .jubilee, .central, .northern]
                     .map { .defaultValue(lineID: $0) },
+                initialIsMuted: false,
+                showPermissionWarning: false
+            ) { _ in }
+        }
+    }
+
+    #Preview("Manage - With Pending Line") {
+        NavigationStack {
+            NotificationSettingsView(
+                mode: .manage,
+                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
+                pendingItems: [.defaultValue(lineID: .central)],
                 initialIsMuted: false,
                 showPermissionWarning: false
             ) { _ in }
@@ -362,7 +412,7 @@ public struct NotificationSettingsView: View {
         NavigationStack {
             NotificationSettingsView(
                 mode: .onboarding,
-                initialItems: [.victoria].map { .defaultValue(lineID: $0) },
+                savedItems: [.victoria].map { .defaultValue(lineID: $0) },
                 initialIsMuted: false,
                 showPermissionWarning: false
             ) { _ in }
@@ -373,7 +423,7 @@ public struct NotificationSettingsView: View {
         NavigationStack {
             NotificationSettingsView(
                 mode: .manage,
-                initialItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
+                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 initialIsMuted: true,
                 showPermissionWarning: false
             ) { _ in }
@@ -384,7 +434,7 @@ public struct NotificationSettingsView: View {
         NavigationStack {
             NotificationSettingsView(
                 mode: .manage,
-                initialItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
+                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 initialIsMuted: false,
                 showPermissionWarning: true
             ) { _ in }

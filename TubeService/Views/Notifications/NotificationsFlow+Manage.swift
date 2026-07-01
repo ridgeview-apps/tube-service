@@ -11,7 +11,8 @@ struct ManageNotificationsFlow: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
 
-    let initialNotificationSettings: [LineNotificationSettings]
+    let savedNotificationSettings: [LineNotificationSettings]
+    let pendingNotificationSettings: [LineNotificationSettings]
     let initialIsMuted: Bool
     @State private var updatedNotificationSettings = [LineNotificationSettings]()
 
@@ -37,7 +38,8 @@ struct ManageNotificationsFlow: View {
     private var lineSettingsView: some View {
         NotificationSettingsView(
             mode: .manage,
-            initialItems: initialNotificationSettings,
+            savedItems: savedNotificationSettings,
+            pendingItems: pendingNotificationSettings,
             initialIsMuted: false,
             showPermissionWarning: notifications.isPermissionDenied
         ) { action in
@@ -56,7 +58,7 @@ struct ManageNotificationsFlow: View {
     private func saveUpdatedSettingsAndFinish() {
         Task {
             await notifications.requestAuthorizationAndRefreshStatus()
-            if notifications.isPermissionDenied {
+            if notifications.canReceivePushNotifications {
                 notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
                 dismiss()
             }

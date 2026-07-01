@@ -24,17 +24,12 @@ struct NotificationsFlow: View {
     let context: Context
     let mode: Mode
 
-    var initialNotificationSettings: [LineNotificationSettings] {
-        switch mode {
-        case .onboarding:
-            switch context {
-            case .lineDetail(let trainLineID):
-                return [.defaultValue(lineID: trainLineID)]
-            case .globalSettings:
-                return []
-            }
-        case .manage:
-            return notifications.preferences?.lines.toLineNotificationSettings() ?? []
+    var onboardingInitialSettings: [LineNotificationSettings] {
+        switch context {
+        case .lineDetail(let trainLineID):
+            return [.defaultValue(lineID: trainLineID)]
+        case .globalSettings:
+            return []
         }
     }
 
@@ -42,13 +37,22 @@ struct NotificationsFlow: View {
         switch mode {
         case .onboarding:
             OnboardingNotificationsFlow(
-                initialNotificationSettings: initialNotificationSettings
+                initialNotificationSettings: onboardingInitialSettings
             )
         case .manage:
+            let saved = savedNotificationSettings
             ManageNotificationsFlow(
-                initialNotificationSettings: initialNotificationSettings,
+                savedNotificationSettings: saved,
+                pendingNotificationSettings: pendingItems(savedItems: saved),
                 initialIsMuted: notifications.device?.enabled ?? true
             )
         }
+    }
+
+    private func pendingItems(savedItems: [LineNotificationSettings]) -> [LineNotificationSettings] {
+        guard case .lineDetail(let lineID) = context,
+            !savedItems.contains(where: { $0.lineID == lineID })
+        else { return [] }
+        return [.defaultValue(lineID: lineID)]
     }
 }

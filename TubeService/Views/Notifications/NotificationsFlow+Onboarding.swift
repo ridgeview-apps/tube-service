@@ -66,7 +66,8 @@ struct OnboardingNotificationsFlow: View {
     private var lineSettingsView: some View {
         NotificationSettingsView(
             mode: .onboarding,
-            initialItems: initialNotificationSettings,
+            savedItems: [],
+            pendingItems: initialNotificationSettings,
             initialIsMuted: false,
             showPermissionWarning: notifications.isPermissionDenied
         ) { action in

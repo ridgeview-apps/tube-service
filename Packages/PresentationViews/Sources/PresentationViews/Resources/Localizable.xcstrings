@@ -2046,6 +2046,9 @@
         }
       }
     },
+    "New" : {
+
+    },
     "notifications.button.line.active.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2299,6 +2302,28 @@
         }
       }
     },
+    "notifications.manage.alerts.paused.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your line notifications are temporarily silenced."
+          }
+        }
+      }
+    },
+    "notifications.manage.alerts.paused.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All alerts paused"
+          }
+        }
+      }
+    },
     "notifications.manage.discard.changes.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2354,6 +2379,28 @@
         }
       }
     },
+    "notifications.manage.pause.all.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receive notifications for your selected lines"
+          }
+        }
+      }
+    },
+    "notifications.manage.pause.all.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts"
+          }
+        }
+      }
+    },
     "notifications.manage.permission.warning.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2376,28 +2423,6 @@
         }
       }
     },
-    "notifications.manage.alerts.paused.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your line notifications are temporarily silenced."
-          }
-        }
-      }
-    },
-    "notifications.manage.alerts.paused.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All alerts paused"
-          }
-        }
-      }
-    },
     "notifications.manage.resume.alerts.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2405,28 +2430,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume alerts"
-          }
-        }
-      }
-    },
-    "notifications.manage.pause.all.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Receive notifications for your selected lines"
-          }
-        }
-      }
-    },
-    "notifications.manage.pause.all.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts"
           }
         }
       }
