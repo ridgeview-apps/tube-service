@@ -1,7 +1,7 @@
 import Models
 import SwiftUI
 
-public struct NotificationSettingsView: View {
+public struct LineNotificationSettingsView: View {
 
     public enum Mode {
         case onboarding
@@ -29,7 +29,7 @@ public struct NotificationSettingsView: View {
     public init(
         mode: Mode,
         savedItems: [LineNotificationSettings],
-        pendingItems: [LineNotificationSettings] = [],
+        pendingItems: [LineNotificationSettings],
         initialIsMuted: Bool,
         showPermissionWarning: Bool,
         onAction: @escaping (Action) -> Void
@@ -58,19 +58,7 @@ public struct NotificationSettingsView: View {
                 }
 
                 if mode == .onboarding || (!isMuted && !showPermissionWarning) {
-                    ForEach(items) { item in
-                        lineScheduleCard(for: item.lineID)
-                            .listRowBackground(Color.clear)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
-                    }
-                    .onDelete { indexSet in
-                        items.remove(atOffsets: indexSet)
-                    }
-
-                    if !unaddedLineIDs.isEmpty {
-                        addLineRow
-                    }
+                    lineItemsSection
                 }
             }
             .listStyle(.plain)
@@ -94,25 +82,8 @@ public struct NotificationSettingsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             if mode == .manage {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        if hasUnsavedChanges {
-                            showCancelConfirmation = true
-                        } else {
-                            onAction(.cancel)
-                        }
-                    } label: {
-                        Image(systemName: "xmark")
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        onAction(.done(items: items, isMuted: isMuted))
-                    } label: {
-                        Text(.globalDone)
-                    }
-                    .disabled(!hasUnsavedChanges)
-                }
+                ToolbarItem(placement: .cancellationAction) { cancelButton }
+                ToolbarItem(placement: .confirmationAction) { doneButton }
             }
         }
         .confirmationDialog(
@@ -145,6 +116,51 @@ public struct NotificationSettingsView: View {
         return TrainLineID.allCases
             .filter { !addedIDs.contains($0) }
             .sorted { $0.name < $1.name }
+    }
+
+    // MARK: - Toolbar Buttons
+
+    private var cancelButton: some View {
+        Button {
+            if hasUnsavedChanges {
+                showCancelConfirmation = true
+            } else {
+                onAction(.cancel)
+            }
+        } label: {
+            Image(systemName: "xmark")
+        }
+    }
+
+    private var doneButton: some View {
+        Button {
+            onAction(.done(items: items, isMuted: isMuted))
+        } label: {
+            Text(.globalDone)
+        }
+        .disabled(!hasUnsavedChanges)
+    }
+
+    // MARK: - Line Items Section
+
+    @ViewBuilder
+    private var lineItemsSection: some View {
+        ForEach($items) { $item in
+            LineScheduleCard(
+                settings: $item,
+                showPendingBadge: pendingLineIDs.contains(item.lineID)
+            )
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+        }
+        .onDelete { indexSet in
+            items.remove(atOffsets: indexSet)
+        }
+
+        if !unaddedLineIDs.isEmpty {
+            addLineRow
+        }
     }
 
     // MARK: - Pinned Done Button (Onboarding)
@@ -250,17 +266,24 @@ public struct NotificationSettingsView: View {
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
     }
+}
 
-    // MARK: - Schedule Cards
 
-    @ViewBuilder
-    private func lineScheduleCard(for lineID: TrainLineID) -> some View {
+// MARK: - Line Schedule Card
+
+private struct LineScheduleCard: View {
+    @Binding var settings: LineNotificationSettings
+    let showPendingBadge: Bool
+
+    private var lineID: TrainLineID { settings.lineID }
+
+    var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 Text(lineID.longName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                if mode == .manage && pendingLineIDs.contains(lineID) {
+                if showPendingBadge {
                     PendingBadge()
                 }
             }
@@ -268,9 +291,9 @@ public struct NotificationSettingsView: View {
 
             Divider()
 
-            scheduleRow(for: lineID)
+            scheduleRow
             Divider()
-            recoveryAlertsRow(for: lineID)
+            recoveryAlertsRow
         }
         .padding(16)
         .background(alignment: .leading) {
@@ -279,14 +302,12 @@ public struct NotificationSettingsView: View {
         .cardStyle()
     }
 
-    @ViewBuilder
-    private func scheduleRow(for lineID: TrainLineID) -> some View {
-        let item = currentItem(for: lineID)
+    private var scheduleRow: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(.notificationsManageScheduleLabel)
                     .foregroundStyle(.primary)
-                if let description = item.schedulePreset.description {
+                if let description = settings.schedulePreset.description {
                     Text(description)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -295,8 +316,8 @@ public struct NotificationSettingsView: View {
             Spacer(minLength: 8)
             Menu {
                 Picker(
-                    L10n.notificationsConfirmationScheduleLabel,
-                    selection: itemBinding(for: lineID).schedulePreset
+                    String(localized: .notificationsConfirmationScheduleLabel),
+                    selection: $settings.schedulePreset
                 ) {
                     ForEach(NotificationSchedulePreset.allDisplayCases, id: \.self) { p in
                         Text(p.title).tag(p)
@@ -305,7 +326,7 @@ public struct NotificationSettingsView: View {
                 .labelsHidden()
             } label: {
                 HStack(spacing: 4) {
-                    Text(item.schedulePreset.title)
+                    Text(settings.schedulePreset.title)
                         .multilineTextAlignment(.trailing)
                     Image(systemName: "chevron.up.chevron.down")
                         .imageScale(.small)
@@ -319,12 +340,12 @@ public struct NotificationSettingsView: View {
         .padding(.vertical, 10)
     }
 
-    private func recoveryAlertsRow(for lineID: TrainLineID) -> some View {
-        Toggle(isOn: itemBinding(for: lineID).notifyRecoveries) {
+    private var recoveryAlertsRow: some View {
+        Toggle(isOn: $settings.notifyRecoveries) {
             VStack(alignment: .leading, spacing: 4) {
-                Text(L10n.notificationsLineRecoveryAlertsLabel)
+                Text(.notificationsLineRecoveryAlertsLabel)
                     .foregroundStyle(.primary)
-                Text(L10n.notificationsOnboardingFeatureRecoveryAlertsDescription)
+                Text(.notificationsOnboardingFeatureRecoveryAlertsDescription)
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -332,23 +353,6 @@ public struct NotificationSettingsView: View {
         .toggleStyle(.checkmark(tint: lineID.backgroundColor))
         .font(.subheadline)
         .padding(.vertical, 10)
-    }
-
-    // MARK: - Helpers
-
-    private func currentItem(for lineID: TrainLineID) -> LineNotificationSettings {
-        items.first(where: { $0.lineID == lineID }) ?? .defaultValue(lineID: lineID)
-    }
-
-    private func itemBinding(for lineID: TrainLineID) -> Binding<LineNotificationSettings> {
-        Binding(
-            get: { currentItem(for: lineID) },
-            set: { newValue in
-                if let index = items.firstIndex(where: { $0.lineID == lineID }) {
-                    items[index] = newValue
-                }
-            }
-        )
     }
 }
 
@@ -386,10 +390,11 @@ private struct PendingBadge: View {
 #if DEBUG
     #Preview("Manage") {
         NavigationStack {
-            NotificationSettingsView(
+            LineNotificationSettingsView(
                 mode: .manage,
                 savedItems: [.victoria, .jubilee, .central, .northern]
                     .map { .defaultValue(lineID: $0) },
+                pendingItems: [],
                 initialIsMuted: false,
                 showPermissionWarning: false
             ) { _ in }
@@ -398,7 +403,7 @@ private struct PendingBadge: View {
 
     #Preview("Manage - With Pending Line") {
         NavigationStack {
-            NotificationSettingsView(
+            LineNotificationSettingsView(
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 pendingItems: [.defaultValue(lineID: .central)],
@@ -410,9 +415,10 @@ private struct PendingBadge: View {
 
     #Preview("Onboarding") {
         NavigationStack {
-            NotificationSettingsView(
+            LineNotificationSettingsView(
                 mode: .onboarding,
                 savedItems: [.victoria].map { .defaultValue(lineID: $0) },
+                pendingItems: [],
                 initialIsMuted: false,
                 showPermissionWarning: false
             ) { _ in }
@@ -421,9 +427,10 @@ private struct PendingBadge: View {
 
     #Preview("Manage - Paused") {
         NavigationStack {
-            NotificationSettingsView(
+            LineNotificationSettingsView(
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
+                pendingItems: [],
                 initialIsMuted: true,
                 showPermissionWarning: false
             ) { _ in }
@@ -432,9 +439,10 @@ private struct PendingBadge: View {
 
     #Preview("Manage - Permission Denied") {
         NavigationStack {
-            NotificationSettingsView(
+            LineNotificationSettingsView(
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
+                pendingItems: [],
                 initialIsMuted: false,
                 showPermissionWarning: true
             ) { _ in }

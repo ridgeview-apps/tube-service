@@ -36,7 +36,7 @@ struct ManageNotificationsFlow: View {
     }
 
     private var lineSettingsView: some View {
-        NotificationSettingsView(
+        LineNotificationSettingsView(
             mode: .manage,
             savedItems: savedNotificationSettings,
             pendingItems: pendingNotificationSettings,

@@ -64,7 +64,7 @@ struct OnboardingNotificationsFlow: View {
     }
 
     private var lineSettingsView: some View {
-        NotificationSettingsView(
+        LineNotificationSettingsView(
             mode: .onboarding,
             savedItems: [],
             pendingItems: initialNotificationSettings,
