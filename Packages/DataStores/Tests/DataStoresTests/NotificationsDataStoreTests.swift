@@ -121,13 +121,13 @@ struct NotificationsDataStoreTests {
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         #expect(store.preferences != nil)
 
-        // When – disable then re-enable; preferences were cleared by disable
+        // When – disable then re-enable; preferences are retained across disable so no re-fetch needed
         await store.disableDevice()
-        #expect(store.preferences == nil)
+        #expect(store.preferences != nil)
         await store.enableDevice()
 
-        // Then – preferences are re-fetched after enable
-        #expect(api.fetchPreferencesCallCount == 2)  // once after register, once after enable
+        // Then – preferences were never cleared so fetchPreferences is only called once (after register)
+        #expect(api.fetchPreferencesCallCount == 1)
     }
 
     @Test
@@ -355,11 +355,10 @@ struct NotificationsDataStoreTests {
         // When – save with isMuted: false (unmuting)
         await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), isMuted: false)
 
-        // Then – enableDevice fires before updatePreferences
-        // (enableDevice also triggers fetchPreferences since preferences were nil after disabling)
+        // Then – enableDevice fires before updatePreferences; no re-fetch since preferences persist across disable
         #expect(api.enableDeviceCallCount == 1)
         #expect(api.updatePreferencesCallCount == 1)
-        #expect(Array(api.invocations.suffix(3)) == ["enableDevice", "fetchPreferences", "updatePreferences"])
+        #expect(Array(api.invocations.suffix(2)) == ["enableDevice", "updatePreferences"])
     }
 
     @Test
