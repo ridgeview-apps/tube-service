@@ -56,6 +56,7 @@ final class AppDataStore {
     func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
+        purchases.isPaywallBypassed = dependencies.userDefaults.value.featureFlags.isPaywallBypassed
     }
 
     func handleRegisteredPushToken(_ token: String) async {

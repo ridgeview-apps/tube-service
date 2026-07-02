@@ -12,8 +12,9 @@ public final class PurchaseStore {
     // MARK: - State
 
     public internal(set) var entitledProductIDs: Set<ProductID> = []
+    public var isPaywallBypassed: Bool = false
 
-    public var hasTubeServicePlus: Bool { isEntitled(to: .tubeServicePlus) }
+    public var hasTubeServicePlus: Bool { isPaywallBypassed || isEntitled(to: .tubeServicePlus) }
 
     private let productIDs: Set<ProductID>
     private var updatesTask: Task<Void, Never>?

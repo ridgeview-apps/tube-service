@@ -23,6 +23,7 @@ struct DebugSettingsScreen: View {
     private var notificationState: NotificationState = .default
 
     @Environment(NotificationsDataStore.self) private var notifications
+    @Environment(PurchaseStore.self) private var purchases
 
     @State private var showDebugConfirmAlert = false
     @State private var copiedField: String?
@@ -32,6 +33,10 @@ struct DebugSettingsScreen: View {
             Section {
                 Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
                 Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
+                Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
+                    .onChange(of: featureFlags.isPaywallBypassed) { _, newValue in
+                        purchases.isPaywallBypassed = newValue
+                    }
             } header: {
                 Text("Feature Toggles")
             }
