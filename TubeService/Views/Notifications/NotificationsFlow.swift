@@ -45,7 +45,7 @@ struct NotificationsFlow: View {
         ManageNotificationsFlow(
             savedNotificationSettings: savedNotificationSettings,
             pendingNotificationSettings: pendingItems,
-            initialIsMuted: !(notifications.device?.enabled ?? false)
+            initialIsEnabled: notifications.device?.enabled ?? true
         )
     }
 

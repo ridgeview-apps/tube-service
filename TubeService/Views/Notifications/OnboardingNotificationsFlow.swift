@@ -68,7 +68,7 @@ struct OnboardingNotificationsFlow: View {
             mode: .onboarding,
             savedItems: [],
             pendingItems: initialNotificationSettings,
-            initialIsMuted: false,
+            initialIsEnabled: true,
             showPermissionWarning: notifications.isPermissionDenied
         ) { action in
             switch action {

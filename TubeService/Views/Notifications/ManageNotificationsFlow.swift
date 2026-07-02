@@ -13,7 +13,7 @@ struct ManageNotificationsFlow: View {
 
     let savedNotificationSettings: [LineNotificationSettings]
     let pendingNotificationSettings: [LineNotificationSettings]
-    let initialIsMuted: Bool
+    let initialIsEnabled: Bool
 
     var body: some View {
         NavigationStack {
@@ -39,18 +39,18 @@ struct ManageNotificationsFlow: View {
             mode: .manage,
             savedItems: savedNotificationSettings,
             pendingItems: pendingNotificationSettings,
-            initialIsMuted: initialIsMuted,
+            initialIsEnabled: initialIsEnabled,
             showPermissionWarning: notifications.isPermissionDenied
         ) { action in
             switch action {
             case .cancel:
                 dismiss()
-            case .done(let updatedValues, let isMuted):
+            case .done(let updatedValues, let isEnabled):
                 dismiss()
                 Task {
                     await notifications.savePreferences(
                         update: updatedValues.toNotificationPreferencesUpdate(),
-                        isMuted: isMuted
+                        deviceEnabled: isEnabled
                     )
                 }
             case .openSettings:

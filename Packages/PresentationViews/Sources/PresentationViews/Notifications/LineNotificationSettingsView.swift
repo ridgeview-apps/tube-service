@@ -9,20 +9,20 @@ public struct LineNotificationSettingsView: View {
     }
 
     public enum Action {
-        case done(items: [LineNotificationSettings], isMuted: Bool)
+        case done(items: [LineNotificationSettings], isEnabled: Bool)
         case cancel
         case openSettings
     }
 
     private let mode: Mode
     private let savedItems: [LineNotificationSettings]
-    private let initialIsMuted: Bool
+    private let initialIsEnabled: Bool
     private let showPermissionWarning: Bool
     private let onAction: (Action) -> Void
     private let pendingLineIDs: Set<TrainLineID>
 
     @State private var items: [LineNotificationSettings]
-    @State private var isMuted: Bool
+    @State private var isEnabled: Bool
     @State private var showCancelConfirmation = false
     @State private var scrollTarget: TrainLineID?
 
@@ -30,20 +30,20 @@ public struct LineNotificationSettingsView: View {
         mode: Mode,
         savedItems: [LineNotificationSettings],
         pendingItems: [LineNotificationSettings],
-        initialIsMuted: Bool,
+        initialIsEnabled: Bool,
         showPermissionWarning: Bool,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
         self.savedItems = savedItems
-        self.initialIsMuted = initialIsMuted
+        self.initialIsEnabled = initialIsEnabled
         self.showPermissionWarning = showPermissionWarning
         self.onAction = onAction
         self.pendingLineIDs = Set(pendingItems.map(\.lineID))
         let savedIDs = Set(savedItems.map(\.lineID))
         let merged = pendingItems.filter { !savedIDs.contains($0.lineID) } + savedItems
         _items = State(initialValue: merged)
-        _isMuted = State(initialValue: initialIsMuted)
+        _isEnabled = State(initialValue: initialIsEnabled)
     }
 
     public var body: some View {
@@ -57,7 +57,7 @@ public struct LineNotificationSettingsView: View {
                     }
                 }
 
-                if mode == .onboarding || (!isMuted && !showPermissionWarning) {
+                if mode == .onboarding || (isEnabled && !showPermissionWarning) {
                     lineItemsSection
                 }
             }
@@ -108,7 +108,7 @@ public struct LineNotificationSettingsView: View {
     // MARK: - Computed Properties
 
     private var hasUnsavedChanges: Bool {
-        items != savedItems || isMuted != initialIsMuted
+        items != savedItems || isEnabled != initialIsEnabled
     }
 
     private var unaddedLineIDs: [TrainLineID] {
@@ -134,7 +134,7 @@ public struct LineNotificationSettingsView: View {
 
     private var doneButton: some View {
         Button {
-            onAction(.done(items: items, isMuted: isMuted))
+            onAction(.done(items: items, isEnabled: isEnabled))
         } label: {
             Text(.globalDone)
         }
@@ -167,7 +167,7 @@ public struct LineNotificationSettingsView: View {
 
     private var pinnedDoneButton: some View {
         Button {
-            onAction(.done(items: items, isMuted: false))
+            onAction(.done(items: items, isEnabled: true))
         } label: {
             Text(.globalDone)
                 .font(.body)
@@ -220,11 +220,11 @@ public struct LineNotificationSettingsView: View {
     // MARK: - Mute All
 
     private var muteAllRow: some View {
-        Toggle(isOn: Binding(get: { !isMuted }, set: { isMuted = !$0 })) {
+        Toggle(isOn: $isEnabled) {
             HStack(spacing: 12) {
-                Image(systemName: isMuted ? "bell.slash.fill" : "bell.fill")
+                Image(systemName: isEnabled ? "bell.fill" : "bell.slash.fill")
                     .font(.system(size: 20))
-                    .foregroundStyle(isMuted ? .orange : Color.accentColor)
+                    .foregroundStyle(isEnabled ? Color.accentColor : .orange)
                     .contentTransition(.symbolEffect(.replace))
                 Text(.notificationsManagePauseAllTitle)
                     .font(.subheadline)
@@ -395,7 +395,7 @@ private struct PendingBadge: View {
                 savedItems: [.victoria, .jubilee, .central, .northern]
                     .map { .defaultValue(lineID: $0) },
                 pendingItems: [],
-                initialIsMuted: false,
+                initialIsEnabled: true,
                 showPermissionWarning: false
             ) { _ in }
         }
@@ -407,7 +407,7 @@ private struct PendingBadge: View {
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 pendingItems: [.defaultValue(lineID: .central)],
-                initialIsMuted: false,
+                initialIsEnabled: true,
                 showPermissionWarning: false
             ) { _ in }
         }
@@ -419,7 +419,7 @@ private struct PendingBadge: View {
                 mode: .onboarding,
                 savedItems: [.victoria].map { .defaultValue(lineID: $0) },
                 pendingItems: [],
-                initialIsMuted: false,
+                initialIsEnabled: true,
                 showPermissionWarning: false
             ) { _ in }
         }
@@ -431,7 +431,7 @@ private struct PendingBadge: View {
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 pendingItems: [],
-                initialIsMuted: true,
+                initialIsEnabled: false,
                 showPermissionWarning: false
             ) { _ in }
         }
@@ -443,7 +443,7 @@ private struct PendingBadge: View {
                 mode: .manage,
                 savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 pendingItems: [],
-                initialIsMuted: false,
+                initialIsEnabled: true,
                 showPermissionWarning: true
             ) { _ in }
         }
