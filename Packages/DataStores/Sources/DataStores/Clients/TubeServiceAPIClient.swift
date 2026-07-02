@@ -123,6 +123,7 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
 
     private let baseURL: URL
     private let apiKey: String
+    private let appVariant: String
     private let urlSession: URLSession
     private let jsonDecoder: JSONDecoder
     private let jsonEncoder: JSONEncoder
@@ -133,11 +134,13 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     public init(
         baseURL: URL,
         apiKey: String,
+        appVariant: String,
         urlSession: URLSession = .shared,
         jsonDecoder: JSONDecoder = .tubeServiceModelDecoder
     ) {
         self.baseURL = baseURL
         self.apiKey = apiKey
+        self.appVariant = appVariant
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
         self.jsonEncoder = {
@@ -168,7 +171,7 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     // MARK: - Notifications
 
     public func registerDevice(deviceId: String, pushToken: String, appVersion: String?) async throws -> HTTPResponse<NotificationDevice> {
-        let body = try jsonEncoder.encode(NotificationDeviceRegistration(platform: "ios", pushToken: pushToken, appVersion: appVersion))
+        let body = try jsonEncoder.encode(NotificationDeviceRegistration(platform: "ios", pushToken: pushToken, appVersion: appVersion, appVariant: appVariant))
         return try await perform(.registerDevice(deviceId: deviceId, body: body), as: NotificationDevice.self)
     }
 
@@ -210,4 +213,5 @@ private struct NotificationDeviceRegistration: Encodable {
     let platform: String
     let pushToken: String
     let appVersion: String?
+    let appVariant: String
 }

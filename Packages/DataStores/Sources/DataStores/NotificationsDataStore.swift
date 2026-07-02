@@ -26,6 +26,7 @@ public final class NotificationsDataStore {
         public let deviceId: String?
         public let authorizationStatus: UNAuthorizationStatus
         public let deviceEnabled: Bool?
+        public let appVariant: String?
         public let configuredLineCount: Int
         public let hasCompletedOnboarding: Bool
     }
@@ -36,6 +37,7 @@ public final class NotificationsDataStore {
             deviceId: keychain.read(key: Self.keychainDeviceIdKey),
             authorizationStatus: authorizationStatus,
             deviceEnabled: device?.enabled,
+            appVariant: device?.appVariant,
             configuredLineCount: preferences?.lines.count ?? 0,
             hasCompletedOnboarding: hasCompletedOnboarding
         )

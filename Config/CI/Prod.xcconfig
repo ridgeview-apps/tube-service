@@ -6,6 +6,7 @@ MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service
 // App config / Info.plist values
 TFL_API_BASE_URL = https:/$()/api.tfl.gov.uk
 TUBE_SERVICE_API_BASE_URL = https:/$()/tube-api.ridgeviewapps.com
+TUBE_SERVICE_API_APP_VARIANT = production
 SYSTEM_STATUS_API_BASE_URL = https:/$()/www.ridgeviewapps.com
 SYSTEM_STATUS_FILE_NAME = status-prod.json
 

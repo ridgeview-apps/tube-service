@@ -58,6 +58,7 @@ struct DebugSettingsScreen: View {
         return Section {
             debugRow(label: "Auth Status", value: info.authorizationStatus.debugDescription)
             debugRow(label: "Device Enabled", value: info.deviceEnabled.map { $0 ? "true" : "false" } ?? "nil")
+            debugRow(label: "App Variant", value: info.appVariant ?? "nil")
             debugRow(label: "Onboarding Done", value: info.hasCompletedOnboarding ? "true" : "false")
             debugRow(label: "Configured Lines", value: "\(info.configuredLineCount)")
             copyableRow(label: "Device ID", value: info.deviceId)

@@ -41,6 +41,7 @@ public struct NotificationDevice: Codable, Hashable, Sendable {
     public let platform: String
     public let enabled: Bool
     public let appVersion: String?
+    public let appVariant: String
     public let createdAt: Date
     public let updatedAt: Date
     public let lastSeenAt: Date
@@ -50,6 +51,7 @@ public struct NotificationDevice: Codable, Hashable, Sendable {
         platform: String,
         enabled: Bool,
         appVersion: String?,
+        appVariant: String,
         createdAt: Date,
         updatedAt: Date,
         lastSeenAt: Date
@@ -58,6 +60,7 @@ public struct NotificationDevice: Codable, Hashable, Sendable {
         self.platform = platform
         self.enabled = enabled
         self.appVersion = appVersion
+        self.appVariant = appVariant
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.lastSeenAt = lastSeenAt

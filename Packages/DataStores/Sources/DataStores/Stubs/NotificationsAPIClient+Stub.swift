@@ -17,6 +17,7 @@ import ModelStubs
                 platform: "ios",
                 enabled: true,
                 appVersion: nil,
+                appVariant: "stub",
                 createdAt: .now,
                 updatedAt: .now,
                 lastSeenAt: .now
@@ -108,6 +109,7 @@ import ModelStubs
                     platform: current.platform,
                     enabled: enabled,
                     appVersion: current.appVersion,
+                    appVariant: current.appVariant,
                     createdAt: current.createdAt,
                     updatedAt: .now,
                     lastSeenAt: current.lastSeenAt

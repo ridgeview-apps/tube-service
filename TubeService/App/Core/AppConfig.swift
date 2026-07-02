@@ -46,7 +46,8 @@ extension AppConfig {
             ),
             tubeServiceAPI: .init(
                 baseURL: config[url: "tubeServiceAPIBaseUrl"],
-                apiKey: config["tubeServiceAPIKey"]
+                apiKey: config["tubeServiceAPIKey"],
+                appVariant: config["tubeServiceAPIAppVariant"]
             ),
             systemStatusAPI: .init(
                 baseURL: config[url: "systemStatusAPIBaseUrl"],
@@ -70,6 +71,7 @@ extension AppConfig {
     struct TubeServiceAPIConfig {
         let baseURL: URL
         let apiKey: String
+        let appVariant: String
     }
 
     struct SystemStatusAPIConfig {

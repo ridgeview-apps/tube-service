@@ -32,7 +32,8 @@ extension TflAPIClient {
 extension TubeServiceAPIClient {
     static let live = TubeServiceAPIClient(
         baseURL: AppConfig.main.tubeServiceAPI.baseURL,
-        apiKey: AppConfig.main.tubeServiceAPI.apiKey
+        apiKey: AppConfig.main.tubeServiceAPI.apiKey,
+        appVariant: AppConfig.main.tubeServiceAPI.appVariant
     )
 }
 
