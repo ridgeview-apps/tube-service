@@ -178,6 +178,10 @@ public final class NotificationsDataStore {
         queuedPreferencesUpdate = update
     }
 
+    public func completeOnboarding() {
+        hasCompletedOnboarding = true
+    }
+
     private func fetchInitialPreferences() async {
         do {
             preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel

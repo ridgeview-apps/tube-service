@@ -81,6 +81,7 @@ struct OnboardingNotificationsFlow: View {
                 openSettings()
             }
         }
+        .navigationBarBackButtonHidden()
     }
 
     private func requestPushPermissionsAndFinish() {
@@ -103,6 +104,8 @@ struct OnboardingNotificationsFlow: View {
             case .openSettings:
                 openSettings()
             case .notNow:
+                notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
+                notifications.completeOnboarding()
                 dismiss()
             }
         }
