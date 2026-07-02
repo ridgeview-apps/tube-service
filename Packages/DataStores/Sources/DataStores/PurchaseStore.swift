@@ -7,6 +7,7 @@ public final class PurchaseStore {
 
     public enum ProductID: String, CaseIterable {
         case tubeServicePlus = "com.ridgeviewapps.tubeservice.plus"
+        case tubeServicePlusMonthly = "com.ridgeviewapps.tubeservice.plus.monthly"
     }
 
     // MARK: - State
@@ -14,7 +15,7 @@ public final class PurchaseStore {
     public internal(set) var entitledProductIDs: Set<ProductID> = []
     public var isPaywallBypassed: Bool = false
 
-    public var hasTubeServicePlus: Bool { isPaywallBypassed || isEntitled(to: .tubeServicePlus) }
+    public var hasTubeServicePlus: Bool { isPaywallBypassed || !entitledProductIDs.isEmpty }
 
     private let productIDs: Set<ProductID>
     private var updatesTask: Task<Void, Never>?

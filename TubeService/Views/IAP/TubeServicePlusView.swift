@@ -25,7 +25,10 @@ struct TubeServicePlusView: View {
 
     var body: some View {
         SubscriptionStoreView(
-            productIDs: [PurchaseStore.ProductID.tubeServicePlus.rawValue]
+            productIDs: [
+                PurchaseStore.ProductID.tubeServicePlus.rawValue,
+                PurchaseStore.ProductID.tubeServicePlusMonthly.rawValue
+            ]
         ) {
             TubeServicePlusMarketingContent(context: context)
         }

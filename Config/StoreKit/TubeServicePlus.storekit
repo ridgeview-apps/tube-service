@@ -22,9 +22,9 @@
     "_billingIssuesEnabled" : false,
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
-    "_locale" : "en_US",
+    "_locale" : "en_GB",
     "_renewalBillingIssuesEnabled" : false,
-    "_storefront" : "USA",
+    "_storefront" : "GBR",
     "_storeKitErrors" : [
 
     ],
@@ -47,13 +47,7 @@
 
           ],
           "billingPlans" : [
-            {
-              "billingPlanType" : "BILLED_UPFRONT",
-              "commitmentDisplayPrice" : "0.99",
-              "displayPrice" : "0.99",
-              "internalID" : "6452CE09",
-              "isEnabled" : true
-            }
+
           ],
           "codeOffers" : [
 
@@ -62,9 +56,35 @@
           "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "F7F245BF",
+          "localizations" : [
+
+          ],
+          "productID" : "com.ridgeviewapps.tubeservice.plus",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Annual Subscription",
+          "subscriptionGroupID" : "27655D9E",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "billingPlans" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "C3D4E5F6",
           "introductoryOffer" : {
             "billingPlanType" : "BILLED_UPFRONT",
-            "internalID" : "9F5AF22F",
+            "internalID" : "A7B8C9D0",
             "numberOfPeriods" : 1,
             "paymentMode" : "free",
             "subscriptionPeriod" : "P1W"
@@ -72,7 +92,7 @@
           "introductoryOffers" : [
             {
               "billingPlanType" : "BILLED_UPFRONT",
-              "internalID" : "9F5AF22F",
+              "internalID" : "A7B8C9D0",
               "numberOfPeriods" : 1,
               "paymentMode" : "free",
               "subscriptionPeriod" : "P1W"
@@ -81,9 +101,9 @@
           "localizations" : [
 
           ],
-          "productID" : "com.ridgeviewapps.tubeservice.plus",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Annual Subscription",
+          "productID" : "com.ridgeviewapps.tubeservice.plus.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Subscription",
           "subscriptionGroupID" : "27655D9E",
           "type" : "RecurringSubscription",
           "winbackOffers" : [
