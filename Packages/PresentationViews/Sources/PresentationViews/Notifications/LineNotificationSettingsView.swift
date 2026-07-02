@@ -108,7 +108,11 @@ public struct LineNotificationSettingsView: View {
     // MARK: - Computed Properties
 
     private var hasUnsavedChanges: Bool {
-        items != savedItems || isEnabled != initialIsEnabled
+        guard !showPermissionWarning else {
+            return false
+        }
+        let hasChanges = items != savedItems || isEnabled != initialIsEnabled
+        return hasChanges
     }
 
     private var unaddedLineIDs: [TrainLineID] {

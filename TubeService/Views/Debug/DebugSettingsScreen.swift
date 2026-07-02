@@ -15,6 +15,12 @@ struct DebugSettingsScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
+    @AppStorage(
+        UserDefaults.Keys.notificationState.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var notificationState: NotificationState = .default
+
     @State private var showDebugConfirmAlert = false
 
     var body: some View {
@@ -36,6 +42,7 @@ struct DebugSettingsScreen: View {
                 Button("No", role: .cancel) {}
                 Button("Yes", role: .destructive) {
                     userPreferences = .default
+                    notificationState = .default
                 }
             }
         }

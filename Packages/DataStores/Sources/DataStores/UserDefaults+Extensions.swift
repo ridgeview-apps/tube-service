@@ -29,17 +29,15 @@ public extension UserDefaults {
 
     var notificationState: NotificationState {
         get {
-            guard let data = data(forKey: Keys.notificationState.rawValue),
-                let decoded = try? JSONDecoder().decode(NotificationState.self, from: data)
+            guard let rawValue = string(forKey: Keys.notificationState.rawValue),
+                let decoded = NotificationState(rawValue: rawValue)
             else {
                 return .default
             }
             return decoded
         }
         set {
-            if let data = try? JSONEncoder().encode(newValue) {
-                set(data, forKey: Keys.notificationState.rawValue)
-            }
+            set(newValue.rawValue, forKey: Keys.notificationState.rawValue)
         }
     }
 
