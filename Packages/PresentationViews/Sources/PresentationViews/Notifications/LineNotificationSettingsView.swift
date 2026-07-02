@@ -262,22 +262,7 @@ public struct LineNotificationSettingsView: View {
 
     private var addLineRow: some View {
         Menu {
-            #if DEBUG
-                if unaddedLineIDs.count > 1 {
-                    Button("Add all lines") {
-                        for lineID in unaddedLineIDs {
-                            items.append(.defaultValue(lineID: lineID))
-                        }
-                        scrollTarget = unaddedLineIDs.last
-                    }
-                    Button("Add all lines (anytime)") {
-                        for lineID in unaddedLineIDs {
-                            items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
-                        }
-                        scrollTarget = unaddedLineIDs.last
-                    }
-                }
-            #endif
+            debugAddAllButtons
             ForEach(unaddedLineIDs, id: \.self) { lineID in
                 Button(lineID.name) {
                     items.append(.defaultValue(lineID: lineID))
@@ -300,6 +285,26 @@ public struct LineNotificationSettingsView: View {
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+    }
+
+    @ViewBuilder
+    private var debugAddAllButtons: some View {
+        #if DEBUG
+            if unaddedLineIDs.count > 1 {
+                Button("Add all lines") {
+                    for lineID in unaddedLineIDs {
+                        items.append(.defaultValue(lineID: lineID))
+                    }
+                    scrollTarget = unaddedLineIDs.last
+                }
+                Button("Add all lines (anytime)") {
+                    for lineID in unaddedLineIDs {
+                        items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
+                    }
+                    scrollTarget = unaddedLineIDs.last
+                }
+            }
+        #endif
     }
 }
 
