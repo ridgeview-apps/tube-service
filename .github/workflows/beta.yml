@@ -31,6 +31,7 @@ jobs:
         run: xcodebuild -version
       - name: Install dependencies
         run: |
+          brew untap aws/tap || true
           brew install librsvg
           brew install imagemagick
       - name: Swift format lint
