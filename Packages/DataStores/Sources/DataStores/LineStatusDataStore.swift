@@ -70,6 +70,21 @@ public final class LineStatusDataStore {
 
     // MARK: - Refreshing
 
+    public func requiresRefresh(for payload: LineStatusNotificationPayload) -> Bool {
+        guard let lines = lineStatusData(for: .live)?.value,
+            let line = lines.first(where: { $0.id == payload.lineID })
+        else {
+            return true
+        }
+        let isDisrupted = line.lineStatuses?.contains(where: { $0.isDisrupted }) ?? false
+        switch payload.eventType {
+        case .disruptionStarted: return !isDisrupted
+        case .disruptionChanged: return true
+        case .serviceResumed: return isDisrupted
+        case nil: return true
+        }
+    }
+
     public func refresh(for request: LineStatusRequest, forced: Bool) async {
         if case .live = request, featureFlags().isStatusHistoryEnabled {
             Task {

@@ -332,6 +332,123 @@ struct LineStatusDataStoreTests {
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 2)
     }
 
+    // MARK: - requiresRefresh(for:)
+
+    @Test
+    func requiresRefreshWhenNoLiveDataLoaded() async {
+        // Given
+        let model = makeStore(now: { .now })
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
+        #expect(model.requiresRefresh(for: payload) == true)
+    }
+
+    @Test
+    func requiresRefreshWhenDisruptionStartedAndLineAtGoodService() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
+        #expect(model.requiresRefresh(for: payload) == true)
+    }
+
+    @Test
+    func doesNotRequireRefreshWhenDisruptionStartedAndLineAlreadyDisrupted() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([
+            Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
+        ])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
+        #expect(model.requiresRefresh(for: payload) == false)
+    }
+
+    @Test
+    func requiresRefreshWhenServiceResumedAndLineStillDisrupted() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([
+            Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
+        ])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .serviceResumed, severity: .goodService)
+        #expect(model.requiresRefresh(for: payload) == true)
+    }
+
+    @Test
+    func doesNotRequireRefreshWhenServiceResumedAndLineAlreadyAtGoodService() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .serviceResumed, severity: .goodService)
+        #expect(model.requiresRefresh(for: payload) == false)
+    }
+
+    @Test
+    func requiresRefreshWhenNotifiedLineNotInCache() async {
+        // Given – only jubilee is in the cache, not victoria
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([Line(id: .jubilee, lineStatuses: [.goodService])])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
+        #expect(model.requiresRefresh(for: payload) == true)
+    }
+
+    @Test
+    func requiresRefreshWhenDisruptionChangedEvenIfLineAlreadyDisrupted() async {
+        // Given – store already reflects a disruption
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([
+            Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
+        ])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When / Then – disruption_changed always triggers a refresh since details may have changed
+        let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionChanged, severity: .severeDelays)
+        #expect(model.requiresRefresh(for: payload) == true)
+    }
+
+    @Test
+    func requiresRefreshWhenEventTypeIsUnknown() async throws {
+        // Given – store reflects good service
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
+        let model = makeStore(tflAPI: tflAPI, now: { .now })
+        await model.forceRefreshLineStatuses(for: .live)
+
+        // When – payload from a future server event type the client doesn't recognise
+        let payload = LineStatusNotificationPayload(
+            userInfo: ["line_id": "victoria", "event_type": "future_unknown_type", "severity": 6]
+        )
+
+        // Then – unknown event type defaults to refreshing to be safe
+        let requiredPayload = try #require(payload)
+        #expect(requiredPayload.eventType == nil)
+        #expect(model.requiresRefresh(for: requiredPayload) == true)
+    }
+
+    // MARK: - Helpers
+
     private func makeStore(
         tflAPI: StubTflAPIClient = StubTflAPIClient(),
         tubeServiceAPI: StubTubeServiceAPIClient = StubTubeServiceAPIClient(),

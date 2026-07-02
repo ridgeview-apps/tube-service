@@ -1,6 +1,7 @@
 import CoreLocation
 import DataStores
 import Foundation
+import Models
 @preconcurrency import MapKit
 import Shared
 
@@ -61,6 +62,12 @@ final class AppDataStore {
 
     func handleRegisteredPushToken(_ token: String) async {
         await notifications.registerDevice(pushToken: token, appVersion: Bundle.main.shortVersion)
+    }
+
+    func handleNotificationLaunch(_ payload: LineStatusNotificationPayload) async {
+        if lineStatus.requiresRefresh(for: payload) {
+            await lineStatus.refresh(for: .live, forced: true)
+        }
     }
 
     func sceneDidBecomeActive() async {

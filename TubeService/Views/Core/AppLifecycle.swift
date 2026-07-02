@@ -13,6 +13,11 @@ struct AppLifecycleModifier: ViewModifier {
                     await appData.handleRegisteredPushToken(token)
                 }
             }
+            .task {
+                for await payload in appDelegate.notificationLaunches {
+                    await appData.handleNotificationLaunch(payload)
+                }
+            }
             .onSceneDidBecomeActive {
                 Task { await appData.sceneDidBecomeActive() }
             }

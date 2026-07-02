@@ -1,5 +1,41 @@
 import Foundation
 
+// MARK: - Push Notification Payload
+
+public struct LineStatusNotificationPayload: Sendable {
+
+    public enum EventType: String, Sendable {
+        case disruptionStarted = "disruption_started"
+        case disruptionChanged = "disruption_changed"
+        case serviceResumed = "service_resumed"
+    }
+
+    public let lineID: TrainLineID
+    /// `nil` when the server sends an event type not recognised by this client version.
+    public let eventType: EventType?
+    public let severity: LineStatusSeverity
+
+    public init(lineID: TrainLineID, eventType: EventType?, severity: LineStatusSeverity) {
+        self.lineID = lineID
+        self.eventType = eventType
+        self.severity = severity
+    }
+
+    public init?(userInfo: [AnyHashable: Any]) {
+        guard
+            let lineIDString = userInfo["line_id"] as? String,
+            let lineID = TrainLineID(rawValue: lineIDString),
+            let severityInt = userInfo["severity"] as? Int,
+            let severity = LineStatusSeverity(rawValue: severityInt)
+        else { return nil }
+        self.lineID = lineID
+        self.severity = severity
+        self.eventType = (userInfo["event_type"] as? String).flatMap(EventType.init(rawValue:))
+    }
+}
+
+// MARK: -
+
 public enum NotificationSchedulePreset: String, Codable, CaseIterable, Hashable, Sendable {
     case anytime
     case weekdayPeak = "weekday_peak"
