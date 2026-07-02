@@ -52,7 +52,7 @@ struct SettingsScreen: View {
     private var notificationsButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         guard purchases.hasTubeServicePlus else { return .locked }
-        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
+        guard notifications.hasConfiguredLines else {
             return .notSetUp
         }
         if notifications.canReceivePushNotifications {

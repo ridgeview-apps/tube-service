@@ -21,6 +21,15 @@ public final class NotificationsDataStore {
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
+    public var hasConfiguredLines: Bool {
+        guard let preferences else { return false }
+        return !preferences.lines.isEmpty
+    }
+
+    public func isNotifying(for lineID: TrainLineID) -> Bool {
+        preferences?.lines.contains(where: { $0.lineId == lineID.rawValue && $0.enabled }) ?? false
+    }
+
     public var canReceivePushNotifications: Bool {
         switch authorizationStatus {
         case .authorized, .provisional, .ephemeral:

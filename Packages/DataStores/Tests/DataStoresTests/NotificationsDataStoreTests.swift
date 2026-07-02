@@ -378,6 +378,97 @@ struct NotificationsDataStoreTests {
         #expect(api.enableDeviceCallCount == 0)
     }
 
+    // MARK: - hasConfiguredLines
+
+    @Test
+    func hasConfiguredLinesIsFalseWhenPreferencesNil() {
+        let store = makeStore()
+        #expect(store.hasConfiguredLines == false)
+    }
+
+    @Test
+    func hasConfiguredLinesIsFalseWhenLinesEmpty() async {
+        // Given – stub returns empty lines (default)
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(store.preferences?.lines.isEmpty == true)
+
+        // Then
+        #expect(store.hasConfiguredLines == false)
+    }
+
+    @Test
+    func hasConfiguredLinesIsTrueWhenLinesPresent() async {
+        // Given – stub returns preferences with one line
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        store.queuePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then
+        #expect(store.hasConfiguredLines == true)
+    }
+
+
+    // MARK: - isNotifying(for:)
+
+    @Test
+    func isNotifyingReturnsFalseWhenPreferencesNil() {
+        let store = makeStore()
+        #expect(store.isNotifying(for: .victoria) == false)
+    }
+
+    @Test
+    func isNotifyingReturnsFalseWhenLineNotConfigured() async {
+        // Given – preferences contain jubilee but not victoria
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "jubilee", schedulePreset: .anytime)])
+        store.queuePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then
+        #expect(store.isNotifying(for: .victoria) == false)
+    }
+
+    @Test
+    func isNotifyingReturnsFalseWhenLineDisabled() async {
+        // Given – victoria is present but disabled
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [
+            NotificationLinePreferenceUpdate(
+                lineId: "victoria",
+                enabled: false,
+                notifyRecoveries: true,
+                schedulePreset: .anytime,
+                severityThreshold: .minorDelays,
+                customSchedules: []
+            )
+        ])
+        store.queuePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then
+        #expect(store.isNotifying(for: .victoria) == false)
+    }
+
+    @Test
+    func isNotifyingReturnsTrueWhenLineEnabled() async {
+        // Given – victoria is present and enabled
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        store.queuePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then
+        #expect(store.isNotifying(for: .victoria) == true)
+    }
+
+
     // MARK: - Helpers
 
     private func makeStore(

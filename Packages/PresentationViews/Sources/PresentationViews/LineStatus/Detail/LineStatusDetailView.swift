@@ -6,7 +6,7 @@ public struct LineStatusDetailView: View {
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
-        case notifyMeTapped
+        case notifyMeTapped(NotificationsButtonState)
     }
 
     public enum StatusContext: Sendable {
@@ -68,7 +68,7 @@ public struct LineStatusDetailView: View {
                             NotificationsButton(
                                 state: state,
                                 context: .lineStatus(line.id),
-                                onTap: { onAction(.notifyMeTapped) }
+                                onTap: { onAction(.notifyMeTapped(state)) }
                             )
                         }
                     }

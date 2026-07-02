@@ -69,11 +69,11 @@ struct LineStatusDetailScreen: View {
     private var notificationButtonState: NotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         guard purchases.hasTubeServicePlus else { return .locked }
-        guard let prefs = notifications.preferences, !prefs.lines.isEmpty else {
+        guard notifications.hasConfiguredLines else {
             return .notSetUp
         }
         if notifications.canReceivePushNotifications {
-            return prefs.lines.contains(where: { $0.lineId == lineID.rawValue && $0.enabled }) ? .active : .inactive
+            return notifications.isNotifying(for: lineID) ? .active : .inactive
         } else if notifications.isPermissionDenied {
             return .permissionDenied
         } else {
@@ -117,10 +117,14 @@ struct LineStatusDetailScreen: View {
                     )
                 )
             }
-        case .notifyMeTapped:
-            router.showSheet(
-                .notificationSettings(.lineDetail(lineID), notifications.hasCompletedOnboarding ? .manage : .onboarding)
-            )
+        case .notifyMeTapped(let state):
+            if state == .permissionDenied {
+                openSettings()
+            } else {
+                router.showSheet(
+                    .notificationSettings(.lineDetail(lineID), notifications.hasCompletedOnboarding ? .manage : .onboarding)
+                )
+            }
         }
     }
 
