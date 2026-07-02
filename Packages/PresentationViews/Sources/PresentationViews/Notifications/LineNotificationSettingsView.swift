@@ -262,6 +262,22 @@ public struct LineNotificationSettingsView: View {
 
     private var addLineRow: some View {
         Menu {
+            #if DEBUG
+                if unaddedLineIDs.count > 1 {
+                    Button("Add all lines") {
+                        for lineID in unaddedLineIDs {
+                            items.append(.defaultValue(lineID: lineID))
+                        }
+                        scrollTarget = unaddedLineIDs.last
+                    }
+                    Button("Add all lines (anytime)") {
+                        for lineID in unaddedLineIDs {
+                            items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
+                        }
+                        scrollTarget = unaddedLineIDs.last
+                    }
+                }
+            #endif
             ForEach(unaddedLineIDs, id: \.self) { lineID in
                 Button(lineID.name) {
                     items.append(.defaultValue(lineID: lineID))
