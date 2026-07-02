@@ -14,6 +14,7 @@ struct SettingsScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
 
     @State private var router = Router<SettingsRoute>()
+    @State private var showManageSubscriptionsSheet = false
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -44,8 +45,10 @@ struct SettingsScreen: View {
             contactUs: contactUsConfig,
             systemStatus: systemStatusData.currentStatus,
             notificationsButtonState: notificationsButtonState,
+            isSubscribed: purchases.hasTubeServicePlus,
             onAction: handleAction
         )
+        .manageSubscriptions(isPresented: $showManageSubscriptionsSheet)
         .navigationTitle(Text(L10n.settingsNavigationTitle))
     }
 
@@ -78,6 +81,8 @@ struct SettingsScreen: View {
         switch action {
         case .openDebugSettings:
             router.navigation.push(.debugSettings)
+        case .manageSubscription:
+            showManageSubscriptionsSheet = true
         case .notificationsTapped:
             switch notificationsButtonState {
             case .permissionDenied:

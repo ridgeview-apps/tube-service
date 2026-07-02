@@ -6,6 +6,7 @@ public struct SettingsView: View {
     public enum Action {
         case openDebugSettings
         case notificationsTapped
+        case manageSubscription
     }
 
     public typealias ContactUs = Settings.ContactUs
@@ -16,6 +17,7 @@ public struct SettingsView: View {
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
     public let notificationsButtonState: NotificationsButtonState?
+    public let isSubscribed: Bool
     public let onAction: (Action) -> Void
 
     public init(
@@ -24,6 +26,7 @@ public struct SettingsView: View {
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
         notificationsButtonState: NotificationsButtonState? = nil,
+        isSubscribed: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
         self.appVersionNumber = appVersionNumber
@@ -31,6 +34,7 @@ public struct SettingsView: View {
         self.contactUs = contactUs
         self.systemStatus = systemStatus
         self.notificationsButtonState = notificationsButtonState
+        self.isSubscribed = isSubscribed
         self.onAction = onAction
     }
 
@@ -47,6 +51,9 @@ public struct SettingsView: View {
                     .listRowInsets(EdgeInsets())
                 }
             }
+            if isSubscribed {
+                subscriptionSection
+            }
             supportSection
             aboutSection
         }
@@ -54,6 +61,18 @@ public struct SettingsView: View {
 
 
     // MARK: - Layout views
+
+    private var subscriptionSection: some View {
+        Section {
+            Button {
+                onAction(.manageSubscription)
+            } label: {
+                Text(.settingsManageSubscriptionTitle)
+            }
+        } header: {
+            Text(.settingsSectionSubscriptionTitle)
+        }
+    }
 
     private var supportSection: some View {
         Section {

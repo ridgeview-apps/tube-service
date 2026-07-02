@@ -2850,6 +2850,28 @@
         }
       }
     },
+    "settings.manage.subscription.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
+          }
+        }
+      }
+    },
+    "settings.section.subscription.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tube Service Plus"
+          }
+        }
+      }
+    },
     "settings.journey.mode.picker.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
