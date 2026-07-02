@@ -1,6 +1,7 @@
 import DataStores
 import Models
 import SwiftUI
+import UserNotifications
 
 struct DebugSettingsScreen: View {
     @AppStorage(
@@ -21,7 +22,10 @@ struct DebugSettingsScreen: View {
     )
     private var notificationState: NotificationState = .default
 
+    @Environment(NotificationsDataStore.self) private var notifications
+
     @State private var showDebugConfirmAlert = false
+    @State private var copiedField: String?
 
     var body: some View {
         Form {
@@ -45,6 +49,72 @@ struct DebugSettingsScreen: View {
                     notificationState = .default
                 }
             }
+            pushNotificationsSection
+        }
+    }
+
+    private var pushNotificationsSection: some View {
+        let info = notifications.debugInfo
+        return Section {
+            debugRow(label: "Auth Status", value: info.authorizationStatus.debugDescription)
+            debugRow(label: "Device Enabled", value: info.deviceEnabled.map { $0 ? "true" : "false" } ?? "nil")
+            debugRow(label: "Onboarding Done", value: info.hasCompletedOnboarding ? "true" : "false")
+            debugRow(label: "Configured Lines", value: "\(info.configuredLineCount)")
+            copyableRow(label: "Device ID", value: info.deviceId)
+            copyableRow(label: "Push Token", value: info.pushToken)
+        } header: {
+            Text("Push Notifications")
+        } footer: {
+            if let field = copiedField {
+                Text("\(field) copied to clipboard")
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func debugRow(label: String, value: String) -> some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value)
+                .foregroundStyle(.secondary)
+                .font(.caption)
+                .monospaced()
+        }
+    }
+
+    @ViewBuilder
+    private func copyableRow(label: String, value: String?) -> some View {
+        Button {
+            guard let value else { return }
+            UIPasteboard.general.string = value
+            copiedField = label
+        } label: {
+            HStack {
+                Text(label)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Text(value ?? "nil")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+                    .monospaced()
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+        }
+        .disabled(value == nil)
+    }
+}
+
+extension UNAuthorizationStatus {
+    fileprivate var debugDescription: String {
+        switch self {
+        case .notDetermined: "notDetermined"
+        case .denied: "denied"
+        case .authorized: "authorized"
+        case .provisional: "provisional"
+        case .ephemeral: "ephemeral"
+        @unknown default: "unknown"
         }
     }
 }

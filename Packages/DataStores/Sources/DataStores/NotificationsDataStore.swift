@@ -21,6 +21,26 @@ public final class NotificationsDataStore {
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
+    public struct DebugInfo {
+        public let pushToken: String?
+        public let deviceId: String?
+        public let authorizationStatus: UNAuthorizationStatus
+        public let deviceEnabled: Bool?
+        public let configuredLineCount: Int
+        public let hasCompletedOnboarding: Bool
+    }
+
+    public var debugInfo: DebugInfo {
+        DebugInfo(
+            pushToken: keychain.read(key: Self.keychainPushTokenKey),
+            deviceId: keychain.read(key: Self.keychainDeviceIdKey),
+            authorizationStatus: authorizationStatus,
+            deviceEnabled: device?.enabled,
+            configuredLineCount: preferences?.lines.count ?? 0,
+            hasCompletedOnboarding: hasCompletedOnboarding
+        )
+    }
+
     public var hasConfiguredLines: Bool {
         guard let preferences else { return false }
         return !preferences.lines.isEmpty
