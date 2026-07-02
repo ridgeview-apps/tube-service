@@ -2319,7 +2319,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your line notifications are temporarily silenced."
+            "value" : "All line notifications are currently paused. Turn on alerts above to manage your lines."
           }
         }
       }

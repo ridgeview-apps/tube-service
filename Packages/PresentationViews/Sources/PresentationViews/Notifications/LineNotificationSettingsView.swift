@@ -54,6 +54,9 @@ public struct LineNotificationSettingsView: View {
                         permissionWarningRow
                     } else {
                         muteAllRow
+                        if !isEnabled {
+                            pausedFooterRow
+                        }
                     }
                 }
 
@@ -241,6 +244,18 @@ public struct LineNotificationSettingsView: View {
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+    }
+
+    // MARK: - Paused Footer
+
+    private var pausedFooterRow: some View {
+        Text(.notificationsManageAlertsPausedSubtitle)
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 2, leading: 20, bottom: 6, trailing: 20))
     }
 
     // MARK: - Add Line
