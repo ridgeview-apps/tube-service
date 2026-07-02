@@ -349,6 +349,8 @@ private struct LineScheduleCard: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            .opacity(settings.notifyRecoveries ? 1 : 0.4)
+            .animation(.easeInOut(duration: 0.2), value: settings.notifyRecoveries)
         }
         .toggleStyle(.checkmark(tint: lineID.backgroundColor))
         .font(.subheadline)
