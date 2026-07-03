@@ -12,6 +12,8 @@ public struct JourneyResultsView: View {
     public let errorFormatter: (any Error) -> String
     public let onAction: (JourneyResultsAction) -> Void
 
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+
     @State private var headerCollapseProgress: CGFloat = 0
     @State private var headerHeight: CGFloat = 0
     @State private var maxHeaderHeight: CGFloat = 0
@@ -53,8 +55,8 @@ public struct JourneyResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             journeyHeaderView
-            JourneyModeFilterStrip(selectedPreset: $selectedPreset, isDisabled: isAnyPageLoading, onCustomTapped: { onAction(.customPresetTapped) })
-            Divider()
+            modeFilterStrip
+            if horizontalSizeClass != .regular { Divider() }
             ScrollView {
                 contentView
             }
@@ -75,6 +77,17 @@ public struct JourneyResultsView: View {
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .defaultMaxWidthWithFullBackground()
+    }
+
+    private var modeFilterStrip: some View {
+        JourneyModeFilterStrip(
+            selectedPreset: $selectedPreset,
+            isDisabled: isAnyPageLoading,
+            onCustomTapped: { onAction(.customPresetTapped) }
+        )
+        .clipShape(RoundedRectangle(cornerRadius: horizontalSizeClass == .regular ? 14 : 0, style: .continuous))
+        .padding(.horizontal, horizontalSizeClass == .regular ? 16 : 0)
+        .padding(.vertical, horizontalSizeClass == .regular ? 8 : 0)
     }
 
     private var journeyHeaderView: some View {
