@@ -2294,7 +2294,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove these alerts?"
+            "value" : "Stop these alerts?"
+          }
+        }
+      }
+    },
+    "notifications.line.config.stop.alerts.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Alerts"
           }
         }
       }

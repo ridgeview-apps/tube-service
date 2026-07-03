@@ -120,7 +120,7 @@ public struct LineNotificationConfigView: View {
             isPresented: $showRemoveConfirmation,
             titleVisibility: .visible
         ) {
-            Button(String(localized: .globalRemove), role: .destructive) {
+            Button(String(localized: .notificationsLineConfigStopAlertsButton), role: .destructive) {
                 removeFeedbackTrigger.toggle()
                 onAction(.remove)
             }
