@@ -2068,9 +2068,6 @@
         }
       }
     },
-    "Notifications on" : {
-
-    },
     "notifications.button.line.active.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2115,17 +2112,6 @@
         }
       }
     },
-    "notifications.button.locked.title %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notify me about the %@"
-          }
-        }
-      }
-    },
     "notifications.button.locked.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2133,6 +2119,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unlock to get service alerts"
+          }
+        }
+      }
+    },
+    "notifications.button.locked.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify me about the %@"
           }
         }
       }
@@ -2247,13 +2244,57 @@
         }
       }
     },
+    "notifications.line.config.add.button %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on %@ alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.add.confirmed %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ notifications on"
+          }
+        }
+      }
+    },
+    "notifications.line.config.nav.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ alerts"
+          }
+        }
+      }
+    },
     "notifications.line.config.remove.button %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn off %@ notifications"
+            "value" : "Turn off %@ alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.remove.confirmation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove these alerts?"
           }
         }
       }
@@ -2828,9 +2869,6 @@
         }
       }
     },
-    "Remove %@ notifications?" : {
-
-    },
     "search.suggestions.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2919,17 +2957,6 @@
         }
       }
     },
-    "settings.notifications.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications"
-          }
-        }
-      }
-    },
     "settings.manage.subscription.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2959,6 +2986,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Line Status Alerts"
+          }
+        }
+      }
+    },
+    "settings.notifications.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
           }
         }
       }
@@ -3311,9 +3349,6 @@
           }
         }
       }
-    },
-    "Turn on %@ notifications" : {
-
     },
     "Warning" : {
 

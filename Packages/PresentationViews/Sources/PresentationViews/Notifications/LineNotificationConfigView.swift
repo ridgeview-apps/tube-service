@@ -9,6 +9,8 @@ public struct LineNotificationConfigView: View {
         case cancel
     }
 
+    @Environment(\.colorScheme) private var colorScheme
+
     private let existingSettings: LineNotificationSettings?
     private let onAction: (Action) -> Void
 
@@ -37,27 +39,25 @@ public struct LineNotificationConfigView: View {
 
     public var body: some View {
         List {
-            scheduleCard
-            if existingSettings == nil {
-                addButton
-            } else {
-                removeButton
+            Group {
+                scheduleCard
+                Group {
+                    if existingSettings == nil {
+                        addButton
+                    } else {
+                        removeButton
+                    }
+                }
+                .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
             }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .navigationTitle(lineID.longName)
+        .navigationTitle(String(localized: .notificationsLineConfigNavTitle(lineID.longName)))
         .navigationBarTitleDisplayMode(.inline)
-        .confirmationDialog(
-            "Remove \(lineID.longName) notifications?",
-            isPresented: $showRemoveConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(String(localized: .globalRemove), role: .destructive) {
-                removeFeedbackTrigger.toggle()
-                onAction(.remove)
-            }
-        }
+
         .sensoryFeedback(.success, trigger: addConfirmed)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
@@ -73,8 +73,6 @@ public struct LineNotificationConfigView: View {
 
     private var scheduleCard: some View {
         LineScheduleCard(settings: $settings)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
     }
 
@@ -91,23 +89,21 @@ public struct LineNotificationConfigView: View {
             }
         } label: {
             Label {
-                Text(addConfirmed ? "Notifications on" : "Turn on \(lineID.longName) notifications")
+                Text(
+                    addConfirmed
+                        ? .notificationsLineConfigAddConfirmed(lineID.longName)
+                        : .notificationsLineConfigAddButton(lineID.longName)
+                )
             } icon: {
                 Image(systemName: addConfirmed ? "checkmark.circle.fill" : "bell.badge")
                     .contentTransition(.symbolEffect(.replace))
             }
-            .font(.subheadline)
-            .fontWeight(.medium)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
+            .ctaLabelStyle(weight: .medium)
         }
         .allowsHitTesting(!addConfirmed)
         .foregroundStyle(addConfirmed ? Color.white : Color.accentColor)
-        .cardStyle(backgroundColor: addConfirmed ? .green : Color.accentColor.opacity(0.08))
+        .cardStyle(backgroundColor: addConfirmed ? .green : Color.accentColor.opacity(colorScheme == .dark ? 0.15 : 0.08))
         .animation(.spring(duration: 0.3), value: addConfirmed)
-        .listRowBackground(Color.clear)
-        .listRowSeparator(.hidden)
-        .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
     }
 
     private var removeButton: some View {
@@ -115,15 +111,20 @@ public struct LineNotificationConfigView: View {
             showRemoveConfirmation = true
         } label: {
             Label(String(localized: .notificationsLineConfigRemoveButton(lineID.longName)), systemImage: "bell.slash")
-                .font(.subheadline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(16)
+                .ctaLabelStyle()
         }
         .foregroundStyle(.red)
-        .cardStyle(backgroundColor: .red.opacity(0.08))
-        .listRowBackground(Color.clear)
-        .listRowSeparator(.hidden)
-        .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+        .cardStyle(backgroundColor: .red.opacity(colorScheme == .dark ? 0.15 : 0.08))
+        .confirmationDialog(
+            Text(.notificationsLineConfigRemoveConfirmation),
+            isPresented: $showRemoveConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: .globalRemove), role: .destructive) {
+                removeFeedbackTrigger.toggle()
+                onAction(.remove)
+            }
+        }
     }
 
     // MARK: - Toolbar Buttons
@@ -147,6 +148,17 @@ public struct LineNotificationConfigView: View {
     }
 }
 
+
+// MARK: - Style helpers
+
+fileprivate extension View {
+    func ctaLabelStyle(weight: Font.Weight = .regular) -> some View {
+        self
+            .font(.subheadline.weight(weight))
+            .frame(maxWidth: .infinity)
+            .padding(16)
+    }
+}
 
 // MARK: - Previews
 
