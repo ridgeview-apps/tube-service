@@ -22,6 +22,7 @@ struct DebugSettingsScreen: View {
     )
     private var notificationState: NotificationState = .default
 
+    @Environment(\.appConfig) private var appConfig
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
 
@@ -54,7 +55,23 @@ struct DebugSettingsScreen: View {
                     notificationState = .default
                 }
             }
+            purchaseStoreSection
             pushNotificationsSection
+        }
+    }
+
+    private var purchaseStoreSection: some View {
+        let config = appConfig.purchaseStore
+        return Section {
+            expandedCopyableRow(label: "Plus Product ID", value: config.tubeServicePlusProductID)
+            expandedCopyableRow(label: "Monthly Product ID", value: config.tubeServicePlusMonthlyProductID)
+        } header: {
+            Text("Purchase Store")
+        } footer: {
+            if let field = copiedField, isPurchaseStoreField(field) {
+                Text("\(field) copied to clipboard")
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 
@@ -71,11 +88,15 @@ struct DebugSettingsScreen: View {
         } header: {
             Text("Push Notifications")
         } footer: {
-            if let field = copiedField {
+            if let field = copiedField, !isPurchaseStoreField(field) {
                 Text("\(field) copied to clipboard")
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private func isPurchaseStoreField(_ field: String) -> Bool {
+        field == "Plus Product ID" || field == "Monthly Product ID"
     }
 
     private func debugRow(label: String, value: String) -> some View {
@@ -106,6 +127,27 @@ struct DebugSettingsScreen: View {
                     .monospaced()
                     .lineLimit(1)
                     .truncationMode(.middle)
+            }
+        }
+        .disabled(value == nil)
+    }
+
+    @ViewBuilder
+    private func expandedCopyableRow(label: String, value: String?) -> some View {
+        Button {
+            guard let value else { return }
+            UIPasteboard.general.string = value
+            copiedField = label
+        } label: {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(label)
+                    .foregroundStyle(.primary)
+                Text(value ?? "nil")
+                    .foregroundStyle(.secondary)
+                    .font(.caption)
+                    .monospaced()
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .disabled(value == nil)
