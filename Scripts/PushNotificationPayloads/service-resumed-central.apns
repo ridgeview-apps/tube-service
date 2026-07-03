@@ -1,0 +1,13 @@
+{
+    "Simulator Target Bundle": "com.ridgeviewapps.tube-service.debug",
+    "aps": {
+        "alert": {
+            "title": "Central line — Good Service",
+            "body": "Good service has resumed on the Central line."
+        },
+        "sound": "default"
+    },
+    "line_id": "central",
+    "event_type": "service_resumed",
+    "severity": 10
+}

@@ -4,6 +4,7 @@ struct AppLifecycleModifier: ViewModifier {
 
     let appData: AppDataStore
     let appDelegate: AppDelegate
+    let router: AppRouter
 
     func body(content: Content) -> some View {
         content
@@ -16,6 +17,7 @@ struct AppLifecycleModifier: ViewModifier {
             .task {
                 for await payload in appDelegate.notificationLaunches {
                     await appData.handleNotificationLaunch(payload)
+                    router.handleNotificationLaunch(payload)
                 }
             }
             .onSceneDidBecomeActive {
@@ -26,7 +28,7 @@ struct AppLifecycleModifier: ViewModifier {
 
 extension View {
 
-    func appLifecycle(appData: AppDataStore, appDelegate: AppDelegate) -> some View {
-        modifier(AppLifecycleModifier(appData: appData, appDelegate: appDelegate))
+    func appLifecycle(appData: AppDataStore, appDelegate: AppDelegate, router: AppRouter) -> some View {
+        modifier(AppLifecycleModifier(appData: appData, appDelegate: appDelegate, router: router))
     }
 }

@@ -1,0 +1,13 @@
+{
+    "Simulator Target Bundle": "com.ridgeviewapps.tube-service.debug",
+    "aps": {
+        "alert": {
+            "title": "Victoria line — Severe Delays",
+            "body": "Severe delays on the Victoria line due to a signal failure."
+        },
+        "sound": "default"
+    },
+    "line_id": "victoria",
+    "event_type": "disruption_started",
+    "severity": 6
+}

@@ -77,4 +77,10 @@ final class AppRouter {
         case .maps: maps.popToRoot()
         }
     }
+
+    func handleNotificationLaunch(_ payload: LineStatusNotificationPayload) {
+        dismissSheets()
+        popToRoot(on: .lineStatus)
+        push(.lineStatusDetail(lineID: payload.lineID, request: .live), on: .lineStatus)
+    }
 }

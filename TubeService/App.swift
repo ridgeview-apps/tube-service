@@ -16,7 +16,7 @@ struct RootScene: App {
             } else {
                 RootScreen()
                     .appSheetRouter($router.sheetRouter)
-                    .appLifecycle(appData: appData, appDelegate: appDelegate)
+                    .appLifecycle(appData: appData, appDelegate: appDelegate, router: router)
                     .appEnvironment(dataStore: appData, router: router)
             }
         }
