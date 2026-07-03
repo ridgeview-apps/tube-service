@@ -114,7 +114,7 @@ public struct LineNotificationConfigView: View {
         Button(role: .destructive) {
             showRemoveConfirmation = true
         } label: {
-            Label(String(localized: .notificationsLineConfigRemoveButton), systemImage: "bell.slash")
+            Label(String(localized: .notificationsLineConfigRemoveButton(lineID.longName)), systemImage: "bell.slash")
                 .font(.subheadline)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)

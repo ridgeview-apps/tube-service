@@ -44,7 +44,7 @@ struct SettingsScreen: View {
             appReviewURL: appConfig.appReviewURL,
             contactUs: contactUsConfig,
             systemStatus: systemStatusData.currentStatus,
-            notificationsButtonState: notificationsButtonState,
+            showNotificationsRow: showNotificationsRow,
             isSubscribed: purchases.hasTubeServicePlus,
             onAction: handleAction
         )
@@ -52,19 +52,8 @@ struct SettingsScreen: View {
         .navigationTitle(Text(L10n.settingsNavigationTitle))
     }
 
-    private var notificationsButtonState: NotificationsButtonState? {
-        guard featureFlags.isNotificationsEnabled else { return nil }
-        guard purchases.hasTubeServicePlus else { return .locked }
-        guard notifications.hasConfiguredLines else {
-            return .notSetUp
-        }
-        if notifications.canReceivePushNotifications {
-            return .active
-        } else if notifications.isPermissionDenied {
-            return .permissionDenied
-        } else {
-            return .notSetUp
-        }
+    private var showNotificationsRow: Bool {
+        featureFlags.isNotificationsEnabled
     }
 
     private var contactUsConfig: Settings.ContactUs {
@@ -84,15 +73,10 @@ struct SettingsScreen: View {
         case .manageSubscription:
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
-            switch notificationsButtonState {
-            case .permissionDenied:
-                openSettings()
-            case .locked, .active, .inactive, .notSetUp, nil:
-                router.sheetRouter.show(
-                    .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
-                    style: .fullScreen
-                )
-            }
+            router.sheetRouter.show(
+                .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
+                style: .fullScreen
+            )
         }
     }
 

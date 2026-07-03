@@ -16,7 +16,7 @@ public struct SettingsView: View {
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
-    public let notificationsButtonState: NotificationsButtonState?
+    public let showNotificationsRow: Bool
     public let isSubscribed: Bool
     public let onAction: (Action) -> Void
 
@@ -25,7 +25,7 @@ public struct SettingsView: View {
         appReviewURL: URL,
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
-        notificationsButtonState: NotificationsButtonState? = nil,
+        showNotificationsRow: Bool = false,
         isSubscribed: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
@@ -33,22 +33,20 @@ public struct SettingsView: View {
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
         self.systemStatus = systemStatus
-        self.notificationsButtonState = notificationsButtonState
+        self.showNotificationsRow = showNotificationsRow
         self.isSubscribed = isSubscribed
         self.onAction = onAction
     }
 
     public var body: some View {
         Form {
-            if let state = notificationsButtonState {
+            if showNotificationsRow {
                 Section {
-                    NotificationsButton(
-                        state: state,
-                        context: .settings,
-                        onTap: { onAction(.notificationsTapped) }
-                    )
-                    .listRowBackground(Color.clear)
-                    .listRowInsets(EdgeInsets())
+                    Button {
+                        onAction(.notificationsTapped)
+                    } label: {
+                        Label(.settingsNotificationsTitle, systemImage: "bell.fill")
+                    }
                 }
             }
             if isSubscribed {
@@ -67,7 +65,7 @@ public struct SettingsView: View {
             Button {
                 onAction(.manageSubscription)
             } label: {
-                Text(.settingsManageSubscriptionTitle)
+                Label(.settingsManageSubscriptionTitle, systemImage: "crown.fill")
             }
         } header: {
             Text(.settingsSectionSubscriptionTitle)
@@ -81,10 +79,10 @@ public struct SettingsView: View {
                 subject: emailSubject,
                 body: emailBody
             ) {
-                Text(.settingsContactUsTitle)
+                Label(.settingsContactUsTitle, systemImage: "envelope.fill")
             }
             Link(destination: appReviewURL) {
-                Text(.settingsRateThisAppTitle)
+                Label(.settingsRateThisAppTitle, systemImage: "star.fill")
             }
             NavigationLink {
                 SystemStatusDetailView(systemStatus: systemStatus)
@@ -124,7 +122,7 @@ public struct SettingsView: View {
             NavigationLink {
                 acknowledgements
             } label: {
-                Text(.settingsAcknowledgementsTitle)
+                Label(.settingsAcknowledgementsTitle, systemImage: "doc.text.fill")
             }
         }
     }

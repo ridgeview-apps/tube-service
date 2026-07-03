@@ -6,7 +6,7 @@ public struct LineStatusDetailView: View {
     public enum Action: Sendable {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
-        case notifyMeTapped(NotificationsButtonState)
+        case notifyMeTapped(LineNotificationsButtonState)
     }
 
     public enum StatusContext: Sendable {
@@ -19,7 +19,7 @@ public struct LineStatusDetailView: View {
     public let refreshDate: Date?
     public let historyButtonState: LineStatusHistoryButton.ButtonState?
     public let statusContext: StatusContext
-    public let notificationButtonState: NotificationsButtonState?
+    public let notificationButtonState: LineNotificationsButtonState?
 
     @Binding public var isFavourite: Bool
 
@@ -32,7 +32,7 @@ public struct LineStatusDetailView: View {
         refreshDate: Date?,
         historyButtonState: LineStatusHistoryButton.ButtonState?,
         statusContext: StatusContext,
-        notificationButtonState: NotificationsButtonState?,
+        notificationButtonState: LineNotificationsButtonState?,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -65,9 +65,9 @@ public struct LineStatusDetailView: View {
                     }
                     if let state = notificationButtonState {
                         Section {
-                            NotificationsButton(
+                            LineNotificationsButton(
                                 state: state,
-                                context: .lineStatus(line.id),
+                                lineID: line.id,
                                 onTap: { onAction(.notifyMeTapped(state)) }
                             )
                         }
@@ -202,7 +202,7 @@ private struct Previewer: View {
     var refreshDate: Date? = .now
     var historyButtonState: LineStatusHistoryButton.ButtonState? = .locked(nil)
     var statusContext = LineStatusDetailView.StatusContext.live
-    var notificationButtonState: NotificationsButtonState? = nil
+    var notificationButtonState: LineNotificationsButtonState? = nil
     @State var isFavourite = false
 
     var body: some View {

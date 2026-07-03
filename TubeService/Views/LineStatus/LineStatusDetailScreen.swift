@@ -66,7 +66,7 @@ struct LineStatusDetailScreen: View {
         }
     }
 
-    private var notificationButtonState: NotificationsButtonState? {
+    private var notificationButtonState: LineNotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         guard purchases.hasTubeServicePlus else { return .locked }
         guard notifications.hasConfiguredLines else {

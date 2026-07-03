@@ -2077,7 +2077,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to edit your service alerts"
+            "value" : "Tap to edit your alert settings"
           }
         }
       }
@@ -2088,7 +2088,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts are on for the %@"
+            "value" : "%@ alerts are turned on"
           }
         }
       }
@@ -2099,7 +2099,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to add it"
+            "value" : "Tap to turn them on"
           }
         }
       }
@@ -2110,7 +2110,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts are off for the %@"
+            "value" : "%@ alerts are turned off"
           }
         }
       }
@@ -2258,13 +2258,13 @@
         }
       }
     },
-    "notifications.line.config.remove.button" : {
+    "notifications.line.config.remove.button %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn off notifications for this line"
+            "value" : "Turn off %@ notifications"
           }
         }
       }
@@ -2839,6 +2839,9 @@
         }
       }
     },
+    "Remove %@ notifications?" : {
+
+    },
     "search.suggestions.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2923,6 +2926,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transport modes"
+          }
+        }
+      }
+    },
+    "settings.notifications.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notifications"
           }
         }
       }
