@@ -41,11 +41,11 @@ import Foundation
         )
     }
 
-    extension PurchaseStore.ProductIDs {
-        static let stub = PurchaseStore.ProductIDs(
-            tubeServicePlus: "stub.tube-service.plus",
-            tubeServicePlusMonthly: "stub.tube-service.plus.monthly"
-        )
+    extension Array where Element == PurchaseStore.ProductID {
+        static let stub: [PurchaseStore.ProductID] = [
+            PurchaseStore.ProductID("stub.tube-service.plus"),
+            PurchaseStore.ProductID("stub.tube-service.plus.monthly")
+        ]
     }
 
 #endif

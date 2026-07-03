@@ -45,8 +45,11 @@ extension SystemStatusAPIClient {
     )
 }
 
-extension PurchaseStore.ProductIDs {
-    static let live = AppConfig.main.purchaseProductIDs
+extension Array where Element == PurchaseStore.ProductID {
+    static let live: [PurchaseStore.ProductID] = [
+        PurchaseStore.ProductID(AppConfig.main.purchaseStore.tubeServicePlusProductID),
+        PurchaseStore.ProductID(AppConfig.main.purchaseStore.tubeServicePlusMonthlyProductID)
+    ]
 }
 
 extension UserDefaultsProvider {

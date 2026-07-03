@@ -5,35 +5,11 @@ import StoreKit
 @Observable
 public final class PurchaseStore {
 
-    public enum ProductID: CaseIterable, Hashable, Sendable {
-        case tubeServicePlus
-        case tubeServicePlusMonthly
-    }
+    public struct ProductID: Hashable, Sendable {
+        public let value: String
 
-    public struct ProductIDs: Sendable {
-        public var tubeServicePlus: String
-        public var tubeServicePlusMonthly: String
-
-        public init(
-            tubeServicePlus: String,
-            tubeServicePlusMonthly: String
-        ) {
-            self.tubeServicePlus = tubeServicePlus
-            self.tubeServicePlusMonthly = tubeServicePlusMonthly
-        }
-
-
-        public func storeKitProductID(for productID: ProductID) -> String {
-            switch productID {
-            case .tubeServicePlus:
-                tubeServicePlus
-            case .tubeServicePlusMonthly:
-                tubeServicePlusMonthly
-            }
-        }
-
-        public func productID(forStoreKitProductID storeKitProductID: String) -> ProductID? {
-            ProductID.allCases.first { self.storeKitProductID(for: $0) == storeKitProductID }
+        public init(_ value: String) {
+            self.value = value
         }
     }
 
@@ -45,15 +21,15 @@ public final class PurchaseStore {
     public var hasTubeServicePlus: Bool { isPaywallBypassed || !entitledProductIDs.isEmpty }
 
     public var storeKitProductIDs: [String] {
-        ProductID.allCases.map { productIDs.storeKitProductID(for: $0) }
+        productIDs.map(\.value)
     }
 
-    private let productIDs: ProductIDs
+    public let productIDs: [ProductID]
     private var updatesTask: Task<Void, Never>?
 
     // MARK: - Init
 
-    public init(productIDs: ProductIDs) {
+    public init(productIDs: [ProductID]) {
         self.productIDs = productIDs
     }
 
@@ -76,7 +52,7 @@ public final class PurchaseStore {
     }
 
     public func purchase(_ productID: ProductID) async throws {
-        let products = try await Product.products(for: [productIDs.storeKitProductID(for: productID)])
+        let products = try await Product.products(for: [productID.value])
         guard let product = products.first else { return }
         let result = try await product.purchase()
         if case .success(let verification) = result {
@@ -92,13 +68,14 @@ public final class PurchaseStore {
     // MARK: - Private
 
     public func refreshEntitlements() async {
+        let productIDs = Set(productIDs)
         var entitled: Set<ProductID> = []
         for await result in Transaction.currentEntitlements {
             if case .verified(let tx) = result,
-                let productID = productIDs.productID(forStoreKitProductID: tx.productID),
+                productIDs.contains(ProductID(tx.productID)),
                 tx.revocationDate == nil
             {
-                entitled.insert(productID)
+                entitled.insert(ProductID(tx.productID))
             }
         }
         entitledProductIDs = entitled

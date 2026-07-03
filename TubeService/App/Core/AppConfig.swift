@@ -1,4 +1,3 @@
-import DataStores
 import Foundation
 
 struct AppConfig {
@@ -8,7 +7,7 @@ struct AppConfig {
     let tflAPI: TflAPIConfig
     let tubeServiceAPI: TubeServiceAPIConfig
     let systemStatusAPI: SystemStatusAPIConfig
-    let purchaseProductIDs: PurchaseStore.ProductIDs
+    let purchaseStore: PurchaseStoreConfig
 
     var appReviewURL: URL {
         guard var urlComponents = URLComponents(string: appStoreProductURL.absoluteString) else {
@@ -26,10 +25,10 @@ struct AppConfig {
             if tubeServiceAPI.apiKey.trimmed().isEmpty {
                 fatalError("TubeService API key is mandatory on Release builds")
             }
-            if purchaseProductIDs.tubeServicePlus.trimmed().isEmpty {
+            if purchaseStore.tubeServicePlusProductID.trimmed().isEmpty {
                 fatalError("Tube Service Plus product ID is mandatory on Release builds")
             }
-            if purchaseProductIDs.tubeServicePlusMonthly.trimmed().isEmpty {
+            if purchaseStore.tubeServicePlusMonthlyProductID.trimmed().isEmpty {
                 fatalError("Tube Service Plus monthly product ID is mandatory on Release builds")
             }
         #endif
@@ -61,9 +60,9 @@ extension AppConfig {
                 baseURL: config[url: "systemStatusAPIBaseUrl"],
                 fileName: config["systemStatusAPIFileName"]
             ),
-            purchaseProductIDs: .init(
-                tubeServicePlus: config["tubeServicePlusProductID"],
-                tubeServicePlusMonthly: config["tubeServicePlusMonthlyProductID"]
+            purchaseStore: .init(
+                tubeServicePlusProductID: config["tubeServicePlusProductID"],
+                tubeServicePlusMonthlyProductID: config["tubeServicePlusMonthlyProductID"]
             )
         )
 
@@ -89,5 +88,10 @@ extension AppConfig {
     struct SystemStatusAPIConfig {
         let baseURL: URL
         let fileName: String
+    }
+
+    struct PurchaseStoreConfig {
+        let tubeServicePlusProductID: String
+        let tubeServicePlusMonthlyProductID: String
     }
 }

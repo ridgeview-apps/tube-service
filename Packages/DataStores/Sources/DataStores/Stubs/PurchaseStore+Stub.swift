@@ -5,13 +5,13 @@ import Foundation
     public extension PurchaseStore {
         static func stub(isPlus: Bool = false) -> PurchaseStore {
             let store = PurchaseStore(
-                productIDs: .init(
-                    tubeServicePlus: "stub.tube-service.plus",
-                    tubeServicePlusMonthly: "stub.tube-service.plus.monthly"
-                )
+                productIDs: [
+                    PurchaseStore.ProductID("stub.tube-service.plus"),
+                    PurchaseStore.ProductID("stub.tube-service.plus.monthly")
+                ]
             )
             if isPlus {
-                store.entitledProductIDs.insert(.tubeServicePlus)
+                store.entitledProductIDs.formUnion(store.productIDs)
             }
             return store
         }
