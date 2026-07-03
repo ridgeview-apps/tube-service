@@ -381,6 +381,17 @@
         }
       }
     },
+    "global.add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
     "global.cancel" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -465,6 +476,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove"
+          }
+        }
+      }
+    },
+    "global.save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
           }
         }
       }
@@ -2046,7 +2068,7 @@
         }
       }
     },
-    "New" : {
+    "Notifications on" : {
 
     },
     "notifications.button.line.active.subtitle" : {
@@ -2221,6 +2243,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.add.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add notifications"
+          }
+        }
+      }
+    },
+    "notifications.line.config.remove.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off notifications for this line"
           }
         }
       }
@@ -2850,28 +2894,6 @@
         }
       }
     },
-    "settings.manage.subscription.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Manage subscription"
-          }
-        }
-      }
-    },
-    "settings.section.subscription.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tube Service Plus"
-          }
-        }
-      }
-    },
     "settings.journey.mode.picker.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2901,6 +2923,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Transport modes"
+          }
+        }
+      }
+    },
+    "settings.manage.subscription.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
           }
         }
       }
@@ -2945,6 +2978,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "About"
+          }
+        }
+      }
+    },
+    "settings.section.subscription.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tube Service Plus"
           }
         }
       }
@@ -3264,6 +3308,9 @@
           }
         }
       }
+    },
+    "Turn on %@ notifications" : {
+
     },
     "Warning" : {
 

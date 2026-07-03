@@ -12,7 +12,6 @@ struct ManageNotificationsFlow: View {
     @Environment(PurchaseStore.self) private var purchases
 
     let savedNotificationSettings: [LineNotificationSettings]
-    let pendingNotificationSettings: [LineNotificationSettings]
     let initialIsEnabled: Bool
 
     var body: some View {
@@ -37,8 +36,7 @@ struct ManageNotificationsFlow: View {
     private var lineSettingsView: some View {
         LineNotificationSettingsView(
             mode: .manage,
-            savedItems: savedNotificationSettings,
-            pendingItems: pendingNotificationSettings,
+            initialItems: savedNotificationSettings,
             initialIsEnabled: initialIsEnabled,
             showPermissionWarning: notifications.isPermissionDenied
         ) { action in

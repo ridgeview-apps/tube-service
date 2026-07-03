@@ -26,6 +26,8 @@ struct SheetView: View {
                 .asModalScreen()
         case let .notificationSettings(context, mode):
             NotificationsFlow(context: context, mode: mode)
+        case let .lineNotificationConfig(lineID):
+            LineNotificationConfigScreen(lineID: lineID)
         }
     }
 }

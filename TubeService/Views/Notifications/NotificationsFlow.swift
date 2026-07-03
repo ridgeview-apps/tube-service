@@ -44,15 +44,7 @@ struct NotificationsFlow: View {
     private var manageFlow: some View {
         ManageNotificationsFlow(
             savedNotificationSettings: savedNotificationSettings,
-            pendingNotificationSettings: pendingItems,
             initialIsEnabled: notifications.device?.enabled ?? true
         )
-    }
-
-    private var pendingItems: [LineNotificationSettings] {
-        guard case .lineDetail(let lineID) = context,
-            !savedNotificationSettings.contains(where: { $0.lineID == lineID })
-        else { return [] }
-        return [.defaultValue(lineID: lineID)]
     }
 }

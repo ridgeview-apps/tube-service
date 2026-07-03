@@ -15,11 +15,10 @@ public struct LineNotificationSettingsView: View {
     }
 
     private let mode: Mode
-    private let savedItems: [LineNotificationSettings]
+    private let initialItems: [LineNotificationSettings]
     private let initialIsEnabled: Bool
     private let showPermissionWarning: Bool
     private let onAction: (Action) -> Void
-    private let pendingLineIDs: Set<TrainLineID>
 
     @State private var items: [LineNotificationSettings]
     @State private var isEnabled: Bool
@@ -28,21 +27,17 @@ public struct LineNotificationSettingsView: View {
 
     public init(
         mode: Mode,
-        savedItems: [LineNotificationSettings],
-        pendingItems: [LineNotificationSettings],
+        initialItems: [LineNotificationSettings],
         initialIsEnabled: Bool,
         showPermissionWarning: Bool,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
-        self.savedItems = savedItems
+        self.initialItems = initialItems
         self.initialIsEnabled = initialIsEnabled
         self.showPermissionWarning = showPermissionWarning
         self.onAction = onAction
-        self.pendingLineIDs = Set(pendingItems.map(\.lineID))
-        let savedIDs = Set(savedItems.map(\.lineID))
-        let merged = pendingItems.filter { !savedIDs.contains($0.lineID) } + savedItems
-        _items = State(initialValue: merged)
+        _items = State(initialValue: initialItems)
         _isEnabled = State(initialValue: initialIsEnabled)
     }
 
@@ -114,7 +109,7 @@ public struct LineNotificationSettingsView: View {
         guard !showPermissionWarning else {
             return false
         }
-        let hasChanges = items != savedItems || isEnabled != initialIsEnabled
+        let hasChanges = items != initialItems || isEnabled != initialIsEnabled
         return hasChanges
     }
 
@@ -153,13 +148,10 @@ public struct LineNotificationSettingsView: View {
     @ViewBuilder
     private var lineItemsSection: some View {
         ForEach($items) { $item in
-            LineScheduleCard(
-                settings: $item,
-                showPendingBadge: pendingLineIDs.contains(item.lineID)
-            )
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+            LineScheduleCard(settings: $item)
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
         }
         .onDelete { indexSet in
             items.remove(atOffsets: indexSet)
@@ -309,124 +301,6 @@ public struct LineNotificationSettingsView: View {
 }
 
 
-// MARK: - Line Schedule Card
-
-private struct LineScheduleCard: View {
-    @Binding var settings: LineNotificationSettings
-    let showPendingBadge: Bool
-
-    private var lineID: TrainLineID { settings.lineID }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .firstTextBaseline, spacing: 8) {
-                Text(lineID.longName)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                if showPendingBadge {
-                    PendingBadge()
-                }
-            }
-            .padding(.bottom, 10)
-
-            Divider()
-
-            scheduleRow
-            Divider()
-            recoveryAlertsRow
-        }
-        .padding(16)
-        .background(alignment: .leading) {
-            lineID.backgroundColor.frame(width: 6)
-        }
-        .cardStyle()
-    }
-
-    private var scheduleRow: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(.notificationsManageScheduleLabel)
-                    .foregroundStyle(.primary)
-                if let description = settings.schedulePreset.description {
-                    Text(description)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Spacer(minLength: 8)
-            Menu {
-                Picker(
-                    String(localized: .notificationsConfirmationScheduleLabel),
-                    selection: $settings.schedulePreset
-                ) {
-                    ForEach(NotificationSchedulePreset.allDisplayCases, id: \.self) { p in
-                        Text(p.title).tag(p)
-                    }
-                }
-                .labelsHidden()
-            } label: {
-                HStack(spacing: 4) {
-                    Text(settings.schedulePreset.title)
-                        .multilineTextAlignment(.trailing)
-                    Image(systemName: "chevron.up.chevron.down")
-                        .imageScale(.small)
-                }
-                .foregroundStyle(.tint)
-            }
-            .menuOrder(.fixed)
-            .buttonStyle(.plain)
-        }
-        .font(.subheadline)
-        .padding(.vertical, 10)
-    }
-
-    private var recoveryAlertsRow: some View {
-        Toggle(isOn: $settings.notifyRecoveries) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(.notificationsLineRecoveryAlertsLabel)
-                    .foregroundStyle(.primary)
-                Text(.notificationsOnboardingFeatureRecoveryAlertsDescription)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .opacity(settings.notifyRecoveries ? 1 : 0.4)
-            .animation(.easeInOut(duration: 0.2), value: settings.notifyRecoveries)
-        }
-        .toggleStyle(.checkmark(tint: lineID.backgroundColor))
-        .font(.subheadline)
-        .padding(.vertical, 10)
-    }
-}
-
-
-// MARK: - Pending Badge
-
-private struct PendingBadge: View {
-    @State private var triggered = false
-
-    var body: some View {
-        Text("New")
-            .font(.caption2)
-            .fontWeight(.semibold)
-            .padding(.horizontal, 6)
-            .padding(.vertical, 2)
-            .background(.tint, in: Capsule())
-            .foregroundStyle(.white)
-            .keyframeAnimator(initialValue: CGFloat(1.0), trigger: triggered) { content, scale in
-                content.scaleEffect(scale)
-            } keyframes: { _ in
-                KeyframeTrack {
-                    SpringKeyframe(1.12, duration: 0.3, spring: .bouncy)
-                    SpringKeyframe(1.0, duration: 0.3, spring: .bouncy)
-                    SpringKeyframe(1.12, duration: 0.3, spring: .bouncy)
-                    SpringKeyframe(1.0, duration: 0.3, spring: .bouncy)
-                }
-            }
-            .onAppear { triggered = true }
-    }
-}
-
-
 // MARK: - Previews
 
 #if DEBUG
@@ -434,21 +308,8 @@ private struct PendingBadge: View {
         NavigationStack {
             LineNotificationSettingsView(
                 mode: .manage,
-                savedItems: [.victoria, .jubilee, .central, .northern]
+                initialItems: [.victoria, .jubilee, .central, .northern]
                     .map { .defaultValue(lineID: $0) },
-                pendingItems: [],
-                initialIsEnabled: true,
-                showPermissionWarning: false
-            ) { _ in }
-        }
-    }
-
-    #Preview("Manage - With Pending Line") {
-        NavigationStack {
-            LineNotificationSettingsView(
-                mode: .manage,
-                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
-                pendingItems: [.defaultValue(lineID: .central)],
                 initialIsEnabled: true,
                 showPermissionWarning: false
             ) { _ in }
@@ -459,8 +320,7 @@ private struct PendingBadge: View {
         NavigationStack {
             LineNotificationSettingsView(
                 mode: .onboarding,
-                savedItems: [.victoria].map { .defaultValue(lineID: $0) },
-                pendingItems: [],
+                initialItems: [.victoria].map { .defaultValue(lineID: $0) },
                 initialIsEnabled: true,
                 showPermissionWarning: false
             ) { _ in }
@@ -471,8 +331,7 @@ private struct PendingBadge: View {
         NavigationStack {
             LineNotificationSettingsView(
                 mode: .manage,
-                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
-                pendingItems: [],
+                initialItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 initialIsEnabled: false,
                 showPermissionWarning: false
             ) { _ in }
@@ -483,8 +342,7 @@ private struct PendingBadge: View {
         NavigationStack {
             LineNotificationSettingsView(
                 mode: .manage,
-                savedItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
-                pendingItems: [],
+                initialItems: [.victoria, .jubilee].map { .defaultValue(lineID: $0) },
                 initialIsEnabled: true,
                 showPermissionWarning: true
             ) { _ in }
