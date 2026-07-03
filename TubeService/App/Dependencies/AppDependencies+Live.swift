@@ -14,7 +14,8 @@ extension AppDependencies {
         locationManager: CLLocationManager(),
         localSearchCompleterClient: MKLocalSearchCompleter(),
         userDefaults: .live,
-        pushNotificationEnvironment: .live
+        pushNotificationEnvironment: .live,
+        purchaseProductIDs: .live
     )
 }
 
@@ -42,6 +43,10 @@ extension SystemStatusAPIClient {
         baseURL: AppConfig.main.systemStatusAPI.baseURL,
         fileName: AppConfig.main.systemStatusAPI.fileName
     )
+}
+
+extension PurchaseStore.ProductIDs {
+    static let live = AppConfig.main.purchaseProductIDs
 }
 
 extension UserDefaultsProvider {

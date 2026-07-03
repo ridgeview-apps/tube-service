@@ -68,6 +68,10 @@
 		<string>$(TUBE_SERVICE_API_KEY)</string>
 		<key>tubeServiceAPIAppVariant</key>
 		<string>$(TUBE_SERVICE_API_APP_VARIANT)</string>
+		<key>tubeServicePlusProductID</key>
+		<string>$(TUBE_SERVICE_PLUS_PRODUCT_ID)</string>
+		<key>tubeServicePlusMonthlyProductID</key>
+		<string>$(TUBE_SERVICE_PLUS_MONTHLY_PRODUCT_ID)</string>
 	</dict>
 </dict>
 </plist>

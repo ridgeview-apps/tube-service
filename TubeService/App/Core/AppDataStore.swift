@@ -42,7 +42,7 @@ final class AppDataStore {
             systemStatusAPI: dependencies.systemStatusAPI,
             now: dependencies.now
         )
-        self.purchases = PurchaseStore()
+        self.purchases = PurchaseStore(productIDs: dependencies.purchaseProductIDs)
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
             pushNotificationEnvironment: dependencies.pushNotificationEnvironment,

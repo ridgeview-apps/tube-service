@@ -24,12 +24,7 @@ struct TubeServicePlusView: View {
     }
 
     var body: some View {
-        SubscriptionStoreView(
-            productIDs: [
-                PurchaseStore.ProductID.tubeServicePlus.rawValue,
-                PurchaseStore.ProductID.tubeServicePlusMonthly.rawValue
-            ]
-        ) {
+        SubscriptionStoreView(productIDs: purchases.storeKitProductIDs) {
             TubeServicePlusMarketingContent(context: context)
         }
         .storeButton(.hidden, for: .cancellation)

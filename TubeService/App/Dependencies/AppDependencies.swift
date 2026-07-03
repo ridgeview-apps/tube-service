@@ -10,6 +10,7 @@ struct AppDependencies: Sendable {
     let localSearchCompleterClient: LocalSearchCompleterClientType
     let userDefaults: UserDefaultsProvider
     let pushNotificationEnvironment: PushNotificationEnvironment
+    let purchaseProductIDs: PurchaseStore.ProductIDs
     let now: @Sendable () -> Date
 
     init(
@@ -21,6 +22,7 @@ struct AppDependencies: Sendable {
         localSearchCompleterClient: LocalSearchCompleterClientType,
         userDefaults: UserDefaultsProvider,
         pushNotificationEnvironment: PushNotificationEnvironment,
+        purchaseProductIDs: PurchaseStore.ProductIDs,
         now: @escaping @Sendable () -> Date = { .now }
     ) {
         self.tflAPI = tflAPI
@@ -31,6 +33,7 @@ struct AppDependencies: Sendable {
         self.localSearchCompleterClient = localSearchCompleterClient
         self.userDefaults = userDefaults
         self.pushNotificationEnvironment = pushNotificationEnvironment
+        self.purchaseProductIDs = purchaseProductIDs
         self.now = now
     }
 }

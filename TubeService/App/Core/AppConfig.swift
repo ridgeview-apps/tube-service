@@ -1,3 +1,4 @@
+import DataStores
 import Foundation
 
 struct AppConfig {
@@ -7,6 +8,7 @@ struct AppConfig {
     let tflAPI: TflAPIConfig
     let tubeServiceAPI: TubeServiceAPIConfig
     let systemStatusAPI: SystemStatusAPIConfig
+    let purchaseProductIDs: PurchaseStore.ProductIDs
 
     var appReviewURL: URL {
         guard var urlComponents = URLComponents(string: appStoreProductURL.absoluteString) else {
@@ -23,6 +25,12 @@ struct AppConfig {
             }
             if tubeServiceAPI.apiKey.trimmed().isEmpty {
                 fatalError("TubeService API key is mandatory on Release builds")
+            }
+            if purchaseProductIDs.tubeServicePlus.trimmed().isEmpty {
+                fatalError("Tube Service Plus product ID is mandatory on Release builds")
+            }
+            if purchaseProductIDs.tubeServicePlusMonthly.trimmed().isEmpty {
+                fatalError("Tube Service Plus monthly product ID is mandatory on Release builds")
             }
         #endif
     }
@@ -52,6 +60,10 @@ extension AppConfig {
             systemStatusAPI: .init(
                 baseURL: config[url: "systemStatusAPIBaseUrl"],
                 fileName: config["systemStatusAPIFileName"]
+            ),
+            purchaseProductIDs: .init(
+                tubeServicePlus: config["tubeServicePlusProductID"],
+                tubeServicePlusMonthly: config["tubeServicePlusMonthlyProductID"]
             )
         )
 

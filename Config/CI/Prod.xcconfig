@@ -9,6 +9,8 @@ TUBE_SERVICE_API_BASE_URL = https:/$()/tube-api.ridgeviewapps.com
 TUBE_SERVICE_API_APP_VARIANT = production
 SYSTEM_STATUS_API_BASE_URL = https:/$()/www.ridgeviewapps.com
 SYSTEM_STATUS_FILE_NAME = status-prod.json
+TUBE_SERVICE_PLUS_PRODUCT_ID = com.ridgeviewapps.tubeservice.appstore.plus
+TUBE_SERVICE_PLUS_MONTHLY_PRODUCT_ID = com.ridgeviewapps.tubeservice.appstore.plus.monthly
 
 // App config (sensitive)
 // TFL_API_APP_KEY = ** <Supplied by CI> **

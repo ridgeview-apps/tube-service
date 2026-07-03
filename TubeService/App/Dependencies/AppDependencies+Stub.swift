@@ -19,7 +19,8 @@ import Foundation
                 locationManager: locationManager,
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),
                 userDefaults: .stub,
-                pushNotificationEnvironment: .stub
+                pushNotificationEnvironment: .stub,
+                purchaseProductIDs: .stub
             )
         }()
     }
@@ -37,6 +38,13 @@ import Foundation
             readAuthStatus: { .authorized },
             requestAuthorization: { true },
             registerForRemoteNotifications: {}
+        )
+    }
+
+    extension PurchaseStore.ProductIDs {
+        static let stub = PurchaseStore.ProductIDs(
+            tubeServicePlus: "stub.tube-service.plus",
+            tubeServicePlusMonthly: "stub.tube-service.plus.monthly"
         )
     }
 
