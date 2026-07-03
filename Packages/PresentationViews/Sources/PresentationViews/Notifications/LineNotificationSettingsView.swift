@@ -263,7 +263,7 @@ public struct LineNotificationSettingsView: View {
             }
         } label: {
             Label {
-                Text(.notificationsManageAddLineButton)
+                Text(addLineButtonText)
             } icon: {
                 Image(systemName: "plus.circle.fill")
             }
@@ -277,6 +277,15 @@ public struct LineNotificationSettingsView: View {
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+    }
+
+    private var addLineButtonText: LocalizedStringResource {
+        switch mode {
+        case .onboarding where !items.isEmpty:
+            return .notificationsManageAddOtherLineButton
+        default:
+            return .notificationsManageAddLineButton
+        }
     }
 
     @ViewBuilder

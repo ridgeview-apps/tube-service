@@ -2387,6 +2387,17 @@
         }
       }
     },
+    "notifications.manage.add.other.line.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add another line…"
+          }
+        }
+      }
+    },
     "notifications.manage.alerts.paused.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
