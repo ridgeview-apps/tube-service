@@ -3,7 +3,6 @@ import SwiftUI
 
 public enum LineNotificationsButtonState: Sendable, Equatable {
     case locked
-    case notSetUp
     case permissionDenied
     case inactive
     case active
@@ -57,16 +56,17 @@ public struct LineNotificationsButton: View {
     private var iconColor: some ShapeStyle {
         switch state {
         case .permissionDenied: AnyShapeStyle(.orange)
+        case .active: AnyShapeStyle(.green)
         default: AnyShapeStyle(.tint)
         }
     }
 
     private var iconName: String {
         switch state {
-        case .locked, .notSetUp: return "bell"
+        case .locked: return "bell"
         case .permissionDenied: return "exclamationmark.triangle.fill"
         case .inactive: return "bell.slash"
-        case .active: return "bell.fill"
+        case .active: return "bell.badge.fill"
         }
     }
 
@@ -87,7 +87,7 @@ public struct LineNotificationsButton: View {
 
     private var title: LocalizedStringResource {
         switch state {
-        case .locked, .notSetUp: return .notificationsButtonLineNotSetUpTitle(lineID.longName)
+        case .locked: return .notificationsButtonLockedTitle(lineID.longName)
         case .permissionDenied: return .lineStatusNotificationsPermissionDeniedTitle
         case .inactive: return .notificationsButtonLineInactiveTitle(lineID.longName)
         case .active: return .notificationsButtonLineActiveTitle(lineID.longName)
@@ -97,7 +97,6 @@ public struct LineNotificationsButton: View {
     private var subtitle: LocalizedStringResource {
         switch state {
         case .locked: return .notificationsButtonLockedSubtitle
-        case .notSetUp: return .notificationsButtonLineNotSetUpSubtitle
         case .permissionDenied: return .lineStatusNotificationsPermissionDeniedSubtitle
         case .inactive: return .notificationsButtonLineInactiveSubtitle
         case .active: return .notificationsButtonLineActiveSubtitle
@@ -107,11 +106,6 @@ public struct LineNotificationsButton: View {
 
 
 // MARK: - Previews
-
-#Preview("Not set up") {
-    LineNotificationsButton(state: .notSetUp, lineID: .victoria, onTap: {})
-        .padding()
-}
 
 #Preview("Locked") {
     LineNotificationsButton(state: .locked, lineID: .victoria, onTap: {})

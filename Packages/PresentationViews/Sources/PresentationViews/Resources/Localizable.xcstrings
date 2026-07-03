@@ -2088,7 +2088,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are turned on"
+            "value" : "%@ alerts are on"
           }
         }
       }
@@ -2099,7 +2099,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to turn them on"
+            "value" : "Set up service alerts for this line"
           }
         }
       }
@@ -2110,23 +2110,12 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are turned off"
+            "value" : "%@ alerts are off"
           }
         }
       }
     },
-    "notifications.button.line.not.set.up.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Set up service alerts for this line"
-          }
-        }
-      }
-    },
-    "notifications.button.line.not.set.up.title %@" : {
+    "notifications.button.locked.title %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
