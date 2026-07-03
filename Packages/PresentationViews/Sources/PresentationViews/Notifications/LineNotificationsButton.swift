@@ -54,10 +54,10 @@ public struct LineNotificationsButton: View {
         .cardStyle()
     }
 
-    private var iconColor: Color {
+    private var iconColor: some ShapeStyle {
         switch state {
-        case .permissionDenied: return .orange
-        case .locked, .notSetUp, .inactive, .active: return lineID.backgroundColor
+        case .permissionDenied: AnyShapeStyle(.orange)
+        default: AnyShapeStyle(.tint)
         }
     }
 

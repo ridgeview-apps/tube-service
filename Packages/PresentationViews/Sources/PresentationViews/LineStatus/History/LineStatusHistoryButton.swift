@@ -15,7 +15,6 @@ public struct LineStatusHistoryButton: View {
     }
 
     let buttonState: ButtonState
-    let lineColor: Color
     let onTap: () -> Void
 
     public var body: some View {
@@ -25,7 +24,7 @@ public struct LineStatusHistoryButton: View {
             HStack(spacing: 12) {
                 Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
                     .font(.title2.weight(.semibold))
-                    .foregroundStyle(lineColor)
+                    .foregroundStyle(.tint)
                     .frame(width: 36)
 
                 VStack(alignment: .leading, spacing: 3) {
@@ -113,14 +112,13 @@ public struct LineStatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineStatusHistoryButton(buttonState: .locked(nil), lineColor: .red, onTap: {})
+    LineStatusHistoryButton(buttonState: .locked(nil), onTap: {})
         .padding()
 }
 
 #Preview("Locked (ongoing disruption)") {
     LineStatusHistoryButton(
         buttonState: .locked(.ongoingDisruption(since: .now)),
-        lineColor: .red,
         onTap: {}
     )
     .padding()
@@ -129,7 +127,6 @@ public struct LineStatusHistoryButton: View {
 #Preview("Locked (resolved disruption)") {
     LineStatusHistoryButton(
         buttonState: .locked(.resolvedDisruption(at: .now)),
-        lineColor: .red,
         onTap: {}
     )
     .padding()
@@ -138,21 +135,19 @@ public struct LineStatusHistoryButton: View {
 #Preview("Locked (multiple disruptions)") {
     LineStatusHistoryButton(
         buttonState: .locked(.multipleDisruptions(count: 3, firstAt: .now)),
-        lineColor: .red,
         onTap: {}
     )
     .padding()
 }
 
 #Preview("Unlocked") {
-    LineStatusHistoryButton(buttonState: .unlocked(nil), lineColor: .blue, onTap: {})
+    LineStatusHistoryButton(buttonState: .unlocked(nil), onTap: {})
         .padding()
 }
 
 #Preview("Unlocked (ongoing disruption)") {
     LineStatusHistoryButton(
         buttonState: .unlocked(.ongoingDisruption(since: .now)),
-        lineColor: .blue,
         onTap: {}
     )
     .padding()
@@ -161,7 +156,6 @@ public struct LineStatusHistoryButton: View {
 #Preview("Unlocked (resolved disruption)") {
     LineStatusHistoryButton(
         buttonState: .unlocked(.resolvedDisruption(at: .now)),
-        lineColor: .blue,
         onTap: {}
     )
     .padding()
@@ -170,7 +164,6 @@ public struct LineStatusHistoryButton: View {
 #Preview("Unlocked (multiple disruptions)") {
     LineStatusHistoryButton(
         buttonState: .unlocked(.multipleDisruptions(count: 3, firstAt: .now)),
-        lineColor: .blue,
         onTap: {}
     )
     .padding()

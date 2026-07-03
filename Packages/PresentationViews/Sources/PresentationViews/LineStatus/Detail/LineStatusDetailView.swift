@@ -58,7 +58,6 @@ public struct LineStatusDetailView: View {
                         Section {
                             LineStatusHistoryButton(
                                 buttonState: historyButtonState,
-                                lineColor: line.id.backgroundColor,
                                 onTap: { onAction(.statusHistoryTapped) }
                             )
                         }
