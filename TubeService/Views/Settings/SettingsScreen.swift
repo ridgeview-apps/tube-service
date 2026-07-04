@@ -1,7 +1,7 @@
 import DataStores
 import Models
 import PresentationViews
-import RidgeviewCore
+import Shared
 import SwiftUI
 
 struct SettingsScreen: View {
@@ -40,7 +40,7 @@ struct SettingsScreen: View {
 
     private var rootView: some View {
         SettingsView(
-            appVersionNumber: Bundle.main.appVersionNumber,
+            appVersionNumber: Bundle.main.appVersionDisplayString ?? "",
             appReviewURL: appConfig.appReviewURL,
             contactUs: contactUsConfig,
             systemStatus: systemStatusData.currentStatus,
@@ -59,9 +59,9 @@ struct SettingsScreen: View {
     private var contactUsConfig: Settings.ContactUs {
         .init(
             emailAddress: appConfig.contactUsEmail,
-            appVersion: Bundle.main.appVersionNumber,
-            appName: Bundle.main.appName,
-            deviceInfo: Device.modelName,
+            appVersion: Bundle.main.appVersionDisplayString ?? "",
+            appName: Bundle.main.appName ?? "",
+            deviceInfo: Device.modelDescription,
             localeInfo: "\(locale.identifier) - \(locale.language.languageCode?.identifier ?? "")"
         )
     }

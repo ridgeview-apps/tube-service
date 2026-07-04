@@ -150,7 +150,7 @@ struct UserPreferencesTests {
         let kingsCrossStationID = ModelStubs.kingsCrossStation.id
         let angelStationID = ModelStubs.angelStation.id
 
-        let timestamp1 = Date.UTC(year: 2024, month: 4, day: 15)!
+        let timestamp1 = Date.utc(year: 2024, month: 4, day: 15)!
         let duplicateJourney1 = SavedJourney(
             id: UUID(),
             fromLocation: .station(id: kingsCrossStationID),
@@ -159,7 +159,7 @@ struct UserPreferencesTests {
             lastUsed: timestamp1
         )
 
-        let timestamp2 = Date.UTC(year: 2024, month: 4, day: 16)!
+        let timestamp2 = Date.utc(year: 2024, month: 4, day: 16)!
         let duplicateJourney2 = SavedJourney(
             id: UUID(),
             fromLocation: .station(id: kingsCrossStationID),
@@ -168,7 +168,7 @@ struct UserPreferencesTests {
             lastUsed: timestamp2
         )
 
-        let timestamp3 = Date.UTC(year: 2024, month: 4, day: 17)!
+        let timestamp3 = Date.utc(year: 2024, month: 4, day: 17)!
         let duplicateJourney3 = SavedJourney(
             id: UUID(),
             fromLocation: .station(id: kingsCrossStationID),
@@ -196,7 +196,7 @@ struct UserPreferencesTests {
         let kingsCrossStationID = ModelStubs.kingsCrossStation.id
         let angelStationID = ModelStubs.angelStation.id
 
-        let timestamp1 = Date.UTC(year: 2024, month: 4, day: 15)!
+        let timestamp1 = Date.utc(year: 2024, month: 4, day: 15)!
         let outboundJourney = SavedJourney(
             id: UUID(),
             fromLocation: .station(id: kingsCrossStationID),
@@ -205,7 +205,7 @@ struct UserPreferencesTests {
             lastUsed: timestamp1
         )
 
-        let timestamp2 = Date.UTC(year: 2024, month: 4, day: 16)!
+        let timestamp2 = Date.utc(year: 2024, month: 4, day: 16)!
         let returnJourney = SavedJourney(
             id: UUID(),
             fromLocation: .station(id: angelStationID),

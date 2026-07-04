@@ -1,5 +1,4 @@
 import SwiftUI
-import RidgeviewCore
 
 // MARK: - Train lines
 public extension Color {
@@ -124,5 +123,16 @@ extension UIColor {
                 return lightMode
             }
         }
+    }
+}
+
+private extension Color {
+
+    static func rgb(_ red: Double, _ green: Double, _ blue: Double) -> Color {
+        Color(
+            red: red / 255.0,
+            green: green / 255.0,
+            blue: blue / 255.0
+        )
     }
 }

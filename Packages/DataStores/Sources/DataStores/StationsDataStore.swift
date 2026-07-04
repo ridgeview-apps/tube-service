@@ -1,6 +1,6 @@
 import Foundation
 import Models
-import RidgeviewCore
+import Shared
 
 @MainActor
 @Observable

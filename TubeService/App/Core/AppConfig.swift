@@ -42,7 +42,7 @@ extension AppConfig {
     // Load config from Main Info plist
 
     static let main: AppConfig = {
-        let config = Bundle.main.loadInfoPlistConfig(forKey: "appConfig")
+        let config = Bundle.main.infoPlistConfig(forKey: "appConfig")
 
         let appConfig = AppConfig(
             contactUsEmail: config["contactUsEmail"],

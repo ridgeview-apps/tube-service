@@ -29,14 +29,36 @@ public struct InfoPlistConfig {
 
 public extension Bundle {
 
-    var shortVersion: String? {
-        infoDictionary?["CFBundleShortVersionString"] as? String
-    }
-
-    func loadInfoPlistConfig(forKey key: String) -> InfoPlistConfig {
+    func infoPlistConfig(forKey key: String) -> InfoPlistConfig {
         guard let infoDictionary = infoDictionary?[key] as? [String: Any] else {
             fatalError("Unable to load \(key) key from info.plist file")
         }
         return InfoPlistConfig(infoDictionary: infoDictionary)
+    }
+
+    var appVersion: String? {
+        infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+
+    var appBuildNumber: String? {
+        infoDictionary?["CFBundleVersion"] as? String
+    }
+
+    var appVersionDisplayString: String? {
+        switch (appVersion, appBuildNumber) {
+        case let (version?, build?):
+            "\(version) (\(build))"
+        case let (version?, nil):
+            version
+        case let (nil, build?):
+            build
+        case (nil, nil):
+            nil
+        }
+    }
+
+    var appName: String? {
+        infoDictionary?["CFBundleName"] as? String
+            ?? infoDictionary?["CFBundleDisplayName"] as? String
     }
 }
