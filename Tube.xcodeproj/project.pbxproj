@@ -33,6 +33,9 @@
 /* Begin PBXFileReference section */
 		310BBAA42AD574350097BAD8 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
 		310BBAA52AD574600097BAD8 /* PresentationViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PresentationViews; sourceTree = "<group>"; };
+		311FD6D32FF928E30089C709 /* beta.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = beta.yml; sourceTree = "<group>"; };
+		311FD6D42FF928E30089C709 /* feature-branch-checks.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "feature-branch-checks.yml"; sourceTree = "<group>"; };
+		311FD6D52FF928E30089C709 /* prod.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = prod.yml; sourceTree = "<group>"; };
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
 		315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,6 +131,24 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
+		311FD6D62FF928E30089C709 /* workflows */ = {
+			isa = PBXGroup;
+			children = (
+				311FD6D32FF928E30089C709 /* beta.yml */,
+				311FD6D42FF928E30089C709 /* feature-branch-checks.yml */,
+				311FD6D52FF928E30089C709 /* prod.yml */,
+			);
+			path = workflows;
+			sourceTree = "<group>";
+		};
+		311FD6D72FF928E30089C709 /* .github */ = {
+			isa = PBXGroup;
+			children = (
+				311FD6D62FF928E30089C709 /* workflows */,
+			);
+			path = .github;
+			sourceTree = "<group>";
+		};
 		316577632FD195B600CABBB4 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,6 +163,7 @@
 		318D481D24EFC4900026B5F4 = {
 			isa = PBXGroup;
 			children = (
+				311FD6D72FF928E30089C709 /* .github */,
 				316577342FD194F200CABBB4 /* .swift-format */,
 				310BBA792AD573FE0097BAD8 /* Packages */,
 				310B4C7D2FCDA47D000BA667 /* Config */,
