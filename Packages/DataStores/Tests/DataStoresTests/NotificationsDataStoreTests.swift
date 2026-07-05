@@ -260,6 +260,27 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
+    func queuedPreferencesUpdateFlushedWhenTokenUnchanged() async {
+        // Given – device already registered; a preferences update is queued after the fact
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        let update = NotificationPreferencesUpdate(lines: [
+            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+        ])
+        store.queuePreferencesUpdate(update)
+
+        // When – same token re-delivered (e.g. APNs rotation returns same token)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – preferences update is applied even though re-registration was skipped
+        #expect(api.registerDeviceCallCount == 1)
+        #expect(api.updatePreferencesCallCount == 1)
+        #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
+    }
+
+    @Test
     func registerDeviceSkippedWhenTokenUnchanged() async {
         // Given
         let api = StubNotificationsAPIClient()

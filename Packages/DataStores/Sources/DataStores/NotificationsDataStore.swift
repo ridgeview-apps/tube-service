@@ -29,6 +29,7 @@ public final class NotificationsDataStore {
         public let appVariant: String?
         public let configuredLineCount: Int
         public let hasCompletedOnboarding: Bool
+        public let lastRegistrationError: String?
     }
 
     public var debugInfo: DebugInfo {
@@ -39,7 +40,8 @@ public final class NotificationsDataStore {
             deviceEnabled: device?.enabled,
             appVariant: device?.appVariant,
             configuredLineCount: preferences?.lines.count ?? 0,
-            hasCompletedOnboarding: hasCompletedOnboarding
+            hasCompletedOnboarding: hasCompletedOnboarding,
+            lastRegistrationError: lastRegistrationError
         )
     }
 
@@ -74,6 +76,7 @@ public final class NotificationsDataStore {
 
     private var isRegistering = false
     private var isSavingPreferences = false
+    private var lastRegistrationError: String?
 
     private static let keychainDeviceIdKey = "push_device_id"
     private static let keychainPushTokenKey = "push_registered_token"
@@ -128,23 +131,32 @@ public final class NotificationsDataStore {
     // MARK: - Registration
 
     public func registerDevice(pushToken: String, appVersion: String?) async {
-        guard !isRegistering,
-            pushToken != keychain.read(key: Self.keychainPushTokenKey)
-        else { return }
+        guard !isRegistering else { return }
+        guard pushToken != keychain.read(key: Self.keychainPushTokenKey) else {
+            await applyQueuedPreferencesIfNeeded()
+            return
+        }
         isRegistering = true
         defer { isRegistering = false }
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
-            if let queuedPreferences = queuedPreferencesUpdate {
-                queuedPreferencesUpdate = nil
-                await updatePreferences(with: queuedPreferences)
+            lastRegistrationError = nil
+            if queuedPreferencesUpdate != nil {
+                await applyQueuedPreferencesIfNeeded()
             } else if preferences == nil {
                 await fetchInitialPreferences()
             }
         } catch {
+            lastRegistrationError = error.localizedDescription
             AppLogger.notifications.error("Failed to register device: \(error)")
         }
+    }
+
+    private func applyQueuedPreferencesIfNeeded() async {
+        guard let update = queuedPreferencesUpdate else { return }
+        queuedPreferencesUpdate = nil
+        await updatePreferences(with: update)
     }
 
 

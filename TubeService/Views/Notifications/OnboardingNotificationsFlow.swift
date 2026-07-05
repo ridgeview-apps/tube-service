@@ -117,6 +117,7 @@ struct OnboardingNotificationsFlow: View {
 
     private func pushPermissionsGranted() {
         notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
+        notifications.completeOnboarding()
         router.navigation.push(.confirmation)
     }
 
