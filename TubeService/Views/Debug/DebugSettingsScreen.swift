@@ -85,6 +85,7 @@ struct DebugSettingsScreen: View {
             debugRow(label: "Configured Lines", value: "\(info.configuredLineCount)")
             copyableRow(label: "Device ID", value: info.deviceId)
             copyableRow(label: "Push Token", value: info.pushToken)
+            expandedCopyableRow(label: "Last Registration Error", value: info.lastRegistrationError)
         } header: {
             Text("Push Notifications")
         } footer: {
