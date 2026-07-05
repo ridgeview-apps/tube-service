@@ -19,30 +19,15 @@ private extension DateFormatter {
         dateFormatter.timeZone = TimeZone(identifier: "UTC")
         return dateFormatter
     }()
-
-    static let tubeServiceDateTimeMicroseconds: DateFormatter = {
-        var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        return dateFormatter
-    }()
-
-    static let tubeServiceDateTimeMilliseconds: DateFormatter = {
-        var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.timeZone = TimeZone(identifier: "UTC")
-        return dateFormatter
-    }()
 }
 
 private let tflDateFormatters: [DateFormatter] = [.tflLocalDateTime]
-private let tubeServiceDateFormatters: [DateFormatter] = [
-    .tubeServiceDateTimeMicroseconds,
-    .tubeServiceDateTimeMilliseconds,
-    .dateOnly
-]
+
+nonisolated(unsafe) private let iso8601WithFractionalSeconds: ISO8601DateFormatter = {
+    let formatter = ISO8601DateFormatter()
+    formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+    return formatter
+}()
 
 public extension JSONDecoder {
 
@@ -64,7 +49,25 @@ public extension JSONDecoder {
     }
 
     @Sendable static func tubeServiceDateDecodingStrategy(for decoder: Decoder) throws -> Date {
-        try decodeDate(from: decoder, using: tubeServiceDateFormatters)
+        let container = try decoder.singleValueContainer()
+        let dateString = try container.decode(String.self)
+
+        if let date = iso8601WithFractionalSeconds.date(from: dateString) {
+            return date
+        }
+
+        if let date = try? Date(dateString, strategy: .iso8601) {
+            return date
+        }
+
+        if let date = DateFormatter.dateOnly.date(from: dateString) {
+            return date
+        }
+
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: "Cannot decode date string \(dateString)"
+        )
     }
 }
 
@@ -84,6 +87,9 @@ private extension JSONDecoder {
             }
         }
 
-        throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateString)")
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: "Cannot decode date string \(dateString)"
+        )
     }
 }

@@ -82,13 +82,13 @@ struct TubeServiceModelDecoderTests {
                 "platform": "ios",
                 "enabled": true,
                 "app_version": "1.0.0",
-                "created_at": "2026-06-20T09:49:14.794457",
-                "updated_at": "2026-06-20T09:49:14.794457",
-                "last_seen_at": "2026-06-20T09:49:14.794457"
+                "created_at": "2026-06-20T09:49:14.794457Z",
+                "updated_at": "2026-06-20T09:49:14.794457Z",
+                "last_seen_at": "2026-06-20T09:49:14.794457Z"
             }
             """
         let device = try decode(NotificationDevice.self, from: json)
-        #expect(device.createdAt == utcDateTime("2026-06-20T09:49:14.794457", format: "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"))
+        #expect(device.createdAt == iso8601WithFractionalSeconds("2026-06-20T09:49:14.794457Z"))
     }
 
     @Test
@@ -99,14 +99,35 @@ struct TubeServiceModelDecoderTests {
                 "platform": "ios",
                 "enabled": true,
                 "app_version": null,
-                "created_at": "2026-06-20T09:49:14.794",
-                "updated_at": "2026-06-20T09:49:14.794",
-                "last_seen_at": "2026-06-20T09:49:14.794"
+                "created_at": "2026-06-20T09:49:14.794Z",
+                "updated_at": "2026-06-20T09:49:14.794Z",
+                "last_seen_at": "2026-06-20T09:49:14.794Z"
             }
             """
         let device = try decode(NotificationDevice.self, from: json)
-        #expect(device.createdAt == utcDateTime("2026-06-20T09:49:14.794", format: "yyyy-MM-dd'T'HH:mm:ss.SSS"))
+        #expect(device.createdAt == iso8601WithFractionalSeconds("2026-06-20T09:49:14.794Z"))
         #expect(device.appVersion == nil)
+    }
+
+    // Regression test: backend returns ISO8601 timestamps with fractional seconds + Z timezone,
+    // which the old custom DateFormatter chain could not parse (no Z suffix support).
+    @Test
+    func decodedNotificationDeviceDatesMatchProductionFormat() throws {
+        let json = """
+            {
+                "device_id": "abc123",
+                "platform": "ios",
+                "enabled": true,
+                "app_version": "2.1.0",
+                "app_variant": "beta",
+                "created_at": "2026-07-04T21:18:49.478974Z",
+                "updated_at": "2026-07-05T10:34:44.617409Z",
+                "last_seen_at": "2026-07-05T10:34:44.617409Z"
+            }
+            """
+        let device = try decode(NotificationDevice.self, from: json)
+        #expect(device.createdAt == iso8601WithFractionalSeconds("2026-07-04T21:18:49.478974Z"))
+        #expect(device.updatedAt == iso8601WithFractionalSeconds("2026-07-05T10:34:44.617409Z"))
     }
 
     // MARK: - LineStatusSnapshot (via DailyDisruptionSummary)
@@ -307,11 +328,9 @@ private extension TubeServiceModelDecoderTests {
         try! Date(string, strategy: .iso8601)
     }
 
-    func utcDateTime(_ string: String, format: String) -> Date {
-        let formatter = DateFormatter()
-        formatter.dateFormat = format
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(identifier: "UTC")
+    func iso8601WithFractionalSeconds(_ string: String) -> Date {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         return formatter.date(from: string)!
     }
 
