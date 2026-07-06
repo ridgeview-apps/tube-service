@@ -42,7 +42,7 @@ public struct TubeServicePlusMarketingContent: View {
                     featureRow(feature)
                 }
             }
-            .padding(16)
+            .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
 
