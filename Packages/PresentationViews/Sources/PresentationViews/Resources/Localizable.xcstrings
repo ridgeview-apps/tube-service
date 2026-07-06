@@ -2353,7 +2353,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recovery alerts"
+            "value" : "Also notify me when Good Service resumes"
           }
         }
       }
@@ -2606,7 +2606,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alert times"
+            "value" : "Disruption alerts"
           }
         }
       }
@@ -2639,7 +2639,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "When service is back to normal"
+            "value" : "Sent when Good Service returns."
           }
         }
       }

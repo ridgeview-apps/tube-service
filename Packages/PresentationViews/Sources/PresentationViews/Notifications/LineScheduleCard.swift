@@ -70,17 +70,11 @@ public struct LineScheduleCard: View {
 
     private var recoveryAlertsRow: some View {
         Toggle(isOn: $settings.notifyRecoveries) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(.notificationsLineRecoveryAlertsLabel)
-                    .foregroundStyle(.primary)
-                Text(.notificationsOnboardingFeatureRecoveryAlertsDescription)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            .opacity(settings.notifyRecoveries ? 1 : 0.4)
-            .animation(.easeInOut(duration: 0.2), value: settings.notifyRecoveries)
+            Text(.notificationsLineRecoveryAlertsLabel)
+                .foregroundStyle(.primary)
         }
-        .toggleStyle(.checkmark(tint: lineID.backgroundColor))
+        .toggleStyle(.switch)
+        .tint(lineID.backgroundColor)
         .font(.subheadline)
         .padding(.vertical, 10)
     }
