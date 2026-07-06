@@ -21,10 +21,12 @@ struct LineNotificationConfigScreen: View {
     var body: some View {
         NavigationStack {
             LineNotificationConfigView(
-                lineID: lineID,
-                existingSettings: existingSettings(for: lineID),
+                mode: .singleLine(
+                    lineID: lineID,
+                    existingSettings: existingSettings(for: lineID),
+                    showsOtherLines: showsOtherLines
+                ),
                 allSettings: currentLines,
-                showsOtherLines: showsOtherLines,
                 onAction: handleAction
             )
         }
@@ -58,6 +60,8 @@ struct LineNotificationConfigScreen: View {
             dismiss()
         case .navigateTo(let targetLineID):
             selectedOtherLine = LineSelection(lineID: targetLineID)
+        case .toggleEnabled:
+            break
         }
     }
 

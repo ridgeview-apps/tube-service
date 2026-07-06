@@ -2236,6 +2236,17 @@
         }
       }
     },
+    "notifications.line.alerts.navigation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line alerts"
+          }
+        }
+      }
+    },
     "notifications.line.config.add.another.line" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2462,7 +2473,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Discard Changes"
+            "value" : "Discard"
           }
         }
       }

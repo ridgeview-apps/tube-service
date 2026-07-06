@@ -1,14 +1,8 @@
-import DataStores
 import Models
 import PresentationViews
 import SwiftUI
 
 struct NotificationsFlow: View {
-    @Environment(NotificationsDataStore.self) private var notifications
-
-    private var savedNotificationSettings: [LineNotificationSettings] {
-        notifications.preferences?.lines.toLineNotificationSettings() ?? []
-    }
 
     enum Context {
         case lineDetail(TrainLineID)
@@ -42,9 +36,6 @@ struct NotificationsFlow: View {
     }
 
     private var manageFlow: some View {
-        ManageNotificationsFlow(
-            savedNotificationSettings: savedNotificationSettings,
-            initialIsEnabled: notifications.device?.enabled ?? true
-        )
+        ManageNotificationsFlow()
     }
 }

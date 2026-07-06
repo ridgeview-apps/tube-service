@@ -5,14 +5,8 @@ import SwiftUI
 
 struct ManageNotificationsFlow: View {
 
-    @Environment(\.openSettings) private var openSettings
-    @Environment(\.dismiss) private var dismiss
-
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
-
-    let savedNotificationSettings: [LineNotificationSettings]
-    let initialIsEnabled: Bool
 
     var body: some View {
         NavigationStack {
@@ -25,35 +19,11 @@ struct ManageNotificationsFlow: View {
         if !purchases.hasTubeServicePlus {
             paywallView
         } else {
-            lineSettingsView
+            LineNotificationManageScreen()
         }
     }
 
     private var paywallView: some View {
         TubeServicePlusView(context: .notifications)
-    }
-
-    private var lineSettingsView: some View {
-        LineNotificationSettingsView(
-            mode: .manage,
-            initialItems: savedNotificationSettings,
-            initialIsEnabled: initialIsEnabled,
-            showPermissionWarning: notifications.isPermissionDenied
-        ) { action in
-            switch action {
-            case .cancel:
-                dismiss()
-            case .done(let updatedValues, let isEnabled):
-                dismiss()
-                Task {
-                    await notifications.savePreferences(
-                        update: updatedValues.toNotificationPreferencesUpdate(),
-                        deviceEnabled: isEnabled
-                    )
-                }
-            case .openSettings:
-                openSettings()
-            }
-        }
     }
 }

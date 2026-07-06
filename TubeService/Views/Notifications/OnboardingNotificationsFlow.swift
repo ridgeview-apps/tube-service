@@ -65,19 +65,12 @@ struct OnboardingNotificationsFlow: View {
 
     private var lineSettingsView: some View {
         LineNotificationSettingsView(
-            mode: .onboarding,
-            initialItems: initialNotificationSettings,
-            initialIsEnabled: true,
-            showPermissionWarning: notifications.isPermissionDenied
+            initialItems: initialNotificationSettings
         ) { action in
             switch action {
-            case .cancel:
-                dismiss()
-            case .done(let updatedValues, _):
+            case .done(let updatedValues):
                 updatedNotificationSettings = updatedValues
                 requestPushPermissionsAndFinish()
-            case .openSettings:
-                openSettings()
             }
         }
         .navigationBarBackButtonHidden()
