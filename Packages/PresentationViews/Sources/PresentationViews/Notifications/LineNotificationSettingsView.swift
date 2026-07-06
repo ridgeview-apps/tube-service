@@ -155,6 +155,8 @@ public struct LineNotificationSettingsView: View {
 
         if !configuredLines.isEmpty || !unconfiguredLineIDs.isEmpty {
             allLinesCard
+                .opacity(isEnabled ? 1 : 0.5)
+                .animation(.easeInOut(duration: 0.2), value: isEnabled)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 12, trailing: 20))
