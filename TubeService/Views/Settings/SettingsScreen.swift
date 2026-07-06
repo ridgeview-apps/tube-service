@@ -75,7 +75,7 @@ struct SettingsScreen: View {
         case .notificationsTapped:
             router.sheetRouter.show(
                 .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
-                style: .fullScreen
+                style: .standard
             )
         }
     }
