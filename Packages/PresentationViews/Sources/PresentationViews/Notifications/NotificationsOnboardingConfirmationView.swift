@@ -41,6 +41,11 @@ public struct NotificationsOnboardingConfirmationView: View {
 
                 LineNotificationRows(settings: lineSettings)
                     .cardStyle()
+
+                Text(.notificationsConfirmationSettingsHint)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
             }
             .padding(20)
         }

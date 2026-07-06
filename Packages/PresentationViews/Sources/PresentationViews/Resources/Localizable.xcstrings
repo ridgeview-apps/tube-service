@@ -2214,6 +2214,17 @@
         }
       }
     },
+    "notifications.confirmation.settings.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can change these anytime in Settings"
+          }
+        }
+      }
+    },
     "notifications.confirmation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2254,39 +2265,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add another line"
-          }
-        }
-      }
-    },
-    "notifications.line.config.add.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add notifications"
-          }
-        }
-      }
-    },
-    "notifications.line.config.add.button %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn on %@ alerts"
-          }
-        }
-      }
-    },
-    "notifications.line.config.add.confirmed %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ notifications on"
           }
         }
       }

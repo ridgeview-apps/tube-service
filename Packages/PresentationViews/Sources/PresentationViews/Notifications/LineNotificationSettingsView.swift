@@ -25,7 +25,6 @@ public struct LineNotificationSettingsView: View {
     @State private var showRemoveConfirmation = false
     @State private var showDiscardChangesConfirmation = false
     @State private var isOtherLinesExpanded = false
-    @State private var addConfirmed = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
 
@@ -107,12 +106,11 @@ public struct LineNotificationSettingsView: View {
         .scrollContentBackground(.hidden)
         .navigationTitle(navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
-        .sensoryFeedback(.success, trigger: addConfirmed)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) { cancelButton }
-            if existingSettings != nil {
+            if case .singleLine = mode {
                 ToolbarItem(placement: .confirmationAction) { saveButton }
             }
         }
@@ -133,21 +131,16 @@ public struct LineNotificationSettingsView: View {
     private var singleLineContent: some View {
         Group {
             scheduleCard
-            Group {
-                if existingSettings == nil {
-                    addButton
-                } else {
-                    removeButton
-                }
+            if existingSettings != nil {
+                removeButton
+                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
             }
-            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
         }
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
 
         if case .singleLine(_, _, let showsOtherLines) = mode, showsOtherLines {
             otherLinesSummarySection
-                .disabled(addConfirmed)
         }
     }
 
@@ -240,36 +233,7 @@ public struct LineNotificationSettingsView: View {
             .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
     }
 
-    // MARK: - Add / Remove Buttons
-
-    private var addButton: some View {
-        Button {
-            withAnimation(.spring(duration: 0.3)) {
-                addConfirmed = true
-            }
-            Task {
-                try? await Task.sleep(for: .milliseconds(1200))
-                onAction(.save(settings))
-            }
-        } label: {
-            Label {
-                Text(
-                    addConfirmed
-                        ? .notificationsLineConfigAddConfirmed(lineID.longName)
-                        : .notificationsLineConfigAddButton(lineID.longName)
-                )
-                .contentTransition(.opacity)
-            } icon: {
-                Image(systemName: addConfirmed ? "checkmark.circle.fill" : "bell.badge")
-                    .contentTransition(.symbolEffect(.replace))
-            }
-            .ctaLabelStyle(weight: .regular)
-        }
-        .allowsHitTesting(!addConfirmed)
-        .foregroundStyle(lineID.textColor)
-        .cardStyle(backgroundColor: lineID.backgroundColor)
-        .animation(.spring(duration: 0.3), value: addConfirmed)
-    }
+    // MARK: - Remove Button
 
     private var removeButton: some View {
         Button(role: .destructive) {
