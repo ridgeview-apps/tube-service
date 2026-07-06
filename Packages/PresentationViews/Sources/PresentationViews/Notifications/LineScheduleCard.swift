@@ -25,7 +25,7 @@ public struct LineScheduleCard: View {
         }
         .padding(16)
         .background(alignment: .leading) {
-            lineID.backgroundColor.frame(width: 6)
+            lineID.backgroundColor.frame(width: 8)
         }
         .cardStyle()
     }

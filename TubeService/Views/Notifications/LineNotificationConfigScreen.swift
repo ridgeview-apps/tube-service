@@ -8,20 +8,28 @@ struct LineNotificationConfigScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
 
-    let lineID: TrainLineID
+    @State private var selectedOtherLine: LineSelection?
 
-    private var existingSettings: LineNotificationSettings? {
-        notifications.preferences?.lines.toLineNotificationSettings()
-            .first { $0.lineID == lineID }
+    let lineID: TrainLineID
+    let showsOtherLines: Bool
+
+    init(lineID: TrainLineID, showsOtherLines: Bool = true) {
+        self.lineID = lineID
+        self.showsOtherLines = showsOtherLines
     }
 
     var body: some View {
         NavigationStack {
             LineNotificationConfigView(
                 lineID: lineID,
-                existingSettings: existingSettings,
+                existingSettings: existingSettings(for: lineID),
+                allSettings: currentLines,
+                showsOtherLines: showsOtherLines,
                 onAction: handleAction
             )
+        }
+        .sheet(item: $selectedOtherLine) { selection in
+            LineNotificationConfigScreen(lineID: selection.lineID, showsOtherLines: false)
         }
     }
 
@@ -48,10 +56,21 @@ struct LineNotificationConfigScreen: View {
             }
         case .cancel:
             dismiss()
+        case .navigateTo(let targetLineID):
+            selectedOtherLine = LineSelection(lineID: targetLineID)
         }
+    }
+
+    private func existingSettings(for lineID: TrainLineID) -> LineNotificationSettings? {
+        currentLines.first { $0.lineID == lineID }
     }
 
     private var currentLines: [LineNotificationSettings] {
         notifications.preferences?.lines.toLineNotificationSettings() ?? []
     }
+}
+
+private struct LineSelection: Identifiable {
+    let lineID: TrainLineID
+    var id: TrainLineID { lineID }
 }

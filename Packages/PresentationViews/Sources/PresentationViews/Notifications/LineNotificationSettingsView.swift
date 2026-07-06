@@ -160,6 +160,9 @@ public struct LineNotificationSettingsView: View {
         if !unaddedLineIDs.isEmpty {
             addLineRow
         }
+        #if DEBUG
+            debugAddAllRow
+        #endif
     }
 
     // MARK: - Pinned Done Button (Onboarding)
@@ -253,27 +256,15 @@ public struct LineNotificationSettingsView: View {
     // MARK: - Add Line
 
     private var addLineRow: some View {
-        Menu {
-            debugAddAllButtons
-            ForEach(unaddedLineIDs, id: \.self) { lineID in
-                Button(lineID.name) {
-                    items.append(.defaultValue(lineID: lineID))
-                    scrollTarget = lineID
-                }
+        AddLineMenu(
+            lineIDs: unaddedLineIDs,
+            label: addLineButtonText,
+            onSelect: { lineID in
+                items.append(.defaultValue(lineID: lineID))
+                scrollTarget = lineID
             }
-        } label: {
-            Label {
-                Text(addLineButtonText)
-            } icon: {
-                Image(systemName: "plus.circle.fill")
-            }
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .foregroundStyle(.tint)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(16)
-            .dashedCardStyle()
-        }
+        )
+        .dashedCardStyle()
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
@@ -288,25 +279,36 @@ public struct LineNotificationSettingsView: View {
         }
     }
 
-    @ViewBuilder
-    private var debugAddAllButtons: some View {
-        #if DEBUG
-            if unaddedLineIDs.count > 1 {
-                Button("Add all lines") {
-                    for lineID in unaddedLineIDs {
-                        items.append(.defaultValue(lineID: lineID))
+    #if DEBUG
+        private var debugAddAllRow: some View {
+            Menu {
+                if unaddedLineIDs.count > 1 {
+                    Button("Add all lines") {
+                        for lineID in unaddedLineIDs {
+                            items.append(.defaultValue(lineID: lineID))
+                        }
+                        scrollTarget = unaddedLineIDs.last
                     }
-                    scrollTarget = unaddedLineIDs.last
-                }
-                Button("Add all lines (anytime)") {
-                    for lineID in unaddedLineIDs {
-                        items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
+                    Button("Add all lines (anytime)") {
+                        for lineID in unaddedLineIDs {
+                            items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
+                        }
+                        scrollTarget = unaddedLineIDs.last
                     }
-                    scrollTarget = unaddedLineIDs.last
                 }
+            } label: {
+                Text("Debug: Add lines")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(8)
             }
-        #endif
-    }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 4, trailing: 20))
+        }
+
+    #endif
 }
 
 

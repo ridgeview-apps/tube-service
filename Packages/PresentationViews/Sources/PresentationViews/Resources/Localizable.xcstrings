@@ -17,6 +17,9 @@
         }
       }
     },
+    "%lld" : {
+
+    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2233,6 +2236,17 @@
         }
       }
     },
+    "notifications.line.config.add.another.line" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add another line"
+          }
+        }
+      }
+    },
     "notifications.line.config.add.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2273,6 +2287,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.other.line.alerts" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other line alerts"
           }
         }
       }
@@ -2734,7 +2759,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Every day"
+            "value" : "Always"
           }
         }
       }
