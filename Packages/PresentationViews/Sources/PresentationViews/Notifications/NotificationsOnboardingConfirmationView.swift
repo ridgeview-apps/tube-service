@@ -39,7 +39,8 @@ public struct NotificationsOnboardingConfirmationView: View {
                     }
                 }
 
-                selectedLinesCard
+                LineNotificationRows(settings: lineSettings)
+                    .cardStyle()
             }
             .padding(20)
         }
@@ -53,23 +54,6 @@ public struct NotificationsOnboardingConfirmationView: View {
                 }
             }
         }
-    }
-
-    private var selectedLinesCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            ForEach(lineSettings.sorted(by: { $0.lineID.name < $1.lineID.name }), id: \.lineID) { settings in
-                HStack(spacing: 10) {
-                    Circle()
-                        .fill(settings.lineID.backgroundColor)
-                        .frame(width: 12, height: 12)
-                    Text(settings.lineID.name)
-                        .font(.subheadline)
-                }
-            }
-        }
-        .padding(20)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
     }
 }
 

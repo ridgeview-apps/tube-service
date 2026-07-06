@@ -348,34 +348,10 @@ public struct LineNotificationSettingsView: View {
             if isOtherLinesExpanded {
                 Divider()
                     .padding(.leading, 40)
-                ForEach(Array(configuredLines.enumerated()), id: \.element.lineID) { index, lineSettings in
-                    if index > 0 {
-                        Divider()
-                            .padding(.leading, 40)
-                    }
-                    Button {
-                        onAction(.navigateTo(lineSettings.lineID))
-                    } label: {
-                        HStack(spacing: 12) {
-                            Circle()
-                                .fill(lineSettings.lineID.backgroundColor)
-                                .frame(width: 12, height: 12)
-                            Text(lineSettings.lineID.name)
-                                .foregroundStyle(.primary)
-                            Spacer()
-                            Text(lineSettings.schedulePreset.title)
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                            Image(systemName: "chevron.right")
-                                .foregroundStyle(.tertiary)
-                                .font(.caption.weight(.semibold))
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
-                }
+                LineNotificationRows(
+                    settings: configuredLines,
+                    onSelect: { onAction(.navigateTo($0)) }
+                )
                 if !unconfiguredLineIDs.isEmpty {
                     Divider()
                         .padding(.leading, 40)
