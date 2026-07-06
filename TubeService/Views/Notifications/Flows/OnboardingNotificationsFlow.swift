@@ -64,7 +64,7 @@ struct OnboardingNotificationsFlow: View {
     }
 
     private var lineSettingsView: some View {
-        LineNotificationSettingsView(
+        LineNotificationSetupView(
             initialItems: initialNotificationSettings
         ) { action in
             switch action {

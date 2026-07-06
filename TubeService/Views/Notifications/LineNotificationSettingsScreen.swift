@@ -3,7 +3,7 @@ import Models
 import PresentationViews
 import SwiftUI
 
-struct LineNotificationConfigScreen: View {
+struct LineNotificationSettingsScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
@@ -20,7 +20,7 @@ struct LineNotificationConfigScreen: View {
 
     var body: some View {
         NavigationStack {
-            LineNotificationConfigView(
+            LineNotificationSettingsView(
                 mode: .singleLine(
                     lineID: lineID,
                     existingSettings: existingSettings(for: lineID),
@@ -31,11 +31,11 @@ struct LineNotificationConfigScreen: View {
             )
         }
         .sheet(item: $selectedOtherLine) { selection in
-            LineNotificationConfigScreen(lineID: selection.lineID, showsOtherLines: false)
+            LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
         }
     }
 
-    private func handleAction(_ action: LineNotificationConfigView.Action) {
+    private func handleAction(_ action: LineNotificationSettingsView.Action) {
         switch action {
         case .save(let updatedSettings):
             dismiss()

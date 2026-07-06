@@ -11,17 +11,17 @@ struct LineNotificationManageScreen: View {
     @State private var selectedLine: LineSelection?
 
     var body: some View {
-        LineNotificationConfigView(
+        LineNotificationSettingsView(
             mode: .manageAll(isEnabled: notifications.device?.enabled ?? true),
             allSettings: currentLines,
             onAction: handleAction
         )
         .sheet(item: $selectedLine) { selection in
-            LineNotificationConfigScreen(lineID: selection.lineID, showsOtherLines: false)
+            LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
         }
     }
 
-    private func handleAction(_ action: LineNotificationConfigView.Action) {
+    private func handleAction(_ action: LineNotificationSettingsView.Action) {
         switch action {
         case .navigateTo(let lineID):
             selectedLine = LineSelection(lineID: lineID)

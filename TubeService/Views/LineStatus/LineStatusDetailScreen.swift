@@ -118,7 +118,7 @@ struct LineStatusDetailScreen: View {
             if state == .permissionDenied {
                 openSettings()
             } else if notifications.hasCompletedOnboarding {
-                router.showSheet(.lineNotificationConfig(lineID))
+                router.showSheet(.lineNotificationSettings(lineID))
             } else {
                 router.showSheet(.notificationSettings(.lineDetail(lineID), .onboarding))
             }
