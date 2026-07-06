@@ -14,6 +14,7 @@ public struct LineNotificationSettingsView: View {
         case cancel
         case navigateTo(TrainLineID)
         case toggleEnabled(Bool)
+        case deleteAllSettings
     }
 
     private let mode: Mode
@@ -23,6 +24,7 @@ public struct LineNotificationSettingsView: View {
     @State private var settings: LineNotificationSettings
     @State private var isEnabled: Bool
     @State private var showRemoveConfirmation = false
+    @State private var showDeleteAllConfirmation = false
     @State private var showDiscardChangesConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
@@ -161,20 +163,30 @@ public struct LineNotificationSettingsView: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 12, trailing: 20))
         }
+
+        deleteAllSettingsButton
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
     }
 
     // MARK: - Mute All Row
 
     private var muteAllRow: some View {
         Toggle(isOn: $isEnabled) {
-            HStack(spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 Image(systemName: isEnabled ? "bell.fill" : "bell.slash.fill")
                     .font(.system(size: 20))
                     .foregroundStyle(isEnabled ? Color.accentColor : .orange)
                     .contentTransition(.symbolEffect(.replace))
-                Text(.notificationsManagePauseAllTitle)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(.notificationsManagePauseAllTitle)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                    Text(.notificationsManagePauseAllSubtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
         }
         .tint(Color.accentColor)
@@ -226,6 +238,36 @@ public struct LineNotificationSettingsView: View {
             }
         }
         .cardStyle()
+    }
+
+    // MARK: - Delete All Settings Button
+
+    private var deleteAllSettingsButton: some View {
+        Button(role: .destructive) {
+            showDeleteAllConfirmation = true
+        } label: {
+            Label {
+                Text(.notificationsManageDeleteAllSettingsButton)
+                    .foregroundStyle(.primary)
+            } icon: {
+                Image(systemName: "trash")
+                    .foregroundStyle(.red)
+            }
+            .ctaLabelStyle()
+        }
+        .cardStyle()
+        .confirmationDialog(
+            Text(.notificationsManageDeleteAllSettingsConfirmationTitle),
+            isPresented: $showDeleteAllConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: .notificationsManageDeleteAllSettingsButton), role: .destructive) {
+                removeFeedbackTrigger.toggle()
+                onAction(.deleteAllSettings)
+            }
+        } message: {
+            Text(.notificationsManageDeleteAllSettingsConfirmationMessage)
+        }
     }
 
     // MARK: - Schedule Card

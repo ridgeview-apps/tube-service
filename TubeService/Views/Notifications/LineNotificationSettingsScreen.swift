@@ -60,7 +60,7 @@ struct LineNotificationSettingsScreen: View {
             dismiss()
         case .navigateTo(let targetLineID):
             selectedOtherLine = LineSelection(lineID: targetLineID)
-        case .toggleEnabled:
+        case .toggleEnabled, .deleteAllSettings:
             break
         }
     }

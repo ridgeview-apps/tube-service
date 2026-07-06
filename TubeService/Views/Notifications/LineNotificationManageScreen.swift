@@ -32,6 +32,11 @@ struct LineNotificationManageScreen: View {
                     deviceEnabled: isEnabled
                 )
             }
+        case .deleteAllSettings:
+            Task {
+                await notifications.deleteDevice()
+                dismiss()
+            }
         case .cancel:
             dismiss()
         case .save, .remove:

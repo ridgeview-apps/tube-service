@@ -2423,6 +2423,39 @@
         }
       }
     },
+    "notifications.manage.delete.all.settings.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all settings"
+          }
+        }
+      }
+    },
+    "notifications.manage.delete.all.settings.confirmation.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes this device and all saved line alert settings. Turning alerts off keeps your settings."
+          }
+        }
+      }
+    },
+    "notifications.manage.delete.all.settings.confirmation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete all notification settings?"
+          }
+        }
+      }
+    },
     "notifications.manage.alerts.paused.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2506,7 +2539,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Receive notifications for your selected lines"
+            "value" : "When alerts are off, your saved line settings are kept and can be turned back on anytime."
           }
         }
       }
