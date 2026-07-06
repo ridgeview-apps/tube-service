@@ -14,15 +14,15 @@ public struct TubeServicePlusMarketingContent: View {
     }
 
     public var body: some View {
-        VStack(spacing: 24) {
-            VStack(spacing: 16) {
+        VStack(spacing: 16) {
+            VStack(spacing: 12) {
                 ZStack {
                     Circle()
                         .fill(Color.accentColor.opacity(0.15))
-                        .frame(width: 88, height: 88)
+                        .frame(width: 64, height: 64)
 
                     Image(systemName: iconName)
-                        .font(.system(size: 36, weight: .semibold))
+                        .font(.system(size: 28, weight: .semibold))
                         .foregroundStyle(Color.accentColor)
                 }
 
@@ -37,29 +37,17 @@ public struct TubeServicePlusMarketingContent: View {
                 }
             }
 
-            VStack(alignment: .leading, spacing: 16) {
-                featureRow(
-                    systemImage: "calendar",
-                    title: .tubeServicePlusFeatureTimelineTitle,
-                    description: .tubeServicePlusFeatureTimelineDescription
-                )
-                featureRow(
-                    systemImage: "exclamationmark.bubble",
-                    title: .tubeServicePlusFeatureDisruptionsTitle,
-                    description: .tubeServicePlusFeatureDisruptionsDescription
-                )
-                featureRow(
-                    systemImage: "arrow.trianglehead.2.clockwise.rotate.90",
-                    title: .tubeServicePlusFeatureRecoveryTitle,
-                    description: .tubeServicePlusFeatureRecoveryDescription
-                )
+            VStack(alignment: .leading, spacing: 12) {
+                ForEach(features) { feature in
+                    featureRow(feature)
+                }
             }
-            .padding(20)
+            .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
             .cardStyle()
 
             Text(.tubeServicePlusDeveloperNote)
-                .font(.footnote)
+                .font(.caption)
                 .foregroundStyle(.tertiary)
                 .multilineTextAlignment(.center)
         }
@@ -87,25 +75,75 @@ public struct TubeServicePlusMarketingContent: View {
         }
     }
 
-    private func featureRow(
-        systemImage: String,
-        title: LocalizedStringResource,
-        description: LocalizedStringResource
-    ) -> some View {
+    private var features: [Feature] {
+        switch context {
+        case .statusHistory:
+            [
+                Feature(
+                    id: "status-timeline",
+                    systemImage: "calendar",
+                    title: .tubeServicePlusFeatureTimelineTitle,
+                    description: .tubeServicePlusFeatureTimelineDescription
+                ),
+                Feature(
+                    id: "status-disruptions",
+                    systemImage: "exclamationmark.bubble",
+                    title: .tubeServicePlusFeatureDisruptionsTitle,
+                    description: .tubeServicePlusFeatureDisruptionsDescription
+                ),
+                Feature(
+                    id: "status-recovery",
+                    systemImage: "arrow.trianglehead.2.clockwise.rotate.90",
+                    title: .tubeServicePlusFeatureRecoveryTitle,
+                    description: .tubeServicePlusFeatureRecoveryDescription
+                )
+            ]
+        case .notifications:
+            [
+                Feature(
+                    id: "notifications-lines",
+                    systemImage: "tram.fill",
+                    title: "Line-specific alerts",
+                    description: "Only follow the lines you care about."
+                ),
+                Feature(
+                    id: "notifications-recovery",
+                    systemImage: "checkmark.circle",
+                    title: "Recovery notifications",
+                    description: "Know when service is back to normal."
+                ),
+                Feature(
+                    id: "notifications-schedules",
+                    systemImage: "calendar.badge.clock",
+                    title: "Alert schedules",
+                    description: "Choose when alerts should be active."
+                )
+            ]
+        }
+    }
+
+    private func featureRow(_ feature: Feature) -> some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: systemImage)
+            Image(systemName: feature.systemImage)
                 .font(.headline)
                 .foregroundStyle(Color.accentColor)
                 .frame(width: 28)
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(title)
+                Text(feature.title)
                     .font(.headline)
-                Text(description)
+                Text(feature.description)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private struct Feature: Identifiable {
+        let id: String
+        let systemImage: String
+        let title: LocalizedStringResource
+        let description: LocalizedStringResource
     }
 }
 

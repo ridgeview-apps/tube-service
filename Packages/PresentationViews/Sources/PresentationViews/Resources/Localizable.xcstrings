@@ -20,6 +20,9 @@
     "%lld" : {
 
     },
+    "Alert schedules" : {
+
+    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -218,6 +221,9 @@
           }
         }
       }
+    },
+    "Choose when alerts should be active." : {
+
     },
     "contact.us.body.app.version" : {
       "extractionState" : "manual",
@@ -1337,6 +1343,12 @@
         }
       }
     },
+    "Know when service is back to normal." : {
+
+    },
+    "Line-specific alerts" : {
+
+    },
     "line.status.date.picker.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2423,6 +2435,28 @@
         }
       }
     },
+    "notifications.manage.alerts.paused.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All line notifications are currently paused. Turn on alerts above to manage your lines."
+          }
+        }
+      }
+    },
+    "notifications.manage.alerts.paused.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All alerts paused"
+          }
+        }
+      }
+    },
     "notifications.manage.delete.all.settings.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2452,28 +2486,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete all notification settings?"
-          }
-        }
-      }
-    },
-    "notifications.manage.alerts.paused.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All line notifications are currently paused. Turn on alerts above to manage your lines."
-          }
-        }
-      }
-    },
-    "notifications.manage.alerts.paused.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All alerts paused"
           }
         }
       }
@@ -2863,6 +2875,9 @@
         }
       }
     },
+    "Only follow the lines you care about." : {
+
+    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2904,6 +2919,9 @@
           }
         }
       }
+    },
+    "Recovery notifications" : {
+
     },
     "refresh.button.title" : {
       "extractionState" : "manual",
@@ -3304,7 +3322,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Today's full service picture — when disruptions started, how long they lasted, and when things recovered."
+            "value" : "Good service now? Check when today's disruptions started, changed, and cleared."
           }
         }
       }
@@ -3315,7 +3333,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Built by one developer. A Plus subscription helps cover server costs and keeps the app free."
+            "value" : "Plus helps cover server costs and supports ongoing development."
           }
         }
       }
@@ -3326,7 +3344,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recent disruptions, their causes, and when they cleared."
+            "value" : "See earlier issues even after service recovers."
           }
         }
       }
@@ -3337,7 +3355,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disruption History"
+            "value" : "Past disruptions"
           }
         }
       }
@@ -3348,7 +3366,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "How quickly service recovered after each disruption."
+            "value" : "Know when each disruption cleared."
           }
         }
       }
@@ -3359,7 +3377,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recovery Tracking"
+            "value" : "Recovery times"
           }
         }
       }
@@ -3370,7 +3388,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A full-day view of service changes, updated as they happen."
+            "value" : "Follow service changes across the day."
           }
         }
       }
@@ -3381,7 +3399,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Daily Timeline"
+            "value" : "Today's line history"
           }
         }
       }
@@ -3392,7 +3410,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Know when your lines are disrupted — and when they recover."
+            "value" : "Get disruption and recovery alerts for the lines you choose."
           }
         }
       }
@@ -3403,7 +3421,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Never Miss a Disruption"
+            "value" : "Alerts for Your Lines"
           }
         }
       }
@@ -3414,7 +3432,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Know Your Line, Better"
+            "value" : "See What Happened Earlier"
           }
         }
       }
