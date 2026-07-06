@@ -312,7 +312,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func deleteDeviceAllowsReregistrationWithSameToken() async {
+    func deleteDeviceSuppressesAutomaticReregistrationWithSameToken() async {
         // Given
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
@@ -320,12 +320,48 @@ struct NotificationsDataStoreTests {
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
         #expect(api.registerDeviceCallCount == 1)
 
-        // When – device is deleted (e.g. user removes account) then re-registers
+        // When – device is deleted, then APNs delivers the same token again automatically
         await store.deleteDevice()
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
-        // Then – backend is called again because the cached token was cleared on delete
+        // Then – the user-initiated deletion is respected
+        #expect(api.registerDeviceCallCount == 1)
+    }
+
+    @Test
+    func deleteDeviceSuppressionPersistsAcrossStoreRestart() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let userDefaults = UserDefaults(suiteName: UUID().uuidString)!
+        let store = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.deleteDevice()
+
+        // When – a new store is created after app restart and receives a push token
+        let restartedStore = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
+        await restartedStore.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – deletion still suppresses automatic registration
+        #expect(api.registerDeviceCallCount == 1)
+    }
+
+    @Test
+    func queuedPreferencesUpdateAllowsReregistrationAfterDelete() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.deleteDevice()
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+
+        // When – the user explicitly configures notifications again
+        store.queuePreferencesUpdate(update)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – explicit setup clears suppression and registers a new device
         #expect(api.registerDeviceCallCount == 2)
+        #expect(api.updatePreferencesCallCount == 1)
     }
 
 

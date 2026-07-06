@@ -18,6 +18,9 @@ public final class NotificationsDataStore {
     public private(set) var hasCompletedOnboarding: Bool {
         didSet { persistNotificationState() }
     }
+    private var isDeviceRegistrationSuppressed: Bool {
+        didSet { persistNotificationState() }
+    }
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
@@ -98,6 +101,7 @@ public final class NotificationsDataStore {
         self.preferences = state.preferences
         self.device = state.device
         self.hasCompletedOnboarding = state.hasCompletedOnboarding
+        self.isDeviceRegistrationSuppressed = state.isDeviceRegistrationSuppressed
         self.pushNotificationEnvironment = pushNotificationEnvironment
     }
 
@@ -108,7 +112,8 @@ public final class NotificationsDataStore {
         userDefaults.notificationState = NotificationState(
             device: device,
             preferences: preferences,
-            hasCompletedOnboarding: hasCompletedOnboarding
+            hasCompletedOnboarding: hasCompletedOnboarding,
+            isDeviceRegistrationSuppressed: isDeviceRegistrationSuppressed
         )
     }
 
@@ -132,6 +137,7 @@ public final class NotificationsDataStore {
 
     public func registerDevice(pushToken: String, appVersion: String?) async {
         guard !isRegistering else { return }
+        guard !isDeviceRegistrationSuppressed || queuedPreferencesUpdate != nil else { return }
         guard pushToken != keychain.read(key: Self.keychainPushTokenKey) else {
             await applyQueuedPreferencesIfNeeded()
             return
@@ -141,6 +147,7 @@ public final class NotificationsDataStore {
         do {
             device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
+            isDeviceRegistrationSuppressed = false
             lastRegistrationError = nil
             if queuedPreferencesUpdate != nil {
                 await applyQueuedPreferencesIfNeeded()
@@ -187,6 +194,7 @@ public final class NotificationsDataStore {
             device = nil
             preferences = nil
             hasCompletedOnboarding = false
+            isDeviceRegistrationSuppressed = true
             keychain.delete(key: Self.keychainDeviceIdKey)
             keychain.delete(key: Self.keychainPushTokenKey)
             cachedDeviceId = nil
@@ -218,10 +226,12 @@ public final class NotificationsDataStore {
     // MARK: - Preferences
 
     public func queuePreferencesUpdate(_ update: NotificationPreferencesUpdate) {
+        isDeviceRegistrationSuppressed = false
         queuedPreferencesUpdate = update
     }
 
     public func completeOnboarding() {
+        isDeviceRegistrationSuppressed = false
         hasCompletedOnboarding = true
     }
 

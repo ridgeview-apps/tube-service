@@ -192,12 +192,19 @@ public struct NotificationState: Codable, Sendable {
     public var device: NotificationDevice?
     public var preferences: NotificationPreferences?
     public var hasCompletedOnboarding: Bool
+    public var isDeviceRegistrationSuppressed: Bool
 
     public static let `default` = NotificationState(device: nil, preferences: nil, hasCompletedOnboarding: false)
 
-    public init(device: NotificationDevice?, preferences: NotificationPreferences?, hasCompletedOnboarding: Bool) {
+    public init(
+        device: NotificationDevice?,
+        preferences: NotificationPreferences?,
+        hasCompletedOnboarding: Bool,
+        isDeviceRegistrationSuppressed: Bool = false
+    ) {
         self.device = device
         self.preferences = preferences
         self.hasCompletedOnboarding = hasCompletedOnboarding
+        self.isDeviceRegistrationSuppressed = isDeviceRegistrationSuppressed
     }
 }
