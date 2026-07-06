@@ -32,6 +32,7 @@ struct LineNotificationSettingsScreen: View {
         }
         .sheet(item: $selectedOtherLine) { selection in
             LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
+                .iOSAppOnMacSheetEnvironment(notifications)
         }
     }
 
