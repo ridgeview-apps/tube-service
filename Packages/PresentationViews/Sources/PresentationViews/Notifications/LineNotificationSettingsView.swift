@@ -346,9 +346,13 @@ public struct LineNotificationSettingsView: View {
             .buttonStyle(.plain)
 
             if isOtherLinesExpanded {
+                Divider()
+                    .padding(.leading, 40)
                 ForEach(Array(configuredLines.enumerated()), id: \.element.lineID) { index, lineSettings in
-                    Divider()
-                        .padding(.leading, 40)
+                    if index > 0 {
+                        Divider()
+                            .padding(.leading, 40)
+                    }
                     Button {
                         onAction(.navigateTo(lineSettings.lineID))
                     } label: {
