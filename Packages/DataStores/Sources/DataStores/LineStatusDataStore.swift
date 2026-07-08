@@ -30,7 +30,7 @@ public final class LineStatusDataStore {
         tflAPI: TflAPIClientType,
         tubeServiceAPI: TubeServiceAPIClientType,
         now: @escaping () -> Date = { .now },
-        featureFlags: @escaping () -> FeatureFlags = { .default }
+        featureFlags: @escaping () -> FeatureFlags
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI

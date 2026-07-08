@@ -1,4 +1,5 @@
 import Foundation
+import Models
 import StoreKit
 
 @MainActor
@@ -16,9 +17,10 @@ public final class PurchaseStore {
     // MARK: - State
 
     public internal(set) var entitledProductIDs: Set<ProductID> = []
-    public var isPaywallBypassed: Bool = false
 
-    public var hasTubeServicePlus: Bool { isPaywallBypassed || !entitledProductIDs.isEmpty }
+    public var hasTubeServicePlus: Bool {
+        featureFlags().isPaywallBypassed || !entitledProductIDs.isEmpty
+    }
 
     public var storeKitProductIDs: [String] {
         productIDs.map(\.value)
@@ -26,11 +28,16 @@ public final class PurchaseStore {
 
     public let productIDs: [ProductID]
     private var updatesTask: Task<Void, Never>?
+    private let featureFlags: () -> FeatureFlags
 
     // MARK: - Init
 
-    public init(productIDs: [ProductID]) {
+    public init(
+        productIDs: [ProductID],
+        featureFlags: @escaping () -> FeatureFlags
+    ) {
         self.productIDs = productIDs
+        self.featureFlags = featureFlags
     }
 
     // MARK: - Lifecycle

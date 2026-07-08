@@ -85,10 +85,9 @@ public struct NotificationsOnboardingLineSetupView: View {
                 .font(.body)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
-                .background(.tint, in: RoundedRectangle(cornerRadius: 14))
-                .foregroundStyle(.white)
         }
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
         .disabled(items.isEmpty)
         .padding(.horizontal, 20)
         .padding(.bottom, 8)

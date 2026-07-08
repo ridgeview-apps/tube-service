@@ -35,9 +35,6 @@ struct DebugSettingsScreen: View {
                 Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
                 Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
                 Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
-                    .onChange(of: featureFlags.isPaywallBypassed) { _, newValue in
-                        purchases.isPaywallBypassed = newValue
-                    }
             } header: {
                 Text("Feature Toggles")
             }

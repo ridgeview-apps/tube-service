@@ -1,4 +1,5 @@
 import Foundation
+import Models
 
 #if DEBUG
 
@@ -8,7 +9,8 @@ import Foundation
                 productIDs: [
                     PurchaseStore.ProductID("stub.tube-service.plus"),
                     PurchaseStore.ProductID("stub.tube-service.plus.monthly")
-                ]
+                ],
+                featureFlags: { FeatureFlags(isStatusHistoryEnabled: true) }
             )
             if isPlus {
                 store.entitledProductIDs.formUnion(store.productIDs)

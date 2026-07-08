@@ -42,7 +42,10 @@ final class AppDataStore {
             systemStatusAPI: dependencies.systemStatusAPI,
             now: dependencies.now
         )
-        self.purchases = PurchaseStore(productIDs: dependencies.purchaseProductIDs)
+        self.purchases = PurchaseStore(
+            productIDs: dependencies.purchaseProductIDs,
+            featureFlags: { dependencies.userDefaults.value.featureFlags }
+        )
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
             pushNotificationEnvironment: dependencies.pushNotificationEnvironment,
@@ -57,7 +60,6 @@ final class AppDataStore {
     func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
-        purchases.isPaywallBypassed = dependencies.userDefaults.value.featureFlags.isPaywallBypassed
     }
 
     func handleRegisteredPushToken(_ token: String) async {

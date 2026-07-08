@@ -452,12 +452,14 @@ struct LineStatusDataStoreTests {
     private func makeStore(
         tflAPI: StubTflAPIClient = StubTflAPIClient(),
         tubeServiceAPI: StubTubeServiceAPIClient = StubTubeServiceAPIClient(),
-        now: @escaping () -> Date
+        now: @escaping () -> Date,
+        featureFlags: @escaping () -> FeatureFlags = { .default }
     ) -> LineStatusDataStore {
         LineStatusDataStore(
             tflAPI: tflAPI,
             tubeServiceAPI: tubeServiceAPI,
-            now: now
+            now: now,
+            featureFlags: featureFlags
         )
     }
 }
