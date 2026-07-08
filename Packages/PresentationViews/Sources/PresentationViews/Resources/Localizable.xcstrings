@@ -2567,6 +2567,17 @@
         }
       }
     },
+    "notifications.manage.pause.all.paused.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts are paused. Turn this back on to resume your saved line settings."
+          }
+        }
+      }
+    },
     "notifications.manage.pause.all.title" : {
       "extractionState" : "manual",
       "localizations" : {

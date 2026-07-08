@@ -232,7 +232,7 @@ public struct LineNotificationSettingsView: View {
                     Text(.notificationsManagePauseAllTitle)
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                    Text(.notificationsManagePauseAllSubtitle)
+                    Text(muteAllSubtitle)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -244,6 +244,10 @@ public struct LineNotificationSettingsView: View {
         .onChange(of: isEnabled) { _, newValue in
             onAction(.toggleEnabled(newValue))
         }
+    }
+
+    private var muteAllSubtitle: LocalizedStringResource {
+        isEnabled ? .notificationsManagePauseAllSubtitle : .notificationsManagePauseAllPausedSubtitle
     }
 
     // MARK: - All Lines Card
