@@ -1,10 +1,10 @@
 import Models
 import SwiftUI
 
-public struct LineNotificationSetupView: View {
+public struct NotificationsOnboardingLineSetupView: View {
 
     public enum Action {
-        case done(items: [LineNotificationSettings])
+        case turnOnAlerts(items: [LineNotificationSettings])
     }
 
     private let initialItems: [LineNotificationSettings]
@@ -38,7 +38,7 @@ public struct LineNotificationSetupView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            pinnedDoneButton
+            pinnedTurnOnAlertsButton
         }
         .navigationTitle(Text(.notificationsManageNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
@@ -75,13 +75,13 @@ public struct LineNotificationSetupView: View {
         #endif
     }
 
-    // MARK: - Pinned Done Button
+    // MARK: - Pinned Turn On Alerts Button
 
-    private var pinnedDoneButton: some View {
+    private var pinnedTurnOnAlertsButton: some View {
         Button {
-            onAction(.done(items: items))
+            onAction(.turnOnAlerts(items: items))
         } label: {
-            Text(.globalDone)
+            Text(.notificationsOnboardingLineSetupTurnOnAlertsButton)
                 .font(.body)
                 .fontWeight(.semibold)
                 .frame(maxWidth: .infinity)
@@ -153,7 +153,7 @@ public struct LineNotificationSetupView: View {
 #if DEBUG
     #Preview("Onboarding") {
         NavigationStack {
-            LineNotificationSetupView(
+            NotificationsOnboardingLineSetupView(
                 initialItems: [.victoria].map { .defaultValue(lineID: $0) }
             ) { _ in }
         }
@@ -161,7 +161,7 @@ public struct LineNotificationSetupView: View {
 
     #Preview("Onboarding - Empty") {
         NavigationStack {
-            LineNotificationSetupView(
+            NotificationsOnboardingLineSetupView(
                 initialItems: []
             ) { _ in }
         }

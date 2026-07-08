@@ -2721,6 +2721,17 @@
         }
       }
     },
+    "notifications.onboarding.line.setup.turn.on.alerts.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on alerts"
+          }
+        }
+      }
+    },
     "notifications.other.lines.section.title" : {
       "extractionState" : "manual",
       "localizations" : {

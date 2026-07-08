@@ -64,11 +64,11 @@ struct OnboardingNotificationsFlow: View {
     }
 
     private var lineSettingsView: some View {
-        LineNotificationSetupView(
+        NotificationsOnboardingLineSetupView(
             initialItems: initialNotificationSettings
         ) { action in
             switch action {
-            case .done(let updatedValues):
+            case .turnOnAlerts(let updatedValues):
                 updatedNotificationSettings = updatedValues
                 requestPushPermissionsAndFinish()
             }
