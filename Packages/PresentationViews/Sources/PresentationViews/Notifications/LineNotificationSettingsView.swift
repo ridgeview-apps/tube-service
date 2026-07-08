@@ -57,6 +57,14 @@ public struct LineNotificationSettingsView: View {
         return s
     }
 
+    private var isAddingSingleLine: Bool {
+        if case .singleLine = mode {
+            return existingSettings == nil
+        } else {
+            return false
+        }
+    }
+
     private var configuredLines: [LineNotificationSettings] {
         switch mode {
         case .singleLine(let lineID, _, _):
@@ -112,7 +120,7 @@ public struct LineNotificationSettingsView: View {
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) { cancelButton }
-            if case .singleLine = mode {
+            if case .singleLine = mode, !isAddingSingleLine {
                 ToolbarItem(placement: .confirmationAction) { saveButton }
             }
         }
@@ -133,10 +141,8 @@ public struct LineNotificationSettingsView: View {
     private var singleLineContent: some View {
         Group {
             scheduleCard
-            if existingSettings != nil {
-                removeButton
-                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
-            }
+            notificationActionButton
+                .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
         }
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
@@ -277,9 +283,18 @@ public struct LineNotificationSettingsView: View {
             .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
     }
 
-    // MARK: - Remove Button
+    @ViewBuilder
+    private var notificationActionButton: some View {
+        if existingSettings != nil {
+            turnOffAlertsButton
+        } else {
+            turnOnAlertsButton
+        }
+    }
 
-    private var removeButton: some View {
+    // MARK: - Alerts on / off CTA
+
+    private var turnOffAlertsButton: some View {
         Button(role: .destructive) {
             showRemoveConfirmation = true
         } label: {
@@ -303,6 +318,22 @@ public struct LineNotificationSettingsView: View {
                 onAction(.remove)
             }
         }
+    }
+
+    private var turnOnAlertsButton: some View {
+        Button {
+            saveFeedbackTrigger.toggle()
+            onAction(.save(settings))
+        } label: {
+            Label {
+                Text(String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)))
+            } icon: {
+                Image(systemName: "bell.fill")
+            }
+            .ctaLabelStyle(weight: .semibold)
+            .foregroundStyle(lineID.textColor)
+        }
+        .cardStyle(backgroundColor: lineID.backgroundColor)
     }
 
     // MARK: - Other Lines Summary
@@ -435,7 +466,8 @@ fileprivate extension View {
         self
             .font(.subheadline.weight(weight))
             .frame(maxWidth: .infinity)
-            .padding(16)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 16)
     }
 }
 
