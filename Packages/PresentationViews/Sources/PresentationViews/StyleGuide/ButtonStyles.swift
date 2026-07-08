@@ -7,13 +7,21 @@ public struct PrimaryActionButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration
             .label
-            .font(.subheadline.weight(.medium))
+            .font(.subheadline.weight(.semibold))
             .withDefaultMaxWidth()
-            .padding(.vertical, 14)
-            .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+            .frame(minHeight: 48)
+            .padding(.horizontal, 18)
+            .background(
+                Color.accentColor.opacity(isEnabled ? 0.12 : 0.06),
+                in: Capsule()
+            )
+            .overlay {
+                Capsule()
+                    .strokeBorder(Color.accentColor.opacity(isEnabled ? 0.18 : 0.08), lineWidth: 1)
+            }
             .foregroundStyle(isEnabled ? Color.accentColor : .secondary)
-            .opacity(configuration.isPressed ? 0.75 : 1)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1)
+            .opacity(configuration.isPressed ? 0.82 : 1)
+            .scaleEffect(configuration.isPressed ? 0.985 : 1)
             .animation(.snappy(duration: 0.15), value: configuration.isPressed)
     }
 }
