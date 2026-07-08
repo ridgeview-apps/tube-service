@@ -16,11 +16,13 @@ public struct LineNotificationSettingsView: View {
         case toggleEnabled(Bool)
         case deleteAllSettings
         case openSettings
+        case resumeAlerts
     }
 
     private let mode: Mode
     private let allSettings: [LineNotificationSettings]
     private let showsPermissionWarning: Bool
+    private let showsPausedAlertsWarning: Bool
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
@@ -36,11 +38,13 @@ public struct LineNotificationSettingsView: View {
         mode: Mode,
         allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
+        showsPausedAlertsWarning: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
         self.allSettings = allSettings
         self.showsPermissionWarning = showsPermissionWarning
+        self.showsPausedAlertsWarning = showsPausedAlertsWarning
         self.onAction = onAction
         switch mode {
         case .singleLine(let lineID, let existingSettings, _):
@@ -116,6 +120,13 @@ public struct LineNotificationSettingsView: View {
                     .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
             }
 
+            if showsPausedAlertsWarning {
+                pausedAlertsWarningRow
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+            }
+
             switch mode {
             case .singleLine:
                 singleLineContent
@@ -168,6 +179,36 @@ public struct LineNotificationSettingsView: View {
                 onAction(.openSettings)
             } label: {
                 Text(.notificationsManageOpenSettingsButton)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+            .controlSize(.regular)
+        }
+        .padding(16)
+        .cardStyle()
+    }
+
+    private var pausedAlertsWarningRow: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "bell.slash.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(.orange)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(.notificationsLineConfigPausedAlertsWarningTitle)
+                        .font(.subheadline.weight(.semibold))
+                    Text(.notificationsLineConfigPausedAlertsWarningSubtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Button {
+                onAction(.resumeAlerts)
+            } label: {
+                Text(.notificationsLineConfigResumeAlertsButton)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)

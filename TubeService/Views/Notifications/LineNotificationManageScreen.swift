@@ -44,6 +44,13 @@ struct LineNotificationManageScreen: View {
             dismiss()
         case .openSettings:
             openSettings()
+        case .resumeAlerts:
+            Task {
+                await notifications.savePreferences(
+                    update: currentLines.toNotificationPreferencesUpdate(),
+                    deviceEnabled: true
+                )
+            }
         case .save, .remove:
             break
         }

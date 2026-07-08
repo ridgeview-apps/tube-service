@@ -29,6 +29,7 @@ struct LineNotificationSettingsScreen: View {
                 ),
                 allSettings: currentLines,
                 showsPermissionWarning: notifications.isPermissionDenied,
+                showsPausedAlertsWarning: notifications.device?.enabled == false,
                 onAction: handleAction
             )
         }
@@ -67,6 +68,13 @@ struct LineNotificationSettingsScreen: View {
             break
         case .openSettings:
             openSettings()
+        case .resumeAlerts:
+            Task {
+                await notifications.savePreferences(
+                    update: currentLines.toNotificationPreferencesUpdate(),
+                    deviceEnabled: true
+                )
+            }
         }
     }
 

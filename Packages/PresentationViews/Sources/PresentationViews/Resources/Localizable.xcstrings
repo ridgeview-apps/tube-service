@@ -2303,6 +2303,28 @@
         }
       }
     },
+    "notifications.line.config.paused.alerts.warning.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alerts won’t be sent until you resume Tube Service alerts."
+          }
+        }
+      }
+    },
+    "notifications.line.config.paused.alerts.warning.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tube Service alerts are paused"
+          }
+        }
+      }
+    },
     "notifications.line.config.remove.button %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2321,6 +2343,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stop these alerts?"
+          }
+        }
+      }
+    },
+    "notifications.line.config.resume.alerts.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume alerts"
           }
         }
       }
