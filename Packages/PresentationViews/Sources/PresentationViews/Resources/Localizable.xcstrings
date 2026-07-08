@@ -2562,7 +2562,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "When alerts are off, your saved line settings are kept and can be turned back on anytime."
+            "value" : "Turn this off to pause alerts without deleting your saved line settings."
           }
         }
       }
@@ -2573,7 +2573,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts"
+            "value" : "Tube Service alerts"
           }
         }
       }
@@ -2584,7 +2584,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications are disabled in iOS Settings. You won't receive any line alerts."
+            "value" : "Turn notifications on in Settings to receive Tube Service alerts."
           }
         }
       }
@@ -2595,7 +2595,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications are turned off"
+            "value" : "iOS notifications are turned off"
           }
         }
       }

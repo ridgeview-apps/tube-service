@@ -15,10 +15,12 @@ public struct LineNotificationSettingsView: View {
         case navigateTo(TrainLineID)
         case toggleEnabled(Bool)
         case deleteAllSettings
+        case openSettings
     }
 
     private let mode: Mode
     private let allSettings: [LineNotificationSettings]
+    private let showsPermissionWarning: Bool
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
@@ -33,10 +35,12 @@ public struct LineNotificationSettingsView: View {
     public init(
         mode: Mode,
         allSettings: [LineNotificationSettings] = [],
+        showsPermissionWarning: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
         self.allSettings = allSettings
+        self.showsPermissionWarning = showsPermissionWarning
         self.onAction = onAction
         switch mode {
         case .singleLine(let lineID, let existingSettings, _):
@@ -105,6 +109,13 @@ public struct LineNotificationSettingsView: View {
 
     public var body: some View {
         List {
+            if showsPermissionWarning {
+                permissionWarningRow
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
+            }
+
             switch mode {
             case .singleLine:
                 singleLineContent
@@ -133,6 +144,38 @@ public struct LineNotificationSettingsView: View {
         case .manageAll:
             return String(localized: .notificationsLineAlertsNavigationTitle)
         }
+    }
+
+    // MARK: - Permission Warning
+
+    private var permissionWarningRow: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(.orange)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(.notificationsManagePermissionWarningTitle)
+                        .font(.subheadline.weight(.semibold))
+                    Text(.notificationsManagePermissionWarningSubtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Button {
+                onAction(.openSettings)
+            } label: {
+                Text(.notificationsManageOpenSettingsButton)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.orange)
+            .controlSize(.regular)
+        }
+        .padding(16)
+        .cardStyle()
     }
 
     // MARK: - Single Line Content

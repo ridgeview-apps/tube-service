@@ -45,6 +45,7 @@ struct SettingsScreen: View {
             contactUs: contactUsConfig,
             systemStatus: systemStatusData.currentStatus,
             showNotificationsRow: showNotificationsRow,
+            showsNotificationsPermissionWarning: notifications.isPermissionDenied,
             isSubscribed: purchases.hasTubeServicePlus,
             onAction: handleAction
         )

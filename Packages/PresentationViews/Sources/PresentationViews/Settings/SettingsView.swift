@@ -17,6 +17,7 @@ public struct SettingsView: View {
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
     public let showNotificationsRow: Bool
+    public let showsNotificationsPermissionWarning: Bool
     public let isSubscribed: Bool
     public let onAction: (Action) -> Void
 
@@ -26,6 +27,7 @@ public struct SettingsView: View {
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
         showNotificationsRow: Bool = false,
+        showsNotificationsPermissionWarning: Bool = false,
         isSubscribed: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
@@ -34,6 +36,7 @@ public struct SettingsView: View {
         self.contactUs = contactUs
         self.systemStatus = systemStatus
         self.showNotificationsRow = showNotificationsRow
+        self.showsNotificationsPermissionWarning = showsNotificationsPermissionWarning
         self.isSubscribed = isSubscribed
         self.onAction = onAction
     }
@@ -45,7 +48,15 @@ public struct SettingsView: View {
                     Button {
                         onAction(.notificationsTapped)
                     } label: {
-                        Label(.settingsNotificationsTitle, systemImage: "bell.fill")
+                        HStack {
+                            Label(.settingsNotificationsTitle, systemImage: "bell.fill")
+                            Spacer()
+                            if showsNotificationsPermissionWarning {
+                                Image(systemName: "exclamationmark.triangle.fill")
+                                    .foregroundStyle(.orange)
+                                    .accessibilityLabel(Text(.notificationsManagePermissionWarningTitle))
+                            }
+                        }
                     }
                 }
             }

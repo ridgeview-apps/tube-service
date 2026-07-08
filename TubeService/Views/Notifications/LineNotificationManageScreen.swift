@@ -7,6 +7,7 @@ struct LineNotificationManageScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openSettings) private var openSettings
 
     @State private var selectedLine: LineSelection?
 
@@ -14,6 +15,7 @@ struct LineNotificationManageScreen: View {
         LineNotificationSettingsView(
             mode: .manageAll(isEnabled: notifications.device?.enabled ?? true),
             allSettings: currentLines,
+            showsPermissionWarning: notifications.isPermissionDenied,
             onAction: handleAction
         )
         .sheet(item: $selectedLine) { selection in
@@ -40,6 +42,8 @@ struct LineNotificationManageScreen: View {
             }
         case .cancel:
             dismiss()
+        case .openSettings:
+            openSettings()
         case .save, .remove:
             break
         }

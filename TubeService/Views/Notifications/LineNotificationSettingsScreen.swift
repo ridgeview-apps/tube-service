@@ -7,6 +7,7 @@ struct LineNotificationSettingsScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.openSettings) private var openSettings
 
     @State private var selectedOtherLine: LineSelection?
 
@@ -27,6 +28,7 @@ struct LineNotificationSettingsScreen: View {
                     showsOtherLines: showsOtherLines
                 ),
                 allSettings: currentLines,
+                showsPermissionWarning: notifications.isPermissionDenied,
                 onAction: handleAction
             )
         }
@@ -63,6 +65,8 @@ struct LineNotificationSettingsScreen: View {
             selectedOtherLine = LineSelection(lineID: targetLineID)
         case .toggleEnabled, .deleteAllSettings:
             break
+        case .openSettings:
+            openSettings()
         }
     }
 
