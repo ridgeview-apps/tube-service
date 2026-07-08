@@ -44,8 +44,7 @@ struct SettingsScreen: View {
             appReviewURL: appConfig.appReviewURL,
             contactUs: contactUsConfig,
             systemStatus: systemStatusData.currentStatus,
-            showNotificationsRow: showNotificationsRow,
-            showsNotificationsPermissionWarning: notifications.isPermissionDenied,
+            notificationRowState: notificationRowState,
             isSubscribed: purchases.hasTubeServicePlus,
             onAction: handleAction
         )
@@ -55,6 +54,14 @@ struct SettingsScreen: View {
 
     private var showNotificationsRow: Bool {
         featureFlags.isNotificationsEnabled
+    }
+
+    private var notificationRowState: Settings.NotificationRowState {
+        .init(
+            isVisible: showNotificationsRow,
+            showsPermissionWarning: notifications.isPermissionDenied,
+            isPaused: notifications.device?.enabled == false
+        )
     }
 
     private var contactUsConfig: Settings.ContactUs {

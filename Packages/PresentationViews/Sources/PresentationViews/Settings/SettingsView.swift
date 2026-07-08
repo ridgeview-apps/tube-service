@@ -16,8 +16,7 @@ public struct SettingsView: View {
     public let appReviewURL: URL
     public let contactUs: ContactUs
     public let systemStatus: SystemStatus?
-    public let showNotificationsRow: Bool
-    public let showsNotificationsPermissionWarning: Bool
+    public let notificationRowState: Settings.NotificationRowState
     public let isSubscribed: Bool
     public let onAction: (Action) -> Void
 
@@ -26,8 +25,7 @@ public struct SettingsView: View {
         appReviewURL: URL,
         contactUs: ContactUs,
         systemStatus: SystemStatus?,
-        showNotificationsRow: Bool = false,
-        showsNotificationsPermissionWarning: Bool = false,
+        notificationRowState: Settings.NotificationRowState = .hidden,
         isSubscribed: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
@@ -35,23 +33,24 @@ public struct SettingsView: View {
         self.appReviewURL = appReviewURL
         self.contactUs = contactUs
         self.systemStatus = systemStatus
-        self.showNotificationsRow = showNotificationsRow
-        self.showsNotificationsPermissionWarning = showsNotificationsPermissionWarning
+        self.notificationRowState = notificationRowState
         self.isSubscribed = isSubscribed
         self.onAction = onAction
     }
 
     public var body: some View {
         Form {
-            if showNotificationsRow {
+            if notificationRowState.isVisible {
                 Section {
                     Button {
                         onAction(.notificationsTapped)
                     } label: {
                         HStack {
-                            Label(.settingsNotificationsTitle, systemImage: "bell.fill")
+                            Image(systemName: notificationsRowSystemImage)
+                                .foregroundStyle(notificationsRowIconColor)
+                            Text(.settingsNotificationsTitle)
                             Spacer()
-                            if showsNotificationsPermissionWarning {
+                            if notificationRowState.showsPermissionWarning {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .foregroundStyle(.orange)
                                     .accessibilityLabel(Text(.notificationsManagePermissionWarningTitle))
@@ -65,6 +64,22 @@ public struct SettingsView: View {
             }
             supportSection
             aboutSection
+        }
+    }
+
+    private var notificationsRowIconColor: Color {
+        if !notificationRowState.showsPermissionWarning, notificationRowState.isPaused {
+            .orange
+        } else {
+            .accentColor
+        }
+    }
+
+    private var notificationsRowSystemImage: String {
+        if !notificationRowState.showsPermissionWarning, notificationRowState.isPaused {
+            "bell.slash.fill"
+        } else {
+            "bell.fill"
         }
     }
 

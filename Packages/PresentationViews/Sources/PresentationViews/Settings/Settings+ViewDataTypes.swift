@@ -36,6 +36,26 @@ public extension Settings {
         )
     }
 
+    // MARK: - Notification row state
+
+    struct NotificationRowState: Equatable, Sendable {
+        public let isVisible: Bool
+        public let showsPermissionWarning: Bool
+        public let isPaused: Bool
+
+        public init(
+            isVisible: Bool = false,
+            showsPermissionWarning: Bool = false,
+            isPaused: Bool = false
+        ) {
+            self.isVisible = isVisible
+            self.showsPermissionWarning = showsPermissionWarning
+            self.isPaused = isPaused
+        }
+
+        public static let hidden = NotificationRowState()
+    }
+
 
     // MARK: - Debug state
 
