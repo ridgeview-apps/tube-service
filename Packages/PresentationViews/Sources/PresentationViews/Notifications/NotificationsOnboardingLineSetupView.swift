@@ -57,8 +57,8 @@ public struct NotificationsOnboardingLineSetupView: View {
 
     @ViewBuilder
     private var lineItemsSection: some View {
-        ForEach($items) { $item in
-            LineScheduleCard(settings: $item)
+        ForEach(items) { item in
+            LineScheduleCard(settings: binding(for: item.lineID))
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
@@ -73,6 +73,19 @@ public struct NotificationsOnboardingLineSetupView: View {
         #if DEBUG
             debugAddAllRow
         #endif
+    }
+
+    // ForEach($items) crashes when deleting the sole initial item — it force-unwraps the binding
+    // during the view update after removal. This manual binding provides a safe fallback instead.
+    private func binding(for lineID: TrainLineID) -> Binding<LineNotificationSettings> {
+        Binding(
+            get: { items.first(where: { $0.lineID == lineID }) ?? .defaultValue(lineID: lineID) },
+            set: { newValue in
+                if let index = items.firstIndex(where: { $0.lineID == lineID }) {
+                    items[index] = newValue
+                }
+            }
+        )
     }
 
     // MARK: - Pinned Turn On Alerts Button
