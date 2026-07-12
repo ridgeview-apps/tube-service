@@ -274,7 +274,7 @@ struct NotificationsDataStoreTests {
         ])
 
         // When – schedule an update before the APNs token arrives
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – update is applied instead of fetching defaults
@@ -292,7 +292,7 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
 
         // When – register twice with the same token; second call is skipped by the token deduplication guard
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
@@ -303,7 +303,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func queuedPreferencesUpdateFlushedWhenTokenUnchanged() async {
+    func onboardingPreferencesAppliedWhenTokenUnchanged() async {
         // Given – device already registered; a preferences update is queued after the fact
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
@@ -312,7 +312,7 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
 
         // When – same token re-delivered (e.g. APNs rotation returns same token)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
@@ -390,7 +390,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func queuedPreferencesUpdateAllowsReregistrationAfterDelete() async throws {
+    func completingOnboardingAfterDeleteAllowsReregistration() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -399,7 +399,7 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
 
         // When – the user explicitly configures notifications again
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – explicit setup clears suppression and registers a new device
@@ -408,12 +408,12 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func queuedPreferencesUpdateIsRetainedWhenApplyFails() async throws {
+    func onboardingPreferencesRetainedWhenApplyFails() async throws {
         // Given – device registered with a queued update
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
 
         // When – registration succeeds but the queued apply fails (server down)
         api.updatePreferencesError = HTTPError.connection(URLError(.notConnectedToInternet))
@@ -562,7 +562,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then
@@ -584,7 +584,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "jubilee", schedulePreset: .anytime)])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then
@@ -606,7 +606,7 @@ struct NotificationsDataStoreTests {
                 customSchedules: []
             )
         ])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then
@@ -619,7 +619,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
-        store.queuePreferencesUpdate(update)
+        store.completeOnboarding(with: update)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then

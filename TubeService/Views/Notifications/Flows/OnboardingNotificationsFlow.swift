@@ -96,8 +96,7 @@ struct OnboardingNotificationsFlow: View {
             case .openSettings:
                 openSettings()
             case .notNow:
-                notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
-                notifications.completeOnboarding()
+                notifications.completeOnboarding(with: updatedNotificationSettings.toNotificationPreferencesUpdate())
                 dismiss()
             }
         }
@@ -109,8 +108,7 @@ struct OnboardingNotificationsFlow: View {
     }
 
     private func pushPermissionsGranted() {
-        notifications.queuePreferencesUpdate(updatedNotificationSettings.toNotificationPreferencesUpdate())
-        notifications.completeOnboarding()
+        notifications.completeOnboarding(with: updatedNotificationSettings.toNotificationPreferencesUpdate())
         router.navigation.push(.confirmation)
     }
 
