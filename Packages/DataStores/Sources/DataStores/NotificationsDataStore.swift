@@ -5,11 +5,14 @@ import UserNotifications
 
 public enum NotificationsDataStoreError: LocalizedError, Equatable {
     case deviceNotRegistered
+    case saveInProgress
 
     public var errorDescription: String? {
         switch self {
         case .deviceNotRegistered:
             return "Device not yet registered for notifications. Please try again."
+        case .saveInProgress:
+            return "A save is already in progress. Please try again."
         }
     }
 }
@@ -20,7 +23,7 @@ public final class NotificationsDataStore {
 
     // MARK: - Public state
 
-    public internal(set) var preferences: NotificationPreferences? {
+    public private(set) var preferences: NotificationPreferences? {
         didSet { persistNotificationState() }
     }
     public private(set) var device: NotificationDevice? {
@@ -262,7 +265,7 @@ public final class NotificationsDataStore {
     }
 
     public func updatePreferences(with update: NotificationPreferencesUpdate) async throws {
-        guard !isSavingPreferences else { return }
+        guard !isSavingPreferences else { throw NotificationsDataStoreError.saveInProgress }
         let previousPreferences = preferences
         isSavingPreferences = true
         defer { isSavingPreferences = false }
