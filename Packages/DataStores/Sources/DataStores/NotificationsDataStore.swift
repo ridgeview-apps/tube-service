@@ -23,17 +23,12 @@ public final class NotificationsDataStore {
 
     // MARK: - Public state
 
-    public private(set) var preferences: NotificationPreferences? {
-        didSet { persistNotificationState() }
-    }
-    public private(set) var device: NotificationDevice? {
-        didSet { persistNotificationState() }
-    }
-    public private(set) var hasCompletedOnboarding: Bool {
-        didSet { persistNotificationState() }
-    }
-    private var hasUserDeletedDevice: Bool {
-        didSet { persistNotificationState() }
+    public var preferences: NotificationPreferences? { state.preferences }
+    public var device: NotificationDevice? { state.device }
+    public var hasCompletedOnboarding: Bool { state.hasCompletedOnboarding }
+
+    private var state: NotificationState {
+        didSet { userDefaults.notificationState = state }
     }
 
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
@@ -111,24 +106,8 @@ public final class NotificationsDataStore {
         self.api = api
         self.keychain = keychain
         self.userDefaults = userDefaults
-        let state = userDefaults.notificationState
-        self.preferences = state.preferences
-        self.device = state.device
-        self.hasCompletedOnboarding = state.hasCompletedOnboarding
-        self.hasUserDeletedDevice = state.hasUserDeletedDevice
+        self.state = userDefaults.notificationState
         self.pushNotificationEnvironment = pushNotificationEnvironment
-    }
-
-
-    // MARK: - Persistence
-
-    private func persistNotificationState() {
-        userDefaults.notificationState = NotificationState(
-            device: device,
-            preferences: preferences,
-            hasCompletedOnboarding: hasCompletedOnboarding,
-            hasUserDeletedDevice: hasUserDeletedDevice
-        )
     }
 
 
@@ -151,7 +130,7 @@ public final class NotificationsDataStore {
 
     public func registerDevice(pushToken: String, appVersion: String?) async {
         guard !isRegistering else { return }
-        guard !hasUserDeletedDevice || pendingPreferencesUpdate != nil else { return }
+        guard !state.hasUserDeletedDevice || pendingPreferencesUpdate != nil else { return }
         guard pushToken != keychain.read(key: Self.keychainPushTokenKey) else {
             await syncPreferences()
             return
@@ -159,9 +138,9 @@ public final class NotificationsDataStore {
         isRegistering = true
         defer { isRegistering = false }
         do {
-            device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
+            state.device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
-            hasUserDeletedDevice = false
+            state.hasUserDeletedDevice = false
             lastRegistrationError = nil
             await syncPreferences()
         } catch {
@@ -193,7 +172,7 @@ public final class NotificationsDataStore {
 
     public func disableDevice() async throws {
         do {
-            device = try await api.disableDevice(deviceId: deviceId).decodedModel
+            state.device = try await api.disableDevice(deviceId: deviceId).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to disable device: \(error)")
             throw error
@@ -202,7 +181,7 @@ public final class NotificationsDataStore {
 
     public func enableDevice() async throws {
         do {
-            device = try await api.enableDevice(deviceId: deviceId).decodedModel
+            state.device = try await api.enableDevice(deviceId: deviceId).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to enable device: \(error)")
             throw error
@@ -217,10 +196,10 @@ public final class NotificationsDataStore {
             AppLogger.notifications.error("Failed to delete device: \(error)")
             throw error
         }
-        device = nil
-        preferences = nil
-        hasCompletedOnboarding = false
-        hasUserDeletedDevice = true
+        state.device = nil
+        state.preferences = nil
+        state.hasCompletedOnboarding = false
+        state.hasUserDeletedDevice = true
         keychain.delete(key: Self.keychainDeviceIdKey)
         keychain.delete(key: Self.keychainPushTokenKey)
         cachedDeviceId = nil
@@ -249,14 +228,14 @@ public final class NotificationsDataStore {
     // MARK: - Preferences
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        hasUserDeletedDevice = false
+        state.hasUserDeletedDevice = false
         pendingPreferencesUpdate = update
-        hasCompletedOnboarding = true
+        state.hasCompletedOnboarding = true
     }
 
     private func fetchInitialPreferences() async {
         do {
-            preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
+            state.preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to fetch notification preferences: \(error)")
         }
@@ -268,10 +247,10 @@ public final class NotificationsDataStore {
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
-            preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
+            state.preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
-            preferences = previousPreferences
+            state.preferences = previousPreferences
             if case HTTPError.statusCode(404, _) = error {
                 keychain.delete(key: Self.keychainPushTokenKey)
                 pushNotificationEnvironment.registerForRemoteNotifications()
