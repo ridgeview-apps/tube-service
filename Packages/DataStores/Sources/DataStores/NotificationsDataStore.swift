@@ -196,10 +196,7 @@ public final class NotificationsDataStore {
             AppLogger.notifications.error("Failed to delete device: \(error)")
             throw error
         }
-        state.device = nil
-        state.preferences = nil
-        state.hasCompletedOnboarding = false
-        state.hasUserDeletedDevice = true
+        state.reset()
         keychain.delete(key: Self.keychainDeviceIdKey)
         keychain.delete(key: Self.keychainPushTokenKey)
         cachedDeviceId = nil

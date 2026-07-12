@@ -207,4 +207,11 @@ public struct NotificationState: Codable, Sendable {
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.hasUserDeletedDevice = hasUserDeletedDevice
     }
+
+    public mutating func reset() {
+        device = nil
+        preferences = nil
+        hasCompletedOnboarding = false
+        hasUserDeletedDevice = true
+    }
 }
