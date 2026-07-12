@@ -176,9 +176,9 @@ public final class NotificationsDataStore {
 
     private func applyQueuedPreferencesIfNeeded() async {
         guard let update = queuedPreferencesUpdate else { return }
-        queuedPreferencesUpdate = nil
         do {
             try await updatePreferences(with: update)
+            queuedPreferencesUpdate = nil
         } catch {
             AppLogger.notifications.error("Failed to apply queued preferences: \(error)")
         }

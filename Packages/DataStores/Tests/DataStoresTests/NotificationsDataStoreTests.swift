@@ -407,6 +407,25 @@ struct NotificationsDataStoreTests {
         #expect(api.updatePreferencesCallCount == 1)
     }
 
+    @Test
+    func queuedPreferencesUpdateIsRetainedWhenApplyFails() async throws {
+        // Given – device registered with a queued update
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        store.queuePreferencesUpdate(update)
+
+        // When – registration succeeds but the queued apply fails (server down)
+        api.updatePreferencesError = HTTPError.connection(URLError(.notConnectedToInternet))
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+
+        // Then – the queued update is preserved so it retries on the next registerDevice call
+        api.updatePreferencesError = nil
+        await store.registerDevice(pushToken: "new-push-token", appVersion: nil)
+        #expect(api.updatePreferencesCallCount == 2)
+        #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
+    }
+
 
     // MARK: - Save preferences with enable state
 
