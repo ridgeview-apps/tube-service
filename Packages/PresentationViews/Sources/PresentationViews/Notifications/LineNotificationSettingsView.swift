@@ -97,11 +97,6 @@ public struct LineNotificationSettingsView: View {
     }
 
     private var hasUnsavedChanges: Bool {
-        guard let existingSettings else { return true }
-        return settings != existingSettings
-    }
-
-    private var hasChangesToDiscard: Bool {
         if let existingSettings {
             return settings != existingSettings
         } else {
@@ -510,7 +505,7 @@ public struct LineNotificationSettingsView: View {
 
     private var cancelButton: some View {
         Button {
-            if case .singleLine = mode, hasChangesToDiscard {
+            if case .singleLine = mode, hasUnsavedChanges {
                 showDiscardChangesConfirmation = true
             } else {
                 onAction(.cancel)
