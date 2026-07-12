@@ -10,6 +10,7 @@ struct LineNotificationSettingsScreen: View {
     @Environment(\.openSettings) private var openSettings
 
     @State private var selectedOtherLine: LineSelection?
+    @State private var savingState: LoadingState = .loaded
 
     let lineID: TrainLineID
     let showsOtherLines: Bool
@@ -30,6 +31,7 @@ struct LineNotificationSettingsScreen: View {
                 allSettings: currentLines,
                 showsPermissionWarning: notifications.isPermissionDenied,
                 showsPausedAlertsWarning: notifications.device?.enabled == false,
+                savingState: savingState,
                 onAction: handleAction
             )
         }
@@ -42,23 +44,33 @@ struct LineNotificationSettingsScreen: View {
     private func handleAction(_ action: LineNotificationSettingsView.Action) {
         switch action {
         case .save(let updatedSettings):
-            dismiss()
             Task {
                 var updatedLines = currentLines.filter { $0.lineID != lineID }
                 updatedLines.append(updatedSettings)
-                await notifications.savePreferences(
-                    update: updatedLines.toNotificationPreferencesUpdate(),
-                    deviceEnabled: notifications.device?.enabled ?? true
-                )
+                savingState = .loading
+                do {
+                    try await notifications.savePreferences(
+                        update: updatedLines.toNotificationPreferencesUpdate(),
+                        deviceEnabled: notifications.device?.enabled ?? true
+                    )
+                    dismiss()
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         case .remove:
-            dismiss()
             Task {
                 let updatedLines = currentLines.filter { $0.lineID != lineID }
-                await notifications.savePreferences(
-                    update: updatedLines.toNotificationPreferencesUpdate(),
-                    deviceEnabled: notifications.device?.enabled ?? true
-                )
+                savingState = .loading
+                do {
+                    try await notifications.savePreferences(
+                        update: updatedLines.toNotificationPreferencesUpdate(),
+                        deviceEnabled: notifications.device?.enabled ?? true
+                    )
+                    dismiss()
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         case .cancel:
             dismiss()
@@ -70,10 +82,16 @@ struct LineNotificationSettingsScreen: View {
             openSettings()
         case .resumeAlerts:
             Task {
-                await notifications.savePreferences(
-                    update: currentLines.toNotificationPreferencesUpdate(),
-                    deviceEnabled: true
-                )
+                savingState = .loading
+                do {
+                    try await notifications.savePreferences(
+                        update: currentLines.toNotificationPreferencesUpdate(),
+                        deviceEnabled: true
+                    )
+                    savingState = .loaded
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         }
     }

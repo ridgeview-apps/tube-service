@@ -74,39 +74,39 @@ struct NotificationsDataStoreTests {
     // MARK: - Device management
 
     @Test
-    func disableDeviceCallsAPI() async {
+    func disableDeviceCallsAPI() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
 
         // When
-        await store.disableDevice()
+        try await store.disableDevice()
 
         // Then
         #expect(api.disableDeviceCallCount == 1)
     }
 
     @Test
-    func enableDeviceCallsAPI() async {
+    func enableDeviceCallsAPI() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
 
         // When
-        await store.enableDevice()
+        try await store.enableDevice()
 
         // Then
         #expect(api.enableDeviceCallCount == 1)
     }
 
     @Test
-    func enableDeviceFetchesPreferencesWhenNil() async {
+    func enableDeviceFetchesPreferencesWhenNil() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
 
         // When
-        await store.enableDevice()
+        try await store.enableDevice()
 
         // Then – preferences are fetched after enabling since they were nil
         #expect(api.fetchPreferencesCallCount == 1)
@@ -114,7 +114,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func enableDeviceDoesNotFetchPreferencesWhenAlreadyLoaded() async {
+    func enableDeviceDoesNotFetchPreferencesWhenAlreadyLoaded() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -122,16 +122,16 @@ struct NotificationsDataStoreTests {
         #expect(store.preferences != nil)
 
         // When – disable then re-enable; preferences are retained across disable so no re-fetch needed
-        await store.disableDevice()
+        try await store.disableDevice()
         #expect(store.preferences != nil)
-        await store.enableDevice()
+        try await store.enableDevice()
 
         // Then – preferences were never cleared so fetchPreferences is only called once (after register)
         #expect(api.fetchPreferencesCallCount == 1)
     }
 
     @Test
-    func deleteDeviceClearsState() async {
+    func deleteDeviceClearsState() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -139,7 +139,7 @@ struct NotificationsDataStoreTests {
         #expect(store.preferences != nil)
 
         // When
-        await store.deleteDevice()
+        try await store.deleteDevice()
 
         // Then
         #expect(store.preferences == nil)
@@ -147,7 +147,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func deleteDeviceClearsKeychainDeviceId() async {
+    func deleteDeviceClearsKeychainDeviceId() async throws {
         // Given
         let keychain = InMemoryKeychain()
         let store = makeStore(keychain: keychain)
@@ -155,17 +155,35 @@ struct NotificationsDataStoreTests {
         #expect(keychain.read(key: "push_device_id") != nil)
 
         // When
-        await store.deleteDevice()
+        try await store.deleteDevice()
 
         // Then – keychain entry is cleared so a fresh device ID is generated on re-registration
         #expect(keychain.read(key: "push_device_id") == nil)
+    }
+
+    @Test
+    func deleteDeviceDoesNotClearStateOnFailure() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(store.device != nil)
+        #expect(store.preferences != nil)
+
+        // When – delete fails
+        api.deleteDeviceError = HTTPError.connection(URLError(.notConnectedToInternet))
+        try? await store.deleteDevice()
+
+        // Then – local state is preserved since the server-side delete didn't succeed
+        #expect(store.device != nil)
+        #expect(store.preferences != nil)
     }
 
 
     // MARK: - Preferences
 
     @Test
-    func updatePreferencesSuccess() async {
+    func updatePreferencesSuccess() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -176,7 +194,7 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
             makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
         ])
-        await store.updatePreferences(with: update)
+        try await store.updatePreferences(with: update)
 
         // Then
         #expect(store.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
@@ -185,7 +203,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func updatePreferencesFailureRollsBack() async {
+    func updatePreferencesFailureRollsBack() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -197,10 +215,35 @@ struct NotificationsDataStoreTests {
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
         ])
-        await store.updatePreferences(with: update)
+        do {
+            try await store.updatePreferences(with: update)
+        } catch {
+            // expected
+        }
 
         // Then – preferences roll back to what they were before the update
         #expect(store.preferences == originalPreferences)
+    }
+
+    @Test
+    func updatePreferences404ClearsStoredPushToken() async throws {
+        // Given – device registered and push token stored
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        #expect(keychain.read(key: "push_registered_token") == "test-push-token")
+
+        // When – preferences update returns 404 (device not found on server)
+        api.updatePreferencesError = HTTPError.statusCode(404, nil)
+        do {
+            try await store.updatePreferences(with: NotificationPreferencesUpdate(lines: []))
+        } catch {
+            // expected
+        }
+
+        // Then – stored push token is cleared so the next APNs delivery forces re-registration
+        #expect(keychain.read(key: "push_registered_token") == nil)
     }
 
 
@@ -312,7 +355,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func deleteDeviceSuppressesAutomaticReregistrationWithSameToken() async {
+    func deleteDeviceSuppressesAutomaticReregistrationWithSameToken() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
@@ -321,7 +364,7 @@ struct NotificationsDataStoreTests {
         #expect(api.registerDeviceCallCount == 1)
 
         // When – device is deleted, then APNs delivers the same token again automatically
-        await store.deleteDevice()
+        try await store.deleteDevice()
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – the user-initiated deletion is respected
@@ -329,14 +372,14 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func deleteDeviceSuppressionPersistsAcrossStoreRestart() async {
+    func deleteDeviceSuppressionPersistsAcrossStoreRestart() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
         let userDefaults = UserDefaults(suiteName: UUID().uuidString)!
         let store = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
-        await store.deleteDevice()
+        try await store.deleteDevice()
 
         // When – a new store is created after app restart and receives a push token
         let restartedStore = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
@@ -347,12 +390,12 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func queuedPreferencesUpdateAllowsReregistrationAfterDelete() async {
+    func queuedPreferencesUpdateAllowsReregistrationAfterDelete() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
-        await store.deleteDevice()
+        try await store.deleteDevice()
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
 
         // When – the user explicitly configures notifications again
@@ -368,14 +411,52 @@ struct NotificationsDataStoreTests {
     // MARK: - Save preferences with enable state
 
     @Test
-    func savePreferencesWhenEnabledAndStaysEnabled() async {
+    func savePreferencesThrowsWhenDeviceNotRegistered() async {
+        // Given – no device registered
+        let store = makeStore()
+
+        // When / Then – savePreferences throws because no device record exists
+        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) {
+            try await store.savePreferences(
+                update: NotificationPreferencesUpdate(lines: []),
+                deviceEnabled: true
+            )
+        }
+    }
+
+    @Test
+    func savePreferencesAbortsWhenEnableDeviceFails() async throws {
+        // Given – device is disabled
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        try await store.disableDevice()
+
+        // When – enable fails
+        api.enableDeviceError = HTTPError.connection(URLError(.notConnectedToInternet))
+        do {
+            try await store.savePreferences(
+                update: NotificationPreferencesUpdate(lines: []),
+                deviceEnabled: true
+            )
+        } catch {
+            // expected
+        }
+
+        // Then – updatePreferences is never called when enableDevice fails
+        #expect(api.enableDeviceCallCount == 1)
+        #expect(api.updatePreferencesCallCount == 0)
+    }
+
+    @Test
+    func savePreferencesWhenEnabledAndStaysEnabled() async throws {
         // Given – device registered (enabled = true)
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // When – save with deviceEnabled: true (no change)
-        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: true)
+        try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: true)
 
         // Then – only updatePreferences called, no enable/disable
         #expect(api.updatePreferencesCallCount == 1)
@@ -384,14 +465,14 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func savePreferencesDisablingCallsUpdateThenDisable() async {
+    func savePreferencesDisablingCallsUpdateThenDisable() async throws {
         // Given – device registered (enabled = true)
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // When – save with deviceEnabled: false (disabling)
-        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: false)
+        try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: false)
 
         // Then – updatePreferences fires before disableDevice
         #expect(api.updatePreferencesCallCount == 1)
@@ -401,16 +482,16 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func savePreferencesEnablingCallsEnableThenUpdate() async {
+    func savePreferencesEnablingCallsEnableThenUpdate() async throws {
         // Given – device disabled
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
-        await store.disableDevice()
+        try await store.disableDevice()
         #expect(store.device?.enabled == false)
 
         // When – save with deviceEnabled: true (re-enabling)
-        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: true)
+        try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: true)
 
         // Then – enableDevice fires before updatePreferences; no re-fetch since preferences persist across disable
         #expect(api.enableDeviceCallCount == 1)
@@ -419,21 +500,22 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func savePreferencesWhenAlreadyDisabledAndStaysDisabled() async {
+    func savePreferencesWhenAlreadyDisabledAndStaysDisabled() async throws {
         // Given – device disabled
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
-        await store.disableDevice()
+        try await store.disableDevice()
 
         // When – save with deviceEnabled: false (no change)
-        await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: false)
+        try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: false)
 
         // Then – only updatePreferences called, no further enable/disable
         #expect(api.updatePreferencesCallCount == 1)
         #expect(api.disableDeviceCallCount == 1)  // only from setup
         #expect(api.enableDeviceCallCount == 0)
     }
+
 
     // MARK: - hasConfiguredLines
 

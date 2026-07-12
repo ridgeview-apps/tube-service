@@ -313,6 +313,17 @@
         }
       }
     },
+    "error.save.failed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorry, couldn't save your changes. Please try again."
+          }
+        }
+      }
+    },
     "error.something.went.wrong" : {
       "extractionState" : "manual",
       "localizations" : {

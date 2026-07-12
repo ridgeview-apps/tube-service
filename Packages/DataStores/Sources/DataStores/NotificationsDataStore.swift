@@ -3,6 +3,17 @@ import Models
 import Shared
 import UserNotifications
 
+public enum NotificationsDataStoreError: LocalizedError, Equatable {
+    case deviceNotRegistered
+
+    public var errorDescription: String? {
+        switch self {
+        case .deviceNotRegistered:
+            return "Device not yet registered for notifications. Please try again."
+        }
+    }
+}
+
 @MainActor
 @Observable
 public final class NotificationsDataStore {
@@ -163,44 +174,51 @@ public final class NotificationsDataStore {
     private func applyQueuedPreferencesIfNeeded() async {
         guard let update = queuedPreferencesUpdate else { return }
         queuedPreferencesUpdate = nil
-        await updatePreferences(with: update)
+        do {
+            try await updatePreferences(with: update)
+        } catch {
+            AppLogger.notifications.error("Failed to apply queued preferences: \(error)")
+        }
     }
 
 
     // MARK: - Device Management
 
-    public func disableDevice() async {
+    public func disableDevice() async throws {
         do {
             device = try await api.disableDevice(deviceId: deviceId).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to disable device: \(error)")
+            throw error
         }
     }
 
-    public func enableDevice() async {
+    public func enableDevice() async throws {
         do {
             device = try await api.enableDevice(deviceId: deviceId).decodedModel
-            if preferences == nil {
-                await fetchInitialPreferences()
-            }
         } catch {
             AppLogger.notifications.error("Failed to enable device: \(error)")
+            throw error
+        }
+        if preferences == nil {
+            await fetchInitialPreferences()
         }
     }
 
-    public func deleteDevice() async {
+    public func deleteDevice() async throws {
         do {
             try await api.deleteDevice(deviceId: deviceId)
-            device = nil
-            preferences = nil
-            hasCompletedOnboarding = false
-            isDeviceRegistrationSuppressed = true
-            keychain.delete(key: Self.keychainDeviceIdKey)
-            keychain.delete(key: Self.keychainPushTokenKey)
-            cachedDeviceId = nil
         } catch {
             AppLogger.notifications.error("Failed to delete device: \(error)")
+            throw error
         }
+        device = nil
+        preferences = nil
+        hasCompletedOnboarding = false
+        isDeviceRegistrationSuppressed = true
+        keychain.delete(key: Self.keychainDeviceIdKey)
+        keychain.delete(key: Self.keychainPushTokenKey)
+        cachedDeviceId = nil
     }
 
 
@@ -243,7 +261,7 @@ public final class NotificationsDataStore {
         }
     }
 
-    public func updatePreferences(with update: NotificationPreferencesUpdate) async {
+    public func updatePreferences(with update: NotificationPreferencesUpdate) async throws {
         guard !isSavingPreferences else { return }
         let previousPreferences = preferences
         isSavingPreferences = true
@@ -254,21 +272,25 @@ public final class NotificationsDataStore {
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             preferences = previousPreferences
+            if case HTTPError.statusCode(404, _) = error {
+                keychain.delete(key: Self.keychainPushTokenKey)
+                pushNotificationEnvironment.registerForRemoteNotifications()
+            }
+            throw error
         }
     }
 
-    public func savePreferences(update: NotificationPreferencesUpdate, deviceEnabled: Bool) async {
+    public func savePreferences(update: NotificationPreferencesUpdate, deviceEnabled: Bool) async throws {
         guard let device else {
-            await updatePreferences(with: update)
-            return
+            throw NotificationsDataStoreError.deviceNotRegistered
         }
         let currentlyEnabled = device.enabled
         if deviceEnabled, !currentlyEnabled {
-            await enableDevice()
+            try await enableDevice()
         }
-        await updatePreferences(with: update)
+        try await updatePreferences(with: update)
         if !deviceEnabled, currentlyEnabled {
-            await disableDevice()
+            try await disableDevice()
         }
     }
 }

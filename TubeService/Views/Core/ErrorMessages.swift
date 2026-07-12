@@ -5,14 +5,18 @@ import PresentationViews
 extension Error {
 
     func toUIErrorMessage() -> String {
-        let defaultErrorMessage = String(localized: L10n.errorSomethingWentWrong)
+        resolvedMessage(default: String(localized: L10n.errorSomethingWentWrong))
+    }
 
-        switch self {
-        case let httpError as HTTPError:
-            return httpError.toUIErrorMessage() ?? defaultErrorMessage
-        default:
-            return defaultErrorMessage
+    func toSaveErrorMessage() -> String {
+        resolvedMessage(default: String(localized: L10n.errorSaveFailed))
+    }
+
+    private func resolvedMessage(default fallback: String) -> String {
+        if let httpError = self as? HTTPError {
+            return httpError.toUIErrorMessage() ?? fallback
         }
+        return fallback
     }
 }
 

@@ -10,12 +10,14 @@ struct LineNotificationManageScreen: View {
     @Environment(\.openSettings) private var openSettings
 
     @State private var selectedLine: LineSelection?
+    @State private var savingState: LoadingState = .loaded
 
     var body: some View {
         LineNotificationSettingsView(
             mode: .manageAll(isEnabled: notifications.device?.enabled ?? true),
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
+            savingState: savingState,
             onAction: handleAction
         )
         .sheet(item: $selectedLine) { selection in
@@ -30,15 +32,26 @@ struct LineNotificationManageScreen: View {
             selectedLine = LineSelection(lineID: lineID)
         case .toggleEnabled(let isEnabled):
             Task {
-                await notifications.savePreferences(
-                    update: currentLines.toNotificationPreferencesUpdate(),
-                    deviceEnabled: isEnabled
-                )
+                savingState = .loading
+                do {
+                    try await notifications.savePreferences(
+                        update: currentLines.toNotificationPreferencesUpdate(),
+                        deviceEnabled: isEnabled
+                    )
+                    savingState = .loaded
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         case .deleteAllSettings:
             Task {
-                await notifications.deleteDevice()
-                dismiss()
+                savingState = .loading
+                do {
+                    try await notifications.deleteDevice()
+                    dismiss()
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         case .cancel:
             dismiss()
@@ -46,10 +59,16 @@ struct LineNotificationManageScreen: View {
             openSettings()
         case .resumeAlerts:
             Task {
-                await notifications.savePreferences(
-                    update: currentLines.toNotificationPreferencesUpdate(),
-                    deviceEnabled: true
-                )
+                savingState = .loading
+                do {
+                    try await notifications.savePreferences(
+                        update: currentLines.toNotificationPreferencesUpdate(),
+                        deviceEnabled: true
+                    )
+                    savingState = .loaded
+                } catch {
+                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
+                }
             }
         case .save, .remove:
             break

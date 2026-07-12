@@ -23,6 +23,7 @@ public struct LineNotificationSettingsView: View {
     private let allSettings: [LineNotificationSettings]
     private let showsPermissionWarning: Bool
     private let showsPausedAlertsWarning: Bool
+    private let savingState: LoadingState
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
@@ -39,12 +40,14 @@ public struct LineNotificationSettingsView: View {
         allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         showsPausedAlertsWarning: Bool = false,
+        savingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
         self.mode = mode
         self.allSettings = allSettings
         self.showsPermissionWarning = showsPermissionWarning
         self.showsPausedAlertsWarning = showsPausedAlertsWarning
+        self.savingState = savingState
         self.onAction = onAction
         switch mode {
         case .singleLine(let lineID, let existingSettings, _):
@@ -120,6 +123,14 @@ public struct LineNotificationSettingsView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+            }
+
+            if savingState != .loaded {
+                LoadingStatusView(loadingState: savingState)
+                    .defaultLoadingStatusStyle()
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
             }
 
             switch mode {
@@ -209,6 +220,7 @@ public struct LineNotificationSettingsView: View {
             .buttonStyle(.borderedProminent)
             .tint(.orange)
             .controlSize(.regular)
+            .disabled(savingState == .loading)
         }
         .padding(16)
         .cardStyle()
@@ -277,6 +289,7 @@ public struct LineNotificationSettingsView: View {
         .tint(Color.accentColor)
         .padding(16)
         .cardStyle()
+        .disabled(savingState == .loading)
         .onChange(of: isEnabled) { _, newValue in
             onAction(.toggleEnabled(newValue))
         }
@@ -417,6 +430,7 @@ public struct LineNotificationSettingsView: View {
             .foregroundStyle(lineID.textColor)
         }
         .cardStyle(backgroundColor: lineID.backgroundColor)
+        .disabled(savingState == .loading)
     }
 
     // MARK: - Other Lines Summary
@@ -537,7 +551,7 @@ public struct LineNotificationSettingsView: View {
         } label: {
             Text(.globalSave)
         }
-        .disabled(!hasUnsavedChanges)
+        .disabled(!hasUnsavedChanges || savingState == .loading)
     }
 }
 
