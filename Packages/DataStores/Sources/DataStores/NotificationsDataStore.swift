@@ -33,19 +33,18 @@ public final class NotificationsDataStore {
             authorizationStatus: authorizationStatus,
             deviceEnabled: device?.enabled,
             appVariant: device?.appVariant,
-            configuredLineCount: preferences?.lines.count ?? 0,
+            configuredLineCount: linePreferences.count,
             registrationState: state.registrationState.description,
             lastRegistrationError: lastRegistrationError
         )
     }
 
     public var hasConfiguredLines: Bool {
-        guard let preferences else { return false }
-        return !preferences.lines.isEmpty
+        !linePreferences.isEmpty
     }
 
     public func isNotifying(for lineID: TrainLineID) -> Bool {
-        preferences?.lines.contains(where: { $0.lineId == lineID.rawValue && $0.enabled }) ?? false
+        linePreferences.contains(where: { $0.lineId == lineID.rawValue && $0.enabled })
     }
 
     public var canReceivePushNotifications: Bool {
@@ -70,7 +69,6 @@ public final class NotificationsDataStore {
         didSet { userDefaults.notificationState = state }
     }
 
-    private var preferences: NotificationPreferences? { state.preferences }
     private var device: NotificationDevice? { state.device }
 
     private var authorizationStatus: UNAuthorizationStatus = .notDetermined
