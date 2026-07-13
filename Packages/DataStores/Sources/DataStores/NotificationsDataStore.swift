@@ -11,7 +11,7 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public var isConfigured: Bool { state.isConfigured }
-    public var isDevicePaused: Bool { device?.enabled == false }
+    public var isDevicePaused: Bool { state.device?.enabled == false }
     public var linePreferences: [NotificationLinePreference] { state.preferences?.lines ?? [] }
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
@@ -31,8 +31,8 @@ public final class NotificationsDataStore {
             pushToken: keychain.read(key: Self.keychainPushTokenKey),
             deviceId: keychain.read(key: Self.keychainDeviceIdKey),
             authorizationStatus: authorizationStatus,
-            deviceEnabled: device?.enabled,
-            appVariant: device?.appVariant,
+            deviceEnabled: state.device?.enabled,
+            appVariant: state.device?.appVariant,
             configuredLineCount: linePreferences.count,
             registrationState: state.registrationState.description,
             lastRegistrationError: lastRegistrationError
@@ -48,14 +48,7 @@ public final class NotificationsDataStore {
     }
 
     public var canReceivePushNotifications: Bool {
-        switch authorizationStatus {
-        case .authorized, .provisional, .ephemeral:
-            true
-        case .notDetermined, .denied:
-            false
-        @unknown default:
-            false
-        }
+        [.authorized, .provisional, .ephemeral].contains(authorizationStatus)
     }
 
     // MARK: - Private state
@@ -68,8 +61,6 @@ public final class NotificationsDataStore {
     private(set) var state: NotificationState {
         didSet { userDefaults.notificationState = state }
     }
-
-    private var device: NotificationDevice? { state.device }
 
     private var authorizationStatus: UNAuthorizationStatus = .notDetermined
     private var isRegisteringDevice = false
