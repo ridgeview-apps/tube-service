@@ -4,14 +4,12 @@ public enum RegistrationState: Codable, CustomStringConvertible, Equatable, Send
     case notRegistered
     case pendingSync(NotificationPreferencesUpdate)
     case registered
-    case deregistered
 
     public var description: String {
         switch self {
         case .notRegistered: "notRegistered"
         case .pendingSync: "pendingSync"
         case .registered: "registered"
-        case .deregistered: "deregistered"
         }
     }
 }
@@ -36,13 +34,13 @@ public struct NotificationState: Codable, Sendable {
     public var isConfigured: Bool {
         switch registrationState {
         case .pendingSync, .registered: true
-        case .notRegistered, .deregistered: false
+        case .notRegistered: false
         }
     }
 
     public mutating func reset() {
         device = nil
         preferences = nil
-        registrationState = .deregistered
+        registrationState = .notRegistered
     }
 }

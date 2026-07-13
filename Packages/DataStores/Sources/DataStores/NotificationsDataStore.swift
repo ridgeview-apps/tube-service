@@ -134,7 +134,7 @@ public final class NotificationsDataStore {
         }
 
         switch state.registrationState {
-        case .deregistered, .notRegistered:
+        case .notRegistered:
             return false
         case .pendingSync, .registered:
             let isNewOrModifiedToken = pushToken != keychain.read(key: Self.keychainPushTokenKey)

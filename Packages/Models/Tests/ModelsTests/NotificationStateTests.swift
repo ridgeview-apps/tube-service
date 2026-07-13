@@ -33,7 +33,7 @@ struct NotificationStateTests {
 
         #expect(state.device == nil)
         #expect(state.preferences == nil)
-        #expect(state.registrationState == .deregistered)
+        #expect(state.registrationState == .notRegistered)
     }
 
     @Test
@@ -41,7 +41,6 @@ struct NotificationStateTests {
         #expect(NotificationState(device: nil, preferences: nil, registrationState: .pendingSync(.init(lines: []))).isConfigured == true)
         #expect(NotificationState(device: nil, preferences: nil, registrationState: .registered).isConfigured == true)
         #expect(NotificationState(device: nil, preferences: nil, registrationState: .notRegistered).isConfigured == false)
-        #expect(NotificationState(device: nil, preferences: nil, registrationState: .deregistered).isConfigured == false)
     }
 
 }
