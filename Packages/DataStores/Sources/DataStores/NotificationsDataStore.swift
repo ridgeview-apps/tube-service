@@ -132,21 +132,16 @@ public final class NotificationsDataStore {
     }
 
     private func syncPreferences() async {
-        if let update = state.pendingPreferencesUpdate {
-            do {
+        do {
+            if let update = state.pendingPreferencesUpdate {
                 try await savePreferences(update: update)
                 state.pendingPreferencesUpdate = nil
-            } catch {
-                AppLogger.notifications.error("Failed to apply pending preferences: \(error)")
+            } else if preferences == nil {
+                state.preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
             }
-        } else {
-            await fetchInitialPreferencesIfNeeded()
+        } catch {
+            AppLogger.notifications.error("Failed to sync preferences: \(error)")
         }
-    }
-
-    private func fetchInitialPreferencesIfNeeded() async {
-        guard preferences == nil else { return }
-        await fetchInitialPreferences()
     }
 
 
@@ -206,14 +201,6 @@ public final class NotificationsDataStore {
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
         state.completeOnboarding(with: update)
-    }
-
-    private func fetchInitialPreferences() async {
-        do {
-            state.preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
-        } catch {
-            AppLogger.notifications.error("Failed to fetch notification preferences: \(error)")
-        }
     }
 
     public func savePreferences(update: NotificationPreferencesUpdate) async throws {
