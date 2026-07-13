@@ -92,7 +92,6 @@ public final class NotificationsDataStore {
 
     private static let keychainDeviceIdKey = "push_device_id"
     private static let keychainPushTokenKey = "push_registered_token"
-    private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
 
     // MARK: - Init
 
@@ -126,7 +125,7 @@ public final class NotificationsDataStore {
 
     public func registerDevice(pushToken: String, appVersion: String?) async {
         guard !isRegistering else { return }
-        guard !state.hasUserDeletedDevice || pendingPreferencesUpdate != nil else { return }
+        guard state.hasCompletedOnboarding, !state.hasUserDeletedDevice else { return }
         guard pushToken != keychain.read(key: Self.keychainPushTokenKey) else {
             await syncPreferences()
             return
@@ -146,10 +145,10 @@ public final class NotificationsDataStore {
     }
 
     private func syncPreferences() async {
-        if let update = pendingPreferencesUpdate {
+        if let update = state.pendingPreferencesUpdate {
             do {
                 try await updatePreferences(with: update)
-                pendingPreferencesUpdate = nil
+                state.pendingPreferencesUpdate = nil
             } catch {
                 AppLogger.notifications.error("Failed to apply pending preferences: \(error)")
             }
@@ -221,7 +220,7 @@ public final class NotificationsDataStore {
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
         state.hasUserDeletedDevice = false
-        pendingPreferencesUpdate = update
+        state.pendingPreferencesUpdate = update
         state.hasCompletedOnboarding = true
     }
 

@@ -6,6 +6,7 @@ extension NotificationState {
         case preferences
         case hasCompletedOnboarding
         case hasUserDeletedDevice
+        case pendingPreferencesUpdate
     }
 
     // Manual decoding allows new fields to gain defaults when reading older stored values.
@@ -17,6 +18,8 @@ extension NotificationState {
             (try? container.decode(Bool.self, forKey: .hasCompletedOnboarding)) ?? false
         hasUserDeletedDevice =
             (try? container.decode(Bool.self, forKey: .hasUserDeletedDevice)) ?? false
+        pendingPreferencesUpdate =
+            try? container.decodeIfPresent(NotificationPreferencesUpdate.self, forKey: .pendingPreferencesUpdate)
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -25,6 +28,7 @@ extension NotificationState {
         try container.encodeIfPresent(preferences, forKey: .preferences)
         try container.encode(hasCompletedOnboarding, forKey: .hasCompletedOnboarding)
         try container.encode(hasUserDeletedDevice, forKey: .hasUserDeletedDevice)
+        try container.encodeIfPresent(pendingPreferencesUpdate, forKey: .pendingPreferencesUpdate)
     }
 }
 

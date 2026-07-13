@@ -404,7 +404,8 @@ private extension TubeServiceModelDecoderTests {
             device: device,
             preferences: preferences,
             hasCompletedOnboarding: true,
-            hasUserDeletedDevice: false
+            hasUserDeletedDevice: false,
+            pendingPreferencesUpdate: NotificationPreferencesUpdate(lines: [])
         )
 
         state.reset()
@@ -413,5 +414,6 @@ private extension TubeServiceModelDecoderTests {
         #expect(state.preferences == nil)
         #expect(state.hasCompletedOnboarding == false)
         #expect(state.hasUserDeletedDevice == true)
+        #expect(state.pendingPreferencesUpdate == nil)
     }
 }

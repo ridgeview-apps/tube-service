@@ -382,7 +382,7 @@ struct NotificationsDataStoreTests {
         try await store.deleteDevice()
 
         // When – a new store is created after app restart and receives a push token
-        let restartedStore = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
+        let restartedStore = makeStore(api: api, keychain: keychain, userDefaults: userDefaults, seedOnboarded: false)
         await restartedStore.registerDevice(pushToken: "test-push-token", appVersion: nil)
 
         // Then – deletion still suppresses automatic registration
@@ -633,9 +633,15 @@ struct NotificationsDataStoreTests {
         api: StubNotificationsAPIClient = StubNotificationsAPIClient(),
         pushNotificationEnvironment: PushNotificationEnvironment = .stub(),
         keychain: KeychainService = InMemoryKeychain(),
-        userDefaults: UserDefaults = .init(suiteName: UUID().uuidString)!
+        userDefaults: UserDefaults = .init(suiteName: UUID().uuidString)!,
+        seedOnboarded: Bool = true
     ) -> NotificationsDataStore {
-        NotificationsDataStore(
+        if seedOnboarded {
+            userDefaults.notificationState = NotificationState(
+                device: nil, preferences: nil, hasCompletedOnboarding: true
+            )
+        }
+        return NotificationsDataStore(
             api: api,
             pushNotificationEnvironment: pushNotificationEnvironment,
             userDefaults: userDefaults,

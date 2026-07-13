@@ -5,6 +5,7 @@ public struct NotificationState: Codable, Sendable {
     public var preferences: NotificationPreferences?
     public var hasCompletedOnboarding: Bool
     public var hasUserDeletedDevice: Bool
+    public var pendingPreferencesUpdate: NotificationPreferencesUpdate?
 
     public static let `default` = NotificationState(device: nil, preferences: nil, hasCompletedOnboarding: false)
 
@@ -12,12 +13,14 @@ public struct NotificationState: Codable, Sendable {
         device: NotificationDevice?,
         preferences: NotificationPreferences?,
         hasCompletedOnboarding: Bool,
-        hasUserDeletedDevice: Bool = false
+        hasUserDeletedDevice: Bool = false,
+        pendingPreferencesUpdate: NotificationPreferencesUpdate? = nil
     ) {
         self.device = device
         self.preferences = preferences
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.hasUserDeletedDevice = hasUserDeletedDevice
+        self.pendingPreferencesUpdate = pendingPreferencesUpdate
     }
 
     public mutating func reset() {
@@ -25,5 +28,6 @@ public struct NotificationState: Codable, Sendable {
         preferences = nil
         hasCompletedOnboarding = false
         hasUserDeletedDevice = true
+        pendingPreferencesUpdate = nil
     }
 }
