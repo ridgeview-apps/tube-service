@@ -92,7 +92,6 @@ public final class NotificationsDataStore {
 
     private static let keychainDeviceIdKey = "push_device_id"
     private static let keychainPushTokenKey = "push_registered_token"
-    private var cachedDeviceId: String?
     private var pendingPreferencesUpdate: NotificationPreferencesUpdate?
 
     // MARK: - Init
@@ -114,14 +113,11 @@ public final class NotificationsDataStore {
     // MARK: - Device ID
 
     private var deviceId: String {
-        if let cached = cachedDeviceId { return cached }
         if let existing = keychain.read(key: Self.keychainDeviceIdKey) {
-            cachedDeviceId = existing
             return existing
         }
         let new = UUID().uuidString
         keychain.write(key: Self.keychainDeviceIdKey, value: new)
-        cachedDeviceId = new
         return new
     }
 
@@ -199,7 +195,6 @@ public final class NotificationsDataStore {
         state.reset()
         keychain.delete(key: Self.keychainDeviceIdKey)
         keychain.delete(key: Self.keychainPushTokenKey)
-        cachedDeviceId = nil
     }
 
 
