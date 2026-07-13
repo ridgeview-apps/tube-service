@@ -1,39 +1,48 @@
 import Foundation
 
+public enum RegistrationState: Codable, CustomStringConvertible, Equatable, Sendable {
+    case notRegistered
+    case pendingSync(NotificationPreferencesUpdate)
+    case registered
+    case deregistered
+
+    public var description: String {
+        switch self {
+        case .notRegistered: "notRegistered"
+        case .pendingSync: "pendingSync"
+        case .registered: "registered"
+        case .deregistered: "deregistered"
+        }
+    }
+}
+
 public struct NotificationState: Codable, Sendable {
     public var device: NotificationDevice?
     public var preferences: NotificationPreferences?
-    public var hasCompletedOnboarding: Bool
-    public var hasUserDeletedDevice: Bool
-    public var pendingPreferencesUpdate: NotificationPreferencesUpdate?
+    public var registrationState: RegistrationState
 
-    public static let `default` = NotificationState(device: nil, preferences: nil, hasCompletedOnboarding: false)
+    public static let `default` = NotificationState(device: nil, preferences: nil, registrationState: .notRegistered)
 
     public init(
         device: NotificationDevice?,
         preferences: NotificationPreferences?,
-        hasCompletedOnboarding: Bool,
-        hasUserDeletedDevice: Bool = false,
-        pendingPreferencesUpdate: NotificationPreferencesUpdate? = nil
+        registrationState: RegistrationState = .notRegistered
     ) {
         self.device = device
         self.preferences = preferences
-        self.hasCompletedOnboarding = hasCompletedOnboarding
-        self.hasUserDeletedDevice = hasUserDeletedDevice
-        self.pendingPreferencesUpdate = pendingPreferencesUpdate
+        self.registrationState = registrationState
     }
 
-    public mutating func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        hasUserDeletedDevice = false
-        pendingPreferencesUpdate = update
-        hasCompletedOnboarding = true
+    public var isConfigured: Bool {
+        switch registrationState {
+        case .pendingSync, .registered: true
+        case .notRegistered, .deregistered: false
+        }
     }
 
     public mutating func reset() {
         device = nil
         preferences = nil
-        hasCompletedOnboarding = false
-        hasUserDeletedDevice = true
-        pendingPreferencesUpdate = nil
+        registrationState = .deregistered
     }
 }

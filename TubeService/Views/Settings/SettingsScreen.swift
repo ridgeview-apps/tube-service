@@ -82,7 +82,7 @@ struct SettingsScreen: View {
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
             router.sheetRouter.show(
-                .notificationSettings(.globalSettings, notifications.hasCompletedOnboarding ? .manage : .onboarding),
+                .notificationSettings(.globalSettings, notifications.isConfigured ? .manage : .onboarding),
                 style: .standard
             )
         }

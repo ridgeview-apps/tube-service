@@ -4,9 +4,7 @@ extension NotificationState {
     enum CodingKeys: String, CodingKey {
         case device
         case preferences
-        case hasCompletedOnboarding
-        case hasUserDeletedDevice
-        case pendingPreferencesUpdate
+        case registrationState
     }
 
     // Manual decoding allows new fields to gain defaults when reading older stored values.
@@ -14,21 +12,15 @@ extension NotificationState {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         device = try? container.decodeIfPresent(NotificationDevice.self, forKey: .device)
         preferences = try? container.decodeIfPresent(NotificationPreferences.self, forKey: .preferences)
-        hasCompletedOnboarding =
-            (try? container.decode(Bool.self, forKey: .hasCompletedOnboarding)) ?? false
-        hasUserDeletedDevice =
-            (try? container.decode(Bool.self, forKey: .hasUserDeletedDevice)) ?? false
-        pendingPreferencesUpdate =
-            try? container.decodeIfPresent(NotificationPreferencesUpdate.self, forKey: .pendingPreferencesUpdate)
+        registrationState =
+            (try? container.decode(RegistrationState.self, forKey: .registrationState)) ?? .notRegistered
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(device, forKey: .device)
         try container.encodeIfPresent(preferences, forKey: .preferences)
-        try container.encode(hasCompletedOnboarding, forKey: .hasCompletedOnboarding)
-        try container.encode(hasUserDeletedDevice, forKey: .hasUserDeletedDevice)
-        try container.encodeIfPresent(pendingPreferencesUpdate, forKey: .pendingPreferencesUpdate)
+        try container.encode(registrationState, forKey: .registrationState)
     }
 }
 

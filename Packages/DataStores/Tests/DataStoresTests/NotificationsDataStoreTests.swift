@@ -12,26 +12,26 @@ struct NotificationsDataStoreTests {
     // MARK: - Registration
 
     @Test
-    func registerDeviceSuccess() async throws {
+    func handlePushTokenSuccess() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(api.registerDeviceCallCount == 1)
     }
 
     @Test
-    func registerDeviceAlsoFetchesPreferences() async {
+    func handlePushTokenAlsoFetchesPreferences() async {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – preferences are fetched automatically after a successful registration
         #expect(store.preferences != nil)
@@ -39,14 +39,14 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func registerDeviceFailureDoesNotFetchPreferences() async {
+    func handlePushTokenFailureDoesNotFetchPreferences() async {
         // Given
         let api = StubNotificationsAPIClient()
         api.registerDeviceError = HTTPError.invalidRequestURL
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(store.preferences == nil)
@@ -55,14 +55,14 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func registerDevicePreferencesFetchFailureKeepsPreferencesNil() async {
+    func handlePushTokenPreferencesFetchFailureKeepsPreferencesNil() async {
         // Given
         let api = StubNotificationsAPIClient()
         api.fetchPreferencesError = HTTPError.invalidRequestURL
         let store = makeStore(api: api)
 
         // When
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – device registered but preferences remain nil if fetch fails
         #expect(api.registerDeviceCallCount == 1)
@@ -104,7 +104,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(store.preferences != nil)
 
         // When
@@ -120,7 +120,7 @@ struct NotificationsDataStoreTests {
         // Given
         let keychain = InMemoryKeychain()
         let store = makeStore(keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(keychain.read(key: "push_device_id") != nil)
 
         // When
@@ -135,7 +135,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(store.device != nil)
         #expect(store.preferences != nil)
 
@@ -156,7 +156,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // When
         let update = NotificationPreferencesUpdate(lines: [
@@ -176,7 +176,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         let originalPreferences = store.preferences
 
         // When – update fails
@@ -200,7 +200,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
         let store = makeStore(api: api, keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(keychain.read(key: "push_registered_token") == "test-push-token")
 
         // When – preferences update returns 404 (device not found on server)
@@ -243,7 +243,7 @@ struct NotificationsDataStoreTests {
 
         // When – schedule an update before the APNs token arrives
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – update is applied instead of fetching defaults
         #expect(api.updatePreferencesCallCount == 1)
@@ -263,8 +263,8 @@ struct NotificationsDataStoreTests {
         store.completeOnboarding(with: update)
 
         // When – register twice with the same token; second call is skipped by the token deduplication guard
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – update was only applied once
         #expect(api.updatePreferencesCallCount == 1)
@@ -276,14 +276,14 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
         let store = makeStore(api: api, keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         let update = NotificationPreferencesUpdate(lines: [
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
         ])
         store.completeOnboarding(with: update)
 
         // When – same token re-delivered (e.g. APNs rotation returns same token)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – preferences update is applied even though re-registration was skipped
         #expect(api.registerDeviceCallCount == 1)
@@ -292,31 +292,31 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func registerDeviceSkippedWhenTokenUnchanged() async {
+    func handlePushTokenSkippedWhenTokenUnchanged() async {
         // Given
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
         let store = makeStore(api: api, keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(api.registerDeviceCallCount == 1)
 
         // When – same token delivered again (e.g. on app resume)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – backend is not called again
         #expect(api.registerDeviceCallCount == 1)
     }
 
     @Test
-    func registerDeviceCalledAgainAfterTokenChanges() async {
+    func handlePushTokenCalledAgainAfterTokenChanges() async {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "token-v1", appVersion: nil)
+        await store.handlePushToken("token-v1", appVersion: nil)
         #expect(api.registerDeviceCallCount == 1)
 
         // When – APNs rotates the token
-        await store.registerDevice(pushToken: "token-v2", appVersion: nil)
+        await store.handlePushToken("token-v2", appVersion: nil)
 
         // Then – backend is called with the new token
         #expect(api.registerDeviceCallCount == 2)
@@ -328,12 +328,12 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
         let store = makeStore(api: api, keychain: keychain)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(api.registerDeviceCallCount == 1)
 
         // When – device is deleted, then APNs delivers the same token again automatically
         try await store.deleteDevice()
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – the user-initiated deletion is respected
         #expect(api.registerDeviceCallCount == 1)
@@ -346,12 +346,12 @@ struct NotificationsDataStoreTests {
         let keychain = InMemoryKeychain()
         let userDefaults = UserDefaults(suiteName: UUID().uuidString)!
         let store = makeStore(api: api, keychain: keychain, userDefaults: userDefaults)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         try await store.deleteDevice()
 
         // When – a new store is created after app restart and receives a push token
         let restartedStore = makeStore(api: api, keychain: keychain, userDefaults: userDefaults, seedOnboarded: false)
-        await restartedStore.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await restartedStore.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – deletion still suppresses automatic registration
         #expect(api.registerDeviceCallCount == 1)
@@ -362,13 +362,13 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         try await store.deleteDevice()
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
 
         // When – the user explicitly configures notifications again
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then – explicit setup clears suppression and registers a new device
         #expect(api.registerDeviceCallCount == 2)
@@ -385,11 +385,11 @@ struct NotificationsDataStoreTests {
 
         // When – registration succeeds but the queued apply fails (server down)
         api.updatePreferencesError = HTTPError.connection(URLError(.notConnectedToInternet))
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
-        // Then – the queued update is preserved so it retries on the next registerDevice call
+        // Then – the queued update is preserved so it retries on the next handlePushToken call
         api.updatePreferencesError = nil
-        await store.registerDevice(pushToken: "new-push-token", appVersion: nil)
+        await store.handlePushToken("new-push-token", appVersion: nil)
         #expect(api.updatePreferencesCallCount == 2)
         #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
     }
@@ -408,7 +408,7 @@ struct NotificationsDataStoreTests {
         // Given – stub returns empty lines (default)
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(store.preferences?.lines.isEmpty == true)
 
         // Then
@@ -422,7 +422,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(store.hasConfiguredLines == true)
@@ -444,7 +444,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "jubilee", schedulePreset: .anytime)])
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(store.isNotifying(for: .victoria) == false)
@@ -466,7 +466,7 @@ struct NotificationsDataStoreTests {
             )
         ])
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(store.isNotifying(for: .victoria) == false)
@@ -479,7 +479,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
         store.completeOnboarding(with: update)
-        await store.registerDevice(pushToken: "test-push-token", appVersion: nil)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
         #expect(store.isNotifying(for: .victoria) == true)
@@ -499,7 +499,7 @@ struct NotificationsDataStoreTests {
             userDefaults.notificationState = NotificationState(
                 device: nil,
                 preferences: nil,
-                hasCompletedOnboarding: true
+                registrationState: .registered
             )
         }
         return NotificationsDataStore(

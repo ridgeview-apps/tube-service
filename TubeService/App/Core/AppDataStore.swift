@@ -63,7 +63,7 @@ final class AppDataStore {
     }
 
     func handleRegisteredPushToken(_ token: String) async {
-        await notifications.registerDevice(pushToken: token, appVersion: Bundle.main.appVersion)
+        await notifications.handlePushToken(token, appVersion: Bundle.main.appVersion)
     }
 
     func handleNotificationLaunch(_ payload: LineStatusNotificationPayload) async {

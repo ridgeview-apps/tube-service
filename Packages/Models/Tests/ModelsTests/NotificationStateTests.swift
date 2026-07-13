@@ -26,34 +26,22 @@ struct NotificationStateTests {
         var state = NotificationState(
             device: device,
             preferences: preferences,
-            hasCompletedOnboarding: true,
-            hasUserDeletedDevice: false,
-            pendingPreferencesUpdate: NotificationPreferencesUpdate(lines: [])
+            registrationState: .registered
         )
 
         state.reset()
 
         #expect(state.device == nil)
         #expect(state.preferences == nil)
-        #expect(state.hasCompletedOnboarding == false)
-        #expect(state.hasUserDeletedDevice == true)
-        #expect(state.pendingPreferencesUpdate == nil)
+        #expect(state.registrationState == .deregistered)
     }
 
     @Test
-    func completeOnboardingSetsAllFields() {
-        var state = NotificationState(
-            device: nil,
-            preferences: nil,
-            hasCompletedOnboarding: false,
-            hasUserDeletedDevice: true
-        )
-        let update = NotificationPreferencesUpdate(lines: [])
-
-        state.completeOnboarding(with: update)
-
-        #expect(state.hasCompletedOnboarding == true)
-        #expect(state.hasUserDeletedDevice == false)
-        #expect(state.pendingPreferencesUpdate == update)
+    func isConfiguredIsTrueWhenPendingSyncOrRegistered() {
+        #expect(NotificationState(device: nil, preferences: nil, registrationState: .pendingSync(.init(lines: []))).isConfigured == true)
+        #expect(NotificationState(device: nil, preferences: nil, registrationState: .registered).isConfigured == true)
+        #expect(NotificationState(device: nil, preferences: nil, registrationState: .notRegistered).isConfigured == false)
+        #expect(NotificationState(device: nil, preferences: nil, registrationState: .deregistered).isConfigured == false)
     }
+
 }

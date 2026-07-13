@@ -12,7 +12,7 @@ public final class NotificationsDataStore {
 
     public var preferences: NotificationPreferences? { state.preferences }
     public var device: NotificationDevice? { state.device }
-    public var hasCompletedOnboarding: Bool { state.hasCompletedOnboarding }
+    public var isConfigured: Bool { state.isConfigured }
 
     private var state: NotificationState {
         didSet { userDefaults.notificationState = state }
@@ -27,7 +27,7 @@ public final class NotificationsDataStore {
         public let deviceEnabled: Bool?
         public let appVariant: String?
         public let configuredLineCount: Int
-        public let hasCompletedOnboarding: Bool
+        public let registrationState: String
         public let lastRegistrationError: String?
     }
 
@@ -39,7 +39,7 @@ public final class NotificationsDataStore {
             deviceEnabled: device?.enabled,
             appVariant: device?.appVariant,
             configuredLineCount: preferences?.lines.count ?? 0,
-            hasCompletedOnboarding: hasCompletedOnboarding,
+            registrationState: state.registrationState.description,
             lastRegistrationError: lastRegistrationError
         )
     }
@@ -110,11 +110,10 @@ public final class NotificationsDataStore {
 
     // MARK: - Registration
 
-    public func registerDevice(pushToken: String, appVersion: String?) async {
-        guard !isRegistering else { return }
-        guard state.hasCompletedOnboarding, !state.hasUserDeletedDevice else { return }
-        guard pushToken != keychain.read(key: Self.keychainPushTokenKey) else {
-            await syncPreferences()
+    public func handlePushToken(_ pushToken: String, appVersion: String?) async {
+        guard !isRegistering, isConfigured else { return }
+        if pushToken == keychain.read(key: Self.keychainPushTokenKey) {
+            await syncPreferencesIfNeeded()
             return
         }
         isRegistering = true
@@ -122,20 +121,19 @@ public final class NotificationsDataStore {
         do {
             state.device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
-            state.hasUserDeletedDevice = false
             lastRegistrationError = nil
-            await syncPreferences()
+            await syncPreferencesIfNeeded()
         } catch {
             lastRegistrationError = error.localizedDescription
             AppLogger.notifications.error("Failed to register device: \(error)")
         }
     }
 
-    private func syncPreferences() async {
+    private func syncPreferencesIfNeeded() async {
         do {
-            if let update = state.pendingPreferencesUpdate {
+            if case .pendingSync(let update) = state.registrationState {
                 try await savePreferences(update: update)
-                state.pendingPreferencesUpdate = nil
+                state.registrationState = .registered
             } else if preferences == nil {
                 state.preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
             }
@@ -200,7 +198,7 @@ public final class NotificationsDataStore {
     // MARK: - Preferences
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        state.completeOnboarding(with: update)
+        state.registrationState = .pendingSync(update)
     }
 
     public func savePreferences(update: NotificationPreferencesUpdate) async throws {
