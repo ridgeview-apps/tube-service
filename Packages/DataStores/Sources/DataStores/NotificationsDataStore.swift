@@ -132,8 +132,8 @@ public final class NotificationsDataStore {
     }
 
     private func applyOnboardingPreferencesIfNeeded() async throws {
-        guard case .onboarded(let update) = state.registrationState else { return }
-        try await savePreferences(update: update)
+        guard case .onboarded(let preferences) = state.registrationState else { return }
+        try await savePreferences(with: preferences)
         state.registrationState = .registered
     }
 
@@ -177,16 +177,16 @@ public final class NotificationsDataStore {
 
     // MARK: - Preferences
 
-    public func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        state.registrationState = .onboarded(update)
+    public func completeOnboarding(with preferences: NotificationPreferencesUpdate) {
+        state.registrationState = .onboarded(preferences)
     }
 
-    public func savePreferences(update: NotificationPreferencesUpdate) async throws {
+    public func savePreferences(with preferences: NotificationPreferencesUpdate) async throws {
         guard !isSavingPreferences else { return }
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
-            state.preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
+            state.preferences = try await api.updatePreferences(deviceId: deviceId, update: preferences).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             if case HTTPError.statusCode(404, _) = error {

@@ -49,7 +49,7 @@ struct LineNotificationSettingsScreen: View {
                 updatedLines.append(updatedSettings)
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(update: updatedLines.toNotificationPreferencesUpdate())
+                    try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
@@ -60,7 +60,7 @@ struct LineNotificationSettingsScreen: View {
                 let updatedLines = currentLines.filter { $0.lineID != lineID }
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(update: updatedLines.toNotificationPreferencesUpdate())
+                    try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())

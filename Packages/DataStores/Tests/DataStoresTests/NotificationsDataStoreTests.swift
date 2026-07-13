@@ -137,7 +137,7 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
             makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
         ])
-        try await store.savePreferences(update: update)
+        try await store.savePreferences(with: update)
 
         // Then
         #expect(store.state.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
@@ -159,7 +159,7 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
         ])
         do {
-            try await store.savePreferences(update: update)
+            try await store.savePreferences(with: update)
         } catch {
             // expected
         }
@@ -180,7 +180,7 @@ struct NotificationsDataStoreTests {
         // When – preferences update returns 404 (device not found on server)
         api.updatePreferencesError = HTTPError.statusCode(404, nil)
         do {
-            try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []))
+            try await store.savePreferences(with: NotificationPreferencesUpdate(lines: []))
         } catch {
             // expected
         }
