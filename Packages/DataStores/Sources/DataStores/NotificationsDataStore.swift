@@ -152,30 +152,15 @@ public final class NotificationsDataStore {
     // MARK: - Device Management
 
     public func disableDevice() async throws {
-        do {
-            state.device = try await api.disableDevice(deviceId: deviceId).decodedModel
-        } catch {
-            AppLogger.notifications.error("Failed to disable device: \(error)")
-            throw error
-        }
+        state.device = try await api.disableDevice(deviceId: deviceId).decodedModel
     }
 
     public func enableDevice() async throws {
-        do {
-            state.device = try await api.enableDevice(deviceId: deviceId).decodedModel
-        } catch {
-            AppLogger.notifications.error("Failed to enable device: \(error)")
-            throw error
-        }
+        state.device = try await api.enableDevice(deviceId: deviceId).decodedModel
     }
 
     public func deleteDevice() async throws {
-        do {
-            try await api.deleteDevice(deviceId: deviceId)
-        } catch {
-            AppLogger.notifications.error("Failed to delete device: \(error)")
-            throw error
-        }
+        try await api.deleteDevice(deviceId: deviceId)
         state.reset()
         keychain.delete(key: Self.keychainDeviceIdKey)
         keychain.delete(key: Self.keychainPushTokenKey)

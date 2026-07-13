@@ -1,20 +1,21 @@
 import Foundation
 
-public enum RegistrationState: Codable, CustomStringConvertible, Equatable, Sendable {
-    case notRegistered
-    case pendingSync(NotificationPreferencesUpdate)
-    case registered
+public struct NotificationState: Codable, Sendable {
 
-    public var description: String {
-        switch self {
-        case .notRegistered: "notRegistered"
-        case .pendingSync: "pendingSync"
-        case .registered: "registered"
+    public enum RegistrationState: Codable, CustomStringConvertible, Equatable, Sendable {
+        case notRegistered
+        case pendingSync(NotificationPreferencesUpdate)
+        case registered
+
+        public var description: String {
+            switch self {
+            case .notRegistered: "notRegistered"
+            case .pendingSync: "pendingSync"
+            case .registered: "registered"
+            }
         }
     }
-}
 
-public struct NotificationState: Codable, Sendable {
     public var device: NotificationDevice?
     public var preferences: NotificationPreferences?
     public var registrationState: RegistrationState
