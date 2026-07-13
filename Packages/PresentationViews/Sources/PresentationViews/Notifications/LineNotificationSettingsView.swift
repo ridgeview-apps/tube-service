@@ -34,6 +34,7 @@ public struct LineNotificationSettingsView: View {
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
+    @State private var bellBounce = false
 
     public init(
         mode: Mode,
@@ -425,12 +426,15 @@ public struct LineNotificationSettingsView: View {
                 Text(String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)))
             } icon: {
                 Image(systemName: "bell.fill")
+                    .symbolEffect(.bounce, value: bellBounce)
             }
-            .ctaLabelStyle(weight: .semibold)
+            .ctaLabelStyle()
             .foregroundStyle(lineID.textColor)
         }
         .cardStyle(backgroundColor: lineID.backgroundColor)
+        .shadow(color: lineID.backgroundColor.opacity(0.5), radius: 10, y: 4)
         .disabled(savingState == .loading)
+        .onAppear { bellBounce = true }
     }
 
     // MARK: - Other Lines Summary
