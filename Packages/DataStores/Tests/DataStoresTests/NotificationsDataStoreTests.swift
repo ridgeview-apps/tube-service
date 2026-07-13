@@ -638,7 +638,9 @@ struct NotificationsDataStoreTests {
     ) -> NotificationsDataStore {
         if seedOnboarded {
             userDefaults.notificationState = NotificationState(
-                device: nil, preferences: nil, hasCompletedOnboarding: true
+                device: nil,
+                preferences: nil,
+                hasCompletedOnboarding: true
             )
         }
         return NotificationsDataStore(
