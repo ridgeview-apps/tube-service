@@ -3,19 +3,6 @@ import Models
 import Shared
 import UserNotifications
 
-public enum NotificationsDataStoreError: LocalizedError, Equatable {
-    case deviceNotRegistered
-    case saveInProgress
-
-    public var errorDescription: String? {
-        switch self {
-        case .deviceNotRegistered:
-            return "Device not yet registered for notifications. Please try again."
-        case .saveInProgress:
-            return "A save is already in progress. Please try again."
-        }
-    }
-}
 
 @MainActor
 @Observable
@@ -147,7 +134,7 @@ public final class NotificationsDataStore {
     private func syncPreferences() async {
         if let update = state.pendingPreferencesUpdate {
             do {
-                try await updatePreferences(with: update)
+                try await savePreferences(update: update)
                 state.pendingPreferencesUpdate = nil
             } catch {
                 AppLogger.notifications.error("Failed to apply pending preferences: \(error)")
@@ -181,7 +168,6 @@ public final class NotificationsDataStore {
             AppLogger.notifications.error("Failed to enable device: \(error)")
             throw error
         }
-        await fetchInitialPreferencesIfNeeded()
     }
 
     public func deleteDevice() async throws {
@@ -219,9 +205,7 @@ public final class NotificationsDataStore {
     // MARK: - Preferences
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        state.hasUserDeletedDevice = false
-        state.pendingPreferencesUpdate = update
-        state.hasCompletedOnboarding = true
+        state.completeOnboarding(with: update)
     }
 
     private func fetchInitialPreferences() async {
@@ -232,35 +216,19 @@ public final class NotificationsDataStore {
         }
     }
 
-    private func updatePreferences(with update: NotificationPreferencesUpdate) async throws {
-        guard !isSavingPreferences else { throw NotificationsDataStoreError.saveInProgress }
-        let previousPreferences = preferences
+    public func savePreferences(update: NotificationPreferencesUpdate) async throws {
+        guard !isSavingPreferences else { return }
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
             state.preferences = try await api.updatePreferences(deviceId: deviceId, update: update).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
-            state.preferences = previousPreferences
             if case HTTPError.statusCode(404, _) = error {
                 keychain.delete(key: Self.keychainPushTokenKey)
                 pushNotificationEnvironment.registerForRemoteNotifications()
             }
             throw error
-        }
-    }
-
-    public func savePreferences(update: NotificationPreferencesUpdate, deviceEnabled: Bool) async throws {
-        guard let device else {
-            throw NotificationsDataStoreError.deviceNotRegistered
-        }
-        let currentlyEnabled = device.enabled
-        if deviceEnabled, !currentlyEnabled {
-            try await enableDevice()
-        }
-        try await updatePreferences(with: update)
-        if !deviceEnabled, currentlyEnabled {
-            try await disableDevice()
         }
     }
 }

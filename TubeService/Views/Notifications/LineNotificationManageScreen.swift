@@ -34,10 +34,11 @@ struct LineNotificationManageScreen: View {
             Task {
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(
-                        update: currentLines.toNotificationPreferencesUpdate(),
-                        deviceEnabled: isEnabled
-                    )
+                    if isEnabled {
+                        try await notifications.enableDevice()
+                    } else {
+                        try await notifications.disableDevice()
+                    }
                     savingState = .loaded
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
@@ -61,10 +62,7 @@ struct LineNotificationManageScreen: View {
             Task {
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(
-                        update: currentLines.toNotificationPreferencesUpdate(),
-                        deviceEnabled: true
-                    )
+                    try await notifications.enableDevice()
                     savingState = .loaded
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())

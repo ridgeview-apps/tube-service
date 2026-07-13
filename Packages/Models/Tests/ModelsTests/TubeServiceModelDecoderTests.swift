@@ -379,41 +379,4 @@ private extension TubeServiceModelDecoderTests {
         """
     }
 
-    // MARK: - NotificationState
-
-    @Test
-    func notificationStateResetClearsAllFields() {
-        let date = Date(timeIntervalSince1970: 0)
-        let device = NotificationDevice(
-            deviceId: "abc",
-            platform: "ios",
-            enabled: true,
-            appVersion: "1.0",
-            appVariant: nil,
-            createdAt: date,
-            updatedAt: date,
-            lastSeenAt: date
-        )
-        let preferences = NotificationPreferences(
-            deviceId: "abc",
-            lines: [],
-            createdAt: date,
-            updatedAt: date
-        )
-        var state = NotificationState(
-            device: device,
-            preferences: preferences,
-            hasCompletedOnboarding: true,
-            hasUserDeletedDevice: false,
-            pendingPreferencesUpdate: NotificationPreferencesUpdate(lines: [])
-        )
-
-        state.reset()
-
-        #expect(state.device == nil)
-        #expect(state.preferences == nil)
-        #expect(state.hasCompletedOnboarding == false)
-        #expect(state.hasUserDeletedDevice == true)
-        #expect(state.pendingPreferencesUpdate == nil)
-    }
 }

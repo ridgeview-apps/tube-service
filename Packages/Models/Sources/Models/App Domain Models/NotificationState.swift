@@ -23,6 +23,12 @@ public struct NotificationState: Codable, Sendable {
         self.pendingPreferencesUpdate = pendingPreferencesUpdate
     }
 
+    public mutating func completeOnboarding(with update: NotificationPreferencesUpdate) {
+        hasUserDeletedDevice = false
+        pendingPreferencesUpdate = update
+        hasCompletedOnboarding = true
+    }
+
     public mutating func reset() {
         device = nil
         preferences = nil
