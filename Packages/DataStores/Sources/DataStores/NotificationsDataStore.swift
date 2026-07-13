@@ -15,30 +15,6 @@ public final class NotificationsDataStore {
     public var linePreferences: [NotificationLinePreference] { state.preferences?.lines ?? [] }
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
-    public struct DebugInfo {
-        public let pushToken: String?
-        public let deviceId: String?
-        public let authorizationStatus: UNAuthorizationStatus
-        public let deviceEnabled: Bool?
-        public let appVariant: String?
-        public let configuredLineCount: Int
-        public let registrationState: String
-        public let lastRegistrationError: String?
-    }
-
-    public var debugInfo: DebugInfo {
-        DebugInfo(
-            pushToken: keychain.read(key: Self.keychainPushTokenKey),
-            deviceId: keychain.read(key: Self.keychainDeviceIdKey),
-            authorizationStatus: authorizationStatus,
-            deviceEnabled: state.device?.enabled,
-            appVariant: state.device?.appVariant,
-            configuredLineCount: linePreferences.count,
-            registrationState: state.registrationState.description,
-            lastRegistrationError: lastRegistrationError
-        )
-    }
-
     public var hasConfiguredLines: Bool {
         !linePreferences.isEmpty
     }
@@ -195,5 +171,33 @@ public final class NotificationsDataStore {
             }
             throw error
         }
+    }
+}
+
+// MARK: - Debug
+
+extension NotificationsDataStore {
+    public struct DebugInfo {
+        public let pushToken: String?
+        public let deviceId: String?
+        public let authorizationStatus: UNAuthorizationStatus
+        public let deviceEnabled: Bool?
+        public let appVariant: String?
+        public let configuredLineCount: Int
+        public let registrationState: String
+        public let lastRegistrationError: String?
+    }
+
+    public var debugInfo: DebugInfo {
+        DebugInfo(
+            pushToken: keychain.read(key: Self.keychainPushTokenKey),
+            deviceId: keychain.read(key: Self.keychainDeviceIdKey),
+            authorizationStatus: authorizationStatus,
+            deviceEnabled: state.device?.enabled,
+            appVariant: state.device?.appVariant,
+            configuredLineCount: linePreferences.count,
+            registrationState: state.registrationState.description,
+            lastRegistrationError: lastRegistrationError
+        )
     }
 }
