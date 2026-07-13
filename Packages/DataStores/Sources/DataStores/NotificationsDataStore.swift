@@ -109,7 +109,7 @@ public final class NotificationsDataStore {
             state.device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
             lastRegistrationError = nil
-            try await applyPendingPreferencesUpdate()
+            try await applyOnboardingPreferencesIfNeeded()
         } catch {
             lastRegistrationError = error.localizedDescription
             AppLogger.notifications.error("handlePushToken failed: \(error)")
@@ -124,15 +124,15 @@ public final class NotificationsDataStore {
         switch state.registrationState {
         case .notRegistered:
             return false
-        case .pendingSync:
+        case .onboarded:
             return true
         case .registered:
             return pushToken != keychain.read(key: Self.keychainPushTokenKey)
         }
     }
 
-    private func applyPendingPreferencesUpdate() async throws {
-        guard case .pendingSync(let update) = state.registrationState else { return }
+    private func applyOnboardingPreferencesIfNeeded() async throws {
+        guard case .onboarded(let update) = state.registrationState else { return }
         try await savePreferences(update: update)
         state.registrationState = .registered
     }
@@ -178,7 +178,7 @@ public final class NotificationsDataStore {
     // MARK: - Preferences
 
     public func completeOnboarding(with update: NotificationPreferencesUpdate) {
-        state.registrationState = .pendingSync(update)
+        state.registrationState = .onboarded(update)
     }
 
     public func savePreferences(update: NotificationPreferencesUpdate) async throws {

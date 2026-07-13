@@ -4,13 +4,13 @@ public struct NotificationState: Codable, Sendable {
 
     public enum RegistrationState: Codable, CustomStringConvertible, Equatable, Sendable {
         case notRegistered
-        case pendingSync(NotificationPreferencesUpdate)
+        case onboarded(NotificationPreferencesUpdate)
         case registered
 
         public var description: String {
             switch self {
             case .notRegistered: "notRegistered"
-            case .pendingSync: "pendingSync"
+            case .onboarded: "onboarded"
             case .registered: "registered"
             }
         }
@@ -34,7 +34,7 @@ public struct NotificationState: Codable, Sendable {
 
     public var isConfigured: Bool {
         switch registrationState {
-        case .pendingSync, .registered: true
+        case .onboarded, .registered: true
         case .notRegistered: false
         }
     }

@@ -37,8 +37,8 @@ struct NotificationStateTests {
     }
 
     @Test
-    func isConfiguredIsTrueWhenPendingSyncOrRegistered() {
-        #expect(NotificationState(device: nil, preferences: nil, registrationState: .pendingSync(.init(lines: []))).isConfigured == true)
+    func isConfiguredIsTrueWhenOnboardedOrRegistered() {
+        #expect(NotificationState(device: nil, preferences: nil, registrationState: .onboarded(.init(lines: []))).isConfigured == true)
         #expect(NotificationState(device: nil, preferences: nil, registrationState: .registered).isConfigured == true)
         #expect(NotificationState(device: nil, preferences: nil, registrationState: .notRegistered).isConfigured == false)
     }
