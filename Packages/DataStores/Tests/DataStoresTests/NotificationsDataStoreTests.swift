@@ -183,7 +183,7 @@ struct NotificationsDataStoreTests {
     // MARK: - Preferences
 
     @Test
-    func updatePreferencesSuccess() async throws {
+    func savePreferencesSuccess() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -194,7 +194,7 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
             makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
         ])
-        try await store.updatePreferences(with: update)
+        try await store.savePreferences(update: update, deviceEnabled: true)
 
         // Then
         #expect(store.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
@@ -203,7 +203,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func updatePreferencesFailureRollsBack() async throws {
+    func savePreferencesFailureRollsBack() async throws {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
@@ -216,7 +216,7 @@ struct NotificationsDataStoreTests {
             makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
         ])
         do {
-            try await store.updatePreferences(with: update)
+            try await store.savePreferences(update: update, deviceEnabled: true)
         } catch {
             // expected
         }
@@ -226,7 +226,7 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func updatePreferences404ClearsStoredPushToken() async throws {
+    func savePreferences404ClearsStoredPushToken() async throws {
         // Given – device registered and push token stored
         let api = StubNotificationsAPIClient()
         let keychain = InMemoryKeychain()
@@ -237,7 +237,7 @@ struct NotificationsDataStoreTests {
         // When – preferences update returns 404 (device not found on server)
         api.updatePreferencesError = HTTPError.statusCode(404, nil)
         do {
-            try await store.updatePreferences(with: NotificationPreferencesUpdate(lines: []))
+            try await store.savePreferences(update: NotificationPreferencesUpdate(lines: []), deviceEnabled: true)
         } catch {
             // expected
         }

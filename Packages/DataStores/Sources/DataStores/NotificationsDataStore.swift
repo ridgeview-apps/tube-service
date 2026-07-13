@@ -232,7 +232,7 @@ public final class NotificationsDataStore {
         }
     }
 
-    public func updatePreferences(with update: NotificationPreferencesUpdate) async throws {
+    private func updatePreferences(with update: NotificationPreferencesUpdate) async throws {
         guard !isSavingPreferences else { throw NotificationsDataStoreError.saveInProgress }
         let previousPreferences = preferences
         isSavingPreferences = true
