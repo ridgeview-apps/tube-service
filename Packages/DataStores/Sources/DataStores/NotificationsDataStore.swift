@@ -10,14 +10,9 @@ public final class NotificationsDataStore {
 
     // MARK: - Public state
 
-    public var preferences: NotificationPreferences? { state.preferences }
-    public var device: NotificationDevice? { state.device }
     public var isConfigured: Bool { state.isConfigured }
-
-    private var state: NotificationState {
-        didSet { userDefaults.notificationState = state }
-    }
-
+    public var isDevicePaused: Bool { device?.enabled == false }
+    public var linePreferences: [NotificationLinePreference] { state.preferences?.lines ?? [] }
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
     public struct DebugInfo {
@@ -64,8 +59,6 @@ public final class NotificationsDataStore {
         }
     }
 
-    private(set) var authorizationStatus: UNAuthorizationStatus = .notDetermined
-
     // MARK: - Private state
 
     private let api: NotificationsAPIClientType
@@ -73,6 +66,14 @@ public final class NotificationsDataStore {
     private let userDefaults: UserDefaults
     private let pushNotificationEnvironment: PushNotificationEnvironment
 
+    private(set) var state: NotificationState {
+        didSet { userDefaults.notificationState = state }
+    }
+
+    private var preferences: NotificationPreferences? { state.preferences }
+    private var device: NotificationDevice? { state.device }
+
+    private var authorizationStatus: UNAuthorizationStatus = .notDetermined
     private var isRegisteringDevice = false
     private var isSavingPreferences = false
     private var lastRegistrationError: String?
@@ -111,9 +112,7 @@ public final class NotificationsDataStore {
     // MARK: - Registration
 
     public func handlePushToken(_ pushToken: String, appVersion: String?) async {
-        guard shouldRegisterDevice(with: pushToken) else {
-            return
-        }
+        guard shouldRegisterDevice(with: pushToken) else { return }
 
         isRegisteringDevice = true
         defer { isRegisteringDevice = false }
@@ -121,10 +120,10 @@ public final class NotificationsDataStore {
             state.device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
             lastRegistrationError = nil
-            await syncPreferencesIfNeeded()
+            try await applyPendingPreferencesUpdate()
         } catch {
             lastRegistrationError = error.localizedDescription
-            AppLogger.notifications.error("Failed to register device: \(error)")
+            AppLogger.notifications.error("handlePushToken failed: \(error)")
         }
     }
 
@@ -136,24 +135,17 @@ public final class NotificationsDataStore {
         switch state.registrationState {
         case .notRegistered:
             return false
-        case .pendingSync, .registered:
-            let isNewOrModifiedToken = pushToken != keychain.read(key: Self.keychainPushTokenKey)
-            let needsPreferenceSync = preferences == nil
-            return isNewOrModifiedToken || needsPreferenceSync
+        case .pendingSync:
+            return true
+        case .registered:
+            return pushToken != keychain.read(key: Self.keychainPushTokenKey)
         }
     }
 
-    private func syncPreferencesIfNeeded() async {
-        do {
-            if case .pendingSync(let update) = state.registrationState {
-                try await savePreferences(update: update)
-                state.registrationState = .registered
-            } else if preferences == nil {
-                state.preferences = try await api.fetchPreferences(deviceId: deviceId).decodedModel
-            }
-        } catch {
-            AppLogger.notifications.error("Failed to sync preferences: \(error)")
-        }
+    private func applyPendingPreferencesUpdate() async throws {
+        guard case .pendingSync(let update) = state.registrationState else { return }
+        try await savePreferences(update: update)
+        state.registrationState = .registered
     }
 
 

@@ -14,7 +14,7 @@ struct LineNotificationManageScreen: View {
 
     var body: some View {
         LineNotificationSettingsView(
-            mode: .manageAll(isEnabled: notifications.device?.enabled ?? true),
+            mode: .manageAll(isEnabled: !notifications.isDevicePaused),
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
@@ -74,7 +74,7 @@ struct LineNotificationManageScreen: View {
     }
 
     private var currentLines: [LineNotificationSettings] {
-        notifications.preferences?.lines.toLineNotificationSettings() ?? []
+        notifications.linePreferences.toLineNotificationSettings()
     }
 }
 

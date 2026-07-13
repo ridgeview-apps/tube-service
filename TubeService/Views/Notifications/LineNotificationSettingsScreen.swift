@@ -30,7 +30,7 @@ struct LineNotificationSettingsScreen: View {
                 ),
                 allSettings: currentLines,
                 showsPermissionWarning: notifications.isPermissionDenied,
-                showsPausedAlertsWarning: notifications.device?.enabled == false,
+                showsPausedAlertsWarning: notifications.isDevicePaused,
                 savingState: savingState,
                 onAction: handleAction
             )
@@ -92,7 +92,7 @@ struct LineNotificationSettingsScreen: View {
     }
 
     private var currentLines: [LineNotificationSettings] {
-        notifications.preferences?.lines.toLineNotificationSettings() ?? []
+        notifications.linePreferences.toLineNotificationSettings()
     }
 }
 

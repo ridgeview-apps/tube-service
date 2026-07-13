@@ -25,20 +25,6 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
-    func handlePushTokenAlsoFetchesPreferences() async {
-        // Given
-        let api = StubNotificationsAPIClient()
-        let store = makeStore(api: api)
-
-        // When
-        await store.handlePushToken("test-push-token", appVersion: nil)
-
-        // Then – preferences are fetched automatically after a successful registration
-        #expect(store.preferences != nil)
-        #expect(api.fetchPreferencesCallCount == 1)
-    }
-
-    @Test
     func handlePushTokenFailureDoesNotFetchPreferences() async {
         // Given
         let api = StubNotificationsAPIClient()
@@ -49,25 +35,9 @@ struct NotificationsDataStoreTests {
         await store.handlePushToken("test-push-token", appVersion: nil)
 
         // Then
-        #expect(store.preferences == nil)
+        #expect(store.state.preferences == nil)
         #expect(api.registerDeviceCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
-    }
-
-    @Test
-    func handlePushTokenPreferencesFetchFailureKeepsPreferencesNil() async {
-        // Given
-        let api = StubNotificationsAPIClient()
-        api.fetchPreferencesError = HTTPError.invalidRequestURL
-        let store = makeStore(api: api)
-
-        // When
-        await store.handlePushToken("test-push-token", appVersion: nil)
-
-        // Then – device registered but preferences remain nil if fetch fails
-        #expect(api.registerDeviceCallCount == 1)
-        #expect(api.fetchPreferencesCallCount == 1)
-        #expect(store.preferences == nil)
     }
 
 
@@ -104,14 +74,16 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
-        #expect(store.preferences != nil)
+        #expect(store.state.preferences != nil)
 
         // When
         try await store.deleteDevice()
 
         // Then
-        #expect(store.preferences == nil)
+        #expect(store.state.preferences == nil)
         #expect(api.deleteDeviceCallCount == 1)
     }
 
@@ -135,17 +107,19 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
-        #expect(store.device != nil)
-        #expect(store.preferences != nil)
+        #expect(store.state.device != nil)
+        #expect(store.state.preferences != nil)
 
         // When – delete fails
         api.deleteDeviceError = HTTPError.connection(URLError(.notConnectedToInternet))
         try? await store.deleteDevice()
 
         // Then – local state is preserved since the server-side delete didn't succeed
-        #expect(store.device != nil)
-        #expect(store.preferences != nil)
+        #expect(store.state.device != nil)
+        #expect(store.state.preferences != nil)
     }
 
 
@@ -166,8 +140,8 @@ struct NotificationsDataStoreTests {
         try await store.savePreferences(update: update)
 
         // Then
-        #expect(store.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
-        #expect(store.preferences?.lines.allSatisfy { $0.schedulePreset == .weekends } == true)
+        #expect(store.state.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
+        #expect(store.state.preferences?.lines.allSatisfy { $0.schedulePreset == .weekends } == true)
         #expect(api.updatePreferencesCallCount == 1)
     }
 
@@ -177,7 +151,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         await store.handlePushToken("test-push-token", appVersion: nil)
-        let originalPreferences = store.preferences
+        let originalPreferences = store.state.preferences
 
         // When – update fails
         api.updatePreferencesError = HTTPError.invalidRequestURL
@@ -191,7 +165,7 @@ struct NotificationsDataStoreTests {
         }
 
         // Then – preferences are unchanged since the failed API call never wrote anything
-        #expect(store.preferences == originalPreferences)
+        #expect(store.state.preferences == originalPreferences)
     }
 
     @Test
@@ -226,7 +200,7 @@ struct NotificationsDataStoreTests {
         await store.refreshAuthorizationStatus()
 
         // Then
-        #expect(store.authorizationStatus == .denied)
+        #expect(store.isPermissionDenied == true)
     }
 
 
@@ -248,8 +222,8 @@ struct NotificationsDataStoreTests {
         // Then – update is applied instead of fetching defaults
         #expect(api.updatePreferencesCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
-        #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
-        #expect(store.preferences?.lines.first?.schedulePreset == .weekends)
+        #expect(store.state.preferences?.lines.map(\.lineId) == ["victoria"])
+        #expect(store.state.preferences?.lines.first?.schedulePreset == .weekends)
     }
 
     @Test
@@ -370,7 +344,7 @@ struct NotificationsDataStoreTests {
         api.updatePreferencesError = nil
         await store.handlePushToken("new-push-token", appVersion: nil)
         #expect(api.updatePreferencesCallCount == 2)
-        #expect(store.preferences?.lines.map(\.lineId) == ["victoria"])
+        #expect(store.state.preferences?.lines.map(\.lineId) == ["victoria"])
     }
 
 
@@ -384,11 +358,12 @@ struct NotificationsDataStoreTests {
 
     @Test
     func hasConfiguredLinesIsFalseWhenLinesEmpty() async {
-        // Given – stub returns empty lines (default)
+        // Given – registered with preferences containing no lines
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
+        store.completeOnboarding(with: NotificationPreferencesUpdate(lines: []))
         await store.handlePushToken("test-push-token", appVersion: nil)
-        #expect(store.preferences?.lines.isEmpty == true)
+        #expect(store.state.preferences?.lines.isEmpty == true)
 
         // Then
         #expect(store.hasConfiguredLines == false)
