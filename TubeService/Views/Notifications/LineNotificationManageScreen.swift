@@ -15,7 +15,7 @@ struct LineNotificationManageScreen: View {
 
     var body: some View {
         LineNotificationManageAllView(
-            isEnabled: $isEnabled,
+            isEnabled: isEnabled,
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
@@ -50,7 +50,6 @@ struct LineNotificationManageScreen: View {
                     savingState = .loaded
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
-                    isEnabled = !notifications.isDevicePaused
                 }
             }
         case .deleteAllSettings:

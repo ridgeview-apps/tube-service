@@ -16,18 +16,18 @@ public struct LineNotificationManageAllView: View {
     private let savingState: LoadingState
     private let onAction: (Action) -> Void
 
-    @Binding private var isEnabled: Bool
+    private let isEnabled: Bool
     @State private var showDeleteAllConfirmation = false
     @State private var removeFeedbackTrigger = false
 
     public init(
-        isEnabled: Binding<Bool>,
+        isEnabled: Bool,
         allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         savingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
-        _isEnabled = isEnabled
+        self.isEnabled = isEnabled
         self.allSettings = allSettings
         self.showsPermissionWarning = showsPermissionWarning
         self.savingState = savingState
@@ -50,10 +50,7 @@ public struct LineNotificationManageAllView: View {
     private var toggleBinding: Binding<Bool> {
         Binding(
             get: { isEnabled },
-            set: { newValue in
-                isEnabled = newValue
-                onAction(.toggleEnabled(newValue))
-            }
+            set: { onAction(.toggleEnabled($0)) }
         )
     }
 
@@ -278,10 +275,9 @@ private extension View {
     import ModelStubs
 
     #Preview("Manage all") {
-        @Previewable @State var isEnabled = true
         NavigationStack {
             LineNotificationManageAllView(
-                isEnabled: $isEnabled,
+                isEnabled: true,
                 allSettings: [.victoria, .jubilee, .central, .northern].map { .defaultValue(lineID: $0) },
                 onAction: { print($0) }
             )
