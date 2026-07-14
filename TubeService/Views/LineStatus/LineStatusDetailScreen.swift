@@ -69,13 +69,10 @@ struct LineStatusDetailScreen: View {
     private var notificationButtonState: LineNotificationsButtonState? {
         guard featureFlags.isNotificationsEnabled else { return nil }
         guard purchases.hasTubeServicePlus else { return .locked }
-        if notifications.canReceivePushNotifications {
-            return notifications.isNotifying(for: lineID) ? .active : .inactive
-        } else if notifications.isPermissionDenied {
+        if notifications.isPermissionDenied {
             return .permissionDenied
-        } else {
-            return .inactive
         }
+        return notifications.isNotifying(for: lineID) ? .active : .inactive
     }
 
     var body: some View {
