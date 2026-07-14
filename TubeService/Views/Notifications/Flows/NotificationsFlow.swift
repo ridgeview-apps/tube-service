@@ -5,37 +5,22 @@ import SwiftUI
 struct NotificationsFlow: View {
 
     enum Context {
-        case lineDetail(TrainLineID)
-        case globalSettings
-    }
-
-    enum Mode {
-        case onboarding
-        case manage
+        enum ManageMode {
+            case singleLine(TrainLineID)
+            case all
+        }
+        case onboarding(defaultLineID: TrainLineID?)
+        case manage(ManageMode)
     }
 
     let context: Context
-    let mode: Mode
-
-    private var onboardingInitialSettings: [LineNotificationSettings] {
-        switch context {
-        case .lineDetail(let trainLineID):
-            return [.defaultValue(lineID: trainLineID)]
-        case .globalSettings:
-            return []
-        }
-    }
 
     var body: some View {
-        switch mode {
-        case .onboarding:
-            OnboardingNotificationsFlow(initialNotificationSettings: onboardingInitialSettings)
-        case .manage:
-            manageFlow
+        switch context {
+        case let .onboarding(defaultLineID):
+            OnboardingNotificationsFlow(defaultLineID: defaultLineID)
+        case let .manage(mode):
+            ManageNotificationsFlow(mode: mode)
         }
-    }
-
-    private var manageFlow: some View {
-        ManageNotificationsFlow()
     }
 }

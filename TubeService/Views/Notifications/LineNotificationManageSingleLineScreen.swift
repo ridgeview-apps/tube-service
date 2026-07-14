@@ -3,39 +3,38 @@ import Models
 import PresentationViews
 import SwiftUI
 
-struct LineNotificationSettingsScreen: View {
+struct LineNotificationManageSingleLineScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
 
-    @State private var selectedOtherLine: LineSelection?
     @State private var savingState: LoadingState = .loaded
+    @State private var selectedOtherLineID: TrainLineID?
 
     let lineID: TrainLineID
     let showsOtherLines: Bool
 
-    init(lineID: TrainLineID, showsOtherLines: Bool = true) {
+    init(lineID: TrainLineID, showsOtherLines: Bool) {
         self.lineID = lineID
         self.showsOtherLines = showsOtherLines
     }
 
     var body: some View {
-        NavigationStack {
-            LineNotificationSingleLineView(
-                lineID: lineID,
-                existingSettings: existingSettings(for: lineID),
-                showsOtherLines: showsOtherLines,
-                allSettings: currentLines,
-                showsPermissionWarning: notifications.isPermissionDenied,
-                showsPausedAlertsWarning: notifications.isDevicePaused,
-                savingState: savingState,
-                onAction: handleAction
-            )
-        }
-        .sheet(item: $selectedOtherLine) { selection in
-            LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
-                .iOSAppOnMacSheetEnvironment(notifications)
+        LineNotificationSingleLineView(
+            lineID: lineID,
+            existingSettings: existingSettings(for: lineID),
+            showsOtherLines: showsOtherLines,
+            allSettings: currentLines,
+            showsPermissionWarning: notifications.isPermissionDenied,
+            showsPausedAlertsWarning: notifications.isDevicePaused,
+            savingState: savingState,
+            onAction: handleAction
+        )
+        .sheet(item: $selectedOtherLineID) { otherLineID in
+            NavigationStack {
+                LineNotificationManageSingleLineScreen(lineID: otherLineID, showsOtherLines: false)
+            }
         }
     }
 
@@ -43,8 +42,8 @@ struct LineNotificationSettingsScreen: View {
         switch action {
         case .cancel:
             dismiss()
-        case .navigateTo(let targetLineID):
-            selectedOtherLine = LineSelection(lineID: targetLineID)
+        case .otherLineSelected(let targetLineID):
+            selectedOtherLineID = targetLineID
         case .openSettings:
             openSettings()
         case .save(let updatedSettings):
@@ -90,9 +89,4 @@ struct LineNotificationSettingsScreen: View {
     private var currentLines: [LineNotificationSettings] {
         notifications.linePreferences.toLineNotificationSettings()
     }
-}
-
-private struct LineSelection: Identifiable {
-    let lineID: TrainLineID
-    var id: TrainLineID { lineID }
 }

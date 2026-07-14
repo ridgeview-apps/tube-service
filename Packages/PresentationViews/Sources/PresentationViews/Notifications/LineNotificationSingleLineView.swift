@@ -5,7 +5,7 @@ public struct LineNotificationSingleLineView: View {
 
     public enum Action {
         case cancel
-        case navigateTo(TrainLineID)
+        case otherLineSelected(TrainLineID)
         case openSettings
         case save(LineNotificationSettings)
         case remove
@@ -32,7 +32,7 @@ public struct LineNotificationSingleLineView: View {
     public init(
         lineID: TrainLineID,
         existingSettings: LineNotificationSettings?,
-        showsOtherLines: Bool = true,
+        showsOtherLines: Bool,
         allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         showsPausedAlertsWarning: Bool = false,
@@ -308,7 +308,7 @@ public struct LineNotificationSingleLineView: View {
                     .padding(.leading, 40)
                 LineNotificationRows(
                     settings: configuredLines,
-                    onSelect: { onAction(.navigateTo($0)) }
+                    onSelect: { onAction(.otherLineSelected($0)) }
                 )
                 if !unconfiguredLineIDs.isEmpty {
                     Divider()
@@ -324,7 +324,7 @@ public struct LineNotificationSingleLineView: View {
         AddLineMenu(
             lineIDs: unconfiguredLineIDs,
             label: .notificationsLineConfigAddAnotherLine,
-            onSelect: { onAction(.navigateTo($0)) }
+            onSelect: { onAction(.otherLineSelected($0)) }
         )
     }
 

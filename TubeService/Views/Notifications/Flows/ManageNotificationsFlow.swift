@@ -8,6 +8,8 @@ struct ManageNotificationsFlow: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
 
+    let mode: NotificationsFlow.Context.ManageMode
+
     var body: some View {
         NavigationStack {
             rootView
@@ -19,7 +21,12 @@ struct ManageNotificationsFlow: View {
         if !purchases.hasTubeServicePlus {
             paywallView
         } else {
-            LineNotificationManageScreen()
+            switch mode {
+            case let .singleLine(lineID):
+                LineNotificationManageSingleLineScreen(lineID: lineID, showsOtherLines: true)
+            case .all:
+                LineNotificationManageAllScreen()
+            }
         }
     }
 

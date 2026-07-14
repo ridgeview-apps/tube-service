@@ -31,7 +31,7 @@ struct SettingsScreen: View {
     var body: some View {
         NavigationStack(path: $router.navigation.path) {
             rootView
-                .appSheetRouter($router.sheetRouter)
+                .sheetPresenter($router.sheetPresenter)
                 .navigationDestination(for: SettingsRoute.self) { route in
                     destinationView(for: route)
                 }
@@ -81,9 +81,10 @@ struct SettingsScreen: View {
         case .manageSubscription:
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
-            router.sheetRouter.show(
-                .notificationSettings(.globalSettings, notifications.isConfigured ? .manage : .onboarding),
-                style: .standard
+            router.sheetPresenter.show(
+                .notificationsFlow(
+                    notifications.isConfigured ? .manage(.all) : .onboarding(defaultLineID: nil)
+                )
             )
         }
     }

@@ -3,14 +3,14 @@ import Models
 import PresentationViews
 import SwiftUI
 
-struct LineNotificationManageScreen: View {
+struct LineNotificationManageAllScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
 
-    @State private var selectedLine: LineSelection?
     @State private var savingState: LoadingState = .loaded
+    @State private var sheetPresenter = SheetPresenter()
 
     var body: some View {
         LineNotificationManageAllView(
@@ -20,10 +20,7 @@ struct LineNotificationManageScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
-        .sheet(item: $selectedLine) { selection in
-            LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
-                .iOSAppOnMacSheetEnvironment(notifications)
-        }
+        .sheetPresenter($sheetPresenter)
     }
 
     private func handleAction(_ action: LineNotificationManageAllView.Action) {
@@ -31,7 +28,9 @@ struct LineNotificationManageScreen: View {
         case .cancel:
             dismiss()
         case .navigateTo(let lineID):
-            selectedLine = LineSelection(lineID: lineID)
+            sheetPresenter.show(
+                .notificationsFlow(.manage(.singleLine(lineID)))
+            )
         case .openSettings:
             openSettings()
         case .toggleEnabled(let enabled):
@@ -64,9 +63,4 @@ struct LineNotificationManageScreen: View {
     private var currentLines: [LineNotificationSettings] {
         notifications.linePreferences.toLineNotificationSettings()
     }
-}
-
-private struct LineSelection: Identifiable {
-    let lineID: TrainLineID
-    var id: TrainLineID { lineID }
 }

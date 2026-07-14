@@ -7,7 +7,7 @@ struct RootScene: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
-    @State private var router = AppRouter()
+    @State private var appRouter = AppRouter()
 
     var body: some Scene {
         WindowGroup {
@@ -15,9 +15,9 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
-                    .appSheetRouter($router.sheetRouter)
-                    .appLifecycle(appData: appData, appDelegate: appDelegate, router: router)
-                    .appEnvironment(dataStore: appData, router: router)
+                    .sheetPresenter($appRouter.sheetPresenter)
+                    .appLifecycle(appData: appData, appDelegate: appDelegate, router: appRouter)
+                    .appEnvironment(dataStore: appData, router: appRouter)
             }
         }
     }
@@ -48,25 +48,25 @@ extension View {
 // MARK: - Sheets
 
 extension View {
-    func appSheetRouter(_ sheetRouter: Binding<SheetRouter>) -> some View {
+    func sheetPresenter(_ sheetPresenter: Binding<SheetPresenter>) -> some View {
         self
-            .modifier(AppSheetRouterModifier(sheetRouter: sheetRouter))
+            .modifier(SheetPresenterModifier(sheetPresenter: sheetPresenter))
     }
 }
 
-private struct AppSheetRouterModifier: ViewModifier {
-    @Binding var sheetRouter: SheetRouter
+private struct SheetPresenterModifier: ViewModifier {
+    @Binding var sheetPresenter: SheetPresenter
 
     // These are only needed for iOS App on Mac sheets to work (they crash otherwise)
-    @Environment(AppDataStore.self) private var macSheetDataStore
-    @Environment(AppRouter.self) private var macSheetRouter
+    @Environment(AppDataStore.self) private var appData
+    @Environment(AppRouter.self) private var appRouter
 
     func body(content: Content) -> some View {
         content
-            .sheet(item: $sheetRouter.presentedSheet) { sheet in
+            .sheet(item: $sheetPresenter.presentedSheet) { sheet in
                 sheetContentView(sheet)
             }
-            .fullScreenCover(item: $sheetRouter.presentedFullScreenSheet) { sheet in
+            .fullScreenCover(item: $sheetPresenter.presentedFullScreenSheet) { sheet in
                 sheetContentView(sheet)
             }
     }
@@ -76,8 +76,8 @@ private struct AppSheetRouterModifier: ViewModifier {
         if ProcessInfo.processInfo.isiOSAppOnMac {
             SheetView(sheet: sheet)
                 .appEnvironment(
-                    dataStore: macSheetDataStore,
-                    router: macSheetRouter
+                    dataStore: appData,
+                    router: appRouter
                 )
         } else {
             SheetView(sheet: sheet)

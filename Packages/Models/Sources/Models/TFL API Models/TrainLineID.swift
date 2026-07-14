@@ -21,3 +21,7 @@ public enum TrainLineID: String, Codable, CaseIterable, Hashable, Sendable {
     case windrush
     case tram
 }
+
+extension TrainLineID: Identifiable {
+    public var id: Self { self }
+}

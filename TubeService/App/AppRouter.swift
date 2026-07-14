@@ -41,17 +41,17 @@ final class AppRouter {
     var maps = NavigationRouter<AppRoute>()
 
     // Sheets
-    var sheetRouter = SheetRouter()
+    var sheetPresenter = SheetPresenter()
 
     func showSheet(_ sheet: Sheet) {
-        sheetRouter.show(sheet)
+        sheetPresenter.show(sheet)
     }
 
     func dismissSheets(
         closePresentedSheet: Bool = true,
         closeFullScreenSheet: Bool = true
     ) {
-        sheetRouter.dismiss(
+        sheetPresenter.dismiss(
             closePresentedSheet: closePresentedSheet,
             closeFullScreenSheet: closeFullScreenSheet
         )

@@ -115,9 +115,13 @@ struct LineStatusDetailScreen: View {
             if state == .permissionDenied {
                 openSettings()
             } else if notifications.isConfigured {
-                router.showSheet(.lineNotificationSettings(lineID))
+                router.showSheet(
+                    .notificationsFlow(.manage(.singleLine(lineID)))
+                )
             } else {
-                router.showSheet(.notificationSettings(.lineDetail(lineID), .onboarding))
+                router.showSheet(
+                    .notificationsFlow(.onboarding(defaultLineID: lineID))
+                )
             }
         }
     }

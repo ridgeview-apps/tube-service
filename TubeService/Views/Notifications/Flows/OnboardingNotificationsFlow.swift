@@ -1,4 +1,5 @@
 import DataStores
+import Models
 import PresentationViews
 import Shared
 import SwiftUI
@@ -19,8 +20,12 @@ struct OnboardingNotificationsFlow: View {
 
     @State private var router = Router<NotificationsOnboardingRoute>()
 
-    let initialNotificationSettings: [LineNotificationSettings]
+    private let initialNotificationSettings: [LineNotificationSettings]
     @State private var updatedNotificationSettings = [LineNotificationSettings]()
+
+    init(defaultLineID: TrainLineID?) {
+        initialNotificationSettings = defaultLineID.map { [.defaultValue(lineID: $0)] } ?? []
+    }
 
     var body: some View {
         NavigationStack(path: $router.navigation.path) {

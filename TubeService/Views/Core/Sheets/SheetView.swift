@@ -24,10 +24,8 @@ struct SheetView: View {
         case let .tubeServicePlus(context, onAction):
             TubeServicePlusView(context: context, onAction: onAction)
                 .asModalScreen()
-        case let .notificationSettings(context, mode):
-            NotificationsFlow(context: context, mode: mode)
-        case let .lineNotificationSettings(lineID):
-            LineNotificationSettingsScreen(lineID: lineID)
+        case let .notificationsFlow(context):
+            NotificationsFlow(context: context)
         }
     }
 }

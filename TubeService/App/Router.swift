@@ -4,7 +4,7 @@ import Observation
 @MainActor
 final class Router<Route: Hashable> {
     var navigation = NavigationRouter<Route>()
-    var sheetRouter = SheetRouter()
+    var sheetPresenter = SheetPresenter()
 }
 
 @Observable
@@ -32,7 +32,7 @@ final class NavigationRouter<Route: Hashable> {
 
 @Observable
 @MainActor
-final class SheetRouter {
+final class SheetPresenter {
     var presentedSheet: Sheet?
     var presentedFullScreenSheet: Sheet?
 
