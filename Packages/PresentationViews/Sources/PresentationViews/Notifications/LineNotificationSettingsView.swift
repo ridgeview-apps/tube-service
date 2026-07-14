@@ -5,18 +5,26 @@ public struct LineNotificationSettingsView: View {
 
     public enum Mode {
         case singleLine(lineID: TrainLineID, existingSettings: LineNotificationSettings?, showsOtherLines: Bool)
-        case manageAll(isEnabled: Bool)
+        case manageAll(isEnabled: Binding<Bool>)
     }
 
     public enum Action {
-        case save(LineNotificationSettings)
-        case remove
         case cancel
         case navigateTo(TrainLineID)
-        case toggleEnabled(Bool)
-        case deleteAllSettings
         case openSettings
-        case resumeAlerts
+        case singleLine(SingleLineAction)
+        case manageAll(ManageAllAction)
+
+        public enum SingleLineAction {
+            case save(LineNotificationSettings)
+            case remove
+            case resumeAlerts
+        }
+
+        public enum ManageAllAction {
+            case toggleEnabled(Bool)
+            case deleteAllSettings
+        }
     }
 
     private let mode: Mode
@@ -27,7 +35,6 @@ public struct LineNotificationSettingsView: View {
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
-    @State private var isEnabled: Bool
     @State private var showRemoveConfirmation = false
     @State private var showDeleteAllConfirmation = false
     @State private var showDiscardChangesConfirmation = false
@@ -53,14 +60,17 @@ public struct LineNotificationSettingsView: View {
         switch mode {
         case .singleLine(let lineID, let existingSettings, _):
             _settings = State(initialValue: existingSettings ?? .defaultValue(lineID: lineID))
-            _isEnabled = State(initialValue: true)
-        case .manageAll(let initialIsEnabled):
+        case .manageAll:
             _settings = State(initialValue: .defaultValue(lineID: .central))
-            _isEnabled = State(initialValue: initialIsEnabled)
         }
     }
 
     // MARK: - Computed Properties
+
+    private var isEnabled: Bool {
+        guard case .manageAll(let binding) = mode else { return true }
+        return binding.wrappedValue
+    }
 
     private var lineID: TrainLineID { settings.lineID }
 
@@ -213,7 +223,7 @@ public struct LineNotificationSettingsView: View {
             }
 
             Button {
-                onAction(.resumeAlerts)
+                onAction(.singleLine(.resumeAlerts))
             } label: {
                 Text(.notificationsLineConfigResumeAlertsButton)
                     .frame(maxWidth: .infinity)
@@ -270,8 +280,21 @@ public struct LineNotificationSettingsView: View {
 
     // MARK: - Mute All Row
 
+    private var toggleBinding: Binding<Bool> {
+        guard case .manageAll(let binding) = mode else {
+            preconditionFailure("toggleBinding accessed outside of manageAll mode")
+        }
+        return Binding(
+            get: { binding.wrappedValue },
+            set: { newValue in
+                binding.wrappedValue = newValue
+                onAction(.manageAll(.toggleEnabled(newValue)))
+            }
+        )
+    }
+
     private var muteAllRow: some View {
-        Toggle(isOn: $isEnabled) {
+        Toggle(isOn: toggleBinding) {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: isEnabled ? "bell.fill" : "bell.slash.fill")
                     .font(.system(size: 20))
@@ -291,9 +314,6 @@ public struct LineNotificationSettingsView: View {
         .padding(16)
         .cardStyle()
         .disabled(savingState == .loading)
-        .onChange(of: isEnabled) { _, newValue in
-            onAction(.toggleEnabled(newValue))
-        }
     }
 
     private var muteAllSubtitle: LocalizedStringResource {
@@ -366,7 +386,7 @@ public struct LineNotificationSettingsView: View {
         ) {
             Button(String(localized: .notificationsManageDeleteAllSettingsButton), role: .destructive) {
                 removeFeedbackTrigger.toggle()
-                onAction(.deleteAllSettings)
+                onAction(.manageAll(.deleteAllSettings))
             }
         } message: {
             Text(.notificationsManageDeleteAllSettingsConfirmationMessage)
@@ -412,7 +432,7 @@ public struct LineNotificationSettingsView: View {
         ) {
             Button(String(localized: .notificationsLineConfigStopAlertsButton), role: .destructive) {
                 removeFeedbackTrigger.toggle()
-                onAction(.remove)
+                onAction(.singleLine(.remove))
             }
         }
     }
@@ -420,7 +440,7 @@ public struct LineNotificationSettingsView: View {
     private var turnOnAlertsButton: some View {
         Button {
             saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
+            onAction(.singleLine(.save(settings)))
         } label: {
             Label {
                 Text(String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)))
@@ -551,7 +571,7 @@ public struct LineNotificationSettingsView: View {
     private var saveButton: some View {
         Button {
             saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
+            onAction(.singleLine(.save(settings)))
         } label: {
             Text(.globalSave)
         }
@@ -596,9 +616,10 @@ fileprivate extension View {
     }
 
     #Preview("Manage all") {
+        @Previewable @State var isEnabled = true
         NavigationStack {
             LineNotificationSettingsView(
-                mode: .manageAll(isEnabled: true),
+                mode: .manageAll(isEnabled: $isEnabled),
                 allSettings: [.victoria, .jubilee, .central, .northern].map { .defaultValue(lineID: $0) },
                 onAction: { print($0) }
             )

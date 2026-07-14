@@ -43,6 +43,21 @@ struct LineNotificationSettingsScreen: View {
 
     private func handleAction(_ action: LineNotificationSettingsView.Action) {
         switch action {
+        case .cancel:
+            dismiss()
+        case .navigateTo(let targetLineID):
+            selectedOtherLine = LineSelection(lineID: targetLineID)
+        case .openSettings:
+            openSettings()
+        case .singleLine(let singleLineAction):
+            handleSingleLineAction(singleLineAction)
+        case .manageAll:
+            break
+        }
+    }
+
+    private func handleSingleLineAction(_ action: LineNotificationSettingsView.Action.SingleLineAction) {
+        switch action {
         case .save(let updatedSettings):
             Task {
                 var updatedLines = currentLines.filter { $0.lineID != lineID }
@@ -66,14 +81,6 @@ struct LineNotificationSettingsScreen: View {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
                 }
             }
-        case .cancel:
-            dismiss()
-        case .navigateTo(let targetLineID):
-            selectedOtherLine = LineSelection(lineID: targetLineID)
-        case .toggleEnabled, .deleteAllSettings:
-            break
-        case .openSettings:
-            openSettings()
         case .resumeAlerts:
             Task {
                 savingState = .loading
