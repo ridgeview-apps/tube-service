@@ -11,19 +11,15 @@ struct LineNotificationManageScreen: View {
 
     @State private var selectedLine: LineSelection?
     @State private var savingState: LoadingState = .loaded
-    @State private var isEnabled: Bool = true
 
     var body: some View {
         LineNotificationManageAllView(
-            isEnabled: isEnabled,
+            isEnabled: !notifications.isDevicePaused,
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
             onAction: handleAction
         )
-        .onChange(of: notifications.isDevicePaused, initial: true) { _, isPaused in
-            isEnabled = !isPaused
-        }
         .sheet(item: $selectedLine) { selection in
             LineNotificationSettingsScreen(lineID: selection.lineID, showsOtherLines: false)
                 .iOSAppOnMacSheetEnvironment(notifications)
