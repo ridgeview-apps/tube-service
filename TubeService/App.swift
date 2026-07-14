@@ -23,17 +23,9 @@ struct RootScene: App {
     }
 }
 
-extension View {
+// MARK: - Environment objects
 
-    func appSheetRouter(_ sheetRouter: Binding<SheetRouter>) -> some View {
-        self
-            .sheet(item: sheetRouter.presentedSheet) { sheet in
-                SheetView(sheet: sheet)
-            }
-            .fullScreenCover(item: sheetRouter.presentedFullScreenSheet) { sheet in
-                SheetView(sheet: sheet)
-            }
-    }
+extension View {
 
     func appEnvironment(
         dataStore: AppDataStore,
@@ -50,5 +42,45 @@ extension View {
             .environment(dataStore.purchases)
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
+    }
+}
+
+// MARK: - Sheets
+
+extension View {
+    func appSheetRouter(_ sheetRouter: Binding<SheetRouter>) -> some View {
+        self
+            .modifier(AppSheetRouterModifier(sheetRouter: sheetRouter))
+    }
+}
+
+private struct AppSheetRouterModifier: ViewModifier {
+    @Binding var sheetRouter: SheetRouter
+
+    // These are only needed for iOS App on Mac sheets to work (they crash otherwise)
+    @Environment(AppDataStore.self) private var macSheetDataStore
+    @Environment(AppRouter.self) private var macSheetRouter
+
+    func body(content: Content) -> some View {
+        content
+            .sheet(item: $sheetRouter.presentedSheet) { sheet in
+                sheetContentView(sheet)
+            }
+            .fullScreenCover(item: $sheetRouter.presentedFullScreenSheet) { sheet in
+                sheetContentView(sheet)
+            }
+    }
+
+    @ViewBuilder
+    private func sheetContentView(_ sheet: Sheet) -> some View {
+        if ProcessInfo.processInfo.isiOSAppOnMac {
+            SheetView(sheet: sheet)
+                .appEnvironment(
+                    dataStore: macSheetDataStore,
+                    router: macSheetRouter
+                )
+        } else {
+            SheetView(sheet: sheet)
+        }
     }
 }
