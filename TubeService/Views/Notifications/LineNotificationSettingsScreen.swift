@@ -22,12 +22,10 @@ struct LineNotificationSettingsScreen: View {
 
     var body: some View {
         NavigationStack {
-            LineNotificationSettingsView(
-                mode: .singleLine(
-                    lineID: lineID,
-                    existingSettings: existingSettings(for: lineID),
-                    showsOtherLines: showsOtherLines
-                ),
+            LineNotificationSingleLineView(
+                lineID: lineID,
+                existingSettings: existingSettings(for: lineID),
+                showsOtherLines: showsOtherLines,
                 allSettings: currentLines,
                 showsPermissionWarning: notifications.isPermissionDenied,
                 showsPausedAlertsWarning: notifications.isDevicePaused,
@@ -41,7 +39,7 @@ struct LineNotificationSettingsScreen: View {
         }
     }
 
-    private func handleAction(_ action: LineNotificationSettingsView.Action) {
+    private func handleAction(_ action: LineNotificationSingleLineView.Action) {
         switch action {
         case .cancel:
             dismiss()
@@ -49,15 +47,6 @@ struct LineNotificationSettingsScreen: View {
             selectedOtherLine = LineSelection(lineID: targetLineID)
         case .openSettings:
             openSettings()
-        case .singleLine(let singleLineAction):
-            handleSingleLineAction(singleLineAction)
-        case .manageAll:
-            break
-        }
-    }
-
-    private func handleSingleLineAction(_ action: LineNotificationSettingsView.Action.SingleLineAction) {
-        switch action {
         case .save(let updatedSettings):
             Task {
                 var updatedLines = currentLines.filter { $0.lineID != lineID }

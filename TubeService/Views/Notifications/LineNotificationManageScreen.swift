@@ -14,8 +14,8 @@ struct LineNotificationManageScreen: View {
     @State private var isEnabled: Bool = true
 
     var body: some View {
-        LineNotificationSettingsView(
-            mode: .manageAll(isEnabled: $isEnabled),
+        LineNotificationManageAllView(
+            isEnabled: $isEnabled,
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
@@ -30,7 +30,7 @@ struct LineNotificationManageScreen: View {
         }
     }
 
-    private func handleAction(_ action: LineNotificationSettingsView.Action) {
+    private func handleAction(_ action: LineNotificationManageAllView.Action) {
         switch action {
         case .cancel:
             dismiss()
@@ -38,15 +38,6 @@ struct LineNotificationManageScreen: View {
             selectedLine = LineSelection(lineID: lineID)
         case .openSettings:
             openSettings()
-        case .manageAll(let manageAction):
-            handleManageAllAction(manageAction)
-        case .singleLine:
-            break
-        }
-    }
-
-    private func handleManageAllAction(_ action: LineNotificationSettingsView.Action.ManageAllAction) {
-        switch action {
         case .toggleEnabled(let enabled):
             Task {
                 savingState = .loading
