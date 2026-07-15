@@ -3,7 +3,7 @@ import Models
 import PresentationViews
 import SwiftUI
 
-struct LineNotificationManageAllScreen: View {
+struct ManageAllLineNotificationsScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
@@ -13,7 +13,7 @@ struct LineNotificationManageAllScreen: View {
     @State private var selectedOtherLineID: TrainLineID?
 
     var body: some View {
-        LineNotificationManageAllView(
+        ManageAllLineNotificationsView(
             isEnabled: !notifications.isDevicePaused,
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
@@ -22,12 +22,12 @@ struct LineNotificationManageAllScreen: View {
         )
         .sheet(item: $selectedOtherLineID) { otherLineID in
             NavigationStack {
-                LineNotificationManageSingleLineScreen(lineID: otherLineID, showsOtherLines: false)
+                ManageSingleLineNotificationsScreen(lineID: otherLineID, showsOtherLines: false)
             }
         }
     }
 
-    private func handleAction(_ action: LineNotificationManageAllView.Action) {
+    private func handleAction(_ action: ManageAllLineNotificationsView.Action) {
         switch action {
         case .cancel:
             dismiss()

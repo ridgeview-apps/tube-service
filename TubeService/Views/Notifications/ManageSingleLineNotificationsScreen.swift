@@ -3,7 +3,7 @@ import Models
 import PresentationViews
 import SwiftUI
 
-struct LineNotificationManageSingleLineScreen: View {
+struct ManageSingleLineNotificationsScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
@@ -21,7 +21,7 @@ struct LineNotificationManageSingleLineScreen: View {
     }
 
     var body: some View {
-        LineNotificationSingleLineView(
+        ManageSingleLineNotificationsView(
             lineID: lineID,
             existingSettings: existingSettings(for: lineID),
             showsOtherLines: showsOtherLines,
@@ -33,12 +33,12 @@ struct LineNotificationManageSingleLineScreen: View {
         )
         .sheet(item: $selectedOtherLineID) { otherLineID in
             NavigationStack {
-                LineNotificationManageSingleLineScreen(lineID: otherLineID, showsOtherLines: false)
+                ManageSingleLineNotificationsScreen(lineID: otherLineID, showsOtherLines: false)
             }
         }
     }
 
-    private func handleAction(_ action: LineNotificationSingleLineView.Action) {
+    private func handleAction(_ action: ManageSingleLineNotificationsView.Action) {
         switch action {
         case .cancel:
             dismiss()

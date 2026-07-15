@@ -1,7 +1,7 @@
 import Models
 import SwiftUI
 
-public struct LineNotificationSingleLineView: View {
+public struct ManageSingleLineNotificationsView: View {
 
     public enum Action {
         case cancel
@@ -387,7 +387,7 @@ private extension View {
 
     #Preview("New line") {
         NavigationStack {
-            LineNotificationSingleLineView(
+            ManageSingleLineNotificationsView(
                 lineID: .central,
                 existingSettings: nil,
                 showsOtherLines: true,
@@ -398,7 +398,7 @@ private extension View {
 
     #Preview("Editing existing") {
         NavigationStack {
-            LineNotificationSingleLineView(
+            ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee),
                 showsOtherLines: true,

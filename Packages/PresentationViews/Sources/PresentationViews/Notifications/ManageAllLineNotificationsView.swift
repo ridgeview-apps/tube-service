@@ -1,7 +1,7 @@
 import Models
 import SwiftUI
 
-public struct LineNotificationManageAllView: View {
+public struct ManageAllLineNotificationsView: View {
 
     public enum Action {
         case cancel
@@ -248,7 +248,7 @@ private extension View {
 
     #Preview("Manage all") {
         NavigationStack {
-            LineNotificationManageAllView(
+            ManageAllLineNotificationsView(
                 isEnabled: true,
                 allSettings: [.victoria, .jubilee, .central, .northern].map { .defaultValue(lineID: $0) },
                 onAction: { print($0) }

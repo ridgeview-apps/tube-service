@@ -23,9 +23,9 @@ struct ManageNotificationsFlow: View {
         } else {
             switch mode {
             case let .singleLine(lineID):
-                LineNotificationManageSingleLineScreen(lineID: lineID, showsOtherLines: true)
+                ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: true)
             case .all:
-                LineNotificationManageAllScreen()
+                ManageAllLineNotificationsScreen()
             }
         }
     }
