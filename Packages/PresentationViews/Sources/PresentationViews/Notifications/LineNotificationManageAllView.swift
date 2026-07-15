@@ -5,7 +5,7 @@ public struct LineNotificationManageAllView: View {
 
     public enum Action {
         case cancel
-        case navigateTo(TrainLineID)
+        case tappedOtherLine(TrainLineID)
         case openSettings
         case toggleEnabled(Bool)
         case deleteAllSettings
@@ -165,7 +165,7 @@ public struct LineNotificationManageAllView: View {
         VStack(spacing: 0) {
             LineNotificationRows(
                 settings: allSettings,
-                onSelect: { onAction(.navigateTo($0)) }
+                onSelect: { onAction(.tappedOtherLine($0)) }
             )
             if !unconfiguredLineIDs.isEmpty {
                 if !allSettings.isEmpty {
@@ -214,7 +214,7 @@ public struct LineNotificationManageAllView: View {
         AddLineMenu(
             lineIDs: unconfiguredLineIDs,
             label: .notificationsManageAddLineButton,
-            onSelect: { onAction(.navigateTo($0)) }
+            onSelect: { onAction(.tappedOtherLine($0)) }
         )
     }
 

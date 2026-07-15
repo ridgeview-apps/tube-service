@@ -10,7 +10,7 @@ struct LineNotificationManageAllScreen: View {
     @Environment(\.openSettings) private var openSettings
 
     @State private var savingState: LoadingState = .loaded
-    @State private var sheetPresenter = SheetPresenter()
+    @State private var selectedOtherLineID: TrainLineID?
 
     var body: some View {
         LineNotificationManageAllView(
@@ -20,17 +20,19 @@ struct LineNotificationManageAllScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
-        .sheetPresenter($sheetPresenter)
+        .sheet(item: $selectedOtherLineID) { otherLineID in
+            NavigationStack {
+                LineNotificationManageSingleLineScreen(lineID: otherLineID, showsOtherLines: false)
+            }
+        }
     }
 
     private func handleAction(_ action: LineNotificationManageAllView.Action) {
         switch action {
         case .cancel:
             dismiss()
-        case .navigateTo(let lineID):
-            sheetPresenter.show(
-                .notificationsFlow(.manage(.singleLine(lineID)))
-            )
+        case .tappedOtherLine(let lineID):
+            selectedOtherLineID = lineID
         case .openSettings:
             openSettings()
         case .toggleEnabled(let enabled):

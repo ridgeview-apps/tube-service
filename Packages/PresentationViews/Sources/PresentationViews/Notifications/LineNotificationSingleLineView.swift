@@ -5,7 +5,7 @@ public struct LineNotificationSingleLineView: View {
 
     public enum Action {
         case cancel
-        case otherLineSelected(TrainLineID)
+        case tappedOtherLine(TrainLineID)
         case openSettings
         case save(LineNotificationSettings)
         case remove
@@ -308,7 +308,7 @@ public struct LineNotificationSingleLineView: View {
                     .padding(.leading, 40)
                 LineNotificationRows(
                     settings: configuredLines,
-                    onSelect: { onAction(.otherLineSelected($0)) }
+                    onSelect: { onAction(.tappedOtherLine($0)) }
                 )
                 if !unconfiguredLineIDs.isEmpty {
                     Divider()
@@ -324,7 +324,7 @@ public struct LineNotificationSingleLineView: View {
         AddLineMenu(
             lineIDs: unconfiguredLineIDs,
             label: .notificationsLineConfigAddAnotherLine,
-            onSelect: { onAction(.otherLineSelected($0)) }
+            onSelect: { onAction(.tappedOtherLine($0)) }
         )
     }
 

@@ -42,7 +42,7 @@ struct LineNotificationManageSingleLineScreen: View {
         switch action {
         case .cancel:
             dismiss()
-        case .otherLineSelected(let targetLineID):
+        case .tappedOtherLine(let targetLineID):
             selectedOtherLineID = targetLineID
         case .openSettings:
             openSettings()
