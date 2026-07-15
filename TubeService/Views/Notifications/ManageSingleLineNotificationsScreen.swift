@@ -8,9 +8,9 @@ struct ManageSingleLineNotificationsScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
+    @Environment(Router<ManageNotificationsRoute>.self) private var manageNotificationsRouter
 
     @State private var savingState: LoadingState = .loaded
-    @State private var selectedOtherLineID: TrainLineID?
 
     let lineID: TrainLineID
     let showsOtherLines: Bool
@@ -31,19 +31,14 @@ struct ManageSingleLineNotificationsScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
-        .sheet(item: $selectedOtherLineID) { otherLineID in
-            NavigationStack {
-                ManageSingleLineNotificationsScreen(lineID: otherLineID, showsOtherLines: false)
-            }
-        }
     }
 
     private func handleAction(_ action: ManageSingleLineNotificationsView.Action) {
         switch action {
         case .cancel:
             dismiss()
-        case .tappedOtherLine(let targetLineID):
-            selectedOtherLineID = targetLineID
+        case .tappedOtherLine(let otherLineID):
+            manageNotificationsRouter.navigation.push(.otherLineSelection(otherLineID))
         case .openSettings:
             openSettings()
         case .save(let updatedSettings):
