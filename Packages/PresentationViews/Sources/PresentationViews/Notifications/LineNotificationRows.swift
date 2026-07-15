@@ -5,6 +5,8 @@ struct LineNotificationRows: View {
     let settings: [LineNotificationSettings]
     var onSelect: ((TrainLineID) -> Void)? = nil
 
+    @Environment(\.lineSelectionZoomNamespace) private var zoomNamespace
+
     var body: some View {
         VStack(spacing: 0) {
             ForEach(
@@ -29,6 +31,7 @@ struct LineNotificationRows: View {
                 rowContent(lineSettings, showChevron: true)
             }
             .buttonStyle(.plain)
+            .matchedTransitionSourceIfPresent(id: lineSettings.lineID, in: zoomNamespace)
         } else {
             rowContent(lineSettings, showChevron: false)
         }

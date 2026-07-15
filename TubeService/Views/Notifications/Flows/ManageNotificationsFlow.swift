@@ -15,6 +15,7 @@ struct ManageNotificationsFlow: View {
     let mode: NotificationsFlow.Context.ManageMode
 
     @State private var manageNotificationsRouter = Router<ManageNotificationsRoute>()
+    @Namespace private var zoomNamespace
 
     var body: some View {
         NavigationStack(path: $manageNotificationsRouter.navigation.path) {
@@ -24,6 +25,7 @@ struct ManageNotificationsFlow: View {
                 }
         }
         .environment(manageNotificationsRouter)
+        .environment(\.lineSelectionZoomNamespace, zoomNamespace as Namespace.ID?)
     }
 
     @ViewBuilder
@@ -52,6 +54,7 @@ struct ManageNotificationsFlow: View {
         case .otherLineSelection(let lineID):
             ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: false)
                 .navigationBarBackButtonHidden()
+                .navigationTransition(.zoom(sourceID: lineID, in: zoomNamespace))
         }
     }
 }
