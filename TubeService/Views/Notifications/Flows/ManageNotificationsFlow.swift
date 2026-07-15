@@ -4,7 +4,8 @@ import PresentationViews
 import SwiftUI
 
 enum ManageNotificationsRoute: Hashable {
-    case otherLineSelection(TrainLineID)
+    case editLine(lineID: TrainLineID)
+    case addLine(lineID: TrainLineID)
 }
 
 struct ManageNotificationsFlow: View {
@@ -25,7 +26,7 @@ struct ManageNotificationsFlow: View {
                 }
         }
         .environment(manageNotificationsRouter)
-        .environment(\.lineSelectionZoomNamespace, zoomNamespace as Namespace.ID?)
+        .environment(\.lineSelectionZoomNamespace, zoomNamespace)
     }
 
     @ViewBuilder
@@ -51,10 +52,17 @@ struct ManageNotificationsFlow: View {
     @ViewBuilder
     private func destinationView(for route: ManageNotificationsRoute) -> some View {
         switch route {
-        case .otherLineSelection(let lineID):
-            ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: false)
-                .navigationBarBackButtonHidden()
-                .navigationTransition(.zoom(sourceID: lineID, in: zoomNamespace))
+        case .editLine(let lineID):
+            manageSingleLineScreen(lineID: lineID, zoomSourceID: lineID)
+        case .addLine(let lineID):
+            manageSingleLineScreen(lineID: lineID, zoomSourceID: "addLineMenu")
         }
+    }
+
+    private func manageSingleLineScreen(lineID: TrainLineID, zoomSourceID: some Hashable) -> some View {
+        ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: false)
+            .navigationBarBackButtonHidden()
+            .navigationTransition(.zoom(sourceID: zoomSourceID, in: zoomNamespace))
+
     }
 }

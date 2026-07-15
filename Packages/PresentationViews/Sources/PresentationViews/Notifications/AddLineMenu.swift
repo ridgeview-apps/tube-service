@@ -6,6 +6,8 @@ struct AddLineMenu: View {
     let label: LocalizedStringResource
     let onSelect: (TrainLineID) -> Void
 
+    @Environment(\.lineSelectionZoomNamespace) private var zoomNamespace
+
     var body: some View {
         Menu {
             ForEach(lineIDs, id: \.self) { lineID in
@@ -23,5 +25,6 @@ struct AddLineMenu: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(16)
         }
+        .matchedTransitionSourceIfPresent(id: "addLineMenu", in: zoomNamespace)
     }
 }

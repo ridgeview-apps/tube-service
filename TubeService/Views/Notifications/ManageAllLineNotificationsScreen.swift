@@ -27,7 +27,9 @@ struct ManageAllLineNotificationsScreen: View {
         case .cancel:
             dismiss()
         case .tappedOtherLine(let otherLineID):
-            manageNotificationsRouter.navigation.push(.otherLineSelection(otherLineID))
+            manageNotificationsRouter.navigation.push(.editLine(lineID: otherLineID))
+        case .addedLine(let otherLineID):
+            manageNotificationsRouter.navigation.push(.addLine(lineID: otherLineID))
         case .openSettings:
             openSettings()
         case .toggleEnabled(let enabled):

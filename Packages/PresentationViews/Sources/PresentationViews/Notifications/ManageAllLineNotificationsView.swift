@@ -6,6 +6,7 @@ public struct ManageAllLineNotificationsView: View {
     public enum Action {
         case cancel
         case tappedOtherLine(TrainLineID)
+        case addedLine(TrainLineID)
         case openSettings
         case toggleEnabled(Bool)
         case deleteAllSettings
@@ -214,7 +215,7 @@ public struct ManageAllLineNotificationsView: View {
         AddLineMenu(
             lineIDs: unconfiguredLineIDs,
             label: .notificationsManageAddLineButton,
-            onSelect: { onAction(.tappedOtherLine($0)) }
+            onSelect: { onAction(.addedLine($0)) }
         )
     }
 
