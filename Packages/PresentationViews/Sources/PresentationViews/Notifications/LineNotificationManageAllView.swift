@@ -36,10 +36,6 @@ public struct LineNotificationManageAllView: View {
 
     // MARK: - Computed Properties
 
-    private var configuredLines: [LineNotificationSettings] {
-        allSettings.sorted { $0.lineID.name < $1.lineID.name }
-    }
-
     private var unconfiguredLineIDs: [TrainLineID] {
         let configuredIDs = Set(allSettings.map(\.lineID))
         return TrainLineID.allCases
@@ -78,7 +74,7 @@ public struct LineNotificationManageAllView: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
 
-            if !configuredLines.isEmpty || !unconfiguredLineIDs.isEmpty {
+            if !allSettings.isEmpty || !unconfiguredLineIDs.isEmpty {
                 allLinesCard
                     .opacity(isEnabled ? 1 : 0.5)
                     .animation(.easeInOut(duration: 0.2), value: isEnabled)
@@ -167,36 +163,12 @@ public struct LineNotificationManageAllView: View {
 
     private var allLinesCard: some View {
         VStack(spacing: 0) {
-            ForEach(Array(configuredLines.enumerated()), id: \.element.lineID) { index, lineSettings in
-                if index > 0 {
-                    Divider()
-                        .padding(.leading, 40)
-                }
-                Button {
-                    onAction(.navigateTo(lineSettings.lineID))
-                } label: {
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(lineSettings.lineID.backgroundColor)
-                            .frame(width: 12, height: 12)
-                        Text(lineSettings.lineID.name)
-                            .foregroundStyle(.primary)
-                        Spacer()
-                        Text(lineSettings.schedulePreset.title)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.tertiary)
-                            .font(.caption.weight(.semibold))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 14)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-            }
+            LineNotificationRows(
+                settings: allSettings,
+                onSelect: { onAction(.navigateTo($0)) }
+            )
             if !unconfiguredLineIDs.isEmpty {
-                if !configuredLines.isEmpty {
+                if !allSettings.isEmpty {
                     Divider()
                         .padding(.leading, 40)
                 }
