@@ -4,14 +4,28 @@ import SwiftUI
 public struct LineStatusHistoryButton: View {
 
     public enum HistoryState {
+        case noDisruption
         case ongoingDisruption(since: Date)
         case resolvedDisruption(at: Date)
         case multipleDisruptions(count: Int, firstAt: Date)
     }
 
-    public enum ButtonState {
-        case locked(HistoryState?)
-        case unlocked(HistoryState?)
+    public struct ButtonState {
+        public enum Style {
+            case locked
+            case unlocked
+        }
+
+        public let style: Style
+        public let historyState: HistoryState
+
+        public static func locked(_ historyState: HistoryState) -> ButtonState {
+            .init(style: .locked, historyState: historyState)
+        }
+
+        public static func unlocked(_ historyState: HistoryState) -> ButtonState {
+            .init(style: .unlocked, historyState: historyState)
+        }
     }
 
     let lineID: TrainLineID
@@ -52,32 +66,24 @@ public struct LineStatusHistoryButton: View {
     }
 
     private var iconForegroundColor: Color {
-        switch buttonState {
-        case .locked:
-            .secondary
-        case .unlocked(let historyState):
-            historyState != nil ? .white : lineID.textColor
+        switch (buttonState.style, buttonState.historyState) {
+        case (.locked, _): .secondary
+        case (.unlocked, .noDisruption): lineID.textColor
+        case (.unlocked, _): .white
         }
     }
 
     private var iconBackgroundColor: Color {
-        switch buttonState {
-        case .locked:
-            Color(.tertiarySystemFill)
-        case .unlocked(let historyState):
-            historyState != nil ? .orange : lineID.backgroundColor
-        }
-    }
-
-    private var historyState: HistoryState? {
-        switch buttonState {
-        case .locked(let historyState), .unlocked(let historyState): return historyState
+        switch (buttonState.style, buttonState.historyState) {
+        case (.locked, _): Color(.tertiarySystemFill)
+        case (.unlocked, .noDisruption): lineID.backgroundColor
+        case (.unlocked, _): .orange
         }
     }
 
     private var title: LocalizedStringResource {
-        switch historyState {
-        case .none:
+        switch buttonState.historyState {
+        case .noDisruption:
             return .lineStatusHistoryNavigationTitle
         case .ongoingDisruption(let date):
             return .lineStatusHistoryEntryDisruptionSince(
@@ -93,21 +99,17 @@ public struct LineStatusHistoryButton: View {
     }
 
     private var subtitle: LocalizedStringResource {
-        switch buttonState {
-        case .locked(let historyState):
-            historyState != nil
-                ? .lineStatusHistoryEntryLockedSubtitleWithDisruption
-                : .lineStatusHistoryEntryLockedSubtitle
-        case .unlocked(let historyState):
-            historyState != nil
-                ? .lineStatusHistoryEntryUnlockedSubtitleWithDisruption
-                : .lineStatusHistoryEntryUnlockedSubtitle
+        switch (buttonState.style, buttonState.historyState) {
+        case (.locked, .noDisruption): .lineStatusHistoryEntryLockedSubtitle
+        case (.locked, _): .lineStatusHistoryEntryLockedSubtitleWithDisruption
+        case (.unlocked, .noDisruption): .lineStatusHistoryEntryUnlockedSubtitle
+        case (.unlocked, _): .lineStatusHistoryEntryUnlockedSubtitleWithDisruption
         }
     }
 
     @ViewBuilder
     private var accessory: some View {
-        switch buttonState {
+        switch buttonState.style {
         case .locked:
             Image(systemName: "lock.fill")
                 .foregroundStyle(.secondary)
@@ -121,7 +123,7 @@ public struct LineStatusHistoryButton: View {
     }
 
     private var accessibilityHint: LocalizedStringResource {
-        switch buttonState {
+        switch buttonState.style {
         case .locked: .lineStatusHistoryEntryLockedAccessibilityHint
         case .unlocked: .lineStatusHistoryEntryUnlockedAccessibilityHint
         }
@@ -132,7 +134,7 @@ public struct LineStatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineStatusHistoryButton(lineID: .victoria, buttonState: .locked(nil), onTap: {})
+    LineStatusHistoryButton(lineID: .victoria, buttonState: .locked(.noDisruption), onTap: {})
         .padding()
 }
 
@@ -164,7 +166,7 @@ public struct LineStatusHistoryButton: View {
 }
 
 #Preview("Unlocked") {
-    LineStatusHistoryButton(lineID: .victoria, buttonState: .unlocked(nil), onTap: {})
+    LineStatusHistoryButton(lineID: .victoria, buttonState: .unlocked(.noDisruption), onTap: {})
         .padding()
 }
 

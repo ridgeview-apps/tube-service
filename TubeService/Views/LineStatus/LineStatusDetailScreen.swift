@@ -41,8 +41,8 @@ struct LineStatusDetailScreen: View {
         return model.lineStatusData(for: .live)?.fetchedAt
     }
 
-    private var historyState: LineStatusHistoryButton.HistoryState? {
-        guard let snapshots = model.disruptionSnapshots(for: lineID) else { return nil }
+    private var historyState: LineStatusHistoryButton.HistoryState {
+        guard let snapshots = model.disruptionSnapshots(for: lineID) else { return .noDisruption }
         let count = model.disruptionCountsByLineID[lineID] ?? 1
         if count > 1 {
             return .multipleDisruptions(count: count, firstAt: snapshots.last?.observedAt ?? snapshots[0].observedAt)
@@ -51,7 +51,7 @@ struct LineStatusDetailScreen: View {
             line?.isDisrupted == true
                 ? .ongoingDisruption(since: $0.observedAt)
                 : .resolvedDisruption(at: $0.observedAt)
-        }
+        } ?? .noDisruption
     }
 
     private var historyButtonState: LineStatusHistoryButton.ButtonState? {
