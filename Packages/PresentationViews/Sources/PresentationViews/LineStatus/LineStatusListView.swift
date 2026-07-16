@@ -133,6 +133,7 @@ public struct LineStatusListView: View {
                     .foregroundStyle(.secondary)
                     .rotationEffect(.degrees(isOtherLinesExpanded ? 90 : 0))
             }
+            .contentShape(.rect)
             .padding(.top, 8)
         }
         .buttonStyle(.plain)

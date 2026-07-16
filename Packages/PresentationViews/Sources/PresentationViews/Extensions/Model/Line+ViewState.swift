@@ -67,10 +67,7 @@ public extension Line {
         disruptionCountsByLineID: [TrainLineID: Int]
     ) -> LineStatusHistoryIndicator? {
         guard let count = disruptionCountsByLineID[id] else { return nil }
-        if isDisrupted {
-            guard count > 1 else { return nil }
-            return .disruptionsToday(count: count)
-        }
+        guard !isDisrupted || count > 1 else { return nil }
         return .disruptionEarlierToday
     }
 }

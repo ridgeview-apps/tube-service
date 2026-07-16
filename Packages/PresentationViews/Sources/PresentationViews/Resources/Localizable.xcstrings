@@ -1526,29 +1526,6 @@
         }
       }
     },
-    "line.status.history.disruptions.today %lld" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "1 disruption today"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld disruptions today"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "line.status.history.empty.description %@" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -99,19 +99,12 @@ public struct LineStatusCell: View {
             Text(line.shortStatusText)
                 .foregroundStyle(line.isDisrupted ? .adaptiveRed : .primary)
 
-            if let historyIndicator {
+            if historyIndicator != nil {
                 HStack(spacing: 4) {
                     Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
                         .foregroundStyle(.orange)
-
-                    switch historyIndicator {
-                    case .disruptionEarlierToday:
-                        Text(.lineStatusHistoryDisruptionEarlierToday)
-                            .foregroundStyle(Color.secondary)
-                    case .disruptionsToday(let count):
-                        Text(.lineStatusHistoryDisruptionsToday(count))
-                            .foregroundStyle(Color.secondary)
-                    }
+                    Text(.lineStatusHistoryDisruptionEarlierToday)
+                        .foregroundStyle(Color.secondary)
                 }
                 .font(.caption2.weight(.medium))
                 .fixedSize(horizontal: false, vertical: true)
