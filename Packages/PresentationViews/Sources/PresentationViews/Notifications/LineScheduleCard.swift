@@ -32,7 +32,7 @@ public struct LineScheduleCard: View {
         .overlay(alignment: .topTrailing) {
             removeButton
                 .dynamicTypeSize(..<DynamicTypeSize.accessibility1)
-                .offset(x: 10, y: -10)
+                .offset(x: 11, y: -11)
         }
     }
 
@@ -49,9 +49,10 @@ public struct LineScheduleCard: View {
             Button {
                 showRemoveConfirmation = true
             } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.body)
-                    .foregroundStyle(.secondary)
+                Image(systemName: "minus.circle.fill")
+                    .font(.title2)
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.white, .adaptiveRed)
             }
             .buttonStyle(.plain)
             .confirmationDialog(

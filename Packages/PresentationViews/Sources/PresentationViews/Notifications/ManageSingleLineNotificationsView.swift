@@ -23,7 +23,7 @@ public struct ManageSingleLineNotificationsView: View {
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
-    @State private var showRemoveConfirmation = false
+
     @State private var showDiscardChangesConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
@@ -192,46 +192,27 @@ public struct ManageSingleLineNotificationsView: View {
 
     // MARK: - Schedule Card
 
+    private var removeAction: (() -> Void)? {
+        guard existingSettings != nil else { return nil }
+        return {
+            removeFeedbackTrigger.toggle()
+            onAction(.remove)
+        }
+    }
+
     private var scheduleCard: some View {
-        LineScheduleCard(settings: $settings)
+        LineScheduleCard(settings: $settings, onRemove: removeAction)
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
+            .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
     }
 
     // MARK: - Alerts On / Off CTA
 
     @ViewBuilder
     private var notificationActionButton: some View {
-        if existingSettings != nil {
-            turnOffAlertsButton
-        } else {
+        if existingSettings == nil {
             turnOnAlertsButton
-        }
-    }
-
-    private var turnOffAlertsButton: some View {
-        Button {
-            showRemoveConfirmation = true
-        } label: {
-            Label {
-                Text(String(localized: .notificationsLineConfigRemoveButton(lineID.longName)))
-            } icon: {
-                Image(systemName: "minus.circle.fill")
-            }
-            .ctaLabelStyle()
-            .foregroundStyle(.adaptiveRed)
-        }
-        .cardStyle(borderColor: .adaptiveRed, borderWidth: 1.5)
-        .confirmationDialog(
-            Text(.notificationsLineConfigRemoveConfirmation),
-            isPresented: $showRemoveConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(String(localized: .notificationsLineConfigStopAlertsButton), role: .destructive) {
-                removeFeedbackTrigger.toggle()
-                onAction(.remove)
-            }
         }
     }
 
