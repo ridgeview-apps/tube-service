@@ -50,8 +50,7 @@ public struct StationView: View {
             }
             .padding(.vertical, 16)
         }
-        .withDefaultMaxWidth()
-        .background(Color.defaultBackground)
+        .defaultMaxWidthWithFullBackground()
         .withHardScrollEdgeEffectStyle()
     }
 
