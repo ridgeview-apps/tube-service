@@ -2550,7 +2550,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This removes all saved line alert configurations from this device. Turning alerts off keeps your settings."
+            "value" : "This removes all saved line alert configurations from this device. You can set them up again at any time."
           }
         }
       }
