@@ -25,9 +25,10 @@ public struct LineNotificationsButton: View {
             HStack(spacing: 12) {
                 Image(systemName: iconName)
                     .contentTransition(.symbolEffect(.replace))
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(iconColor)
-                    .frame(width: 36)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(iconForegroundColor)
+                    .frame(width: 36, height: 36)
+                    .background(iconBackgroundColor, in: Circle())
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
@@ -53,11 +54,19 @@ public struct LineNotificationsButton: View {
         .cardStyle()
     }
 
-    private var iconColor: some ShapeStyle {
+    private var iconForegroundColor: some ShapeStyle {
         switch state {
-        case .permissionDenied: AnyShapeStyle(.orange)
-        case .active: AnyShapeStyle(.green)
-        default: AnyShapeStyle(.tint)
+        case .active: AnyShapeStyle(lineID.textColor)
+        case .permissionDenied: AnyShapeStyle(Color.white)
+        default: AnyShapeStyle(Color.secondary)
+        }
+    }
+
+    private var iconBackgroundColor: some ShapeStyle {
+        switch state {
+        case .active: AnyShapeStyle(lineID.backgroundColor)
+        case .permissionDenied: AnyShapeStyle(Color.orange)
+        default: AnyShapeStyle(Color(.tertiarySystemFill))
         }
     }
 
