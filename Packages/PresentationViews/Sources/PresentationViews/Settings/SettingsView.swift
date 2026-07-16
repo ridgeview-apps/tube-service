@@ -54,6 +54,9 @@ public struct SettingsView: View {
                                 Image(systemName: "exclamationmark.triangle.fill")
                                     .foregroundStyle(.orange)
                                     .accessibilityLabel(Text(.notificationsManagePermissionWarningTitle))
+                            } else if notificationRowState.configuredLineCount > 0 {
+                                Text("\(notificationRowState.configuredLineCount)")
+                                    .foregroundStyle(.secondary)
                             }
                         }
                     }

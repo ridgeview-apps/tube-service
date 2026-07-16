@@ -60,7 +60,8 @@ struct SettingsScreen: View {
         .init(
             isVisible: showNotificationsRow,
             showsPermissionWarning: notifications.isPermissionDenied,
-            isPaused: notifications.isDevicePaused
+            isPaused: notifications.isDevicePaused,
+            configuredLineCount: notifications.linePreferences.count
         )
     }
 
