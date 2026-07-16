@@ -23,8 +23,18 @@ struct OnboardingNotificationsFlow: View {
     private let initialNotificationSettings: [LineNotificationSettings]
     @State private var updatedNotificationSettings = [LineNotificationSettings]()
 
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var userPreferences: UserPreferences = .default
+
     init(defaultLineID: TrainLineID?) {
-        initialNotificationSettings = defaultLineID.map { [.defaultValue(lineID: $0)] } ?? []
+        var initialLineIDs = _userPreferences.wrappedValue.favouriteLineIDs
+        if let defaultLineID {
+            initialLineIDs.insert(defaultLineID)
+        }
+        initialNotificationSettings = initialLineIDs.map { .defaultValue(lineID: $0) }
     }
 
     var body: some View {
