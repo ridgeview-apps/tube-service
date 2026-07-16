@@ -52,7 +52,10 @@ public extension Color {
     )
 
     static let defaultBackground = Color(uiColor: .secondarySystemBackground)
-    static let defaultCellBackground = Color(uiColor: .tertiarySystemBackground)
+    static let defaultCellBackground = Color.adaptive(
+        lightMode: .white,
+        darkMode: Color.rgb(58, 58, 60)
+    )
 
     static let systemBannerOK = Color.rgb(55, 122, 0)
     static let systemBannerOutage = Color.darkRed1
