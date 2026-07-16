@@ -2539,7 +2539,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all settings"
+            "value" : "Delete all line alerts"
           }
         }
       }
@@ -2550,7 +2550,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This removes this device and all saved line alert settings. Turning alerts off keeps your settings."
+            "value" : "This removes all saved line alert configurations from this device. Turning alerts off keeps your settings."
           }
         }
       }
@@ -2561,7 +2561,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all notification settings?"
+            "value" : "Delete all line alerts?"
           }
         }
       }
