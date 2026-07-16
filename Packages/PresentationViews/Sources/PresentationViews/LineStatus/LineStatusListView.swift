@@ -18,7 +18,8 @@ public struct LineStatusListView: View {
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
     private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
-    private var hasFavouritesOrDisruptions: Bool { !(favourites + disruptions).isEmpty }
+
+    @State private var isOtherLinesExpanded = false
 
     public init(
         loadingState: LoadingState,
@@ -63,6 +64,7 @@ public struct LineStatusListView: View {
         .listStyle(.plain)
         .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)
+        .onChange(of: selectedFilterOption) { isOtherLinesExpanded = false }
     }
 
     private var loadingStatusView: some View {
@@ -78,8 +80,12 @@ public struct LineStatusListView: View {
             Spacer()
                 .listRowInsets(.zero)
                 .frame(height: 8)
-            if hasFavouritesOrDisruptions {
+            if !favourites.isEmpty {
+                sectionLabel(.lineStatusSectionFavourites)
                 tappableStatusCells(with: favourites)
+            }
+            if !disruptions.isEmpty {
+                sectionLabel(.lineStatusSectionDisruptions)
                 tappableStatusCells(with: disruptions)
             }
             allOtherLineCells
@@ -89,14 +95,42 @@ public struct LineStatusListView: View {
     @ViewBuilder
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
-            sectionLabel(.lineStatusSectionAllOtherLines)
-
-            if showOtherLinesSummaryCell {
-                otherLinesSummaryCell
-            } else {
+            collapsibleOtherLinesSectionLabel
+            if isOtherLinesExpanded {
                 tappableStatusCells(with: allOtherLines)
+            } else {
+                Button {
+                    withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
+                } label: {
+                    otherLinesSummaryCell
+                }
+                .buttonStyle(.borderless)
             }
         }
+    }
+
+    private var otherLinesSectionTitle: LocalizedStringResource {
+        favourites.isEmpty && disruptions.isEmpty
+            ? .lineStatusSectionAllLines
+            : .lineStatusSectionAllOtherLines
+    }
+
+    private var collapsibleOtherLinesSectionLabel: some View {
+        Button {
+            withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
+        } label: {
+            HStack(spacing: 8) {
+                Text(otherLinesSectionTitle)
+                    .secondarySectionHeaderStyle()
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .rotationEffect(.degrees(isOtherLinesExpanded ? 90 : 0))
+            }
+            .padding(.top, 8)
+        }
+        .buttonStyle(.plain)
     }
 
     private func sectionLabel(_ title: LocalizedStringResource) -> some View {
@@ -105,21 +139,13 @@ public struct LineStatusListView: View {
             .padding(.top, 8)
     }
 
-    private func tappableStatusCells(
-        with lines: [Line]
-    ) -> some View {
+    private func tappableStatusCells(with lines: [Line]) -> some View {
         ForEach(lines) { line in
-            tappableStatusCell(
-                for: line,
-                isFavourite: favouriteLineIDs.contains(line.id)
-            )
+            tappableStatusCell(for: line)
         }
     }
 
-    private func tappableStatusCell(
-        for line: Line,
-        isFavourite: Bool
-    ) -> some View {
+    private func tappableStatusCell(for line: Line) -> some View {
         Button {
             onSelectLine(line)
         } label: {
@@ -127,7 +153,6 @@ public struct LineStatusListView: View {
                 style: .singleLine(line),
                 showsAccessory: true,
                 animatedAccessoryImage: true,
-                isFavourite: isFavourite,
                 historyIndicator: historyIndicator(for: line)
             )
             .frame(minHeight: 52)
@@ -153,15 +178,6 @@ public struct LineStatusListView: View {
             return true
         case .future:
             return isValidFutureDate
-        }
-    }
-
-    private var showOtherLinesSummaryCell: Bool {
-        switch selectedFilterOption {
-        case .today:
-            return false
-        case .tomorrow, .thisWeekend, .future:
-            return allOtherLines.count > 1
         }
     }
 
@@ -245,6 +261,13 @@ private struct WrapperView: View {
         lines: [],
         favouriteLineIDs: [.jubilee, .northern],
         selectedFilterOption: .future
+    )
+}
+
+#Preview("All good service - no favourites") {
+    WrapperView(
+        loadingState: .loaded,
+        lines: ModelStubs.lineStatusesToday.sortedByStatusSeverity()
     )
 }
 
