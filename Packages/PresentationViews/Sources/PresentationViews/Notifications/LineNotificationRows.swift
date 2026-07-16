@@ -45,9 +45,15 @@ struct LineNotificationRows: View {
             Text(lineSettings.lineID.name)
                 .foregroundStyle(.primary)
             Spacer()
-            Text(lineSettings.schedulePreset.title)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
+            if lineSettings.isEnabled {
+                Text(lineSettings.schedulePreset.title)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            } else {
+                Label(.globalPaused, systemImage: "bell.slash")
+                    .font(.subheadline)
+                    .foregroundStyle(.orange)
+            }
             if showChevron {
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.tertiary)

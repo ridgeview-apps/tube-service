@@ -500,6 +500,17 @@
         }
       }
     },
+    "global.paused" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        }
+      }
+    },
     "global.remove" : {
       "extractionState" : "manual",
       "localizations" : {
