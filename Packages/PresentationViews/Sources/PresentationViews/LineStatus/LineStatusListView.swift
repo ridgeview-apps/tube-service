@@ -48,6 +48,7 @@ public struct LineStatusListView: View {
             Section {
                 loadingStatusView
                 lineStatusCells
+                bottomScrollContentPadding
             } header: {
                 LineStatusFilterHeader(
                     refreshDate: refreshDate,
@@ -206,6 +207,10 @@ public struct LineStatusListView: View {
         )
         .cardStyle()
         .frame(minHeight: 72)
+    }
+
+    private var bottomScrollContentPadding: some View {
+        Spacer().frame(height: 24)
     }
 }
 
