@@ -81,11 +81,11 @@ public struct LineStatusListView: View {
                 .listRowInsets(.zero)
                 .frame(height: 8)
             if !favourites.isEmpty {
-                sectionLabel(.lineStatusSectionFavourites)
+                sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
                 tappableStatusCells(with: favourites)
             }
             if !disruptions.isEmpty {
-                sectionLabel(.lineStatusSectionDisruptions)
+                sectionLabel(.lineStatusSectionDisruptions, systemImage: "exclamationmark.triangle.fill")
                 tappableStatusCells(with: disruptions)
             }
             allOtherLineCells
@@ -95,16 +95,21 @@ public struct LineStatusListView: View {
     @ViewBuilder
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
-            collapsibleOtherLinesSectionLabel
-            if isOtherLinesExpanded {
+            if allOtherLines.count == 1 {
+                sectionLabel(otherLinesSectionTitle)
                 tappableStatusCells(with: allOtherLines)
             } else {
-                Button {
-                    withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
-                } label: {
-                    otherLinesSummaryCell
+                collapsibleOtherLinesSectionLabel
+                if isOtherLinesExpanded {
+                    tappableStatusCells(with: allOtherLines)
+                } else {
+                    Button {
+                        withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
+                    } label: {
+                        otherLinesSummaryCell
+                    }
+                    .buttonStyle(.borderless)
                 }
-                .buttonStyle(.borderless)
             }
         }
     }
@@ -133,10 +138,15 @@ public struct LineStatusListView: View {
         .buttonStyle(.plain)
     }
 
-    private func sectionLabel(_ title: LocalizedStringResource) -> some View {
-        Text(title)
-            .secondarySectionHeaderStyle()
-            .padding(.top, 8)
+    private func sectionLabel(_ title: LocalizedStringResource, systemImage: String? = nil) -> some View {
+        HStack(spacing: 4) {
+            if let systemImage {
+                Image(systemName: systemImage)
+            }
+            Text(title)
+        }
+        .secondarySectionHeaderStyle()
+        .padding(.top, 8)
     }
 
     private func tappableStatusCells(with lines: [Line]) -> some View {
@@ -194,7 +204,7 @@ public struct LineStatusListView: View {
             showsAccessory: true
         )
         .cardStyle()
-        .frame(minHeight: 52)
+        .frame(minHeight: 72)
     }
 }
 
