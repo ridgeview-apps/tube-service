@@ -2352,7 +2352,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn off %@ alerts"
+            "value" : "Remove %@ alerts"
           }
         }
       }
@@ -2363,7 +2363,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stop these alerts?"
+            "value" : "Remove alerts?"
           }
         }
       }
@@ -2385,7 +2385,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stop Alerts"
+            "value" : "Remove"
           }
         }
       }

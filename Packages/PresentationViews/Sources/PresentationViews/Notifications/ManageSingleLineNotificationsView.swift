@@ -217,7 +217,7 @@ public struct ManageSingleLineNotificationsView: View {
             Label {
                 Text(String(localized: .notificationsLineConfigRemoveButton(lineID.longName)))
             } icon: {
-                Image(systemName: "trash.fill")
+                Image(systemName: "minus.circle.fill")
             }
             .ctaLabelStyle()
             .foregroundStyle(.adaptiveRed)
