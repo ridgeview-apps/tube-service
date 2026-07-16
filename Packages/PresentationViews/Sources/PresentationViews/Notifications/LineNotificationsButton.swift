@@ -4,7 +4,8 @@ import SwiftUI
 public enum LineNotificationsButtonState: Sendable, Equatable {
     case locked
     case permissionDenied
-    case inactive
+    case notSetUp
+    case paused
     case active
 }
 
@@ -57,7 +58,7 @@ public struct LineNotificationsButton: View {
     private var iconForegroundColor: Color {
         switch state {
         case .active: lineID.textColor
-        case .permissionDenied: .white
+        case .permissionDenied, .paused: .white
         default: .secondary
         }
     }
@@ -65,7 +66,7 @@ public struct LineNotificationsButton: View {
     private var iconBackgroundColor: Color {
         switch state {
         case .active: lineID.backgroundColor
-        case .permissionDenied: .orange
+        case .permissionDenied, .paused: .orange
         default: Color(.tertiarySystemFill)
         }
     }
@@ -74,7 +75,8 @@ public struct LineNotificationsButton: View {
         switch state {
         case .locked: return "bell"
         case .permissionDenied: return "exclamationmark.triangle.fill"
-        case .inactive: return "bell.slash"
+        case .notSetUp: return "bell.slash"
+        case .paused: return "bell.slash.fill"
         case .active: return "bell.badge.fill"
         }
     }
@@ -98,7 +100,8 @@ public struct LineNotificationsButton: View {
         switch state {
         case .locked: return .notificationsButtonLockedTitle(lineID.longName)
         case .permissionDenied: return .lineStatusNotificationsPermissionDeniedTitle
-        case .inactive: return .notificationsButtonLineInactiveTitle(lineID.longName)
+        case .notSetUp: return .notificationsButtonLineInactiveTitle(lineID.longName)
+        case .paused: return .notificationsButtonLinePausedTitle(lineID.longName)
         case .active: return .notificationsButtonLineActiveTitle(lineID.longName)
         }
     }
@@ -107,7 +110,8 @@ public struct LineNotificationsButton: View {
         switch state {
         case .locked: return .notificationsButtonLockedSubtitle
         case .permissionDenied: return .lineStatusNotificationsPermissionDeniedSubtitle
-        case .inactive: return .notificationsButtonLineInactiveSubtitle
+        case .notSetUp: return .notificationsButtonLineInactiveSubtitle
+        case .paused: return .notificationsButtonLinePausedSubtitle
         case .active: return .notificationsButtonLineActiveSubtitle
         }
     }
@@ -126,8 +130,13 @@ public struct LineNotificationsButton: View {
         .padding()
 }
 
-#Preview("Inactive") {
-    LineNotificationsButton(state: .inactive, lineID: .victoria, onTap: {})
+#Preview("Not set up") {
+    LineNotificationsButton(state: .notSetUp, lineID: .victoria, onTap: {})
+        .padding()
+}
+
+#Preview("Paused") {
+    LineNotificationsButton(state: .paused, lineID: .victoria, onTap: {})
         .padding()
 }
 

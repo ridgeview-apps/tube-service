@@ -289,10 +289,17 @@ import ModelStubs
     )
 }
 
-#Preview("Notifications — inactive") {
+#Preview("Notifications — not set up") {
     Previewer(
         line: ModelStubs.lineStatusGoodService,
-        notificationButtonState: .inactive
+        notificationButtonState: .notSetUp
+    )
+}
+
+#Preview("Notifications — paused") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .paused
     )
 }
 

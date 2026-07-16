@@ -2159,6 +2159,28 @@
         }
       }
     },
+    "notifications.button.line.paused.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap to resume or manage"
+          }
+        }
+      }
+    },
+    "notifications.button.line.paused.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ alerts are paused"
+          }
+        }
+      }
+    },
     "notifications.button.locked.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {

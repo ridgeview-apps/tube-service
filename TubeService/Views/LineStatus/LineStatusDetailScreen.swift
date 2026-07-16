@@ -72,7 +72,9 @@ struct LineStatusDetailScreen: View {
         if notifications.isPermissionDenied {
             return .permissionDenied
         }
-        return notifications.isNotifying(for: lineID) ? .active : .inactive
+        if notifications.isNotifying(for: lineID) { return .active }
+        let isPaused = notifications.linePreferences.contains(where: { $0.lineId == lineID.rawValue && !$0.enabled })
+        return isPaused ? .paused : .notSetUp
     }
 
     var body: some View {
