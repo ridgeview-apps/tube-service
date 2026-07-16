@@ -182,19 +182,18 @@ public struct ManageAllLineNotificationsView: View {
     // MARK: - Delete All Button
 
     private var deleteAllSettingsButton: some View {
-        Button(role: .destructive) {
+        Button {
             showDeleteAllConfirmation = true
         } label: {
             Label {
                 Text(.notificationsManageDeleteAllSettingsButton)
-                    .foregroundStyle(.primary)
             } icon: {
-                Image(systemName: "trash")
-                    .foregroundStyle(.red)
+                Image(systemName: "trash.fill")
             }
             .ctaLabelStyle()
+            .foregroundStyle(.adaptiveRed)
         }
-        .cardStyle()
+        .cardStyle(borderColor: .adaptiveRed, borderWidth: 1.5)
         .confirmationDialog(
             Text(.notificationsManageDeleteAllSettingsConfirmationTitle),
             isPresented: $showDeleteAllConfirmation,
