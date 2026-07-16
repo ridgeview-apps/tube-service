@@ -54,19 +54,19 @@ public struct LineNotificationsButton: View {
         .cardStyle()
     }
 
-    private var iconForegroundColor: some ShapeStyle {
+    private var iconForegroundColor: Color {
         switch state {
-        case .active: AnyShapeStyle(lineID.textColor)
-        case .permissionDenied: AnyShapeStyle(Color.white)
-        default: AnyShapeStyle(Color.secondary)
+        case .active: lineID.textColor
+        case .permissionDenied: .white
+        default: .secondary
         }
     }
 
-    private var iconBackgroundColor: some ShapeStyle {
+    private var iconBackgroundColor: Color {
         switch state {
-        case .active: AnyShapeStyle(lineID.backgroundColor)
-        case .permissionDenied: AnyShapeStyle(Color.orange)
-        default: AnyShapeStyle(Color(.tertiarySystemFill))
+        case .active: lineID.backgroundColor
+        case .permissionDenied: .orange
+        default: Color(.tertiarySystemFill)
         }
     }
 

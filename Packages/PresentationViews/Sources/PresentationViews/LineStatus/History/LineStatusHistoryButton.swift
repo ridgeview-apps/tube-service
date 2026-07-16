@@ -14,6 +14,7 @@ public struct LineStatusHistoryButton: View {
         case unlocked(HistoryState?)
     }
 
+    let lineID: TrainLineID
     let buttonState: ButtonState
     let onTap: () -> Void
 
@@ -23,9 +24,10 @@ public struct LineStatusHistoryButton: View {
         } label: {
             HStack(spacing: 12) {
                 Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.tint)
-                    .frame(width: 36)
+                    .font(.body.weight(.semibold))
+                    .foregroundStyle(iconForegroundColor)
+                    .frame(width: 36, height: 36)
+                    .background(iconBackgroundColor, in: Circle())
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)
@@ -49,9 +51,27 @@ public struct LineStatusHistoryButton: View {
         .accessibilityHint(accessibilityHint)
     }
 
+    private var iconForegroundColor: Color {
+        switch buttonState {
+        case .locked:
+            .secondary
+        case .unlocked(let historyState):
+            historyState != nil ? .white : lineID.textColor
+        }
+    }
+
+    private var iconBackgroundColor: Color {
+        switch buttonState {
+        case .locked:
+            Color(.tertiarySystemFill)
+        case .unlocked(let historyState):
+            historyState != nil ? .orange : lineID.backgroundColor
+        }
+    }
+
     private var historyState: HistoryState? {
         switch buttonState {
-        case .locked(let h), .unlocked(let h): return h
+        case .locked(let historyState), .unlocked(let historyState): return historyState
         }
     }
 
@@ -74,12 +94,12 @@ public struct LineStatusHistoryButton: View {
 
     private var subtitle: LocalizedStringResource {
         switch buttonState {
-        case .locked(let h):
-            h != nil
+        case .locked(let historyState):
+            historyState != nil
                 ? .lineStatusHistoryEntryLockedSubtitleWithDisruption
                 : .lineStatusHistoryEntryLockedSubtitle
-        case .unlocked(let h):
-            h != nil
+        case .unlocked(let historyState):
+            historyState != nil
                 ? .lineStatusHistoryEntryUnlockedSubtitleWithDisruption
                 : .lineStatusHistoryEntryUnlockedSubtitle
         }
@@ -112,12 +132,13 @@ public struct LineStatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineStatusHistoryButton(buttonState: .locked(nil), onTap: {})
+    LineStatusHistoryButton(lineID: .victoria, buttonState: .locked(nil), onTap: {})
         .padding()
 }
 
 #Preview("Locked (ongoing disruption)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .locked(.ongoingDisruption(since: .now)),
         onTap: {}
     )
@@ -126,6 +147,7 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Locked (resolved disruption)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .locked(.resolvedDisruption(at: .now)),
         onTap: {}
     )
@@ -134,6 +156,7 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Locked (multiple disruptions)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .locked(.multipleDisruptions(count: 3, firstAt: .now)),
         onTap: {}
     )
@@ -141,12 +164,13 @@ public struct LineStatusHistoryButton: View {
 }
 
 #Preview("Unlocked") {
-    LineStatusHistoryButton(buttonState: .unlocked(nil), onTap: {})
+    LineStatusHistoryButton(lineID: .victoria, buttonState: .unlocked(nil), onTap: {})
         .padding()
 }
 
 #Preview("Unlocked (ongoing disruption)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .unlocked(.ongoingDisruption(since: .now)),
         onTap: {}
     )
@@ -155,6 +179,7 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Unlocked (resolved disruption)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .unlocked(.resolvedDisruption(at: .now)),
         onTap: {}
     )
@@ -163,6 +188,7 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Unlocked (multiple disruptions)") {
     LineStatusHistoryButton(
+        lineID: .victoria,
         buttonState: .unlocked(.multipleDisruptions(count: 3, firstAt: .now)),
         onTap: {}
     )

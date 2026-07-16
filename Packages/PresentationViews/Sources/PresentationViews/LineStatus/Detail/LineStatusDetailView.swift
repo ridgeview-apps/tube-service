@@ -57,6 +57,7 @@ public struct LineStatusDetailView: View {
                     if let historyButtonState {
                         Section {
                             LineStatusHistoryButton(
+                                lineID: line.id,
                                 buttonState: historyButtonState,
                                 onTap: { onAction(.statusHistoryTapped) }
                             )
