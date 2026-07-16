@@ -77,7 +77,7 @@ public struct LineNotificationsButton: View {
         case .permissionDenied: return "exclamationmark.triangle.fill"
         case .notSetUp: return "bell.slash"
         case .paused: return "bell.slash.fill"
-        case .active: return "bell.badge.fill"
+        case .active: return "bell.fill"
         }
     }
 

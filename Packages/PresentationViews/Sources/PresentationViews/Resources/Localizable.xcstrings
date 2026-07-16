@@ -2335,6 +2335,28 @@
         }
       }
     },
+    "notifications.line.config.line.paused.warning.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You won't receive service updates for this line"
+          }
+        }
+      }
+    },
+    "notifications.line.config.line.paused.warning.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ alerts are paused"
+          }
+        }
+      }
+    },
     "notifications.line.config.nav.title %@" : {
       "extractionState" : "manual",
       "localizations" : {

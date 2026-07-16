@@ -91,6 +91,11 @@ public struct ManageSingleLineNotificationsView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+            } else if existingSettings != nil && !settings.isEnabled {
+                linePausedWarningRow
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
             }
 
             if savingState != .loaded {
@@ -191,6 +196,25 @@ public struct ManageSingleLineNotificationsView: View {
         .cardStyle()
     }
 
+    private var linePausedWarningRow: some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "bell.slash.fill")
+                .font(.system(size: 20))
+                .foregroundStyle(.orange)
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(.notificationsLineConfigLinePausedWarningTitle(lineID.longName))
+                    .font(.subheadline.weight(.semibold))
+                Text(.notificationsLineConfigLinePausedWarningSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(16)
+        .cardStyle()
+    }
+
     // MARK: - Schedule Card
 
     private var scheduleCard: some View {
@@ -266,8 +290,8 @@ public struct ManageSingleLineNotificationsView: View {
         alertActionButton(
             text: String(localized: .notificationsLineConfigPauseButton(lineID.longName)),
             iconName: "bell.slash.fill",
-            foregroundColor: .white,
-            backgroundColor: .orange,
+            foregroundColor: lineID.textColor,
+            backgroundColor: lineID.backgroundColor,
             onTap: { showPauseConfirmation = true }
         )
         .confirmationDialog(
@@ -434,7 +458,7 @@ private extension View {
     #Preview("New line") {
         NavigationStack {
             ManageSingleLineNotificationsView(
-                lineID: .central,
+                lineID: .jubilee,
                 existingSettings: nil,
                 showsOtherLines: true,
                 onAction: { print($0) }
@@ -448,6 +472,29 @@ private extension View {
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee),
                 showsOtherLines: true,
+                onAction: { print($0) }
+            )
+        }
+    }
+
+    #Preview("Alerts paused") {
+        NavigationStack {
+            ManageSingleLineNotificationsView(
+                lineID: .jubilee,
+                existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
+                showsOtherLines: true,
+                onAction: { print($0) }
+            )
+        }
+    }
+
+    #Preview("All alerts paused + line paused") {
+        NavigationStack {
+            ManageSingleLineNotificationsView(
+                lineID: .jubilee,
+                existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
+                showsOtherLines: true,
+                showsPausedAlertsWarning: true,
                 onAction: { print($0) }
             )
         }
