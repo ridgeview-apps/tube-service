@@ -2413,6 +2413,17 @@
         }
       }
     },
+    "notifications.line.schedule.remove.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@?"
+          }
+        }
+      }
+    },
     "notifications.line.selection.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {

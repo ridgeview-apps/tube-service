@@ -58,13 +58,13 @@ public struct NotificationsOnboardingLineSetupView: View {
     @ViewBuilder
     private var lineItemsSection: some View {
         ForEach(items) { item in
-            LineScheduleCard(settings: binding(for: item.lineID))
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
-        }
-        .onDelete { indexSet in
-            items.remove(atOffsets: indexSet)
+            LineScheduleCard(
+                settings: binding(for: item.lineID),
+                onRemove: { items.removeAll { $0.lineID == item.lineID } }
+            )
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
         }
 
         if !unaddedLineIDs.isEmpty {
