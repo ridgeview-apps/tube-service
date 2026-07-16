@@ -1,7 +1,7 @@
 import Models
 import SwiftUI
 
-struct LineNotificationRows: View {
+struct LineNotificationSettingsSummary: View {
     let settings: [LineNotificationSettings]
     var onSelect: ((TrainLineID) -> Void)? = nil
 

@@ -376,7 +376,7 @@ public struct ManageSingleLineNotificationsView: View {
             if isOtherLinesExpanded {
                 Divider()
                     .padding(.leading, 40)
-                LineNotificationRows(
+                LineNotificationSettingsSummary(
                     settings: configuredLines,
                     onSelect: { onAction(.tappedOtherLine($0)) }
                 )

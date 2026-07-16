@@ -39,7 +39,7 @@ public struct NotificationsOnboardingConfirmationView: View {
                     }
                 }
 
-                LineNotificationRows(settings: lineSettings)
+                LineNotificationSettingsSummary(settings: lineSettings)
                     .cardStyle()
 
                 Text(.notificationsConfirmationSettingsHint)

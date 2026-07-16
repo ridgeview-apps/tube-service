@@ -164,7 +164,7 @@ public struct ManageAllLineNotificationsView: View {
 
     private var allLinesCard: some View {
         VStack(spacing: 0) {
-            LineNotificationRows(
+            LineNotificationSettingsSummary(
                 settings: allSettings,
                 onSelect: { onAction(.tappedOtherLine($0)) }
             )
