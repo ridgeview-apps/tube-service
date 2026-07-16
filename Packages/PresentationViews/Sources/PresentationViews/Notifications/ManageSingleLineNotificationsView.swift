@@ -211,19 +211,18 @@ public struct ManageSingleLineNotificationsView: View {
     }
 
     private var turnOffAlertsButton: some View {
-        Button(role: .destructive) {
+        Button {
             showRemoveConfirmation = true
         } label: {
             Label {
                 Text(String(localized: .notificationsLineConfigRemoveButton(lineID.longName)))
-                    .foregroundStyle(.primary)
             } icon: {
-                Image(systemName: "bell.slash")
-                    .foregroundStyle(.red)
+                Image(systemName: "trash.fill")
             }
             .ctaLabelStyle()
+            .foregroundStyle(.adaptiveRed)
         }
-        .cardStyle()
+        .cardStyle(borderColor: .adaptiveRed, borderWidth: 1.5)
         .confirmationDialog(
             Text(.notificationsLineConfigRemoveConfirmation),
             isPresented: $showRemoveConfirmation,
