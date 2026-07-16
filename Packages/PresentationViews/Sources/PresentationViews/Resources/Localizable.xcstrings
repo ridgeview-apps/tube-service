@@ -489,6 +489,17 @@
         }
       }
     },
+    "global.pause" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        }
+      }
+    },
     "global.remove" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2324,6 +2335,28 @@
         }
       }
     },
+    "notifications.line.config.pause.button %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause %@ alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.pause.confirmation %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause %@ alerts?"
+          }
+        }
+      }
+    },
     "notifications.line.config.paused.alerts.warning.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2386,6 +2419,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.resume.button %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume %@ alerts"
           }
         }
       }

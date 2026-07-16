@@ -25,6 +25,7 @@ public struct ManageSingleLineNotificationsView: View {
     @State private var settings: LineNotificationSettings
 
     @State private var showDiscardChangesConfirmation = false
+    @State private var showPauseConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
@@ -215,26 +216,88 @@ public struct ManageSingleLineNotificationsView: View {
     private var notificationActionButton: some View {
         if existingSettings == nil {
             turnOnAlertsButton
+        } else if settings.isEnabled {
+            pauseAlertsButton
+        } else {
+            resumeAlertsButton
         }
     }
 
-    private var turnOnAlertsButton: some View {
-        Button {
-            saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
-        } label: {
+    @ViewBuilder
+    private func alertActionButton(
+        text: String,
+        iconName: String,
+        foregroundColor: Color,
+        backgroundColor: Color,
+        bounces: Bool = false,
+        onTap: @escaping () -> Void
+    ) -> some View {
+        Button(action: onTap) {
             Label {
-                Text(String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)))
+                Text(text)
             } icon: {
-                Image(systemName: "bell.fill")
-                    .symbolEffect(.bounce, value: bellBounce)
+                Image(systemName: iconName)
+                    .symbolEffect(.bounce, value: bounces ? bellBounce : false)
             }
             .ctaLabelStyle()
-            .foregroundStyle(lineID.textColor)
+            .foregroundStyle(foregroundColor)
         }
-        .cardStyle(backgroundColor: lineID.backgroundColor)
-        .shadow(color: lineID.backgroundColor.opacity(0.5), radius: 10, y: 4)
+        .cardStyle(backgroundColor: backgroundColor)
+        .shadow(color: backgroundColor.opacity(0.5), radius: 10, y: 4)
         .disabled(savingState == .loading)
+    }
+
+    private var turnOnAlertsButton: some View {
+        alertActionButton(
+            text: String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)),
+            iconName: "bell.fill",
+            foregroundColor: lineID.textColor,
+            backgroundColor: lineID.backgroundColor,
+            bounces: true,
+            onTap: {
+                saveFeedbackTrigger.toggle()
+                onAction(.save(settings))
+            }
+        )
+        .onAppear { bellBounce = true }
+    }
+
+    private var pauseAlertsButton: some View {
+        alertActionButton(
+            text: String(localized: .notificationsLineConfigPauseButton(lineID.longName)),
+            iconName: "bell.slash.fill",
+            foregroundColor: .white,
+            backgroundColor: .orange,
+            onTap: { showPauseConfirmation = true }
+        )
+        .confirmationDialog(
+            String(localized: .notificationsLineConfigPauseConfirmation(lineID.longName)),
+            isPresented: $showPauseConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: .globalPause)) {
+                saveFeedbackTrigger.toggle()
+                var paused = settings
+                paused.isEnabled = false
+                onAction(.save(paused))
+            }
+        }
+    }
+
+    private var resumeAlertsButton: some View {
+        alertActionButton(
+            text: String(localized: .notificationsLineConfigResumeButton(lineID.longName)),
+            iconName: "bell.fill",
+            foregroundColor: lineID.textColor,
+            backgroundColor: lineID.backgroundColor,
+            bounces: true,
+            onTap: {
+                saveFeedbackTrigger.toggle()
+                var resumed = settings
+                resumed.isEnabled = true
+                onAction(.save(resumed))
+            }
+        )
         .onAppear { bellBounce = true }
     }
 
