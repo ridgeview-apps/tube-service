@@ -3,12 +3,21 @@ import SwiftUI
 
 public struct LineScheduleCard: View {
     @Binding public var settings: LineNotificationSettings
+    private let showsRemoveButton: Bool
+    private let removalConfirmationTitle: String
     private let onRemove: (() -> Void)?
 
     @State private var showRemoveConfirmation = false
 
-    public init(settings: Binding<LineNotificationSettings>, onRemove: (() -> Void)? = nil) {
+    public init(
+        settings: Binding<LineNotificationSettings>,
+        showsRemoveButton: Bool,
+        removalConfirmationTitle: String,
+        onRemove: (() -> Void)? = nil
+    ) {
         _settings = settings
+        self.showsRemoveButton = showsRemoveButton
+        self.removalConfirmationTitle = removalConfirmationTitle
         self.onRemove = onRemove
     }
 
@@ -45,7 +54,7 @@ public struct LineScheduleCard: View {
 
     @ViewBuilder
     private var removeButton: some View {
-        if onRemove != nil {
+        if showsRemoveButton {
             Button {
                 showRemoveConfirmation = true
             } label: {
@@ -56,7 +65,7 @@ public struct LineScheduleCard: View {
             }
             .buttonStyle(.plain)
             .confirmationDialog(
-                String(localized: .notificationsLineScheduleRemoveTitle(lineID.longName)),
+                removalConfirmationTitle,
                 isPresented: $showRemoveConfirmation,
                 titleVisibility: .visible
             ) {
@@ -121,13 +130,19 @@ public struct LineScheduleCard: View {
 
 #if DEBUG
     #Preview("Read-only") {
-        LineScheduleCard(settings: .constant(.defaultValue(lineID: .victoria)))
-            .padding(20)
+        LineScheduleCard(
+            settings: .constant(.defaultValue(lineID: .victoria)),
+            showsRemoveButton: false,
+            removalConfirmationTitle: ""
+        )
+        .padding(20)
     }
 
     #Preview("With remove button") {
         LineScheduleCard(
             settings: .constant(.defaultValue(lineID: .jubilee)),
+            showsRemoveButton: true,
+            removalConfirmationTitle: String(localized: .notificationsLineScheduleRemoveTitle("Jubilee line")),
             onRemove: {}
         )
         .padding(20)

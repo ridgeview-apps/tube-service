@@ -60,6 +60,8 @@ public struct NotificationsOnboardingLineSetupView: View {
         ForEach(items) { item in
             LineScheduleCard(
                 settings: binding(for: item.lineID),
+                showsRemoveButton: true,
+                removalConfirmationTitle: String(localized: .notificationsLineScheduleRemoveTitle(item.lineID.longName)),
                 onRemove: { items.removeAll { $0.lineID == item.lineID } }
             )
             .listRowBackground(Color.clear)

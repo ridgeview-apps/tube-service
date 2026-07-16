@@ -2368,6 +2368,17 @@
         }
       }
     },
+    "notifications.line.config.remove.permanent.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanently delete %@ alerts?"
+          }
+        }
+      }
+    },
     "notifications.line.config.resume.alerts.button" : {
       "extractionState" : "manual",
       "localizations" : {

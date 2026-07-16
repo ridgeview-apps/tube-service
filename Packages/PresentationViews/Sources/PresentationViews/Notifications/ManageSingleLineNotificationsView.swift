@@ -192,19 +192,21 @@ public struct ManageSingleLineNotificationsView: View {
 
     // MARK: - Schedule Card
 
-    private var removeAction: (() -> Void)? {
-        guard existingSettings != nil else { return nil }
-        return {
-            removeFeedbackTrigger.toggle()
-            onAction(.remove)
-        }
+    private var scheduleCard: some View {
+        LineScheduleCard(
+            settings: $settings,
+            showsRemoveButton: existingSettings != nil,
+            removalConfirmationTitle: String(localized: .notificationsLineConfigRemovePermanentTitle(lineID.longName)),
+            onRemove: handleRemoveLine
+        )
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
     }
 
-    private var scheduleCard: some View {
-        LineScheduleCard(settings: $settings, onRemove: removeAction)
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
+    private func handleRemoveLine() {
+        removeFeedbackTrigger.toggle()
+        onAction(.remove)
     }
 
     // MARK: - Alerts On / Off CTA
