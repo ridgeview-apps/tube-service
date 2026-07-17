@@ -180,4 +180,40 @@ struct LineViewStateTests {
         #expect(line.mergedLineStatuses.first?.reason == "Signal failure")
         #expect(line.mergedLineStatuses.first?.severityText == "Part suspended, Minor delays")
     }
+
+    @Test
+    func truncatedStatusText_oneStatus_noTruncation() {
+        let line = Line(
+            id: .bakerloo,
+            lineStatuses: [
+                LineStatus(statusSeverity: .partSuspended, statusSeverityDescription: "Part Suspended", reason: nil, disruption: nil)
+            ]
+        )
+        #expect(line.truncatedStatusText == "Part suspended")
+    }
+
+    @Test
+    func truncatedStatusText_twoStatuses_noTruncation() {
+        let line = Line(
+            id: .bakerloo,
+            lineStatuses: [
+                LineStatus(statusSeverity: .partSuspended, statusSeverityDescription: "Part Suspended", reason: nil, disruption: nil),
+                LineStatus(statusSeverity: .minorDelays, statusSeverityDescription: "Minor Delays", reason: nil, disruption: nil)
+            ]
+        )
+        #expect(line.truncatedStatusText == "Part suspended, Minor delays")
+    }
+
+    @Test
+    func truncatedStatusText_threeStatuses_truncatesWithEllipsis() {
+        let line = Line(
+            id: .bakerloo,
+            lineStatuses: [
+                LineStatus(statusSeverity: .partSuspended, statusSeverityDescription: "Part Suspended", reason: nil, disruption: nil),
+                LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: "Severe Delays", reason: nil, disruption: nil),
+                LineStatus(statusSeverity: .minorDelays, statusSeverityDescription: "Minor Delays", reason: nil, disruption: nil)
+            ]
+        )
+        #expect(line.truncatedStatusText == "Part suspended, Severe delays…")
+    }
 }

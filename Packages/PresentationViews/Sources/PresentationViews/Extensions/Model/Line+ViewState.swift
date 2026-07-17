@@ -122,8 +122,17 @@ extension Line {
     var shortStatusText: String {
         mergedLineStatuses
             .flatMap(\.severityDescriptions)
-            .reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
+            .removingDuplicates()
             .joined(separator: ", ")
+    }
+
+    var truncatedStatusText: String {
+        let descriptions =
+            mergedLineStatuses
+            .flatMap(\.severityDescriptions)
+            .removingDuplicates()
+        guard descriptions.count > 2 else { return descriptions.joined(separator: ", ") }
+        return descriptions.prefix(2).joined(separator: ", ") + "…"
     }
 
 }
