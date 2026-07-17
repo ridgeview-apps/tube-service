@@ -178,6 +178,6 @@ struct LineViewStateTests {
 
         #expect(line.mergedLineStatuses.count == 1)
         #expect(line.mergedLineStatuses.first?.reason == "Signal failure")
-        #expect(line.mergedLineStatuses.first?.severityText == "Part Suspended, Minor Delays")
+        #expect(line.mergedLineStatuses.first?.severityText == "Part suspended, Minor delays")
     }
 }

@@ -101,13 +101,13 @@ extension Line {
             if let index = groups.firstIndex(
                 where: { $0.reason == reason && $0.additionalInfo == additionalInfo }
             ) {
-                if let desc = status.statusSeverityDescription, !groups[index].severityDescriptions.contains(desc) {
+                if let desc = status.statusSeverityDescription.map(\.sentenceCase), !groups[index].severityDescriptions.contains(desc) {
                     groups[index].severityDescriptions.append(desc)
                 }
             } else {
                 groups.append(
                     MergedStatus(
-                        severityDescriptions: status.statusSeverityDescription.map { [$0] } ?? [],
+                        severityDescriptions: status.statusSeverityDescription.map { [$0.sentenceCase] } ?? [],
                         isDisrupted: status.isDisrupted,
                         reason: reason,
                         additionalInfo: additionalInfo
@@ -126,6 +126,16 @@ extension Line {
             .joined(separator: ", ")
     }
 
+}
+
+private extension String {
+    var sentenceCase: String {
+        guard let first = first else { return self }
+        return first.uppercased() + dropFirst().lowercased()
+    }
+}
+
+extension Line {
     var xPostLinks: [LineStatusXPostLink] {
         var xPostLinks = [LineStatusXPostLink(style: .tflAllXPosts, url: .latestXPosts())]
 
