@@ -1812,24 +1812,13 @@
         }
       }
     },
-    "line.status.section.all.lines" : {
+    "line.status.section.good.service" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All lines"
-          }
-        }
-      }
-    },
-    "line.status.section.all.other.lines" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other lines"
+            "value" : "Good service"
           }
         }
       }

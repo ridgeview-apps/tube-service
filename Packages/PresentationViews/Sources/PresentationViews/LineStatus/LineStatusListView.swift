@@ -97,7 +97,7 @@ public struct LineStatusListView: View {
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
             if allOtherLines.count == 1 {
-                sectionLabel(otherLinesSectionTitle)
+                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
                 tappableStatusCells(with: allOtherLines)
             } else {
                 collapsibleOtherLinesSectionLabel
@@ -115,19 +115,16 @@ public struct LineStatusListView: View {
         }
     }
 
-    private var otherLinesSectionTitle: LocalizedStringResource {
-        favourites.isEmpty && disruptions.isEmpty
-            ? .lineStatusSectionAllLines
-            : .lineStatusSectionAllOtherLines
-    }
-
     private var collapsibleOtherLinesSectionLabel: some View {
         Button {
             withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
         } label: {
             HStack(spacing: 8) {
-                Text(otherLinesSectionTitle)
-                    .secondarySectionHeaderStyle()
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark.circle.fill")
+                    Text(.lineStatusSectionGoodService)
+                }
+                .secondarySectionHeaderStyle()
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
