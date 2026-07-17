@@ -58,10 +58,9 @@ public struct LineScheduleCard: View {
             Button {
                 showRemoveConfirmation = true
             } label: {
-                Image(systemName: "minus.circle.fill")
+                Image(systemName: "xmark.circle.fill")
                     .font(.title2)
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(.white, .adaptiveRed)
+                    .foregroundStyle(.adaptiveRed)
             }
             .buttonStyle(.plain)
             .confirmationDialog(

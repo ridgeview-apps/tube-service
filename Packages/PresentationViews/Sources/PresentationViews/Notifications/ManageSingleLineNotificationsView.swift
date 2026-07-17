@@ -290,8 +290,8 @@ public struct ManageSingleLineNotificationsView: View {
         alertActionButton(
             text: String(localized: .notificationsLineConfigPauseButton(lineID.longName)),
             iconName: "bell.slash.fill",
-            foregroundColor: lineID.textColor,
-            backgroundColor: lineID.backgroundColor,
+            foregroundColor: .orange,
+            backgroundColor: .defaultCellBackground,
             onTap: { showPauseConfirmation = true }
         )
         .confirmationDialog(
