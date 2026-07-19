@@ -8,27 +8,35 @@ struct JourneyModeFilterStrip: View {
     let onCustomTapped: () -> Void
 
     var body: some View {
-        ScrollView(.horizontal) {
-            HStack(spacing: 8) {
-                ForEach(JourneyModePreset.displayCases, id: \.self) { preset in
-                    presetChip(for: preset)
+        HStack(spacing: 0) {
+            Image(systemName: "line.3.horizontal.decrease")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .padding(.leading, 14)
+                .padding(.vertical, 8)
+            ScrollView(.horizontal) {
+                HStack(spacing: 8) {
+                    ForEach(JourneyModePreset.displayCases, id: \.self) { preset in
+                        presetChip(for: preset)
+                    }
                 }
+                .padding(.leading, 10)
+                .padding(.trailing, 16)
+                .padding(.vertical, 8)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
+            .scrollIndicators(.hidden)
+            .mask(
+                HStack(spacing: 0) {
+                    Rectangle()
+                    LinearGradient(
+                        colors: [.black, .clear],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .frame(width: 20)
+                }
+            )
         }
-        .scrollIndicators(.hidden)
-        .mask(
-            HStack(spacing: 0) {
-                Rectangle()
-                LinearGradient(
-                    colors: [.black, .clear],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .frame(width: 20)
-            }
-        )
         .background(Color.defaultCellBackground)
     }
 
