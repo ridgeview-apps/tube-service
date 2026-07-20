@@ -119,7 +119,7 @@ public struct LineScheduleCard: View {
                 .foregroundStyle(.primary)
         }
         .toggleStyle(.switch)
-        .tint(lineID.backgroundColor)
+        .tint(.secondary)
         .font(.subheadline)
         .padding(.vertical, 10)
     }

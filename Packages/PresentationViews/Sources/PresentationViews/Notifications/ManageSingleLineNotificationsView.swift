@@ -186,6 +186,7 @@ public struct ManageSingleLineNotificationsView: View {
             } label: {
                 Text(.notificationsLineConfigResumeAlertsButton)
                     .frame(maxWidth: .infinity)
+                    .padding(.vertical, 4)
             }
             .buttonStyle(.borderedProminent)
             .tint(.orange)
@@ -251,8 +252,6 @@ public struct ManageSingleLineNotificationsView: View {
     private func alertActionButton(
         text: String,
         iconName: String,
-        foregroundColor: Color,
-        backgroundColor: Color,
         bounces: Bool = false,
         onTap: @escaping () -> Void
     ) -> some View {
@@ -264,10 +263,7 @@ public struct ManageSingleLineNotificationsView: View {
                     .symbolEffect(.bounce, value: bounces ? bellBounce : false)
             }
             .ctaLabelStyle()
-            .foregroundStyle(foregroundColor)
         }
-        .cardStyle(backgroundColor: backgroundColor)
-        .shadow(color: backgroundColor.opacity(0.5), radius: 10, y: 4)
         .disabled(savingState == .loading)
     }
 
@@ -275,14 +271,13 @@ public struct ManageSingleLineNotificationsView: View {
         alertActionButton(
             text: String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)),
             iconName: "bell.fill",
-            foregroundColor: lineID.textColor,
-            backgroundColor: lineID.backgroundColor,
             bounces: true,
             onTap: {
                 saveFeedbackTrigger.toggle()
                 onAction(.save(settings))
             }
         )
+        .buttonStyle(.line(lineID))
         .onAppear { bellBounce = true }
     }
 
@@ -290,8 +285,6 @@ public struct ManageSingleLineNotificationsView: View {
         alertActionButton(
             text: String(localized: .notificationsLineConfigPauseButton(lineID.longName)),
             iconName: "bell.slash.fill",
-            foregroundColor: .orange,
-            backgroundColor: .defaultCellBackground,
             onTap: { showPauseConfirmation = true }
         )
         .confirmationDialog(
@@ -306,14 +299,13 @@ public struct ManageSingleLineNotificationsView: View {
                 onAction(.save(paused))
             }
         }
+        .buttonStyle(.primary(tint: .orange))
     }
 
     private var resumeAlertsButton: some View {
         alertActionButton(
             text: String(localized: .notificationsLineConfigResumeButton(lineID.longName)),
             iconName: "bell.fill",
-            foregroundColor: lineID.textColor,
-            backgroundColor: lineID.backgroundColor,
             bounces: true,
             onTap: {
                 saveFeedbackTrigger.toggle()
@@ -322,6 +314,7 @@ public struct ManageSingleLineNotificationsView: View {
                 onAction(.save(resumed))
             }
         )
+        .buttonStyle(.line(lineID))
         .onAppear { bellBounce = true }
     }
 

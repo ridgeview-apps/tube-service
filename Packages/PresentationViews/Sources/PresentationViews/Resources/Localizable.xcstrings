@@ -544,9 +544,6 @@
         }
       }
     },
-    "Hello World" : {
-
-    },
     "journey.location.picker.nearby.stations.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2418,7 +2415,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tube Service alerts are paused"
+            "value" : "Tube Service alerts are paused for all lines"
           }
         }
       }
@@ -2720,17 +2717,6 @@
         }
       }
     },
-    "notifications.manage.pause.all.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn this off to pause alerts without deleting your saved line settings."
-          }
-        }
-      }
-    },
     "notifications.manage.pause.all.paused.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2738,6 +2724,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alerts are paused. Turn this back on to resume your saved line settings."
+          }
+        }
+      }
+    },
+    "notifications.manage.pause.all.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn this off to pause alerts without deleting your saved line settings."
           }
         }
       }
@@ -2885,17 +2882,6 @@
         }
       }
     },
-    "notifications.onboarding.navigation.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Line Status Alerts"
-          }
-        }
-      }
-    },
     "notifications.onboarding.line.setup.turn.on.alerts.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2903,6 +2889,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on alerts"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.navigation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line Status Alerts"
           }
         }
       }
