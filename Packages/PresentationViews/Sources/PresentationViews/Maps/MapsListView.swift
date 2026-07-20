@@ -52,7 +52,9 @@ public struct MapsListView: View {
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.tertiary)
             }
-            .padding()
+            .frame(minHeight: 44)
+            .padding(.vertical, 8)
+            .padding(.horizontal)
             .cardStyle()
         }
         .buttonStyle(.plain)
