@@ -13,12 +13,12 @@ public struct LineStatusCell: View {
     @ScaledMetric private var dynamicScaleFactor: CGFloat = 1
 
     public enum Style: Hashable {
-        case singleLine(Line)
+        case singleLine(Line, isFavourite: Bool)
         case multiLine([Line])
 
         var accessoryImageType: LineStatusAccessoryImageType {
             switch self {
-            case .singleLine(let line):
+            case .singleLine(let line, _):
                 return line.isDisrupted ? .disruption : .goodService
             case .multiLine(let lines):
                 return lines.allAreGoodService ? .goodService : .disruption
@@ -59,15 +59,23 @@ public struct LineStatusCell: View {
 
     @ViewBuilder private func leadingColumn() -> some View {
         switch style {
-        case .singleLine(let line):
-            singleLineLeadingColumn(line: line)
+        case .singleLine(let line, let isFavourite):
+            singleLineLeadingColumn(line: line, isFavourite: isFavourite)
         case .multiLine(let lines):
             multilineLeadingColumn(with: lines)
         }
     }
 
-    private func singleLineLeadingColumn(line: Line) -> some View {
+    private func singleLineLeadingColumn(line: Line, isFavourite: Bool) -> some View {
         HStack(spacing: 4) {
+            if isFavourite {
+                Image(systemName: "star.fill")
+                    .resizable()
+                    .frame(
+                        width: 10 * dynamicScaleFactor,
+                        height: 10 * dynamicScaleFactor
+                    )
+            }
             Text(line.id.name)
             Spacer()
         }
@@ -87,7 +95,7 @@ public struct LineStatusCell: View {
 
     @ViewBuilder private func trailingColumn() -> some View {
         switch style {
-        case .singleLine(let line):
+        case .singleLine(let line, _):
             singleLineTrailingColumn(line: line)
         case .multiLine(let lines):
             multilineTrailingColumn(with: lines)
@@ -185,26 +193,26 @@ import ModelStubs
         Group {
             Section("Single line - good service") {
                 LineStatusCell(
-                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    style: .singleLine(ModelStubs.lineStatusGoodService, isFavourite: false),
                     showsAccessory: true
                 )
             }
             Section("Single line - good service (favourite)") {
                 LineStatusCell(
-                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    style: .singleLine(ModelStubs.lineStatusGoodService, isFavourite: true),
                     showsAccessory: true
                 )
             }
             Section("Single line - disruption earlier") {
                 LineStatusCell(
-                    style: .singleLine(ModelStubs.lineStatusGoodService),
+                    style: .singleLine(ModelStubs.lineStatusGoodService, isFavourite: false),
                     showsAccessory: true,
                     historyIndicator: .disruptionEarlierToday
                 )
             }
             Section("Single line - disrupted") {
                 LineStatusCell(
-                    style: .singleLine(ModelStubs.lineStatusDisrupted),
+                    style: .singleLine(ModelStubs.lineStatusDisrupted, isFavourite: false),
                     showsAccessory: true
                 )
             }

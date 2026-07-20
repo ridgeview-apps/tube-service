@@ -144,7 +144,7 @@ public struct StationView: View {
         section(cardBackground: false) {
             VStack(spacing: 8) {
                 ForEach(statusCells, id: \.self) { cellStyle in
-                    if case let .singleLine(line) = cellStyle {
+                    if case let .singleLine(line, _) = cellStyle {
                         Button {
                             onAction(.tappedLine(line))
                         } label: {
@@ -222,12 +222,12 @@ private struct WrapperView: View {
     var loadingState: LoadingState = .loaded
     var statusCells: [LineStatusCell.Style] =
         [
-            .singleLine(.init(id: .circle, lineStatuses: [.goodService])),
-            .singleLine(.init(id: .hammersmithAndCity, lineStatuses: [.goodService])),
-            .singleLine(.init(id: .metropolitan, lineStatuses: [.goodService])),
-            .singleLine(.init(id: .northern, lineStatuses: [.goodService])),
-            .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService])),
-            .singleLine(.init(id: .victoria, lineStatuses: [.goodService]))
+            .singleLine(.init(id: .circle, lineStatuses: [.goodService]), isFavourite: false),
+            .singleLine(.init(id: .hammersmithAndCity, lineStatuses: [.goodService]), isFavourite: false),
+            .singleLine(.init(id: .metropolitan, lineStatuses: [.goodService]), isFavourite: false),
+            .singleLine(.init(id: .northern, lineStatuses: [.goodService]), isFavourite: false),
+            .singleLine(.init(id: .piccadilly, lineStatuses: [.goodService]), isFavourite: false),
+            .singleLine(.init(id: .victoria, lineStatuses: [.goodService]), isFavourite: false)
         ]
     var disruptionCountsByLineID: [TrainLineID: Int] = [:]
     var disruptionMessages: [String] = []

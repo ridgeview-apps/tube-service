@@ -82,11 +82,9 @@ public struct LineStatusListView: View {
                 .listRowInsets(.zero)
                 .frame(height: 8)
             if !favourites.isEmpty {
-                sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill")
                 tappableStatusCells(with: favourites)
             }
             if !disruptions.isEmpty {
-                sectionLabel(.lineStatusSectionDisruptions, systemImage: "exclamationmark.triangle.fill")
                 tappableStatusCells(with: disruptions)
             }
             allOtherLineCells
@@ -97,7 +95,7 @@ public struct LineStatusListView: View {
     private var allOtherLineCells: some View {
         if !allOtherLines.isEmpty {
             if allOtherLines.count == 1 {
-                sectionLabel(.lineStatusSectionGoodService, systemImage: "checkmark.circle.fill")
+                sectionLabel(.lineStatusSectionGoodService)
                 tappableStatusCells(with: allOtherLines)
             } else {
                 collapsibleOtherLinesSectionLabel
@@ -120,11 +118,8 @@ public struct LineStatusListView: View {
             withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
         } label: {
             HStack(spacing: 8) {
-                HStack(spacing: 4) {
-                    Image(systemName: "checkmark.circle.fill")
-                    Text(.lineStatusSectionGoodService)
-                }
-                .secondarySectionHeaderStyle()
+                Text(.lineStatusSectionGoodService)
+                    .secondarySectionHeaderStyle()
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
@@ -159,7 +154,7 @@ public struct LineStatusListView: View {
             onSelectLine(line)
         } label: {
             LineStatusCell(
-                style: .singleLine(line),
+                style: .singleLine(line, isFavourite: favouriteLineIDs.contains(line.id)),
                 showsAccessory: true,
                 animatedAccessoryImage: true,
                 historyIndicator: historyIndicator(for: line)

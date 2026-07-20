@@ -10,6 +10,12 @@ struct StationScreen: View {
     @Environment(LineStatusDataStore.self) var lineStatus
     @Environment(StationsDataStore.self) var stations
 
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var userPreferences: UserPreferences = .default
+
     let station: Station
 
     // MARK: - Layout
@@ -64,7 +70,7 @@ struct StationScreen: View {
 
     private var statusCells: [LineStatusCell.Style] {
         let allLineStatuses = lineStatus.lineStatusData(for: .live)?.value ?? []
-        return allLineStatuses.toLineStatusCellStyles(for: station)
+        return allLineStatuses.toLineStatusCellStyles(for: station, favouriteLineIDs: userPreferences.favouriteLineIDs)
     }
 
     private var disruptionMessages: [String] {
@@ -82,12 +88,12 @@ struct StationScreen: View {
 }
 
 private extension Sequence where Element == Line {
-    func toLineStatusCellStyles(for station: Station) -> [LineStatusCell.Style] {
+    func toLineStatusCellStyles(for station: Station, favouriteLineIDs: Set<Line.ID>) -> [LineStatusCell.Style] {
         self
             .sortedByStatusSeverity()
             .filter { station.sortedLineIDs.contains($0.id) }
             .map {
-                LineStatusCell.Style.singleLine($0)
+                LineStatusCell.Style.singleLine($0, isFavourite: favouriteLineIDs.contains($0.id))
             }
     }
 }

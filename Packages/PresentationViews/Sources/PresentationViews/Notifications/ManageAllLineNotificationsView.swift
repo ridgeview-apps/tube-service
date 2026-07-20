@@ -191,9 +191,8 @@ public struct ManageAllLineNotificationsView: View {
                 Image(systemName: "trash.fill")
             }
             .ctaLabelStyle()
-            .foregroundStyle(.adaptiveRed)
         }
-        .cardStyle(borderColor: .adaptiveRed, borderWidth: 1.5)
+        .buttonStyle(.primary(tint: .red))
         .confirmationDialog(
             Text(.notificationsManageDeleteAllSettingsConfirmationTitle),
             isPresented: $showDeleteAllConfirmation,
