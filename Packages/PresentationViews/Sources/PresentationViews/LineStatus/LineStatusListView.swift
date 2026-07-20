@@ -159,7 +159,7 @@ public struct LineStatusListView: View {
                 animatedAccessoryImage: true,
                 historyIndicator: historyIndicator(for: line)
             )
-            .frame(minHeight: 52)
+            .frame(minHeight: 56)
             .cardStyle()
             .id(statusCellAnimationID(for: line))
         }
@@ -198,7 +198,7 @@ public struct LineStatusListView: View {
             showsAccessory: true
         )
         .cardStyle()
-        .frame(minHeight: 72)
+        .frame(minHeight: 76)
     }
 
     private var bottomScrollContentPadding: some View {

@@ -155,7 +155,7 @@ public struct StationView: View {
                                     disruptionCountsByLineID: disruptionCountsByLineID
                                 )
                             )
-                            .frame(minHeight: 52)
+                            .frame(minHeight: 56)
                         }
                         .buttonStyle(.plain)
                         .cardStyle()
