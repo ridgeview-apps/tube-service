@@ -85,7 +85,7 @@ public struct LineStatusCell: View {
     }
 
     private func multilineLeadingColumn(with lines: [Line]) -> some View {
-        LineColourKeyView(lineIDs: lines.map(\.id))
+        LineColourKeyView(lineIDs: lines.prefix(12).map(\.id))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .frame(idealHeight: 72)
     }
