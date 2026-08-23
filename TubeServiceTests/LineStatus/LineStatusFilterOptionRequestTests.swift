@@ -46,4 +46,16 @@ struct LineStatusFilterOptionRequestTests {
 
         #expect(result == .planned(expectedInterval))
     }
+
+    @Test
+    func thisWeekend_ignoresPassedDate_andAnchorsOnToday() throws {
+        let expectedInterval = try #require(Calendar.london.thisOrNextWeekendDateInterval(for: .now))
+        let futureDate = try #require(
+            Calendar.london.date(byAdding: .month, value: 1, to: .now)
+        )
+
+        let result = LineStatusFilterOption.thisWeekend.toLineStatusRequest(for: futureDate)
+
+        #expect(result == .planned(expectedInterval))
+    }
 }

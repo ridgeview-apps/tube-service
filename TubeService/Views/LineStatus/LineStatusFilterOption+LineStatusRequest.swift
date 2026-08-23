@@ -20,7 +20,8 @@ extension LineStatusFilterOption {
             }
             return .planned(.init(start: startDate, end: endDate))
         case .thisWeekend:
-            guard let weekendInterval = Calendar.london.thisOrNextWeekendDateInterval(for: date) else {
+            // "This weekend" is always relative to today, never the future-date selection.
+            guard let weekendInterval = Calendar.london.thisOrNextWeekendDateInterval(for: .now) else {
                 assertionFailure("Failed to calculate next weekend dates (falling back to today instead)")
                 return .live
             }
