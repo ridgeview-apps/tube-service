@@ -2,136 +2,227 @@ import Models
 import SwiftUI
 
 public struct LineScheduleCard: View {
+
+    /// What sits at the trailing end of the header, next to the line name.
+    public enum Accessory {
+        case none
+        /// An ellipsis menu that pauses or resumes the line (by editing `settings.isEnabled`) or removes it.
+        case actionsMenu(onRemove: () -> Void)
+        case removeButton(onRemove: () -> Void)
+    }
+
     @Binding public var settings: LineNotificationSettings
-    private let showsRemoveButton: Bool
-    private let removalConfirmationTitle: String
-    private let onRemove: (() -> Void)?
+    private let accessory: Accessory
 
-    @State private var showRemoveConfirmation = false
+    private let barWidth: CGFloat = 8
 
-    public init(
-        settings: Binding<LineNotificationSettings>,
-        showsRemoveButton: Bool,
-        removalConfirmationTitle: String,
-        onRemove: (() -> Void)? = nil
-    ) {
+    public init(settings: Binding<LineNotificationSettings>, accessory: Accessory = .none) {
         _settings = settings
-        self.showsRemoveButton = showsRemoveButton
-        self.removalConfirmationTitle = removalConfirmationTitle
-        self.onRemove = onRemove
+        self.accessory = accessory
     }
 
     private var lineID: TrainLineID { settings.lineID }
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            lineNameRow
+            header
+                .padding(.bottom, 10)
 
             Divider()
 
-            scheduleRow
+            // The rows' own 44pt height provides the spacing between them and below the divider.
+            VStack(alignment: .leading, spacing: 0) {
+                NotificationDaysPicker(days: $settings.schedule.days)
+                timeSlotPicker
+            }
         }
         .padding(16)
+        // Content keeps its full 16pt inset from the bar's inner edge, not from the card's edge.
+        .padding(.leading, barWidth)
+        // The side bar is the card's only use of the line colour; controls use the accent colour.
         .background(alignment: .leading) {
-            lineID.backgroundColor.frame(width: 8)
+            lineID.backgroundColor.frame(width: barWidth)
         }
         .cardStyle()
-        .overlay(alignment: .topTrailing) {
-            removeButton
-                .dynamicTypeSize(..<DynamicTypeSize.accessibility1)
-                .offset(x: 11, y: -11)
-        }
+        .animation(.easeInOut(duration: 0.2), value: settings.isEnabled)
     }
 
-    private var lineNameRow: some View {
-        Text(lineID.longName)
-            .font(.subheadline)
-            .fontWeight(.semibold)
-            .padding(.bottom, 10)
-    }
+    // MARK: - Header
 
     @ViewBuilder
-    private var removeButton: some View {
-        if showsRemoveButton {
-            Button {
-                showRemoveConfirmation = true
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .font(.title2)
-                    .foregroundStyle(.adaptiveRed)
+    private var header: some View {
+        switch accessory {
+        case .none:
+            headerLabel
+        case .actionsMenu(let onRemove):
+            HStack(spacing: 8) {
+                headerLabel
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                actionsMenu(onRemove: onRemove)
             }
-            .buttonStyle(.plain)
-            .confirmationDialog(
-                removalConfirmationTitle,
-                isPresented: $showRemoveConfirmation,
-                titleVisibility: .visible
-            ) {
-                Button(.globalRemove, role: .destructive) {
-                    onRemove?()
-                }
+        case .removeButton(let onRemove):
+            HStack(spacing: 8) {
+                headerLabel
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                removeButton(onRemove: onRemove)
             }
         }
     }
 
-    private var scheduleRow: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(.notificationsManageScheduleLabel)
-                    .foregroundStyle(.primary)
-                if let description = settings.schedule.timeSlot.timesDescription {
-                    Text(description)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+    private var headerLabel: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(lineID.longName)
+                .font(.subheadline)
+                .fontWeight(.semibold)
+            if !settings.isEnabled {
+                HStack(spacing: 4) {
+                    Image(systemName: "bell.slash")
+                    Text(.globalPaused)
                 }
+                .font(.footnote)
+                .foregroundStyle(.orange)
+                .accessibilityElement(children: .combine)
+                .transition(.opacity)
             }
-            Spacer(minLength: 8)
-            Menu {
-                Picker(
-                    String(localized: .notificationsConfirmationScheduleLabel),
-                    selection: $settings.schedule.timeSlot
-                ) {
-                    ForEach(NotificationTimeSlot.allCases, id: \.self) { timeSlot in
-                        Text(timeSlot.title).tag(timeSlot)
+        }
+    }
+
+    /// Pausing is an edit like the schedule rows, saved with them; removing is left to the caller to confirm.
+    private func actionsMenu(onRemove: @escaping () -> Void) -> some View {
+        Menu {
+            Button {
+                settings.isEnabled.toggle()
+            } label: {
+                if settings.isEnabled {
+                    Label {
+                        Text(.notificationsLineConfigMenuPause)
+                    } icon: {
+                        Image(systemName: "bell.slash")
+                    }
+                } else {
+                    Label {
+                        Text(.notificationsLineConfigMenuResume)
+                    } icon: {
+                        Image(systemName: "bell")
                     }
                 }
-                .labelsHidden()
-            } label: {
-                HStack(spacing: 4) {
-                    Text(settings.schedule.timeSlot.title)
-                        .multilineTextAlignment(.trailing)
-                    Image(systemName: "chevron.up.chevron.down")
-                        .imageScale(.small)
-                }
-                .foregroundStyle(.tint)
             }
-            .menuOrder(.fixed)
-            .buttonStyle(.plain)
+            Divider()
+            Button(role: .destructive, action: onRemove) {
+                Label {
+                    Text(.notificationsLineConfigRemoveButton(lineID.longName))
+                } icon: {
+                    Image(systemName: "trash")
+                }
+            }
+        } label: {
+            Label {
+                Text(.notificationsLineConfigMenuLabel)
+            } icon: {
+                Image(systemName: "ellipsis.circle")
+            }
+            .labelStyle(.iconOnly)
+            // Trailing-aligned so the icon lines up with the schedule chevrons; the tap area extends leftwards.
+            .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
+            .contentShape(Rectangle())
         }
-        .font(.subheadline)
-        .padding(.vertical, 10)
+        .tint(Color.accentColor)
+        // Keeps the header row the same height as the other variants despite the 44pt tap target.
+        .padding(.vertical, -10)
     }
 
+    private func removeButton(onRemove: @escaping () -> Void) -> some View {
+        Button(role: .destructive, action: onRemove) {
+            Label {
+                Text(.notificationsLineConfigRemoveButton(lineID.longName))
+            } icon: {
+                Image(systemName: "trash")
+            }
+            .labelStyle(.iconOnly)
+            // Trailing-aligned so the icon lines up with the schedule chevrons; the tap area extends leftwards.
+            .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.borderless)
+        .tint(.adaptiveRed)
+        // Keeps the header row the same height as the other variants despite the 44pt tap target.
+        .padding(.vertical, -10)
+    }
+
+    // MARK: - Schedule
+
+    /// The time slot row, with the slot's times (if any) under the value.
+    private var timeSlotPicker: some View {
+        let timeSlot = settings.schedule.timeSlot
+
+        return ScheduleMenuRow(
+            title: .notificationsLineScheduleTimeLabel,
+            value: String(localized: timeSlot.title),
+            detail: timeSlot.timesDescription
+        ) {
+            // Toggles rather than a Picker: menus document title-and-subtitle labels for toggles, not picker options.
+            ForEach(NotificationTimeSlot.allCases, id: \.self) { option in
+                Toggle(isOn: selectionBinding(for: option)) {
+                    Text(option.title)
+                    if let times = option.timesDescription {
+                        Text(times)
+                    }
+                }
+            }
+        }
+    }
+
+    /// On when `option` is selected; turning it on selects it. Turning the selected option off does nothing,
+    /// so exactly one time slot is always selected, as with a picker.
+    private func selectionBinding(for option: NotificationTimeSlot) -> Binding<Bool> {
+        Binding(
+            get: { settings.schedule.timeSlot == option },
+            set: { isOn in
+                if isOn { settings.schedule.timeSlot = option }
+            }
+        )
+    }
 }
 
 // MARK: - Previews
 
 #if DEBUG
-    #Preview("Read-only") {
+    #Preview("Onboarding (remove)") {
         LineScheduleCard(
-            settings: .constant(.defaultValue(lineID: .victoria)),
-            showsRemoveButton: false,
-            removalConfirmationTitle: ""
+            settings: .constant(.defaultValue(lineID: .jubilee)),
+            accessory: .removeButton(onRemove: {})
         )
         .padding(20)
     }
 
-    #Preview("With remove button") {
-        LineScheduleCard(
-            settings: .constant(.defaultValue(lineID: .jubilee)),
-            showsRemoveButton: true,
-            removalConfirmationTitle: String(localized: .notificationsLineScheduleRemoveTitle("Jubilee line")),
-            onRemove: {}
+    #Preview("Existing line (menu)") {
+        @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .victoria)
+        LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+            .padding(20)
+    }
+
+    #Preview("Paused, all day") {
+        @Previewable @State var settings = LineNotificationSettings.defaultValue(
+            lineID: .circle,
+            isEnabled: false,
+            schedule: .init(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
         )
-        .padding(20)
+        LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+            .padding(20)
+    }
+
+    #Preview("New line, dark mode") {
+        LineScheduleCard(settings: .constant(.defaultValue(lineID: .northern)))
+            .padding(20)
+            .preferredColorScheme(.dark)
+    }
+
+    #Preview("Accessibility size") {
+        @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .hammersmithAndCity)
+        ScrollView {
+            LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+                .padding(20)
+        }
+        .dynamicTypeSize(.accessibility3)
     }
 #endif

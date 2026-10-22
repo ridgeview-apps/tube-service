@@ -12,6 +12,7 @@ public struct NotificationsOnboardingLineSetupView: View {
 
     @State private var items: [LineNotificationSettings]
     @State private var scrollTarget: TrainLineID?
+    @State private var removeFeedbackTrigger = false
 
     public init(
         initialItems: [LineNotificationSettings],
@@ -40,8 +41,9 @@ public struct NotificationsOnboardingLineSetupView: View {
         .safeAreaInset(edge: .bottom) {
             pinnedTurnOnAlertsButton
         }
-        .navigationTitle(Text(.notificationsManageNavigationTitle))
+        .navigationTitle(Text(.notificationsLineAlertsNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
+        .sensoryFeedback(.impact(weight: .light), trigger: removeFeedbackTrigger)
     }
 
     // MARK: - Computed Properties
@@ -57,12 +59,18 @@ public struct NotificationsOnboardingLineSetupView: View {
 
     @ViewBuilder
     private var lineItemsSection: some View {
+        Text(.notificationsOnboardingLineSetupExplainer)
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 12, leading: 24, bottom: 6, trailing: 24))
+
         ForEach(items) { item in
+            // Nothing is saved yet and a removed line is one tap to re-add, so there's no confirmation.
             LineScheduleCard(
                 settings: binding(for: item.lineID),
-                showsRemoveButton: true,
-                removalConfirmationTitle: String(localized: .notificationsLineScheduleRemoveTitle(item.lineID.longName)),
-                onRemove: { items.removeAll { $0.lineID == item.lineID } }
+                accessory: .removeButton(onRemove: { remove(item.lineID) })
             )
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
@@ -75,6 +83,13 @@ public struct NotificationsOnboardingLineSetupView: View {
         #if DEBUG
             debugAddAllRow
         #endif
+    }
+
+    private func remove(_ lineID: TrainLineID) {
+        removeFeedbackTrigger.toggle()
+        withAnimation {
+            items.removeAll { $0.lineID == lineID }
+        }
     }
 
     // ForEach($items) crashes when deleting the sole initial item — it force-unwraps the binding

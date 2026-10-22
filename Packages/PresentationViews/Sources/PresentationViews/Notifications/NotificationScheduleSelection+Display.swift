@@ -25,8 +25,12 @@ extension NotificationScheduleSelection {
         String(localized: .notificationsScheduleSummary(daysDescription, String(localized: timeSlot.title)))
     }
 
-    /// e.g. "Mon–Fri", "Mon, Wed and Sat–Sun" or "Every day".
     var daysDescription: String {
+        Self.daysDescription(for: days)
+    }
+
+    /// e.g. "Mon–Fri", "Mon, Wed and Sat–Sun" or "Every day".
+    static func daysDescription(for days: Set<NotificationWeekday>) -> String {
         let sortedDays = NotificationWeekday.allCases.filter(days.contains)
         guard sortedDays.count < NotificationWeekday.allCases.count else {
             return String(localized: .notificationsScheduleEveryDay)
@@ -80,7 +84,16 @@ extension NotificationWeekday {
 
     /// The locale's abbreviated weekday name, e.g. "Mon".
     fileprivate var shortSymbol: String {
-        // `shortWeekdaySymbols` starts on Sunday, whereas `allCases` starts on Monday.
-        Calendar.current.shortWeekdaySymbols[(index + 1) % 7]
+        Calendar.current.shortWeekdaySymbols[calendarSymbolIndex]
+    }
+
+    /// The locale's full weekday name, e.g. "Monday".
+    var fullSymbol: String {
+        Calendar.current.weekdaySymbols[calendarSymbolIndex]
+    }
+
+    /// `Calendar`'s weekday symbols start on Sunday, whereas `allCases` starts on Monday.
+    private var calendarSymbolIndex: Int {
+        (index + 1) % 7
     }
 }

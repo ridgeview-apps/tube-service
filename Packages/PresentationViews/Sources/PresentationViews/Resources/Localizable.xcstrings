@@ -489,17 +489,6 @@
         }
       }
     },
-    "global.pause" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause"
-          }
-        }
-      }
-    },
     "global.paused" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2332,24 +2321,46 @@
         }
       }
     },
-    "notifications.line.config.line.paused.warning.subtitle" : {
+    "notifications.line.config.explainer" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You won't receive service updates for this line"
+            "value" : "You'll get alerts about disruptions on the days and times above, and when good service returns."
           }
         }
       }
     },
-    "notifications.line.config.line.paused.warning.title %@" : {
+    "notifications.line.config.menu.label" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are paused"
+            "value" : "More"
+          }
+        }
+      }
+    },
+    "notifications.line.config.menu.pause" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause alerts"
+          }
+        }
+      }
+    },
+    "notifications.line.config.menu.resume" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume alerts"
           }
         }
       }
@@ -2372,28 +2383,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Other line alerts"
-          }
-        }
-      }
-    },
-    "notifications.line.config.pause.button %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause %@ alerts"
-          }
-        }
-      }
-    },
-    "notifications.line.config.pause.confirmation %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause %@ alerts?"
           }
         }
       }
@@ -2464,17 +2453,6 @@
         }
       }
     },
-    "notifications.line.config.resume.button %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resume %@ alerts"
-          }
-        }
-      }
-    },
     "notifications.line.config.stop.alerts.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2508,13 +2486,24 @@
         }
       }
     },
-    "notifications.line.schedule.remove.title %@" : {
+    "notifications.line.schedule.days.label" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove %@?"
+            "value" : "Days"
+          }
+        }
+      }
+    },
+    "notifications.line.schedule.time.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
           }
         }
       }
@@ -2684,17 +2673,6 @@
         }
       }
     },
-    "notifications.manage.navigation.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notification Settings"
-          }
-        }
-      }
-    },
     "notifications.manage.open.settings.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2772,17 +2750,6 @@
         }
       }
     },
-    "notifications.manage.schedule.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disruption alerts"
-          }
-        }
-      }
-    },
     "notifications.onboarding.feature.disruption.alerts.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2833,7 +2800,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Morning, evening, or all day"
+            "value" : "Choose your days, peak hours or all day"
           }
         }
       }
@@ -2867,6 +2834,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stay Ahead of Disruptions"
+          }
+        }
+      }
+    },
+    "notifications.onboarding.line.setup.explainer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "We'll alert you when these lines are disrupted, and when good service returns."
           }
         }
       }

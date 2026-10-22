@@ -25,7 +25,7 @@ public struct ManageSingleLineNotificationsView: View {
     @State private var settings: LineNotificationSettings
 
     @State private var showDiscardChangesConfirmation = false
-    @State private var showPauseConfirmation = false
+    @State private var showRemoveConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
@@ -91,11 +91,6 @@ public struct ManageSingleLineNotificationsView: View {
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
-            } else if existingSettings != nil && !settings.isEnabled {
-                linePausedWarningRow
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
             }
 
             if savingState != .loaded {
@@ -108,10 +103,19 @@ public struct ManageSingleLineNotificationsView: View {
 
             scheduleCard
 
-            notificationActionButton
+            Text(.notificationsLineConfigExplainer)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+                .listRowInsets(EdgeInsets(top: 4, leading: 24, bottom: 6, trailing: 24))
+
+            if isAddingSingleLine {
+                turnOnAlertsButton
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
+            }
 
             if showsOtherLines {
                 otherLinesSummarySection
@@ -197,37 +201,24 @@ public struct ManageSingleLineNotificationsView: View {
         .cardStyle()
     }
 
-    private var linePausedWarningRow: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "bell.slash.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(.orange)
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(.notificationsLineConfigLinePausedWarningTitle(lineID.longName))
-                    .font(.subheadline.weight(.semibold))
-                Text(.notificationsLineConfigLinePausedWarningSubtitle)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(16)
-        .cardStyle()
-    }
-
     // MARK: - Schedule Card
 
     private var scheduleCard: some View {
+        // Existing lines get a menu to pause or resume them (saved with the rest of the edit) or remove them.
         LineScheduleCard(
             settings: $settings,
-            showsRemoveButton: existingSettings != nil,
-            removalConfirmationTitle: String(localized: .notificationsLineConfigRemovePermanentTitle(lineID.longName)),
-            onRemove: handleRemoveLine
+            accessory: isAddingSingleLine ? .none : .actionsMenu(onRemove: { showRemoveConfirmation = true })
         )
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
+        .confirmationDialog(
+            String(localized: .notificationsLineConfigRemovePermanentTitle(lineID.longName)),
+            isPresented: $showRemoveConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(.globalRemove, role: .destructive, action: handleRemoveLine)
+        }
     }
 
     private func handleRemoveLine() {
@@ -235,86 +226,28 @@ public struct ManageSingleLineNotificationsView: View {
         onAction(.remove)
     }
 
-    // MARK: - Alerts On / Off CTA
+    // MARK: - Turn On CTA
 
-    @ViewBuilder
-    private var notificationActionButton: some View {
-        if existingSettings == nil {
-            turnOnAlertsButton
-        } else if settings.isEnabled {
-            pauseAlertsButton
-        } else {
-            resumeAlertsButton
-        }
-    }
-
-    @ViewBuilder
-    private func alertActionButton(
-        text: String,
-        iconName: String,
-        bounces: Bool = false,
-        onTap: @escaping () -> Void
-    ) -> some View {
-        Button(action: onTap) {
-            Label {
-                Text(text)
-            } icon: {
-                Image(systemName: iconName)
-                    .symbolEffect(.bounce, value: bounces ? bellBounce : false)
-            }
-            .ctaLabelStyle()
-        }
-        .disabled(savingState == .loading)
-    }
-
+    /// Styled like onboarding's pinned "Turn on alerts" button; the line colour is kept for identity only.
     private var turnOnAlertsButton: some View {
-        alertActionButton(
-            text: String(localized: .notificationsLineConfigTurnOnButton(lineID.longName)),
-            iconName: "bell.fill",
-            bounces: true,
-            onTap: {
-                saveFeedbackTrigger.toggle()
-                onAction(.save(settings))
+        Button {
+            saveFeedbackTrigger.toggle()
+            onAction(.save(settings))
+        } label: {
+            Label {
+                Text(.notificationsLineConfigTurnOnButton(lineID.longName))
+            } icon: {
+                Image(systemName: "bell.fill")
+                    .symbolEffect(.bounce, value: bellBounce)
             }
-        )
-        .buttonStyle(.line(lineID))
-        .onAppear { bellBounce = true }
-    }
-
-    private var pauseAlertsButton: some View {
-        alertActionButton(
-            text: String(localized: .notificationsLineConfigPauseButton(lineID.longName)),
-            iconName: "bell.slash.fill",
-            onTap: { showPauseConfirmation = true }
-        )
-        .confirmationDialog(
-            String(localized: .notificationsLineConfigPauseConfirmation(lineID.longName)),
-            isPresented: $showPauseConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(String(localized: .globalPause)) {
-                saveFeedbackTrigger.toggle()
-                var paused = settings
-                paused.isEnabled = false
-                onAction(.save(paused))
-            }
+            .labelStyle(.titleAndIcon)
+            .font(.body)
+            .fontWeight(.semibold)
+            .frame(maxWidth: .infinity)
         }
-        .buttonStyle(.primary(tint: .orange))
-    }
-
-    private var resumeAlertsButton: some View {
-        alertActionButton(
-            text: String(localized: .notificationsLineConfigResumeButton(lineID.longName)),
-            iconName: "bell.fill",
-            bounces: true,
-            onTap: {
-                saveFeedbackTrigger.toggle()
-                var resumed = settings
-                resumed.isEnabled = true
-                onAction(.save(resumed))
-            }
-        )
-        .buttonStyle(.line(lineID))
+        .buttonStyle(.borderedProminent)
+        .controlSize(.large)
+        .disabled(savingState == .loading)
         .onAppear { bellBounce = true }
     }
 
@@ -428,18 +361,6 @@ public struct ManageSingleLineNotificationsView: View {
             Text(.globalSave)
         }
         .disabled(!hasUnsavedChanges || savingState == .loading)
-    }
-}
-
-// MARK: - Style Helpers
-
-private extension View {
-    func ctaLabelStyle() -> some View {
-        self
-            .font(.subheadline)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
-            .padding(.horizontal, 16)
     }
 }
 
