@@ -20,9 +20,6 @@
     "%lld" : {
 
     },
-    "Alert schedules" : {
-
-    },
     "arrivals.board.countdown.due" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -221,9 +218,6 @@
           }
         }
       }
-    },
-    "Choose when alerts should be active." : {
-
     },
     "contact.us.body.app.version" : {
       "extractionState" : "manual",
@@ -1362,12 +1356,6 @@
         }
       }
     },
-    "Know when service is back to normal." : {
-
-    },
-    "Line-specific alerts" : {
-
-    },
     "line.status.date.picker.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1727,7 +1715,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enable in Settings to receive service alerts"
+            "value" : "Enable in Settings to receive notifications"
           }
         }
       }
@@ -2107,7 +2095,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to edit your alert settings"
+            "value" : "Tap to edit your notification settings"
           }
         }
       }
@@ -2118,7 +2106,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are on"
+            "value" : "%@ notifications are on"
           }
         }
       }
@@ -2129,7 +2117,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Set up service alerts for this line"
+            "value" : "Set up notifications for this line"
           }
         }
       }
@@ -2140,7 +2128,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are off"
+            "value" : "%@ notifications are off"
           }
         }
       }
@@ -2162,7 +2150,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts are paused"
+            "value" : "%@: paused"
           }
         }
       }
@@ -2173,7 +2161,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock to get service alerts"
+            "value" : "Unlock to get disruption alerts"
           }
         }
       }
@@ -2211,17 +2199,6 @@
         }
       }
     },
-    "notifications.button.settings.not.set.up.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get service alerts for your lines"
-          }
-        }
-      }
-    },
     "notifications.button.settings.not.set.up.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2239,7 +2216,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You'll receive service alerts for your chosen lines."
+            "value" : "You'll receive notifications for your chosen lines."
           }
         }
       }
@@ -2283,18 +2260,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your alerts are now active"
-          }
-        }
-      }
-    },
-    "notifications.line.alerts.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts"
+            "value" : "Your notifications are now on"
           }
         }
       }
@@ -2305,7 +2271,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Line alerts"
+            "value" : "Line notifications"
           }
         }
       }
@@ -2327,7 +2293,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You'll get alerts about disruptions on the days and times above, and when good service returns."
+            "value" : "You'll be notified about disruptions on the days and times above, and when good service returns."
           }
         }
       }
@@ -2349,7 +2315,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pause alerts"
+            "value" : "Pause notifications"
           }
         }
       }
@@ -2360,7 +2326,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume alerts"
+            "value" : "Resume notifications"
           }
         }
       }
@@ -2371,7 +2337,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ alerts"
+            "value" : "%@"
           }
         }
       }
@@ -2382,7 +2348,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Other line alerts"
+            "value" : "Other line notifications"
           }
         }
       }
@@ -2393,7 +2359,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts won’t be sent until you resume Tube Service alerts."
+            "value" : "Nothing will be sent until you turn Tube Service notifications back on."
           }
         }
       }
@@ -2404,7 +2370,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tube Service alerts are paused for all lines"
+            "value" : "Notifications are paused for all lines"
           }
         }
       }
@@ -2415,18 +2381,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove %@ alerts"
-          }
-        }
-      }
-    },
-    "notifications.line.config.remove.confirmation" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove alerts?"
+            "value" : "Remove %@ notifications"
           }
         }
       }
@@ -2437,7 +2392,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permanently delete %@ alerts?"
+            "value" : "Permanently delete %@ notifications?"
           }
         }
       }
@@ -2448,40 +2403,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume alerts"
+            "value" : "Resume notifications"
           }
         }
       }
     },
-    "notifications.line.config.stop.alerts.button" : {
+    "notifications.line.config.turn.on.button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
-    "notifications.line.config.turn.on.button %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn on %@ alerts"
-          }
-        }
-      }
-    },
-    "notifications.line.enabled.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts"
+            "value" : "Turn on notifications"
           }
         }
       }
@@ -2530,28 +2463,6 @@
         }
       }
     },
-    "notifications.line.status.alerts.off" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts off"
-          }
-        }
-      }
-    },
-    "notifications.line.status.alerts.on" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Alerts on"
-          }
-        }
-      }
-    },
     "notifications.line.status.not.set.up" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2585,35 +2496,13 @@
         }
       }
     },
-    "notifications.manage.alerts.paused.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All line notifications are currently paused. Turn on alerts above to manage your lines."
-          }
-        }
-      }
-    },
-    "notifications.manage.alerts.paused.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All alerts paused"
-          }
-        }
-      }
-    },
     "notifications.manage.delete.all.settings.button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all line alerts"
+            "value" : "Delete all line notifications"
           }
         }
       }
@@ -2624,7 +2513,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This removes all saved line alert configurations from this device. You can set them up again at any time."
+            "value" : "This removes all saved line notification settings from this device. You can set them up again at any time."
           }
         }
       }
@@ -2635,7 +2524,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all line alerts?"
+            "value" : "Delete all line notifications?"
           }
         }
       }
@@ -2690,7 +2579,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts are paused. Turn this back on to resume your saved line settings."
+            "value" : "Notifications are paused. Turn this back on to resume your saved line settings."
           }
         }
       }
@@ -2701,7 +2590,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn this off to pause alerts without deleting your saved line settings."
+            "value" : "Turn this off to pause notifications without deleting your saved line settings."
           }
         }
       }
@@ -2712,7 +2601,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tube Service alerts"
+            "value" : "Tube Service notifications"
           }
         }
       }
@@ -2723,7 +2612,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn notifications on in Settings to receive Tube Service alerts."
+            "value" : "Turn on notifications for Tube Service in Settings."
           }
         }
       }
@@ -2735,17 +2624,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "iOS notifications are turned off"
-          }
-        }
-      }
-    },
-    "notifications.manage.resume.alerts.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resume alerts"
           }
         }
       }
@@ -2844,7 +2722,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "We'll alert you when these lines are disrupted, and when good service returns."
+            "value" : "We'll notify you when these lines are disrupted, and when good service returns."
           }
         }
       }
@@ -2855,7 +2733,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Turn on alerts"
+            "value" : "Turn on notifications"
           }
         }
       }
@@ -2866,7 +2744,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Line Status Alerts"
+            "value" : "Line Status Notifications"
           }
         }
       }
@@ -2948,17 +2826,6 @@
         }
       }
     },
-    "notifications.schedule.navigation.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "When to Alert Me"
-          }
-        }
-      }
-    },
     "notifications.schedule.range %@ %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3003,9 +2870,6 @@
         }
       }
     },
-    "Only follow the lines you care about." : {
-
-    },
     "open.app.settings.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3047,9 +2911,6 @@
           }
         }
       }
-    },
-    "Recovery notifications" : {
-
     },
     "refresh.button.title" : {
       "extractionState" : "manual",
@@ -3190,17 +3051,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Settings"
-          }
-        }
-      }
-    },
-    "settings.notifications.row.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Line Status Alerts"
           }
         }
       }
@@ -3488,6 +3338,72 @@
         }
       }
     },
+    "tube.service.plus.feature.notifications.lines.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only follow the lines you care about."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.notifications.lines.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line-specific notifications"
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.notifications.recovery.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Know when service is back to normal."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.notifications.recovery.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recovery alerts"
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.notifications.schedules.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose when you get notified."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.notifications.schedules.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notification schedules"
+          }
+        }
+      }
+    },
     "tube.service.plus.feature.recovery.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3549,7 +3465,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alerts for Your Lines"
+            "value" : "Disruption Alerts for Your Lines"
           }
         }
       }

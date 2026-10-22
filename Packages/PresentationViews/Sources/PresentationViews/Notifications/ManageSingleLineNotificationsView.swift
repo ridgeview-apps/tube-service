@@ -228,14 +228,14 @@ public struct ManageSingleLineNotificationsView: View {
 
     // MARK: - Turn On CTA
 
-    /// Styled like onboarding's pinned "Turn on alerts" button; the line colour is kept for identity only.
+    /// Styled like onboarding's pinned "Turn on notifications" button; the line colour is kept for identity only.
     private var turnOnAlertsButton: some View {
         Button {
             saveFeedbackTrigger.toggle()
             onAction(.save(settings))
         } label: {
             Label {
-                Text(.notificationsLineConfigTurnOnButton(lineID.longName))
+                Text(.notificationsLineConfigTurnOnButton)
             } icon: {
                 Image(systemName: "bell.fill")
                     .symbolEffect(.bounce, value: bellBounce)

@@ -103,20 +103,20 @@ public struct TubeServicePlusMarketingContent: View {
                 Feature(
                     id: "notifications-lines",
                     systemImage: "tram.fill",
-                    title: "Line-specific alerts",
-                    description: "Only follow the lines you care about."
+                    title: .tubeServicePlusFeatureNotificationsLinesTitle,
+                    description: .tubeServicePlusFeatureNotificationsLinesDescription
                 ),
                 Feature(
                     id: "notifications-recovery",
                     systemImage: "checkmark.circle",
-                    title: "Recovery notifications",
-                    description: "Know when service is back to normal."
+                    title: .tubeServicePlusFeatureNotificationsRecoveryTitle,
+                    description: .tubeServicePlusFeatureNotificationsRecoveryDescription
                 ),
                 Feature(
                     id: "notifications-schedules",
                     systemImage: "calendar.badge.clock",
-                    title: "Alert schedules",
-                    description: "Choose when alerts should be active."
+                    title: .tubeServicePlusFeatureNotificationsSchedulesTitle,
+                    description: .tubeServicePlusFeatureNotificationsSchedulesDescription
                 )
             ]
         }

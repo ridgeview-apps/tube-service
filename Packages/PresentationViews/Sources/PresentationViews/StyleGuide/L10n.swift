@@ -44,20 +44,14 @@ public enum L10n {
     public static let searchSuggestionsSectionTitle = LocalizedStringResource.searchSuggestionsSectionTitle
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
-    public static let settingsNotificationsRowTitle = LocalizedStringResource.settingsNotificationsRowTitle
 
     public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
-    public static let notificationsLineAlertsLabel = LocalizedStringResource.notificationsLineAlertsLabel
     public static let notificationsOtherLinesSectionTitle = LocalizedStringResource.notificationsOtherLinesSectionTitle
-    public static let notificationsLineStatusAlertsOff = LocalizedStringResource.notificationsLineStatusAlertsOff
-    public static let notificationsLineStatusAlertsOn = LocalizedStringResource.notificationsLineStatusAlertsOn
     public static let notificationsLineStatusNotSetUp = LocalizedStringResource.notificationsLineStatusNotSetUp
     public static let notificationsOnboardingFeatureRecoveryAlertsDescription =
         LocalizedStringResource.notificationsOnboardingFeatureRecoveryAlertsDescription
 
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle
-
-    public static let notificationsScheduleNavigationTitle = LocalizedStringResource.notificationsScheduleNavigationTitle
 
 }
