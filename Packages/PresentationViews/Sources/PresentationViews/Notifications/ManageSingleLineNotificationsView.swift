@@ -123,7 +123,7 @@ public struct ManageSingleLineNotificationsView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .navigationTitle(String(localized: .notificationsLineConfigNavTitle(lineID.longName)))
+        .navigationTitle(Text(.notificationsLineConfigNavTitle))
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)

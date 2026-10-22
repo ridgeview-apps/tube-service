@@ -2331,13 +2331,13 @@
         }
       }
     },
-    "notifications.line.config.nav.title %@" : {
+    "notifications.line.config.nav.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@"
+            "value" : "Notifications"
           }
         }
       }
