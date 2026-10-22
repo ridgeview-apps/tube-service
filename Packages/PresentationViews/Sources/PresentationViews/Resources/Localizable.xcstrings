@@ -2271,7 +2271,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Line notifications"
+            "value" : "Notifications"
           }
         }
       }
@@ -2386,13 +2386,24 @@
         }
       }
     },
-    "notifications.line.config.remove.permanent.title %@" : {
+    "notifications.line.config.remove.confirmation.message" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permanently delete %@ notifications?"
+            "value" : "Your days and times for this line will be deleted."
+          }
+        }
+      }
+    },
+    "notifications.line.config.remove.confirmation.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove %@ notifications?"
           }
         }
       }
@@ -2502,7 +2513,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all line notifications"
+            "value" : "Delete all notification settings"
           }
         }
       }
@@ -2524,7 +2535,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete all line notifications?"
+            "value" : "Delete all notification settings?"
           }
         }
       }

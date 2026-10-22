@@ -213,11 +213,13 @@ public struct ManageSingleLineNotificationsView: View {
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
         .confirmationDialog(
-            String(localized: .notificationsLineConfigRemovePermanentTitle(lineID.longName)),
+            String(localized: .notificationsLineConfigRemoveConfirmationTitle(lineID.longName)),
             isPresented: $showRemoveConfirmation,
             titleVisibility: .visible
         ) {
             Button(.globalRemove, role: .destructive, action: handleRemoveLine)
+        } message: {
+            Text(.notificationsLineConfigRemoveConfirmationMessage)
         }
     }
 
