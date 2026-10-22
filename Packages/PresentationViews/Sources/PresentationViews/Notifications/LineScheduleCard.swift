@@ -7,12 +7,15 @@ public struct LineScheduleCard: View {
     public enum Accessory {
         case none
         /// An ellipsis menu that pauses or resumes the line (by editing `settings.isEnabled`) or removes it.
+        /// Removing asks for confirmation first; `onRemove` is only called once the user confirms.
         case actionsMenu(onRemove: () -> Void)
         case removeButton(onRemove: () -> Void)
     }
 
     @Binding public var settings: LineNotificationSettings
     private let accessory: Accessory
+
+    @State private var showRemoveConfirmation = false
 
     private let barWidth: CGFloat = 8
 
@@ -87,7 +90,7 @@ public struct LineScheduleCard: View {
         }
     }
 
-    /// Pausing is an edit like the schedule rows, saved with them; removing is left to the caller to confirm.
+    /// Pausing is an edit like the schedule rows, saved with them; removing is confirmed here before calling `onRemove`.
     private func actionsMenu(onRemove: @escaping () -> Void) -> some View {
         Menu {
             Button {
@@ -108,7 +111,9 @@ public struct LineScheduleCard: View {
                 }
             }
             Divider()
-            Button(role: .destructive, action: onRemove) {
+            Button(role: .destructive) {
+                showRemoveConfirmation = true
+            } label: {
                 Label {
                     Text(.notificationsLineConfigRemoveButton(lineID.longName))
                 } icon: {
@@ -127,6 +132,16 @@ public struct LineScheduleCard: View {
             .contentShape(Rectangle())
         }
         .tint(Color.accentColor)
+        // Attached to the menu rather than the whole card so the dialog's popover points at the ellipsis.
+        .confirmationDialog(
+            String(localized: .notificationsLineConfigRemoveConfirmationTitle(lineID.longName)),
+            isPresented: $showRemoveConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(.globalRemove, role: .destructive, action: onRemove)
+        } message: {
+            Text(.notificationsLineConfigRemoveConfirmationMessage)
+        }
         // Keeps the header row the same height as the other variants despite the 44pt tap target.
         .padding(.vertical, -10)
     }

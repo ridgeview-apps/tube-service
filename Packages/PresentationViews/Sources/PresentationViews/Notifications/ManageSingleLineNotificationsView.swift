@@ -25,7 +25,6 @@ public struct ManageSingleLineNotificationsView: View {
     @State private var settings: LineNotificationSettings
 
     @State private var showDiscardChangesConfirmation = false
-    @State private var showRemoveConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
@@ -205,22 +204,14 @@ public struct ManageSingleLineNotificationsView: View {
 
     private var scheduleCard: some View {
         // Existing lines get a menu to pause or resume them (saved with the rest of the edit) or remove them.
+        // The card confirms the removal itself, so `handleRemoveLine` only runs once confirmed.
         LineScheduleCard(
             settings: $settings,
-            accessory: isAddingSingleLine ? .none : .actionsMenu(onRemove: { showRemoveConfirmation = true })
+            accessory: isAddingSingleLine ? .none : .actionsMenu(onRemove: handleRemoveLine)
         )
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
-        .confirmationDialog(
-            String(localized: .notificationsLineConfigRemoveConfirmationTitle(lineID.longName)),
-            isPresented: $showRemoveConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(.globalRemove, role: .destructive, action: handleRemoveLine)
-        } message: {
-            Text(.notificationsLineConfigRemoveConfirmationMessage)
-        }
     }
 
     private func handleRemoveLine() {
