@@ -9,9 +9,8 @@ extension LineNotificationSettings {
             lineId: lineID.rawValue,
             enabled: isEnabled,
             notifyRecoveries: notifyRecoveries,
-            schedulePreset: schedulePreset,
             severityThreshold: .minorDelays,
-            customSchedules: []
+            schedules: schedulePreset.schedules
         )
     }
 }

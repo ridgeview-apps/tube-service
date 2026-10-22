@@ -90,8 +90,7 @@ import ModelStubs
                         enabled: lineUpdate.enabled,
                         severityThreshold: lineUpdate.severityThreshold,
                         notifyRecoveries: lineUpdate.notifyRecoveries,
-                        schedulePreset: lineUpdate.schedulePreset,
-                        customSchedules: lineUpdate.customSchedules
+                        schedules: lineUpdate.schedules
                     )
                 },
                 createdAt: stubbedPreferences.decodedModel.createdAt,

@@ -12,7 +12,7 @@ extension NotificationLinePreference {
         return LineNotificationSettings(
             lineID: trainLineID,
             isEnabled: enabled,
-            schedulePreset: schedulePreset,
+            schedulePreset: NotificationSchedulePreset(schedules: schedules),
             notifyRecoveries: notifyRecoveries
         )
     }

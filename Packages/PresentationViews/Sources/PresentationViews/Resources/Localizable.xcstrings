@@ -2970,6 +2970,17 @@
         }
       }
     },
+    "notifications.schedule.all.day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "all day"
+          }
+        }
+      }
+    },
     "notifications.schedule.anytime.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2992,6 +3003,28 @@
         }
       }
     },
+    "notifications.schedule.custom.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
+    "notifications.schedule.every.day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day"
+          }
+        }
+      }
+    },
     "notifications.schedule.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2999,6 +3032,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "When to Alert Me"
+          }
+        }
+      }
+    },
+    "notifications.schedule.range %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@–%2$@"
+          }
+        }
+      }
+    },
+    "notifications.schedule.summary %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@, %2$@"
           }
         }
       }
@@ -3021,17 +3076,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mon–Fri (all day)"
-          }
-        }
-      }
-    },
-    "notifications.schedule.weekday.peak.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "6:30–9:30 AM & 4–7 PM"
           }
         }
       }

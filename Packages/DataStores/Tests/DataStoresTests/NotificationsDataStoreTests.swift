@@ -141,7 +141,7 @@ struct NotificationsDataStoreTests {
 
         // Then
         #expect(store.state.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
-        #expect(store.state.preferences?.lines.allSatisfy { $0.schedulePreset == .weekends } == true)
+        #expect(store.state.preferences?.lines.allSatisfy { $0.schedules == NotificationSchedulePreset.weekends.schedules } == true)
         #expect(api.updatePreferencesCallCount == 1)
     }
 
@@ -223,7 +223,7 @@ struct NotificationsDataStoreTests {
         #expect(api.updatePreferencesCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
         #expect(store.state.preferences?.lines.map(\.lineId) == ["victoria"])
-        #expect(store.state.preferences?.lines.first?.schedulePreset == .weekends)
+        #expect(store.state.preferences?.lines.first?.schedules == NotificationSchedulePreset.weekends.schedules)
     }
 
     @Test
@@ -414,9 +414,8 @@ struct NotificationsDataStoreTests {
                 lineId: "victoria",
                 enabled: false,
                 notifyRecoveries: true,
-                schedulePreset: .anytime,
                 severityThreshold: .minorDelays,
-                customSchedules: []
+                schedules: NotificationSchedulePreset.anytime.schedules
             )
         ])
         store.completeOnboarding(with: update)
@@ -473,9 +472,8 @@ struct NotificationsDataStoreTests {
             lineId: lineId,
             enabled: true,
             notifyRecoveries: true,
-            schedulePreset: .weekends,
             severityThreshold: severityThreshold,
-            customSchedules: []
+            schedules: schedulePreset.schedules
         )
     }
 }

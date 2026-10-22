@@ -92,7 +92,7 @@ public struct LineScheduleCard: View {
                     String(localized: .notificationsConfirmationScheduleLabel),
                     selection: $settings.schedulePreset
                 ) {
-                    ForEach(NotificationSchedulePreset.allDisplayCases, id: \.self) { p in
+                    ForEach(NotificationSchedulePreset.displayCases(including: settings.schedulePreset), id: \.self) { p in
                         Text(p.title).tag(p)
                     }
                 }

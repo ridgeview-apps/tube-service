@@ -36,14 +36,6 @@ public struct LineStatusNotificationPayload: Sendable {
 
 // MARK: -
 
-public enum NotificationSchedulePreset: String, Codable, CaseIterable, Hashable, Sendable {
-    case anytime
-    case weekdayPeak = "weekday_peak"
-    case weekdayAllDay = "weekday_all_day"
-    case weekends
-    case custom
-}
-
 public enum NotificationSeverityThreshold: String, Codable, CaseIterable, Hashable, Sendable {
     case minorDelays = "minor_delays"
     case severeDelays = "severe_delays"
@@ -60,15 +52,78 @@ public enum NotificationWeekday: String, Codable, CaseIterable, Hashable, Sendab
     case sunday = "sun"
 }
 
-public struct NotificationScheduleWindow: Codable, Hashable, Sendable {
-    public let days: [NotificationWeekday]
-    public let startTime: String
-    public let endTime: String
+/// A wall-clock time in the preferences' timezone, sent over the wire as `HH:MM:SS`.
+public struct NotificationTimeOfDay: Hashable, Comparable, Sendable {
+    public let hour: Int
+    public let minute: Int
 
-    public init(days: [NotificationWeekday], startTime: String, endTime: String) {
-        self.days = days
+    public init(hour: Int, minute: Int) {
+        self.hour = hour
+        self.minute = minute
+    }
+
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        (lhs.hour, lhs.minute) < (rhs.hour, rhs.minute)
+    }
+}
+
+extension NotificationTimeOfDay: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let string = try container.decode(String.self)
+        // Accepts `HH:MM`, `HH:MM:SS` and `HH:MM:SS.ffffff`; seconds are ignored.
+        let components = string.split(separator: ":")
+        guard
+            components.count >= 2,
+            let hour = Int(components[0]), (0..<24).contains(hour),
+            let minute = Int(components[1]), (0..<60).contains(minute)
+        else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Invalid time of day: \(string)")
+        }
+        self.init(hour: hour, minute: minute)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(String(format: "%02d:%02d:00", hour, minute))
+    }
+}
+
+public struct NotificationScheduleWindow: Codable, Hashable, Sendable {
+    public let startTime: NotificationTimeOfDay
+    public let endTime: NotificationTimeOfDay
+
+    public init(startTime: NotificationTimeOfDay, endTime: NotificationTimeOfDay) {
         self.startTime = startTime
         self.endTime = endTime
+    }
+}
+
+public struct NotificationSchedule: Codable, Hashable, Sendable {
+    public let days: [NotificationWeekday]
+    public let allDay: Bool
+    /// Always empty when `allDay` is `true`.
+    public let windows: [NotificationScheduleWindow]
+
+    public init(days: [NotificationWeekday], allDay: Bool, windows: [NotificationScheduleWindow]) {
+        self.days = days
+        self.allDay = allDay
+        self.windows = windows
+    }
+
+    public static func allDay(_ days: [NotificationWeekday]) -> Self {
+        .init(days: days, allDay: true, windows: [])
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case days, allDay, windows
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        days = try container.decode([NotificationWeekday].self, forKey: .days)
+        allDay = try container.decodeIfPresent(Bool.self, forKey: .allDay) ?? false
+        windows = try container.decodeIfPresent([NotificationScheduleWindow].self, forKey: .windows) ?? []
     }
 }
 
@@ -108,23 +163,20 @@ public struct NotificationLinePreference: Codable, Hashable, Sendable {
     public let enabled: Bool
     public let severityThreshold: NotificationSeverityThreshold
     public let notifyRecoveries: Bool
-    public let schedulePreset: NotificationSchedulePreset
-    public let customSchedules: [NotificationScheduleWindow]
+    public let schedules: [NotificationSchedule]
 
     public init(
         lineId: String,
         enabled: Bool,
         severityThreshold: NotificationSeverityThreshold,
         notifyRecoveries: Bool,
-        schedulePreset: NotificationSchedulePreset,
-        customSchedules: [NotificationScheduleWindow]
+        schedules: [NotificationSchedule]
     ) {
         self.lineId = lineId
         self.enabled = enabled
         self.severityThreshold = severityThreshold
         self.notifyRecoveries = notifyRecoveries
-        self.schedulePreset = schedulePreset
-        self.customSchedules = customSchedules
+        self.schedules = schedules
     }
 }
 
@@ -154,24 +206,21 @@ public struct NotificationLinePreferenceUpdate: Codable, Hashable, Sendable {
     public let lineId: String
     public let enabled: Bool
     public let notifyRecoveries: Bool
-    public let schedulePreset: NotificationSchedulePreset
     public let severityThreshold: NotificationSeverityThreshold
-    public let customSchedules: [NotificationScheduleWindow]
+    public let schedules: [NotificationSchedule]
 
     public init(
         lineId: String,
         enabled: Bool,
         notifyRecoveries: Bool,
-        schedulePreset: NotificationSchedulePreset,
         severityThreshold: NotificationSeverityThreshold,
-        customSchedules: [NotificationScheduleWindow]
+        schedules: [NotificationSchedule]
     ) {
         self.lineId = lineId
         self.enabled = enabled
         self.notifyRecoveries = notifyRecoveries
-        self.schedulePreset = schedulePreset
         self.severityThreshold = severityThreshold
-        self.customSchedules = customSchedules
+        self.schedules = schedules
     }
 }
 
