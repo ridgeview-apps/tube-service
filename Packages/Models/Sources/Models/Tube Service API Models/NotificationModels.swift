@@ -52,7 +52,7 @@ public enum NotificationWeekday: String, Codable, CaseIterable, Hashable, Sendab
     case sunday = "sun"
 }
 
-/// A wall-clock time in the preferences' timezone, sent over the wire as `HH:MM:SS`.
+/// A wall-clock time in the preferences' timezone, sent over the wire as `HH:mm`.
 public struct NotificationTimeOfDay: Hashable, Comparable, Sendable {
     public let hour: Int
     public let minute: Int
@@ -85,7 +85,7 @@ extension NotificationTimeOfDay: Codable {
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(String(format: "%02d:%02d:00", hour, minute))
+        try container.encode(String(format: "%02d:%02d", hour, minute))
     }
 }
 

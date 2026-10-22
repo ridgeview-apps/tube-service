@@ -78,7 +78,7 @@ public struct LineScheduleCard: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(.notificationsManageScheduleLabel)
                     .foregroundStyle(.primary)
-                if let description = settings.schedulePreset.description {
+                if let description = settings.schedule.timeSlot.timesDescription {
                     Text(description)
                         .font(.caption)
                         .foregroundStyle(.secondary)
@@ -88,16 +88,16 @@ public struct LineScheduleCard: View {
             Menu {
                 Picker(
                     String(localized: .notificationsConfirmationScheduleLabel),
-                    selection: $settings.schedulePreset
+                    selection: $settings.schedule.timeSlot
                 ) {
-                    ForEach(NotificationSchedulePreset.displayCases(including: settings.schedulePreset), id: \.self) { p in
-                        Text(p.title).tag(p)
+                    ForEach(NotificationTimeSlot.allCases, id: \.self) { timeSlot in
+                        Text(timeSlot.title).tag(timeSlot)
                     }
                 }
                 .labelsHidden()
             } label: {
                 HStack(spacing: 4) {
-                    Text(settings.schedulePreset.title)
+                    Text(settings.schedule.timeSlot.title)
                         .multilineTextAlignment(.trailing)
                     Image(systemName: "chevron.up.chevron.down")
                         .imageScale(.small)

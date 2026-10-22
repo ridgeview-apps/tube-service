@@ -142,7 +142,12 @@ public struct NotificationsOnboardingLineSetupView: View {
                     }
                     Button("Add all lines (anytime)") {
                         for lineID in unaddedLineIDs {
-                            items.append(.defaultValue(lineID: lineID, schedulePreset: .anytime))
+                            items.append(
+                                .defaultValue(
+                                    lineID: lineID,
+                                    schedule: .init(days: Set(NotificationWeekday.allCases), timeSlot: .allDay)
+                                )
+                            )
                         }
                         scrollTarget = unaddedLineIDs.last
                     }

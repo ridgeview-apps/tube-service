@@ -11,7 +11,7 @@ extension LineNotificationSettings {
             // Recovery alerts aren't user-configurable, so they're always on.
             notifyRecoveries: true,
             severityThreshold: .minorDelays,
-            schedules: schedulePreset.schedules
+            schedules: [schedule.schedule]
         )
     }
 }

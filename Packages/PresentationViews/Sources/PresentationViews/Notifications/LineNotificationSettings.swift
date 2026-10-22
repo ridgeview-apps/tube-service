@@ -5,27 +5,27 @@ public struct LineNotificationSettings: Hashable, Sendable, Identifiable {
 
     public let lineID: TrainLineID
     public var isEnabled: Bool
-    public var schedulePreset: NotificationSchedulePreset
+    public var schedule: NotificationScheduleSelection
 
     public init(
         lineID: TrainLineID,
         isEnabled: Bool,
-        schedulePreset: NotificationSchedulePreset
+        schedule: NotificationScheduleSelection
     ) {
         self.lineID = lineID
         self.isEnabled = isEnabled
-        self.schedulePreset = schedulePreset
+        self.schedule = schedule
     }
 
     public static func defaultValue(
         lineID: TrainLineID,
         isEnabled: Bool = true,
-        schedulePreset: NotificationSchedulePreset = .weekdayPeak
+        schedule: NotificationScheduleSelection = .default
     ) -> Self {
         .init(
             lineID: lineID,
             isEnabled: isEnabled,
-            schedulePreset: schedulePreset
+            schedule: schedule
         )
     }
 }

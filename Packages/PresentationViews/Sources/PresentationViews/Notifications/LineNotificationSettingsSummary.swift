@@ -46,7 +46,7 @@ struct LineNotificationSettingsSummary: View {
                 .foregroundStyle(.primary)
             Spacer()
             if lineSettings.isEnabled {
-                Text(lineSettings.schedulePreset.title)
+                Text(lineSettings.schedule.summary)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {

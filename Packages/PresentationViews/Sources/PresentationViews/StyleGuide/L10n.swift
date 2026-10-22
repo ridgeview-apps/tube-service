@@ -58,13 +58,6 @@ public enum L10n {
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle
 
-    public static let notificationsScheduleAnytimeDescription = LocalizedStringResource.notificationsScheduleAnytimeDescription
-    public static let notificationsScheduleAnytimeTitle = LocalizedStringResource.notificationsScheduleAnytimeTitle
     public static let notificationsScheduleNavigationTitle = LocalizedStringResource.notificationsScheduleNavigationTitle
-    public static let notificationsScheduleWeekdayAllDayDescription = LocalizedStringResource.notificationsScheduleWeekdayAllDayDescription
-    public static let notificationsScheduleWeekdayAllDayTitle = LocalizedStringResource.notificationsScheduleWeekdayAllDayTitle
-    public static let notificationsScheduleWeekdayPeakTitle = LocalizedStringResource.notificationsScheduleWeekdayPeakTitle
-    public static let notificationsScheduleWeekendsDescription = LocalizedStringResource.notificationsScheduleWeekendsDescription
-    public static let notificationsScheduleWeekendsTitle = LocalizedStringResource.notificationsScheduleWeekendsTitle
 
 }

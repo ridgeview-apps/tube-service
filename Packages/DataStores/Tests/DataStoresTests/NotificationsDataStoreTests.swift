@@ -74,7 +74,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
         store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(store.state.preferences != nil)
@@ -107,7 +107,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
         store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
         #expect(store.state.device != nil)
@@ -134,14 +134,14 @@ struct NotificationsDataStoreTests {
 
         // When
         let update = NotificationPreferencesUpdate(lines: [
-            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends),
-            makePreferenceUpdate(lineId: "jubilee", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedule: .weekends),
+            makePreferenceUpdate(lineId: "jubilee", schedule: .weekends)
         ])
         try await store.savePreferences(with: update)
 
         // Then
         #expect(store.state.preferences?.lines.map(\.lineId).sorted() == ["jubilee", "victoria"])
-        #expect(store.state.preferences?.lines.allSatisfy { $0.schedules == NotificationSchedulePreset.weekends.schedules } == true)
+        #expect(store.state.preferences?.lines.allSatisfy { $0.schedules == [NotificationScheduleSelection.weekends.schedule] } == true)
         #expect(api.updatePreferencesCallCount == 1)
     }
 
@@ -156,7 +156,7 @@ struct NotificationsDataStoreTests {
         // When – update fails
         api.updatePreferencesError = HTTPError.invalidRequestURL
         let update = NotificationPreferencesUpdate(lines: [
-            makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)
+            makePreferenceUpdate(lineId: "victoria", schedule: .anytime)
         ])
         do {
             try await store.savePreferences(with: update)
@@ -212,7 +212,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [
-            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedule: .weekends)
         ])
 
         // When – schedule an update before the APNs token arrives
@@ -223,7 +223,7 @@ struct NotificationsDataStoreTests {
         #expect(api.updatePreferencesCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
         #expect(store.state.preferences?.lines.map(\.lineId) == ["victoria"])
-        #expect(store.state.preferences?.lines.first?.schedules == NotificationSchedulePreset.weekends.schedules)
+        #expect(store.state.preferences?.lines.first?.schedules == [NotificationScheduleSelection.weekends.schedule])
     }
 
     @Test
@@ -232,7 +232,7 @@ struct NotificationsDataStoreTests {
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
         let update = NotificationPreferencesUpdate(lines: [
-            makePreferenceUpdate(lineId: "victoria", schedulePreset: .weekends)
+            makePreferenceUpdate(lineId: "victoria", schedule: .weekends)
         ])
         store.completeOnboarding(with: update)
 
@@ -317,7 +317,7 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api)
         await store.handlePushToken("test-push-token", appVersion: nil)
         try await store.deleteDevice()
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
 
         // When – the user explicitly configures notifications again
         store.completeOnboarding(with: update)
@@ -333,7 +333,7 @@ struct NotificationsDataStoreTests {
         // Given – device registered with a queued update
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
         store.completeOnboarding(with: update)
 
         // When – registration succeeds but the queued apply fails (server down)
@@ -374,7 +374,7 @@ struct NotificationsDataStoreTests {
         // Given – stub returns preferences with one line
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
         store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
 
@@ -396,7 +396,7 @@ struct NotificationsDataStoreTests {
         // Given – preferences contain jubilee but not victoria
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "jubilee", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "jubilee", schedule: .anytime)])
         store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
 
@@ -415,7 +415,7 @@ struct NotificationsDataStoreTests {
                 enabled: false,
                 notifyRecoveries: true,
                 severityThreshold: .minorDelays,
-                schedules: NotificationSchedulePreset.anytime.schedules
+                schedules: [NotificationScheduleSelection.anytime.schedule]
             )
         ])
         store.completeOnboarding(with: update)
@@ -430,7 +430,7 @@ struct NotificationsDataStoreTests {
         // Given – victoria is present and enabled
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
-        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedulePreset: .anytime)])
+        let update = NotificationPreferencesUpdate(lines: [makePreferenceUpdate(lineId: "victoria", schedule: .anytime)])
         store.completeOnboarding(with: update)
         await store.handlePushToken("test-push-token", appVersion: nil)
 
@@ -465,7 +465,7 @@ struct NotificationsDataStoreTests {
 
     private func makePreferenceUpdate(
         lineId: String,
-        schedulePreset: NotificationSchedulePreset,
+        schedule: NotificationScheduleSelection,
         severityThreshold: NotificationSeverityThreshold = .minorDelays
     ) -> NotificationLinePreferenceUpdate {
         NotificationLinePreferenceUpdate(
@@ -473,9 +473,14 @@ struct NotificationsDataStoreTests {
             enabled: true,
             notifyRecoveries: true,
             severityThreshold: severityThreshold,
-            schedules: schedulePreset.schedules
+            schedules: [schedule.schedule]
         )
     }
+}
+
+private extension NotificationScheduleSelection {
+    static let anytime = NotificationScheduleSelection(days: Set(NotificationWeekday.allCases), timeSlot: .allDay)
+    static let weekends = NotificationScheduleSelection(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
 }
 
 

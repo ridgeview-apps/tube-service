@@ -2959,50 +2959,6 @@
         }
       }
     },
-    "notifications.schedule.all.day" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "all day"
-          }
-        }
-      }
-    },
-    "notifications.schedule.anytime.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All hours"
-          }
-        }
-      }
-    },
-    "notifications.schedule.anytime.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Always"
-          }
-        }
-      }
-    },
-    "notifications.schedule.custom.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom"
-          }
-        }
-      }
-    },
     "notifications.schedule.every.day" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3042,62 +2998,29 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@, %2$@"
+            "value" : "%1$@ · %2$@"
           }
         }
       }
     },
-    "notifications.schedule.weekday.all.day.description" : {
+    "notifications.schedule.time.slot.all.day.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All hours"
+            "value" : "All day"
           }
         }
       }
     },
-    "notifications.schedule.weekday.all.day.title" : {
+    "notifications.schedule.time.slot.peak.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mon–Fri (all day)"
-          }
-        }
-      }
-    },
-    "notifications.schedule.weekday.peak.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mon–Fri (peak hours)"
-          }
-        }
-      }
-    },
-    "notifications.schedule.weekends.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All hours"
-          }
-        }
-      }
-    },
-    "notifications.schedule.weekends.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sat–Sun (all day)"
+            "value" : "Peak hours"
           }
         }
       }
