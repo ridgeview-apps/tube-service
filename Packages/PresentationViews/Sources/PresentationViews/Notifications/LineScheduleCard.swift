@@ -30,8 +30,6 @@ public struct LineScheduleCard: View {
             Divider()
 
             scheduleRow
-            Divider()
-            recoveryAlertsRow
         }
         .padding(16)
         .background(alignment: .leading) {
@@ -113,16 +111,6 @@ public struct LineScheduleCard: View {
         .padding(.vertical, 10)
     }
 
-    private var recoveryAlertsRow: some View {
-        Toggle(isOn: $settings.notifyRecoveries) {
-            Text(.notificationsLineRecoveryAlertsLabel)
-                .foregroundStyle(.primary)
-        }
-        .toggleStyle(.switch)
-        .tint(.secondary)
-        .font(.subheadline)
-        .padding(.vertical, 10)
-    }
 }
 
 // MARK: - Previews

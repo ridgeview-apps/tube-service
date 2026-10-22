@@ -2508,17 +2508,6 @@
         }
       }
     },
-    "notifications.line.recovery.alerts.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tell me when Good Service resumes"
-          }
-        }
-      }
-    },
     "notifications.line.schedule.remove.title %@" : {
       "extractionState" : "manual",
       "localizations" : {

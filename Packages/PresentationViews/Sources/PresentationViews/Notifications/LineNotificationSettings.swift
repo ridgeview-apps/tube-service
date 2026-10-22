@@ -6,31 +6,26 @@ public struct LineNotificationSettings: Hashable, Sendable, Identifiable {
     public let lineID: TrainLineID
     public var isEnabled: Bool
     public var schedulePreset: NotificationSchedulePreset
-    public var notifyRecoveries: Bool
 
     public init(
         lineID: TrainLineID,
         isEnabled: Bool,
-        schedulePreset: NotificationSchedulePreset,
-        notifyRecoveries: Bool
+        schedulePreset: NotificationSchedulePreset
     ) {
         self.lineID = lineID
         self.isEnabled = isEnabled
         self.schedulePreset = schedulePreset
-        self.notifyRecoveries = notifyRecoveries
     }
 
     public static func defaultValue(
         lineID: TrainLineID,
         isEnabled: Bool = true,
-        schedulePreset: NotificationSchedulePreset = .weekdayPeak,
-        notifyRecoveries: Bool = true
+        schedulePreset: NotificationSchedulePreset = .weekdayPeak
     ) -> Self {
         .init(
             lineID: lineID,
             isEnabled: isEnabled,
-            schedulePreset: schedulePreset,
-            notifyRecoveries: notifyRecoveries
+            schedulePreset: schedulePreset
         )
     }
 }

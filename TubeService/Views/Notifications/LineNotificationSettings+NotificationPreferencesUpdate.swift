@@ -8,7 +8,8 @@ extension LineNotificationSettings {
         NotificationLinePreferenceUpdate(
             lineId: lineID.rawValue,
             enabled: isEnabled,
-            notifyRecoveries: notifyRecoveries,
+            // Recovery alerts aren't user-configurable, so they're always on.
+            notifyRecoveries: true,
             severityThreshold: .minorDelays,
             schedules: schedulePreset.schedules
         )
