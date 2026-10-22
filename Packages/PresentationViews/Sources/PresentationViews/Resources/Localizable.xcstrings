@@ -2100,13 +2100,13 @@
         }
       }
     },
-    "notifications.button.line.active.title %@" : {
+    "notifications.button.line.active.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ notifications are on"
+            "value" : "Notifications on"
           }
         }
       }
@@ -2122,13 +2122,13 @@
         }
       }
     },
-    "notifications.button.line.inactive.title %@" : {
+    "notifications.button.line.inactive.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ notifications are off"
+            "value" : "Notifications off"
           }
         }
       }
@@ -2144,13 +2144,13 @@
         }
       }
     },
-    "notifications.button.line.paused.title %@" : {
+    "notifications.button.line.paused.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@: paused"
+            "value" : "Notifications paused"
           }
         }
       }
@@ -2166,13 +2166,13 @@
         }
       }
     },
-    "notifications.button.locked.title %@" : {
+    "notifications.button.locked.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notify me about the %@"
+            "value" : "Notifications"
           }
         }
       }

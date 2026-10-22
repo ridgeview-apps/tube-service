@@ -98,11 +98,11 @@ public struct LineNotificationsButton: View {
 
     private var title: LocalizedStringResource {
         switch state {
-        case .locked: return .notificationsButtonLockedTitle(lineID.longName)
+        case .locked: return .notificationsButtonLockedTitle
         case .permissionDenied: return .lineStatusNotificationsPermissionDeniedTitle
-        case .notSetUp: return .notificationsButtonLineInactiveTitle(lineID.longName)
-        case .paused: return .notificationsButtonLinePausedTitle(lineID.longName)
-        case .active: return .notificationsButtonLineActiveTitle(lineID.longName)
+        case .notSetUp: return .notificationsButtonLineInactiveTitle
+        case .paused: return .notificationsButtonLinePausedTitle
+        case .active: return .notificationsButtonLineActiveTitle
         }
     }
 
