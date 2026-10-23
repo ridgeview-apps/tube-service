@@ -17,6 +17,7 @@ public struct LineStatusHistoryButton: View {
     }
 
     let buttonState: ButtonState
+    var showsNewBadge = false
     let onTap: () -> Void
 
     public var body: some View {
@@ -34,6 +35,7 @@ public struct LineStatusHistoryButton: View {
                     Text(title)
                         .font(.headline)
                         .foregroundStyle(.primary)
+                        .newBadge(showsNewBadge)
 
                     Text(subtitle)
                         .font(.subheadline)
@@ -127,6 +129,11 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Locked") {
     LineStatusHistoryButton(buttonState: .locked, onTap: {})
+        .padding()
+}
+
+#Preview("Locked (new)") {
+    LineStatusHistoryButton(buttonState: .locked, showsNewBadge: true, onTap: {})
         .padding()
 }
 

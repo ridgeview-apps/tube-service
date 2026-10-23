@@ -24,6 +24,8 @@ public struct LineStatusDetailView: View {
     public let notificationButtonState: LineNotificationsButtonState?
     /// The progress of pausing or resuming from the notifications row; a failure presents an alert.
     public let notificationSavingState: LoadingState
+    /// Features whose buttons show a "New" badge.
+    public let newFeatures: Set<NewFeature>
 
     @Binding public var isFavourite: Bool
 
@@ -38,6 +40,7 @@ public struct LineStatusDetailView: View {
         statusContext: StatusContext,
         notificationButtonState: LineNotificationsButtonState?,
         notificationSavingState: LoadingState = .loaded,
+        newFeatures: Set<NewFeature> = [],
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -47,6 +50,7 @@ public struct LineStatusDetailView: View {
         self.statusContext = statusContext
         self.notificationButtonState = notificationButtonState
         self.notificationSavingState = notificationSavingState
+        self.newFeatures = newFeatures
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
@@ -64,6 +68,7 @@ public struct LineStatusDetailView: View {
                         Section {
                             LineStatusHistoryButton(
                                 buttonState: historyButtonState,
+                                showsNewBadge: newFeatures.contains(.statusHistory),
                                 onTap: { onAction(.statusHistoryTapped) }
                             )
                         }
@@ -73,6 +78,7 @@ public struct LineStatusDetailView: View {
                             LineNotificationsButton(
                                 state: state,
                                 isSaving: notificationSavingState == .loading,
+                                showsNewBadge: newFeatures.contains(.lineNotifications),
                                 onAction: { handleNotificationsButtonAction($0, state: state) }
                             )
                         }
@@ -258,6 +264,7 @@ private struct Previewer: View {
     var statusContext = LineStatusDetailView.StatusContext.live
     var notificationButtonState: LineNotificationsButtonState? = nil
     var notificationSavingState: LoadingState = .loaded
+    var newFeatures: Set<NewFeature> = []
     @State var isFavourite = false
 
     var body: some View {
@@ -271,6 +278,7 @@ private struct Previewer: View {
                 statusContext: statusContext,
                 notificationButtonState: notificationButtonState,
                 notificationSavingState: notificationSavingState,
+                newFeatures: newFeatures,
                 onAction: { print($0) }
             )
             .navigationTitle("Preview")
@@ -320,6 +328,15 @@ import ModelStubs
     Previewer(
         line: ModelStubs.lineStatusDisrupted,
         historyButtonState: .unlocked(.multipleDisruptions(count: 3, firstAt: .now))
+    )
+}
+
+#Preview("New features (locked)") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        historyButtonState: .locked,
+        notificationButtonState: .locked,
+        newFeatures: Set(NewFeature.allCases)
     )
 }
 

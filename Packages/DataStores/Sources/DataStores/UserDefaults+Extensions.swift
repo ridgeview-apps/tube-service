@@ -8,6 +8,7 @@ public extension UserDefaults {
         case userPreferences = "userPreferences_v2"
         case featureFlags = "featureFlags_v1"
         case notificationState = "notificationState_v1"
+        case newFeatureBadges = "newFeatureBadges_v1"
     }
 
     // N.B. @AppStorage property wrapper is available from SwiftUI views and should be used whenever possible.

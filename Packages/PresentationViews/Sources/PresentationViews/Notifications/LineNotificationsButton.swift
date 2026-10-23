@@ -18,15 +18,18 @@ public struct LineNotificationsButton: View {
 
     let state: LineNotificationsButtonState
     let isSaving: Bool
+    let showsNewBadge: Bool
     let onAction: (Action) -> Void
 
     public init(
         state: LineNotificationsButtonState,
         isSaving: Bool = false,
+        showsNewBadge: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
         self.state = state
         self.isSaving = isSaving
+        self.showsNewBadge = showsNewBadge
         self.onAction = onAction
     }
 
@@ -52,6 +55,7 @@ public struct LineNotificationsButton: View {
                         Text(title)
                             .font(.headline)
                             .foregroundStyle(.primary)
+                            .newBadge(showsNewBadge)
 
                         Text(subtitle)
                             .font(.subheadline)
@@ -205,6 +209,11 @@ public struct LineNotificationsButton: View {
 
 #Preview("Locked") {
     LineNotificationsButton(state: .locked, onAction: { _ in })
+        .padding()
+}
+
+#Preview("Locked (new)") {
+    LineNotificationsButton(state: .locked, showsNewBadge: true, onAction: { _ in })
         .padding()
 }
 

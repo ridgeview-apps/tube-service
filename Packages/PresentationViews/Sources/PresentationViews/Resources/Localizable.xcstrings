@@ -461,6 +461,18 @@
         }
       }
     },
+    "global.new" : {
+      "comment" : "Badge shown next to a feature that has recently been added",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
+          }
+        }
+      }
+    },
     "global.not.now" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -26,6 +26,12 @@ struct LineStatusDetailScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
+    @AppStorage(
+        UserDefaults.Keys.newFeatureBadges.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var newFeatureBadges: NewFeatureBadges = .default
+
     @State private var notificationSavingState: LoadingState = .loaded
     @State private var notificationSaveSuccessCount = 0
 
@@ -62,6 +68,19 @@ struct LineStatusDetailScreen: View {
         return purchases.hasTubeServicePlus ? .unlocked(historyState) : .locked
     }
 
+    /// The new features whose buttons are on screen; the buttons only appear for live statuses.
+    private var displayedNewFeatures: Set<NewFeature> {
+        guard case .live = request else { return [] }
+        var features: Set<NewFeature> = []
+        if historyButtonState != nil { features.insert(.statusHistory) }
+        if notificationButtonState != nil { features.insert(.lineNotifications) }
+        return features
+    }
+
+    private var badgedNewFeatures: Set<NewFeature> {
+        displayedNewFeatures.filter { newFeatureBadges.showsBadge(for: $0, now: .now) }
+    }
+
     private var statusContext: LineStatusDetailView.StatusContext {
         switch request {
         case .live: .live
@@ -92,8 +111,14 @@ struct LineStatusDetailScreen: View {
                     statusContext: statusContext,
                     notificationButtonState: notificationButtonState,
                     notificationSavingState: notificationSavingState,
+                    newFeatures: badgedNewFeatures,
                     onAction: handleDetailViewAction
                 )
+            }
+        }
+        .onAppear {
+            for feature in displayedNewFeatures {
+                newFeatureBadges.recordSeen(feature, at: .now)
             }
         }
         .sensoryFeedback(.success, trigger: notificationSaveSuccessCount)
@@ -108,6 +133,7 @@ struct LineStatusDetailScreen: View {
         case .linkTapped(let link):
             openURL(link.url)
         case .statusHistoryTapped:
+            newFeatureBadges.recordUsed(.statusHistory)
             if purchases.hasTubeServicePlus {
                 router.push(.lineStatusHistory(lineID: lineID))
             } else {
@@ -119,6 +145,7 @@ struct LineStatusDetailScreen: View {
                 )
             }
         case .notifyMeTapped(let state):
+            newFeatureBadges.recordUsed(.lineNotifications)
             if state == .permissionDenied {
                 openSettings()
             } else if notifications.isConfigured {
