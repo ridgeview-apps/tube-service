@@ -26,6 +26,9 @@ struct LineStatusDetailScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
+    @State private var notificationSavingState: LoadingState = .loaded
+    @State private var notificationSaveSuccessCount = 0
+
     let lineID: TrainLineID
     let request: LineStatusDataStore.LineStatusRequest
 
@@ -88,10 +91,12 @@ struct LineStatusDetailScreen: View {
                     historyButtonState: historyButtonState,
                     statusContext: statusContext,
                     notificationButtonState: notificationButtonState,
+                    notificationSavingState: notificationSavingState,
                     onAction: handleDetailViewAction
                 )
             }
         }
+        .sensoryFeedback(.success, trigger: notificationSaveSuccessCount)
         .navigationTitle(lineID.name)
         .toolbar {
             FavouritesButton(style: .small, isSelected: isFavouriteLine(for: lineID))
@@ -124,6 +129,32 @@ struct LineStatusDetailScreen: View {
                 router.showSheet(
                     .notificationsFlow(.onboarding(defaultLineID: lineID))
                 )
+            }
+        case .setNotificationsPaused(let isPaused):
+            setNotificationsPaused(isPaused)
+        case .notificationsErrorDismissed:
+            // Tapping Try Again also dismisses the alert; leave the retry's loading state alone.
+            if case .failure = notificationSavingState {
+                notificationSavingState = .loaded
+            }
+        }
+    }
+
+    private func setNotificationsPaused(_ isPaused: Bool) {
+        let updatedLines = notifications.linePreferences.toLineNotificationSettings().map { settings in
+            guard settings.lineID == lineID else { return settings }
+            var updated = settings
+            updated.isEnabled = !isPaused
+            return updated
+        }
+        notificationSavingState = .loading
+        Task {
+            do {
+                try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
+                notificationSavingState = .loaded
+                notificationSaveSuccessCount += 1
+            } catch {
+                notificationSavingState = .failure(errorMessage: error.toSaveErrorMessage())
             }
         }
     }

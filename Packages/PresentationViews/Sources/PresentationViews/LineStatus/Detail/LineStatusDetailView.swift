@@ -7,6 +7,8 @@ public struct LineStatusDetailView: View {
         case linkTapped(LineStatusXPostLink)
         case statusHistoryTapped
         case notifyMeTapped(LineNotificationsButtonState)
+        case setNotificationsPaused(Bool)
+        case notificationsErrorDismissed
     }
 
     public enum StatusContext: Sendable {
@@ -20,6 +22,8 @@ public struct LineStatusDetailView: View {
     public let historyButtonState: LineStatusHistoryButton.ButtonState?
     public let statusContext: StatusContext
     public let notificationButtonState: LineNotificationsButtonState?
+    /// The progress of pausing or resuming from the notifications row; a failure presents an alert.
+    public let notificationSavingState: LoadingState
 
     @Binding public var isFavourite: Bool
 
@@ -33,6 +37,7 @@ public struct LineStatusDetailView: View {
         historyButtonState: LineStatusHistoryButton.ButtonState?,
         statusContext: StatusContext,
         notificationButtonState: LineNotificationsButtonState?,
+        notificationSavingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
         self.line = line
@@ -41,6 +46,7 @@ public struct LineStatusDetailView: View {
         self.historyButtonState = historyButtonState
         self.statusContext = statusContext
         self.notificationButtonState = notificationButtonState
+        self.notificationSavingState = notificationSavingState
         self._isFavourite = isFavourite
         self.onAction = onAction
     }
@@ -66,7 +72,8 @@ public struct LineStatusDetailView: View {
                         Section {
                             LineNotificationsButton(
                                 state: state,
-                                onTap: { onAction(.notifyMeTapped(state)) }
+                                isSaving: notificationSavingState == .loading,
+                                onAction: { handleNotificationsButtonAction($0, state: state) }
                             )
                         }
                     }
@@ -84,6 +91,55 @@ public struct LineStatusDetailView: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .defaultMaxWidthWithFullBackground()
+        .alert(
+            Text(notificationErrorTitle),
+            isPresented: isShowingNotificationError,
+            presenting: notificationErrorMessage
+        ) { _ in
+            // The row's state only changes once a save succeeds, so it still reflects what was being attempted.
+            Button(.globalTryAgain) {
+                onAction(.setNotificationsPaused(notificationButtonState == .active))
+            }
+            Button(.globalOk, role: .cancel) {}
+        } message: { message in
+            Text(message)
+        }
+    }
+
+
+    // MARK: - Notifications
+
+    private func handleNotificationsButtonAction(
+        _ action: LineNotificationsButton.Action,
+        state: LineNotificationsButtonState
+    ) {
+        switch action {
+        case .tapped:
+            onAction(.notifyMeTapped(state))
+        case .setPaused(let isPaused):
+            onAction(.setNotificationsPaused(isPaused))
+        }
+    }
+
+    private var notificationErrorMessage: String? {
+        guard case .failure(let errorMessage) = notificationSavingState else { return nil }
+        return errorMessage
+    }
+
+    private var isShowingNotificationError: Binding<Bool> {
+        Binding {
+            notificationErrorMessage != nil
+        } set: { isPresented in
+            if !isPresented {
+                onAction(.notificationsErrorDismissed)
+            }
+        }
+    }
+
+    private var notificationErrorTitle: LocalizedStringResource {
+        notificationButtonState == .paused
+            ? .lineStatusNotificationsResumeFailedTitle
+            : .lineStatusNotificationsPauseFailedTitle
     }
 
 
@@ -201,6 +257,7 @@ private struct Previewer: View {
     var historyButtonState: LineStatusHistoryButton.ButtonState? = .locked(.noDisruption)
     var statusContext = LineStatusDetailView.StatusContext.live
     var notificationButtonState: LineNotificationsButtonState? = nil
+    var notificationSavingState: LoadingState = .loaded
     @State var isFavourite = false
 
     var body: some View {
@@ -213,6 +270,7 @@ private struct Previewer: View {
                 historyButtonState: historyButtonState,
                 statusContext: statusContext,
                 notificationButtonState: notificationButtonState,
+                notificationSavingState: notificationSavingState,
                 onAction: { print($0) }
             )
             .navigationTitle("Preview")
@@ -305,5 +363,13 @@ import ModelStubs
     Previewer(
         line: ModelStubs.lineStatusGoodService,
         notificationButtonState: .active
+    )
+}
+
+#Preview("Notifications — pause failed") {
+    Previewer(
+        line: ModelStubs.lineStatusGoodService,
+        notificationButtonState: .active,
+        notificationSavingState: .failure(errorMessage: "Sorry, couldn't save your changes. Please try again.")
     )
 }

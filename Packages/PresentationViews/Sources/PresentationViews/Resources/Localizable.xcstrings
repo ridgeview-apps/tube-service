@@ -527,6 +527,17 @@
         }
       }
     },
+    "global.try.again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try Again"
+          }
+        }
+      }
+    },
     "journey.location.picker.nearby.stations.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1709,6 +1720,17 @@
         }
       }
     },
+    "line.status.notifications.pause.failed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't pause notifications"
+          }
+        }
+      }
+    },
     "line.status.notifications.permission.denied.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1727,6 +1749,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications blocked"
+          }
+        }
+      }
+    },
+    "line.status.notifications.resume.failed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't resume notifications"
           }
         }
       }
@@ -2139,7 +2172,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to resume or edit"
+            "value" : "Tap to edit your notification settings"
           }
         }
       }
@@ -2294,6 +2327,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "You'll be notified about disruptions on the days and times above, and when good service returns."
+          }
+        }
+      }
+    },
+    "notifications.line.config.menu.edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit notifications"
           }
         }
       }
