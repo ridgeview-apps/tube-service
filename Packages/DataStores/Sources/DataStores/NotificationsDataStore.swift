@@ -125,7 +125,14 @@ public final class NotificationsDataStore {
     }
 
     public func deleteDevice() async throws {
-        try await api.deleteDevice(deviceId: deviceId)
+        // Only call the server if a device ID was ever generated; reading `deviceId` would otherwise create one.
+        if let existingDeviceId = keychain.read(key: Self.keychainDeviceIdKey) {
+            do {
+                try await api.deleteDevice(deviceId: existingDeviceId)
+            } catch HTTPError.statusCode(404, _) {
+                // The server no longer knows this device, so local cleanup can still proceed.
+            }
+        }
         state.reset()
         keychain.delete(key: Self.keychainDeviceIdKey)
         keychain.delete(key: Self.keychainPushTokenKey)

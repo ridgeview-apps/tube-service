@@ -122,6 +122,41 @@ struct NotificationsDataStoreTests {
         #expect(store.state.preferences != nil)
     }
 
+    @Test
+    func deleteDeviceClearsStateWhenServerReturnsNotFound() async throws {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        #expect(store.state.device != nil)
+
+        // When – the server has already lost the device
+        api.deleteDeviceError = HTTPError.statusCode(404, nil)
+        try await store.deleteDevice()
+
+        // Then – local state and keychain are still cleared
+        #expect(store.state.device == nil)
+        #expect(store.state.registrationState == .notRegistered)
+        #expect(keychain.read(key: "push_device_id") == nil)
+    }
+
+    @Test
+    func deleteDeviceSkipsServerWhenNoDeviceIdExists() async throws {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+
+        // When
+        try await store.deleteDevice()
+
+        // Then – no server call, and no device ID is generated as a side effect
+        #expect(api.deleteDeviceCallCount == 0)
+        #expect(keychain.read(key: "push_device_id") == nil)
+        #expect(store.state.registrationState == .notRegistered)
+    }
+
 
     // MARK: - Preferences
 

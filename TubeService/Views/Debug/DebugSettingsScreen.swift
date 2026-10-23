@@ -16,17 +16,14 @@ struct DebugSettingsScreen: View {
     )
     private var featureFlags: FeatureFlags = .default
 
-    @AppStorage(
-        UserDefaults.Keys.notificationState.rawValue,
-        store: AppDependencies.current.userDefaults.value
-    )
-    private var notificationState: NotificationState = .default
-
     @Environment(\.appConfig) private var appConfig
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
 
     @State private var showDebugConfirmAlert = false
+    @State private var showDeleteDeviceConfirmAlert = false
+    @State private var isDeletingDevice = false
+    @State private var deleteDeviceError: String?
     @State private var copiedField: String?
 
     var body: some View {
@@ -39,18 +36,34 @@ struct DebugSettingsScreen: View {
                 Text("Feature Toggles")
             }
             Section {
-                Button("Reset user defaults?") {
+                Button("Reset user preferences?") {
                     showDebugConfirmAlert = true
                 }
+                Button("Delete notification device?") {
+                    showDeleteDeviceConfirmAlert = true
+                }
+                .disabled(isDeletingDevice)
             } header: {
-                Text("User defaults")
+                Text("Reset")
+            } footer: {
+                if let deleteDeviceError {
+                    Text("Delete device failed: \(deleteDeviceError)")
+                        .foregroundStyle(.red)
+                }
             }
             .alert("Are you sure?", isPresented: $showDebugConfirmAlert) {
                 Button("No", role: .cancel) {}
                 Button("Yes", role: .destructive) {
                     userPreferences = .default
-                    notificationState = .default
                 }
+            }
+            .alert("Delete notification device?", isPresented: $showDeleteDeviceConfirmAlert) {
+                Button("No", role: .cancel) {}
+                Button("Yes", role: .destructive) {
+                    deleteDevice()
+                }
+            } message: {
+                Text("Removes the device from the server and clears local notification state and keychain entries.")
             }
             purchaseStoreSection
             pushNotificationsSection
@@ -89,6 +102,19 @@ struct DebugSettingsScreen: View {
             if let field = copiedField, !isPurchaseStoreField(field) {
                 Text("\(field) copied to clipboard")
                     .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private func deleteDevice() {
+        Task {
+            isDeletingDevice = true
+            defer { isDeletingDevice = false }
+            do {
+                try await notifications.deleteDevice()
+                deleteDeviceError = nil
+            } catch {
+                deleteDeviceError = error.localizedDescription
             }
         }
     }
