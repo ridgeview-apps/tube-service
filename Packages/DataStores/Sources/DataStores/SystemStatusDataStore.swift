@@ -28,18 +28,15 @@ public final class SystemStatusDataStore {
 
     // MARK: - Refreshing
 
-    public func fetchSystemStatusIfStale() async {
+    /// Refreshes the status unless it was fetched in the last 10 minutes.
+    public func refreshSystemStatusIfStale() async {
         let tenMinutes = TimeInterval(10 * 60)
-        let tenMinutesAgo = now() - tenMinutes
-
-        let lastFetchedOver10MinutesAgo = lastFetchedAt <= tenMinutesAgo
-
-        if lastFetchedOver10MinutesAgo {
-            await fetchSystemStatus()
+        if lastFetchedAt <= now() - tenMinutes {
+            await refreshSystemStatus()
         }
     }
 
-    public func fetchSystemStatus() async {
+    public func refreshSystemStatus() async {
         if case .fetching = fetchState {
             return
         }

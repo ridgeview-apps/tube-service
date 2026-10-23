@@ -33,7 +33,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
 
     private func showSystemStatusBannerIfNeeded() {
         Task {
-            await systemStatus.fetchSystemStatusIfStale()
+            await systemStatus.refreshSystemStatusIfStale()
 
             guard let currentStatus = systemStatus.currentStatus, currentStatus.status != .ok else {
                 return
