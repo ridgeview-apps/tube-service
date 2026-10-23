@@ -236,3 +236,34 @@ public struct NotificationPreferencesUpdate: Codable, Hashable, Sendable {
         self.lines = lines
     }
 }
+
+/// The fields to change on one line in a merge patch. `nil` fields are omitted from the
+/// request and keep their stored values; a new line must set every field.
+public struct NotificationLinePreferencePatch: Encodable, Hashable, Sendable {
+    public var enabled: Bool?
+    public var severityThreshold: NotificationSeverityThreshold?
+    public var notifyRecoveries: Bool?
+    public var schedules: [NotificationSchedule]?
+
+    public init(
+        enabled: Bool? = nil,
+        severityThreshold: NotificationSeverityThreshold? = nil,
+        notifyRecoveries: Bool? = nil,
+        schedules: [NotificationSchedule]? = nil
+    ) {
+        self.enabled = enabled
+        self.severityThreshold = severityThreshold
+        self.notifyRecoveries = notifyRecoveries
+        self.schedules = schedules
+    }
+}
+
+/// An RFC 7396 merge patch of the per-line preferences, keyed by line ID.
+/// Only the lines listed change; a `nil` value is sent as `null` and removes that line.
+public struct NotificationPreferencesPatch: Encodable, Hashable, Sendable {
+    public var lines: [String: NotificationLinePreferencePatch?]
+
+    public init(lines: [String: NotificationLinePreferencePatch?]) {
+        self.lines = lines
+    }
+}

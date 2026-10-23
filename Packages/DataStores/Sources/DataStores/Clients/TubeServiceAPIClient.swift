@@ -18,6 +18,7 @@ public protocol NotificationsAPIClientType: Sendable {
     func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice>
     func fetchPreferences(deviceId: String) async throws -> HTTPResponse<NotificationPreferences>
     func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences>
+    func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences>
 }
 
 
@@ -36,6 +37,7 @@ enum TubeServiceAPIRoute {
     case enableDevice(deviceId: String)
     case fetchPreferences(deviceId: String)
     case updatePreferences(deviceId: String, body: Data)
+    case patchPreferences(deviceId: String, body: Data)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
         guard let url = try toURLComponents(relativeTo: baseURL).url else {
@@ -51,9 +53,18 @@ enum TubeServiceAPIRoute {
         request.setValue(apiKey, forHTTPHeaderField: "X-API-Key")
         if let body = httpBody {
             request.httpBody = body
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
         }
         return request
+    }
+
+    private var contentType: String {
+        switch self {
+        case .patchPreferences:
+            return "application/merge-patch+json"
+        default:
+            return "application/json"
+        }
     }
 
     private var httpMethod: String {
@@ -62,6 +73,8 @@ enum TubeServiceAPIRoute {
             return "GET"
         case .registerDevice, .updatePreferences:
             return "PUT"
+        case .patchPreferences:
+            return "PATCH"
         case .disableDevice, .enableDevice:
             return "POST"
         case .deleteDevice:
@@ -71,7 +84,7 @@ enum TubeServiceAPIRoute {
 
     private var httpBody: Data? {
         switch self {
-        case let .registerDevice(_, body), let .updatePreferences(_, body):
+        case let .registerDevice(_, body), let .updatePreferences(_, body), let .patchPreferences(_, body):
             return body
         default:
             return nil
@@ -90,7 +103,7 @@ enum TubeServiceAPIRoute {
             return ["v1", "notification-devices", deviceId, "disable"]
         case let .enableDevice(deviceId):
             return ["v1", "notification-devices", deviceId, "enable"]
-        case let .fetchPreferences(deviceId), let .updatePreferences(deviceId, _):
+        case let .fetchPreferences(deviceId), let .updatePreferences(deviceId, _), let .patchPreferences(deviceId, _):
             return ["v1", "notification-devices", deviceId, "preferences"]
         }
     }
@@ -106,7 +119,7 @@ enum TubeServiceAPIRoute {
         case let .dailyLineDisruptionSummary(operationalDate):
             guard let operationalDate else { return [] }
             return [URLQueryItem(name: "date", value: operationalDate.toOperationalDateParam())]
-        case .registerDevice, .deleteDevice, .disableDevice, .enableDevice, .fetchPreferences, .updatePreferences:
+        case .registerDevice, .deleteDevice, .disableDevice, .enableDevice, .fetchPreferences, .updatePreferences, .patchPreferences:
             return []
         }
     }
@@ -143,11 +156,14 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
         self.appVariant = appVariant
         self.urlSession = urlSession
         self.jsonDecoder = jsonDecoder
-        self.jsonEncoder = {
-            let encoder = JSONEncoder()
-            encoder.keyEncodingStrategy = .convertToSnakeCase
-            return encoder
-        }()
+        self.jsonEncoder = Self.makeJSONEncoder()
+    }
+
+    /// Internal so tests can check the exact request bodies the client sends.
+    static func makeJSONEncoder() -> JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        return encoder
     }
 
 
@@ -195,6 +211,11 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     public func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
         let body = try jsonEncoder.encode(update)
         return try await perform(.updatePreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
+    }
+
+    public func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
+        let body = try jsonEncoder.encode(patch)
+        return try await perform(.patchPreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
     }
 
 

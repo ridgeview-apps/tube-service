@@ -176,12 +176,28 @@ public final class NotificationsDataStore {
         state.registrationState = .onboarded(preferences)
     }
 
+    /// Replaces every line's preferences. Only onboarding should need this; edits should use `patchPreferences(with:)`.
     public func savePreferences(with preferences: NotificationPreferencesUpdate) async throws {
+        try await writePreferences { deviceId in
+            try await self.api.updatePreferences(deviceId: deviceId, update: preferences)
+        }
+    }
+
+    /// Changes only the lines in `patch`, so lines the user didn't touch keep any fields this app version doesn't know about.
+    public func patchPreferences(with patch: NotificationPreferencesPatch) async throws {
+        try await writePreferences { deviceId in
+            try await self.api.patchPreferences(deviceId: deviceId, patch: patch)
+        }
+    }
+
+    private func writePreferences(
+        _ write: (String) async throws -> HTTPResponse<NotificationPreferences>
+    ) async throws {
         guard !isSavingPreferences else { return }
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
-            state.preferences = try await api.updatePreferences(deviceId: registeredDeviceId(), update: preferences).decodedModel
+            state.preferences = try await write(registeredDeviceId()).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             if case HTTPError.statusCode(404, _) = error {

@@ -144,6 +144,20 @@ struct TubeServiceAPIRouteTests {
         #expect(request.httpMethod == "PUT")
         #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/json")
     }
+
+    @Test
+    func patchPreferencesEndpoint() throws {
+        // Given
+        let route: TubeServiceAPIRoute = .patchPreferences(deviceId: "device-abc", body: Data())
+
+        // When
+        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
+
+        // Then
+        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc/preferences")
+        #expect(request.httpMethod == "PATCH")
+        #expect(request.value(forHTTPHeaderField: "Content-Type") == "application/merge-patch+json")
+    }
 }
 
 

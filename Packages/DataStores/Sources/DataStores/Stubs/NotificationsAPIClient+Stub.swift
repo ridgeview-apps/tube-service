@@ -100,6 +100,57 @@ import ModelStubs
             return stubbedPreferences
         }
 
+        public private(set) var patchPreferencesCallCount = 0
+        public private(set) var lastPatch: NotificationPreferencesPatch?
+        public var patchPreferencesError: Error?
+        public func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
+            patchPreferencesCallCount += 1
+            lastPatch = patch
+            invocations.append("patchPreferences")
+            if let patchPreferencesError { throw patchPreferencesError }
+            let current = stubbedPreferences.decodedModel
+            // Mirrors the server's merge: listed lines change, others are kept, and `nil` removes a line.
+            var lines = current.lines.compactMap { line -> NotificationLinePreference? in
+                guard let entry = patch.lines[line.lineId] else { return line }
+                guard let linePatch = entry else { return nil }
+                return NotificationLinePreference(
+                    lineId: line.lineId,
+                    enabled: linePatch.enabled ?? line.enabled,
+                    severityThreshold: linePatch.severityThreshold ?? line.severityThreshold,
+                    notifyRecoveries: linePatch.notifyRecoveries ?? line.notifyRecoveries,
+                    schedules: linePatch.schedules ?? line.schedules
+                )
+            }
+            let existingLineIds = Set(current.lines.map(\.lineId))
+            for (lineId, entry) in patch.lines.sorted(by: { $0.key < $1.key }) where !existingLineIds.contains(lineId) {
+                guard let linePatch = entry,
+                    let enabled = linePatch.enabled,
+                    let severityThreshold = linePatch.severityThreshold,
+                    let notifyRecoveries = linePatch.notifyRecoveries,
+                    let schedules = linePatch.schedules
+                else { continue }
+                lines.append(
+                    NotificationLinePreference(
+                        lineId: lineId,
+                        enabled: enabled,
+                        severityThreshold: severityThreshold,
+                        notifyRecoveries: notifyRecoveries,
+                        schedules: schedules
+                    )
+                )
+            }
+            stubbedPreferences = .success200(
+                NotificationPreferences(
+                    deviceId: deviceId,
+                    timezone: current.timezone,
+                    lines: lines,
+                    createdAt: current.createdAt,
+                    updatedAt: .now
+                )
+            )
+            return stubbedPreferences
+        }
+
         private func makeDeviceResponse(enabled: Bool) -> HTTPResponse<NotificationDevice> {
             let current = stubbedDevice.decodedModel
             return .success200(

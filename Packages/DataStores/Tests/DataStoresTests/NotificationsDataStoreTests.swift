@@ -260,6 +260,99 @@ struct NotificationsDataStoreTests {
         #expect(keychain.read(key: "push_registered_token") == nil)
     }
 
+    @Test
+    func patchPreferencesChangesOnlyTheListedLine() async throws {
+        // Given – two configured lines
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        try await store.savePreferences(
+            with: NotificationPreferencesUpdate(lines: [
+                makePreferenceUpdate(lineId: "victoria", schedule: .weekends),
+                makePreferenceUpdate(lineId: "jubilee", schedule: .weekends, severityThreshold: .severeDelays)
+            ])
+        )
+        let originalJubilee = store.state.preferences?.lines.first { $0.lineId == "jubilee" }
+
+        // When
+        try await store.patchPreferences(
+            with: NotificationPreferencesPatch(lines: [
+                "victoria": NotificationLinePreferencePatch(enabled: false)
+            ])
+        )
+
+        // Then – the patched line is paused and the other is untouched
+        let lines = try #require(store.state.preferences?.lines)
+        #expect(lines.first { $0.lineId == "victoria" }?.enabled == false)
+        #expect(lines.first { $0.lineId == "jubilee" } == originalJubilee)
+        #expect(api.patchPreferencesCallCount == 1)
+    }
+
+    @Test
+    func patchPreferencesRemovesLineSetToNil() async throws {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        try await store.savePreferences(
+            with: NotificationPreferencesUpdate(lines: [
+                makePreferenceUpdate(lineId: "victoria", schedule: .weekends),
+                makePreferenceUpdate(lineId: "jubilee", schedule: .weekends)
+            ])
+        )
+
+        // When
+        try await store.patchPreferences(with: NotificationPreferencesPatch(lines: ["victoria": nil]))
+
+        // Then
+        #expect(store.state.preferences?.lines.map(\.lineId) == ["jubilee"])
+    }
+
+    @Test
+    func patchPreferencesFailurePreservesOriginalPreferences() async throws {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        try await store.savePreferences(
+            with: NotificationPreferencesUpdate(lines: [
+                makePreferenceUpdate(lineId: "victoria", schedule: .weekends)
+            ])
+        )
+        let originalPreferences = store.state.preferences
+
+        // When – patch fails
+        api.patchPreferencesError = HTTPError.invalidRequestURL
+        await #expect(throws: HTTPError.self) {
+            try await store.patchPreferences(
+                with: NotificationPreferencesPatch(lines: [
+                    "victoria": NotificationLinePreferencePatch(enabled: false)
+                ])
+            )
+        }
+
+        // Then
+        #expect(store.state.preferences == originalPreferences)
+    }
+
+    @Test
+    func patchPreferences404ClearsStoredPushToken() async throws {
+        // Given – device registered and push token stored
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // When – patch returns 404 (device not found on server)
+        api.patchPreferencesError = HTTPError.statusCode(404, nil)
+        await #expect(throws: HTTPError.self) {
+            try await store.patchPreferences(with: NotificationPreferencesPatch(lines: ["victoria": nil]))
+        }
+
+        // Then – stored push token is cleared so the next APNs delivery forces re-registration
+        #expect(keychain.read(key: "push_registered_token") == nil)
+    }
+
     // MARK: - Authorization status
 
     @Test
