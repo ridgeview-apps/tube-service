@@ -8,15 +8,6 @@ public extension View {
             .background(Color.defaultBackground)
     }
 
-    @ViewBuilder
-    func withHardScrollEdgeEffectStyle(for edges: Edge.Set = .all) -> some View {
-        if #available(iOS 26.0, *) {
-            scrollEdgeEffectStyle(.hard, for: edges)
-        } else {
-            self
-        }
-    }
-
 }
 
 extension ForEach where Content: View {

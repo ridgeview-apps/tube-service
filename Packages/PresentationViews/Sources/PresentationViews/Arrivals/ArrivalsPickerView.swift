@@ -52,7 +52,6 @@ public struct ArrivalsPickerView: View {
             }
         }
         .defaultMaxWidthWithFullBackground()
-        .withHardScrollEdgeEffectStyle()
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
 

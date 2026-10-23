@@ -63,7 +63,6 @@ public struct LineStatusListView: View {
         }
         .defaultMaxWidthWithFullBackground()
         .listStyle(.plain)
-        .withHardScrollEdgeEffectStyle(for: .top)
         .environment(\.defaultMinListRowHeight, 0)
         .onChange(of: selectedFilterOption) { isOtherLinesExpanded = false }
     }

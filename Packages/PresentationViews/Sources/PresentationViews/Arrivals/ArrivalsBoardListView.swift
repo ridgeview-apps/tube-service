@@ -60,7 +60,6 @@ public struct ArrivalsBoardListView: View {
         }
         .frame(maxWidth: .infinity)
         .defaultMaxWidthWithFullBackground()
-        .withHardScrollEdgeEffectStyle()
     }
 
     private var noDataView: some View {
