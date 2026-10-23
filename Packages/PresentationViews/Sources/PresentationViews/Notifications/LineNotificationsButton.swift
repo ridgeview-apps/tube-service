@@ -1,4 +1,3 @@
-import Models
 import SwiftUI
 
 public enum LineNotificationsButtonState: Sendable, Equatable {
@@ -12,12 +11,10 @@ public enum LineNotificationsButtonState: Sendable, Equatable {
 public struct LineNotificationsButton: View {
 
     let state: LineNotificationsButtonState
-    let lineID: TrainLineID
     let onTap: () -> Void
 
-    public init(state: LineNotificationsButtonState, lineID: TrainLineID, onTap: @escaping () -> Void) {
+    public init(state: LineNotificationsButtonState, onTap: @escaping () -> Void) {
         self.state = state
-        self.lineID = lineID
         self.onTap = onTap
     }
 
@@ -55,17 +52,18 @@ public struct LineNotificationsButton: View {
         .cardStyle()
     }
 
+    // Orange flags states needing attention and the accent colour marks
+    // notifications as on; the line colour is left to the status header.
     private var iconForegroundColor: Color {
         switch state {
-        case .active: lineID.textColor
-        case .permissionDenied, .paused: .white
+        case .active, .permissionDenied, .paused: .white
         default: .secondary
         }
     }
 
     private var iconBackgroundColor: Color {
         switch state {
-        case .active: lineID.backgroundColor
+        case .active: .accentColor
         case .permissionDenied, .paused: .orange
         default: Color(.tertiarySystemFill)
         }
@@ -121,26 +119,26 @@ public struct LineNotificationsButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineNotificationsButton(state: .locked, lineID: .victoria, onTap: {})
+    LineNotificationsButton(state: .locked, onTap: {})
         .padding()
 }
 
 #Preview("Permission denied") {
-    LineNotificationsButton(state: .permissionDenied, lineID: .victoria, onTap: {})
+    LineNotificationsButton(state: .permissionDenied, onTap: {})
         .padding()
 }
 
 #Preview("Not set up") {
-    LineNotificationsButton(state: .notSetUp, lineID: .victoria, onTap: {})
+    LineNotificationsButton(state: .notSetUp, onTap: {})
         .padding()
 }
 
 #Preview("Paused") {
-    LineNotificationsButton(state: .paused, lineID: .victoria, onTap: {})
+    LineNotificationsButton(state: .paused, onTap: {})
         .padding()
 }
 
 #Preview("Active") {
-    LineNotificationsButton(state: .active, lineID: .victoria, onTap: {})
+    LineNotificationsButton(state: .active, onTap: {})
         .padding()
 }

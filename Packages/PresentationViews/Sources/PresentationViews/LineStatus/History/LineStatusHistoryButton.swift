@@ -1,4 +1,3 @@
-import Models
 import SwiftUI
 
 public struct LineStatusHistoryButton: View {
@@ -28,7 +27,6 @@ public struct LineStatusHistoryButton: View {
         }
     }
 
-    let lineID: TrainLineID
     let buttonState: ButtonState
     let onTap: () -> Void
 
@@ -65,19 +63,19 @@ public struct LineStatusHistoryButton: View {
         .accessibilityHint(accessibilityHint)
     }
 
+    // Colour is reserved for attention: any disruption is highlighted in orange,
+    // even when locked, so it acts as a teaser for unlocking the history.
     private var iconForegroundColor: Color {
-        switch (buttonState.style, buttonState.historyState) {
-        case (.locked, _): .secondary
-        case (.unlocked, .noDisruption): lineID.textColor
-        case (.unlocked, _): .white
+        switch buttonState.historyState {
+        case .noDisruption: .secondary
+        default: .white
         }
     }
 
     private var iconBackgroundColor: Color {
-        switch (buttonState.style, buttonState.historyState) {
-        case (.locked, _): Color(.tertiarySystemFill)
-        case (.unlocked, .noDisruption): lineID.backgroundColor
-        case (.unlocked, _): .orange
+        switch buttonState.historyState {
+        case .noDisruption: Color(.tertiarySystemFill)
+        default: .orange
         }
     }
 
@@ -134,13 +132,12 @@ public struct LineStatusHistoryButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineStatusHistoryButton(lineID: .victoria, buttonState: .locked(.noDisruption), onTap: {})
+    LineStatusHistoryButton(buttonState: .locked(.noDisruption), onTap: {})
         .padding()
 }
 
 #Preview("Locked (ongoing disruption)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .locked(.ongoingDisruption(since: .now)),
         onTap: {}
     )
@@ -149,7 +146,6 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Locked (resolved disruption)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .locked(.resolvedDisruption(at: .now)),
         onTap: {}
     )
@@ -158,7 +154,6 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Locked (multiple disruptions)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .locked(.multipleDisruptions(count: 3, firstAt: .now)),
         onTap: {}
     )
@@ -166,13 +161,12 @@ public struct LineStatusHistoryButton: View {
 }
 
 #Preview("Unlocked") {
-    LineStatusHistoryButton(lineID: .victoria, buttonState: .unlocked(.noDisruption), onTap: {})
+    LineStatusHistoryButton(buttonState: .unlocked(.noDisruption), onTap: {})
         .padding()
 }
 
 #Preview("Unlocked (ongoing disruption)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .unlocked(.ongoingDisruption(since: .now)),
         onTap: {}
     )
@@ -181,7 +175,6 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Unlocked (resolved disruption)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .unlocked(.resolvedDisruption(at: .now)),
         onTap: {}
     )
@@ -190,7 +183,6 @@ public struct LineStatusHistoryButton: View {
 
 #Preview("Unlocked (multiple disruptions)") {
     LineStatusHistoryButton(
-        lineID: .victoria,
         buttonState: .unlocked(.multipleDisruptions(count: 3, firstAt: .now)),
         onTap: {}
     )
