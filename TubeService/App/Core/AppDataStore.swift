@@ -68,7 +68,7 @@ final class AppDataStore {
 
     func handleNotificationLaunch(_ payload: LineStatusNotificationPayload) async {
         if lineStatus.requiresRefresh(for: payload) {
-            await lineStatus.refresh(for: .live, forced: true)
+            await lineStatus.refresh(for: .live)
         }
     }
 

@@ -44,13 +44,13 @@ struct StationScreen: View {
     }
 
     private func refreshDataIfStale() async {
-        async let lineStatuses: () = lineStatus.refresh(for: .live, forced: false)
+        async let lineStatuses: () = lineStatus.refreshIfStale(for: .live)
         async let stationDisruptions: () = stations.refreshStationDisruptionsIfStale()
         _ = await (lineStatuses, stationDisruptions)
     }
 
     private func refreshData() async {
-        async let lineStatuses: () = lineStatus.refresh(for: .live, forced: true)
+        async let lineStatuses: () = lineStatus.refresh(for: .live)
         async let stationDisruptions: () = stations.refreshStationDisruptions()
         _ = await (lineStatuses, stationDisruptions)
     }

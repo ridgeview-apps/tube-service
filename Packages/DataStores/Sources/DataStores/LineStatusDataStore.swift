@@ -85,27 +85,30 @@ public final class LineStatusDataStore {
         }
     }
 
-    public func refresh(for request: LineStatusRequest, forced: Bool) async {
+    /// Refreshes the line statuses (and, for live statuses, the disruption summary) that are out of date.
+    public func refreshIfStale(for request: LineStatusRequest) async {
         if case .live = request, featureFlags().isStatusHistoryEnabled {
-            Task {
-                forced
-                    ? await forceRefreshDisruptionSummary()
-                    : await refreshDisruptionSummaryIfStale()
-            }
+            Task { await refreshDisruptionSummaryIfStale() }
         }
-        forced
-            ? await forceRefreshLineStatuses(for: request)
-            : await refreshLineStatusesIfStale(for: request)
+        await refreshLineStatusesIfStale(for: request)
+    }
+
+    /// Refreshes the line statuses (and, for live statuses, the disruption summary) regardless of when they were fetched.
+    public func refresh(for request: LineStatusRequest) async {
+        if case .live = request, featureFlags().isStatusHistoryEnabled {
+            Task { await refreshDisruptionSummary() }
+        }
+        await refreshLineStatuses(for: request)
     }
 
     func refreshLineStatusesIfStale(for request: LineStatusRequest) async {
         let fiveMinutes: TimeInterval = 5 * 60
         if isStale(fetchedAt: lineStatusCache[request]?.fetchedAt, threshold: fiveMinutes) {
-            await forceRefreshLineStatuses(for: request)
+            await refreshLineStatuses(for: request)
         }
     }
 
-    func forceRefreshLineStatuses(for request: LineStatusRequest) async {
+    func refreshLineStatuses(for request: LineStatusRequest) async {
         guard lineStatusCache.beginFetch(for: request) else { return }
         do {
             let previousLines = lineStatusCache[request]?.value
@@ -132,11 +135,11 @@ public final class LineStatusDataStore {
     func refreshDisruptionSummaryIfStale() async {
         let thirtyMinutes: TimeInterval = 30 * 60
         if isStale(fetchedAt: disruptionSummaryCache[.current]?.fetchedAt, threshold: thirtyMinutes) {
-            await forceRefreshDisruptionSummary()
+            await refreshDisruptionSummary()
         }
     }
 
-    func forceRefreshDisruptionSummary() async {
+    func refreshDisruptionSummary() async {
         guard disruptionSummaryCache.beginFetch(for: .current) else { return }
         do {
             let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
@@ -146,21 +149,15 @@ public final class LineStatusDataStore {
         }
     }
 
-    public func refreshTimeline(for lineID: TrainLineID, forced: Bool) async {
-        guard featureFlags().isStatusHistoryEnabled else { return }
-        forced
-            ? await forceRefreshTimeline(for: lineID)
-            : await refreshTimelineIfStale(for: lineID)
-    }
-
-    func refreshTimelineIfStale(for lineID: TrainLineID) async {
+    public func refreshTimelineIfStale(for lineID: TrainLineID) async {
         let thirtyMinutes: TimeInterval = 30 * 60
         if isStale(fetchedAt: timelineCache[lineID]?.fetchedAt, threshold: thirtyMinutes) {
-            await forceRefreshTimeline(for: lineID)
+            await refreshTimeline(for: lineID)
         }
     }
 
-    func forceRefreshTimeline(for lineID: TrainLineID) async {
+    public func refreshTimeline(for lineID: TrainLineID) async {
+        guard featureFlags().isStatusHistoryEnabled else { return }
         guard timelineCache.beginFetch(for: lineID) else { return }
         do {
             let timeline = try await tubeServiceAPI.fetchDailyLineTimeline(lineID: lineID, operationalDate: nil).decodedModel

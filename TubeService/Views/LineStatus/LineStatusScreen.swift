@@ -45,7 +45,7 @@ struct LineStatusScreen: View {
         )
         .navigationTitle(Text(L10n.lineStatusNavigationTitle))
         .refreshable {
-            await model.refresh(for: request, forced: true)
+            await model.refresh(for: request)
         }
         .withSettingsToolbarButton()
         .onAppear {
@@ -84,7 +84,7 @@ struct LineStatusScreen: View {
     }
 
     private func fetchIfStale() {
-        Task { await model.refresh(for: request, forced: false) }
+        Task { await model.refreshIfStale(for: request) }
     }
 
 }

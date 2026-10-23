@@ -22,7 +22,7 @@ struct LineStatusDataStoreTests {
 
         // When
         #expect(model.lineStatusData(for: .live) == nil)
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
         let fetchedData = model.lineStatusData(for: .live)
 
         // Then
@@ -46,7 +46,7 @@ struct LineStatusDataStoreTests {
 
         // When
         let dateInterval = DateInterval(start: Date(), duration: oneDay)
-        await model.forceRefreshLineStatuses(for: .planned(dateInterval))
+        await model.refreshLineStatuses(for: .planned(dateInterval))
         let fetchedData = model.lineStatusData(for: .planned(dateInterval))
 
         // Then
@@ -69,7 +69,7 @@ struct LineStatusDataStoreTests {
 
         // When
         tflAPI.fetchCurrentLineStatusesError = HTTPError.invalidRequestURL
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
         let fetchedData = model.lineStatusData(for: .live)
 
         // Then
@@ -134,7 +134,7 @@ struct LineStatusDataStoreTests {
 
         // When
         #expect(model.disruptionCountsByLineID.isEmpty)
-        await model.forceRefreshDisruptionSummary()
+        await model.refreshDisruptionSummary()
 
         // Then
         #expect(model.disruptionCountsByLineID == [.central: 1])
@@ -185,12 +185,12 @@ struct LineStatusDataStoreTests {
         )
 
         // Populate cache with a successful fetch
-        await model.forceRefreshDisruptionSummary()
+        await model.refreshDisruptionSummary()
         #expect(model.disruptionCountsByLineID == [.jubilee: 1])
 
         // Simulate failure on next fetch
         tubeServiceAPI.fetchDailyLineDisruptionSummaryError = HTTPError.invalidRequestURL
-        await model.forceRefreshDisruptionSummary()
+        await model.refreshDisruptionSummary()
 
         // Cache should be preserved
         #expect(model.disruptionCountsByLineID == [.jubilee: 1])
@@ -203,22 +203,22 @@ struct LineStatusDataStoreTests {
         // Given
         let tflAPI = StubTflAPIClient()
         let tubeServiceAPI = StubTubeServiceAPIClient()
-        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now })
+        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now }, featureFlags: { .statusHistoryEnabled })
 
         // Initial line status fetch (good service) and populate timeline cache
         tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
-        await model.forceRefreshTimeline(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
         #expect(model.timelineData(for: .victoria)?.fetchedAt != nil)
 
         // When – line status changes (good service → disrupted)
         tflAPI.stubbedLineStatuses = .success200([
             Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
         ])
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // Then – timeline cache entry for victoria is now stale
         #expect(model.timelineData(for: .victoria)?.fetchedAt == nil)
@@ -231,19 +231,19 @@ struct LineStatusDataStoreTests {
         let tubeServiceAPI = StubTubeServiceAPIClient()
         let goodServiceLine = Line(id: .victoria, lineStatuses: [.goodService])
         tflAPI.stubbedLineStatuses = .success200([goodServiceLine])
-        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now })
+        let model = makeStore(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: { .now }, featureFlags: { .statusHistoryEnabled })
 
         // Initial line status fetch + populate timeline cache
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(
             DailyLineTimeline(lineId: .victoria, operationalDate: .now, timezone: "Europe/London", startsAt: .now, endsAt: .now, snapshots: [])
         )
-        await model.forceRefreshTimeline(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
         let originalFetchedAt = model.timelineData(for: .victoria)?.fetchedAt
         #expect(originalFetchedAt != nil)
 
         // When – line status fetched again with identical data
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // Then – timeline cache entry is untouched
         #expect(model.timelineData(for: .victoria)?.fetchedAt == originalFetchedAt)
@@ -267,12 +267,13 @@ struct LineStatusDataStoreTests {
         tubeServiceAPI.stubbedDailyLineTimeline = .success200(timeline)
         let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
-            now: { clock.currentTime }
+            now: { clock.currentTime },
+            featureFlags: { .statusHistoryEnabled }
         )
 
         // When
         #expect(model.timelineData(for: .victoria) == nil)
-        await model.forceRefreshTimeline(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
         let result = model.timelineData(for: .victoria)
 
         // Then
@@ -290,11 +291,12 @@ struct LineStatusDataStoreTests {
         tubeServiceAPI.fetchDailyLineTimelineError = HTTPError.invalidRequestURL
         let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
-            now: { .now }
+            now: { .now },
+            featureFlags: { .statusHistoryEnabled }
         )
 
         // When
-        await model.forceRefreshTimeline(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
         let result = model.timelineData(for: .victoria)
 
         // Then
@@ -312,7 +314,8 @@ struct LineStatusDataStoreTests {
         let tubeServiceAPI = StubTubeServiceAPIClient()
         let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
-            now: { clock.currentTime }
+            now: { clock.currentTime },
+            featureFlags: { .statusHistoryEnabled }
         )
 
         // Initial fetch
@@ -330,6 +333,21 @@ struct LineStatusDataStoreTests {
         clock.addingMinutes(30)
         await model.refreshTimelineIfStale(for: .victoria)
         #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 2)
+    }
+
+    @Test
+    func timelineNotRefreshedWhenStatusHistoryDisabled() async {
+        // Given – status history feature flag is off by default
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let model = makeStore(tubeServiceAPI: tubeServiceAPI, now: { .now })
+
+        // When
+        await model.refreshTimelineIfStale(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
+
+        // Then
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 0)
+        #expect(model.timelineData(for: .victoria) == nil)
     }
 
     // MARK: - requiresRefresh(for:)
@@ -350,7 +368,7 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
@@ -365,7 +383,7 @@ struct LineStatusDataStoreTests {
             Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
         ])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
@@ -380,7 +398,7 @@ struct LineStatusDataStoreTests {
             Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
         ])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .serviceResumed, severity: .goodService)
@@ -393,7 +411,7 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .serviceResumed, severity: .goodService)
@@ -406,7 +424,7 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         tflAPI.stubbedLineStatuses = .success200([Line(id: .jubilee, lineStatuses: [.goodService])])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionStarted, severity: .severeDelays)
@@ -421,7 +439,7 @@ struct LineStatusDataStoreTests {
             Line(id: .victoria, lineStatuses: [LineStatus(statusSeverity: .severeDelays, statusSeverityDescription: nil, reason: nil, disruption: nil)])
         ])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When / Then – disruption_changed always triggers a refresh since details may have changed
         let payload = LineStatusNotificationPayload(lineID: .victoria, eventType: .disruptionChanged, severity: .severeDelays)
@@ -434,7 +452,7 @@ struct LineStatusDataStoreTests {
         let tflAPI = StubTflAPIClient()
         tflAPI.stubbedLineStatuses = .success200([Line(id: .victoria, lineStatuses: [.goodService])])
         let model = makeStore(tflAPI: tflAPI, now: { .now })
-        await model.forceRefreshLineStatuses(for: .live)
+        await model.refreshLineStatuses(for: .live)
 
         // When – payload from a future server event type the client doesn't recognise
         let payload = LineStatusNotificationPayload(
@@ -462,4 +480,8 @@ struct LineStatusDataStoreTests {
             featureFlags: featureFlags
         )
     }
+}
+
+private extension FeatureFlags {
+    static let statusHistoryEnabled = FeatureFlags(isStatusHistoryEnabled: true)
 }

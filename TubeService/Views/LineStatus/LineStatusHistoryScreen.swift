@@ -30,13 +30,13 @@ struct LineStatusHistoryScreen: View {
     }
 
     private func fetchIfStale() {
-        Task { await model.refreshTimeline(for: lineID, forced: false) }
+        Task { await model.refreshTimelineIfStale(for: lineID) }
     }
 
     private func handleAction(_ action: LineStatusHistoryView.Action) {
         switch action {
         case .refreshTapped, .retryTapped:
-            Task { await model.refreshTimeline(for: lineID, forced: true) }
+            Task { await model.refreshTimeline(for: lineID) }
         }
     }
 }
