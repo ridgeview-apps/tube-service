@@ -2690,7 +2690,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "When your lines are disrupted"
+            "value" : "As soon as a line you follow is disrupted."
           }
         }
       }
@@ -2701,7 +2701,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disruption Alerts"
+            "value" : "Disruption alerts"
           }
         }
       }
@@ -2712,7 +2712,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sent when Good Service returns."
+            "value" : "When good service returns."
           }
         }
       }
@@ -2723,7 +2723,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recovery Alerts"
+            "value" : "Recovery alerts"
           }
         }
       }
@@ -2734,7 +2734,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose your days, peak hours or all day"
+            "value" : "Only on the days and times you travel."
           }
         }
       }
@@ -2745,18 +2745,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Customisable Schedule"
-          }
-        }
-      }
-    },
-    "notifications.onboarding.hero.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get notified when your lines are disrupted and when service returns to normal."
+            "value" : "Your schedule"
           }
         }
       }
@@ -2767,7 +2756,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stay Ahead of Disruptions"
+            "value" : "Get Notified About Your Lines"
           }
         }
       }
@@ -3356,7 +3345,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Good service now? Check when today's disruptions started, changed, and cleared."
+            "value" : "See when each disruption started, changed and ended, even after good service returns."
           }
         }
       }
@@ -3378,7 +3367,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See earlier issues even after service recovers."
+            "value" : "Still shown after good service returns."
           }
         }
       }
@@ -3389,7 +3378,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Past disruptions"
+            "value" : "Earlier disruptions"
           }
         }
       }
@@ -3400,7 +3389,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Only follow the lines you care about."
+            "value" : "Choose which lines you get notified about."
           }
         }
       }
@@ -3411,7 +3400,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Line-specific notifications"
+            "value" : "Just your lines"
           }
         }
       }
@@ -3422,7 +3411,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Know when service is back to normal."
+            "value" : "Know when good service returns."
           }
         }
       }
@@ -3466,7 +3455,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Know when each disruption cleared."
+            "value" : "When each disruption ended."
           }
         }
       }
@@ -3488,7 +3477,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Follow service changes across the day."
+            "value" : "Every status change since the start of service."
           }
         }
       }
@@ -3510,7 +3499,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get disruption and recovery alerts for the lines you choose."
+            "value" : "Tube Service Plus includes disruption and recovery alerts for your lines."
           }
         }
       }
@@ -3521,7 +3510,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disruption Alerts for Your Lines"
+            "value" : "Unlock Notifications"
           }
         }
       }
@@ -3532,7 +3521,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See What Happened Earlier"
+            "value" : "See Today's Disruptions"
           }
         }
       }
