@@ -141,16 +141,10 @@ struct LineStatusDetailScreen: View {
     }
 
     private func setNotificationsPaused(_ isPaused: Bool) {
-        let updatedLines = notifications.linePreferences.toLineNotificationSettings().map { settings in
-            guard settings.lineID == lineID else { return settings }
-            var updated = settings
-            updated.isEnabled = !isPaused
-            return updated
-        }
         notificationSavingState = .loading
         Task {
             do {
-                try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
+                try await notifications.patchPreferences(with: .setEnabled(!isPaused, for: lineID))
                 notificationSavingState = .loaded
                 notificationSaveSuccessCount += 1
             } catch {

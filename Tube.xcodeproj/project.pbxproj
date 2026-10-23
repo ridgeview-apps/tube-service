@@ -57,6 +57,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				LineStatus/LineStatusFilterOptionRequestTests.swift,
+				Notifications/NotificationPreferencesPatchBuilderTests.swift,
 			);
 			target = 318D482524EFC4900026B5F4 /* TubeService */;
 		};
@@ -64,6 +65,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				LineStatus/LineStatusFilterOptionRequestTests.swift,
+				Notifications/NotificationPreferencesPatchBuilderTests.swift,
 			);
 			target = 31E6EEEC2C9DB4980042A66A /* TubeServiceTests */;
 		};

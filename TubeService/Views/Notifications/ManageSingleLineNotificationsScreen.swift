@@ -44,12 +44,12 @@ struct ManageSingleLineNotificationsScreen: View {
         case .openSettings:
             openSettings()
         case .save(let updatedSettings):
+            let patch: NotificationPreferencesPatch =
+                existingSettings(for: lineID) == nil ? .add(updatedSettings) : .update(updatedSettings)
             Task {
-                var updatedLines = currentLines.filter { $0.lineID != lineID }
-                updatedLines.append(updatedSettings)
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
+                    try await notifications.patchPreferences(with: patch)
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
@@ -57,10 +57,9 @@ struct ManageSingleLineNotificationsScreen: View {
             }
         case .remove:
             Task {
-                let updatedLines = currentLines.filter { $0.lineID != lineID }
                 savingState = .loading
                 do {
-                    try await notifications.savePreferences(with: updatedLines.toNotificationPreferencesUpdate())
+                    try await notifications.patchPreferences(with: .remove(lineID))
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
