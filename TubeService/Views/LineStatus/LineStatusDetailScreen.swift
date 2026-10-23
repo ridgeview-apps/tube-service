@@ -144,7 +144,7 @@ struct LineStatusDetailScreen: View {
         notificationSavingState = .loading
         Task {
             do {
-                try await notifications.patchPreferences(with: .setEnabled(!isPaused, for: lineID))
+                try await notifications.updateLinePreferences(with: .setEnabled(!isPaused, for: lineID))
                 notificationSavingState = .loaded
                 notificationSaveSuccessCount += 1
             } catch {

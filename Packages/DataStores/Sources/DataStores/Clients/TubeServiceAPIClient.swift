@@ -17,8 +17,8 @@ public protocol NotificationsAPIClientType: Sendable {
     func disableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice>
     func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice>
     func fetchPreferences(deviceId: String) async throws -> HTTPResponse<NotificationPreferences>
-    func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences>
-    func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences>
+    func replaceAllPreferences(deviceId: String, with update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences>
+    func updatePreferences(deviceId: String, with patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences>
 }
 
 
@@ -36,8 +36,8 @@ enum TubeServiceAPIRoute {
     case disableDevice(deviceId: String)
     case enableDevice(deviceId: String)
     case fetchPreferences(deviceId: String)
+    case replaceAllPreferences(deviceId: String, body: Data)
     case updatePreferences(deviceId: String, body: Data)
-    case patchPreferences(deviceId: String, body: Data)
 
     func toURL(relativeTo baseURL: URL) throws -> URL {
         guard let url = try toURLComponents(relativeTo: baseURL).url else {
@@ -60,7 +60,7 @@ enum TubeServiceAPIRoute {
 
     private var contentType: String {
         switch self {
-        case .patchPreferences:
+        case .updatePreferences:
             return "application/merge-patch+json"
         default:
             return "application/json"
@@ -71,9 +71,9 @@ enum TubeServiceAPIRoute {
         switch self {
         case .dailyLineTimeline, .dailyLineDisruptionSummary, .fetchPreferences:
             return "GET"
-        case .registerDevice, .updatePreferences:
+        case .registerDevice, .replaceAllPreferences:
             return "PUT"
-        case .patchPreferences:
+        case .updatePreferences:
             return "PATCH"
         case .disableDevice, .enableDevice:
             return "POST"
@@ -84,7 +84,7 @@ enum TubeServiceAPIRoute {
 
     private var httpBody: Data? {
         switch self {
-        case let .registerDevice(_, body), let .updatePreferences(_, body), let .patchPreferences(_, body):
+        case let .registerDevice(_, body), let .replaceAllPreferences(_, body), let .updatePreferences(_, body):
             return body
         default:
             return nil
@@ -103,7 +103,7 @@ enum TubeServiceAPIRoute {
             return ["v1", "notification-devices", deviceId, "disable"]
         case let .enableDevice(deviceId):
             return ["v1", "notification-devices", deviceId, "enable"]
-        case let .fetchPreferences(deviceId), let .updatePreferences(deviceId, _), let .patchPreferences(deviceId, _):
+        case let .fetchPreferences(deviceId), let .replaceAllPreferences(deviceId, _), let .updatePreferences(deviceId, _):
             return ["v1", "notification-devices", deviceId, "preferences"]
         }
     }
@@ -119,7 +119,7 @@ enum TubeServiceAPIRoute {
         case let .dailyLineDisruptionSummary(operationalDate):
             guard let operationalDate else { return [] }
             return [URLQueryItem(name: "date", value: operationalDate.toOperationalDateParam())]
-        case .registerDevice, .deleteDevice, .disableDevice, .enableDevice, .fetchPreferences, .updatePreferences, .patchPreferences:
+        case .registerDevice, .deleteDevice, .disableDevice, .enableDevice, .fetchPreferences, .replaceAllPreferences, .updatePreferences:
             return []
         }
     }
@@ -208,14 +208,14 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
         try await perform(.fetchPreferences(deviceId: deviceId), as: NotificationPreferences.self)
     }
 
-    public func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
+    public func replaceAllPreferences(deviceId: String, with update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
         let body = try jsonEncoder.encode(update)
-        return try await perform(.updatePreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
+        return try await perform(.replaceAllPreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
     }
 
-    public func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
+    public func updatePreferences(deviceId: String, with patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
         let body = try jsonEncoder.encode(patch)
-        return try await perform(.patchPreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
+        return try await perform(.updatePreferences(deviceId: deviceId, body: body), as: NotificationPreferences.self)
     }
 
 

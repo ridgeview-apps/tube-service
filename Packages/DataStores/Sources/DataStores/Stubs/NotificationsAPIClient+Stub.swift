@@ -76,12 +76,12 @@ import ModelStubs
             return stubbedPreferences
         }
 
-        public private(set) var updatePreferencesCallCount = 0
-        public var updatePreferencesError: Error?
-        public func updatePreferences(deviceId: String, update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
-            updatePreferencesCallCount += 1
-            invocations.append("updatePreferences")
-            if let updatePreferencesError { throw updatePreferencesError }
+        public private(set) var replaceAllPreferencesCallCount = 0
+        public var replaceAllPreferencesError: Error?
+        public func replaceAllPreferences(deviceId: String, with update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences> {
+            replaceAllPreferencesCallCount += 1
+            invocations.append("replaceAllPreferences")
+            if let replaceAllPreferencesError { throw replaceAllPreferencesError }
             let updated = NotificationPreferences(
                 deviceId: deviceId,
                 lines: update.lines.map { lineUpdate in
@@ -100,14 +100,14 @@ import ModelStubs
             return stubbedPreferences
         }
 
-        public private(set) var patchPreferencesCallCount = 0
+        public private(set) var updatePreferencesCallCount = 0
         public private(set) var lastPatch: NotificationPreferencesPatch?
-        public var patchPreferencesError: Error?
-        public func patchPreferences(deviceId: String, patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
-            patchPreferencesCallCount += 1
+        public var updatePreferencesError: Error?
+        public func updatePreferences(deviceId: String, with patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences> {
+            updatePreferencesCallCount += 1
             lastPatch = patch
-            invocations.append("patchPreferences")
-            if let patchPreferencesError { throw patchPreferencesError }
+            invocations.append("updatePreferences")
+            if let updatePreferencesError { throw updatePreferencesError }
             let current = stubbedPreferences.decodedModel
             // Mirrors the server's merge: listed lines change, others are kept, and `nil` removes a line.
             var lines = current.lines.compactMap { line -> NotificationLinePreference? in

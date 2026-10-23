@@ -132,9 +132,9 @@ struct TubeServiceAPIRouteTests {
     }
 
     @Test
-    func updatePreferencesEndpoint() throws {
+    func replaceAllPreferencesEndpoint() throws {
         // Given
-        let route: TubeServiceAPIRoute = .updatePreferences(deviceId: "device-abc", body: Data())
+        let route: TubeServiceAPIRoute = .replaceAllPreferences(deviceId: "device-abc", body: Data())
 
         // When
         let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
@@ -146,9 +146,9 @@ struct TubeServiceAPIRouteTests {
     }
 
     @Test
-    func patchPreferencesEndpoint() throws {
+    func updatePreferencesEndpoint() throws {
         // Given
-        let route: TubeServiceAPIRoute = .patchPreferences(deviceId: "device-abc", body: Data())
+        let route: TubeServiceAPIRoute = .updatePreferences(deviceId: "device-abc", body: Data())
 
         // When
         let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")

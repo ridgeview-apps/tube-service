@@ -49,7 +49,7 @@ struct ManageSingleLineNotificationsScreen: View {
             Task {
                 savingState = .loading
                 do {
-                    try await notifications.patchPreferences(with: patch)
+                    try await notifications.updateLinePreferences(with: patch)
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
@@ -59,7 +59,7 @@ struct ManageSingleLineNotificationsScreen: View {
             Task {
                 savingState = .loading
                 do {
-                    try await notifications.patchPreferences(with: .remove(lineID))
+                    try await notifications.updateLinePreferences(with: .remove(lineID))
                     dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
