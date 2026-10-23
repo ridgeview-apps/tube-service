@@ -42,7 +42,7 @@ public final class JourneyPlannerStore {
 
     public var form: JourneyPlannerForm = .empty
     public var pages: [JourneyPage] = []
-    public private(set) var hasFetchedInitialData = false
+    public private(set) var hasLoadedJourneys = false
 
     private let tflAPI: TflAPIClientType
     private let localSearchResults: LocalSearchResultsStore
@@ -60,7 +60,7 @@ public final class JourneyPlannerStore {
 
     public func resetForNewJourney() {
         form.adjustCurrentTimeIfNeeded()
-        prepareForInitialFetch()
+        prepareForInitialLoad()
     }
 
     public func resetTimeSelectionIfNeeded() {
@@ -73,45 +73,45 @@ public final class JourneyPlannerStore {
         form.updateCurrentLocationInfo(name: name, coordinate: coordinate, updatesAllowed: updatesAllowed)
     }
 
-    public func fetchInitialData(modeIDs: Set<ModeID>) async {
-        prepareForInitialFetch()
+    public func loadJourneys(modeIDs: Set<ModeID>) async {
+        prepareForInitialLoad()
         do {
             form = try await localSearchResults.resolveLocationCoordinates(forForm: form)
             let requestParams = try form.toJourneyRequestParams(withModeIDs: modeIDs)
-            await fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+            await loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         } catch {
             setInitialPageError(error)
         }
     }
 
-    public func fetchAdjacentData(action: JourneyPaginationAction, modeIDs: Set<ModeID>) async {
+    public func loadMoreJourneys(_ action: JourneyPaginationAction, modeIDs: Set<ModeID>) async {
         guard let requestParams = try? form.toJourneyRequestParams(withModeIDs: modeIDs) else { return }
-        await fetchAdjacentResults(action: action, baseRequestParams: requestParams, modeIDs: modeIDs)
+        await loadAdjacentResults(action: action, baseRequestParams: requestParams, modeIDs: modeIDs)
     }
 
     // MARK: - Lower-level (also used by unit tests)
 
-    public func prepareForInitialFetch() {
-        hasFetchedInitialData = false
+    func prepareForInitialLoad() {
+        hasLoadedJourneys = false
         pages = [.loading(id: PageID.initial.description)]
         earlierTimeAdjustment = nil
         laterTimeAdjustment = nil
         pageCounter = 0
     }
 
-    public func setInitialPageError(_ error: any Error) {
+    func setInitialPageError(_ error: any Error) {
         if let index = pageIndex(for: .initial) {
             pages[index] = .failed(id: PageID.initial.description, error: error)
         }
     }
 
-    public func fetchInitialResults(requestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
+    func loadInitialResults(requestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
         if await fetchAndUpdatePage(pageID: .initial, context: .initial, requestParams: requestParams, modeIDs: modeIDs) {
-            hasFetchedInitialData = true
+            hasLoadedJourneys = true
         }
     }
 
-    public func fetchAdjacentResults(action: JourneyPaginationAction, baseRequestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
+    func loadAdjacentResults(action: JourneyPaginationAction, baseRequestParams: JourneyRequestParams, modeIDs: Set<ModeID>) async {
         let timeAdjustment: JourneyTimeAdjustment
         let pageID: PageID
 

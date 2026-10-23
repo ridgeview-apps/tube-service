@@ -37,15 +37,15 @@ struct JourneyPlannerStoreTests {
     // MARK: - resetForNewJourney
 
     @Test
-    func resetForNewJourney_resetsHasFetchedInitialData() async {
+    func resetForNewJourney_resetsHasLoadedJourneys() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        #expect(model.hasFetchedInitialData == true)
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        #expect(model.hasLoadedJourneys == true)
 
         model.resetForNewJourney()
 
-        #expect(model.hasFetchedInitialData == false)
+        #expect(model.hasLoadedJourneys == false)
     }
 
     // MARK: - resetTimeSelectionIfNeeded
@@ -70,17 +70,17 @@ struct JourneyPlannerStoreTests {
         #expect(model.form.timeSelection.option == .leaveAt)
     }
 
-    // MARK: - fetchInitialData (high-level)
+    // MARK: - loadJourneys (high-level)
 
     @Test
-    func fetchInitialData_success_resolvesAndPopulatesPages() async {
+    func loadJourneys_success_resolvesAndPopulatesPages() async {
         let model = makeStore()
         model.form.from = .station(makeStation(id: "940GZZLUAGL", icsCode: "1000004", name: "Angel"))
         model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
 
-        await model.fetchInitialData(modeIDs: modeIDs)
+        await model.loadJourneys(modeIDs: modeIDs)
 
-        #expect(model.hasFetchedInitialData == true)
+        #expect(model.hasLoadedJourneys == true)
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.isLoaded == true)
         #expect(model.pages.first?.cellItems?.isEmpty == false)
@@ -88,25 +88,25 @@ struct JourneyPlannerStoreTests {
     }
 
     @Test
-    func fetchInitialData_networkError_setsFailureState() async {
+    func loadJourneys_networkError_setsFailureState() async {
         let model = makeStore()
         model.form.from = .station(makeStation(id: "940GZZLUAGL", icsCode: "1000004", name: "Angel"))
         model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
 
-        await model.fetchInitialData(modeIDs: modeIDs)
+        await model.loadJourneys(modeIDs: modeIDs)
 
-        #expect(model.hasFetchedInitialData == false)
+        #expect(model.hasLoadedJourneys == false)
         #expect(model.pages.first?.isFailed == true)
     }
 
-    // MARK: - prepareForInitialFetch
+    // MARK: - prepareForInitialLoad
 
     @Test
-    func prepareForInitialFetch_setsLoadingState() {
+    func prepareForInitialLoad_setsLoadingState() {
         let model = makeStore()
 
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
 
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
@@ -115,15 +115,15 @@ struct JourneyPlannerStoreTests {
     }
 
     @Test
-    func prepareForInitialFetch_resetsHasFetchedInitialData() async {
+    func prepareForInitialLoad_resetsHasLoadedJourneys() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
-        #expect(model.hasFetchedInitialData == true)
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        #expect(model.hasLoadedJourneys == true)
 
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
 
-        #expect(model.hasFetchedInitialData == false)
+        #expect(model.hasLoadedJourneys == false)
     }
 
     // MARK: - setInitialPageError
@@ -131,7 +131,7 @@ struct JourneyPlannerStoreTests {
     @Test
     func setInitialPageError_setsFailureState() {
         let model = makeStore()
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
 
         model.setInitialPageError(URLError(.notConnectedToInternet))
 
@@ -139,16 +139,16 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.first?.isFailed == true)
     }
 
-    // MARK: - fetchInitialResults
+    // MARK: - loadInitialResults
 
     @Test
-    func fetchInitialResults_success_populatesPagesAndSetsHasFetched() async {
+    func loadInitialResults_success_populatesPagesAndSetsHasLoadedJourneys() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
 
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(model.hasFetchedInitialData == true)
+        #expect(model.hasLoadedJourneys == true)
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.isLoaded == true)
         #expect(model.pages.first?.cellItems?.isEmpty == false)
@@ -156,67 +156,67 @@ struct JourneyPlannerStoreTests {
     }
 
     @Test
-    func fetchInitialResults_404_keepsPageWithEmptyResults() async {
+    func loadInitialResults_404_keepsPageWithEmptyResults() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
         tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
 
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(model.hasFetchedInitialData == true)
+        #expect(model.hasLoadedJourneys == true)
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.isLoaded == true)
         #expect(model.pages.first?.cellItems?.isEmpty == true)
     }
 
     @Test
-    func fetchInitialResults_error_setsFailureState() async {
+    func loadInitialResults_error_setsFailureState() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
+        model.prepareForInitialLoad()
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
 
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
-        #expect(model.hasFetchedInitialData == false)
+        #expect(model.hasLoadedJourneys == false)
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.isFailed == true)
     }
 
-    // MARK: - fetchAdjacentResults (no prior fetch)
+    // MARK: - loadAdjacentResults (no prior load)
 
     @Test
-    func fetchAdjacentResults_withoutPriorFetch_doesNothing() async {
+    func loadAdjacentResults_withoutPriorLoad_doesNothing() async {
         let model = makeStore()
 
-        await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        await model.loadAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(tflAPI.fetchJourneyResultsCallCount == 0)
         #expect(model.pages.isEmpty)
     }
 
-    // MARK: - fetchAdjacentResults error handling
+    // MARK: - loadAdjacentResults error handling
 
     @Test
-    func fetchAdjacentResults_404_removesAdjacentPage() async {
+    func loadAdjacentResults_404_removesAdjacentPage() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         tflAPI.fetchJourneyResultsError = HTTPError.statusCode(404, nil)
-        await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        await model.loadAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")
     }
 
     @Test
-    func fetchAdjacentResults_error_setsFailureOnAdjacentPage() async {
+    func loadAdjacentResults_error_setsFailureOnAdjacentPage() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
 
         tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
-        await model.fetchAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        await model.loadAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 2)
         #expect(model.pages[0].isFailed == true)
@@ -226,15 +226,15 @@ struct JourneyPlannerStoreTests {
     // MARK: - Deduplication
 
     @Test
-    func fetchAdjacentResults_deduplicatesJourneysAcrossPages() async {
+    func loadAdjacentResults_deduplicatesJourneysAcrossPages() async {
         let model = makeStore()
-        model.prepareForInitialFetch()
-        await model.fetchInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
         let initialCount = model.pages.first?.cellItems?.count ?? 0
         #expect(initialCount > 0)
 
-        // Fetch later with identical results — all should be deduped, adjacent page removed
-        await model.fetchAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        // Load later journeys with identical results — all should be deduped, adjacent page removed
+        await model.loadAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
 
         #expect(model.pages.count == 1)
         #expect(model.pages.first?.id == "initial")

@@ -32,21 +32,21 @@ struct JourneyResultsScreen: View {
         .navigationTitle(Text(L10n.journeyResultsNavigationTitle))
         .onChange(of: userPreferences.journeyModePreset) { _, newValue in
             guard !newValue.isCustom else { return }
-            Task { await fetchInitialData() }
+            Task { await loadJourneys() }
         }
     }
 
     private func handleAction(_ action: JourneyResultsAction) {
         switch action {
         case .initialFetch:
-            guard !journeyPlanner.hasFetchedInitialData else { return }
-            Task { await fetchInitialData() }
+            guard !journeyPlanner.hasLoadedJourneys else { return }
+            Task { await loadJourneys() }
         case .refresh:
-            Task { await fetchInitialData() }
+            Task { await loadJourneys() }
         case .earlierJourneys:
-            Task { await journeyPlanner.fetchAdjacentData(action: .earlierJourneys, modeIDs: sessionModeIDs) }
+            Task { await journeyPlanner.loadMoreJourneys(.earlierJourneys, modeIDs: sessionModeIDs) }
         case .laterJourneys:
-            Task { await journeyPlanner.fetchAdjacentData(action: .laterJourneys, modeIDs: sessionModeIDs) }
+            Task { await journeyPlanner.loadMoreJourneys(.laterJourneys, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
             let seedModeIDs: Set<ModeID>
             if case .custom(let modeIDs) = userPreferences.journeyModePreset {
@@ -59,15 +59,15 @@ struct JourneyResultsScreen: View {
                     initialModeIDs: seedModeIDs,
                     onDone: { modeIDs in
                         userPreferences.journeyModePreset = .custom(modeIDs)
-                        Task { await fetchInitialData() }
+                        Task { await loadJourneys() }
                     }
                 )
             )
         }
     }
 
-    private func fetchInitialData() async {
-        await journeyPlanner.fetchInitialData(modeIDs: sessionModeIDs)
+    private func loadJourneys() async {
+        await journeyPlanner.loadJourneys(modeIDs: sessionModeIDs)
         saveRecentJourney()
     }
 
