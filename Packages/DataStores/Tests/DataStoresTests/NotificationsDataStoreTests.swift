@@ -48,6 +48,7 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // When
         try await store.disableDevice()
@@ -61,12 +62,47 @@ struct NotificationsDataStoreTests {
         // Given
         let api = StubNotificationsAPIClient()
         let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
 
         // When
         try await store.enableDevice()
 
         // Then
         #expect(api.enableDeviceCallCount == 1)
+    }
+
+    @Test
+    func deviceActionsThrowWithoutGeneratingDeviceIdWhenNotRegistered() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let keychain = InMemoryKeychain()
+        let store = makeStore(api: api, keychain: keychain)
+
+        // When / Then – each action fails without reaching the server
+        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) { try await store.disableDevice() }
+        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) { try await store.enableDevice() }
+        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) {
+            try await store.savePreferences(with: NotificationPreferencesUpdate(lines: []))
+        }
+        #expect(api.disableDeviceCallCount == 0)
+        #expect(api.enableDeviceCallCount == 0)
+        #expect(api.updatePreferencesCallCount == 0)
+        #expect(keychain.read(key: "push_device_id") == nil)
+    }
+
+    @Test
+    func handlePushTokenReusesExistingDeviceId() async {
+        // Given – a device ID persisted by a previous launch
+        let keychain = InMemoryKeychain()
+        keychain.write(key: "push_device_id", value: "existing-device-id")
+        let store = makeStore(keychain: keychain)
+
+        // When
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // Then
+        #expect(keychain.read(key: "push_device_id") == "existing-device-id")
+        #expect(store.debugInfo.deviceId == "existing-device-id")
     }
 
     @Test

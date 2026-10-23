@@ -64,13 +64,26 @@ public final class NotificationsDataStore {
 
     // MARK: - Device ID
 
-    private var deviceId: String {
-        if let existing = keychain.read(key: Self.keychainDeviceIdKey) {
-            return existing
+    /// `nil` until the device first registers.
+    private var deviceId: String? {
+        keychain.read(key: Self.keychainDeviceIdKey)
+    }
+
+    /// Only registration may create a device ID; every other call requires one to already exist.
+    /// A new ID is persisted before it's returned, so a lost registration response retries with the same ID.
+    private func readOrCreateDeviceId() -> String {
+        if let deviceId {
+            return deviceId
         }
         let new = UUID().uuidString
         keychain.write(key: Self.keychainDeviceIdKey, value: new)
         return new
+    }
+
+    /// Returns the ID of a device that has already registered, for calls that are meaningless otherwise.
+    private func registeredDeviceId() throws -> String {
+        guard let deviceId else { throw NotificationsDataStoreError.deviceNotRegistered }
+        return deviceId
     }
 
 
@@ -82,7 +95,7 @@ public final class NotificationsDataStore {
         isRegisteringDevice = true
         defer { isRegisteringDevice = false }
         do {
-            state.device = try await api.registerDevice(deviceId: deviceId, pushToken: pushToken, appVersion: appVersion).decodedModel
+            state.device = try await api.registerDevice(deviceId: readOrCreateDeviceId(), pushToken: pushToken, appVersion: appVersion).decodedModel
             keychain.write(key: Self.keychainPushTokenKey, value: pushToken)
             lastRegistrationError = nil
             try await applyOnboardingPreferencesIfNeeded()
@@ -117,18 +130,17 @@ public final class NotificationsDataStore {
     // MARK: - Device Management
 
     public func disableDevice() async throws {
-        state.device = try await api.disableDevice(deviceId: deviceId).decodedModel
+        state.device = try await api.disableDevice(deviceId: registeredDeviceId()).decodedModel
     }
 
     public func enableDevice() async throws {
-        state.device = try await api.enableDevice(deviceId: deviceId).decodedModel
+        state.device = try await api.enableDevice(deviceId: registeredDeviceId()).decodedModel
     }
 
     public func deleteDevice() async throws {
-        // Only call the server if a device ID was ever generated; reading `deviceId` would otherwise create one.
-        if let existingDeviceId = keychain.read(key: Self.keychainDeviceIdKey) {
+        if let deviceId {
             do {
-                try await api.deleteDevice(deviceId: existingDeviceId)
+                try await api.deleteDevice(deviceId: deviceId)
             } catch HTTPError.statusCode(404, _) {
                 // The server no longer knows this device, so local cleanup can still proceed.
             }
@@ -169,7 +181,7 @@ public final class NotificationsDataStore {
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {
-            state.preferences = try await api.updatePreferences(deviceId: deviceId, update: preferences).decodedModel
+            state.preferences = try await api.updatePreferences(deviceId: registeredDeviceId(), update: preferences).decodedModel
         } catch {
             AppLogger.notifications.error("Failed to update notification preferences: \(error)")
             if case HTTPError.statusCode(404, _) = error {
@@ -198,7 +210,7 @@ extension NotificationsDataStore {
     public var debugInfo: DebugInfo {
         DebugInfo(
             pushToken: keychain.read(key: Self.keychainPushTokenKey),
-            deviceId: keychain.read(key: Self.keychainDeviceIdKey),
+            deviceId: deviceId,
             authorizationStatus: authorizationStatus,
             deviceEnabled: state.device?.enabled,
             appVariant: state.device?.appVariant,
