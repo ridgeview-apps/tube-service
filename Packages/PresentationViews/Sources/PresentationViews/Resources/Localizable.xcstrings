@@ -1610,17 +1610,6 @@
         }
       }
     },
-    "line.status.history.entry.locked.subtitle.with.disruption" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unlock to see what happened"
-          }
-        }
-      }
-    },
     "line.status.history.entry.unlocked.accessibility.hint" : {
       "extractionState" : "manual",
       "localizations" : {

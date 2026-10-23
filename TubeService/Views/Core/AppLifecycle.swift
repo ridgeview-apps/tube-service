@@ -21,6 +21,9 @@ struct AppLifecycleModifier: ViewModifier {
                     router.handleNotificationLaunch(payload)
                 }
             }
+            .onChange(of: appData.purchases.hasTubeServicePlus) { _, hasTubeServicePlus in
+                Task { await appData.tubeServicePlusDidChange(hasTubeServicePlus) }
+            }
             .onSceneDidBecomeActive {
                 Task { await appData.sceneDidBecomeActive() }
             }

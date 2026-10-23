@@ -9,9 +9,16 @@ import Models
             tflAPI: TflAPIClientType,
             tubeServiceAPI: TubeServiceAPIClientType = StubTubeServiceAPIClient(),
             now: @escaping () -> Date = { Date() },
-            featureFlags: @escaping () -> FeatureFlags = { FeatureFlags(isStatusHistoryEnabled: true) }
+            featureFlags: @escaping () -> FeatureFlags = { FeatureFlags(isStatusHistoryEnabled: true) },
+            hasTubeServicePlus: @escaping @MainActor () -> Bool = { true }
         ) -> LineStatusDataStore {
-            return .init(tflAPI: tflAPI, tubeServiceAPI: tubeServiceAPI, now: now, featureFlags: featureFlags)
+            return .init(
+                tflAPI: tflAPI,
+                tubeServiceAPI: tubeServiceAPI,
+                now: now,
+                featureFlags: featureFlags,
+                hasTubeServicePlus: hasTubeServicePlus
+            )
         }
     }
 

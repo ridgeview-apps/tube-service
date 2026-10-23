@@ -59,7 +59,7 @@ struct LineStatusDetailScreen: View {
 
     private var historyButtonState: LineStatusHistoryButton.ButtonState? {
         guard featureFlags.isStatusHistoryEnabled else { return nil }
-        return purchases.hasTubeServicePlus ? .unlocked(historyState) : .locked(historyState)
+        return purchases.hasTubeServicePlus ? .unlocked(historyState) : .locked
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {

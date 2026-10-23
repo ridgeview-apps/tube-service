@@ -26,11 +26,18 @@ final class AppDataStore {
         let stations = StationsDataStore(tflAPI: dependencies.tflAPI)
         self.stations = stations
 
+        let purchases = PurchaseStore(
+            productIDs: dependencies.purchaseProductIDs,
+            featureFlags: { dependencies.userDefaults.value.featureFlags }
+        )
+        self.purchases = purchases
+
         self.lineStatus = LineStatusDataStore(
             tflAPI: dependencies.tflAPI,
             tubeServiceAPI: dependencies.tubeServiceAPI,
             now: dependencies.now,
-            featureFlags: { dependencies.userDefaults.value.featureFlags }
+            featureFlags: { dependencies.userDefaults.value.featureFlags },
+            hasTubeServicePlus: { purchases.hasTubeServicePlus }
         )
         self.location = LocationDataStore(
             locationManager: dependencies.locationManager,
@@ -41,10 +48,6 @@ final class AppDataStore {
         self.systemStatus = SystemStatusDataStore(
             systemStatusAPI: dependencies.systemStatusAPI,
             now: dependencies.now
-        )
-        self.purchases = PurchaseStore(
-            productIDs: dependencies.purchaseProductIDs,
-            featureFlags: { dependencies.userDefaults.value.featureFlags }
         )
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
@@ -70,6 +73,13 @@ final class AppDataStore {
         if lineStatus.requiresRefresh(for: payload) {
             await lineStatus.refresh(for: .live)
         }
+    }
+
+    /// Line status screens may have refreshed before Plus was known (entitlements load at launch, or the user has just
+    /// subscribed), skipping the disruption summary. Line statuses are still fresh, so only the summary is requested.
+    func tubeServicePlusDidChange(_ hasTubeServicePlus: Bool) async {
+        guard hasTubeServicePlus else { return }
+        await lineStatus.refreshIfStale(for: .live)
     }
 
     func sceneDidBecomeActive() async {

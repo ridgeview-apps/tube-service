@@ -350,6 +350,67 @@ struct LineStatusDataStoreTests {
         #expect(model.timelineData(for: .victoria) == nil)
     }
 
+    // MARK: - Tube Service Plus
+
+    @Test
+    func tubeServiceAPINotRequestedWithoutTubeServicePlus() async {
+        // Given
+        let tflAPI = StubTflAPIClient()
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        let model = makeStore(
+            tflAPI: tflAPI,
+            tubeServiceAPI: tubeServiceAPI,
+            now: { .now },
+            featureFlags: { .statusHistoryEnabled },
+            hasTubeServicePlus: { false }
+        )
+
+        // When
+        await model.refreshIfStale(for: .live)
+        await model.refresh(for: .live)
+        await model.refreshTimelineIfStale(for: .victoria)
+        await model.refreshTimeline(for: .victoria)
+        // The summary is requested in an unstructured task, so call it directly rather than waiting on that task.
+        await model.refreshDisruptionSummary()
+
+        // Then – TfL line statuses are still fetched, but nothing is requested from the Tube Service API
+        #expect(tflAPI.fetchCurrentLineStatusesCallCount == 2)
+        #expect(tubeServiceAPI.fetchDailyLineDisruptionSummaryCallCount == 0)
+        #expect(tubeServiceAPI.fetchDailyLineTimelineCallCount == 0)
+        #expect(model.timelineData(for: .victoria) == nil)
+    }
+
+    @Test
+    func disruptionSummaryHiddenWhenTubeServicePlusLapses() async {
+        // Given
+        var hasTubeServicePlus = true
+        let tubeServiceAPI = StubTubeServiceAPIClient()
+        tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
+            .init(
+                operationalDate: .now,
+                timezone: "Europe/London",
+                startsAt: .now,
+                endsAt: .now,
+                lines: ["central": [.init(lineId: .central, observedAt: .now, transition: .disruptionStarted, statuses: [])]]
+            )
+        )
+        let model = makeStore(
+            tubeServiceAPI: tubeServiceAPI,
+            now: { .now },
+            hasTubeServicePlus: { hasTubeServicePlus }
+        )
+        await model.refreshDisruptionSummary()
+        #expect(model.disruptionCountsByLineID == [.central: 1])
+        #expect(model.disruptionSnapshots(for: .central) != nil)
+
+        // When
+        hasTubeServicePlus = false
+
+        // Then
+        #expect(model.disruptionCountsByLineID.isEmpty)
+        #expect(model.disruptionSnapshots(for: .central) == nil)
+    }
+
     // MARK: - requiresRefresh(for:)
 
     @Test
@@ -471,13 +532,15 @@ struct LineStatusDataStoreTests {
         tflAPI: StubTflAPIClient = StubTflAPIClient(),
         tubeServiceAPI: StubTubeServiceAPIClient = StubTubeServiceAPIClient(),
         now: @escaping () -> Date,
-        featureFlags: @escaping () -> FeatureFlags = { .default }
+        featureFlags: @escaping () -> FeatureFlags = { .default },
+        hasTubeServicePlus: @escaping @MainActor () -> Bool = { true }
     ) -> LineStatusDataStore {
         LineStatusDataStore(
             tflAPI: tflAPI,
             tubeServiceAPI: tubeServiceAPI,
             now: now,
-            featureFlags: featureFlags
+            featureFlags: featureFlags,
+            hasTubeServicePlus: hasTubeServicePlus
         )
     }
 }

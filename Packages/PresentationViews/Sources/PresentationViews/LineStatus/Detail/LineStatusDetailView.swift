@@ -254,7 +254,7 @@ private struct Previewer: View {
     let line: Line
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
-    var historyButtonState: LineStatusHistoryButton.ButtonState? = .locked(.noDisruption)
+    var historyButtonState: LineStatusHistoryButton.ButtonState? = .locked
     var statusContext = LineStatusDetailView.StatusContext.live
     var notificationButtonState: LineNotificationsButtonState? = nil
     var notificationSavingState: LoadingState = .loaded
@@ -306,13 +306,6 @@ import ModelStubs
     Previewer(
         line: ModelStubs.lineStatusGoodService,
         historyButtonState: nil
-    )
-}
-
-#Preview("Earlier disruption (locked)") {
-    Previewer(
-        line: ModelStubs.lineStatusGoodService,
-        historyButtonState: .locked(.resolvedDisruption(at: .now))
     )
 }
 

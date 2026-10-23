@@ -21,27 +21,32 @@ public final class LineStatusDataStore {
     private let tubeServiceAPI: TubeServiceAPIClientType
     private let now: () -> Date
     private let featureFlags: () -> FeatureFlags
+    private let hasTubeServicePlus: @MainActor () -> Bool
 
     private var lineStatusCache = FetchCache<LineStatusRequest, [Line]>()
     private var disruptionSummaryCache = FetchCache<DisruptionSummaryCacheKey, DailyDisruptionSummary>()
     private var timelineCache = FetchCache<TrainLineID, DailyLineTimeline>()
 
+    /// - Parameter hasTubeServicePlus: The disruption summary and timelines come from the Tube Service API, which is a
+    ///   Tube Service Plus feature. They're only requested, and only exposed, while this returns `true`.
     public init(
         tflAPI: TflAPIClientType,
         tubeServiceAPI: TubeServiceAPIClientType,
         now: @escaping () -> Date = { .now },
-        featureFlags: @escaping () -> FeatureFlags
+        featureFlags: @escaping () -> FeatureFlags,
+        hasTubeServicePlus: @escaping @MainActor () -> Bool
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
         self.now = now
         self.featureFlags = featureFlags
+        self.hasTubeServicePlus = hasTubeServicePlus
     }
 
     // MARK: - Outputs
 
     public var disruptionCountsByLineID: [TrainLineID: Int] {
-        guard let summary = disruptionSummaryCache[.current]?.value else { return [:] }
+        guard hasTubeServicePlus(), let summary = disruptionSummaryCache[.current]?.value else { return [:] }
         return summary.lines.reduce(into: [:]) { result, entry in
             guard let lineID = TrainLineID(rawValue: entry.key),
                 !entry.value.isEmpty
@@ -52,7 +57,8 @@ public final class LineStatusDataStore {
     }
 
     public func disruptionSnapshots(for lineID: TrainLineID) -> [LineStatusSnapshot]? {
-        guard let snapshots = disruptionSummaryCache[.current]?.value?.lines[lineID.rawValue],
+        guard hasTubeServicePlus(),
+            let snapshots = disruptionSummaryCache[.current]?.value?.lines[lineID.rawValue],
             !snapshots.isEmpty
         else { return nil }
         return snapshots
@@ -140,6 +146,7 @@ public final class LineStatusDataStore {
     }
 
     func refreshDisruptionSummary() async {
+        guard hasTubeServicePlus() else { return }
         guard disruptionSummaryCache.beginFetch(for: .current) else { return }
         do {
             let summary = try await tubeServiceAPI.fetchDailyLineDisruptionSummary(operationalDate: nil).decodedModel
@@ -157,7 +164,7 @@ public final class LineStatusDataStore {
     }
 
     public func refreshTimeline(for lineID: TrainLineID) async {
-        guard featureFlags().isStatusHistoryEnabled else { return }
+        guard featureFlags().isStatusHistoryEnabled, hasTubeServicePlus() else { return }
         guard timelineCache.beginFetch(for: lineID) else { return }
         do {
             let timeline = try await tubeServiceAPI.fetchDailyLineTimeline(lineID: lineID, operationalDate: nil).decodedModel
