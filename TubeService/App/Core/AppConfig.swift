@@ -28,9 +28,6 @@ struct AppConfig {
             if purchaseStore.tubeServicePlusProductID.trimmed().isEmpty {
                 fatalError("Tube Service Plus product ID is mandatory on Release builds")
             }
-            if purchaseStore.tubeServicePlusMonthlyProductID.trimmed().isEmpty {
-                fatalError("Tube Service Plus monthly product ID is mandatory on Release builds")
-            }
         #endif
     }
 }
@@ -61,8 +58,7 @@ extension AppConfig {
                 fileName: config["systemStatusAPIFileName"]
             ),
             purchaseStore: .init(
-                tubeServicePlusProductID: config["tubeServicePlusProductID"],
-                tubeServicePlusMonthlyProductID: config["tubeServicePlusMonthlyProductID"]
+                tubeServicePlusProductID: config["tubeServicePlusProductID"]
             )
         )
 
@@ -92,6 +88,5 @@ extension AppConfig {
 
     struct PurchaseStoreConfig {
         let tubeServicePlusProductID: String
-        let tubeServicePlusMonthlyProductID: String
     }
 }

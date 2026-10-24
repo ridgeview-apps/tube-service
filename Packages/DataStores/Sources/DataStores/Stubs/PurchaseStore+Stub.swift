@@ -7,8 +7,7 @@ import Models
         static func stub(isPlus: Bool = false) -> PurchaseStore {
             let store = PurchaseStore(
                 productIDs: [
-                    PurchaseStore.ProductID("stub.tube-service.plus"),
-                    PurchaseStore.ProductID("stub.tube-service.plus.monthly")
+                    PurchaseStore.ProductID("stub.tube-service.plus")
                 ],
                 featureFlags: { FeatureFlags(isStatusHistoryEnabled: true) }
             )

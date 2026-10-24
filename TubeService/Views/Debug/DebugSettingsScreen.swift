@@ -74,7 +74,6 @@ struct DebugSettingsScreen: View {
         let config = appConfig.purchaseStore
         return Section {
             expandedCopyableRow(label: "Plus Product ID", value: config.tubeServicePlusProductID)
-            expandedCopyableRow(label: "Monthly Product ID", value: config.tubeServicePlusMonthlyProductID)
         } header: {
             Text("Purchase Store")
         } footer: {
@@ -120,7 +119,7 @@ struct DebugSettingsScreen: View {
     }
 
     private func isPurchaseStoreField(_ field: String) -> Bool {
-        field == "Plus Product ID" || field == "Monthly Product ID"
+        field == "Plus Product ID"
     }
 
     private func debugRow(label: String, value: String) -> some View {

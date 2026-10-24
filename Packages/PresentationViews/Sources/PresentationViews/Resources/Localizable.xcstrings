@@ -3515,6 +3515,144 @@
         }
       }
     },
+    "tube.service.plus.price.every %@ %@" : {
+      "comment" : "Subscription price and multi-unit renewal period, e.g. £6.99 every 2 months",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ every %2$@"
+          }
+        }
+      }
+    },
+    "tube.service.plus.price.per.day %@" : {
+      "comment" : "Subscription price per day, e.g. £0.99/day",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/day"
+          }
+        }
+      }
+    },
+    "tube.service.plus.price.per.month %@" : {
+      "comment" : "Subscription price per month, e.g. £0.99/month",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/month"
+          }
+        }
+      }
+    },
+    "tube.service.plus.price.per.week %@" : {
+      "comment" : "Subscription price per week, e.g. £0.99/week",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/week"
+          }
+        }
+      }
+    },
+    "tube.service.plus.price.per.year %@" : {
+      "comment" : "Subscription price per year, e.g. £6.99/year",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@/year"
+          }
+        }
+      }
+    },
+    "tube.service.plus.restore.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore Purchases"
+          }
+        }
+      }
+    },
+    "tube.service.plus.restore.failed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't Restore Purchases"
+          }
+        }
+      }
+    },
+    "tube.service.plus.restore.nothing.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "There's no Tube Service Plus subscription on this Apple Account to restore."
+          }
+        }
+      }
+    },
+    "tube.service.plus.restore.nothing.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Subscription Found"
+          }
+        }
+      }
+    },
+    "tube.service.plus.subscribe.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subscribe"
+          }
+        }
+      }
+    },
+    "tube.service.plus.subscribe.free.trial.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Free Trial"
+          }
+        }
+      }
+    },
+    "tube.service.plus.terms.free.trial %@ %@" : {
+      "comment" : "Free trial length, then price per period, e.g. 1 month free, then £6.99/year",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ free, then %2$@"
+          }
+        }
+      }
+    },
     "tube.service.plus.title" : {
       "extractionState" : "manual",
       "localizations" : {

@@ -47,8 +47,7 @@ extension SystemStatusAPIClient {
 
 extension Array where Element == PurchaseStore.ProductID {
     static let live: [PurchaseStore.ProductID] = [
-        PurchaseStore.ProductID(AppConfig.main.purchaseStore.tubeServicePlusProductID),
-        PurchaseStore.ProductID(AppConfig.main.purchaseStore.tubeServicePlusMonthlyProductID)
+        PurchaseStore.ProductID(AppConfig.main.purchaseStore.tubeServicePlusProductID)
     ]
 }
 
