@@ -16,17 +16,21 @@ public struct LineNotificationsButton: View {
         case setPaused(Bool)
     }
 
+    /// Names the line in the menu's Pause and Resume items, so they can't be mistaken for pausing every line.
+    let lineName: String
     let state: LineNotificationsButtonState
     let isSaving: Bool
     let showsNewBadge: Bool
     let onAction: (Action) -> Void
 
     public init(
+        lineName: String,
         state: LineNotificationsButtonState,
         isSaving: Bool = false,
         showsNewBadge: Bool = false,
         onAction: @escaping (Action) -> Void
     ) {
+        self.lineName = lineName
         self.state = state
         self.isSaving = isSaving
         self.showsNewBadge = showsNewBadge
@@ -96,13 +100,13 @@ public struct LineNotificationsButton: View {
             } label: {
                 if state == .active {
                     Label {
-                        Text(.notificationsLineConfigMenuPause)
+                        Text(.notificationsLineConfigMenuPause(lineName))
                     } icon: {
                         Image(systemName: "bell.slash")
                     }
                 } else {
                     Label {
-                        Text(.notificationsLineConfigMenuResume)
+                        Text(.notificationsLineConfigMenuResume(lineName))
                     } icon: {
                         Image(systemName: "bell")
                     }
@@ -208,36 +212,36 @@ public struct LineNotificationsButton: View {
 // MARK: - Previews
 
 #Preview("Locked") {
-    LineNotificationsButton(state: .locked, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .locked, onAction: { _ in })
         .padding()
 }
 
 #Preview("Locked (new)") {
-    LineNotificationsButton(state: .locked, showsNewBadge: true, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .locked, showsNewBadge: true, onAction: { _ in })
         .padding()
 }
 
 #Preview("Permission denied") {
-    LineNotificationsButton(state: .permissionDenied, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .permissionDenied, onAction: { _ in })
         .padding()
 }
 
 #Preview("Not set up") {
-    LineNotificationsButton(state: .notSetUp, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .notSetUp, onAction: { _ in })
         .padding()
 }
 
 #Preview("Paused") {
-    LineNotificationsButton(state: .paused, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .paused, onAction: { _ in })
         .padding()
 }
 
 #Preview("Active") {
-    LineNotificationsButton(state: .active, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .active, onAction: { _ in })
         .padding()
 }
 
 #Preview("Active, saving") {
-    LineNotificationsButton(state: .active, isSaving: true, onAction: { _ in })
+    LineNotificationsButton(lineName: "Victoria line", state: .active, isSaving: true, onAction: { _ in })
         .padding()
 }

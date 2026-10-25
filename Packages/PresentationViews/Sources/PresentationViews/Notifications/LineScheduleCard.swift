@@ -105,13 +105,13 @@ public struct LineScheduleCard: View {
             } label: {
                 if settings.isEnabled {
                     Label {
-                        Text(.notificationsLineConfigMenuPause)
+                        Text(.notificationsLineConfigMenuPause(lineID.longName))
                     } icon: {
                         Image(systemName: "bell.slash")
                     }
                 } else {
                     Label {
-                        Text(.notificationsLineConfigMenuResume)
+                        Text(.notificationsLineConfigMenuResume(lineID.longName))
                     } icon: {
                         Image(systemName: "bell")
                     }

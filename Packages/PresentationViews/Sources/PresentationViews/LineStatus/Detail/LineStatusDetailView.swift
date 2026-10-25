@@ -76,6 +76,7 @@ public struct LineStatusDetailView: View {
                     if let state = notificationButtonState {
                         Section {
                             LineNotificationsButton(
+                                lineName: line.id.longName,
                                 state: state,
                                 isSaving: notificationSavingState == .loading,
                                 showsNewBadge: newFeatures.contains(.lineNotifications),

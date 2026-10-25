@@ -2332,24 +2332,24 @@
         }
       }
     },
-    "notifications.line.config.menu.pause" : {
+    "notifications.line.config.menu.pause %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pause notifications"
+            "value" : "Pause %@ notifications"
           }
         }
       }
     },
-    "notifications.line.config.menu.resume" : {
+    "notifications.line.config.menu.resume %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume notifications"
+            "value" : "Resume %@ notifications"
           }
         }
       }
