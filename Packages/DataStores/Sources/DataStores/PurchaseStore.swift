@@ -45,9 +45,11 @@ public final class PurchaseStore {
     public func start() async {
         updatesTask?.cancel()
         await refreshEntitlements()
+        // Only reports transactions made outside the app or on other devices, such as renewals. Purchases made in
+        // the app's store views arrive through `handlePurchaseResult(_:)` instead.
         updatesTask = Task {
-            for await _ in Transaction.updates {
-                await self.refreshEntitlements()
+            for await update in Transaction.updates {
+                await self.finish(update)
             }
         }
     }
@@ -62,6 +64,11 @@ public final class PurchaseStore {
         let products = try await Product.products(for: [productID.value])
         guard let product = products.first else { return }
         let result = try await product.purchase()
+        await handlePurchaseResult(result)
+    }
+
+    /// Completes a purchase made in a StoreKit view, such as the Tube Service Plus store.
+    public func handlePurchaseResult(_ result: Product.PurchaseResult) async {
         if case .success(let verification) = result {
             await finish(verification)
         }
@@ -88,9 +95,11 @@ public final class PurchaseStore {
         entitledProductIDs = entitled
     }
 
+    /// Unverified transactions aren't finished, but entitlements are still refreshed (they only count verified ones).
     private func finish(_ verification: VerificationResult<Transaction>) async {
-        guard case .verified(let tx) = verification else { return }
-        await tx.finish()
+        if case .verified(let tx) = verification {
+            await tx.finish()
+        }
         await refreshEntitlements()
     }
 }

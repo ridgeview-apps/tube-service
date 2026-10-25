@@ -86,16 +86,17 @@ public struct TubeServicePlusMarketingContent: View {
                     description: .tubeServicePlusFeatureTimelineDescription
                 ),
                 Feature(
-                    id: "status-disruptions",
-                    systemImage: "exclamationmark.bubble",
-                    title: .tubeServicePlusFeatureDisruptionsTitle,
-                    description: .tubeServicePlusFeatureDisruptionsDescription
-                ),
-                Feature(
                     id: "status-recovery",
                     systemImage: "arrow.trianglehead.2.clockwise.rotate.90",
                     title: .tubeServicePlusFeatureRecoveryTitle,
                     description: .tubeServicePlusFeatureRecoveryDescription
+                ),
+                // Plus unlocks both features, so each paywall mentions the other.
+                Feature(
+                    id: "status-also-notifications",
+                    systemImage: "bell.badge",
+                    title: .tubeServicePlusFeatureAlsoNotificationsTitle,
+                    description: .tubeServicePlusFeatureAlsoNotificationsDescription
                 )
             ]
         case .notifications:
@@ -117,6 +118,12 @@ public struct TubeServicePlusMarketingContent: View {
                     systemImage: "calendar.badge.clock",
                     title: .tubeServicePlusFeatureNotificationsSchedulesTitle,
                     description: .tubeServicePlusFeatureNotificationsSchedulesDescription
+                ),
+                Feature(
+                    id: "notifications-also-status-history",
+                    systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90",
+                    title: .tubeServicePlusFeatureAlsoStatusHistoryTitle,
+                    description: .tubeServicePlusFeatureAlsoStatusHistoryDescription
                 )
             ]
         }

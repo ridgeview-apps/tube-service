@@ -5,7 +5,6 @@ import Shared
 import SwiftUI
 
 enum NotificationsOnboardingRoute: Hashable {
-    case initialPaywall
     case permissionDenied
     case confirmation
 }
@@ -46,29 +45,14 @@ struct OnboardingNotificationsFlow: View {
         }
     }
 
-    private var rootView: some View {
-        NotificationsOnboardingIntroView { action in
-            switch action {
-            case .getStarted:
-                router.navigation.push(.initialPaywall)
-            case .notNow:
-                dismiss()
-            }
-        }
-        .toolbar {
-            NavigationButton.Close {
-                dismiss()
-            }
-        }
-    }
-
+    /// Non-subscribers see the paywall first; once they subscribe it's replaced by line setup in place.
     @ViewBuilder
-    private var initialPaywallView: some View {
+    private var rootView: some View {
         Group {
-            if !purchases.hasTubeServicePlus {
-                TubeServicePlusView(context: .notifications)
-            } else {
+            if purchases.hasTubeServicePlus {
                 lineSettingsView
+            } else {
+                TubeServicePlusView(context: .notifications)
             }
         }
         .toolbar {
@@ -136,8 +120,6 @@ struct OnboardingNotificationsFlow: View {
     @ViewBuilder
     private func destinationView(for route: NotificationsOnboardingRoute) -> some View {
         switch route {
-        case .initialPaywall:
-            initialPaywallView
         case .permissionDenied:
             permissionDeniedView
         case .confirmation:

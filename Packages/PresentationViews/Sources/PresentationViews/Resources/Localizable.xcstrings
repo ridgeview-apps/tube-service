@@ -450,17 +450,6 @@
         }
       }
     },
-    "global.get.started" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get Started"
-          }
-        }
-      }
-    },
     "global.new" : {
       "comment" : "Badge shown next to a feature that has recently been added",
       "extractionState" : "manual",
@@ -2684,83 +2673,6 @@
         }
       }
     },
-    "notifications.onboarding.feature.disruption.alerts.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "As soon as a line you follow is disrupted."
-          }
-        }
-      }
-    },
-    "notifications.onboarding.feature.disruption.alerts.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disruption alerts"
-          }
-        }
-      }
-    },
-    "notifications.onboarding.feature.recovery.alerts.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "When good service returns."
-          }
-        }
-      }
-    },
-    "notifications.onboarding.feature.recovery.alerts.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Recovery alerts"
-          }
-        }
-      }
-    },
-    "notifications.onboarding.feature.schedule.description" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only on the days and times you travel."
-          }
-        }
-      }
-    },
-    "notifications.onboarding.feature.schedule.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Your schedule"
-          }
-        }
-      }
-    },
-    "notifications.onboarding.hero.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get Notified About Your Lines"
-          }
-        }
-      }
-    },
     "notifications.onboarding.line.setup.explainer" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2779,17 +2691,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on notifications"
-          }
-        }
-      }
-    },
-    "notifications.onboarding.navigation.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Line Status Notifications"
           }
         }
       }
@@ -3345,7 +3246,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See when each disruption started, changed and ended, even after good service returns."
+            "value" : "Check whether a line was disrupted earlier today, and see when each disruption started and ended."
           }
         }
       }
@@ -3361,24 +3262,46 @@
         }
       }
     },
-    "tube.service.plus.feature.disruptions.description" : {
+    "tube.service.plus.feature.also.notifications.description" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Still shown after good service returns."
+            "value" : "Get alerts when your lines are disrupted."
           }
         }
       }
     },
-    "tube.service.plus.feature.disruptions.title" : {
+    "tube.service.plus.feature.also.notifications.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Earlier disruptions"
+            "value" : "Also includes notifications"
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.also.status.history.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See today's disruptions, even after they've ended."
+          }
+        }
+      }
+    },
+    "tube.service.plus.feature.also.status.history.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also includes status history"
           }
         }
       }
@@ -3493,6 +3416,17 @@
         }
       }
     },
+    "tube.service.plus.navigation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tube Service Plus"
+          }
+        }
+      }
+    },
     "tube.service.plus.notifications.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3571,6 +3505,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@/year"
+          }
+        }
+      }
+    },
+    "tube.service.plus.purchase.failed.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't Subscribe"
           }
         }
       }
@@ -3659,7 +3604,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See Today's Disruptions"
+            "value" : "Unlock Status History"
           }
         }
       }

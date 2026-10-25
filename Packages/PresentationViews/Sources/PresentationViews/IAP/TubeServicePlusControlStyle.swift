@@ -91,45 +91,48 @@ public struct TubeServicePlusControlStyle: SubscriptionStoreControlStyle {
 }
 
 
-// MARK: - Restore Alert
+// MARK: - Alerts
 
-public enum RestorePurchasesOutcome: Equatable {
+/// Problems on the Tube Service Plus store that the store view doesn't report itself.
+public enum TubeServicePlusAlert: Equatable {
+    case purchaseFailed(errorMessage: String)
     case nothingToRestore
-    case failed(errorMessage: String)
+    case restoreFailed(errorMessage: String)
 }
 
 extension View {
 
-    /// Explains a restore that didn't unlock Tube Service Plus. A successful restore needs no alert: the store
+    /// Explains a purchase or restore that didn't unlock Tube Service Plus. Success needs no alert: the store
     /// dismisses itself once the subscription is active.
-    public func restorePurchasesAlert(_ outcome: Binding<RestorePurchasesOutcome?>) -> some View {
-        alert(
-            Text(outcome.wrappedValue.alertTitle),
+    public func tubeServicePlusAlert(_ alert: Binding<TubeServicePlusAlert?>) -> some View {
+        self.alert(
+            Text(alert.wrappedValue?.title ?? .tubeServicePlusRestoreNothingTitle),
             isPresented: Binding(
-                get: { outcome.wrappedValue != nil },
+                get: { alert.wrappedValue != nil },
                 set: { isPresented in
-                    if !isPresented { outcome.wrappedValue = nil }
+                    if !isPresented { alert.wrappedValue = nil }
                 }
             ),
-            presenting: outcome.wrappedValue
+            presenting: alert.wrappedValue
         ) { _ in
             Button(.globalOk, role: .cancel) {}
-        } message: { outcome in
-            switch outcome {
+        } message: { alert in
+            switch alert {
             case .nothingToRestore:
                 Text(.tubeServicePlusRestoreNothingMessage)
-            case .failed(let errorMessage):
+            case .purchaseFailed(let errorMessage), .restoreFailed(let errorMessage):
                 Text(verbatim: errorMessage)
             }
         }
     }
 }
 
-private extension Optional where Wrapped == RestorePurchasesOutcome {
-    var alertTitle: LocalizedStringResource {
+private extension TubeServicePlusAlert {
+    var title: LocalizedStringResource {
         switch self {
-        case .failed: .tubeServicePlusRestoreFailedTitle
-        case .nothingToRestore, .none: .tubeServicePlusRestoreNothingTitle
+        case .purchaseFailed: .tubeServicePlusPurchaseFailedTitle
+        case .nothingToRestore: .tubeServicePlusRestoreNothingTitle
+        case .restoreFailed: .tubeServicePlusRestoreFailedTitle
         }
     }
 }
