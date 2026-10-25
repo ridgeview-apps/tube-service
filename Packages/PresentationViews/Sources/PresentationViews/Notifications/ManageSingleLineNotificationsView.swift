@@ -23,6 +23,7 @@ public struct ManageSingleLineNotificationsView: View {
 
     @State private var settings: LineNotificationSettings
 
+    @State private var showRemoveConfirmation = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
 
@@ -81,6 +82,14 @@ public struct ManageSingleLineNotificationsView: View {
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 24, bottom: 6, trailing: 24))
+
+            // Set apart below the content, so it reads as the end of the screen rather than its main action.
+            if !isAddingSingleLine {
+                removeButton
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 32, leading: 20, bottom: 12, trailing: 20))
+            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -183,20 +192,43 @@ public struct ManageSingleLineNotificationsView: View {
     // MARK: - Schedule Card
 
     private var scheduleCard: some View {
-        // Existing lines get a menu to pause or resume them (saved with the rest of the edit) or remove them.
-        // The card confirms the removal itself, so `handleRemoveLine` only runs once confirmed.
+        // Existing lines get a toggle to pause or resume them, saved like the rest of the edit.
         LineScheduleCard(
             settings: $settings,
-            accessory: isAddingSingleLine ? .none : .actionsMenu(onRemove: handleRemoveLine)
+            accessory: isAddingSingleLine ? .none : .enabledToggle
         )
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
     }
 
-    private func handleRemoveLine() {
-        removeFeedbackTrigger.toggle()
-        onAction(.remove)
+    // MARK: - Remove Button
+
+    private var removeButton: some View {
+        Button {
+            showRemoveConfirmation = true
+        } label: {
+            Label {
+                Text(.notificationsLineConfigRemoveButton(lineID.longName))
+            } icon: {
+                Image(systemName: "trash.fill")
+            }
+            .ctaLabelStyle()
+        }
+        .buttonStyle(.primary(tint: .red))
+        .disabled(savingState == .loading)
+        .confirmationDialog(
+            String(localized: .notificationsLineConfigRemoveConfirmationTitle(lineID.longName)),
+            isPresented: $showRemoveConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(.globalRemove, role: .destructive) {
+                removeFeedbackTrigger.toggle()
+                onAction(.remove)
+            }
+        } message: {
+            Text(.notificationsLineConfigRemoveConfirmationMessage)
+        }
     }
 
     // MARK: - Toolbar

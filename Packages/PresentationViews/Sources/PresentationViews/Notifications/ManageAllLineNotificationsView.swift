@@ -228,18 +228,6 @@ public struct ManageAllLineNotificationsView: View {
     }
 }
 
-// MARK: - Style Helpers
-
-private extension View {
-    func ctaLabelStyle() -> some View {
-        self
-            .font(.subheadline)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 20)
-            .padding(.horizontal, 16)
-    }
-}
-
 // MARK: - Previews
 
 #if DEBUG

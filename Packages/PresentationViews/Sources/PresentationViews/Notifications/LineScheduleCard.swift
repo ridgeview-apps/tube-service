@@ -6,16 +6,14 @@ public struct LineScheduleCard: View {
     /// What sits at the trailing end of the header, next to the line name.
     public enum Accessory {
         case none
-        /// An ellipsis menu, with the line's on or paused status under its name, that that pauses or resumes the line (by editing `settings.isEnabled`) or removes it.
-        /// Removing asks for confirmation first; `onRemove` is only called once the user confirms.
-        case actionsMenu(onRemove: () -> Void)
+        /// A toggle that pauses or resumes the line by editing `settings.isEnabled`, with the line's on or paused
+        /// status under its name.
+        case enabledToggle
         case removeButton(onRemove: () -> Void)
     }
 
     @Binding public var settings: LineNotificationSettings
     private let accessory: Accessory
-
-    @State private var showRemoveConfirmation = false
 
     private let barWidth: CGFloat = 8
 
@@ -38,6 +36,8 @@ public struct LineScheduleCard: View {
                 NotificationDaysPicker(days: $settings.schedule.days)
                 timeSlotPicker
             }
+            // Faded while paused but still editable, so the schedule can be set before resuming.
+            .opacity(settings.isEnabled ? 1 : 0.5)
         }
         .padding(16)
         // Content keeps its full 16pt inset from the bar's inner edge, not from the card's edge.
@@ -57,12 +57,12 @@ public struct LineScheduleCard: View {
         switch accessory {
         case .none:
             headerLabel
-        case .actionsMenu(let onRemove):
-            HStack(spacing: 8) {
+        case .enabledToggle:
+            Toggle(isOn: $settings.isEnabled) {
                 headerLabel
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                actionsMenu(onRemove: onRemove)
             }
+            // As on the Tube Service notifications toggle.
+            .tint(Color.accentColor)
         case .removeButton(let onRemove):
             HStack(spacing: 8) {
                 headerLabel
@@ -91,66 +91,10 @@ public struct LineScheduleCard: View {
         }
     }
 
-    /// Only existing lines, which have the menu to pause or resume them, show whether they're on or paused.
+    /// Only existing lines, which have the toggle to pause or resume them, show whether they're on or paused.
     private var showsStatus: Bool {
-        if case .actionsMenu = accessory { return true }
+        if case .enabledToggle = accessory { return true }
         return false
-    }
-
-    /// Pausing is an edit like the schedule rows, saved with them; removing is confirmed here before calling `onRemove`.
-    private func actionsMenu(onRemove: @escaping () -> Void) -> some View {
-        Menu {
-            Button {
-                settings.isEnabled.toggle()
-            } label: {
-                if settings.isEnabled {
-                    Label {
-                        Text(.notificationsLineConfigMenuPause(lineID.longName))
-                    } icon: {
-                        Image(systemName: "bell.slash")
-                    }
-                } else {
-                    Label {
-                        Text(.notificationsLineConfigMenuResume(lineID.longName))
-                    } icon: {
-                        Image(systemName: "bell")
-                    }
-                }
-            }
-            Divider()
-            Button(role: .destructive) {
-                showRemoveConfirmation = true
-            } label: {
-                Label {
-                    Text(.notificationsLineConfigRemoveButton(lineID.longName))
-                } icon: {
-                    Image(systemName: "trash")
-                }
-            }
-        } label: {
-            Label {
-                Text(.notificationsLineConfigMenuLabel)
-            } icon: {
-                Image(systemName: "ellipsis.circle")
-            }
-            .labelStyle(.iconOnly)
-            // Trailing-aligned so the icon lines up with the schedule chevrons; the tap area extends leftwards.
-            .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
-            .contentShape(Rectangle())
-        }
-        .tint(Color.accentColor)
-        // Attached to the menu rather than the whole card so the dialog's popover points at the ellipsis.
-        .confirmationDialog(
-            String(localized: .notificationsLineConfigRemoveConfirmationTitle(lineID.longName)),
-            isPresented: $showRemoveConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(.globalRemove, role: .destructive, action: onRemove)
-        } message: {
-            Text(.notificationsLineConfigRemoveConfirmationMessage)
-        }
-        // Keeps the header row the same height as the other variants despite the 44pt tap target.
-        .padding(.vertical, -10)
     }
 
     private func removeButton(onRemove: @escaping () -> Void) -> some View {
@@ -217,9 +161,9 @@ public struct LineScheduleCard: View {
         .padding(20)
     }
 
-    #Preview("Existing line (menu)") {
+    #Preview("Existing line (toggle)") {
         @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .victoria)
-        LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+        LineScheduleCard(settings: $settings, accessory: .enabledToggle)
             .padding(20)
     }
 
@@ -229,7 +173,7 @@ public struct LineScheduleCard: View {
             isEnabled: false,
             schedule: .init(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
         )
-        LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+        LineScheduleCard(settings: $settings, accessory: .enabledToggle)
             .padding(20)
     }
 
@@ -242,7 +186,7 @@ public struct LineScheduleCard: View {
     #Preview("Accessibility size") {
         @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .hammersmithAndCity)
         ScrollView {
-            LineScheduleCard(settings: $settings, accessory: .actionsMenu(onRemove: {}))
+            LineScheduleCard(settings: $settings, accessory: .enabledToggle)
                 .padding(20)
         }
         .dynamicTypeSize(.accessibility3)

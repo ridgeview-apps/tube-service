@@ -68,6 +68,19 @@ public extension ButtonStyle where Self == LineActionButtonStyle {
     }
 }
 
+// MARK: - Call-to-action label
+
+extension View {
+    /// Sizes a full-width button label, such as the red Remove and Delete all buttons, to match the other screens' CTAs.
+    func ctaLabelStyle() -> some View {
+        self
+            .font(.subheadline)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 20)
+            .padding(.horizontal, 16)
+    }
+}
+
 #Preview("Primary button") {
     VStack {
         Button("Standard") {}
