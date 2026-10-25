@@ -5,8 +5,6 @@ public struct ManageSingleLineNotificationsView: View {
 
     public enum Action {
         case close
-        case tappedOtherLine(TrainLineID)
-        case addedLine(TrainLineID)
         case openSettings
         /// The pinned "Turn on notifications" button was tapped for a line that has no settings yet.
         case add(LineNotificationSettings)
@@ -18,8 +16,6 @@ public struct ManageSingleLineNotificationsView: View {
 
     private let lineID: TrainLineID
     private let existingSettings: LineNotificationSettings?
-    private let showsOtherLines: Bool
-    private let allSettings: [LineNotificationSettings]
     private let showsPermissionWarning: Bool
     private let showsPausedAlertsWarning: Bool
     private let savingState: LoadingState
@@ -27,15 +23,12 @@ public struct ManageSingleLineNotificationsView: View {
 
     @State private var settings: LineNotificationSettings
 
-    @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
 
     public init(
         lineID: TrainLineID,
         existingSettings: LineNotificationSettings?,
-        showsOtherLines: Bool,
-        allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         showsPausedAlertsWarning: Bool = false,
         savingState: LoadingState = .loaded,
@@ -43,8 +36,6 @@ public struct ManageSingleLineNotificationsView: View {
     ) {
         self.lineID = lineID
         self.existingSettings = existingSettings
-        self.showsOtherLines = showsOtherLines
-        self.allSettings = allSettings
         self.showsPermissionWarning = showsPermissionWarning
         self.showsPausedAlertsWarning = showsPausedAlertsWarning
         self.savingState = savingState
@@ -55,17 +46,6 @@ public struct ManageSingleLineNotificationsView: View {
     // MARK: - Computed Properties
 
     private var isAddingSingleLine: Bool { existingSettings == nil }
-
-    private var configuredLines: [LineNotificationSettings] {
-        allSettings.filter { $0.lineID != lineID }.sorted { $0.lineID.name < $1.lineID.name }
-    }
-
-    private var unconfiguredLineIDs: [TrainLineID] {
-        let configuredIDs = Set(allSettings.map(\.lineID))
-        return TrainLineID.allCases
-            .filter { $0 != lineID && !configuredIDs.contains($0) }
-            .sorted { $0.name < $1.name }
-    }
 
     // MARK: - Body
 
@@ -101,10 +81,6 @@ public struct ManageSingleLineNotificationsView: View {
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 24, bottom: 6, trailing: 24))
-
-            if showsOtherLines {
-                otherLinesSummarySection
-            }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
@@ -131,10 +107,9 @@ public struct ManageSingleLineNotificationsView: View {
         .toolbar {
             // Nothing is saved for a new line until it's turned on, so closing cancels it;
             // an existing line's edits are already saved, so closing confirms them.
-            if isAddingSingleLine {
-                ToolbarItem(placement: .cancellationAction) { closeButton(systemImage: "xmark") }
-            } else {
-                ToolbarItem(placement: .confirmationAction) { closeButton(systemImage: "checkmark") }
+            // Both sit on the trailing side, opposite the back button to the list.
+            ToolbarItem(placement: .topBarTrailing) {
+                closeButton(systemImage: isAddingSingleLine ? "xmark" : "checkmark")
             }
         }
     }
@@ -224,79 +199,6 @@ public struct ManageSingleLineNotificationsView: View {
         onAction(.remove)
     }
 
-    // MARK: - Other Lines Summary
-
-    @ViewBuilder
-    private var otherLinesSummarySection: some View {
-        if !configuredLines.isEmpty {
-            otherLinesCard
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 12, trailing: 20))
-        } else if !unconfiguredLineIDs.isEmpty {
-            addLineMenu
-                .dashedCardStyle()
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 12, trailing: 20))
-        }
-    }
-
-    private var otherLinesCard: some View {
-        VStack(spacing: 0) {
-            Button {
-                withAnimation(.spring(duration: 0.3)) {
-                    isOtherLinesExpanded.toggle()
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Text(.notificationsLineConfigOtherLineAlerts)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    if !isOtherLinesExpanded {
-                        Text("\(configuredLines.count)")
-                            .font(.subheadline)
-                            .foregroundStyle(.tertiary)
-                            .transition(.opacity)
-                    }
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(isOtherLinesExpanded ? 90 : 0))
-                        .animation(.spring(duration: 0.3), value: isOtherLinesExpanded)
-                        .foregroundStyle(.tertiary)
-                        .font(.caption.weight(.semibold))
-                }
-                .padding(.horizontal, 16)
-                .frame(minHeight: 52)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-
-            if isOtherLinesExpanded {
-                Divider()
-                    .padding(.leading, 40)
-                LineNotificationSettingsSummary(
-                    settings: configuredLines,
-                    onSelect: { onAction(.tappedOtherLine($0)) }
-                )
-                if !unconfiguredLineIDs.isEmpty {
-                    Divider()
-                        .padding(.leading, 40)
-                    addLineMenu
-                }
-            }
-        }
-        .cardStyle()
-    }
-
-    private var addLineMenu: some View {
-        AddLineMenu(
-            lineIDs: unconfiguredLineIDs,
-            label: .notificationsLineConfigAddAnotherLine,
-            onSelect: { onAction(.addedLine($0)) }
-        )
-    }
-
     // MARK: - Toolbar
 
     private func closeButton(systemImage: String) -> some View {
@@ -323,7 +225,6 @@ public struct ManageSingleLineNotificationsView: View {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: nil,
-                showsOtherLines: true,
                 onAction: { print($0) }
             )
         }
@@ -334,7 +235,6 @@ public struct ManageSingleLineNotificationsView: View {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee),
-                showsOtherLines: true,
                 onAction: { print($0) }
             )
         }
@@ -345,7 +245,6 @@ public struct ManageSingleLineNotificationsView: View {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
-                showsOtherLines: true,
                 onAction: { print($0) }
             )
         }
@@ -356,7 +255,6 @@ public struct ManageSingleLineNotificationsView: View {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
-                showsOtherLines: true,
                 showsPausedAlertsWarning: true,
                 onAction: { print($0) }
             )

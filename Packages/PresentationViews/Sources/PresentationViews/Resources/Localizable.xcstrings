@@ -2288,17 +2288,6 @@
         }
       }
     },
-    "notifications.line.config.add.another.line" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add another line"
-          }
-        }
-      }
-    },
     "notifications.line.config.explainer" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2361,17 +2350,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Notifications"
-          }
-        }
-      }
-    },
-    "notifications.line.config.other.line.alerts" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other line notifications"
           }
         }
       }
