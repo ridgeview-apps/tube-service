@@ -2118,7 +2118,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to edit your notification settings"
+            "value" : "Edit notification settings"
           }
         }
       }
@@ -2162,7 +2162,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to edit your notification settings"
+            "value" : "Edit notification settings"
           }
         }
       }
