@@ -506,17 +506,6 @@
         }
       }
     },
-    "global.save" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save"
-          }
-        }
-      }
-    },
     "global.select.all" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2581,39 +2570,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete all notification settings?"
-          }
-        }
-      }
-    },
-    "notifications.manage.discard.changes.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discard"
-          }
-        }
-      }
-    },
-    "notifications.manage.discard.changes.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Discard Changes?"
-          }
-        }
-      }
-    },
-    "notifications.manage.keep.editing" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keep Editing"
           }
         }
       }

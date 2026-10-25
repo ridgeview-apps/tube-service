@@ -41,6 +41,8 @@ public final class NotificationsDataStore {
     private var authorizationStatus: UNAuthorizationStatus = .notDetermined
     private var isRegisteringDevice = false
     private var isSavingPreferences = false
+    /// The most recent line preferences save, which the next one waits for.
+    private var lastLinePreferencesSave: Task<Void, Never>?
     private var lastRegistrationError: String?
 
     private static let keychainDeviceIdKey = "push_device_id"
@@ -186,8 +188,21 @@ public final class NotificationsDataStore {
     }
 
     /// Changes only the lines in `patch`, so lines the user didn't touch keep any fields this app version doesn't know about.
+    ///
+    /// Saves are sent one at a time in the order they're made, so quick successive edits all reach the server
+    /// and the last one wins. Each save runs in its own task, so it still completes if the caller is cancelled,
+    /// e.g. when the screen that made the edit closes.
     public func updateLinePreferences(with patch: NotificationPreferencesPatch) async throws {
-        guard !isSavingPreferences else { return }
+        let previousSave = lastLinePreferencesSave
+        let save = Task {
+            await previousSave?.value
+            try await sendLinePreferences(patch)
+        }
+        lastLinePreferencesSave = Task { _ = try? await save.value }
+        try await save.value
+    }
+
+    private func sendLinePreferences(_ patch: NotificationPreferencesPatch) async throws {
         isSavingPreferences = true
         defer { isSavingPreferences = false }
         do {

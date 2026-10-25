@@ -4,11 +4,14 @@ import SwiftUI
 public struct ManageSingleLineNotificationsView: View {
 
     public enum Action {
-        case cancel
+        case close
         case tappedOtherLine(TrainLineID)
         case addedLine(TrainLineID)
         case openSettings
-        case save(LineNotificationSettings)
+        /// The pinned "Turn on notifications" button was tapped for a line that has no settings yet.
+        case add(LineNotificationSettings)
+        /// An existing line's settings were edited; each edit is saved as it's made.
+        case update(LineNotificationSettings)
         case remove
         case resumeAlerts
     }
@@ -24,7 +27,6 @@ public struct ManageSingleLineNotificationsView: View {
 
     @State private var settings: LineNotificationSettings
 
-    @State private var showDiscardChangesConfirmation = false
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
@@ -53,14 +55,6 @@ public struct ManageSingleLineNotificationsView: View {
     // MARK: - Computed Properties
 
     private var isAddingSingleLine: Bool { existingSettings == nil }
-
-    private var hasUnsavedChanges: Bool {
-        if let existingSettings {
-            return settings != existingSettings
-        } else {
-            return settings != .defaultValue(lineID: lineID)
-        }
-    }
 
     private var configuredLines: [LineNotificationSettings] {
         allSettings.filter { $0.lineID != lineID }.sorted { $0.lineID.name < $1.lineID.name }
@@ -114,19 +108,33 @@ public struct ManageSingleLineNotificationsView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        // New lines are saved from the pinned button; existing lines from the toolbar's Save button.
+        // New lines are saved from the pinned button; edits to existing lines are saved as they're made.
         .turnOnNotificationsBar(isShown: isAddingSingleLine, isDisabled: savingState == .loading) {
             saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
+            onAction(.add(settings))
+        }
+        .onChange(of: settings) { _, newSettings in
+            // Skips the reset below, which puts back what's already saved.
+            guard let existingSettings, newSettings != existingSettings else { return }
+            onAction(.update(newSettings))
+        }
+        .onChange(of: savingState) { _, newState in
+            // A failed save leaves the server unchanged, so the controls go back to what's saved.
+            if case .failure = newState, let existingSettings {
+                settings = existingSettings
+            }
         }
         .navigationTitle(Text(.notificationsLineConfigNavTitle))
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) { cancelButton }
-            if !isAddingSingleLine {
-                ToolbarItem(placement: .confirmationAction) { saveButton }
+            // Nothing is saved for a new line until it's turned on, so closing cancels it;
+            // an existing line's edits are already saved, so closing confirms them.
+            if isAddingSingleLine {
+                ToolbarItem(placement: .cancellationAction) { closeButton(systemImage: "xmark") }
+            } else {
+                ToolbarItem(placement: .confirmationAction) { closeButton(systemImage: "checkmark") }
             }
         }
     }
@@ -291,41 +299,17 @@ public struct ManageSingleLineNotificationsView: View {
 
     // MARK: - Toolbar
 
-    private var cancelButton: some View {
+    private func closeButton(systemImage: String) -> some View {
         Button {
-            if hasUnsavedChanges {
-                showDiscardChangesConfirmation = true
-            } else {
-                onAction(.cancel)
-            }
+            onAction(.close)
         } label: {
-            Image(systemName: "xmark")
-        }
-        .confirmationDialog(
-            Text(.notificationsManageDiscardChangesTitle),
-            isPresented: $showDiscardChangesConfirmation,
-            titleVisibility: .visible
-        ) {
-            Button(role: .destructive) {
-                onAction(.cancel)
-            } label: {
-                Text(.notificationsManageDiscardChangesButton)
+            Label {
+                Text(isAddingSingleLine ? .globalCancel : .globalDone)
+            } icon: {
+                Image(systemName: systemImage)
             }
-            Button(role: .cancel) {
-            } label: {
-                Text(.notificationsManageKeepEditing)
-            }
+            .labelStyle(.iconOnly)
         }
-    }
-
-    private var saveButton: some View {
-        Button {
-            saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
-        } label: {
-            Text(.globalSave)
-        }
-        .disabled(!hasUnsavedChanges || savingState == .loading)
     }
 }
 

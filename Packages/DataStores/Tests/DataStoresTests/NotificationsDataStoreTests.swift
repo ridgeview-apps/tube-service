@@ -224,6 +224,29 @@ struct NotificationsDataStoreTests {
     }
 
     @Test
+    func overlappingUpdateLinePreferencesAreAllSentInOrder() async throws {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = await makeOnboardedStore(api: api, lines: [makePreferenceUpdate(lineId: "victoria", schedule: .weekends)])
+
+        // When – a second save starts before the first finishes
+        let pause = Task {
+            try await store.updateLinePreferences(
+                with: NotificationPreferencesPatch(lines: ["victoria": NotificationLinePreferencePatch(enabled: false)])
+            )
+        }
+        await Task.yield()
+        try await store.updateLinePreferences(
+            with: NotificationPreferencesPatch(lines: ["victoria": NotificationLinePreferencePatch(enabled: true)])
+        )
+        try await pause.value
+
+        // Then – both are sent and the later one wins
+        #expect(api.updatePreferencesCallCount == 2)
+        #expect(store.state.preferences?.lines.first { $0.lineId == "victoria" }?.enabled == true)
+    }
+
+    @Test
     func updateLinePreferencesRemovesLineSetToNil() async throws {
         // Given
         let store = await makeOnboardedStore(lines: [
