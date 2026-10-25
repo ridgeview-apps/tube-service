@@ -136,7 +136,7 @@ public struct ManageAllLineNotificationsView: View {
     private var muteAllRow: some View {
         Toggle(isOn: toggleBinding) {
             HStack(alignment: .top, spacing: 12) {
-                Image(systemName: isEnabled ? "bell.fill" : "bell.slash.fill")
+                Image(systemName: isEnabled ? "bell.and.waves.left.and.right.fill" : "bell.slash.fill")
                     .font(.system(size: 20))
                     .foregroundStyle(isEnabled ? Color.accentColor : .orange)
                     .contentTransition(.symbolEffect(.replace))

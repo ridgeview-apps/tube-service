@@ -44,12 +44,12 @@ public struct LineNotificationsButton: View {
                 onAction(.tapped)
             } label: {
                 HStack(spacing: 12) {
-                    Image(systemName: iconName)
-                        .contentTransition(.symbolEffect(.replace))
-                        .font(.body.weight(.semibold))
-                        .foregroundStyle(iconForegroundColor)
-                        .frame(width: 36, height: 36)
-                        .background(iconBackgroundColor, in: Circle())
+                    IconBadge(
+                        systemName: iconName,
+                        foregroundColor: iconForegroundColor,
+                        backgroundColor: iconBackgroundColor
+                    )
+                    .contentTransition(.symbolEffect(.replace))
 
                     VStack(alignment: .leading, spacing: 3) {
                         Text(title)
@@ -164,7 +164,7 @@ public struct LineNotificationsButton: View {
         case .permissionDenied: return "exclamationmark.triangle.fill"
         case .notSetUp: return "bell.slash"
         case .paused: return "bell.slash.fill"
-        case .active: return "bell.fill"
+        case .active: return "bell.and.waves.left.and.right.fill"
         }
     }
 

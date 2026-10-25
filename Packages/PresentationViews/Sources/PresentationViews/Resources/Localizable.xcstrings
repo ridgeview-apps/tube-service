@@ -2442,6 +2442,17 @@
         }
       }
     },
+    "notifications.line.config.status.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        }
+      }
+    },
     "notifications.line.config.resume.alerts.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2680,17 +2691,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "We'll notify you when these lines are disrupted, and when good service returns."
-          }
-        }
-      }
-    },
-    "notifications.onboarding.line.setup.turn.on.alerts.button" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn on notifications"
           }
         }
       }

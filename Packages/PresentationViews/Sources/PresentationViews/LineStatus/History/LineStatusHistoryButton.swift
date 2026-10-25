@@ -25,11 +25,11 @@ public struct LineStatusHistoryButton: View {
             onTap()
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90")
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(iconForegroundColor)
-                    .frame(width: 36, height: 36)
-                    .background(iconBackgroundColor, in: Circle())
+                IconBadge(
+                    systemName: "clock.arrow.trianglehead.counterclockwise.rotate.90",
+                    foregroundColor: iconForegroundColor,
+                    backgroundColor: iconBackgroundColor
+                )
 
                 VStack(alignment: .leading, spacing: 3) {
                     Text(title)

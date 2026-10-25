@@ -28,7 +28,6 @@ public struct ManageSingleLineNotificationsView: View {
     @State private var isOtherLinesExpanded = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
-    @State private var bellBounce = false
 
     public init(
         lineID: TrainLineID,
@@ -109,19 +108,17 @@ public struct ManageSingleLineNotificationsView: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 24, bottom: 6, trailing: 24))
 
-            if isAddingSingleLine {
-                turnOnAlertsButton
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
-            }
-
             if showsOtherLines {
                 otherLinesSummarySection
             }
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        // New lines are saved from the pinned button; existing lines from the toolbar's Save button.
+        .turnOnNotificationsBar(isShown: isAddingSingleLine, isDisabled: savingState == .loading) {
+            saveFeedbackTrigger.toggle()
+            onAction(.save(settings))
+        }
         .navigationTitle(Text(.notificationsLineConfigNavTitle))
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
@@ -217,31 +214,6 @@ public struct ManageSingleLineNotificationsView: View {
     private func handleRemoveLine() {
         removeFeedbackTrigger.toggle()
         onAction(.remove)
-    }
-
-    // MARK: - Turn On CTA
-
-    /// Styled like onboarding's pinned "Turn on notifications" button; the line colour is kept for identity only.
-    private var turnOnAlertsButton: some View {
-        Button {
-            saveFeedbackTrigger.toggle()
-            onAction(.save(settings))
-        } label: {
-            Label {
-                Text(.notificationsLineConfigTurnOnButton)
-            } icon: {
-                Image(systemName: "bell.fill")
-                    .symbolEffect(.bounce, value: bellBounce)
-            }
-            .labelStyle(.titleAndIcon)
-            .font(.body)
-            .fontWeight(.semibold)
-            .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.borderedProminent)
-        .controlSize(.large)
-        .disabled(savingState == .loading)
-        .onAppear { bellBounce = true }
     }
 
     // MARK: - Other Lines Summary

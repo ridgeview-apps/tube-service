@@ -50,7 +50,7 @@ struct LineNotificationSettingsSummary: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             } else {
-                Label(.globalPaused, systemImage: "bell.slash")
+                Label(.globalPaused, systemImage: "bell.slash.fill")
                     .font(.subheadline)
                     .foregroundStyle(.orange)
             }

@@ -6,7 +6,7 @@ public struct LineScheduleCard: View {
     /// What sits at the trailing end of the header, next to the line name.
     public enum Accessory {
         case none
-        /// An ellipsis menu that pauses or resumes the line (by editing `settings.isEnabled`) or removes it.
+        /// An ellipsis menu, with the line's on or paused status under its name, that that pauses or resumes the line (by editing `settings.isEnabled`) or removes it.
         /// Removing asks for confirmation first; `onRemove` is only called once the user confirms.
         case actionsMenu(onRemove: () -> Void)
         case removeButton(onRemove: () -> Void)
@@ -77,17 +77,24 @@ public struct LineScheduleCard: View {
             Text(lineID.longName)
                 .font(.subheadline)
                 .fontWeight(.semibold)
-            if !settings.isEnabled {
+            if showsStatus {
                 HStack(spacing: 4) {
-                    Image(systemName: "bell.slash")
-                    Text(.globalPaused)
+                    Image(systemName: settings.isEnabled ? "bell.and.waves.left.and.right.fill" : "bell.slash.fill")
+                        .contentTransition(.symbolEffect(.replace))
+                    Text(settings.isEnabled ? .notificationsLineConfigStatusOn : .globalPaused)
                 }
                 .font(.footnote)
-                .foregroundStyle(.orange)
+                // As on the line status button: the accent colour marks notifications as on, orange flags a pause.
+                .foregroundStyle(settings.isEnabled ? Color.accentColor : .orange)
                 .accessibilityElement(children: .combine)
-                .transition(.opacity)
             }
         }
+    }
+
+    /// Only existing lines, which have the menu to pause or resume them, show whether they're on or paused.
+    private var showsStatus: Bool {
+        if case .actionsMenu = accessory { return true }
+        return false
     }
 
     /// Pausing is an edit like the schedule rows, saved with them; removing is confirmed here before calling `onRemove`.

@@ -38,8 +38,8 @@ public struct NotificationsOnboardingLineSetupView: View {
                 scrollTarget = nil
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            pinnedTurnOnAlertsButton
+        .turnOnNotificationsBar(isDisabled: items.isEmpty) {
+            onAction(.turnOnAlerts(items: items))
         }
         .navigationTitle(Text(.notificationsLineAlertsNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
@@ -103,25 +103,6 @@ public struct NotificationsOnboardingLineSetupView: View {
                 }
             }
         )
-    }
-
-    // MARK: - Pinned Turn On Alerts Button
-
-    private var pinnedTurnOnAlertsButton: some View {
-        Button {
-            onAction(.turnOnAlerts(items: items))
-        } label: {
-            Text(.notificationsOnboardingLineSetupTurnOnAlertsButton)
-                .font(.body)
-                .fontWeight(.semibold)
-                .frame(maxWidth: .infinity)
-        }
-        .buttonStyle(.borderedProminent)
-        .controlSize(.large)
-        .disabled(items.isEmpty)
-        .padding(.horizontal, 20)
-        .padding(.bottom, 8)
-        .background(.regularMaterial)
     }
 
     // MARK: - Add Line
