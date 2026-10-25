@@ -41,7 +41,13 @@ struct SystemStatusRefreshableModifier: ViewModifier {
 
             let newMessageAvailable = !userPreferences.hasReadSystemStatusMessage(id: currentStatus.id)
             if newMessageAvailable {
-                try await Task.sleep(for: .seconds(1.2))  // N.B. Suspends the task without blocking the thread
+                // N.B. Suspends the task without blocking the thread. Sleeping only throws when the task is
+                // cancelled, in which case the banner isn't shown.
+                do {
+                    try await Task.sleep(for: .seconds(1.2))
+                } catch {
+                    return
+                }
                 withAnimation { showBanner = true }
             }
         }

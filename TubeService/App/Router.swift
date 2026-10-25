@@ -3,8 +3,14 @@ import Observation
 @Observable
 @MainActor
 final class Router<Route: Hashable> {
-    var navigation = NavigationRouter<Route>()
+    var navigation: NavigationRouter<Route>
     var sheetPresenter = SheetPresenter()
+
+    // `@Observable` moves a property's default value outside the class's main-actor isolation, where creating a
+    // main-actor `NavigationRouter<Route>` can't be shown to be safe. Creating it here keeps it on the main actor.
+    init() {
+        navigation = NavigationRouter<Route>()
+    }
 }
 
 @Observable

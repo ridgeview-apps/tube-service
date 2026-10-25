@@ -29,6 +29,8 @@ private struct NewBadgeModifier: ViewModifier {
     }
 
     func body(content: Content) -> some View {
+        // Read here on the main actor: the alignment guide's closure is Sendable, so it can't read the property.
+        let capHeight = titleCapHeight
         HStack(alignment: .firstTextBaseline, spacing: 6) {
             content
             if isShown {
@@ -36,7 +38,7 @@ private struct NewBadgeModifier: ViewModifier {
                 // which would leave the capsule sitting low. Holds on the first line when the title wraps.
                 NewBadge()
                     .alignmentGuide(.firstTextBaseline) { dimensions in
-                        dimensions[VerticalAlignment.center] + titleCapHeight / 2
+                        dimensions[VerticalAlignment.center] + capHeight / 2
                     }
             }
         }
