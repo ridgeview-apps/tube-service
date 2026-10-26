@@ -18,8 +18,14 @@ public final class PurchaseStore {
 
     public internal(set) var entitledProductIDs: Set<ProductID> = []
 
+    /// Whether the debug paywall bypass can apply: only for installs from outside the App Store, such as TestFlight.
+    /// The same build is installed from both, so this is read at launch rather than set at build time. Off until
+    /// confirmed, and off if it can't be, so an App Store install never bypasses the paywall, even with a bypass saved
+    /// by a TestFlight install it replaced.
+    public private(set) var allowsPaywallBypass = false
+
     public var hasTubeServicePlus: Bool {
-        featureFlags().isPaywallBypassed || !entitledProductIDs.isEmpty
+        (allowsPaywallBypass && featureFlags().isPaywallBypassed) || !entitledProductIDs.isEmpty
     }
 
     public var storeKitProductIDs: [String] {
@@ -29,21 +35,27 @@ public final class PurchaseStore {
     public let productIDs: [ProductID]
     private var updatesTask: Task<Void, Never>?
     private let featureFlags: () -> FeatureFlags
+    private let readInstallEnvironment: @Sendable () async -> AppStore.Environment?
 
     // MARK: - Init
 
+    /// - Parameter readInstallEnvironment: For tests: the environment that signed the app's install, or `nil` if it
+    ///   can't be read. Defaults to reading the app's install record.
     public init(
         productIDs: [ProductID],
-        featureFlags: @escaping () -> FeatureFlags
+        featureFlags: @escaping () -> FeatureFlags,
+        readInstallEnvironment: (@Sendable () async -> AppStore.Environment?)? = nil
     ) {
         self.productIDs = productIDs
         self.featureFlags = featureFlags
+        self.readInstallEnvironment = readInstallEnvironment ?? Self.readAppTransactionEnvironment
     }
 
     // MARK: - Lifecycle
 
     public func start() async {
         updatesTask?.cancel()
+        await refreshAllowsPaywallBypass()
         await refreshEntitlements()
         // Only reports transactions made outside the app or on other devices, such as renewals. Purchases made in
         // the app's store views arrive through `handlePurchaseResult(_:)` instead.
@@ -93,6 +105,26 @@ public final class PurchaseStore {
             }
         }
         entitledProductIDs = entitled
+    }
+
+    /// Internal so tests can check the bypass without starting StoreKit's transaction updates.
+    func refreshAllowsPaywallBypass() async {
+        guard let environment = await readInstallEnvironment() else { return }
+        allowsPaywallBypass = environment != .production
+    }
+
+    /// The environment from the app's install record, which Apple signs: `.production` for the App Store, `.sandbox`
+    /// for TestFlight and development builds, `.xcode` with StoreKit Testing in Xcode. Debug builds only come from
+    /// Xcode, so they count as `.xcode` where there's no record to read, such as on the simulator.
+    private static func readAppTransactionEnvironment() async -> AppStore.Environment? {
+        guard case .verified(let appTransaction) = try? await AppTransaction.shared else {
+            #if DEBUG
+                return .xcode
+            #else
+                return nil
+            #endif
+        }
+        return appTransaction.environment
     }
 
     /// Unverified transactions aren't finished, but entitlements are still refreshed (they only count verified ones).

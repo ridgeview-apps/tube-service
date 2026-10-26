@@ -31,7 +31,10 @@ struct DebugSettingsScreen: View {
             Section {
                 Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
                 Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
-                Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
+                // Hidden on App Store installs, where the bypass is ignored.
+                if purchases.allowsPaywallBypass {
+                    Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
+                }
             } header: {
                 Text("Feature Toggles")
             }
