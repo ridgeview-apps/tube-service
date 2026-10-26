@@ -39,6 +39,26 @@ import ModelStubs
             if let deleteDeviceError { throw deleteDeviceError }
         }
 
+        public private(set) var disableDeviceCallCount = 0
+        public var disableDeviceError: Error?
+        public func disableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
+            disableDeviceCallCount += 1
+            invocations.append("disableDevice")
+            if let disableDeviceError { throw disableDeviceError }
+            stubbedDevice = makeDeviceResponse(enabled: false)
+            return stubbedDevice
+        }
+
+        public private(set) var enableDeviceCallCount = 0
+        public var enableDeviceError: Error?
+        public func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
+            enableDeviceCallCount += 1
+            invocations.append("enableDevice")
+            if let enableDeviceError { throw enableDeviceError }
+            stubbedDevice = makeDeviceResponse(enabled: true)
+            return stubbedDevice
+        }
+
         public private(set) var fetchPreferencesCallCount = 0
         public var stubbedPreferences: HTTPResponse<NotificationPreferences> = .success200(
             .init(
@@ -129,6 +149,22 @@ import ModelStubs
                 )
             )
             return stubbedPreferences
+        }
+
+        private func makeDeviceResponse(enabled: Bool) -> HTTPResponse<NotificationDevice> {
+            let current = stubbedDevice.decodedModel
+            return .success200(
+                NotificationDevice(
+                    deviceId: current.deviceId,
+                    platform: current.platform,
+                    enabled: enabled,
+                    appVersion: current.appVersion,
+                    appVariant: current.appVariant,
+                    createdAt: current.createdAt,
+                    updatedAt: .now,
+                    lastSeenAt: current.lastSeenAt
+                )
+            )
         }
     }
 

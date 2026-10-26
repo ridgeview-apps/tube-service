@@ -139,6 +139,23 @@ public final class NotificationsDataStore {
 
     // MARK: - Device Management
 
+    /// Turns notifications for this device on or off on the server. The user's line settings are kept either way.
+    ///
+    /// Does nothing if the device isn't registered or is already in that state, so it's safe to call often. If the
+    /// request fails, the error is logged and the next call tries again.
+    public func setDeviceEnabled(_ isEnabled: Bool) async {
+        guard let device = state.device, device.enabled != isEnabled, let deviceId else { return }
+        do {
+            let response =
+                isEnabled
+                ? try await api.enableDevice(deviceId: deviceId)
+                : try await api.disableDevice(deviceId: deviceId)
+            state.device = response.decodedModel
+        } catch {
+            AppLogger.notifications.error("Failed to set device enabled to \(isEnabled): \(error)")
+        }
+    }
+
     public func deleteDevice() async throws {
         if let deviceId {
             do {

@@ -44,6 +44,106 @@ struct NotificationsDataStoreTests {
     // MARK: - Device management
 
     @Test
+    func enablingAnEnabledDeviceSendsNothing() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // When
+        await store.setDeviceEnabled(true)
+
+        // Then – already on, so nothing is sent
+        #expect(api.enableDeviceCallCount == 0)
+        #expect(api.disableDeviceCallCount == 0)
+        #expect(store.state.device?.enabled == true)
+    }
+
+    @Test
+    func disablingAnEnabledDeviceTurnsItOffOnTheServer() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // When
+        await store.setDeviceEnabled(false)
+
+        // Then
+        #expect(api.disableDeviceCallCount == 1)
+        #expect(store.state.device?.enabled == false)
+    }
+
+    @Test
+    func enablingADisabledDeviceTurnsItOnOnTheServer() async {
+        // Given – the server reports the device as disabled from an earlier lapse
+        let api = StubNotificationsAPIClient()
+        api.stubbedDevice = .success200(makeDevice(enabled: false))
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // When
+        await store.setDeviceEnabled(true)
+
+        // Then
+        #expect(api.enableDeviceCallCount == 1)
+        #expect(store.state.device?.enabled == true)
+    }
+
+    @Test
+    func disablingADisabledDeviceSendsNothing() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        api.stubbedDevice = .success200(makeDevice(enabled: false))
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+
+        // When
+        await store.setDeviceEnabled(false)
+
+        // Then – already off, so nothing is sent
+        #expect(api.enableDeviceCallCount == 0)
+        #expect(api.disableDeviceCallCount == 0)
+    }
+
+    @Test
+    func settingDeviceEnabledDoesNothingBeforeTheDeviceRegisters() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+
+        // When
+        await store.setDeviceEnabled(false)
+
+        // Then
+        #expect(api.disableDeviceCallCount == 0)
+        #expect(api.enableDeviceCallCount == 0)
+    }
+
+    @Test
+    func failedSettingDeviceEnabledLeavesTheDeviceAsItWasAndRetriesNextTime() async {
+        // Given
+        let api = StubNotificationsAPIClient()
+        let store = makeStore(api: api)
+        await store.handlePushToken("test-push-token", appVersion: nil)
+        api.disableDeviceError = HTTPError.connection(URLError(.notConnectedToInternet))
+
+        // When – the first attempt fails
+        await store.setDeviceEnabled(false)
+
+        // Then
+        #expect(store.state.device?.enabled == true)
+
+        // When – the next attempt succeeds
+        api.disableDeviceError = nil
+        await store.setDeviceEnabled(false)
+
+        // Then
+        #expect(api.disableDeviceCallCount == 2)
+        #expect(store.state.device?.enabled == false)
+    }
+
+    @Test
     func deviceActionsThrowWithoutGeneratingDeviceIdWhenNotRegistered() async {
         // Given
         let api = StubNotificationsAPIClient()
@@ -555,6 +655,19 @@ struct NotificationsDataStoreTests {
             pushNotificationEnvironment: pushNotificationEnvironment,
             userDefaults: userDefaults,
             keychain: keychain
+        )
+    }
+
+    private func makeDevice(enabled: Bool) -> NotificationDevice {
+        NotificationDevice(
+            deviceId: UUID().uuidString,
+            platform: "ios",
+            enabled: enabled,
+            appVersion: nil,
+            appVariant: "stub",
+            createdAt: .now,
+            updatedAt: .now,
+            lastSeenAt: .now
         )
     }
 

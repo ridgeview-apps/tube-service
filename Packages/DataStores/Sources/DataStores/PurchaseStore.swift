@@ -18,6 +18,10 @@ public final class PurchaseStore {
 
     public internal(set) var entitledProductIDs: Set<ProductID> = []
 
+    /// Whether entitlements have been loaded at least once. Until then `hasTubeServicePlus` is false even for
+    /// subscribers, so anything that acts on a lapsed subscription waits for this.
+    public private(set) var hasLoadedEntitlements = false
+
     /// Whether the debug paywall bypass can apply: only for installs from outside the App Store, such as TestFlight.
     /// The same build is installed from both, so this is read at launch rather than set at build time. Off until
     /// confirmed, and off if it can't be, so an App Store install never bypasses the paywall, even with a bypass saved
@@ -105,6 +109,7 @@ public final class PurchaseStore {
             }
         }
         entitledProductIDs = entitled
+        hasLoadedEntitlements = true
     }
 
     /// Internal so tests can check the bypass without starting StoreKit's transaction updates.

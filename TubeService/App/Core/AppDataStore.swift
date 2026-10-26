@@ -63,6 +63,7 @@ final class AppDataStore {
     func start() async {
         dependencies.userDefaults.value.migrateLegacyValuesIfNeeded()
         await purchases.start()
+        await applyEntitlements()
     }
 
     func handleRegisteredPushToken(_ token: String) async {
@@ -78,12 +79,21 @@ final class AppDataStore {
     /// Line status screens may have refreshed before Plus was known (entitlements load at launch, or the user has just
     /// subscribed), skipping the disruption summary. Line statuses are still fresh, so only the summary is requested.
     func tubeServicePlusDidChange(_ hasTubeServicePlus: Bool) async {
+        await applyEntitlements()
         guard hasTubeServicePlus else { return }
         await lineStatus.refreshIfStale(for: .live)
     }
 
     func sceneDidBecomeActive() async {
         await purchases.refreshEntitlements()
+        await applyEntitlements()
         await notifications.refreshAuthorizationStatus()
+    }
+
+    /// Applies the entitlements once loaded (e.g. turning the notification device off if a subscription has lapsed, and
+    /// back on if it's been restored).
+    private func applyEntitlements() async {
+        guard purchases.hasLoadedEntitlements else { return }
+        await notifications.setDeviceEnabled(purchases.hasTubeServicePlus)
     }
 }

@@ -83,6 +83,21 @@ struct PurchaseStoreTests {
         #expect(store.hasTubeServicePlus)
     }
 
+    // MARK: - Loading entitlements
+
+    @Test
+    func entitlementsAreOnlyLoadedOnceRefreshed() async {
+        // Given
+        let store = makeStore(isPaywallBypassed: false, installEnvironment: .production)
+        #expect(store.hasLoadedEntitlements == false)
+
+        // When
+        await store.refreshEntitlements()
+
+        // Then
+        #expect(store.hasLoadedEntitlements)
+    }
+
     // MARK: - Helpers
 
     private func makeStore(isPaywallBypassed: Bool, installEnvironment: AppStore.Environment?) -> PurchaseStore {
