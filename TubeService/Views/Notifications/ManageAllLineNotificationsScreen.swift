@@ -14,7 +14,6 @@ struct ManageAllLineNotificationsScreen: View {
 
     var body: some View {
         ManageAllLineNotificationsView(
-            isEnabled: !notifications.isDevicePaused,
             allSettings: currentLines,
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
@@ -32,20 +31,6 @@ struct ManageAllLineNotificationsScreen: View {
             manageNotificationsRouter.navigation.push(.addLine(lineID: otherLineID))
         case .openSettings:
             openSettings()
-        case .toggleEnabled(let enabled):
-            Task {
-                savingState = .loading
-                do {
-                    if enabled {
-                        try await notifications.enableDevice()
-                    } else {
-                        try await notifications.disableDevice()
-                    }
-                    savingState = .loaded
-                } catch {
-                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
-                }
-            }
         case .deleteAllSettings:
             Task {
                 savingState = .loading

@@ -44,34 +44,6 @@ struct NotificationsDataStoreTests {
     // MARK: - Device management
 
     @Test
-    func disableDeviceCallsAPI() async throws {
-        // Given
-        let api = StubNotificationsAPIClient()
-        let store = makeStore(api: api)
-        await store.handlePushToken("test-push-token", appVersion: nil)
-
-        // When
-        try await store.disableDevice()
-
-        // Then
-        #expect(api.disableDeviceCallCount == 1)
-    }
-
-    @Test
-    func enableDeviceCallsAPI() async throws {
-        // Given
-        let api = StubNotificationsAPIClient()
-        let store = makeStore(api: api)
-        await store.handlePushToken("test-push-token", appVersion: nil)
-
-        // When
-        try await store.enableDevice()
-
-        // Then
-        #expect(api.enableDeviceCallCount == 1)
-    }
-
-    @Test
     func deviceActionsThrowWithoutGeneratingDeviceIdWhenNotRegistered() async {
         // Given
         let api = StubNotificationsAPIClient()
@@ -79,13 +51,9 @@ struct NotificationsDataStoreTests {
         let store = makeStore(api: api, keychain: keychain)
 
         // When / Then – each action fails without reaching the server
-        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) { try await store.disableDevice() }
-        await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) { try await store.enableDevice() }
         await #expect(throws: NotificationsDataStoreError.deviceNotRegistered) {
             try await store.updateLinePreferences(with: NotificationPreferencesPatch(lines: ["victoria": nil]))
         }
-        #expect(api.disableDeviceCallCount == 0)
-        #expect(api.enableDeviceCallCount == 0)
         #expect(api.updatePreferencesCallCount == 0)
         #expect(keychain.read(key: "push_device_id") == nil)
     }

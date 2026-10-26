@@ -8,7 +8,6 @@ public struct ManageAllLineNotificationsView: View {
         case tappedOtherLine(TrainLineID)
         case addedLine(TrainLineID)
         case openSettings
-        case toggleEnabled(Bool)
         case deleteAllSettings
     }
 
@@ -17,18 +16,15 @@ public struct ManageAllLineNotificationsView: View {
     private let savingState: LoadingState
     private let onAction: (Action) -> Void
 
-    private let isEnabled: Bool
     @State private var showDeleteAllConfirmation = false
     @State private var removeFeedbackTrigger = false
 
     public init(
-        isEnabled: Bool,
         allSettings: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         savingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
-        self.isEnabled = isEnabled
         self.allSettings = allSettings
         self.showsPermissionWarning = showsPermissionWarning
         self.savingState = savingState
@@ -42,13 +38,6 @@ public struct ManageAllLineNotificationsView: View {
         return TrainLineID.allCases
             .filter { !configuredIDs.contains($0) }
             .sorted { $0.name < $1.name }
-    }
-
-    private var toggleBinding: Binding<Bool> {
-        Binding(
-            get: { isEnabled },
-            set: { onAction(.toggleEnabled($0)) }
-        )
     }
 
     // MARK: - Body
@@ -70,18 +59,11 @@ public struct ManageAllLineNotificationsView: View {
                     .listRowInsets(EdgeInsets(top: 4, leading: 20, bottom: 4, trailing: 20))
             }
 
-            muteAllRow
-                .listRowBackground(Color.clear)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
-
             if !allSettings.isEmpty || !unconfiguredLineIDs.isEmpty {
                 allLinesCard
-                    .opacity(isEnabled ? 1 : 0.5)
-                    .animation(.easeInOut(duration: 0.2), value: isEnabled)
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 12, trailing: 20))
+                    .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 12, trailing: 20))
             }
 
             deleteAllSettingsButton
@@ -129,35 +111,6 @@ public struct ManageAllLineNotificationsView: View {
         }
         .padding(16)
         .cardStyle()
-    }
-
-    // MARK: - Mute All Row
-
-    private var muteAllRow: some View {
-        Toggle(isOn: toggleBinding) {
-            HStack(alignment: .top, spacing: 12) {
-                Image(systemName: isEnabled ? "bell.and.waves.left.and.right.fill" : "bell.slash.fill")
-                    .font(.system(size: 20))
-                    .foregroundStyle(isEnabled ? Color.accentColor : .orange)
-                    .contentTransition(.symbolEffect(.replace))
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(.notificationsManagePauseAllTitle)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                    Text(muteAllSubtitle)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-            }
-        }
-        .tint(Color.accentColor)
-        .padding(16)
-        .cardStyle()
-        .disabled(savingState == .loading)
-    }
-
-    private var muteAllSubtitle: LocalizedStringResource {
-        isEnabled ? .notificationsManagePauseAllSubtitle : .notificationsManagePauseAllPausedSubtitle
     }
 
     // MARK: - All Lines Card
@@ -236,7 +189,6 @@ public struct ManageAllLineNotificationsView: View {
     #Preview("Manage all") {
         NavigationStack {
             ManageAllLineNotificationsView(
-                isEnabled: true,
                 allSettings: [.victoria, .jubilee, .central, .northern].map { .defaultValue(lineID: $0) },
                 onAction: { print($0) }
             )

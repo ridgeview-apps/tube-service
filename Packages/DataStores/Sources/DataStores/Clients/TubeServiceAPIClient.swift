@@ -14,8 +14,6 @@ public protocol TubeServiceAPIClientType: Sendable {
 public protocol NotificationsAPIClientType: Sendable {
     func registerDevice(deviceId: String, pushToken: String, appVersion: String?) async throws -> HTTPResponse<NotificationDevice>
     func deleteDevice(deviceId: String) async throws
-    func disableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice>
-    func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice>
     func fetchPreferences(deviceId: String) async throws -> HTTPResponse<NotificationPreferences>
     func replaceAllPreferences(deviceId: String, with update: NotificationPreferencesUpdate) async throws -> HTTPResponse<NotificationPreferences>
     func updatePreferences(deviceId: String, with patch: NotificationPreferencesPatch) async throws -> HTTPResponse<NotificationPreferences>
@@ -33,8 +31,6 @@ enum TubeServiceAPIRoute {
     // Notifications
     case registerDevice(deviceId: String, body: Data)
     case deleteDevice(deviceId: String)
-    case disableDevice(deviceId: String)
-    case enableDevice(deviceId: String)
     case fetchPreferences(deviceId: String)
     case replaceAllPreferences(deviceId: String, body: Data)
     case updatePreferences(deviceId: String, body: Data)
@@ -75,8 +71,6 @@ enum TubeServiceAPIRoute {
             return "PUT"
         case .updatePreferences:
             return "PATCH"
-        case .disableDevice, .enableDevice:
-            return "POST"
         case .deleteDevice:
             return "DELETE"
         }
@@ -99,10 +93,6 @@ enum TubeServiceAPIRoute {
             return ["v1", "line-status", "disruption-summary"]
         case let .registerDevice(deviceId, _), let .deleteDevice(deviceId):
             return ["v1", "notification-devices", deviceId]
-        case let .disableDevice(deviceId):
-            return ["v1", "notification-devices", deviceId, "disable"]
-        case let .enableDevice(deviceId):
-            return ["v1", "notification-devices", deviceId, "enable"]
         case let .fetchPreferences(deviceId), let .replaceAllPreferences(deviceId, _), let .updatePreferences(deviceId, _):
             return ["v1", "notification-devices", deviceId, "preferences"]
         }
@@ -119,7 +109,7 @@ enum TubeServiceAPIRoute {
         case let .dailyLineDisruptionSummary(operationalDate):
             guard let operationalDate else { return [] }
             return [URLQueryItem(name: "date", value: operationalDate.toOperationalDateParam())]
-        case .registerDevice, .deleteDevice, .disableDevice, .enableDevice, .fetchPreferences, .replaceAllPreferences, .updatePreferences:
+        case .registerDevice, .deleteDevice, .fetchPreferences, .replaceAllPreferences, .updatePreferences:
             return []
         }
     }
@@ -194,14 +184,6 @@ public struct TubeServiceAPIClient: TubeServiceAPIClientType, NotificationsAPICl
     public func deleteDevice(deviceId: String) async throws {
         let request = try TubeServiceAPIRoute.deleteDevice(deviceId: deviceId).toURLRequest(relativeTo: baseURL, apiKey: apiKey)
         try await urlSession.send(request: request, decodedBy: jsonDecoder)
-    }
-
-    public func disableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
-        try await perform(.disableDevice(deviceId: deviceId), as: NotificationDevice.self)
-    }
-
-    public func enableDevice(deviceId: String) async throws -> HTTPResponse<NotificationDevice> {
-        try await perform(.enableDevice(deviceId: deviceId), as: NotificationDevice.self)
     }
 
     public func fetchPreferences(deviceId: String) async throws -> HTTPResponse<NotificationPreferences> {

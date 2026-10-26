@@ -11,7 +11,6 @@ public final class NotificationsDataStore {
     // MARK: - Public state
 
     public var isConfigured: Bool { state.isConfigured }
-    public var isDevicePaused: Bool { state.device?.enabled == false }
     public var linePreferences: [NotificationLinePreference] { state.preferences?.lines ?? [] }
     public var isPermissionDenied: Bool { authorizationStatus == .denied }
 
@@ -139,14 +138,6 @@ public final class NotificationsDataStore {
 
 
     // MARK: - Device Management
-
-    public func disableDevice() async throws {
-        state.device = try await api.disableDevice(deviceId: registeredDeviceId()).decodedModel
-    }
-
-    public func enableDevice() async throws {
-        state.device = try await api.enableDevice(deviceId: registeredDeviceId()).decodedModel
-    }
 
     public func deleteDevice() async throws {
         if let deviceId {

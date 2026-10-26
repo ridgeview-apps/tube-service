@@ -11,13 +11,11 @@ public struct ManageSingleLineNotificationsView: View {
         /// An existing line's settings were edited; each edit is saved as it's made.
         case update(LineNotificationSettings)
         case remove
-        case resumeAlerts
     }
 
     private let lineID: TrainLineID
     private let existingSettings: LineNotificationSettings?
     private let showsPermissionWarning: Bool
-    private let showsPausedAlertsWarning: Bool
     private let savingState: LoadingState
     private let onAction: (Action) -> Void
 
@@ -26,19 +24,18 @@ public struct ManageSingleLineNotificationsView: View {
     @State private var showRemoveConfirmation = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
+    @State private var pauseFeedbackTrigger = false
 
     public init(
         lineID: TrainLineID,
         existingSettings: LineNotificationSettings?,
         showsPermissionWarning: Bool = false,
-        showsPausedAlertsWarning: Bool = false,
         savingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
         self.lineID = lineID
         self.existingSettings = existingSettings
         self.showsPermissionWarning = showsPermissionWarning
-        self.showsPausedAlertsWarning = showsPausedAlertsWarning
         self.savingState = savingState
         self.onAction = onAction
         _settings = State(initialValue: existingSettings ?? .defaultValue(lineID: lineID))
@@ -47,6 +44,8 @@ public struct ManageSingleLineNotificationsView: View {
     // MARK: - Computed Properties
 
     private var isAddingSingleLine: Bool { existingSettings == nil }
+
+    private var showsPausedLineWarning: Bool { !isAddingSingleLine && !settings.isEnabled }
 
     // MARK: - Body
 
@@ -59,8 +58,8 @@ public struct ManageSingleLineNotificationsView: View {
                     .listRowInsets(EdgeInsets(top: 12, leading: 20, bottom: 6, trailing: 20))
             }
 
-            if showsPausedAlertsWarning {
-                pausedAlertsWarningRow
+            if showsPausedLineWarning {
+                pausedLineWarningRow
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
@@ -83,12 +82,18 @@ public struct ManageSingleLineNotificationsView: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 4, leading: 24, bottom: 6, trailing: 24))
 
-            // Set apart below the content, so it reads as the end of the screen rather than its main action.
+            // Set apart below the content, so they read as the end of the screen rather than its main action.
+            // A paused line is resumed from the warning at the top, so only Remove is left here.
             if !isAddingSingleLine {
-                removeButton
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 32, leading: 20, bottom: 12, trailing: 20))
+                VStack(spacing: 12) {
+                    if settings.isEnabled {
+                        pauseButton
+                    }
+                    removeButton
+                }
+                .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 32, leading: 20, bottom: 12, trailing: 20))
             }
         }
         .listStyle(.plain)
@@ -113,6 +118,8 @@ public struct ManageSingleLineNotificationsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
+        .sensoryFeedback(.selection, trigger: pauseFeedbackTrigger)
+        .animation(.easeInOut(duration: 0.2), value: settings.isEnabled)
         .toolbar {
             // Nothing is saved for a new line until it's turned on, so closing cancels it;
             // an existing line's edits are already saved, so closing confirms them.
@@ -155,9 +162,9 @@ public struct ManageSingleLineNotificationsView: View {
         .cardStyle()
     }
 
-    // MARK: - Paused Alerts Warning
+    // MARK: - Paused Line Warning
 
-    private var pausedAlertsWarningRow: some View {
+    private var pausedLineWarningRow: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "bell.slash.fill")
@@ -165,18 +172,20 @@ public struct ManageSingleLineNotificationsView: View {
                     .foregroundStyle(.orange)
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(.notificationsLineConfigPausedAlertsWarningTitle)
+                    Text(.notificationsLineConfigPausedLineWarningTitle(lineID.longName))
                         .font(.subheadline.weight(.semibold))
-                    Text(.notificationsLineConfigPausedAlertsWarningSubtitle)
+                    Text(.notificationsLineConfigPausedLineWarningSubtitle)
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
 
+            // Saved like any other edit, through the settings change.
             Button {
-                onAction(.resumeAlerts)
+                pauseFeedbackTrigger.toggle()
+                settings.isEnabled = true
             } label: {
-                Text(.notificationsLineConfigResumeAlertsButton)
+                Text(.notificationsLineConfigResumeLineButton)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 4)
             }
@@ -192,17 +201,33 @@ public struct ManageSingleLineNotificationsView: View {
     // MARK: - Schedule Card
 
     private var scheduleCard: some View {
-        // Existing lines get a toggle to pause or resume them, saved like the rest of the edit.
         LineScheduleCard(
             settings: $settings,
-            accessory: isAddingSingleLine ? .none : .enabledToggle
+            accessory: isAddingSingleLine ? .none : .status
         )
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 28, leading: 20, bottom: 6, trailing: 20))
     }
 
-    // MARK: - Remove Button
+    // MARK: - Pause and Remove Buttons
+
+    /// Pausing is easily undone from the warning it brings up, so unlike Remove it isn't confirmed.
+    private var pauseButton: some View {
+        Button {
+            pauseFeedbackTrigger.toggle()
+            settings.isEnabled = false
+        } label: {
+            Label {
+                Text(.notificationsLineConfigPauseButton(lineID.longName))
+            } icon: {
+                Image(systemName: "bell.slash.fill")
+            }
+            .ctaLabelStyle()
+        }
+        .buttonStyle(.primary)
+        .disabled(savingState == .loading)
+    }
 
     private var removeButton: some View {
         Button {
@@ -272,22 +297,11 @@ public struct ManageSingleLineNotificationsView: View {
         }
     }
 
-    #Preview("Alerts paused") {
+    #Preview("Line paused") {
         NavigationStack {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
-                onAction: { print($0) }
-            )
-        }
-    }
-
-    #Preview("All alerts paused + line paused") {
-        NavigationStack {
-            ManageSingleLineNotificationsView(
-                lineID: .jubilee,
-                existingSettings: .defaultValue(lineID: .jubilee, isEnabled: false),
-                showsPausedAlertsWarning: true,
                 onAction: { print($0) }
             )
         }

@@ -106,19 +106,6 @@ struct TubeServiceAPIRouteTests {
     }
 
     @Test
-    func disableDeviceEndpoint() throws {
-        // Given
-        let route: TubeServiceAPIRoute = .disableDevice(deviceId: "device-abc")
-
-        // When
-        let request = try route.toURLRequest(relativeTo: baseURL, apiKey: "test-key")
-
-        // Then
-        #expect(request.url?.absoluteString == "https://foo.com/v1/notification-devices/device-abc/disable")
-        #expect(request.httpMethod == "POST")
-    }
-
-    @Test
     func fetchPreferencesEndpoint() throws {
         // Given
         let route: TubeServiceAPIRoute = .fetchPreferences(deviceId: "device-abc")

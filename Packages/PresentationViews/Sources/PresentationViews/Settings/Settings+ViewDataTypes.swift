@@ -41,18 +41,15 @@ public extension Settings {
     struct NotificationRowState: Equatable, Sendable {
         public let isVisible: Bool
         public let showsPermissionWarning: Bool
-        public let isPaused: Bool
         public let configuredLineCount: Int
 
         public init(
             isVisible: Bool = false,
             showsPermissionWarning: Bool = false,
-            isPaused: Bool = false,
             configuredLineCount: Int = 0
         ) {
             self.isVisible = isVisible
             self.showsPermissionWarning = showsPermissionWarning
-            self.isPaused = isPaused
             self.configuredLineCount = configuredLineCount
         }
 

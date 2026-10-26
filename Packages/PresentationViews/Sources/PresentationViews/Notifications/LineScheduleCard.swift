@@ -3,12 +3,11 @@ import SwiftUI
 
 public struct LineScheduleCard: View {
 
-    /// What sits at the trailing end of the header, next to the line name.
+    /// What the header shows alongside the line name.
     public enum Accessory {
         case none
-        /// A toggle that pauses or resumes the line by editing `settings.isEnabled`, with the line's on or paused
-        /// status under its name.
-        case enabledToggle
+        /// The line's on or paused status under its name. Pausing and resuming are left to the screen's own buttons.
+        case status
         case removeButton(onRemove: () -> Void)
     }
 
@@ -55,14 +54,8 @@ public struct LineScheduleCard: View {
     @ViewBuilder
     private var header: some View {
         switch accessory {
-        case .none:
+        case .none, .status:
             headerLabel
-        case .enabledToggle:
-            Toggle(isOn: $settings.isEnabled) {
-                headerLabel
-            }
-            // As on the Tube Service notifications toggle.
-            .tint(Color.accentColor)
         case .removeButton(let onRemove):
             HStack(spacing: 8) {
                 headerLabel
@@ -91,9 +84,9 @@ public struct LineScheduleCard: View {
         }
     }
 
-    /// Only existing lines, which have the toggle to pause or resume them, show whether they're on or paused.
+    /// Only existing lines, which can be paused, show whether they're on or paused.
     private var showsStatus: Bool {
-        if case .enabledToggle = accessory { return true }
+        if case .status = accessory { return true }
         return false
     }
 
@@ -161,9 +154,9 @@ public struct LineScheduleCard: View {
         .padding(20)
     }
 
-    #Preview("Existing line (toggle)") {
+    #Preview("Existing line (status)") {
         @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .victoria)
-        LineScheduleCard(settings: $settings, accessory: .enabledToggle)
+        LineScheduleCard(settings: $settings, accessory: .status)
             .padding(20)
     }
 
@@ -173,7 +166,7 @@ public struct LineScheduleCard: View {
             isEnabled: false,
             schedule: .init(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
         )
-        LineScheduleCard(settings: $settings, accessory: .enabledToggle)
+        LineScheduleCard(settings: $settings, accessory: .status)
             .padding(20)
     }
 
@@ -186,7 +179,7 @@ public struct LineScheduleCard: View {
     #Preview("Accessibility size") {
         @Previewable @State var settings = LineNotificationSettings.defaultValue(lineID: .hammersmithAndCity)
         ScrollView {
-            LineScheduleCard(settings: $settings, accessory: .enabledToggle)
+            LineScheduleCard(settings: $settings, accessory: .status)
                 .padding(20)
         }
         .dynamicTypeSize(.accessibility3)

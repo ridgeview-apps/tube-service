@@ -23,7 +23,6 @@ struct ManageSingleLineNotificationsScreen: View {
             lineID: lineID,
             existingSettings: existingSettings(for: lineID),
             showsPermissionWarning: notifications.isPermissionDenied,
-            showsPausedAlertsWarning: notifications.isDevicePaused,
             savingState: savingState,
             onAction: handleAction
         )
@@ -69,16 +68,6 @@ struct ManageSingleLineNotificationsScreen: View {
                 do {
                     try await notifications.updateLinePreferences(with: .remove(lineID))
                     dismiss()
-                } catch {
-                    savingState = .failure(errorMessage: error.toSaveErrorMessage())
-                }
-            }
-        case .resumeAlerts:
-            Task {
-                savingState = .loading
-                do {
-                    try await notifications.enableDevice()
-                    savingState = .loaded
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
                 }

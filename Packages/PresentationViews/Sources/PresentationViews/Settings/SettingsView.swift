@@ -46,8 +46,8 @@ public struct SettingsView: View {
                         onAction(.notificationsTapped)
                     } label: {
                         HStack {
-                            Image(systemName: notificationsRowSystemImage)
-                                .foregroundStyle(notificationsRowIconColor)
+                            Image(systemName: "bell.fill")
+                                .foregroundStyle(Color.accentColor)
                             Text(.settingsNotificationsTitle)
                             Spacer()
                             if notificationRowState.showsPermissionWarning {
@@ -69,23 +69,6 @@ public struct SettingsView: View {
             aboutSection
         }
     }
-
-    private var notificationsRowIconColor: Color {
-        if !notificationRowState.showsPermissionWarning, notificationRowState.isPaused {
-            .orange
-        } else {
-            .accentColor
-        }
-    }
-
-    private var notificationsRowSystemImage: String {
-        if !notificationRowState.showsPermissionWarning, notificationRowState.isPaused {
-            "bell.slash.fill"
-        } else {
-            "bell.fill"
-        }
-    }
-
 
     // MARK: - Layout views
 

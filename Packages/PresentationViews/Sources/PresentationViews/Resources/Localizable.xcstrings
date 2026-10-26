@@ -2354,24 +2354,35 @@
         }
       }
     },
-    "notifications.line.config.paused.alerts.warning.subtitle" : {
+    "notifications.line.config.pause.button %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nothing will be sent until you turn Tube Service notifications back on."
+            "value" : "Pause %@ notifications"
           }
         }
       }
     },
-    "notifications.line.config.paused.alerts.warning.title" : {
+    "notifications.line.config.paused.line.warning.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Notifications are paused for all lines"
+            "value" : "You won't get notifications for this line until you resume them."
+          }
+        }
+      }
+    },
+    "notifications.line.config.paused.line.warning.title %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ notifications are paused"
           }
         }
       }
@@ -2420,13 +2431,13 @@
         }
       }
     },
-    "notifications.line.config.resume.alerts.button" : {
+    "notifications.line.config.resume.line.button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resume notifications"
+            "value" : "Resume"
           }
         }
       }
@@ -2559,39 +2570,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Open Settings"
-          }
-        }
-      }
-    },
-    "notifications.manage.pause.all.paused.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Notifications are paused. Turn this back on to resume your saved line settings."
-          }
-        }
-      }
-    },
-    "notifications.manage.pause.all.subtitle" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn this off to pause notifications without deleting your saved line settings."
-          }
-        }
-      }
-    },
-    "notifications.manage.pause.all.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tube Service notifications"
           }
         }
       }
