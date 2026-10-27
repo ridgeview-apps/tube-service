@@ -69,8 +69,8 @@ lane :build do
   match(
     readonly: false,
     clone_branch_directly: true,
-    git_url: "https://github.com/ridgeview-apps/ridgeview-certs.git",
-    git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION_BASE64"],
+    git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
+    git_private_key: ENV["MATCH_GIT_PRIVATE_KEY"],
     app_identifier: match_app_identifiers,
     username: "ci.ridgeview@gmail.com",
     type: "appstore"
