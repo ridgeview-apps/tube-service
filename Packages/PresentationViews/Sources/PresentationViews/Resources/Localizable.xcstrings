@@ -2453,6 +2453,17 @@
         }
       }
     },
+    "notifications.line.config.turn.on.button %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on %@ notifications"
+          }
+        }
+      }
+    },
     "notifications.line.schedule.days.label" : {
       "extractionState" : "manual",
       "localizations" : {

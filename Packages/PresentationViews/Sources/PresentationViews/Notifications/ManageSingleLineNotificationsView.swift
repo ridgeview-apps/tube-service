@@ -117,7 +117,11 @@ public struct ManageSingleLineNotificationsView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         // New lines are saved from the pinned button; edits to existing lines are saved as they're made.
-        .turnOnNotificationsBar(isShown: isAddingSingleLine, isDisabled: savingState == .loading) {
+        .turnOnNotificationsBar(
+            title: .notificationsLineConfigTurnOnButton(lineID.longName),
+            isShown: isAddingSingleLine,
+            isDisabled: savingState == .loading
+        ) {
             saveFeedbackTrigger.toggle()
             onAction(.add(settings))
         }
