@@ -10,7 +10,6 @@ enum ManageNotificationsRoute: Hashable {
 
 struct ManageNotificationsFlow: View {
 
-    @Environment(NotificationsDataStore.self) private var notifications
     @Environment(PurchaseStore.self) private var purchases
 
     let mode: NotificationsFlow.Context.ManageMode
@@ -21,41 +20,23 @@ struct ManageNotificationsFlow: View {
                 TubeServicePlusView(context: .notifications)
             }
         } else {
-            ManageNotificationsStack(
-                mode: mode,
-                isLineSetUp: { lineID in
-                    notifications.linePreferences.toLineNotificationSettings().contains { $0.lineID == lineID }
-                }
-            )
+            ManageNotificationsStack(mode: mode)
         }
     }
 }
 
-/// The navigation stack behind `ManageNotificationsFlow`, created once Tube Service Plus is unlocked so it can
-/// start with the line's editor already on the path rather than pushing it after the sheet appears.
+/// The navigation stack behind `ManageNotificationsFlow`, shown once Tube Service Plus is unlocked.
 private struct ManageNotificationsStack: View {
 
     @Environment(\.dismiss) private var dismissSheet
 
-    /// The line the flow was opened for, whose screen starts pushed over the list of all lines.
-    @State private var openedLineID: TrainLineID?
-    @State private var manageNotificationsRouter: Router<ManageNotificationsRoute>
+    @State private var manageNotificationsRouter = Router<ManageNotificationsRoute>()
 
-    init(mode: NotificationsFlow.Context.ManageMode, isLineSetUp: (TrainLineID) -> Bool) {
-        let router = Router<ManageNotificationsRoute>()
-        switch mode {
-        case let .singleLine(lineID):
-            _openedLineID = State(initialValue: lineID)
-            router.navigation.path = [isLineSetUp(lineID) ? .editLine(lineID: lineID) : .addLine(lineID: lineID)]
-        case .all:
-            _openedLineID = State(initialValue: nil)
-        }
-        _manageNotificationsRouter = State(initialValue: router)
-    }
+    let mode: NotificationsFlow.Context.ManageMode
 
     var body: some View {
         NavigationStack(path: $manageNotificationsRouter.navigation.path) {
-            ManageAllLineNotificationsScreen()
+            rootView
                 .navigationDestination(for: ManageNotificationsRoute.self) { route in
                     destinationView(for: route)
                 }
@@ -63,24 +44,36 @@ private struct ManageNotificationsStack: View {
         .environment(manageNotificationsRouter)
     }
 
+    /// A line opened from its status screen is the root, so there's nothing to go back to. Once it's set up it
+    /// lists the other lines below its settings; until then it stays focused on turning it on, which finishes what
+    /// the user came to do and closes the sheet.
+    @ViewBuilder
+    private var rootView: some View {
+        switch mode {
+        case let .singleLine(lineID):
+            ManageSingleLineNotificationsScreen(
+                lineID: lineID,
+                showsOtherLines: true,
+                onClose: { dismissSheet() },
+                onAdded: { dismissSheet() }
+            )
+        case .all:
+            ManageAllLineNotificationsScreen()
+        }
+    }
+
+    /// Pushed screens keep their close button closing the whole sheet. A line added from the list goes back to the
+    /// list, so several can be added in a row.
     private func destinationView(for route: ManageNotificationsRoute) -> some View {
         let lineID =
             switch route {
             case .editLine(let lineID), .addLine(let lineID): lineID
             }
-        // Back returns to the list, so the close button closes the whole sheet. Turning on the line the flow was
-        // opened for finishes what the user came to do, so it closes the sheet too; a line added from the list
-        // goes back to the list.
         return ManageSingleLineNotificationsScreen(
             lineID: lineID,
+            showsOtherLines: false,
             onClose: { dismissSheet() },
-            onAdded: {
-                if lineID == openedLineID {
-                    dismissSheet()
-                } else {
-                    manageNotificationsRouter.navigation.goBack()
-                }
-            }
+            onAdded: { manageNotificationsRouter.navigation.goBack() }
         )
     }
 }

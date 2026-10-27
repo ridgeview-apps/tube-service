@@ -39,18 +39,20 @@ struct LineNotificationSettingsSummary: View {
             Circle()
                 .fill(lineSettings.lineID.backgroundColor)
                 .frame(width: 12, height: 12)
-            Text(lineSettings.lineID.name)
-                .foregroundStyle(.primary)
-            Spacer()
-            if lineSettings.isEnabled {
-                Text(lineSettings.schedule.summary)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            } else {
-                Label(.globalPaused, systemImage: "bell.slash.fill")
-                    .font(.subheadline)
-                    .foregroundStyle(.orange)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(lineSettings.lineID.name)
+                    .foregroundStyle(.primary)
+                if lineSettings.isEnabled {
+                    Text(lineSettings.schedule.summary)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Label(.globalPaused, systemImage: "bell.slash.fill")
+                        .font(.subheadline)
+                        .foregroundStyle(.orange)
+                }
             }
+            Spacer()
             if showChevron {
                 Image(systemName: "chevron.right")
                     .foregroundStyle(.tertiary)
@@ -62,3 +64,32 @@ struct LineNotificationSettingsSummary: View {
         .contentShape(Rectangle())
     }
 }
+// MARK: - Previews
+
+#if DEBUG
+    import ModelStubs
+
+    #Preview("Selectable") {
+        LineNotificationSettingsSummary(
+            settings: [
+                .defaultValue(lineID: .victoria),
+                .defaultValue(lineID: .jubilee, isEnabled: false),
+                .defaultValue(lineID: .central),
+                .defaultValue(lineID: .hammersmithAndCity)
+            ],
+            onSelect: { print($0) }
+        )
+        .padding()
+    }
+
+    #Preview("Read only") {
+        LineNotificationSettingsSummary(
+            settings: [
+                .defaultValue(lineID: .victoria),
+                .defaultValue(lineID: .jubilee),
+                .defaultValue(lineID: .central),
+                .defaultValue(lineID: .hammersmithAndCity)
+            ]
+        )
+    }
+#endif
