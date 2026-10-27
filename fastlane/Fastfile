@@ -68,6 +68,7 @@ lane :build do
 
   match(
     readonly: false,
+    renew_expired_certs: true,
     clone_branch_directly: true,
     git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
     git_private_key: ENV["MATCH_GIT_PRIVATE_KEY"],
