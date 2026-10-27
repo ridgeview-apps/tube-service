@@ -52,19 +52,12 @@ lane :add_badge_overlay do
   )
 end
 
-lane :build do
+private_lane :main_target_bundle_id do
+  read_xcconfig_file.attributes['MAIN_TARGET_BUNDLE_ID']
+end
+
+lane :sync_signing do
   app_store_connect_api_key(duration: 1200)
-
-  xcconfig = read_xcconfig_file
-
-  main_target_bundle_id = xcconfig.attributes['MAIN_TARGET_BUNDLE_ID']
-
-  match_app_identifiers = ["#{main_target_bundle_id}"]
-
-  xcargs = [
-    "TFL_API_APP_KEY=#{ENV.fetch("TFL_API_APP_KEY")}",
-    "TUBE_SERVICE_API_KEY=#{ENV.fetch("TUBE_SERVICE_API_KEY")}",
-  ].join(" ")
 
   match(
     readonly: false,
@@ -72,11 +65,20 @@ lane :build do
     clone_branch_directly: true,
     git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
     git_private_key: ENV["MATCH_GIT_PRIVATE_KEY"],
-    app_identifier: match_app_identifiers,
+    app_identifier: [main_target_bundle_id],
     username: "ci.ridgeview@gmail.com",
     type: "appstore"
   )
-  
+end
+
+lane :build do
+  bundle_id = main_target_bundle_id
+
+  xcargs = [
+    "TFL_API_APP_KEY=#{ENV.fetch("TFL_API_APP_KEY")}",
+    "TUBE_SERVICE_API_KEY=#{ENV.fetch("TUBE_SERVICE_API_KEY")}",
+  ].join(" ")
+
   increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
 
   gym(
@@ -86,7 +88,12 @@ lane :build do
     xcargs: xcargs,
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     export_method: "app-store",
-    skip_profile_detection: true
+    skip_profile_detection: true,
+    # match runs in a separate fastlane call (sync_signing), so gym doesn't
+    # inherit its profile mapping and needs it spelled out for the export
+    export_options: {
+      provisioningProfiles: { bundle_id => "match AppStore #{bundle_id}" }
+    }
   )
 end
 
