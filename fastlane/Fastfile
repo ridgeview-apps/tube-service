@@ -56,8 +56,34 @@ private_lane :main_target_bundle_id do
   read_xcconfig_file.attributes['MAIN_TARGET_BUNDLE_ID']
 end
 
+# App Store Connect's profile list leaves out EXPIRED profiles, so match can't
+# see or replace them, yet their names stay taken and block it creating new
+# ones. The bundle ID's own profile list still includes them, so delete them
+# from there first
+private_lane :delete_expired_match_profiles do |options|
+  client = Spaceship::ConnectAPI.client.provisioning_request_client
+
+  options[:bundle_ids].each do |identifier|
+    bundle_id = Spaceship::ConnectAPI::BundleId.find(identifier)
+    next unless bundle_id
+
+    profiles = client.get("v1/bundleIds/#{bundle_id.id}/profiles", { limit: 200 }).body["data"]
+    profiles.each do |profile|
+      attributes = profile["attributes"]
+      next unless attributes["profileState"] == "EXPIRED" &&
+                  attributes["name"] == "match AppStore #{identifier}"
+
+      UI.important("Deleting expired profile '#{attributes["name"]}' (#{attributes["uuid"]})")
+      Spaceship::ConnectAPI.delete_profile(profile_id: profile["id"])
+    end
+  end
+end
+
 lane :sync_signing do
   app_store_connect_api_key(duration: 1200)
+
+  bundle_ids = [main_target_bundle_id]
+  delete_expired_match_profiles(bundle_ids: bundle_ids)
 
   match(
     readonly: false,
@@ -65,7 +91,7 @@ lane :sync_signing do
     clone_branch_directly: true,
     git_url: "git@github.com:ridgeview-apps/ridgeview-certs.git",
     git_private_key: ENV["MATCH_GIT_PRIVATE_KEY"],
-    app_identifier: [main_target_bundle_id],
+    app_identifier: bundle_ids,
     username: "ci.ridgeview@gmail.com",
     type: "appstore"
   )
