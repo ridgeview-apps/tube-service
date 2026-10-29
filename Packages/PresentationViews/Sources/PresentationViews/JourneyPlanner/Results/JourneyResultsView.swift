@@ -141,6 +141,23 @@ public struct JourneyResultsView: View {
         )
     }
 
+    private func initialLoadFailureView(error: any Error) -> some View {
+        ContentUnavailableView {
+            Label {
+                Text(.journeyResultsLoadFailureTitle)
+            } icon: {
+                Image(systemName: "exclamationmark.triangle")
+            }
+        } description: {
+            Text(errorFormatter(error))
+        } actions: {
+            Button(.globalTryAgain) {
+                onAction(.refresh)
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+
     @ViewBuilder
     private func pageView(page: JourneyPage) -> some View {
         switch page {
@@ -155,13 +172,18 @@ public struct JourneyResultsView: View {
             .defaultLoadingStatusStyle(verticalPadding: hasLoadedResults ? 2 : 12)
             .padding(.horizontal)
         case .failed(_, let error):
-            HStack {
-                Spacer()
-                LoadingStatusView(loadingState: .failure(errorMessage: errorFormatter(error)))
-                    .defaultLoadingStatusStyle(verticalPadding: 12)
-                Spacer()
+            if hasLoadedResults {
+                // An earlier/later page failed; tapping its pager button again retries it.
+                HStack {
+                    Spacer()
+                    LoadingStatusView(loadingState: .failure(errorMessage: errorFormatter(error)))
+                        .defaultLoadingStatusStyle(verticalPadding: 12)
+                    Spacer()
+                }
+                .padding(.horizontal)
+            } else {
+                initialLoadFailureView(error: error)
             }
-            .padding(.horizontal)
         case .loaded(_, let cellItems):
             ForEach(cellItems) { cellItem in
                 JourneyResultsCell(
@@ -334,6 +356,18 @@ extension JourneyPage {
     Previewer(
         pages: [
             .failed(id: "initial", error: URLError(.notConnectedToInternet))
+        ]
+    )
+}
+
+#Preview("Loading error (next)") {
+    Previewer(
+        pages: [
+            .loadedPage(
+                id: "initial",
+                results: ModelStubs.journeyResultsKingsXToWaterlooNow
+            ),
+            .failed(id: "next", error: URLError(.timedOut))
         ]
     )
 }

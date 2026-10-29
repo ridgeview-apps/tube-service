@@ -223,6 +223,35 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages[1].isLoaded == true)
     }
 
+    @Test
+    func loadAdjacentResults_retryAfterError_replacesFailedPage() async {
+        let model = makeStore()
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+
+        tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
+        await model.loadAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        await model.loadAdjacentResults(action: .laterJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+
+        #expect(model.pages.count == 2)
+        #expect(model.pages[0].isLoaded == true)
+        #expect(model.pages[1].isFailed == true)
+    }
+
+    @Test
+    func loadAdjacentResults_successfulRetry_removesFailedPage() async {
+        let model = makeStore()
+        model.prepareForInitialLoad()
+        await model.loadInitialResults(requestParams: requestParams, modeIDs: modeIDs)
+
+        tflAPI.fetchJourneyResultsError = HTTPError.connection(URLError(.notConnectedToInternet))
+        await model.loadAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+        tflAPI.fetchJourneyResultsError = nil
+        await model.loadAdjacentResults(action: .earlierJourneys, baseRequestParams: requestParams, modeIDs: modeIDs)
+
+        #expect(!model.pages.contains { $0.isFailed })
+    }
+
     // MARK: - Deduplication
 
     @Test

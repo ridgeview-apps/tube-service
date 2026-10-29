@@ -329,6 +329,17 @@
         }
       }
     },
+    "error.something.went.wrong.try.again" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sorry, something went wrong. Please try again."
+          }
+        }
+      }
+    },
     "expansion.info.button.show.less.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1254,6 +1265,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Later journeys"
+          }
+        }
+      }
+    },
+    "journey.results.load.failure.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't load journeys"
           }
         }
       }

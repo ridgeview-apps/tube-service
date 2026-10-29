@@ -8,6 +8,11 @@ extension Error {
         resolvedMessage(default: String(localized: L10n.errorSomethingWentWrong))
     }
 
+    /// For errors shown next to an explicit retry control, so the message doesn't point at pull-to-refresh.
+    func toRetryableErrorMessage() -> String {
+        resolvedMessage(default: String(localized: L10n.errorSomethingWentWrongTryAgain))
+    }
+
     func toSaveErrorMessage() -> String {
         resolvedMessage(default: String(localized: L10n.errorSaveFailed))
     }

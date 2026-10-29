@@ -25,7 +25,7 @@ struct JourneyResultsScreen: View {
             toLocation: $journeyPlanner.form.to,
             viaLocation: journeyPlanner.form.via,
             selectedPreset: $userPreferences.journeyModePreset,
-            errorFormatter: { $0.toUIErrorMessage() },
+            errorFormatter: { $0.toRetryableErrorMessage() },
             onAction: { handleAction($0) }
         )
         .navigationBarTitleDisplayMode(.inline)

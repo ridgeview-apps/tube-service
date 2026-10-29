@@ -13,6 +13,7 @@ public enum L10n {
     public static let errorNoInternetConnection = LocalizedStringResource.errorNoInternetConnection
     public static let errorSaveFailed = LocalizedStringResource.errorSaveFailed
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
+    public static let errorSomethingWentWrongTryAgain = LocalizedStringResource.errorSomethingWentWrongTryAgain
 
     public static let globalCancel = LocalizedStringResource.globalCancel
     public static let globalDeselectAll = LocalizedStringResource.globalDeselectAll

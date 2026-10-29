@@ -128,9 +128,13 @@ public final class JourneyPlannerStore {
             pageID = .later(pageCounter)
         }
 
+        // Tapping Earlier/Later again after a failure retries that page, so replace the failed page
+        // rather than leaving its error row stranded between results.
         if case .earlier = pageID {
+            if pages.first?.isFailed == true { pages.removeFirst() }
             pages.insert(.loading(id: pageID.description), at: 0)
         } else {
+            if pages.last?.isFailed == true { pages.removeLast() }
             pages.append(.loading(id: pageID.description))
         }
 
