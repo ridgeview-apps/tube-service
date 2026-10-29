@@ -132,6 +132,9 @@ lane :distribute do
   pilot(
     distribute_external: distribute_external,
     groups: groups,
+    # pilot treats an empty groups array as truthy and would otherwise submit
+    # internal-only builds for external Beta App Review
+    submit_beta_review: distribute_external,
     notify_external_testers: true,
     skip_waiting_for_build_processing: !distribute_external,
     changelog: "Thank you for installing our latest build",
