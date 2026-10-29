@@ -137,7 +137,9 @@ lane :distribute do
     submit_beta_review: distribute_external,
     notify_external_testers: true,
     skip_waiting_for_build_processing: !distribute_external,
-    changelog: "Thank you for installing our latest build",
+    # With a changelog, pilot still waits for the build to appear in App Store
+    # Connect even when skipping processing, so only set one for external builds
+    changelog: distribute_external ? "Thank you for installing our latest build" : nil,
     reject_build_waiting_for_review: true
   )
   
