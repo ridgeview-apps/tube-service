@@ -30,14 +30,18 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Confirm Xcode version
         run: xcodebuild -version
-      - name: Fastlane commands
+      - name: Install gems
         run: |
           bundle install
           bundle update fastlane
-          bundle exec fastlane sync_signing
-          # bundle exec fastlane unit_tests
-          bundle exec fastlane build
-          bundle exec fastlane distribute
+      - name: Sync signing
+        run: bundle exec fastlane sync_signing
+      # - name: Unit tests
+      #   run: bundle exec fastlane unit_tests
+      - name: Build
+        run: bundle exec fastlane build
+      - name: Distribute
+        run: bundle exec fastlane distribute
 
 
   # Manual approval job
@@ -49,9 +53,9 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      - name: Fastlane commands
+      - name: Install gems
         run: |
-          echo "Submitting app for review"
           bundle install
           bundle update fastlane
-          bundle exec fastlane submit_for_review
+      - name: Submit for review
+        run: bundle exec fastlane submit_for_review

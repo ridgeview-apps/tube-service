@@ -21,8 +21,9 @@ jobs:
         run: xcodebuild -version
       - name: Swift format lint
         run: Scripts/swift-format-lint.sh          
-      - name: Fastlane commands
+      - name: Install gems
         run: |
           bundle install
           bundle update fastlane
-          bundle exec fastlane unit_tests
+      - name: Unit tests
+        run: bundle exec fastlane unit_tests

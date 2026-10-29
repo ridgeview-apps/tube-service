@@ -29,6 +29,10 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_27.1.app
       - name: Confirm Xcode version
         run: xcodebuild -version
+      - name: Install gems
+        run: |
+          bundle install
+          bundle update fastlane
       - name: Install dependencies
         run: |
           brew untap aws/tap || true
@@ -36,12 +40,13 @@ jobs:
           brew install imagemagick
       - name: Swift format lint
         run: Scripts/swift-format-lint.sh          
-      - name: Fastlane commands
-        run: |
-          bundle install
-          bundle update fastlane
-          bundle exec fastlane sync_signing
-          bundle exec fastlane unit_tests
-          bundle exec fastlane add_badge_overlay
-          bundle exec fastlane build
-          bundle exec fastlane distribute
+      - name: Sync signing
+        run: bundle exec fastlane sync_signing
+      - name: Unit tests
+        run: bundle exec fastlane unit_tests
+      - name: Add badge overlay
+        run: bundle exec fastlane add_badge_overlay
+      - name: Build
+        run: bundle exec fastlane build
+      - name: Distribute
+        run: bundle exec fastlane distribute
