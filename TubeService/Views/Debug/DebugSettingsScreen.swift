@@ -28,15 +28,16 @@ struct DebugSettingsScreen: View {
 
     var body: some View {
         Form {
-            Section {
-                Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
-                Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
-                // Hidden on App Store installs, where the bypass is ignored.
-                if purchases.allowsPaywallBypass {
+            // Hidden on App Store installs: the paywalled features aren't released, and the bypass is
+            // ignored there.
+            if purchases.allowsPaywallBypass {
+                Section {
+                    Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
+                    Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
                     Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
+                } header: {
+                    Text("Feature Toggles")
                 }
-            } header: {
-                Text("Feature Toggles")
             }
             Section {
                 Button("Reset user preferences?") {
