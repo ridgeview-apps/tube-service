@@ -1,6 +1,5 @@
-What's new in 2.1
-
 • Updated for iOS 27.
 • Line Status now groups lines running a good service into their own section, so disruptions stand out.
 • Planning ahead for the weekend? You can now view Saturday, Sunday or both.
-• Bug fixes and improvements, including a fix for the Journey Planner not working when your iPhone is set to 12-hour time. A big thank you to the user who reported this and helped us track it down!
+• Fixed the Journey Planner not working when your iPhone is set to 12-hour time. A big thank you to the user who reported this and helped us track it down!
+• Other bug fixes and improvements.
