@@ -170,6 +170,14 @@ lane :submit_for_review do |options|
   )
 end
 
+# Tags the submitted commit with its version. A resubmission after rejection
+# moves the tag, so it always marks what was last sent to App Review
+lane :tag_release do
+  tag = app_version_number
+  sh("git", "tag", "--force", tag)
+  sh("git", "push", "--force", "origin", "refs/tags/#{tag}")
+end
+
 # Syncs release notes and other metadata to the App Store version, creating it
 # if needed. Never uploads a binary or screenshots, or submits for review
 lane :upload_metadata do

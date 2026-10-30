@@ -50,6 +50,8 @@ jobs:
     needs: build-and-deploy-prod
     environment:
       name: prod
+    permissions:
+      contents: write # To push the release tag
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -58,3 +60,5 @@ jobs:
       - name: Submit for review
         # Same workflow run as the build job, so this is the build number it uploaded
         run: bundle exec fastlane submit_for_review build_number:"$GITHUB_RUN_NUMBER"
+      - name: Tag release
+        run: bundle exec fastlane tag_release
