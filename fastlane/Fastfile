@@ -144,7 +144,8 @@ lane :distribute do
     skip_waiting_for_build_processing: !distribute_external,
     # With a changelog, pilot still waits for the build to appear in App Store
     # Connect even when skipping processing, so only set one for external builds
-    changelog: distribute_external ? "Thank you for installing our latest build" : nil,
+    # External testers get the App Store release notes as "What to test"
+    changelog: distribute_external ? File.read("metadata/en-GB/release_notes.txt").strip : nil,
     reject_build_waiting_for_review: true
   )
   
