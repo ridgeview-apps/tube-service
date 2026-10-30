@@ -5,6 +5,7 @@ on:
     branches:
       - 'feature/**'
       - 'hotfix/**'
+  workflow_dispatch: # Allow this workflow to be triggered manually
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}

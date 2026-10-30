@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # Allow this workflow to be triggered manually
 
 env:
   XCODE_CONFIG: Beta
