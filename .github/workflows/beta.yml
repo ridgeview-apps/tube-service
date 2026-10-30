@@ -30,9 +30,7 @@ jobs:
       - name: Confirm Xcode version
         run: xcodebuild -version
       - name: Install gems
-        run: |
-          bundle install
-          bundle update fastlane
+        run: bundle install
       - name: Install dependencies
         run: |
           brew untap aws/tap || true

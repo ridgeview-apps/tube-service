@@ -23,8 +23,6 @@ jobs:
       - name: Swift format lint
         run: Scripts/swift-format-lint.sh          
       - name: Install gems
-        run: |
-          bundle install
-          bundle update fastlane
+        run: bundle install
       - name: Unit tests
         run: bundle exec fastlane unit_tests

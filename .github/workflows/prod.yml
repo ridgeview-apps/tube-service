@@ -31,9 +31,7 @@ jobs:
       - name: Confirm Xcode version
         run: xcodebuild -version
       - name: Install gems
-        run: |
-          bundle install
-          bundle update fastlane
+        run: bundle install
       - name: Sync signing
         run: bundle exec fastlane sync_signing
       # - name: Unit tests
@@ -54,8 +52,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Install gems
-        run: |
-          bundle install
-          bundle update fastlane
+        run: bundle install
       - name: Submit for review
         run: bundle exec fastlane submit_for_review
