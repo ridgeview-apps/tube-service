@@ -1,4 +1,4 @@
-name: Feature branch checks
+name: Branch checks
 
 on:
   push:
@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true    
 
 jobs:
-  check-feature-branch:
+  checks:
     runs-on: xcode-27
     steps:
       - name: Checkout repo
