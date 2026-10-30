@@ -9,6 +9,11 @@ private_lane :read_xcconfig_file do
   Xcodeproj::Config.new(path)
 end
 
+# Read directly: Xcodeproj::Config doesn't follow the CI xcconfigs' #includes
+private_lane :app_version_number do
+  Xcodeproj::Config.new("../Config/Base.xcconfig").attributes["APP_VERSION_NUMBER"]
+end
+
 private_lane :changelog do
   changelog_from_git_commits(
     commits_count: 1,
@@ -177,6 +182,8 @@ private_lane :upload_to_app_store_connect do |options|
   
   deliver(
     app_identifier: app_identifier,
+    # Creates the version on App Store Connect if it doesn't exist yet
+    app_version: app_version_number,
     automatic_release: false,
     submit_for_review: submit_for_review,
     overwrite_screenshots: overwrite_screenshots,
