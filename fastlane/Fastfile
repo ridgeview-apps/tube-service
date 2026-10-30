@@ -169,13 +169,39 @@ lane :submit_for_review do |options|
   )
 end
 
+# Syncs release notes and other metadata to the App Store version, creating it
+# if needed. Never uploads a binary or screenshots, or submits for review
+lane :upload_metadata do
+  app_store_connect_api_key(duration: 1200)
+
+  version = app_version_number
+  app = Spaceship::ConnectAPI::App.find(app_store_app_identifier)
+  existing_version = app.get_app_store_versions(filter: { versionString: version }).first
+  editable_version = app.get_edit_app_store_version
+
+  # Once a version is approved or live its metadata is locked, and deliver
+  # would try to create it again and fail
+  if existing_version && existing_version.id != editable_version&.id
+    UI.important("#{version} is #{existing_version.app_version_state} on App Store Connect, so its metadata can't be changed. Skipping")
+    next
+  end
+
+  upload_to_app_store_connect(metadata_only: true)
+end
+
+# The App Store app is the one the Prod config builds, whichever config is active
+private_lane :app_store_app_identifier do
+  Xcodeproj::Config.new("../Config/CI/Prod.xcconfig").attributes["MAIN_TARGET_BUNDLE_ID"]
+end
+
 private_lane :upload_to_app_store_connect do |options|
   app_store_connect_api_key(duration: 1200)
-    
-  app_identifier = "com.ridgeviewapps.tube-service"
+
+  app_identifier = app_store_app_identifier
   submit_for_review = options[:submit_for_review] || false
   overwrite_screenshots = options[:overwrite_screenshots] || false
-  
+  metadata_only = options[:metadata_only] || false
+
   if submit_for_review
     build_number = options[:build_number] || latest_testflight_build_number(app_identifier: app_identifier).to_s
   end
@@ -187,6 +213,10 @@ private_lane :upload_to_app_store_connect do |options|
     automatic_release: false,
     submit_for_review: submit_for_review,
     overwrite_screenshots: overwrite_screenshots,
+    # The Prod build job leaves its .ipa in the checkout, which deliver would
+    # otherwise pick up and upload again
+    skip_binary_upload: metadata_only,
+    skip_screenshots: metadata_only,
     precheck_include_in_app_purchases: false,
     force: true, # Skips the interactive preview of html file before uploading
     build_number: build_number,

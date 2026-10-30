@@ -40,6 +40,8 @@ jobs:
         run: bundle exec fastlane build
       - name: Distribute
         run: bundle exec fastlane distribute
+      - name: Upload metadata
+        run: bundle exec fastlane upload_metadata
 
 
   # Manual approval job
