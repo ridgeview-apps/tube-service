@@ -3,7 +3,8 @@ name: Feature branch checks
 on:
   push:
     branches:
-      - 'feature/**'    
+      - 'feature/**'
+      - 'hotfix/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
