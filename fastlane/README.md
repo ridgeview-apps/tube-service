@@ -37,6 +37,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### sync_signing
+
+```sh
+[bundle exec] fastlane sync_signing
+```
+
+
+
 ### build
 
 ```sh
@@ -65,6 +73,30 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ```sh
 [bundle exec] fastlane submit_for_review
+```
+
+
+
+### tag_release
+
+```sh
+[bundle exec] fastlane tag_release
+```
+
+
+
+### upload_metadata
+
+```sh
+[bundle exec] fastlane upload_metadata
+```
+
+
+
+### start_release
+
+```sh
+[bundle exec] fastlane start_release
 ```
 
 

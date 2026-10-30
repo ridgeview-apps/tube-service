@@ -14,6 +14,11 @@ private_lane :app_version_number do
   Xcodeproj::Config.new("../Config/Base.xcconfig").attributes["APP_VERSION_NUMBER"]
 end
 
+# The en-GB App Store release notes, also used as the TestFlight "What to test"
+private_lane :release_notes do
+  File.read("metadata/en-GB/release_notes.txt").strip
+end
+
 private_lane :changelog do
   changelog_from_git_commits(
     commits_count: 1,
@@ -145,7 +150,7 @@ lane :distribute do
     # With a changelog, pilot still waits for the build to appear in App Store
     # Connect even when skipping processing, so only set one for external builds
     # External testers get the App Store release notes as "What to test"
-    changelog: distribute_external ? File.read("metadata/en-GB/release_notes.txt").strip : nil,
+    changelog: distribute_external ? release_notes : nil,
     reject_build_waiting_for_review: true
   )
   
@@ -239,4 +244,52 @@ private_lane :upload_to_app_store_connect do |options|
       # content_rights_has_rights: true,
     }
   )
+end
+
+
+#######################
+# Releases
+#######################
+
+# Run locally on main to start a release: pushes release/<version> for the
+# version in Base.xcconfig (which starts the Prod workflow), then bumps main to
+# the next minor version, or major with bump:major. dry_run:true only prints
+# what it would do
+lane :start_release do |options|
+  bump = options[:bump] || "minor"
+  UI.user_error!("bump must be minor or major, not '#{bump}'") unless %w[minor major].include?(bump)
+
+  ensure_git_branch(branch: "^main$")
+  ensure_git_status_clean
+  sh("git", "pull", "--ff-only")
+
+  version = app_version_number
+  major, minor = version.split(".").map(&:to_i)
+  next_version = bump == "major" ? "#{major + 1}.0.0" : "#{major}.#{minor + 1}.0"
+  release_branch = "release/#{version}"
+
+  # ls-remote --exit-code succeeds only if the branch exists
+  if system("git", "ls-remote", "--exit-code", "--heads", "origin", release_branch, out: File::NULL)
+    UI.user_error!("#{release_branch} already exists on origin")
+  end
+
+  # A last look at the notes, which are easy to forget to update
+  UI.message("Release notes for #{version}:\n#{release_notes.gsub(/^/, "  ")}")
+
+  plan = "Push #{release_branch} from main, then bump main from #{version} to #{next_version}"
+  if options[:dry_run]
+    UI.message("Dry run: #{plan}")
+    next
+  end
+  next unless UI.confirm("#{plan}?")
+
+  sh("git", "push", "origin", "HEAD:refs/heads/#{release_branch}")
+
+  xcconfig_path = "../Config/Base.xcconfig"
+  contents = File.read(xcconfig_path)
+  File.write(xcconfig_path, contents.sub(/^(\s*APP_VERSION_NUMBER\s*=\s*)[^\s\/]+/) { "#{$1}#{next_version}" })
+  UI.user_error!("Couldn't update APP_VERSION_NUMBER in #{xcconfig_path}") unless app_version_number == next_version
+
+  sh("git", "commit", "-m", "Bump version to #{next_version}", "--", xcconfig_path)
+  sh("git", "push", "origin", "main")
 end
