@@ -54,4 +54,5 @@ jobs:
       - name: Install gems
         run: bundle install
       - name: Submit for review
-        run: bundle exec fastlane submit_for_review
+        # Same workflow run as the build job, so this is the build number it uploaded
+        run: bundle exec fastlane submit_for_review build_number:"$GITHUB_RUN_NUMBER"
