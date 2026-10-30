@@ -50,7 +50,7 @@ jobs:
       name: prod
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install gems
         run: bundle install
       - name: Submit for review
