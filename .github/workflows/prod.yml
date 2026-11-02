@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - 'release/**'
+  # Lets Start release run this on the branch it pushes, since pushes made with
+  # the workflow token don't start workflows. Only release branches are built
+  workflow_dispatch:
 
 env:
   XCODE_CONFIG: Prod
@@ -22,6 +25,7 @@ concurrency:
 
 jobs:
   build-and-deploy-prod:
+    if: startsWith(github.ref, 'refs/heads/release/')
     runs-on: xcode-27
     steps:
       - name: Checkout repo
@@ -60,5 +64,14 @@ jobs:
       - name: Submit for review
         # Same workflow run as the build job, so this is the build number it uploaded
         run: bundle exec fastlane submit_for_review build_number:"$GITHUB_RUN_NUMBER"
+      - name: Read version
+        id: versions
+        run: bundle exec fastlane release_versions
+      # Tags the submitted commit with its version. A resubmission after
+      # rejection moves the tag, so it always marks what was last sent to App Review
       - name: Tag release
-        run: bundle exec fastlane tag_release
+        env:
+          VERSION: ${{ steps.versions.outputs.version }}
+        run: |
+          git tag --force "$VERSION"
+          git push --force origin "refs/tags/$VERSION"

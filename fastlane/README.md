@@ -77,14 +77,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### tag_release
-
-```sh
-[bundle exec] fastlane tag_release
-```
-
-
-
 ### upload_metadata
 
 ```sh
@@ -93,10 +85,18 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### start_release
+### release_versions
 
 ```sh
-[bundle exec] fastlane start_release
+[bundle exec] fastlane release_versions
+```
+
+
+
+### set_version
+
+```sh
+[bundle exec] fastlane set_version
 ```
 
 

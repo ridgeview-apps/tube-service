@@ -1,0 +1,109 @@
+name: Start release
+
+# Starts a release from main. In one atomic push it creates release/<version>
+# for the version in Base.xcconfig and bumps main to the next version, then it
+# starts Prod on the release branch and Beta on main (pushes made with the
+# workflow token don't start workflows by themselves).
+#
+# Refuses to run while another release is in progress (a release branch with no
+# tag yet), so running it twice can't start a second release.
+#
+# If it fails:
+#   - in "Release": nothing was pushed. Fix the cause and run it again
+#   - in "Start builds": the release is pushed. "Re-run failed jobs" is safe (a
+#     second Prod run cancels the first), or run Prod on release/<version> and
+#     Beta on main by hand
+# To abandon a release, delete release/<version> and revert the bump on main.
+
+on:
+  workflow_dispatch:
+    inputs:
+      bump:
+        description: 'Bump main to the next'
+        type: choice
+        options:
+          - minor
+          - major
+        default: minor
+      dry_run:
+        description: 'Dry run (only show the plan)'
+        type: boolean
+        default: true
+
+# Runs queue rather than overlap, and each one checks the guards again
+concurrency:
+  group: start-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    runs-on: macos-latest
+    permissions:
+      contents: write # To push the release branch and the bump
+    outputs:
+      version: ${{ steps.versions.outputs.version }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v6
+        with:
+          ref: main
+      - name: Install gems
+        run: bundle install
+      - name: Read versions
+        id: versions
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: bundle exec fastlane release_versions bump:"$BUMP"
+      - name: Check release is allowed
+        env:
+          VERSION: ${{ steps.versions.outputs.version }}
+        run: .github/scripts/check-release-allowed.sh "$VERSION"
+      - name: Bump version
+        env:
+          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
+        run: |
+          bundle exec fastlane set_version version:"$NEXT_VERSION"
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -m "Bump version to $NEXT_VERSION" -- Config/Base.xcconfig
+          git show HEAD
+      - name: Show plan
+        env:
+          OUTCOME: ${{ inputs.dry_run && 'dry run, nothing was pushed' || 'starting' }}
+          VERSION: ${{ steps.versions.outputs.version }}
+          NEXT_VERSION: ${{ steps.versions.outputs.next_version }}
+        run: |
+          tee -a "$GITHUB_STEP_SUMMARY" <<EOF
+          ### Release $VERSION: $OUTCOME
+          - Push \`release/$VERSION\` at ${GITHUB_SHA:0:7}
+          - Bump main from $VERSION to $NEXT_VERSION
+          - Start Prod on \`release/$VERSION\` and Beta on main
+          EOF
+      # Atomic, so the branch and the bump are pushed together or not at all.
+      # The leases make it fail if the branch has appeared or main has moved
+      - name: Push release branch and bump
+        if: ${{ !inputs.dry_run }}
+        env:
+          VERSION: ${{ steps.versions.outputs.version }}
+        run: |
+          git push --atomic origin \
+            --force-with-lease="refs/heads/release/$VERSION:" \
+            --force-with-lease="refs/heads/main:$GITHUB_SHA" \
+            "$GITHUB_SHA:refs/heads/release/$VERSION" \
+            "HEAD:refs/heads/main"
+
+  start-builds:
+    name: Start builds
+    needs: release
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write # To start the Prod and Beta workflows
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.release.outputs.version }}
+    steps:
+      - name: Start Prod
+        run: gh workflow run prod.yml --repo "$GITHUB_REPOSITORY" --ref "release/$VERSION"
+      - name: Start Beta
+        run: gh workflow run beta.yml --repo "$GITHUB_REPOSITORY" --ref main

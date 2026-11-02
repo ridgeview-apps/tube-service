@@ -175,14 +175,6 @@ lane :submit_for_review do |options|
   )
 end
 
-# Tags the submitted commit with its version. A resubmission after rejection
-# moves the tag, so it always marks what was last sent to App Review
-lane :tag_release do
-  tag = app_version_number
-  sh("git", "tag", "--force", tag)
-  sh("git", "push", "--force", "origin", "refs/tags/#{tag}")
-end
-
 # Syncs release notes and other metadata to the App Store version, creating it
 # if needed. Never uploads a binary or screenshots, or submits for review
 lane :upload_metadata do
@@ -212,6 +204,15 @@ private_lane :upload_to_app_store_connect do |options|
   app_store_connect_api_key(duration: 1200)
 
   app_identifier = app_store_app_identifier
+  version = app_version_number
+
+  # deliver renames an editable version whose number differs, e.g. turning a
+  # rejected 2.1.0 into 2.2.0, so refuse instead
+  editable_version = Spaceship::ConnectAPI::App.find(app_identifier).get_edit_app_store_version
+  if editable_version && editable_version.version_string != version
+    UI.user_error!("App Store Connect's editable version is #{editable_version.version_string} (#{editable_version.app_version_state}), not #{version}. Deal with it on App Store Connect first, or deliver would rename it to #{version}")
+  end
+
   submit_for_review = options[:submit_for_review] || false
   overwrite_screenshots = options[:overwrite_screenshots] || false
   metadata_only = options[:metadata_only] || false
@@ -223,7 +224,7 @@ private_lane :upload_to_app_store_connect do |options|
   deliver(
     app_identifier: app_identifier,
     # Creates the version on App Store Connect if it doesn't exist yet
-    app_version: app_version_number,
+    app_version: version,
     automatic_release: false,
     submit_for_review: submit_for_review,
     overwrite_screenshots: overwrite_screenshots,
@@ -251,45 +252,31 @@ end
 # Releases
 #######################
 
-# Run locally on main to start a release: pushes release/<version> for the
-# version in Base.xcconfig (which starts the Prod workflow), then bumps main to
-# the next minor version, or major with bump:major. dry_run:true only prints
-# what it would do
-lane :start_release do |options|
+# Prints the version in Base.xcconfig and the one after it: the next minor
+# version, or major with bump:major. On CI both are also step outputs, so
+# workflows get the version without parsing the xcconfig themselves
+lane :release_versions do |options|
   bump = options[:bump] || "minor"
   UI.user_error!("bump must be minor or major, not '#{bump}'") unless %w[minor major].include?(bump)
 
-  ensure_git_branch(branch: "^main$")
-  ensure_git_status_clean
-  sh("git", "pull", "--ff-only")
+  version = app_version_number.to_s
+  UI.user_error!("APP_VERSION_NUMBER must look like 1.2.3, not '#{version}'") unless version.match?(/\A\d+\.\d+\.\d+\z/)
 
-  version = app_version_number
   major, minor = version.split(".").map(&:to_i)
   next_version = bump == "major" ? "#{major + 1}.0.0" : "#{major}.#{minor + 1}.0"
-  release_branch = "release/#{version}"
 
-  # ls-remote --exit-code succeeds only if the branch exists
-  if system("git", "ls-remote", "--exit-code", "--heads", "origin", release_branch, out: File::NULL)
-    UI.user_error!("#{release_branch} already exists on origin")
-  end
+  outputs = "version=#{version}\nnext_version=#{next_version}\n"
+  UI.message(outputs)
+  File.write(ENV["GITHUB_OUTPUT"], outputs, mode: "a") if ENV["GITHUB_OUTPUT"]
+end
 
-  # A last look at the notes, which are easy to forget to update
-  UI.message("Release notes for #{version}:\n#{release_notes.gsub(/^/, "  ")}")
-
-  plan = "Push #{release_branch} from main, then bump main from #{version} to #{next_version}"
-  if options[:dry_run]
-    UI.message("Dry run: #{plan}")
-    next
-  end
-  next unless UI.confirm("#{plan}?")
-
-  sh("git", "push", "origin", "HEAD:refs/heads/#{release_branch}")
+# Sets APP_VERSION_NUMBER in Base.xcconfig, e.g. version:2.2.0
+lane :set_version do |options|
+  version = options[:version].to_s
+  UI.user_error!("version must look like 1.2.3, not '#{version}'") unless version.match?(/\A\d+\.\d+\.\d+\z/)
 
   xcconfig_path = "../Config/Base.xcconfig"
   contents = File.read(xcconfig_path)
-  File.write(xcconfig_path, contents.sub(/^(\s*APP_VERSION_NUMBER\s*=\s*)[^\s\/]+/) { "#{$1}#{next_version}" })
-  UI.user_error!("Couldn't update APP_VERSION_NUMBER in #{xcconfig_path}") unless app_version_number == next_version
-
-  sh("git", "commit", "-m", "Bump version to #{next_version}", "--", xcconfig_path)
-  sh("git", "push", "origin", "main")
+  File.write(xcconfig_path, contents.sub(/^(\s*APP_VERSION_NUMBER\s*=\s*)[^\s\/]+/) { "#{$1}#{version}" })
+  UI.user_error!("Couldn't update APP_VERSION_NUMBER in #{xcconfig_path}") unless app_version_number == version
 end
