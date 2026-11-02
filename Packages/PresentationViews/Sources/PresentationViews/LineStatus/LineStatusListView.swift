@@ -194,14 +194,9 @@ public struct LineStatusListView: View {
         @ViewBuilder trailingContent: () -> some View
     ) -> some View {
         HStack(spacing: 4) {
-            Group {
-                if let systemImage {
-                    Image(systemName: systemImage)
-                }
-                Text(title)
-            }
-            .secondarySectionHeaderStyle()
-            .accessibilityAddTraits(.isHeader)
+            LineGroupSectionHeader(title: title, imageName: systemImage)
+                .secondarySectionHeaderStyle()
+                .accessibilityAddTraits(.isHeader)
             Spacer()
             trailingContent()
                 .font(.footnote.weight(.semibold))
@@ -222,7 +217,7 @@ public struct LineStatusListView: View {
             onAction(.selectLine(line))
         } label: {
             LineStatusCell(
-                style: .singleLine(line, isFavourite: favouriteLineIDs.contains(line.id)),
+                style: .singleLine(line, isFavourite: false),  // The Favourites section label marks them instead
                 showsAccessory: true,
                 animatedAccessoryImage: true,
                 historyIndicator: historyIndicator(for: line)
