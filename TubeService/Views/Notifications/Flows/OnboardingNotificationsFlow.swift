@@ -30,8 +30,8 @@ struct OnboardingNotificationsFlow: View {
 
     init(defaultLineID: TrainLineID?) {
         var initialLineIDs = _userPreferences.wrappedValue.favouriteLineIDs
-        if let defaultLineID {
-            initialLineIDs.insert(defaultLineID)
+        if let defaultLineID, !initialLineIDs.contains(defaultLineID) {
+            initialLineIDs.append(defaultLineID)
         }
         initialNotificationSettings = initialLineIDs.map { .defaultValue(lineID: $0) }
     }

@@ -67,6 +67,40 @@ struct UserPreferencesTests {
     }
 
     @Test
+    func addingFavouriteLinesAppendsInOrderWithoutDuplicates() throws {
+        var userPreferences = UserPreferences.default
+
+        userPreferences.addFavouriteLine(.victoria)
+        userPreferences.addFavouriteLine(.bakerloo)
+        userPreferences.addFavouriteLine(.victoria)
+
+        #expect(userPreferences.favouriteLineIDs == [.victoria, .bakerloo])
+    }
+
+    @Test
+    func reorderingFavouriteLinesKeepsTheSameFavourites() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.addFavouriteLine(.victoria)
+        userPreferences.addFavouriteLine(.bakerloo)
+        userPreferences.addFavouriteLine(.northern)
+
+        // Jubilee isn't a favourite (ignored) and Northern is missing (kept at the end)
+        userPreferences.reorderFavouriteLines([.bakerloo, .jubilee, .victoria])
+
+        #expect(userPreferences.favouriteLineIDs == [.bakerloo, .victoria, .northern])
+    }
+
+    @Test
+    func decodingFavouriteLinesPreservesOrderAndRemovesDuplicates() throws {
+        let json = #"{"favouriteLineIDs":["victoria","bakerloo","victoria","not-a-line"]}"#
+        let data = try #require(json.data(using: .utf8))
+
+        let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
+
+        #expect(decoded.favouriteLineIDs == [.victoria, .bakerloo])
+    }
+
+    @Test
     func addingAndRemovingFavouriteLineGroupIDs() throws {
         var userPreferences = UserPreferences.default
         let fakeID = "FakeLineGroupID"

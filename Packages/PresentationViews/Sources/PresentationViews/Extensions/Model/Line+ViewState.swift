@@ -29,14 +29,14 @@ public extension Sequence where Element == Line {
         self.filter { !$0.isDisrupted }.sorted { $0.id.name < $1.id.name }
     }
 
-    func removingLineIDs(_ excludedLineIDs: Set<TrainLineID>) -> [Line] {
+    func removingLineIDs(_ excludedLineIDs: [TrainLineID]) -> [Line] {
         self.filter { !excludedLineIDs.contains($0.id) }
     }
 
-    func favouritesOnly(matching favouriteLineIDs: Set<TrainLineID>) -> [Line] {
-        self
-            .filter { favouriteLineIDs.contains($0.id) }
-            .sortedByStatusSeverity()
+    /// Returns the favourite lines in the user's chosen order (not by status severity).
+    func favouritesOnly(matching favouriteLineIDs: [TrainLineID]) -> [Line] {
+        let linesByID = Dictionary(map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return favouriteLineIDs.compactMap { linesByID[$0] }
     }
 }
 

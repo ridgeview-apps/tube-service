@@ -1,4 +1,5 @@
 import Foundation
+import Shared
 
 extension UserPreferences {
     enum CodingKeys: String, CodingKey {
@@ -17,7 +18,7 @@ extension UserPreferences {
         recentlySelectedStations = (try? container.decode([Station.ID].self, forKey: .recentlySelectedStations)) ?? []
 
         let rawLineIDs = (try? container.decode([String].self, forKey: .favouriteLineIDs)) ?? []
-        favouriteLineIDs = Set(rawLineIDs.compactMap { TrainLineID(rawValue: $0) })
+        favouriteLineIDs = rawLineIDs.compactMap { TrainLineID(rawValue: $0) }.removingDuplicates()
 
         journeyModePreset = (try? container.decode(JourneyModePreset.self, forKey: .journeyModePreset)) ?? .trainAndBus
 
