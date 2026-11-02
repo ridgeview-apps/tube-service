@@ -90,20 +90,12 @@ public struct ArrivalsPickerView: View {
                         imageName: "star.fill"
                     )
                     Spacer()
-                    editFavouritesButton
+                    EditModeButton(editMode: $editMode)
                 }
                 .secondarySectionHeaderStyle()
             }
             .lineGroupListRowStyle()
         }
-    }
-
-    private var editFavouritesButton: some View {
-        let title: LocalizedStringResource = editMode.isEditing ? .globalDone : .globalEdit
-        return Button(title) {
-            withAnimation { editMode = editMode.isEditing ? .inactive : .active }
-        }
-        .foregroundStyle(.tint)
     }
 
     private func moveFavourites(fromOffsets source: IndexSet, toOffset destination: Int) {

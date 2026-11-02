@@ -103,7 +103,7 @@ public struct LineStatusListView: View {
     private var favouriteLineCells: some View {
         if !favourites.isEmpty {
             sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
-                editFavouritesButton
+                EditModeButton(editMode: $editMode)
             }
             tappableStatusCells(with: favourites, isEditable: true)
                 .onMove(perform: moveFavourites)
@@ -113,14 +113,6 @@ public struct LineStatusListView: View {
                 // edit mode. Toggling deleteDisabled with edit mode instead stops the delete controls animating in.
                 .swipeActions {}
         }
-    }
-
-    private var editFavouritesButton: some View {
-        let title: LocalizedStringResource = editMode.isEditing ? .globalDone : .globalEdit
-        return Button(title) {
-            withAnimation { editMode = editMode.isEditing ? .inactive : .active }
-        }
-        .buttonStyle(.borderless)
     }
 
     private func moveFavourites(fromOffsets source: IndexSet, toOffset destination: Int) {
