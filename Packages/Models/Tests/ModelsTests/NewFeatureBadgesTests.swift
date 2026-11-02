@@ -59,7 +59,8 @@ struct NewFeatureBadgesTests {
         // When
         let decoded = try #require(NewFeatureBadges(rawValue: badges.rawValue))
 
-        // Then
-        #expect(decoded == badges)
+        // Then: compares properties because == on a RawRepresentable type compares the encoded JSON, whose key order varies
+        #expect(decoded.firstSeenAt == badges.firstSeenAt)
+        #expect(decoded.usedFeatures == badges.usedFeatures)
     }
 }
