@@ -168,10 +168,25 @@ lane :upload_screenshots do |options|
   )
 end
 
+# If another build of the version is in review, this is a resubmission, so
+# deliver removes that build from review first. If this build is the one in
+# review (e.g. a re-run after a later step failed), there's nothing to submit
 lane :submit_for_review do |options|
+  app_store_connect_api_key(duration: 1200)
+
+  build_number = (options[:build_number] || latest_testflight_build_number(app_identifier: app_store_app_identifier)).to_s
+  build_in_review = build_number_in_review
+
+  if build_in_review == build_number
+    UI.important("Build #{build_number} is already in review. Skipping")
+    next
+  end
+  UI.important("Removing build #{build_in_review} from review to submit build #{build_number}") if build_in_review
+
   upload_to_app_store_connect(
     submit_for_review: true,
-    build_number: options[:build_number]
+    build_number: build_number,
+    reject_if_possible: !build_in_review.nil?
   )
 end
 
@@ -192,12 +207,35 @@ lane :upload_metadata do
     next
   end
 
+  # Metadata is locked while in review. Submit for review uploads it once it
+  # has removed the build from review
+  build_in_review = build_number_in_review
+  if build_in_review
+    message = "Approving Submit for review will remove build #{build_in_review} of #{version} from review and submit build #{ENV.fetch("GITHUB_RUN_NUMBER", "?")} instead"
+    UI.important("#{version} is in review, so its metadata is uploaded on resubmission. #{message}")
+    File.write(ENV["GITHUB_STEP_SUMMARY"], "⚠️ #{message}\n", mode: "a") if ENV["GITHUB_STEP_SUMMARY"]
+    next
+  end
+
   upload_to_app_store_connect(metadata_only: true)
 end
 
 # The App Store app is the one the Prod config builds, whichever config is active
 private_lane :app_store_app_identifier do
   Xcodeproj::Config.new("../Config/CI/Prod.xcconfig").attributes["MAIN_TARGET_BUNDLE_ID"]
+end
+
+# The build number of this version that's in App Review, or nil if none is. If
+# a different version is in review, upload_to_app_store_connect refuses, so a
+# resubmission can't remove that from review
+private_lane :build_number_in_review do
+  app = Spaceship::ConnectAPI::App.find(app_store_app_identifier)
+  next nil unless app.get_in_progress_review_submission(platform: Spaceship::ConnectAPI::Platform::IOS)
+
+  editable_version = app.get_edit_app_store_version
+  next nil unless editable_version&.version_string == app_version_number
+
+  editable_version.build&.version
 end
 
 private_lane :upload_to_app_store_connect do |options|
@@ -217,10 +255,6 @@ private_lane :upload_to_app_store_connect do |options|
   overwrite_screenshots = options[:overwrite_screenshots] || false
   metadata_only = options[:metadata_only] || false
 
-  if submit_for_review
-    build_number = options[:build_number] || latest_testflight_build_number(app_identifier: app_identifier).to_s
-  end
-  
   deliver(
     app_identifier: app_identifier,
     # Creates the version on App Store Connect if it doesn't exist yet
@@ -234,7 +268,9 @@ private_lane :upload_to_app_store_connect do |options|
     skip_screenshots: metadata_only,
     precheck_include_in_app_purchases: false,
     force: true, # Skips the interactive preview of html file before uploading
-    build_number: build_number,
+    build_number: options[:build_number],
+    # Cancels the review submission in progress before submitting this build
+    reject_if_possible: options[:reject_if_possible] || false,
     submission_information: {
       add_id_info_uses_idfa: false,
       add_id_info_serves_ads: false,
