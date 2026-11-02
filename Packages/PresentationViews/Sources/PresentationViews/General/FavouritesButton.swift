@@ -56,7 +56,13 @@ public struct FavouritesButton: View {
             return wasRemoved
         }
         .accessibility(identifier: "acc.id.favourites.button.\(style.rawValue)")
-        .applyingStyle(style)
+        .applyingStyle(style, tint: largeStyleTint)
+    }
+
+    // Red while it would remove a favourite, matching the other destructive Remove buttons
+    private var largeStyleTint: Color {
+        if showingConfirmation { return .green }
+        return isSelected ? .red : .accentColor
     }
 
     @ViewBuilder
@@ -79,7 +85,6 @@ public struct FavouritesButton: View {
                     .transition(.push(from: .top))
             }
         }
-        .foregroundStyle(showingConfirmation ? .green : Color.accentColor)
     }
 
     private func buttonTapped() {
@@ -114,12 +119,12 @@ public struct FavouritesButton: View {
 
 private extension View {
 
-    @ViewBuilder func applyingStyle(_ style: FavouritesButton.Style) -> some View {
+    @ViewBuilder func applyingStyle(_ style: FavouritesButton.Style, tint: Color) -> some View {
         switch style {
         case .small:
             self.buttonStyle(.borderless)
         case .large:
-            self.buttonStyle(.primary)
+            self.buttonStyle(.primary(tint: tint))
         }
     }
 }
