@@ -55,7 +55,7 @@ jobs:
     environment:
       name: prod
     permissions:
-      contents: write # To push the release tag
+      contents: write # To push the release tag and create the GitHub release
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -75,3 +75,13 @@ jobs:
         run: |
           git tag --force "$VERSION"
           git push --force origin "refs/tags/$VERSION"
+      # The App Store release notes, followed by GitHub's changelog link. A
+      # resubmission replaces the release (not the tag), so it's always current
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.versions.outputs.version }}
+        run: |
+          gh release delete "$VERSION" --yes 2>/dev/null || true
+          gh release create "$VERSION" --verify-tag --title "$VERSION" \
+            --notes-file fastlane/metadata/en-GB/release_notes.txt --generate-notes
