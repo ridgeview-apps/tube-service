@@ -54,6 +54,10 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteLineGroupIDs.remove(favouriteLineGroupID)
     }
 
+    public mutating func removeFavouriteLineGroups(_ favouriteLineGroupIDs: some Sequence<Station.LineGroup.ID>) {
+        self.favouriteLineGroupIDs.subtract(favouriteLineGroupIDs)
+    }
+
     /// Only affects display order: stations that are no longer favourites are ignored when sorting.
     public mutating func reorderFavouriteStations(_ orderedStationIDs: [Station.ID]) {
         favouriteStationOrder = orderedStationIDs.removingDuplicates()

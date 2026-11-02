@@ -122,6 +122,18 @@ struct UserPreferencesTests {
     }
 
     @Test
+    func removingSeveralFavouriteLineGroupIDsKeepsTheRest() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.addFavouriteLineGroup("LineGroupA")
+        userPreferences.addFavouriteLineGroup("LineGroupB")
+        userPreferences.addFavouriteLineGroup("LineGroupC")
+
+        userPreferences.removeFavouriteLineGroups(["LineGroupA", "LineGroupB"])
+
+        #expect(userPreferences.favouriteLineGroupIDs == ["LineGroupC"])
+    }
+
+    @Test
     func saveRecentlyUsedStationID() throws {
         var userPreferences = UserPreferences.default
 

@@ -16,6 +16,7 @@ public struct ArrivalsPickerView: View {
 
     public enum Action {
         case reorderFavourites([Station.ID])
+        case removeFavourites([Station.LineGroup.ID])
     }
 
     public let mode: ArrivalsPickerMode
@@ -64,8 +65,8 @@ public struct ArrivalsPickerView: View {
         }
         .defaultMaxWidthWithFullBackground()
         .environment(\.editMode, $editMode)
-        .onChange(of: canReorderFavourites) {
-            if !canReorderFavourites { editMode = .inactive }
+        .onChange(of: favourites.isEmpty) {
+            if favourites.isEmpty { editMode = .inactive }
         }
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
@@ -82,7 +83,11 @@ public struct ArrivalsPickerView: View {
                     ArrivalsPickerExpandableCell(style: .plain, station: station)
                 }
                 .onMove(perform: moveFavourites)
+                .onDelete(perform: removeFavourites)
                 .moveDisabled(!canReorderFavourites)
+                // Empty swipe actions replace onDelete's swipe-to-delete, so stations are only removable from
+                // edit mode. Toggling deleteDisabled with edit mode instead stops the delete controls animating in.
+                .swipeActions {}
             } header: {
                 HStack {
                     LineGroupSectionHeader(
@@ -90,9 +95,7 @@ public struct ArrivalsPickerView: View {
                         imageName: "star.fill"
                     )
                     Spacer()
-                    if canReorderFavourites {
-                        editFavouritesButton
-                    }
+                    editFavouritesButton
                 }
                 .secondarySectionHeaderStyle()
             }
@@ -112,6 +115,12 @@ public struct ArrivalsPickerView: View {
         var reorderedStationIDs = favourites.map(\.id)
         reorderedStationIDs.move(fromOffsets: source, toOffset: destination)
         onAction(.reorderFavourites(reorderedStationIDs))
+    }
+
+    // Favourite stations only hold their favourited line groups, so this removes the whole station
+    private func removeFavourites(atOffsets offsets: IndexSet) {
+        let removedLineGroupIDs = offsets.flatMap { favourites[$0].lineGroups.map(\.id) }
+        withAnimation { onAction(.removeFavourites(removedLineGroupIDs)) }
     }
 
     private var allStationsSection: some View {

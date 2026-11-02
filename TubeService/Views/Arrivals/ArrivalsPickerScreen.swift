@@ -96,6 +96,8 @@ struct ArrivalsPickerScreen: View {
         switch action {
         case .reorderFavourites(let stationIDs):
             userPreferences.reorderFavouriteStations(stationIDs)
+        case .removeFavourites(let lineGroupIDs):
+            userPreferences.removeFavouriteLineGroups(lineGroupIDs)
         }
     }
 

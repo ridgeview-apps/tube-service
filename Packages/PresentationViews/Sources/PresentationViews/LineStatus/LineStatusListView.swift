@@ -7,6 +7,7 @@ public struct LineStatusListView: View {
     public enum Action {
         case selectLine(Line)
         case reorderFavourites([TrainLineID])
+        case removeFavourites([TrainLineID])
     }
 
     public let loadingState: LoadingState
@@ -77,8 +78,8 @@ public struct LineStatusListView: View {
             isGoodServiceSectionExpanded = false
             editMode = .inactive
         }
-        .onChange(of: canReorderFavourites) {
-            if !canReorderFavourites { editMode = .inactive }
+        .onChange(of: favourites.isEmpty) {
+            if favourites.isEmpty { editMode = .inactive }
         }
     }
 
@@ -102,13 +103,15 @@ public struct LineStatusListView: View {
     private var favouriteLineCells: some View {
         if !favourites.isEmpty {
             sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
-                if canReorderFavourites {
-                    editFavouritesButton
-                }
+                editFavouritesButton
             }
             tappableStatusCells(with: favourites)
                 .onMove(perform: moveFavourites)
+                .onDelete(perform: removeFavourites)
                 .moveDisabled(!canReorderFavourites)
+                // Empty swipe actions replace onDelete's swipe-to-delete, so lines are only removable from
+                // edit mode. Toggling deleteDisabled with edit mode instead stops the delete controls animating in.
+                .swipeActions {}
         }
     }
 
@@ -124,6 +127,11 @@ public struct LineStatusListView: View {
         var reorderedLineIDs = favourites.map(\.id)
         reorderedLineIDs.move(fromOffsets: source, toOffset: destination)
         onAction(.reorderFavourites(reorderedLineIDs))
+    }
+
+    private func removeFavourites(atOffsets offsets: IndexSet) {
+        let removedLineIDs = offsets.map { favourites[$0].id }
+        withAnimation { onAction(.removeFavourites(removedLineIDs)) }
     }
 
     @ViewBuilder

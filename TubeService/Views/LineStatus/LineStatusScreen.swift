@@ -93,6 +93,8 @@ struct LineStatusScreen: View {
             router.push(.lineStatusDetail(lineID: line.id, request: request))
         case .reorderFavourites(let lineIDs):
             userPreferences.reorderFavouriteLines(lineIDs)
+        case .removeFavourites(let lineIDs):
+            lineIDs.forEach { userPreferences.removeFavouriteLine($0) }
         }
     }
 }
