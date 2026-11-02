@@ -6,6 +6,7 @@ extension UserPreferences {
         case favouriteLineGroupIDs = "favourites"
         case recentlySelectedStations
         case favouriteLineIDs
+        case favouriteStationOrder
         case journeyModePreset
         case recentlySavedJourneys
         case readSystemStatusMessage
@@ -19,6 +20,7 @@ extension UserPreferences {
 
         let rawLineIDs = (try? container.decode([String].self, forKey: .favouriteLineIDs)) ?? []
         favouriteLineIDs = rawLineIDs.compactMap { TrainLineID(rawValue: $0) }.removingDuplicates()
+        favouriteStationOrder = ((try? container.decode([Station.ID].self, forKey: .favouriteStationOrder)) ?? []).removingDuplicates()
 
         journeyModePreset = (try? container.decode(JourneyModePreset.self, forKey: .journeyModePreset)) ?? .trainAndBus
 
@@ -31,6 +33,7 @@ extension UserPreferences {
         try container.encode(favouriteLineGroupIDs, forKey: .favouriteLineGroupIDs)
         try container.encode(recentlySelectedStations, forKey: .recentlySelectedStations)
         try container.encode(favouriteLineIDs, forKey: .favouriteLineIDs)
+        try container.encode(favouriteStationOrder, forKey: .favouriteStationOrder)
         try container.encode(journeyModePreset, forKey: .journeyModePreset)
         try container.encode(recentlySavedJourneys, forKey: .recentlySavedJourneys)
         try container.encode(readSystemStatusMessage, forKey: .readSystemStatusMessage)

@@ -6,6 +6,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public static let `default`: UserPreferences = .init(
         favouriteLineGroupIDs: [],
         favouriteLineIDs: [],
+        favouriteStationOrder: [],
         recentlySelectedStations: [],
         journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
@@ -13,6 +14,8 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     )
 
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
+    /// The user's chosen order for stations in their favourite line groups (which are stored unordered).
+    public internal(set) var favouriteStationOrder: [Station.ID]
     public internal(set) var favouriteLineIDs: [Line.ID]
     public var recentlySelectedStations: [Station.ID]
     public var journeyModePreset: JourneyModePreset
@@ -22,6 +25,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
         favouriteLineIDs: [Line.ID] = [],
+        favouriteStationOrder: [Station.ID] = [],
         recentlySelectedStations: [Station.ID] = [],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
@@ -29,6 +33,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
         self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
+        self.favouriteStationOrder = favouriteStationOrder.removingDuplicates()
         self.recentlySelectedStations = recentlySelectedStations
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
@@ -47,6 +52,11 @@ public struct UserPreferences: Equatable, Codable, Sendable {
 
     public mutating func removeFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
         favouriteLineGroupIDs.remove(favouriteLineGroupID)
+    }
+
+    /// Only affects display order: stations that are no longer favourites are ignored when sorting.
+    public mutating func reorderFavouriteStations(_ orderedStationIDs: [Station.ID]) {
+        favouriteStationOrder = orderedStationIDs.removingDuplicates()
     }
 
     public func containsFavouriteLine(_ lineID: TrainLineID) -> Bool {

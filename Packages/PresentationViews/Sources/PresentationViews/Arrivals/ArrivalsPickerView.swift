@@ -5,7 +5,7 @@ import Models
 // MARK: - Data types
 
 public enum ArrivalsPickerMode: Equatable {
-    case favouritesVisible(favourites: Set<Station.LineGroup.ID>)
+    case favouritesVisible(favourites: Set<Station.LineGroup.ID>, order: [Station.ID])
     case searchResults
 }
 
@@ -14,27 +14,38 @@ public enum ArrivalsPickerMode: Equatable {
 
 public struct ArrivalsPickerView: View {
 
+    public enum Action {
+        case reorderFavourites([Station.ID])
+    }
+
     public let mode: ArrivalsPickerMode
     public let allStations: [Station]
 
     @Binding public var selection: Station.LineGroup?
+    public let onAction: (Action) -> Void
 
     private let favourites: [Station]
+
+    @State private var editMode: EditMode = .inactive
+
+    private var canReorderFavourites: Bool { favourites.count > 1 }
 
     // MARK: - Init
 
     public init(
         allStations: [Station],
         mode: ArrivalsPickerMode,
-        selection: Binding<Station.LineGroup?>
+        selection: Binding<Station.LineGroup?>,
+        onAction: @escaping (Action) -> Void
     ) {
         self.allStations = allStations
         self.mode = mode
         self._selection = selection
+        self.onAction = onAction
 
         switch mode {
-        case let .favouritesVisible(favourites):
-            self.favourites = allStations.favourites(matching: favourites)
+        case let .favouritesVisible(favourites, order):
+            self.favourites = allStations.favourites(matching: favourites, order: order)
         case .searchResults:
             self.favourites = []
         }
@@ -43,7 +54,7 @@ public struct ArrivalsPickerView: View {
     // MARK: Layout
 
     public var body: some View {
-        List(selection: $selection) {
+        List(selection: listSelection) {
             Group {
                 if case .favouritesVisible = mode {
                     favouritesSection
@@ -52,19 +63,55 @@ public struct ArrivalsPickerView: View {
             }
         }
         .defaultMaxWidthWithFullBackground()
+        .environment(\.editMode, $editMode)
+        .onChange(of: canReorderFavourites) {
+            if !canReorderFavourites { editMode = .inactive }
+        }
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
+    }
+
+    // Rows are drag targets while reordering, so selecting one shouldn't navigate away
+    private var listSelection: Binding<Station.LineGroup?> {
+        editMode.isEditing ? .constant(nil) : $selection
     }
 
     @ViewBuilder private var favouritesSection: some View {
         if !favourites.isEmpty {
-            stationsSection(
-                with: favourites,
-                header: .init(
-                    title: .arrivalsPickerFavouritesSectionTitle,
-                    imageName: "star.fill"
-                )
-            )
+            Section {
+                ForEach(favourites) { station in
+                    ArrivalsPickerExpandableCell(style: .plain, station: station)
+                }
+                .onMove(perform: moveFavourites)
+                .moveDisabled(!canReorderFavourites)
+            } header: {
+                HStack {
+                    LineGroupSectionHeader(
+                        title: .arrivalsPickerFavouritesSectionTitle,
+                        imageName: "star.fill"
+                    )
+                    Spacer()
+                    if canReorderFavourites {
+                        editFavouritesButton
+                    }
+                }
+                .secondarySectionHeaderStyle()
+            }
+            .lineGroupListRowStyle()
         }
+    }
+
+    private var editFavouritesButton: some View {
+        let title: LocalizedStringResource = editMode.isEditing ? .globalDone : .globalEdit
+        return Button(title) {
+            withAnimation { editMode = editMode.isEditing ? .inactive : .active }
+        }
+        .foregroundStyle(.tint)
+    }
+
+    private func moveFavourites(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var reorderedStationIDs = favourites.map(\.id)
+        reorderedStationIDs.move(fromOffsets: source, toOffset: destination)
+        onAction(.reorderFavourites(reorderedStationIDs))
     }
 
     private var allStationsSection: some View {
@@ -105,6 +152,22 @@ private struct ArrivalsPickerExpandableCell: View {
     let style: LineGroupCell.Style
     let station: Station
 
+    @Environment(\.editMode) private var editMode
+    @State private var isExpanded = false
+
+    private var isEditing: Bool { editMode?.wrappedValue.isEditing == true }
+
+    // Stations stay collapsed while editing, so each one is dragged as a single row
+    private var isExpandedBinding: Binding<Bool> {
+        Binding(
+            get: { isExpanded && !isEditing },
+            set: { newValue in
+                guard !isEditing else { return }
+                isExpanded = newValue
+            }
+        )
+    }
+
     var body: some View {
         Group {
             if station.lineGroups.count == 1 {
@@ -114,7 +177,7 @@ private struct ArrivalsPickerExpandableCell: View {
                     showsDistance: true
                 )
             } else {
-                DisclosureGroup {
+                DisclosureGroup(isExpanded: isExpandedBinding) {
                     ForEach(station.lineGroups.sortedByName()) { lineGroup in
                         lineGroupCellLink(
                             for: lineGroup,
@@ -122,6 +185,8 @@ private struct ArrivalsPickerExpandableCell: View {
                             showsDistance: false
                         )
                     }
+                    // Only whole stations can be reordered, not the line groups within them
+                    .moveDisabled(true)
                 } label: {
                     lineGroupCell(
                         withLineIDs: station.sortedLineIDs,
@@ -180,7 +245,8 @@ private struct WrapperView: View {
             ArrivalsPickerView(
                 allStations: allStations,
                 mode: mode,
-                selection: $selection
+                selection: $selection,
+                onAction: { _ in }
             )
             .navigationTitle("Picker preview")
             .navigationDestination(item: $selection) { selection in
@@ -193,18 +259,21 @@ private struct WrapperView: View {
 
 #Preview("Normal mode (favourites)") {
     WrapperView(
-        mode: .favouritesVisible(favourites: [
-            "940GZZLUKSX-circle,hammersmith-city,metropolitan",  // Kings X - Circle, H&C, Met lines
-            "940GZZLUKSX-northern",  // Kings X - Northern line
-            "940GZZLUKSX-piccadilly",  // Kingx X - Piccadilly line
-            "940GZZLUPAC-bakerloo",
-            "940GZZLUHBT-northern"
-        ])
+        mode: .favouritesVisible(
+            favourites: [
+                "940GZZLUKSX-circle,hammersmith-city,metropolitan",  // Kings X - Circle, H&C, Met lines
+                "940GZZLUKSX-northern",  // Kings X - Northern line
+                "940GZZLUKSX-piccadilly",  // Kingx X - Piccadilly line
+                "940GZZLUPAC-bakerloo",
+                "940GZZLUHBT-northern"
+            ],
+            order: []
+        )
     )
 }
 
 #Preview("Normal mode (no favourites)") {
-    WrapperView(mode: .favouritesVisible(favourites: []))
+    WrapperView(mode: .favouritesVisible(favourites: [], order: []))
 }
 
 #Preview("Search results mode") {

@@ -21,7 +21,12 @@ struct ArrivalsPickerScreen: View {
 
     private var isSearching: Bool { !searchTerm.isEmpty }
     private var pickerMode: ArrivalsPickerMode {
-        isSearching ? .searchResults : .favouritesVisible(favourites: userPreferences.favouriteLineGroupIDs)
+        isSearching
+            ? .searchResults
+            : .favouritesVisible(
+                favourites: userPreferences.favouriteLineGroupIDs,
+                order: userPreferences.favouriteStationOrder
+            )
     }
 
 
@@ -68,7 +73,8 @@ struct ArrivalsPickerScreen: View {
             ArrivalsPickerView(
                 allStations: selectableStations,
                 mode: pickerMode,
-                selection: $selection
+                selection: $selection,
+                onAction: handleAction
             )
             .navigationTitle(Text(L10n.arrivalsPickerNavigationTitle))
             .withSettingsToolbarButton()
@@ -83,6 +89,13 @@ struct ArrivalsPickerScreen: View {
             selectableStations = stations.filteredStations(matchingName: searchTerm)
         } else {
             selectableStations = stations.allLondon
+        }
+    }
+
+    private func handleAction(_ action: ArrivalsPickerView.Action) {
+        switch action {
+        case .reorderFavourites(let stationIDs):
+            userPreferences.reorderFavouriteStations(stationIDs)
         }
     }
 

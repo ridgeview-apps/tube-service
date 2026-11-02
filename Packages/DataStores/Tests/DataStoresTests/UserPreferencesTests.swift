@@ -12,6 +12,7 @@ struct UserPreferencesTests {
         var expected = UserPreferences.default
         expected.addFavouriteLineGroup("line-group")
         expected.addFavouriteLine(.bakerloo)
+        expected.reorderFavouriteStations([ModelStubs.angelStation.id, ModelStubs.kingsCrossStation.id])
         expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
@@ -29,6 +30,7 @@ struct UserPreferencesTests {
 
         #expect(decoded.favouriteLineGroupIDs == expected.favouriteLineGroupIDs)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
+        #expect(decoded.favouriteStationOrder == expected.favouriteStationOrder)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
         #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
@@ -43,6 +45,7 @@ struct UserPreferencesTests {
 
         #expect(decoded.favouriteLineGroupIDs == ["line-group"])
         #expect(decoded.favouriteLineIDs.isEmpty)
+        #expect(decoded.favouriteStationOrder.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
         #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
