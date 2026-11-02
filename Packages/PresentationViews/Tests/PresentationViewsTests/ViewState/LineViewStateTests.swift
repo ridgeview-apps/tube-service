@@ -75,6 +75,20 @@ struct LineViewStateTests {
     }
 
     @Test
+    func favouritesFollowUserOrderRatherThanSeverity() {
+        let lines = [
+            Line(id: .bakerloo, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.with(statusSeverity: .severeDelays)]),
+            Line(id: .victoria, lineStatuses: [.goodService])
+        ]
+
+        let favourites = lines.favouritesOnly(matching: [.victoria, .bakerloo, .northern, .jubilee])
+
+        // Jubilee isn't in the data, so it's skipped
+        #expect(favourites.map(\.id) == [.victoria, .bakerloo, .northern])
+    }
+
+    @Test
     func linesWithValuesRemoved() {
         let lines = [
             Line(id: .bakerloo, lineStatuses: [.goodService]),

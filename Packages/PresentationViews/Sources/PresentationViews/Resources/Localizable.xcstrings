@@ -461,6 +461,17 @@
         }
       }
     },
+    "global.edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
     "global.new" : {
       "comment" : "Badge shown next to a feature that has recently been added",
       "extractionState" : "manual",
@@ -1827,6 +1838,30 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Good service"
+          }
+        }
+      }
+    },
+    "line.status.section.good.service.accessibility.collapsed" : {
+      "comment" : "Accessibility value for the Good service section header when its lines are hidden",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapsed"
+          }
+        }
+      }
+    },
+    "line.status.section.good.service.accessibility.expanded" : {
+      "comment" : "Accessibility value for the Good service section header when its lines are shown",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expanded"
           }
         }
       }

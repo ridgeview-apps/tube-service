@@ -12,6 +12,7 @@ struct UserPreferencesTests {
         var expected = UserPreferences.default
         expected.addFavouriteLineGroup("line-group")
         expected.addFavouriteLine(.bakerloo)
+        expected.reorderFavouriteStations([ModelStubs.angelStation.id, ModelStubs.kingsCrossStation.id])
         expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
@@ -29,6 +30,7 @@ struct UserPreferencesTests {
 
         #expect(decoded.favouriteLineGroupIDs == expected.favouriteLineGroupIDs)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
+        #expect(decoded.favouriteStationOrder == expected.favouriteStationOrder)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
         #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
@@ -43,6 +45,7 @@ struct UserPreferencesTests {
 
         #expect(decoded.favouriteLineGroupIDs == ["line-group"])
         #expect(decoded.favouriteLineIDs.isEmpty)
+        #expect(decoded.favouriteStationOrder.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
         #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
@@ -64,6 +67,40 @@ struct UserPreferencesTests {
         // 3. Remove the line ID
         userPreferences.removeFavouriteLine(.bakerloo)
         #expect(!userPreferences.containsFavouriteLine(.bakerloo))
+    }
+
+    @Test
+    func addingFavouriteLinesAppendsInOrderWithoutDuplicates() throws {
+        var userPreferences = UserPreferences.default
+
+        userPreferences.addFavouriteLine(.victoria)
+        userPreferences.addFavouriteLine(.bakerloo)
+        userPreferences.addFavouriteLine(.victoria)
+
+        #expect(userPreferences.favouriteLineIDs == [.victoria, .bakerloo])
+    }
+
+    @Test
+    func reorderingFavouriteLinesKeepsTheSameFavourites() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.addFavouriteLine(.victoria)
+        userPreferences.addFavouriteLine(.bakerloo)
+        userPreferences.addFavouriteLine(.northern)
+
+        // Jubilee isn't a favourite (ignored) and Northern is missing (kept at the end)
+        userPreferences.reorderFavouriteLines([.bakerloo, .jubilee, .victoria])
+
+        #expect(userPreferences.favouriteLineIDs == [.bakerloo, .victoria, .northern])
+    }
+
+    @Test
+    func decodingFavouriteLinesPreservesOrderAndRemovesDuplicates() throws {
+        let json = #"{"favouriteLineIDs":["victoria","bakerloo","victoria","not-a-line"]}"#
+        let data = try #require(json.data(using: .utf8))
+
+        let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
+
+        #expect(decoded.favouriteLineIDs == [.victoria, .bakerloo])
     }
 
     @Test

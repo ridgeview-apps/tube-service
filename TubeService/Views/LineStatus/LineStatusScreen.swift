@@ -38,7 +38,7 @@ struct LineStatusScreen: View {
             favouriteLineIDs: userPreferences.favouriteLineIDs,
             disruptionCountsByLineID: model.disruptionCountsByLineID,
             refreshDate: refreshDate,
-            onSelectLine: { line in router.push(.lineStatusDetail(lineID: line.id, request: request)) },
+            onAction: handleAction,
             selectedFilterOption: $selectedFilterOption,
             selectedDate: $selectedDate,
             selectedWeekendDayFilter: $selectedWeekendDayFilter
@@ -49,21 +49,21 @@ struct LineStatusScreen: View {
         }
         .withSettingsToolbarButton()
         .onAppear {
-            fetchIfStale()
+            refreshIfStale()
         }
         .onSceneDidBecomeActive {
-            fetchIfStale()
+            refreshIfStale()
         }
         .onChange(of: selectedFilterOption) {
             router.popToRoot(on: .lineStatus)
             selectedWeekendDayFilter = .both
-            fetchIfStale()
+            refreshIfStale()
         }
         .onChange(of: selectedDate) {
-            fetchIfStale()
+            refreshIfStale()
         }
         .onChange(of: selectedWeekendDayFilter) {
-            fetchIfStale()
+            refreshIfStale()
         }
         .onCalendarDayChanged {
             selectedFilterOption = .today
@@ -83,10 +83,18 @@ struct LineStatusScreen: View {
         model.lineStatusData(for: request)?.fetchedAt
     }
 
-    private func fetchIfStale() {
+    private func refreshIfStale() {
         Task { await model.refreshIfStale(for: request) }
     }
 
+    private func handleAction(_ action: LineStatusListView.Action) {
+        switch action {
+        case .selectLine(let line):
+            router.push(.lineStatusDetail(lineID: line.id, request: request))
+        case .reorderFavourites(let lineIDs):
+            userPreferences.reorderFavouriteLines(lineIDs)
+        }
+    }
 }
 
 // MARK: - Previews

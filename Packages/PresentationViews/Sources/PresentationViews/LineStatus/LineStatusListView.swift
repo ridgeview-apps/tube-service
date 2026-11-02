@@ -4,30 +4,38 @@ import SwiftUI
 
 public struct LineStatusListView: View {
 
+    public enum Action {
+        case selectLine(Line)
+        case reorderFavourites([TrainLineID])
+    }
+
     public let loadingState: LoadingState
     public let lines: [Line]
-    public let favouriteLineIDs: Set<TrainLineID>
+    public let favouriteLineIDs: [TrainLineID]
     public let disruptionCountsByLineID: [TrainLineID: Int]
     public let refreshDate: Date?
 
-    public let onSelectLine: (Line) -> Void
+    public let onAction: (Action) -> Void
     @Binding var selectedFilterOption: LineStatusFilterOption
     @Binding var selectedDate: Date
     @Binding var selectedWeekendDayFilter: WeekendDayFilter
 
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
-    private var allOtherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
+    private var goodServiceLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
 
-    @State private var isOtherLinesExpanded = false
+    @State private var isGoodServiceSectionExpanded = false
+    @State private var editMode: EditMode = .inactive
+
+    private var canReorderFavourites: Bool { favourites.count > 1 }
 
     public init(
         loadingState: LoadingState,
         lines: [Line],
-        favouriteLineIDs: Set<TrainLineID>,
+        favouriteLineIDs: [TrainLineID],
         disruptionCountsByLineID: [TrainLineID: Int],
         refreshDate: Date?,
-        onSelectLine: @escaping (Line) -> Void,
+        onAction: @escaping (Action) -> Void,
         selectedFilterOption: Binding<LineStatusFilterOption>,
         selectedDate: Binding<Date>,
         selectedWeekendDayFilter: Binding<WeekendDayFilter>
@@ -37,7 +45,7 @@ public struct LineStatusListView: View {
         self.favouriteLineIDs = favouriteLineIDs
         self.disruptionCountsByLineID = disruptionCountsByLineID
         self.refreshDate = refreshDate
-        self.onSelectLine = onSelectLine
+        self.onAction = onAction
         self._selectedFilterOption = selectedFilterOption
         self._selectedDate = selectedDate
         self._selectedWeekendDayFilter = selectedWeekendDayFilter
@@ -48,7 +56,6 @@ public struct LineStatusListView: View {
             Section {
                 loadingStatusView
                 lineStatusCells
-                bottomScrollContentPadding
             } header: {
                 LineStatusFilterHeader(
                     refreshDate: refreshDate,
@@ -63,8 +70,16 @@ public struct LineStatusListView: View {
         }
         .defaultMaxWidthWithFullBackground()
         .listStyle(.plain)
+        .contentMargins(.bottom, 24, for: .scrollContent)
         .environment(\.defaultMinListRowHeight, 0)
-        .onChange(of: selectedFilterOption) { isOtherLinesExpanded = false }
+        .environment(\.editMode, $editMode)
+        .onChange(of: selectedFilterOption) {
+            isGoodServiceSectionExpanded = false
+            editMode = .inactive
+        }
+        .onChange(of: canReorderFavourites) {
+            if !canReorderFavourites { editMode = .inactive }
+        }
     }
 
     private var loadingStatusView: some View {
@@ -77,34 +92,62 @@ public struct LineStatusListView: View {
 
     @ViewBuilder private var lineStatusCells: some View {
         if shouldShowLineStatusCells {
-            Spacer()
-                .listRowInsets(.zero)
-                .frame(height: 8)
-            if !favourites.isEmpty {
-                tappableStatusCells(with: favourites)
-            }
-            if !disruptions.isEmpty {
-                tappableStatusCells(with: disruptions)
-            }
-            allOtherLineCells
+            favouriteLineCells
+            disruptionLineCells
+            goodServiceLineCells
         }
     }
 
     @ViewBuilder
-    private var allOtherLineCells: some View {
-        if !allOtherLines.isEmpty {
-            if allOtherLines.count == 1 {
+    private var favouriteLineCells: some View {
+        if !favourites.isEmpty {
+            sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
+                if canReorderFavourites {
+                    editFavouritesButton
+                }
+            }
+            tappableStatusCells(with: favourites)
+                .onMove(perform: moveFavourites)
+                .moveDisabled(!canReorderFavourites)
+        }
+    }
+
+    private var editFavouritesButton: some View {
+        let title: LocalizedStringResource = editMode.isEditing ? .globalDone : .globalEdit
+        return Button(title) {
+            withAnimation { editMode = editMode.isEditing ? .inactive : .active }
+        }
+        .buttonStyle(.borderless)
+    }
+
+    private func moveFavourites(fromOffsets source: IndexSet, toOffset destination: Int) {
+        var reorderedLineIDs = favourites.map(\.id)
+        reorderedLineIDs.move(fromOffsets: source, toOffset: destination)
+        onAction(.reorderFavourites(reorderedLineIDs))
+    }
+
+    @ViewBuilder
+    private var disruptionLineCells: some View {
+        if !disruptions.isEmpty {
+            sectionLabel(.lineStatusSectionDisruptions)
+            tappableStatusCells(with: disruptions)
+        }
+    }
+
+    @ViewBuilder
+    private var goodServiceLineCells: some View {
+        if !goodServiceLines.isEmpty {
+            if goodServiceLines.count == 1 {
                 sectionLabel(.lineStatusSectionGoodService)
-                tappableStatusCells(with: allOtherLines)
+                tappableStatusCells(with: goodServiceLines)
             } else {
-                collapsibleOtherLinesSectionLabel
-                if isOtherLinesExpanded {
-                    tappableStatusCells(with: allOtherLines)
+                collapsibleGoodServiceSectionLabel
+                if isGoodServiceSectionExpanded {
+                    tappableStatusCells(with: goodServiceLines)
                 } else {
-                    Button {
-                        withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
-                    } label: {
-                        otherLinesSummaryCell
+                    // The summary card expands the lines too, as it's the larger tap target
+                    Button(action: toggleGoodServiceSection) {
+                        goodServiceSummaryCell
                     }
                     .buttonStyle(.borderless)
                 }
@@ -112,10 +155,12 @@ public struct LineStatusListView: View {
         }
     }
 
-    private var collapsibleOtherLinesSectionLabel: some View {
-        Button {
-            withAnimation(.easeInOut) { isOtherLinesExpanded.toggle() }
-        } label: {
+    private func toggleGoodServiceSection() {
+        withAnimation(.easeInOut) { isGoodServiceSectionExpanded.toggle() }
+    }
+
+    private var collapsibleGoodServiceSectionLabel: some View {
+        Button(action: toggleGoodServiceSection) {
             HStack(spacing: 8) {
                 Text(.lineStatusSectionGoodService)
                     .secondarySectionHeaderStyle()
@@ -123,26 +168,48 @@ public struct LineStatusListView: View {
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
-                    .rotationEffect(.degrees(isOtherLinesExpanded ? 90 : 0))
+                    .rotationEffect(.degrees(isGoodServiceSectionExpanded ? 90 : 0))
             }
             .contentShape(.rect)
             .padding(.top, 8)
         }
         .buttonStyle(.plain)
+        .accessibilityAddTraits(.isHeader)
+        .accessibilityValue(
+            Text(
+                isGoodServiceSectionExpanded
+                    ? .lineStatusSectionGoodServiceAccessibilityExpanded
+                    : .lineStatusSectionGoodServiceAccessibilityCollapsed
+            )
+        )
     }
 
     private func sectionLabel(_ title: LocalizedStringResource, systemImage: String? = nil) -> some View {
+        sectionLabel(title, systemImage: systemImage) { EmptyView() }
+    }
+
+    private func sectionLabel(
+        _ title: LocalizedStringResource,
+        systemImage: String?,
+        @ViewBuilder trailingContent: () -> some View
+    ) -> some View {
         HStack(spacing: 4) {
-            if let systemImage {
-                Image(systemName: systemImage)
+            Group {
+                if let systemImage {
+                    Image(systemName: systemImage)
+                }
+                Text(title)
             }
-            Text(title)
+            .secondarySectionHeaderStyle()
+            .accessibilityAddTraits(.isHeader)
+            Spacer()
+            trailingContent()
+                .font(.footnote.weight(.semibold))
         }
-        .secondarySectionHeaderStyle()
         .padding(.top, 8)
     }
 
-    private func tappableStatusCells(with lines: [Line]) -> some View {
+    private func tappableStatusCells(with lines: [Line]) -> some DynamicViewContent {
         ForEach(lines) { line in
             tappableStatusCell(for: line)
         }
@@ -150,7 +217,9 @@ public struct LineStatusListView: View {
 
     private func tappableStatusCell(for line: Line) -> some View {
         Button {
-            onSelectLine(line)
+            // Rows are drag targets while reordering, so don't navigate away
+            guard !editMode.isEditing else { return }
+            onAction(.selectLine(line))
         } label: {
             LineStatusCell(
                 style: .singleLine(line, isFavourite: favouriteLineIDs.contains(line.id)),
@@ -191,17 +260,13 @@ public struct LineStatusListView: View {
         return selectedDate >= startOfTomorrow
     }
 
-    private var otherLinesSummaryCell: some View {
+    private var goodServiceSummaryCell: some View {
         LineStatusCell(
-            style: .multiLine(allOtherLines),
+            style: .multiLine(goodServiceLines),
             showsAccessory: true
         )
         .cardStyle()
         .frame(minHeight: 76)
-    }
-
-    private var bottomScrollContentPadding: some View {
-        Spacer().frame(height: 24)
     }
 }
 
@@ -212,7 +277,7 @@ import ModelStubs
 private struct WrapperView: View {
     let loadingState: LoadingState
     let lines: [Line]
-    var favouriteLineIDs: Set<TrainLineID> = []
+    var favouriteLineIDs: [TrainLineID] = []
     var disruptionCountsByLineID: [TrainLineID: Int] = [:]
     var refreshDate: Date? = .now
     @State var selectedFilterOption: LineStatusFilterOption = .today
@@ -227,7 +292,7 @@ private struct WrapperView: View {
                 favouriteLineIDs: favouriteLineIDs,
                 disruptionCountsByLineID: disruptionCountsByLineID,
                 refreshDate: refreshDate,
-                onSelectLine: { _ in },
+                onAction: { _ in },
                 selectedFilterOption: $selectedFilterOption,
                 selectedDate: $selectedDate,
                 selectedWeekendDayFilter: $selectedWeekendDayFilter

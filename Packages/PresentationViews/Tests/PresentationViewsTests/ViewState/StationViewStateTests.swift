@@ -139,4 +139,25 @@ struct StationViewStateTests {
         #expect(favouriteStationIDs.contains(ModelStubs.paddingtonStation.id))
         #expect(favouriteStationIDs.contains(ModelStubs.highBarnetStation.id))
     }
+
+    @Test
+    func favouriteStationsFollowUserOrderThenName() {
+        let favouriteLineGroupIDs: Set<Station.LineGroup.ID> = [
+            "940GZZLUKSX-northern",
+            "940GZZLUPAC-bakerloo",
+            "940GZZLUHBT-northern"
+        ]
+        // Paddington isn't in the order (e.g. newly added), and Angel is no longer a favourite
+        let order = [ModelStubs.highBarnetStation.id, ModelStubs.angelStation.id, ModelStubs.kingsCrossStation.id]
+
+        let favouriteStations = ModelStubs.stations.favourites(matching: favouriteLineGroupIDs, order: order)
+
+        #expect(
+            favouriteStations.map(\.id) == [
+                ModelStubs.highBarnetStation.id,
+                ModelStubs.kingsCrossStation.id,
+                ModelStubs.paddingtonStation.id
+            ]
+        )
+    }
 }

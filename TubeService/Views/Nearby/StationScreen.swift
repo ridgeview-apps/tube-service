@@ -88,7 +88,7 @@ struct StationScreen: View {
 }
 
 private extension Sequence where Element == Line {
-    func toLineStatusCellStyles(for station: Station, favouriteLineIDs: Set<Line.ID>) -> [LineStatusCell.Style] {
+    func toLineStatusCellStyles(for station: Station, favouriteLineIDs: [Line.ID]) -> [LineStatusCell.Style] {
         self
             .sortedByStatusSeverity()
             .filter { station.sortedLineIDs.contains($0.id) }

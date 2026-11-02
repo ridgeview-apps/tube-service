@@ -1,10 +1,12 @@
 import Foundation
+import Shared
 
 public struct UserPreferences: Equatable, Codable, Sendable {
 
     public static let `default`: UserPreferences = .init(
         favouriteLineGroupIDs: [],
         favouriteLineIDs: [],
+        favouriteStationOrder: [],
         recentlySelectedStations: [],
         journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
@@ -12,7 +14,9 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     )
 
     public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
-    public var favouriteLineIDs: Set<Line.ID>
+    /// The user's chosen order for stations in their favourite line groups (which are stored unordered).
+    public internal(set) var favouriteStationOrder: [Station.ID]
+    public internal(set) var favouriteLineIDs: [Line.ID]
     public var recentlySelectedStations: [Station.ID]
     public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
@@ -20,14 +24,16 @@ public struct UserPreferences: Equatable, Codable, Sendable {
 
     public init(
         favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
-        favouriteLineIDs: Set<Line.ID> = [],
+        favouriteLineIDs: [Line.ID] = [],
+        favouriteStationOrder: [Station.ID] = [],
         recentlySelectedStations: [Station.ID] = [],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
         readSystemStatusMessage: SystemStatus.ID?
     ) {
         self.favouriteLineGroupIDs = favouriteLineGroupIDs
-        self.favouriteLineIDs = favouriteLineIDs
+        self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
+        self.favouriteStationOrder = favouriteStationOrder.removingDuplicates()
         self.recentlySelectedStations = recentlySelectedStations
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
@@ -48,16 +54,31 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteLineGroupIDs.remove(favouriteLineGroupID)
     }
 
+    /// Only affects display order: stations that are no longer favourites are ignored when sorting.
+    public mutating func reorderFavouriteStations(_ orderedStationIDs: [Station.ID]) {
+        favouriteStationOrder = orderedStationIDs.removingDuplicates()
+    }
+
     public func containsFavouriteLine(_ lineID: TrainLineID) -> Bool {
         favouriteLineIDs.contains(lineID)
     }
 
+    /// New favourites are added to the end of the user's ordering.
     public mutating func addFavouriteLine(_ favouriteLineID: TrainLineID) {
-        favouriteLineIDs.insert(favouriteLineID)
+        guard !favouriteLineIDs.contains(favouriteLineID) else { return }
+        favouriteLineIDs.append(favouriteLineID)
     }
 
     public mutating func removeFavouriteLine(_ favouriteLineID: TrainLineID) {
-        favouriteLineIDs.remove(favouriteLineID)
+        favouriteLineIDs.removeAll { $0 == favouriteLineID }
+    }
+
+    /// Applies a new ordering without changing which lines are favourites:
+    /// IDs that aren't already favourites are ignored, and any favourites missing from `orderedLineIDs` keep their place at the end.
+    public mutating func reorderFavouriteLines(_ orderedLineIDs: [TrainLineID]) {
+        let reordered = orderedLineIDs.removingDuplicates().filter { favouriteLineIDs.contains($0) }
+        let missing = favouriteLineIDs.filter { !reordered.contains($0) }
+        favouriteLineIDs = reordered + missing
     }
 
     // MARK: - Recent Selections
