@@ -194,14 +194,9 @@ public struct LineStatusListView: View {
         @ViewBuilder trailingContent: () -> some View
     ) -> some View {
         HStack(spacing: 4) {
-            Group {
-                if let systemImage {
-                    Image(systemName: systemImage)
-                }
-                Text(title)
-            }
-            .secondarySectionHeaderStyle()
-            .accessibilityAddTraits(.isHeader)
+            LineGroupSectionHeader(title: title, imageName: systemImage)
+                .secondarySectionHeaderStyle()
+                .accessibilityAddTraits(.isHeader)
             Spacer()
             trailingContent()
                 .font(.footnote.weight(.semibold))
