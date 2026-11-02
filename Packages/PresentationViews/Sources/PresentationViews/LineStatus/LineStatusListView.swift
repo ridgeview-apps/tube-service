@@ -217,7 +217,7 @@ public struct LineStatusListView: View {
             onAction(.selectLine(line))
         } label: {
             LineStatusCell(
-                style: .singleLine(line, isFavourite: favouriteLineIDs.contains(line.id)),
+                style: .singleLine(line, isFavourite: false),  // The Favourites section label marks them instead
                 showsAccessory: true,
                 animatedAccessoryImage: true,
                 historyIndicator: historyIndicator(for: line)
