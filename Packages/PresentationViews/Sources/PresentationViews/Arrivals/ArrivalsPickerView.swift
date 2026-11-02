@@ -55,7 +55,7 @@ public struct ArrivalsPickerView: View {
     // MARK: Layout
 
     public var body: some View {
-        List(selection: listSelection) {
+        List(selection: $selection) {
             Group {
                 if case .favouritesVisible = mode {
                     favouritesSection
@@ -71,16 +71,11 @@ public struct ArrivalsPickerView: View {
         .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
 
-    // Rows are drag targets while reordering, so selecting one shouldn't navigate away
-    private var listSelection: Binding<Station.LineGroup?> {
-        editMode.isEditing ? .constant(nil) : $selection
-    }
-
     @ViewBuilder private var favouritesSection: some View {
         if !favourites.isEmpty {
             Section {
                 ForEach(favourites) { station in
-                    ArrivalsPickerExpandableCell(style: .plain, station: station)
+                    ArrivalsPickerExpandableCell(style: .plain, station: station, isEditable: true)
                 }
                 .onMove(perform: moveFavourites)
                 .onDelete(perform: removeFavourites)
@@ -160,33 +155,27 @@ private struct ArrivalsPickerExpandableCell: View {
 
     let style: LineGroupCell.Style
     let station: Station
+    var isEditable = false
 
     @Environment(\.editMode) private var editMode
     @State private var isExpanded = false
 
-    private var isEditing: Bool { editMode?.wrappedValue.isEditing == true }
-
-    // Stations stay collapsed while editing, so each one is dragged as a single row
-    private var isExpandedBinding: Binding<Bool> {
-        Binding(
-            get: { isExpanded && !isEditing },
-            set: { newValue in
-                guard !isEditing else { return }
-                isExpanded = newValue
-            }
-        )
-    }
+    private var isBeingEdited: Bool { isEditable && editMode?.wrappedValue.isEditing == true }
 
     var body: some View {
         Group {
-            if station.lineGroups.count == 1 {
+            if isBeingEdited {
+                // A plain row while editing: it's dragged as a whole station, and has no chevron
+                // or link suggesting a tap will expand it or navigate away
+                stationCell
+            } else if station.lineGroups.count == 1 {
                 lineGroupCellLink(
                     for: station.lineGroups[0],
                     title: station.name,
                     showsDistance: true
                 )
             } else {
-                DisclosureGroup(isExpanded: isExpandedBinding) {
+                DisclosureGroup(isExpanded: $isExpanded) {
                     ForEach(station.lineGroups.sortedByName()) { lineGroup in
                         lineGroupCellLink(
                             for: lineGroup,
@@ -197,17 +186,21 @@ private struct ArrivalsPickerExpandableCell: View {
                     // Only whole stations can be reordered, not the line groups within them
                     .moveDisabled(true)
                 } label: {
-                    lineGroupCell(
-                        withLineIDs: station.sortedLineIDs,
-                        title: station.name,
-                        showsDistance: true
-                    )
-                    .accessibilityIdentifier(station.id)
+                    stationCell
                 }
                 .tint(.clear)
             }
         }
         .frame(minHeight: 52)
+    }
+
+    private var stationCell: some View {
+        lineGroupCell(
+            withLineIDs: station.sortedLineIDs,
+            title: station.name,
+            showsDistance: true
+        )
+        .accessibilityIdentifier(station.id)
     }
 
 

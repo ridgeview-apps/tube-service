@@ -105,7 +105,7 @@ public struct LineStatusListView: View {
             sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
                 editFavouritesButton
             }
-            tappableStatusCells(with: favourites)
+            tappableStatusCells(with: favourites, isEditable: true)
                 .onMove(perform: moveFavourites)
                 .onDelete(perform: removeFavourites)
                 .moveDisabled(!canReorderFavourites)
@@ -212,16 +212,16 @@ public struct LineStatusListView: View {
         .padding(.top, 8)
     }
 
-    private func tappableStatusCells(with lines: [Line]) -> some DynamicViewContent {
+    private func tappableStatusCells(with lines: [Line], isEditable: Bool = false) -> some DynamicViewContent {
         ForEach(lines) { line in
-            tappableStatusCell(for: line)
+            tappableStatusCell(for: line, isEditable: isEditable)
         }
     }
 
-    private func tappableStatusCell(for line: Line) -> some View {
+    private func tappableStatusCell(for line: Line, isEditable: Bool) -> some View {
         Button {
-            // Rows are drag targets while reordering, so don't navigate away
-            guard !editMode.isEditing else { return }
+            // Editable rows are drag targets while editing, so don't navigate away
+            guard !(isEditable && editMode.isEditing) else { return }
             onAction(.selectLine(line))
         } label: {
             LineStatusCell(
