@@ -16,5 +16,5 @@ cd "$REPO_ROOT"
 find TubeService Packages TubeServiceTests TubeServiceUITests \
     -path "*/.build" -prune -o \
     -name "*.swift" \
-    ! -path "TubeServiceUITests/SnapshotHelper.swift" \
+    ! -path "TubeServiceUITests/Support/SnapshotHelper.swift" \
     -print0 | xargs -0 "$SWIFT_FORMAT" lint --configuration "$REPO_ROOT/.swift-format" --parallel
