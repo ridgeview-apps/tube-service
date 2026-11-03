@@ -61,7 +61,8 @@ Keep lower-level helpers that only exist for tests `internal`, not `public`; tes
 UI tests drive the app through page objects in `TubeServiceUITests/Pages/`, one per screen, built on the generic `TubeServiceUITests/Support/` layer.
 
 - **Naming:** the `Page` suffix is reserved for UI test page objects, e.g. `JourneyPlannerPage`. App views are named `…Screen` (main target) or `…View` (PresentationViews), never `…Page`.
-- **What a page holds:** element queries, actions that return the page they lead to (`lineStatus.openLine("elizabeth") -> LineDetailPage`), and a `rootElement` that `waitingToAppear(in:)` waits for. Pages don't assert on content; tests do.
+- **What a page holds:** element queries, actions that return the page they lead to (`lineStatus.tapLine("elizabeth") -> LineDetailPage`), and a `rootElement` that `waitingToAppear(in:)` waits for. Pages don't assert on content; tests do.
+- **Action names:** name each action after the gesture and the element, e.g. `tapLine(_:)`, `longPressFavourite()`, `swipeToDeleteRecentJourney()`. Say "first" when it acts on the first of several matches (`tapFirstJourney()`). The return type says where the action leads, and the doc comment says why.
 - **Finding elements:** by `AccessibilityID` (`Shared/UITesting/AccessibilityID.swift`), never by display text, so tests survive copy changes and localization. Add an identifier only when a page needs it. Put a screen's root identifier on its `List` or `ScrollView`, not on a wrapping container, where it spreads to every child element.
 - **Waiting:** use the `Support/` helpers (`waitToExist`, `tapWhenHittable`, …). They fail the test with a clear message rather than silently skipping a step.
 - Add pages and actions only when a test needs them.

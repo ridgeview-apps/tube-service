@@ -22,27 +22,27 @@ struct TabBar {
 
     let app: XCUIApplication
 
-    func openJourneyPlanner() -> JourneyPlannerPage {
-        select(.journeyPlanner)
+    func tapJourneyPlannerTab() -> JourneyPlannerPage {
+        tap(.journeyPlanner)
         return .waitingToAppear(in: app)
     }
 
-    func openArrivals() -> ArrivalsPickerPage {
-        select(.arrivals)
+    func tapArrivalsTab() -> ArrivalsPickerPage {
+        tap(.arrivals)
         return .waitingToAppear(in: app)
     }
 
-    func openNearby() -> NearbyPage {
-        select(.nearby)
+    func tapNearbyTab() -> NearbyPage {
+        tap(.nearby)
         return .waitingToAppear(in: app)
     }
 
-    func openMaps() -> MapsPage {
-        select(.maps)
+    func tapMapsTab() -> MapsPage {
+        tap(.maps)
         return .waitingToAppear(in: app)
     }
 
-    private func select(_ tab: Tab) {
+    private func tap(_ tab: Tab) {
         item(for: tab).tapWhenHittable()
     }
 

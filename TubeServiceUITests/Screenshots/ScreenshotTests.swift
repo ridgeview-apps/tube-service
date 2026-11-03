@@ -22,31 +22,31 @@ final class ScreenshotTests: ScreenshotTestCase {
         let lineStatus = LineStatusPage.waitingToAppear(in: app)
         capture(lineStatus, as: "ServiceStatuses-Today")
 
-        let lineDetail = lineStatus.openLine("elizabeth")
+        let lineDetail = lineStatus.tapLine("elizabeth")
         capture(lineDetail, as: "ServiceStatusDetail-Today")
 
-        let weekend = lineDetail.goBack().showThisWeekend()
+        let weekend = lineDetail.tapBackButton().tapThisWeekendFilter()
         capture(weekend, as: "ServiceStatuses-Weekend")
 
-        let journeyPlanner = weekend.tabBar.openJourneyPlanner()
+        let journeyPlanner = weekend.tabBar.tapJourneyPlannerTab()
         capture(journeyPlanner, as: "JourneyPlannerForm")
 
-        let journeyResults = journeyPlanner.planRecentJourney().expandFirstJourney().showFirstLegStops()
+        let journeyResults = journeyPlanner.tapFirstRecentJourney().tapFirstJourney().tapFirstStopsButton()
         capture(journeyResults, as: "JourneyPlannerResults")
 
-        let arrivalsPicker = journeyResults.tabBar.openArrivals()
+        let arrivalsPicker = journeyResults.tabBar.tapArrivalsTab()
         capture(arrivalsPicker, as: "LiveArrivalsPicker")
 
-        let arrivalsBoard = arrivalsPicker.openLineGroup("910GABWDXR-elizabeth")  // Abbey Wood
+        let arrivalsBoard = arrivalsPicker.tapLineGroup("910GABWDXR-elizabeth")  // Abbey Wood
         capture(arrivalsBoard, as: "LiveArrivalsBoard1")
 
-        let nearby = arrivalsBoard.tabBar.openNearby()
+        let nearby = arrivalsBoard.tabBar.tapNearbyTab()
         capture(nearby, as: "NearbyStations-List")
 
-        let station = nearby.openStation("HUBKGX")  // King's Cross St Pancras
+        let station = nearby.tapStation("HUBKGX")  // King's Cross St Pancras
         capture(station, as: "NearbyStations-Detail")
 
-        let maps = station.tabBar.openMaps()
+        let maps = station.tabBar.tapMapsTab()
         capture(maps, as: "Maps")
     }
 }

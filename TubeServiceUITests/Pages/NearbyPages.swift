@@ -6,7 +6,7 @@ struct NearbyPage: Page {
     var rootElement: XCUIElement { app.collectionViews[AccessibilityID.Nearby.list] }
 
     /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
-    func openStation(_ stationID: String) -> StationPage {
+    func tapStation(_ stationID: String) -> StationPage {
         app.buttons[AccessibilityID.Nearby.station(stationID)].tapWhenHittable()
         return .waitingToAppear(in: app)
     }

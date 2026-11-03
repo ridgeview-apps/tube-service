@@ -5,8 +5,8 @@ struct JourneyPlannerPage: Page {
     let app: XCUIApplication
     var rootElement: XCUIElement { app.collectionViews[AccessibilityID.JourneyPlanner.form] }
 
-    /// Plans the most recent journey, which fills in the form and shows its results.
-    func planRecentJourney() -> JourneyResultsPage {
+    /// Taps the most recent journey, which fills in the form and shows its results.
+    func tapFirstRecentJourney() -> JourneyResultsPage {
         app.buttons[AccessibilityID.JourneyPlanner.recentJourney].firstMatch.tapWhenHittable()
         return .waitingToAppear(in: app)
     }
@@ -22,15 +22,15 @@ struct JourneyResultsPage: Page {
         app.switches[AccessibilityID.JourneyResults.stopsToggle].firstMatch
     }
 
-    /// Expands the first journey to show its legs.
-    func expandFirstJourney() -> JourneyResultsPage {
+    /// Taps the first journey, which expands it to show its legs.
+    func tapFirstJourney() -> JourneyResultsPage {
         firstJourney.tapWhenHittable()
         firstStopsToggle.waitToExist()
         return self
     }
 
-    /// Shows the stops of the first journey's first leg that has them. Expand the journey first.
-    func showFirstLegStops() -> JourneyResultsPage {
+    /// Taps the first journey's first stops button, which shows that leg's stops. Tap the journey first.
+    func tapFirstStopsButton() -> JourneyResultsPage {
         // The toggle's label and value stay the same when it opens, but the journey's card grows to fit the stops
         let collapsedHeight = firstJourney.frame.height
         firstStopsToggle.tapWhenHittable()
