@@ -38,6 +38,7 @@ struct JourneyResultsCell: View {
             .padding()
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier(AccessibilityID.JourneyResults.journey)
         .cardStyle()
     }
 
@@ -64,7 +65,6 @@ struct JourneyResultsCell: View {
 
         }
         .accessibilityAddTraits(.isButton)
-        .accessibilityIdentifier(AccessibilityID.JourneyResults.journey)
     }
 
     private var startAndEndTime: some View {

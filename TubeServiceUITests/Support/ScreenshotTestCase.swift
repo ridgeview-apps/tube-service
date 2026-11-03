@@ -11,16 +11,16 @@ class ScreenshotTestCase: UITestCase {
         setupSnapshot(app)
     }
 
-    /// Captures `screen` as "NN-`name`" once it has finished loading.
+    /// Captures `page` as "NN-`name`" once it has finished loading.
     @MainActor
     func capture(
-        _ screen: some Screen,
+        _ page: some Page,
         as name: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        screen.rootElement.waitToExist(file: file, line: line)
-        screen.app.waitForLoadingToFinish(file: file, line: line)
+        page.rootElement.waitToExist(file: file, line: line)
+        page.app.waitForLoadingToFinish(file: file, line: line)
         captureCount += 1
         snapshot(String(format: "%02d-%@", captureCount, name))
     }
