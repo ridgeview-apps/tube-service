@@ -6,7 +6,7 @@ import PresentationViews
 extension JourneyPlannerForm {
     func toNewSavedJourney(
         id: UUID = UUID(),
-        timestamp: Date = .now
+        timestamp: Date
     ) -> SavedJourney? {
         guard from != to,
             let fromLocation = from?.toSavedJourneyLocationType(),

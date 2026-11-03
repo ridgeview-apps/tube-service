@@ -20,10 +20,13 @@ final class AppDataStore {
 
     private let dependencies: AppDependencies
 
+    /// The app's clock, which views read through the `\.now` environment value.
+    var now: @Sendable () -> Date { dependencies.now }
+
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
 
-        let stations = StationsDataStore(tflAPI: dependencies.tflAPI)
+        let stations = StationsDataStore(tflAPI: dependencies.tflAPI, now: dependencies.now)
         self.stations = stations
 
         let purchases = PurchaseStore(
@@ -41,7 +44,8 @@ final class AppDataStore {
         )
         self.location = LocationDataStore(
             locationManager: dependencies.locationManager,
-            stations: stations
+            stations: stations,
+            now: dependencies.now
         )
         let localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
         self.localSearchResults = localSearchResults
@@ -56,7 +60,8 @@ final class AppDataStore {
         )
         self.journeyPlanner = JourneyPlannerStore(
             tflAPI: dependencies.tflAPI,
-            localSearchResults: localSearchResults
+            localSearchResults: localSearchResults,
+            now: dependencies.now
         )
     }
 

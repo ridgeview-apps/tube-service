@@ -12,6 +12,7 @@ public struct JourneyPlannerFormView: View {
     let onAction: (JourneyPlannerForm.Action) -> Void
 
     @Namespace private var animationNamespace
+    @Environment(\.now) private var now
     private var showsDatePicker: Bool {
         form.timeSelection.option != .leaveNow
     }
@@ -101,7 +102,7 @@ public struct JourneyPlannerFormView: View {
             JourneyPlannerTimeChip(timeSelection: $form.timeSelection)
             CompactDatePicker(
                 selection: $form.timeSelection.date,
-                minimumDate: .now,
+                minimumDate: now(),
                 minuteInterval: 5
             )
         }

@@ -48,24 +48,24 @@ struct JourneyPlannerStoreTests {
         #expect(model.hasLoadedJourneys == false)
     }
 
-    // MARK: - resetTimeSelectionIfNeeded
+    // MARK: - resetTimeSelectionIfPast
 
     @Test
-    func resetTimeSelectionIfNeeded_withPastDate_resetsToLeaveNow() {
+    func resetTimeSelectionIfPast_withPastDate_resetsToLeaveNow() {
         let model = makeStore()
         model.form.timeSelection = JourneyTimeSelection.leaveAt(Date(timeIntervalSince1970: 0))
 
-        model.resetTimeSelectionIfNeeded()
+        model.resetTimeSelectionIfPast()
 
         #expect(model.form.timeSelection.option == .leaveNow)
     }
 
     @Test
-    func resetTimeSelectionIfNeeded_withFutureDate_doesNotReset() {
+    func resetTimeSelectionIfPast_withFutureDate_doesNotReset() {
         let model = makeStore()
         model.form.timeSelection = JourneyTimeSelection.leaveAt(.distantFuture)
 
-        model.resetTimeSelectionIfNeeded()
+        model.resetTimeSelectionIfPast()
 
         #expect(model.form.timeSelection.option == .leaveAt)
     }

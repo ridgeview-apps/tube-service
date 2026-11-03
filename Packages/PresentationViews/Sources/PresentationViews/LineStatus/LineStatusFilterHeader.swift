@@ -10,6 +10,8 @@ struct LineStatusFilterHeader: View {
     @Binding var selectedDate: Date
     @Binding var selectedWeekendDayFilter: WeekendDayFilter
 
+    @Environment(\.now) private var now
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             filterOptionsPicker
@@ -18,7 +20,7 @@ struct LineStatusFilterHeader: View {
             } else if selectedFilterOption == .future {
                 DatePicker(
                     selection: $selectedDate,
-                    in: .now...,
+                    in: now()...,
                     displayedComponents: [.date]
                 ) {
                     Text(.lineStatusDatePickerTitle)
@@ -106,7 +108,7 @@ struct LineStatusFilterHeader: View {
     }
 
     private func tomorrowFormatted() -> String {
-        guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
+        guard let startOfTomorrow = Calendar.london.startOfNextDay(after: now()) else {
             return ""
         }
         return startOfTomorrow.formatted(date: .complete, time: .omitted)

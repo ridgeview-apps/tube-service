@@ -42,6 +42,7 @@ extension View {
             .environment(dataStore.purchases)
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
+            .environment(\.now, dataStore.now)
     }
 }
 

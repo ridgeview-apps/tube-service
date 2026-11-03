@@ -98,7 +98,7 @@ public final class StationsDataStore {
             let disruptedPoints = try await tflAPI.fetchStationDisruptions().decodedModel
             fetchedDisruptionData.messagesByStationID = disruptedPoints.toMessagesGroupedByStationID(stationsByAtcoCode: stationsByAtcoCode)
             fetchedDisruptionData.fetchState = .success
-            fetchedDisruptionData.fetchedAt = .now
+            fetchedDisruptionData.fetchedAt = now()
         } catch {
             fetchedDisruptionData.fetchState = .failure(error)
         }

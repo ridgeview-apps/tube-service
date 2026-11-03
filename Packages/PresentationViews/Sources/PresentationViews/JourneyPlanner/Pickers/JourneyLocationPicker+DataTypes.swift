@@ -82,12 +82,6 @@ private extension JourneyLocation {
     }
 }
 
-private let timestampFormatter: DateFormatter = Formatter.relative(
-    dateStyle: .medium,
-    timeStyle: .short,
-    context: .middleOfSentence
-)
-
 public typealias JourneyTimePickerSelection = JourneyTimeSelection
 
 extension JourneyTimeSelection.Option {
@@ -99,17 +93,6 @@ extension JourneyTimeSelection.Option {
             .journeyPlannerTimePickerOptionLeaveLater
         case .arriveBy:
             .journeyPlannerTimePickerOptionArriveBy
-        }
-    }
-}
-
-extension JourneyTimeSelection {
-    var formattedDate: String {
-        switch option {
-        case .leaveNow:
-            timestampFormatter.string(from: .now)
-        case .leaveAt, .arriveBy:
-            timestampFormatter.string(from: date)
         }
     }
 }

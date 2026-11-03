@@ -7,7 +7,10 @@ struct ArrivalsBoardListScreen: View {
     let stationName: String
     let lineGroup: Station.LineGroup
 
-    @State private var store = ArrivalsBoardStore(tflAPI: AppDependencies.current.tflAPI)
+    @State private var store = ArrivalsBoardStore(
+        tflAPI: AppDependencies.current.tflAPI,
+        now: AppDependencies.current.now
+    )
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
