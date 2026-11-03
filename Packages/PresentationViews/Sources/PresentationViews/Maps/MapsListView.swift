@@ -1,3 +1,4 @@
+import Shared
 import SwiftUI
 
 public struct MapsListView: View {
@@ -18,6 +19,7 @@ public struct MapsListView: View {
             }
             .padding()
         }
+        .accessibilityIdentifier(AccessibilityID.Maps.list)
         .defaultMaxWidthWithFullBackground()
         .onAppear {
             cachedMapIDs = Set(MapLink.allMaps.filter { MapCache.isCached($0) }.map(\.id))

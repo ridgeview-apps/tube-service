@@ -58,6 +58,7 @@ public struct ArrivalsBoardListView: View {
                 .background(Color.defaultBackground)
             }
         }
+        .accessibilityIdentifier(AccessibilityID.ArrivalsBoard.content)
         .frame(maxWidth: .infinity)
         .defaultMaxWidthWithFullBackground()
     }

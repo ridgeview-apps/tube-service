@@ -70,6 +70,7 @@ public struct LineStatusListView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
+        .accessibilityIdentifier(AccessibilityID.LineStatus.list)
         .defaultMaxWidthWithFullBackground()
         .listStyle(.plain)
         .contentMargins(.bottom, 24, for: .scrollContent)
@@ -228,7 +229,7 @@ public struct LineStatusListView: View {
             .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
-        .accessibility(identifier: line.id.rawValue)
+        .accessibilityIdentifier(AccessibilityID.LineStatus.line(line.id.rawValue))
     }
 
     private func statusCellAnimationID(for line: Line) -> some Hashable {

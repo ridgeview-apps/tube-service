@@ -1,5 +1,6 @@
 import ModelStubs
 import Models
+import Shared
 import SwiftUI
 
 public struct JourneyPlannerFormView: View {
@@ -38,6 +39,7 @@ public struct JourneyPlannerFormView: View {
             formSection
             recentJourneysSection
         }
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.form)
         .buttonStyle(.plain)
         .listStyle(.plain)
         .defaultScrollContentBackgroundColor()

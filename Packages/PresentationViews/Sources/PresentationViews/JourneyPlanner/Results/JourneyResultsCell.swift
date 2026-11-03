@@ -1,5 +1,6 @@
 import SwiftUI
 import Models
+import Shared
 
 public enum JourneyResultsAction {
     case initialFetch
@@ -63,7 +64,7 @@ struct JourneyResultsCell: View {
 
         }
         .accessibilityAddTraits(.isButton)
-        .accessibilityIdentifier("journey.start.time.info")
+        .accessibilityIdentifier(AccessibilityID.JourneyResults.journey)
     }
 
     private var startAndEndTime: some View {

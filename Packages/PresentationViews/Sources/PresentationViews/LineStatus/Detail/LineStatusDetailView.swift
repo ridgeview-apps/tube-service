@@ -1,4 +1,5 @@
 import Models
+import Shared
 import SwiftUI
 
 public struct LineStatusDetailView: View {
@@ -96,6 +97,7 @@ public struct LineStatusDetailView: View {
             .padding(.horizontal)
             .frame(maxWidth: .infinity)
         }
+        .accessibilityIdentifier(AccessibilityID.LineStatusDetail.content)
         .scrollBounceBehavior(.basedOnSize)
         .defaultMaxWidthWithFullBackground()
         .alert(

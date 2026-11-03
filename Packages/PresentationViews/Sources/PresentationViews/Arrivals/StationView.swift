@@ -1,5 +1,6 @@
 import SwiftUI
 import Models
+import Shared
 import MapKit
 
 public struct StationView: View {
@@ -50,6 +51,7 @@ public struct StationView: View {
             }
             .padding(.vertical, 16)
         }
+        .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
     }
 

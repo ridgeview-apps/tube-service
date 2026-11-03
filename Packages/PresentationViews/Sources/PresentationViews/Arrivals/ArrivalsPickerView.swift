@@ -63,12 +63,12 @@ public struct ArrivalsPickerView: View {
                 allStationsSection
             }
         }
+        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.list)
         .defaultMaxWidthWithFullBackground()
         .environment(\.editMode, $editMode)
         .onChange(of: favourites.isEmpty) {
             if favourites.isEmpty { editMode = .inactive }
         }
-        .accessibilityIdentifier("acc.id.arrivals.picker.list")
     }
 
     @ViewBuilder private var favouritesSection: some View {
@@ -192,7 +192,7 @@ private struct ArrivalsPickerExpandableCell: View {
             title: station.name,
             showsDistance: true
         )
-        .accessibilityIdentifier(station.id)
+        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(station.id))
     }
 
 
@@ -208,7 +208,7 @@ private struct ArrivalsPickerExpandableCell: View {
                 showsDistance: showsDistance
             )
         }
-        .accessibilityIdentifier("\(lineGroup.id)")
+        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.lineGroup(lineGroup.id))
     }
 
     private func lineGroupCell(

@@ -148,13 +148,13 @@ private extension LineStatusFilterOption {
     var accessibilityID: String {
         switch self {
         case .today:
-            "acc.id.filter.option.today"
+            AccessibilityID.LineStatus.filterToday
         case .tomorrow:
-            "acc.id.filter.option.tomorrow"
+            AccessibilityID.LineStatus.filterTomorrow
         case .thisWeekend:
-            "acc.id.filter.option.thisWeekend"
+            AccessibilityID.LineStatus.filterThisWeekend
         case .future:
-            "acc.id.filter.option.future"
+            AccessibilityID.LineStatus.filterFuture
         }
     }
 }
