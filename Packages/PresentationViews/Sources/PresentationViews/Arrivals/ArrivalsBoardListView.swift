@@ -61,6 +61,7 @@ public struct ArrivalsBoardListView: View {
         .accessibilityIdentifier(AccessibilityID.ArrivalsBoard.content)
         .frame(maxWidth: .infinity)
         .defaultMaxWidthWithFullBackground()
+        .lineGroupNavigationSubtitle(lineGroupName)
     }
 
     private var noDataView: some View {
@@ -78,8 +79,11 @@ public struct ArrivalsBoardListView: View {
     private var headerTitleView: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .firstTextBaseline) {
-                Text(lineGroupName)
-                    .font(.headline)
+                // From iOS 26 the name is the navigation subtitle instead (see `lineGroupNavigationSubtitle(_:)`)
+                if #unavailable(iOS 26) {
+                    Text(lineGroupName)
+                        .font(.headline)
+                }
                 Spacer()
                 if let refreshDate {
                     LastUpatedTimeLabel(date: refreshDate)
@@ -123,6 +127,18 @@ public struct ArrivalsBoardListView: View {
     @ViewBuilder private var footerView: some View {
         FavouritesButton(style: .large, isSelected: $isFavourite)
             .padding(.bottom, 30)
+    }
+}
+
+private extension View {
+    /// Shows the line group's name under the station's navigation title. On a wide iPad the board's header sits in a
+    /// centred column, away from the title the name belongs with.
+    @ViewBuilder func lineGroupNavigationSubtitle(_ lineGroupName: String) -> some View {
+        if #available(iOS 26, *) {
+            navigationSubtitle(lineGroupName)
+        } else {
+            self
+        }
     }
 }
 
