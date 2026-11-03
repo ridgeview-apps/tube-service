@@ -8,7 +8,7 @@ import SwiftUI
 struct LineStatusScreen: View {
     @Environment(LineStatusDataStore.self) var model
     @Environment(AppRouter.self) private var router
-    @Environment(\.now) private var now
+    @Environment(\.clock) private var clock
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -18,14 +18,14 @@ struct LineStatusScreen: View {
 
     @State private var selectedFilterOption: LineStatusFilterOption = .today
     // The environment can't be read while initialising state, so this reads the same clock directly.
-    @State private var selectedDate: Date = AppDependencies.current.now()
+    @State private var selectedDate: Date = AppDependencies.current.clock.now
     @State private var selectedWeekendDayFilter: WeekendDayFilter = .both
 
     private var request: LineStatusDataStore.LineStatusRequest {
         selectedFilterOption.toLineStatusRequest(
             for: selectedDate,
             weekendDayFilter: selectedWeekendDayFilter,
-            now: now()
+            now: clock.now
         )
     }
 
@@ -73,7 +73,7 @@ struct LineStatusScreen: View {
         }
         .onCalendarDayChanged {
             selectedFilterOption = .today
-            selectedDate = now()
+            selectedDate = clock.now
         }
     }
 

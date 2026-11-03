@@ -49,7 +49,7 @@ extension View {
             .environment(dataStore.purchases)
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
-            .environment(\.now, dataStore.now)
+            .environment(\.clock, dataStore.clock)
             .environment(\.pausesTimedContent, ProcessInfo.isRunningUITests)
     }
 }

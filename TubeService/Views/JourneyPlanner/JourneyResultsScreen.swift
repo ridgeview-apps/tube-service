@@ -1,6 +1,7 @@
 import DataStores
 import Models
 import PresentationViews
+import Shared
 import SwiftUI
 
 @MainActor
@@ -8,7 +9,7 @@ struct JourneyResultsScreen: View {
 
     @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(AppRouter.self) private var router
-    @Environment(\.now) private var now
+    @Environment(\.clock) private var clock
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -73,7 +74,7 @@ struct JourneyResultsScreen: View {
     }
 
     private func saveRecentJourney() {
-        if let savedJourney = journeyPlanner.form.toNewSavedJourney(timestamp: now()) {
+        if let savedJourney = journeyPlanner.form.toNewSavedJourney(timestamp: clock.now) {
             userPreferences.saveRecentJourney(savedJourney)
         } else {
             assertionFailure("Failed to create a saved journey - results will be shown but not saved.")

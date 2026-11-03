@@ -20,13 +20,15 @@ final class AppDataStore {
 
     private let dependencies: AppDependencies
 
-    /// The app's clock, which views read through the `\.now` environment value.
-    var now: @Sendable () -> Date { dependencies.now }
+    /// The app's clock, which views read through the `\.clock` environment value.
+    var clock: AppClock { dependencies.clock }
 
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
+        let clock = dependencies.clock
+        let now: @Sendable () -> Date = { clock.now }
 
-        let stations = StationsDataStore(tflAPI: dependencies.tflAPI, now: dependencies.now)
+        let stations = StationsDataStore(tflAPI: dependencies.tflAPI, now: now)
         self.stations = stations
 
         let purchases = PurchaseStore(
@@ -39,7 +41,7 @@ final class AppDataStore {
         self.lineStatus = LineStatusDataStore(
             tflAPI: dependencies.tflAPI,
             tubeServiceAPI: dependencies.tubeServiceAPI,
-            now: dependencies.now,
+            now: now,
             featureFlags: { dependencies.userDefaults.value.featureFlags },
             hasTubeServicePlus: { purchases.hasTubeServicePlus }
         )
@@ -47,13 +49,13 @@ final class AppDataStore {
             locationManager: dependencies.locationManager,
             stations: stations,
             geocoder: dependencies.reverseGeocoder,
-            now: dependencies.now
+            now: now
         )
         let localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
         self.localSearchResults = localSearchResults
         self.systemStatus = SystemStatusDataStore(
             systemStatusAPI: dependencies.systemStatusAPI,
-            now: dependencies.now
+            now: now
         )
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
@@ -63,7 +65,7 @@ final class AppDataStore {
         self.journeyPlanner = JourneyPlannerStore(
             tflAPI: dependencies.tflAPI,
             localSearchResults: localSearchResults,
-            now: dependencies.now
+            now: now
         )
     }
 

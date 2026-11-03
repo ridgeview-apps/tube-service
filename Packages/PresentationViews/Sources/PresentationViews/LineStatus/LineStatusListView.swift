@@ -27,7 +27,7 @@ public struct LineStatusListView: View {
 
     @State private var isGoodServiceSectionExpanded = false
     @State private var editMode: EditMode = .inactive
-    @Environment(\.now) private var now
+    @Environment(\.clock) private var clock
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
 
@@ -251,7 +251,7 @@ public struct LineStatusListView: View {
     }
 
     private var isValidFutureDate: Bool {
-        guard let startOfTomorrow = Calendar.london.startOfNextDay(after: now()) else {
+        guard let startOfTomorrow = Calendar.london.startOfNextDay(after: clock.now) else {
             return true
         }
         return selectedDate >= startOfTomorrow

@@ -17,7 +17,7 @@ struct AppDependencies: Sendable {
     let purchaseProductIDs: [PurchaseStore.ProductID]
     /// The environment that signed the app's install, or `nil` to read the real one (see `PurchaseStore`).
     let readInstallEnvironment: (@Sendable () async -> AppStore.Environment?)?
-    let now: @Sendable () -> Date
+    let clock: AppClock
 
     init(
         tflAPI: TflAPIClientType,
@@ -31,7 +31,7 @@ struct AppDependencies: Sendable {
         pushNotificationEnvironment: PushNotificationEnvironment,
         purchaseProductIDs: [PurchaseStore.ProductID],
         readInstallEnvironment: (@Sendable () async -> AppStore.Environment?)? = nil,
-        now: @escaping @Sendable () -> Date = { .now }
+        clock: AppClock = .live
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
@@ -44,7 +44,7 @@ struct AppDependencies: Sendable {
         self.pushNotificationEnvironment = pushNotificationEnvironment
         self.purchaseProductIDs = purchaseProductIDs
         self.readInstallEnvironment = readInstallEnvironment
-        self.now = now
+        self.clock = clock
     }
 }
 

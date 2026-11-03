@@ -45,7 +45,7 @@ import Shared
                 purchaseProductIDs: .stub,
                 // Plus comes from the debug paywall bypass, which only applies outside App Store installs.
                 readInstallEnvironment: { .xcode },
-                now: { now }
+                clock: .fixed(at: now)
             )
         }
     }

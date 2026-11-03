@@ -9,7 +9,7 @@ struct ArrivalsBoardListScreen: View {
 
     @State private var store = ArrivalsBoardStore(
         tflAPI: AppDependencies.current.tflAPI,
-        now: AppDependencies.current.now
+        now: { AppDependencies.current.clock.now }
     )
 
     @AppStorage(

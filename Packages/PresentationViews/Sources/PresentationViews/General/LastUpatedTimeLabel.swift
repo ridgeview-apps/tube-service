@@ -5,7 +5,7 @@ public struct LastUpatedTimeLabel: View {
 
     public let date: Date
 
-    @Environment(\.now) private var now
+    @Environment(\.clock) private var clock
 
     private let timestampFormatter = RelativeDateFormatter(
         dateStyle: .short,
@@ -22,7 +22,7 @@ public struct LastUpatedTimeLabel: View {
             Image(systemName: "clock")
             Text(
                 .refreshStatusLastUpdated(
-                    timestampFormatter.string(from: date, relativeTo: now())
+                    timestampFormatter.string(from: date, relativeTo: clock.now)
                 )
             )
         }
