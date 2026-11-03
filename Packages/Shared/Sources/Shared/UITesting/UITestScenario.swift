@@ -47,7 +47,7 @@ public extension UITestScenario.Fixtures {
     var now: Date {
         switch self {
         case .screenshots, .functional:
-            Date(timeIntervalSince1970: 1_781_250_060)  // Friday 12 June 2026, 08:41 in London
+            Date(timeIntervalSince1970: 1_781_253_660)  // Friday 12 June 2026, 09:41 in London (Apple's 9:41)
         }
     }
 }

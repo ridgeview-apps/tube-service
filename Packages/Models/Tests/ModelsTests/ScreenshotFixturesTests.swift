@@ -8,8 +8,8 @@ struct ScreenshotFixturesTests {
 
     typealias Fixtures = ModelStubs.Screenshots
 
-    // Friday 12 June 2026, 08:41 in London: the time the screenshot fixtures are dated around.
-    let now = Date(timeIntervalSince1970: 1_781_250_060)
+    // Friday 12 June 2026, 09:41 in London (`UITestScenario.Fixtures.now`): the time the fixtures are dated around.
+    let now = Date(timeIntervalSince1970: 1_781_253_660)
 
     @Test
     func decodeEveryResponse() {

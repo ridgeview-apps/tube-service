@@ -3,9 +3,9 @@
     "journeys": [
         {
             "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.Journey, Tfl.Api.Presentation.Entities",
-            "startDateTime": "2026-06-12T08:41:00",
+            "startDateTime": "2026-06-12T09:41:00",
             "duration": 14,
-            "arrivalDateTime": "2026-06-12T08:55:00",
+            "arrivalDateTime": "2026-06-12T09:55:00",
             "alternativeRoute": false,
             "legs": [
                 {
@@ -26,8 +26,8 @@
                             "position": "AFTER"
                         }
                     ],
-                    "departureTime": "2026-06-12T08:41:00",
-                    "arrivalTime": "2026-06-12T08:45:00",
+                    "departureTime": "2026-06-12T09:41:00",
+                    "arrivalTime": "2026-06-12T09:45:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUKSX",
@@ -123,8 +123,8 @@
                     "distance": 32.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:40:00",
-                    "scheduledArrivalTime": "2026-06-12T08:44:00",
+                    "scheduledDepartureTime": "2026-06-12T09:40:00",
+                    "scheduledArrivalTime": "2026-06-12T09:44:00",
                     "interChangeDuration": "2",
                     "interChangePosition": "AFTER"
                 },
@@ -138,8 +138,8 @@
                         "steps": []
                     },
                     "obstacles": [],
-                    "departureTime": "2026-06-12T08:48:00",
-                    "arrivalTime": "2026-06-12T08:55:00",
+                    "departureTime": "2026-06-12T09:48:00",
+                    "arrivalTime": "2026-06-12T09:55:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUOXC",
@@ -244,8 +244,8 @@
                     "distance": 683.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:47:00",
-                    "scheduledArrivalTime": "2026-06-12T08:54:00"
+                    "scheduledDepartureTime": "2026-06-12T09:47:00",
+                    "scheduledArrivalTime": "2026-06-12T09:54:00"
                 }
             ],
             "fare": {
@@ -306,9 +306,9 @@
         },
         {
             "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.Journey, Tfl.Api.Presentation.Entities",
-            "startDateTime": "2026-06-12T08:44:00",
+            "startDateTime": "2026-06-12T09:44:00",
             "duration": 13,
-            "arrivalDateTime": "2026-06-12T08:57:00",
+            "arrivalDateTime": "2026-06-12T09:57:00",
             "alternativeRoute": false,
             "legs": [
                 {
@@ -329,8 +329,8 @@
                             "position": "AFTER"
                         }
                     ],
-                    "departureTime": "2026-06-12T08:44:00",
-                    "arrivalTime": "2026-06-12T08:49:00",
+                    "departureTime": "2026-06-12T09:44:00",
+                    "arrivalTime": "2026-06-12T09:49:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUKSX",
@@ -426,8 +426,8 @@
                     "distance": 32.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:44:00",
-                    "scheduledArrivalTime": "2026-06-12T08:49:00",
+                    "scheduledDepartureTime": "2026-06-12T09:44:00",
+                    "scheduledArrivalTime": "2026-06-12T09:49:00",
                     "interChangeDuration": "2",
                     "interChangePosition": "AFTER"
                 },
@@ -441,8 +441,8 @@
                         "steps": []
                     },
                     "obstacles": [],
-                    "departureTime": "2026-06-12T08:51:00",
-                    "arrivalTime": "2026-06-12T08:57:00",
+                    "departureTime": "2026-06-12T09:51:00",
+                    "arrivalTime": "2026-06-12T09:57:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUOXC",
@@ -547,8 +547,8 @@
                     "distance": 683.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:50:00",
-                    "scheduledArrivalTime": "2026-06-12T08:56:00"
+                    "scheduledDepartureTime": "2026-06-12T09:50:00",
+                    "scheduledArrivalTime": "2026-06-12T09:56:00"
                 }
             ],
             "fare": {
@@ -609,9 +609,9 @@
         },
         {
             "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.Journey, Tfl.Api.Presentation.Entities",
-            "startDateTime": "2026-06-12T08:49:00",
+            "startDateTime": "2026-06-12T09:49:00",
             "duration": 14,
-            "arrivalDateTime": "2026-06-12T09:03:00",
+            "arrivalDateTime": "2026-06-12T10:03:00",
             "alternativeRoute": false,
             "legs": [
                 {
@@ -632,8 +632,8 @@
                             "position": "AFTER"
                         }
                     ],
-                    "departureTime": "2026-06-12T08:49:00",
-                    "arrivalTime": "2026-06-12T08:53:00",
+                    "departureTime": "2026-06-12T09:49:00",
+                    "arrivalTime": "2026-06-12T09:53:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUKSX",
@@ -729,8 +729,8 @@
                     "distance": 32.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:49:00",
-                    "scheduledArrivalTime": "2026-06-12T08:53:00",
+                    "scheduledDepartureTime": "2026-06-12T09:49:00",
+                    "scheduledArrivalTime": "2026-06-12T09:53:00",
                     "interChangeDuration": "2",
                     "interChangePosition": "AFTER"
                 },
@@ -744,8 +744,8 @@
                         "steps": []
                     },
                     "obstacles": [],
-                    "departureTime": "2026-06-12T08:57:00",
-                    "arrivalTime": "2026-06-12T09:03:00",
+                    "departureTime": "2026-06-12T09:57:00",
+                    "arrivalTime": "2026-06-12T10:03:00",
                     "departurePoint": {
                         "$type": "Tfl.Api.Presentation.Entities.StopPoint, Tfl.Api.Presentation.Entities",
                         "naptanId": "940GZZLUOXC",
@@ -850,8 +850,8 @@
                     "distance": 683.0,
                     "isDisrupted": false,
                     "hasFixedLocations": true,
-                    "scheduledDepartureTime": "2026-06-12T08:57:00",
-                    "scheduledArrivalTime": "2026-06-12T09:03:00"
+                    "scheduledDepartureTime": "2026-06-12T09:57:00",
+                    "scheduledArrivalTime": "2026-06-12T10:03:00"
                 }
             ],
             "fare": {
@@ -918,8 +918,8 @@
             "name": "Bakerloo",
             "modeName": "tube",
             "disruptions": [],
-            "created": "2026-06-09T06:41:07.333Z",
-            "modified": "2026-06-09T06:41:07.333Z",
+            "created": "2026-06-09T07:41:07.333Z",
+            "modified": "2026-06-09T07:41:07.333Z",
             "lineStatuses": [
                 {
                     "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -948,8 +948,8 @@
             "name": "Victoria",
             "modeName": "tube",
             "disruptions": [],
-            "created": "2026-06-09T06:41:07.333Z",
-            "modified": "2026-06-09T06:41:07.333Z",
+            "created": "2026-06-09T07:41:07.333Z",
+            "modified": "2026-06-09T07:41:07.333Z",
             "lineStatuses": [
                 {
                     "$type": "Tfl.Api.Presentation.Entities.LineStatus, Tfl.Api.Presentation.Entities",
@@ -982,7 +982,7 @@
     "recommendedMaxAgeMinutes": 0,
     "searchCriteria": {
         "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.SearchCriteria, Tfl.Api.Presentation.Entities",
-        "dateTime": "2026-06-12T08:40:00",
+        "dateTime": "2026-06-12T09:40:00",
         "dateTimeType": "Departing",
         "timeAdjustments": {
             "$type": "Tfl.Api.Presentation.Entities.JourneyPlanner.TimeAdjustments, Tfl.Api.Presentation.Entities",
