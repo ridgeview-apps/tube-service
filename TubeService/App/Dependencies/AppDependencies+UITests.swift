@@ -26,8 +26,14 @@ import Shared
                 CLLocation(latitude: 51.530823, longitude: -0.123821)  // King's Cross
             ]
 
+            let tflAPI: TflAPIClientType =
+                switch scenario.fixtures {
+                case .screenshots: ScreenshotTflAPIClient()
+                case .functional: StubTflAPIClient()
+                }
+
             return AppDependencies(
-                tflAPI: StubTflAPIClient(),
+                tflAPI: tflAPI,
                 tubeServiceAPI: StubTubeServiceAPIClient(),
                 notificationsAPI: StubNotificationsAPIClient(),
                 systemStatusAPI: StubSystemStatusAPIClient(),

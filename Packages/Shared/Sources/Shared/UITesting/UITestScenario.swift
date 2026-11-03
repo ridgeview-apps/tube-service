@@ -8,7 +8,9 @@ public struct UITestScenario: Codable, Sendable {
     /// Which set of stubbed API responses to use. Screenshot and functional tests have separate sets, so changing one
     /// never changes the other.
     public enum Fixtures: String, Codable, Sendable {
+        /// Curated data for App Store screenshots.
         case screenshots
+        /// The unit tests' stub responses for now; functional flows get their own set as they need it.
         case functional
     }
 
@@ -37,5 +39,15 @@ public struct UITestScenario: Codable, Sendable {
         self.seed = seed
         self.hasTubeServicePlus = hasTubeServicePlus
         self.enablesUnreleasedFeatures = enablesUnreleasedFeatures
+    }
+}
+
+public extension UITestScenario.Fixtures {
+    /// The time the fixtures' dates were written around. Launch with this as `now` so their times look current.
+    var now: Date {
+        switch self {
+        case .screenshots, .functional:
+            Date(timeIntervalSince1970: 1_781_250_060)  // Friday 12 June 2026, 08:41 in London
+        }
     }
 }
