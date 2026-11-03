@@ -44,6 +44,7 @@ public struct UITestScenario: Codable, Sendable {
 
 public extension UITestScenario.Fixtures {
     /// The time the fixtures' dates were written around. Launch with this as `now` so their times look current.
+    /// `fastlane/Snapfile` sets the simulator's status bar to the same time.
     var now: Date {
         switch self {
         case .screenshots, .functional:

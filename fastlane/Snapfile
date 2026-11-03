@@ -9,4 +9,10 @@ languages([
 
 clear_previous_screenshots(true)
 override_status_bar(true)
+# The screenshot fixtures' clock (`UITestScenario.Fixtures.now`): Friday 12 June 2026, 09:41 in London. A full date
+# also sets the date the iPad shows; simctl only accepts it with fractional seconds. The rest are fastlane's defaults.
+override_status_bar_arguments(
+  "--time 2026-06-12T09:41:00.000+01:00 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active " \
+  "--operatorName '' --cellularBars 4 --batteryState charged --batteryLevel 100"
+)
 # erase_simulator(true)
