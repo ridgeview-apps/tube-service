@@ -31,7 +31,8 @@ final class AppDataStore {
 
         let purchases = PurchaseStore(
             productIDs: dependencies.purchaseProductIDs,
-            featureFlags: { dependencies.userDefaults.value.featureFlags }
+            featureFlags: { dependencies.userDefaults.value.featureFlags },
+            readInstallEnvironment: dependencies.readInstallEnvironment
         )
         self.purchases = purchases
 
@@ -45,6 +46,7 @@ final class AppDataStore {
         self.location = LocationDataStore(
             locationManager: dependencies.locationManager,
             stations: stations,
+            geocoder: dependencies.reverseGeocoder,
             now: dependencies.now
         )
         let localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)

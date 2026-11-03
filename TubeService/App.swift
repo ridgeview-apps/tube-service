@@ -1,4 +1,5 @@
 import DataStores
+import Shared
 import SwiftUI
 
 @main
@@ -8,6 +9,12 @@ struct RootScene: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
     @State private var appRouter = AppRouter()
+
+    init() {
+        #if DEBUG
+            TubeUITestLaunchConfiguration.fromProcessEnvironment()?.applyProcessSettings()
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -43,6 +50,7 @@ extension View {
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
             .environment(\.now, dataStore.now)
+            .environment(\.pausesTimedContent, ProcessInfo.isRunningUITests)
     }
 }
 
