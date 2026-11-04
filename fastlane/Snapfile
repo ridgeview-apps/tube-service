@@ -21,9 +21,12 @@ xcargs("-collect-test-diagnostics never")
 clear_previous_screenshots(true)
 override_status_bar(true)
 # The screenshot fixtures' clock (`UITestScenario.Fixtures.now`): Friday 12 June 2026, 09:41 in London. A full date
-# also sets the date the iPad shows; simctl only accepts it with fractional seconds. The rest are fastlane's defaults.
+# also sets the date the iPad shows; simctl only accepts it with fractional seconds. The simulator shows it in the
+# Mac's time zone, so it's given in that zone (Time.new's default) to read 09:41 on any Mac, CI's UTC runners included.
+# The rest are fastlane's defaults.
+status_bar_time = Time.new(2026, 6, 12, 9, 41).iso8601(3)
 override_status_bar_arguments(
-  "--time 2026-06-12T09:41:00.000+01:00 --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active " \
+  "--time #{status_bar_time} --dataNetwork wifi --wifiMode active --wifiBars 3 --cellularMode active " \
   "--operatorName '' --cellularBars 4 --batteryState charged --batteryLevel 100"
 )
 # erase_simulator(true)
