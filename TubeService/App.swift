@@ -50,7 +50,7 @@ extension View {
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
             .environment(\.clock, dataStore.clock)
-            .environment(\.pausesTimedContent, ProcessInfo.isRunningUITests)
+            .environment(\.pausesRepeatingAnimations, ProcessInfo.isRunningUITests)
             // The iPad otherwise restores whichever layout it last showed, which would change the screenshots
             .environment(\.adaptableTabBarPlacement, ProcessInfo.isRunningUITests ? .sidebar : .automatic)
     }
