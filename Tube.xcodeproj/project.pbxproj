@@ -74,6 +74,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				TestPlans/Screenshots.xctestplan,
+				TestPlans/UIFunctional.xctestplan,
 			);
 			target = 315F89C62567BCB70069DD2D /* TubeServiceUITests */;
 		};
