@@ -10,6 +10,8 @@ languages([
   "en-GB"
 ])
 localize_simulator(true)
+# Fail on the first error rather than retrying, so flaky screenshots show up instead of being hidden.
+number_of_retries(0)
 
 clear_previous_screenshots(true)
 override_status_bar(true)
