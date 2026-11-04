@@ -47,6 +47,7 @@ struct ArrivalsBoardView: View {
         Text(platformName)
             .font(.headline)
             .foregroundColor(.white)
+            .accessibilityIdentifier(AccessibilityID.ArrivalsBoard.platformName)
     }
 
     private var cells: some View {

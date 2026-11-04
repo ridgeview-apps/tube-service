@@ -192,7 +192,11 @@ private struct ArrivalsPickerExpandableCell: View {
             title: station.name,
             showsDistance: true
         )
-        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(station.id))
+        .accessibilityIdentifier(
+            isEditable
+                ? AccessibilityID.ArrivalsPicker.favouriteStation(station.id)
+                : AccessibilityID.ArrivalsPicker.station(station.id)
+        )
     }
 
 
@@ -208,7 +212,11 @@ private struct ArrivalsPickerExpandableCell: View {
                 showsDistance: showsDistance
             )
         }
-        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.lineGroup(lineGroup.id))
+        .accessibilityIdentifier(
+            isEditable
+                ? AccessibilityID.ArrivalsPicker.favouriteLineGroup(lineGroup.id)
+                : AccessibilityID.ArrivalsPicker.lineGroup(lineGroup.id)
+        )
     }
 
     private func lineGroupCell(

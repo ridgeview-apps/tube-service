@@ -37,7 +37,7 @@ final class ScreenshotTests: ScreenshotTestCase {
         let arrivalsPicker = journeyResults.tabBar.tapArrivalsTab()
         capture(arrivalsPicker, as: "LiveArrivalsPicker")
 
-        let arrivalsBoard = arrivalsPicker.tapLineGroup("910GABWDXR-elizabeth")  // Abbey Wood
+        let arrivalsBoard = arrivalsPicker.tapFavouriteLineGroup("910GABWDXR-elizabeth")  // Abbey Wood
         capture(arrivalsBoard, as: "LiveArrivalsBoard1")
 
         let nearby = arrivalsBoard.tabBar.tapNearbyTab()
