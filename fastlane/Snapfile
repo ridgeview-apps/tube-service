@@ -12,6 +12,11 @@ languages([
 localize_simulator(true)
 # Fail on the first error rather than retrying, so flaky screenshots show up instead of being hidden.
 number_of_retries(0)
+# snapshot only spots failed tests in the *_TestSummaries.plist files Xcode no longer writes, so without this a failed
+# run still exits 0. This fails it when xcodebuild does.
+stop_after_first_error(true)
+# After a failed test, Xcode spends 10 minutes collecting diagnostics from the simulator before it exits.
+xcargs("-collect-test-diagnostics never")
 
 clear_previous_screenshots(true)
 override_status_bar(true)

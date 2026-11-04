@@ -158,6 +158,30 @@ end
 
 
 #######################
+# Screenshots
+#######################
+
+# Generates the App Store screenshots into an absolute output_directory, e.g.
+# output_directory:/tmp/screenshots. Needs no App Store Connect key
+lane :screenshots do |options|
+  output_directory = options[:output_directory].to_s
+  UI.user_error!("output_directory must be an absolute path, not '#{output_directory}'") unless output_directory.start_with?("/")
+
+  # snapshot copies everything in its cache into the output, and only empties
+  # the cache after a run that passes, so a failed run would leave screenshots
+  # behind for the next run to pass off as its own
+  FileUtils.rm_rf(File.expand_path("~/Library/Caches/tools.fastlane/screenshots"))
+
+  snapshot(output_directory: output_directory)
+
+  # ScreenshotTests captures 10 per device
+  expected_count = Snapshot.config[:devices].count * 10
+  actual_count = Dir[File.join(output_directory, "*", "*.png")].count
+  UI.user_error!("Expected #{expected_count} screenshots in #{output_directory}, found #{actual_count}") unless actual_count == expected_count
+end
+
+
+#######################
 # App Store submission
 #######################
 
