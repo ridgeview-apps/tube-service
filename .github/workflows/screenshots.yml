@@ -24,6 +24,8 @@ on:
       - 'feature/ui-test-overhaul'
     paths:
       - '.github/workflows/screenshots.yml'
+      - 'fastlane/Fastfile'
+      - 'fastlane/Snapfile'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,6 +47,11 @@ jobs:
       - name: Install gems
         run: bundle install
       - name: Generate screenshots
+        # Fails a hung run long before GitHub's 6 hours. On the step rather than
+        # the job, so the logs still upload: a job timeout cancels the job, and
+        # failure() steps don't run. Sized for 2 devices in 1 language (about
+        # 2.5 minutes locally); scale it with the Snapfile's devices and languages
+        timeout-minutes: 45
         run: bundle exec fastlane screenshots output_directory:"$RUNNER_TEMP/screenshots"
       - name: Upload screenshots
         uses: actions/upload-artifact@v7

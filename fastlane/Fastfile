@@ -172,7 +172,11 @@ lane :screenshots do |options|
   # behind for the next run to pass off as its own
   FileUtils.rm_rf(File.expand_path("~/Library/Caches/tools.fastlane/screenshots"))
 
-  snapshot(output_directory: output_directory)
+  snapshot(
+    output_directory: output_directory,
+    # Two simulators at once may be more than a hosted runner can take
+    concurrent_simulators: !is_ci
+  )
 
   # ScreenshotTests captures 10 per device
   expected_count = Snapshot.config[:devices].count * 10
