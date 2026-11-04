@@ -122,6 +122,7 @@ public struct JourneyPlannerFormView: View {
         }
         .buttonStyle(.primary)
         .disabled(!form.canSubmit)
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.showJourneysButton)
     }
 
     @ViewBuilder

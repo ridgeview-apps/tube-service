@@ -1,5 +1,6 @@
 import ModelStubs
 import Models
+import Shared
 import SwiftUI
 
 struct JourneyPlannerFromToSelectionView: View {
@@ -36,6 +37,7 @@ struct JourneyPlannerFromToSelectionView: View {
         ) {
             onAction(.tappedLocationField(.from))
         }
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.fromField)
         .routeAnchor(.from)
         .swapValuesGeometryEffectID(
             .firstPairItem("fromToFormFields"),
@@ -57,6 +59,7 @@ struct JourneyPlannerFromToSelectionView: View {
         ) {
             onAction(.tappedLocationField(.to))
         }
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.toField)
         .routeAnchor(.to)
         .swapValuesGeometryEffectID(
             .secondPairItem("fromToFormFields"),

@@ -38,8 +38,18 @@ public enum AccessibilityID {
 
     public enum JourneyPlanner {
         public static let form = "journeyPlanner.form"
+        public static let fromField = "journeyPlanner.fromField"
+        public static let toField = "journeyPlanner.toField"
+        public static let showJourneysButton = "journeyPlanner.showJourneysButton"
         /// Every recent journey row shares this; query with `firstMatch` or by index.
         public static let recentJourney = "journeyPlanner.recentJourney"
+    }
+    public enum JourneyLocationPicker {
+        public static let list = "journeyLocationPicker.list"
+        public static let searchField = "journeyLocationPicker.searchField"
+        /// Every search result row shares this; query with `firstMatch` or by index. Suggestions don't have it, so a
+        /// test can wait for the results to replace them.
+        public static let searchResult = "journeyLocationPicker.searchResult"
     }
 
     public enum JourneyResults {
