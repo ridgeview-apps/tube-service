@@ -19,9 +19,9 @@ struct JourneyPlannerPage: Page {
         return .waitingToAppear(in: app)
     }
 
-    /// Taps Show journeys, which shows the results for the form and saves it as a recent journey.
-    func tapShowJourneysButton() -> JourneyResultsPage {
-        app.buttons[AccessibilityID.JourneyPlanner.showJourneysButton].tapWhenHittable()
+    /// Taps Plan my journey, which shows the results for the form and saves it as a recent journey.
+    func tapPlanMyJourneyButton() -> JourneyResultsPage {
+        app.buttons[AccessibilityID.JourneyPlanner.planMyJourneyButton].tapWhenHittable()
         return .waitingToAppear(in: app)
     }
 

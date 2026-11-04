@@ -22,7 +22,7 @@ final class JourneyPlannerTests: UITestCase {
             journeyPlanner
             .tapFromField().typeInSearchField("King's Cross").tapFirstSearchResult()
             .tapToField().typeInSearchField("Waterloo").tapFirstSearchResult()
-            .tapShowJourneysButton()
+            .tapPlanMyJourneyButton()
 
         let returnedJourneyPlanner = results.tapBackButton()
         returnedJourneyPlanner.recentJourneys.firstMatch.waitToExist()

@@ -1025,6 +1025,17 @@
         }
       }
     },
+    "journey.planner.plan.my.journey.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan my journey"
+          }
+        }
+      }
+    },
     "journey.planner.recent.journeys.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1055,17 +1066,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "journey.planner.show.journeys.button.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plan my journey"
           }
         }
       }

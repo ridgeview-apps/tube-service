@@ -40,7 +40,7 @@ public enum AccessibilityID {
         public static let form = "journeyPlanner.form"
         public static let fromField = "journeyPlanner.fromField"
         public static let toField = "journeyPlanner.toField"
-        public static let showJourneysButton = "journeyPlanner.showJourneysButton"
+        public static let planMyJourneyButton = "journeyPlanner.planMyJourneyButton"
         /// Every recent journey row shares this; query with `firstMatch` or by index.
         public static let recentJourney = "journeyPlanner.recentJourney"
     }

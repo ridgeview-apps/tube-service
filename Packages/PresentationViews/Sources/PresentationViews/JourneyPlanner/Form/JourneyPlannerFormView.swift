@@ -55,7 +55,7 @@ public struct JourneyPlannerFormView: View {
                     .padding(.trailing, 16)
                 Group {
                     travelOptionsChips
-                    submitButton
+                    planMyJourneyButton
                 }
                 .padding(.horizontal, 16)
 
@@ -114,15 +114,15 @@ public struct JourneyPlannerFormView: View {
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
-    private var submitButton: some View {
+    private var planMyJourneyButton: some View {
         Button {
             submitForm()
         } label: {
-            Text(.journeyPlannerShowJourneysButtonTitle)
+            Text(.journeyPlannerPlanMyJourneyButtonTitle)
         }
         .buttonStyle(.primary)
         .disabled(!form.canSubmit)
-        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.showJourneysButton)
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.planMyJourneyButton)
     }
 
     @ViewBuilder
