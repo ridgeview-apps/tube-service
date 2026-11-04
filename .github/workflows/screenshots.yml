@@ -9,6 +9,9 @@ name: Screenshots
 #
 # Generating needs no secrets: the UI tests build Debug against stubbed data.
 # Only the upload job gets the App Store Connect key.
+#
+# Each device generates on its own runner: a standard runner (3 cores, 7 GB)
+# froze when it started the iPad's tests after the iPhone's.
 
 on:
   workflow_dispatch:
@@ -37,6 +40,14 @@ permissions:
 jobs:
   generate:
     runs-on: xcode-27
+    strategy:
+      # Lets the other device finish, so one run shows how both are doing
+      fail-fast: false
+      matrix:
+        # The Snapfile's devices
+        device:
+          - iPhone 18 Pro Max
+          - iPad Pro 13-inch (M5)
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -49,14 +60,24 @@ jobs:
       - name: Generate screenshots
         # Fails a hung run long before GitHub's 6 hours. On the step rather than
         # the job, so the logs still upload: a job timeout cancels the job, and
-        # failure() steps don't run. Sized for 2 devices in 1 language (about
-        # 2.5 minutes locally); scale it with the Snapfile's devices and languages
+        # failure() steps don't run. Sized for 1 device in 1 language (the iPhone
+        # took about 20 minutes, mostly building); scale it with the languages
         timeout-minutes: 45
-        run: bundle exec fastlane screenshots output_directory:"$RUNNER_TEMP/screenshots"
+        env:
+          DEVICE: ${{ matrix.device }}
+        # Prints memory use every 30 seconds among snapshot's output, so if the
+        # runner freezes, the live log shows whether it ran out of memory first
+        run: |
+          while true; do
+            echo "[memory] $(date -u +%H:%M:%S) $(memory_pressure | tail -1), swap $(sysctl -n vm.swapusage)"
+            sleep 30
+          done &
+          trap "kill $!" EXIT
+          bundle exec fastlane screenshots output_directory:"$RUNNER_TEMP/screenshots" device:"$DEVICE"
       - name: Upload screenshots
         uses: actions/upload-artifact@v7
         with:
-          name: screenshots
+          name: screenshots-${{ matrix.device }}
           path: ${{ runner.temp }}/screenshots
           if-no-files-found: error
       # snapshot deletes its derived data, result bundle included, so its
@@ -65,7 +86,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v7
         with:
-          name: snapshot-logs
+          name: snapshot-logs-${{ matrix.device }}
           path: ~/Library/Logs/snapshot
 
   # Manual approval job
@@ -85,7 +106,9 @@ jobs:
       - name: Download screenshots
         uses: actions/download-artifact@v8
         with:
-          name: screenshots
+          # Every device's, into one folder
+          pattern: screenshots-*
+          merge-multiple: true
           path: ${{ runner.temp }}/screenshots
       - name: Install gems
         run: bundle install
