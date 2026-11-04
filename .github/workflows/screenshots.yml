@@ -20,15 +20,6 @@ on:
         description: 'Upload to App Store Connect (after approval)'
         type: boolean
         default: false
-  # TEMPORARY: lets this run before it's on main, where workflow_dispatch
-  # needs it to be. Remove before merging
-  push:
-    branches:
-      - 'feature/ui-test-overhaul'
-    paths:
-      - '.github/workflows/screenshots.yml'
-      - 'fastlane/Fastfile'
-      - 'fastlane/Snapfile'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
