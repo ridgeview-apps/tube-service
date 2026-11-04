@@ -1,0 +1,86 @@
+name: Screenshots
+
+# Generates the App Store screenshots and, with "upload" ticked, replaces the
+# App Store version's screenshots with them once approved. Download the
+# screenshots artifact from the run to check them before approving.
+#
+# Run it on the branch of the version whose screenshots should change (the
+# version in Base.xcconfig), e.g. release/<version>.
+#
+# Generating needs no secrets: the UI tests build Debug against stubbed data.
+# Only the upload job gets the App Store Connect key.
+
+on:
+  workflow_dispatch:
+    inputs:
+      upload:
+        description: 'Upload to App Store Connect (after approval)'
+        type: boolean
+        default: false
+  # TEMPORARY: lets this run before it's on main, where workflow_dispatch
+  # needs it to be. Remove before merging
+  push:
+    branches:
+      - 'feature/ui-test-overhaul'
+    paths:
+      - '.github/workflows/screenshots.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: xcode-27
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_$(cat .xcode-version).app"
+      - name: Confirm Xcode version
+        run: xcodebuild -version
+      - name: Install gems
+        run: bundle install
+      - name: Generate screenshots
+        run: bundle exec fastlane screenshots output_directory:"$RUNNER_TEMP/screenshots"
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v7
+        with:
+          name: screenshots
+          path: ${{ runner.temp }}/screenshots
+          if-no-files-found: error
+      # snapshot deletes its derived data, result bundle included, so its
+      # xcodebuild logs are what's left to debug a failure with
+      - name: Upload logs
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: snapshot-logs
+          path: ~/Library/Logs/snapshot
+
+  # Manual approval job
+  upload:
+    if: inputs.upload
+    runs-on: macos-latest
+    needs: generate
+    environment:
+      name: prod
+    env:
+      APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+      APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+      APP_STORE_CONNECT_API_KEY_KEY: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: Download screenshots
+        uses: actions/download-artifact@v8
+        with:
+          name: screenshots
+          path: ${{ runner.temp }}/screenshots
+      - name: Install gems
+        run: bundle install
+      - name: Upload screenshots
+        run: bundle exec fastlane upload_screenshots screenshots_path:"$RUNNER_TEMP/screenshots"
