@@ -42,7 +42,6 @@
 		315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		316577342FD194F200CABBB4 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
 		3165775F2FD195B600CABBB4 /* screenshots.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshots.sh"; sourceTree = "<group>"; };
-		316577612FD195B600CABBB4 /* screenshots-upload.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshots-upload.sh"; sourceTree = "<group>"; };
 		316577622FD195B600CABBB4 /* submit-for-review.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "submit-for-review.sh"; sourceTree = "<group>"; };
 		316577642FD195EC00CABBB4 /* swift-format-lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "swift-format-lint.sh"; sourceTree = "<group>"; };
 		318D482624EFC4900026B5F4 /* Tube Service.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tube Service.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,7 +158,6 @@
 			isa = PBXGroup;
 			children = (
 				3165775F2FD195B600CABBB4 /* screenshots.sh */,
-				316577612FD195B600CABBB4 /* screenshots-upload.sh */,
 				316577622FD195B600CABBB4 /* submit-for-review.sh */,
 				316577642FD195EC00CABBB4 /* swift-format-lint.sh */,
 			);
