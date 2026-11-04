@@ -35,6 +35,27 @@ extension XCUIElement {
         return self
     }
 
+    /// Waits until the element has stopped moving, such as controls that slide in when a list enters edit mode. A tap
+    /// while it's still moving can miss it.
+    @discardableResult
+    func waitToStopMoving(
+        timeout: TimeInterval = defaultTimeout,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> Self {
+        waitToExist(timeout: timeout, file: file, line: line)
+        let deadline = Date.now.addingTimeInterval(timeout)
+        var previousFrame = frame
+        while Date.now < deadline {
+            RunLoop.current.run(until: .now.addingTimeInterval(0.1))
+            let currentFrame = frame
+            if currentFrame == previousFrame { return self }
+            previousFrame = currentFrame
+        }
+        XCTFail("Still moving after \(timeout)s: \(self)", file: file, line: line)
+        return self
+    }
+
     func waitToDisappear(
         timeout: TimeInterval = defaultTimeout,
         file: StaticString = #filePath,
