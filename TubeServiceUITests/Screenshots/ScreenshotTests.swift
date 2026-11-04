@@ -22,7 +22,7 @@ final class ScreenshotTests: ScreenshotTestCase {
         let lineStatus = LineStatusPage.waitingToAppear(in: app)
         capture(lineStatus, as: "ServiceStatuses-Today")
 
-        let lineDetail = lineStatus.tapLine("elizabeth")
+        let lineDetail = lineStatus.tapFavouriteLine("elizabeth")
         capture(lineDetail, as: "ServiceStatusDetail-Today")
 
         let weekend = lineDetail.tapBackButton().tapThisWeekendFilter()

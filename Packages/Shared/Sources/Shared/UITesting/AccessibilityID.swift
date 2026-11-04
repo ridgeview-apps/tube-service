@@ -27,9 +27,12 @@ public enum AccessibilityID {
         public static let filterTomorrow = "lineStatus.filter.tomorrow"
         public static let filterThisWeekend = "lineStatus.filter.thisWeekend"
         public static let filterFuture = "lineStatus.filter.future"
+        public static let editFavouritesButton = "lineStatus.editFavouritesButton"
 
-        /// A line's row, by `TrainLineID` raw value.
+        /// A line's row outside the Favourites section, by `TrainLineID` raw value.
         public static func line(_ lineID: String) -> String { "lineStatus.line.\(lineID)" }
+        /// A line's row in the Favourites section, by `TrainLineID` raw value.
+        public static func favouriteLine(_ lineID: String) -> String { "lineStatus.favourite.\(lineID)" }
     }
 
     public enum LineStatusDetail {

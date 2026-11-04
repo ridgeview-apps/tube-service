@@ -106,6 +106,7 @@ public struct LineStatusListView: View {
         if !favourites.isEmpty {
             sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
                 EditModeButton(editMode: $editMode)
+                    .accessibilityIdentifier(AccessibilityID.LineStatus.editFavouritesButton)
             }
             tappableStatusCells(with: favourites, isEditable: true)
                 .onMove(perform: moveFavourites)
@@ -229,7 +230,11 @@ public struct LineStatusListView: View {
             .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
-        .accessibilityIdentifier(AccessibilityID.LineStatus.line(line.id.rawValue))
+        .accessibilityIdentifier(
+            isEditable
+                ? AccessibilityID.LineStatus.favouriteLine(line.id.rawValue)
+                : AccessibilityID.LineStatus.line(line.id.rawValue)
+        )
     }
 
     private func statusCellAnimationID(for line: Line) -> some Hashable {
