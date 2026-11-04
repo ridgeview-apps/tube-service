@@ -1,7 +1,7 @@
 import Shared
 import XCTest
 
-/// The tab bar on iPhone, or the sidebar on iPad.
+/// The tab bar on iPhone, or the sidebar or top tab bar on iPad.
 @MainActor
 struct TabBar {
 
@@ -48,7 +48,8 @@ struct TabBar {
 
     private func item(for tab: Tab) -> XCUIElement {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            app.cells[tab.identifier]
+            // A cell in the sidebar or a button in the top tab bar, whichever the iPad shows
+            app.descendants(matching: .any).matching(identifier: tab.identifier).firstMatch
         } else {
             // The iPhone tab bar's buttons have no identifiers until the selected tab first changes (see `AccessibilityID.Tab`)
             app.tabBars.buttons.element(boundBy: tab.rawValue)

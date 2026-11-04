@@ -5,6 +5,7 @@ import SwiftUI
 struct RootScreen: View {
 
     @Environment(AppRouter.self) private var router
+    @Environment(\.adaptableTabBarPlacement) private var adaptableTabBarPlacement
 
     var body: some View {
         @Bindable var router = router
@@ -16,6 +17,7 @@ struct RootScreen: View {
             mapsTab
         }
         .tabViewStyle(.sidebarAdaptable)
+        .defaultAdaptableTabBarPlacement(adaptableTabBarPlacement)
         .systemStatusRefreshable()
     }
 
