@@ -2,6 +2,9 @@ import XCTest
 
 /// Waits that fail the test with a clear message when they time out, so a missing element never silently skips a
 /// step. With `continueAfterFailure = false` (see `UITestCase`) the failure also stops the test.
+///
+/// Each wait checks once straight away: XCTest's own waits only re-check about once a second, so they cost a second
+/// even when the element is already there.
 @MainActor
 extension XCUIElement {
 
@@ -13,7 +16,7 @@ extension XCUIElement {
         file: StaticString = #filePath,
         line: UInt = #line
     ) -> Self {
-        if !waitForExistence(timeout: timeout) {
+        if !exists, !waitForExistence(timeout: timeout) {
             XCTFail("Not found within \(timeout)s: \(self)", file: file, line: line)
         }
         return self
@@ -26,7 +29,7 @@ extension XCUIElement {
         line: UInt = #line
     ) -> Self {
         waitToExist(timeout: timeout, file: file, line: line)
-        if !wait(for: \.isHittable, toEqual: true, timeout: timeout) {
+        if !isHittable, !wait(for: \.isHittable, toEqual: true, timeout: timeout) {
             XCTFail("Not hittable within \(timeout)s: \(self)", file: file, line: line)
         }
         return self
@@ -37,7 +40,7 @@ extension XCUIElement {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        if !waitForNonExistence(timeout: timeout) {
+        if exists, !waitForNonExistence(timeout: timeout) {
             XCTFail("Still showing after \(timeout)s: \(self)", file: file, line: line)
         }
     }
