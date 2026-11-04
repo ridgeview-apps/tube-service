@@ -1,4 +1,5 @@
 import Models
+import Shared
 import SwiftUI
 
 public struct JourneyLocationPickerView: View {
@@ -30,6 +31,7 @@ public struct JourneyLocationPickerView: View {
                     pickerValuesSection(with: sectionState)
                 }
             }
+            .accessibilityIdentifier(AccessibilityID.JourneyLocationPicker.list)
             .defaultScrollContentBackgroundColor()
             .onChange(of: searchTerm, debounceTime: .milliseconds(300)) { newValue in
                 onAction(.searchTermChanged(newValue))
@@ -51,6 +53,7 @@ public struct JourneyLocationPickerView: View {
             .clearButton(text: $searchTerm)
             .focused($showKeyboard)
             .autocorrectionDisabled()
+            .accessibilityIdentifier(AccessibilityID.JourneyLocationPicker.searchField)
         }
         .padding(10)
         .background(Color(.tertiarySystemFill), in: RoundedRectangle(cornerRadius: 12))
@@ -64,6 +67,10 @@ public struct JourneyLocationPickerView: View {
             Section {
                 ForEach(sectionState.values, id: \.self) { value in
                     selectableRow(for: value)
+                        .accessibilityIdentifier(
+                            AccessibilityID.JourneyLocationPicker.searchResult,
+                            isEnabled: sectionState.isSearchResults
+                        )
                 }
             } header: {
                 HStack(spacing: 4) {
@@ -131,6 +138,10 @@ public struct JourneyLocationPickerView: View {
 }
 
 private extension JourneyLocationPicker.SectionState {
+
+    var isSearchResults: Bool {
+        if case .searchResults = sectionID { true } else { false }
+    }
 
     var sectionIcon: String {
         switch sectionID {

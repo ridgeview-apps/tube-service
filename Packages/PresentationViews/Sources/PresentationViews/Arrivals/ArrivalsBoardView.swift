@@ -16,6 +16,7 @@ struct ArrivalsBoardView: View {
 
     // MARK: Private state
 
+    @Environment(\.pausesRepeatingAnimations) private var pausesRepeatingAnimations
     @State private var rotationCellAnimated = false
     @State private var rotatingCellIndex: Int?
 
@@ -46,6 +47,7 @@ struct ArrivalsBoardView: View {
         Text(platformName)
             .font(.headline)
             .foregroundColor(.white)
+            .accessibilityIdentifier(AccessibilityID.ArrivalsBoard.platformName)
     }
 
     private var cells: some View {
@@ -66,6 +68,7 @@ struct ArrivalsBoardView: View {
             rotateToNextArrivalIfNeeded(animated: false)
         }
         .onChange(of: rotatingCellTimer.firedAt) {
+            guard !pausesRepeatingAnimations else { return }
             rotateToNextArrivalIfNeeded(animated: true)
         }
     }

@@ -12,4 +12,5 @@ struct OpenSettingsAction {
 extension EnvironmentValues {
     @Entry var appConfig = AppConfig.main
     @Entry var openSettings = OpenSettingsAction()
+    @Entry var adaptableTabBarPlacement = AdaptableTabBarPlacement.automatic
 }

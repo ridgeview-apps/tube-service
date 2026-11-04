@@ -61,6 +61,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### screenshots
+
+```sh
+[bundle exec] fastlane screenshots
+```
+
+
+
 ### upload_screenshots
 
 ```sh

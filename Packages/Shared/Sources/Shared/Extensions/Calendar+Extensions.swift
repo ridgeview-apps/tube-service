@@ -15,17 +15,13 @@ public extension Calendar {
     // means the start of day in LONDON (not start of day in the user's local time zone).
     static let london: Calendar = iso8601(in: .london)
 
-    func thisOrNextWeekendDateInterval(for date: Date = .now) -> DateInterval? {
+    func weekendInterval(onOrAfter date: Date) -> DateInterval? {
         dateIntervalOfWeekend(containing: date) ?? nextWeekend(startingAfter: date)
     }
 
     func startOfNextDay(after date: Date) -> Date? {
         let startOfDay = Calendar.london.startOfDay(for: date)
         return Calendar.london.date(byAdding: .day, value: 1, to: startOfDay)
-    }
-
-    func startOfTomorrow() -> Date? {
-        startOfNextDay(after: .now)
     }
 
     func weekdayDateComponent(for date: Date) -> Int? {

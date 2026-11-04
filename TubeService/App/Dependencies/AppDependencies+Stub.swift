@@ -17,6 +17,7 @@ import Foundation
                 notificationsAPI: StubNotificationsAPIClient(),
                 systemStatusAPI: StubSystemStatusAPIClient(),
                 locationManager: locationManager,
+                reverseGeocoder: StubReverseGeocoder(),
                 localSearchCompleterClient: StubLocalSearchCompleterClient(),
                 userDefaults: .stub,
                 pushNotificationEnvironment: .stub,

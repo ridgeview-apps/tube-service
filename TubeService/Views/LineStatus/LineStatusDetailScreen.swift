@@ -13,6 +13,7 @@ struct LineStatusDetailScreen: View {
     @Environment(AppRouter.self) var router
     @Environment(\.openURL) var openURL
     @Environment(\.openSettings) var openSettings
+    @Environment(\.clock) private var clock
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -78,7 +79,7 @@ struct LineStatusDetailScreen: View {
     }
 
     private var badgedNewFeatures: Set<NewFeature> {
-        displayedNewFeatures.filter { newFeatureBadges.showsBadge(for: $0, now: .now) }
+        displayedNewFeatures.filter { newFeatureBadges.showsBadge(for: $0, now: clock.now) }
     }
 
     private var statusContext: LineStatusDetailView.StatusContext {
@@ -118,7 +119,7 @@ struct LineStatusDetailScreen: View {
         }
         .onAppear {
             for feature in displayedNewFeatures {
-                newFeatureBadges.recordSeen(feature, at: .now)
+                newFeatureBadges.recordSeen(feature, at: clock.now)
             }
         }
         .sensoryFeedback(.success, trigger: notificationSaveSuccessCount)

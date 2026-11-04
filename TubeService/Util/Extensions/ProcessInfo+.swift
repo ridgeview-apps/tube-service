@@ -1,4 +1,5 @@
 import Foundation
+import Shared
 
 // MARK: - ProcessInfo
 extension ProcessInfo {
@@ -7,6 +8,6 @@ extension ProcessInfo {
     }
 
     static var isRunningUITests: Bool {
-        ProcessInfo.processInfo.arguments.contains("-ui-tests")
+        ProcessInfo.processInfo.environment[TubeUITestLaunchConfiguration.environmentKey] != nil
     }
 }

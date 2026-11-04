@@ -94,7 +94,7 @@ fastlane unit_tests           # Run unit tests
 fastlane add_badge_overlay    # Add a 'Beta' badge overlay
 fastlane build                # Build / archive the app
 fastlane distribute           # Distribute the app via TestFlight
-fastlane snapshot             # Generate App Store screenshots
-fastlane upload_screenshots   # Upload screenshots to App Store Connect
+fastlane screenshots output_directory:/tmp/shots  # Generate App Store screenshots
+fastlane upload_screenshots screenshots_path:/tmp/shots  # Upload screenshots to App Store Connect (CI: Screenshots workflow)
 fastlane submit_for_review    # Submit the app for review
 ```

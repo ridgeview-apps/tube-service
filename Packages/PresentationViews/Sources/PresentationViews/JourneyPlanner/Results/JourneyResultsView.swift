@@ -1,5 +1,6 @@
 import ModelStubs
 import Models
+import Shared
 import SwiftUI
 
 public struct JourneyResultsView: View {
@@ -60,6 +61,7 @@ public struct JourneyResultsView: View {
             ScrollView {
                 contentView
             }
+            .accessibilityIdentifier(AccessibilityID.JourneyResults.content)
             .onScrollGeometryChange(for: CGFloat.self) { geometry in
                 geometry.contentOffset.y
             } action: { _, newOffset in

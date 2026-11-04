@@ -49,10 +49,4 @@ extension JourneyPlannerForm {
             self.via = updatesAllowed ? .currentLocation(name: name, coordinate: coordinate) : nil
         }
     }
-
-    mutating func adjustCurrentTimeIfNeeded() {
-        if timeSelection.date < .now {
-            timeSelection.date = .now
-        }
-    }
 }

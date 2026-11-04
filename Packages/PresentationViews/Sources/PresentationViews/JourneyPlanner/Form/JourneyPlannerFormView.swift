@@ -1,5 +1,6 @@
 import ModelStubs
 import Models
+import Shared
 import SwiftUI
 
 public struct JourneyPlannerFormView: View {
@@ -12,6 +13,7 @@ public struct JourneyPlannerFormView: View {
     let onAction: (JourneyPlannerForm.Action) -> Void
 
     @Namespace private var animationNamespace
+    @Environment(\.clock) private var clock
     private var showsDatePicker: Bool {
         form.timeSelection.option != .leaveNow
     }
@@ -37,6 +39,7 @@ public struct JourneyPlannerFormView: View {
             formSection
             recentJourneysSection
         }
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.form)
         .buttonStyle(.plain)
         .listStyle(.plain)
         .defaultScrollContentBackgroundColor()
@@ -52,7 +55,7 @@ public struct JourneyPlannerFormView: View {
                     .padding(.trailing, 16)
                 Group {
                     travelOptionsChips
-                    submitButton
+                    planMyJourneyButton
                 }
                 .padding(.horizontal, 16)
 
@@ -101,7 +104,7 @@ public struct JourneyPlannerFormView: View {
             JourneyPlannerTimeChip(timeSelection: $form.timeSelection)
             CompactDatePicker(
                 selection: $form.timeSelection.date,
-                minimumDate: .now,
+                minimumDate: clock.now,
                 minuteInterval: 5
             )
         }
@@ -111,14 +114,15 @@ public struct JourneyPlannerFormView: View {
         .transition(.opacity.combined(with: .move(edge: .top)))
     }
 
-    private var submitButton: some View {
+    private var planMyJourneyButton: some View {
         Button {
             submitForm()
         } label: {
-            Text(.journeyPlannerShowJourneysButtonTitle)
+            Text(.journeyPlannerPlanMyJourneyButtonTitle)
         }
         .buttonStyle(.primary)
         .disabled(!form.canSubmit)
+        .accessibilityIdentifier(AccessibilityID.JourneyPlanner.planMyJourneyButton)
     }
 
     @ViewBuilder

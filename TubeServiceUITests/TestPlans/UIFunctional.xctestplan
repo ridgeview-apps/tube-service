@@ -1,0 +1,27 @@
+{
+  "configurations" : [
+    {
+      "id" : "8B27D5A1-4C3E-4F96-A0D8-6E1B9F2C7A45",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "ScreenshotTests"
+      ],
+      "target" : {
+        "containerPath" : "container:Tube.xcodeproj",
+        "identifier" : "315F89C62567BCB70069DD2D",
+        "name" : "TubeServiceUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

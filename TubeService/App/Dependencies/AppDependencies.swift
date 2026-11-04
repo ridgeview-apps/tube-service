@@ -1,5 +1,8 @@
+import CoreLocation
 import DataStores
 import Foundation
+import Shared
+import StoreKit
 
 struct AppDependencies: Sendable {
     let tflAPI: TflAPIClientType
@@ -7,11 +10,14 @@ struct AppDependencies: Sendable {
     let notificationsAPI: NotificationsAPIClientType
     let systemStatusAPI: SystemStatusAPIClientType
     let locationManager: LocationManagerType
+    let reverseGeocoder: ReverseGeocoderType
     let localSearchCompleterClient: LocalSearchCompleterClientType
     let userDefaults: UserDefaultsProvider
     let pushNotificationEnvironment: PushNotificationEnvironment
     let purchaseProductIDs: [PurchaseStore.ProductID]
-    let now: @Sendable () -> Date
+    /// The environment that signed the app's install, or `nil` to read the real one (see `PurchaseStore`).
+    let readInstallEnvironment: (@Sendable () async -> AppStore.Environment?)?
+    let clock: AppClock
 
     init(
         tflAPI: TflAPIClientType,
@@ -19,22 +25,26 @@ struct AppDependencies: Sendable {
         notificationsAPI: NotificationsAPIClientType,
         systemStatusAPI: SystemStatusAPIClientType,
         locationManager: LocationManagerType,
+        reverseGeocoder: ReverseGeocoderType = CLGeocoder(),
         localSearchCompleterClient: LocalSearchCompleterClientType,
         userDefaults: UserDefaultsProvider,
         pushNotificationEnvironment: PushNotificationEnvironment,
         purchaseProductIDs: [PurchaseStore.ProductID],
-        now: @escaping @Sendable () -> Date = { .now }
+        readInstallEnvironment: (@Sendable () async -> AppStore.Environment?)? = nil,
+        clock: AppClock = .live
     ) {
         self.tflAPI = tflAPI
         self.tubeServiceAPI = tubeServiceAPI
         self.notificationsAPI = notificationsAPI
         self.systemStatusAPI = systemStatusAPI
         self.locationManager = locationManager
+        self.reverseGeocoder = reverseGeocoder
         self.localSearchCompleterClient = localSearchCompleterClient
         self.userDefaults = userDefaults
         self.pushNotificationEnvironment = pushNotificationEnvironment
         self.purchaseProductIDs = purchaseProductIDs
-        self.now = now
+        self.readInstallEnvironment = readInstallEnvironment
+        self.clock = clock
     }
 }
 
@@ -53,11 +63,14 @@ extension AppDependencies {
                 return previewOverride
             }
 
-            if ProcessInfo.isRunningUnitTests || ProcessInfo.isRunningUITests {
+            if let uiTestConfiguration = TubeUITestLaunchConfiguration.fromProcessEnvironment() {
+                return .uiTests(uiTestConfiguration)
+            }
+
+            if ProcessInfo.isRunningUnitTests {
                 return .stub
             }
         #endif
-
 
         return .live
     }()

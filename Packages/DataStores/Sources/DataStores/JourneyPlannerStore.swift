@@ -40,32 +40,44 @@ public final class JourneyPlannerStore {
 
     // MARK: - State
 
-    public var form: JourneyPlannerForm = .empty
+    public var form: JourneyPlannerForm
     public var pages: [JourneyPage] = []
     public private(set) var hasLoadedJourneys = false
 
     private let tflAPI: TflAPIClientType
     private let localSearchResults: LocalSearchResultsStore
+    private let now: () -> Date
 
     private var earlierTimeAdjustment: JourneyTimeAdjustment?
     private var laterTimeAdjustment: JourneyTimeAdjustment?
     private var pageCounter = 0
 
-    public init(tflAPI: TflAPIClientType, localSearchResults: LocalSearchResultsStore) {
+    public init(
+        tflAPI: TflAPIClientType,
+        localSearchResults: LocalSearchResultsStore,
+        now: @escaping () -> Date = { .now }
+    ) {
         self.tflAPI = tflAPI
         self.localSearchResults = localSearchResults
+        self.now = now
+        self.form = JourneyPlannerForm(timeSelection: JourneyTimeSelection(option: .leaveNow, date: now()))
     }
 
     // MARK: - High-level (screen-facing)
 
     public func resetForNewJourney() {
-        form.adjustCurrentTimeIfNeeded()
+        // A time picked earlier may have passed since; planning from it would show past journeys.
+        let now = now()
+        if form.timeSelection.date < now {
+            form.timeSelection.date = now
+        }
         prepareForInitialLoad()
     }
 
-    public func resetTimeSelectionIfNeeded() {
-        if form.timeSelection.date < .now {
-            form.timeSelection = .leaveNow()
+    public func resetTimeSelectionIfPast() {
+        let now = now()
+        if form.timeSelection.date < now {
+            form.timeSelection = JourneyTimeSelection(option: .leaveNow, date: now)
         }
     }
 

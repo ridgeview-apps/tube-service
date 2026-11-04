@@ -20,34 +20,42 @@ final class AppDataStore {
 
     private let dependencies: AppDependencies
 
+    /// The app's clock, which views read through the `\.clock` environment value.
+    var clock: AppClock { dependencies.clock }
+
     init(dependencies: AppDependencies) {
         self.dependencies = dependencies
+        let clock = dependencies.clock
+        let now: @Sendable () -> Date = { clock.now }
 
-        let stations = StationsDataStore(tflAPI: dependencies.tflAPI)
+        let stations = StationsDataStore(tflAPI: dependencies.tflAPI, now: now)
         self.stations = stations
 
         let purchases = PurchaseStore(
             productIDs: dependencies.purchaseProductIDs,
-            featureFlags: { dependencies.userDefaults.value.featureFlags }
+            featureFlags: { dependencies.userDefaults.value.featureFlags },
+            readInstallEnvironment: dependencies.readInstallEnvironment
         )
         self.purchases = purchases
 
         self.lineStatus = LineStatusDataStore(
             tflAPI: dependencies.tflAPI,
             tubeServiceAPI: dependencies.tubeServiceAPI,
-            now: dependencies.now,
+            now: now,
             featureFlags: { dependencies.userDefaults.value.featureFlags },
             hasTubeServicePlus: { purchases.hasTubeServicePlus }
         )
         self.location = LocationDataStore(
             locationManager: dependencies.locationManager,
-            stations: stations
+            stations: stations,
+            geocoder: dependencies.reverseGeocoder,
+            now: now
         )
         let localSearchResults = LocalSearchResultsStore(completerClient: dependencies.localSearchCompleterClient)
         self.localSearchResults = localSearchResults
         self.systemStatus = SystemStatusDataStore(
             systemStatusAPI: dependencies.systemStatusAPI,
-            now: dependencies.now
+            now: now
         )
         self.notifications = NotificationsDataStore(
             api: dependencies.notificationsAPI,
@@ -56,7 +64,8 @@ final class AppDataStore {
         )
         self.journeyPlanner = JourneyPlannerStore(
             tflAPI: dependencies.tflAPI,
-            localSearchResults: localSearchResults
+            localSearchResults: localSearchResults,
+            now: now
         )
     }
 

@@ -1,3 +1,4 @@
+import Shared
 import SwiftUI
 
 public struct FavouritesButton: View {
@@ -55,7 +56,7 @@ public struct FavouritesButton: View {
             let wasRemoved = oldValue && !newValue
             return wasRemoved
         }
-        .accessibility(identifier: "acc.id.favourites.button.\(style.rawValue)")
+        .accessibilityIdentifier(AccessibilityID.FavouritesButton.button(style.rawValue))
         .applyingStyle(style, tint: largeStyleTint)
     }
 

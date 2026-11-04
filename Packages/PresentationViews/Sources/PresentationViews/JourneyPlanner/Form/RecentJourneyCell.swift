@@ -1,5 +1,6 @@
 import ModelStubs
 import Models
+import Shared
 import SwiftUI
 
 public struct RecentJourneyItem: Hashable, Identifiable, Sendable {
@@ -47,6 +48,7 @@ struct RecentJourneyCell: View {
             } label: {
                 buttonLabel
             }
+            .accessibilityIdentifier(AccessibilityID.JourneyPlanner.recentJourney)
         }
         .cardStyle()
     }

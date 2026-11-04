@@ -11,6 +11,7 @@
 		310BBAAF2AD574D70097BAD8 /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 310BBAAE2AD574D70097BAD8 /* Shared */; };
 		314D614C2B4C1F1600C08D67 /* DataStores in Frameworks */ = {isa = PBXBuildFile; productRef = 314D614B2B4C1F1600C08D67 /* DataStores */; };
 		31692E7A2AE6BD7D00E8383F /* Models in Frameworks */ = {isa = PBXBuildFile; productRef = 31692E792AE6BD7D00E8383F /* Models */; };
+		31A7D1E12FD9A00100C0FFEE /* Shared in Frameworks */ = {isa = PBXBuildFile; productRef = 31A7D1E02FD9A00100C0FFEE /* Shared */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,8 +41,7 @@
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
 		315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		316577342FD194F200CABBB4 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
-		3165775F2FD195B600CABBB4 /* generate-screenshots.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "generate-screenshots.sh"; sourceTree = "<group>"; };
-		316577612FD195B600CABBB4 /* screenshots-upload.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshots-upload.sh"; sourceTree = "<group>"; };
+		3165775F2FD195B600CABBB4 /* screenshots.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "screenshots.sh"; sourceTree = "<group>"; };
 		316577622FD195B600CABBB4 /* submit-for-review.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "submit-for-review.sh"; sourceTree = "<group>"; };
 		316577642FD195EC00CABBB4 /* swift-format-lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "swift-format-lint.sh"; sourceTree = "<group>"; };
 		318D482624EFC4900026B5F4 /* Tube Service.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tube Service.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +73,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				TestPlans/Screenshots.xctestplan,
+				TestPlans/UIFunctional.xctestplan,
 			);
 			target = 315F89C62567BCB70069DD2D /* TubeServiceUITests */;
 		};
@@ -97,6 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31A7D1E12FD9A00100C0FFEE /* Shared in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,8 +157,7 @@
 		316577632FD195B600CABBB4 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
-				3165775F2FD195B600CABBB4 /* generate-screenshots.sh */,
-				316577612FD195B600CABBB4 /* screenshots-upload.sh */,
+				3165775F2FD195B600CABBB4 /* screenshots.sh */,
 				316577622FD195B600CABBB4 /* submit-for-review.sh */,
 				316577642FD195EC00CABBB4 /* swift-format-lint.sh */,
 			);
@@ -218,6 +220,9 @@
 				310B4C572FCDA398000BA667 /* TubeServiceUITests */,
 			);
 			name = TubeServiceUITests;
+			packageProductDependencies = (
+				31A7D1E02FD9A00100C0FFEE /* Shared */,
+			);
 			productName = TubeServiceUITests;
 			productReference = 315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -716,6 +721,10 @@
 		31692E792AE6BD7D00E8383F /* Models */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Models;
+		};
+		31A7D1E02FD9A00100C0FFEE /* Shared */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Shared;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

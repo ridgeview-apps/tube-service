@@ -17,11 +17,13 @@ public final class ArrivalsBoardStore {
     public private(set) var boardData = RemoteData<BoardData?>(value: nil, fetchedAt: nil, fetchState: .idle)
 
     private let tflAPI: TflAPIClientType
+    private let now: () -> Date
     private var initialFetchTask: Task<Void, Never>?
     private var periodicRefreshTask: Task<Void, Never>?
 
-    public init(tflAPI: TflAPIClientType) {
+    public init(tflAPI: TflAPIClientType, now: @escaping () -> Date = { .now }) {
         self.tflAPI = tflAPI
+        self.now = now
     }
 
     // Fetches immediately then starts the periodic refresh loop.
@@ -52,7 +54,7 @@ public final class ArrivalsBoardStore {
         let previousFetchState = boardData.fetchState
         boardData.fetchState = .fetching
         do {
-            boardData.succeed(with: try await fetchBoardData(for: lineGroup))
+            boardData.succeed(with: try await fetchBoardData(for: lineGroup), fetchedAt: now())
         } catch is CancellationError {
             boardData.fetchState = previousFetchState
         } catch {

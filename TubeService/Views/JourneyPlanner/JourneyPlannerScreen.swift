@@ -46,7 +46,7 @@ struct JourneyPlannerScreen: View {
             handleLocationChangeAction($0)
         }
         .onCalendarDayChanged {
-            journeyPlanner.resetTimeSelectionIfNeeded()
+            journeyPlanner.resetTimeSelectionIfPast()
         }
         .task { initialLoad() }
     }

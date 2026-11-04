@@ -18,6 +18,7 @@ public extension View {
 
 private struct PulsatingSymbolEffectModifier: ViewModifier {
 
+    @Environment(\.pausesRepeatingAnimations) private var pausesRepeatingAnimations
     @State private var isAnimating = false
 
     func body(content: Content) -> some View {
@@ -25,7 +26,7 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
             content
                 .symbolEffect(.pulse, options: .repeating, value: isAnimating)
                 .onAppear {
-                    isAnimating = true
+                    isAnimating = !pausesRepeatingAnimations
                 }
         } else {
             content

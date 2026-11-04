@@ -27,6 +27,7 @@ public struct LineStatusListView: View {
 
     @State private var isGoodServiceSectionExpanded = false
     @State private var editMode: EditMode = .inactive
+    @Environment(\.clock) private var clock
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
 
@@ -69,6 +70,7 @@ public struct LineStatusListView: View {
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
         }
+        .accessibilityIdentifier(AccessibilityID.LineStatus.list)
         .defaultMaxWidthWithFullBackground()
         .listStyle(.plain)
         .contentMargins(.bottom, 24, for: .scrollContent)
@@ -104,6 +106,7 @@ public struct LineStatusListView: View {
         if !favourites.isEmpty {
             sectionLabel(.lineStatusSectionFavourites, systemImage: "star.fill") {
                 EditModeButton(editMode: $editMode)
+                    .accessibilityIdentifier(AccessibilityID.LineStatus.editFavouritesButton)
             }
             tappableStatusCells(with: favourites, isEditable: true)
                 .onMove(perform: moveFavourites)
@@ -227,7 +230,11 @@ public struct LineStatusListView: View {
             .id(statusCellAnimationID(for: line))
         }
         .buttonStyle(.borderless)
-        .accessibility(identifier: line.id.rawValue)
+        .accessibilityIdentifier(
+            isEditable
+                ? AccessibilityID.LineStatus.favouriteLine(line.id.rawValue)
+                : AccessibilityID.LineStatus.line(line.id.rawValue)
+        )
     }
 
     private func statusCellAnimationID(for line: Line) -> some Hashable {
@@ -249,7 +256,7 @@ public struct LineStatusListView: View {
     }
 
     private var isValidFutureDate: Bool {
-        guard let startOfTomorrow = Calendar.london.startOfTomorrow() else {
+        guard let startOfTomorrow = Calendar.london.startOfNextDay(after: clock.now) else {
             return true
         }
         return selectedDate >= startOfTomorrow

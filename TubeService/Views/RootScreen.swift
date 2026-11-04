@@ -1,9 +1,11 @@
 import PresentationViews
+import Shared
 import SwiftUI
 
 struct RootScreen: View {
 
     @Environment(AppRouter.self) private var router
+    @Environment(\.adaptableTabBarPlacement) private var adaptableTabBarPlacement
 
     var body: some View {
         @Bindable var router = router
@@ -15,6 +17,7 @@ struct RootScreen: View {
             mapsTab
         }
         .tabViewStyle(.sidebarAdaptable)
+        .defaultAdaptableTabBarPlacement(adaptableTabBarPlacement)
         .systemStatusRefreshable()
     }
 
@@ -24,7 +27,7 @@ struct RootScreen: View {
         } label: {
             Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
         }
-        .accessibilityIdentifier("acc.id.line.status.tab.title")
+        .accessibilityIdentifier(AccessibilityID.Tab.lineStatus)
     }
 
     private var journeyPlannerTab: some TabContent<AppTab> {
@@ -33,7 +36,7 @@ struct RootScreen: View {
         } label: {
             Label(L10n.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
         }
-        .accessibilityIdentifier("acc.id.journey.planner.tab.title")
+        .accessibilityIdentifier(AccessibilityID.Tab.journeyPlanner)
     }
 
     private var liveArrivalsTab: some TabContent<AppTab> {
@@ -42,7 +45,7 @@ struct RootScreen: View {
         } label: {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
         }
-        .accessibilityIdentifier("acc.id.arrivals.tab.title")
+        .accessibilityIdentifier(AccessibilityID.Tab.arrivals)
     }
 
     private var nearbyStationsTab: some TabContent<AppTab> {
@@ -51,7 +54,7 @@ struct RootScreen: View {
         } label: {
             Label(L10n.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
         }
-        .accessibilityIdentifier("acc.id.nearby.stations.tab.title")
+        .accessibilityIdentifier(AccessibilityID.Tab.nearby)
     }
 
     private var mapsTab: some TabContent<AppTab> {
@@ -60,7 +63,7 @@ struct RootScreen: View {
         } label: {
             Label(L10n.mapsTabTitle, systemImage: "map")
         }
-        .accessibilityIdentifier("acc.id.maps.tab.title")
+        .accessibilityIdentifier(AccessibilityID.Tab.maps)
     }
 }
 

@@ -35,7 +35,6 @@ public struct LocatedStationsView: View {
             .defaultMaxWidthWithFullBackground()
             .frame(maxHeight: .infinity)
             .background(Color.defaultBackground)
-            .accessibilityIdentifier("acc.id.nearby.stations")
     }
 
     @ViewBuilder private var locatedStationsListView: some View {
@@ -51,7 +50,7 @@ public struct LocatedStationsView: View {
             }
             .listSectionSpacing(0)
             .defaultScrollContentBackgroundColor()
-            .accessibilityIdentifier("acc.id.nearby.stations.list")
+            .accessibilityIdentifier(AccessibilityID.Nearby.list)
             .animation(.default, value: sectionState.currentPageNo)
         }
     }
@@ -109,6 +108,7 @@ public struct LocatedStationsView: View {
                 .frame(minHeight: 52)
             }
             .buttonStyle(.plain)
+            .accessibilityIdentifier(AccessibilityID.Nearby.station(locatedStation.station.id))
         }
     }
 

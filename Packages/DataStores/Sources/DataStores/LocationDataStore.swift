@@ -25,6 +25,7 @@ public final class LocationDataStore: NSObject {
     private let locationManagerDelegate = LocationManagerDelegate()
     private let stations: StationsDataStore
     private let geocoder: ReverseGeocoderType
+    private let now: () -> Date
 
     public private(set) var authorizationStatus: CLAuthorizationStatus
     public private(set) var currentLocationCoordinate: LocationCoordinate?
@@ -39,12 +40,14 @@ public final class LocationDataStore: NSObject {
     public init(
         locationManager: LocationManagerType,
         stations: StationsDataStore,
-        geocoder: ReverseGeocoderType = CLGeocoder()
+        geocoder: ReverseGeocoderType = CLGeocoder(),
+        now: @escaping () -> Date = { .now }
     ) {
         self.locationManager = locationManager
         self.authorizationStatus = locationManager.authorizationStatus
         self.stations = stations
         self.geocoder = geocoder
+        self.now = now
         super.init()
 
         locationManagerDelegate.onAction = { [weak self] action in
@@ -154,7 +157,7 @@ public final class LocationDataStore: NSObject {
         let oneMinute = 60.0
         let fiveHundredMeters = 500.0
 
-        let nameUpdatedOverOneMinuteAgo = Date.now.timeIntervalSince(currentLocationNameLastUpdated) > oneMinute
+        let nameUpdatedOverOneMinuteAgo = now().timeIntervalSince(currentLocationNameLastUpdated) > oneMinute
         let locationHasChangedSignificantly = newValue.toCLLocation().distance(from: oldValue.toCLLocation()) > fiveHundredMeters
 
         return locationHasChangedSignificantly && nameUpdatedOverOneMinuteAgo
@@ -174,7 +177,7 @@ public final class LocationDataStore: NSObject {
         }
 
         currentLocationName = placemark.toLocationName()
-        currentLocationNameLastUpdated = .now
+        currentLocationNameLastUpdated = now()
     }
 
     private func updateNearestStations() {

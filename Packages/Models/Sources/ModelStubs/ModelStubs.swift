@@ -3,7 +3,7 @@ import Models
 
 public enum ModelStubs {}  // Namespace
 
-private extension ModelStubs {
+extension ModelStubs {
 
     static func decodedValue<D: Decodable>(for rawJSON: String) -> D {
         guard let jsonData = rawJSON.data(using: .utf8),

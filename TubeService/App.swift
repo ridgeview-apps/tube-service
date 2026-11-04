@@ -1,4 +1,5 @@
 import DataStores
+import Shared
 import SwiftUI
 
 @main
@@ -8,6 +9,12 @@ struct RootScene: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
     @State private var appRouter = AppRouter()
+
+    init() {
+        #if DEBUG
+            TubeUITestLaunchConfiguration.fromProcessEnvironment()?.applyProcessSettings()
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -42,6 +49,10 @@ extension View {
             .environment(dataStore.purchases)
             .environment(dataStore.notifications)
             .environment(dataStore.journeyPlanner)
+            .environment(\.clock, dataStore.clock)
+            .environment(\.pausesRepeatingAnimations, ProcessInfo.isRunningUITests)
+            // The iPad otherwise restores whichever layout it last showed, which would change the screenshots
+            .environment(\.adaptableTabBarPlacement, ProcessInfo.isRunningUITests ? .sidebar : .automatic)
     }
 }
 

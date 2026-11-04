@@ -13,7 +13,7 @@ struct CalendarExtensionsTests {
     let monday23rd = dayMonthYear(23, 10, 2023, in: .london)  // Mon 23nd Oct 2023
 
     @Test
-    func thisOrNextWeekend_MidWeek() {
+    func weekendInterval_MidWeek() {
         // Given
         let timeZone = TimeZone.london
         var calendar = Calendar(identifier: .iso8601)
@@ -21,7 +21,7 @@ struct CalendarExtensionsTests {
 
         // When
         let today = weds18th
-        let weekendRange = calendar.thisOrNextWeekendDateInterval(for: today)
+        let weekendRange = calendar.weekendInterval(onOrAfter: today)
 
         // Then
         #expect(weekendRange?.start == saturday21st)
@@ -29,7 +29,7 @@ struct CalendarExtensionsTests {
     }
 
     @Test
-    func thisOrNextWeekend_JustBeforeTheWeekend() {
+    func weekendInterval_JustBeforeTheWeekend() {
         // Given
         let timeZone = TimeZone.london
         var calendar = Calendar(identifier: .iso8601)
@@ -37,7 +37,7 @@ struct CalendarExtensionsTests {
 
         // When
         let today = friday20th
-        let weekendRange = calendar.thisOrNextWeekendDateInterval(for: today)
+        let weekendRange = calendar.weekendInterval(onOrAfter: today)
 
         // Then
         #expect(weekendRange?.start == saturday21st)
@@ -45,7 +45,7 @@ struct CalendarExtensionsTests {
     }
 
     @Test
-    func thisOrNextWeekend_DuringTheWeekend_OnSaturday() {
+    func weekendInterval_DuringTheWeekend_OnSaturday() {
         // Given
         let timeZone = TimeZone.london
         var calendar = Calendar(identifier: .iso8601)
@@ -53,7 +53,7 @@ struct CalendarExtensionsTests {
 
         // When
         let today = saturday21st
-        let weekendRange = calendar.thisOrNextWeekendDateInterval(for: today)
+        let weekendRange = calendar.weekendInterval(onOrAfter: today)
 
         // Then
         #expect(weekendRange?.start == saturday21st)
@@ -61,7 +61,7 @@ struct CalendarExtensionsTests {
     }
 
     @Test
-    func thisOrNextWeekend_DuringTheWeekend_OnSunday() {
+    func weekendInterval_DuringTheWeekend_OnSunday() {
         // Given
         let timeZone = TimeZone.london
         var calendar = Calendar(identifier: .iso8601)
@@ -69,7 +69,7 @@ struct CalendarExtensionsTests {
 
         // When
         let today = sunday22nd
-        let weekendRange = calendar.thisOrNextWeekendDateInterval(for: today)
+        let weekendRange = calendar.weekendInterval(onOrAfter: today)
 
         // Then
         #expect(weekendRange?.start == saturday21st)

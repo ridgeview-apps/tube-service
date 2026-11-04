@@ -1,10 +1,13 @@
+import Shared
 import SwiftUI
 
 public struct LastUpatedTimeLabel: View {
 
     public let date: Date
 
-    private let timestampFormatter: DateFormatter = Formatter.relative(
+    @Environment(\.clock) private var clock
+
+    private let timestampFormatter = RelativeDateFormatter(
         dateStyle: .short,
         timeStyle: .short,
         context: .middleOfSentence
@@ -19,7 +22,7 @@ public struct LastUpatedTimeLabel: View {
             Image(systemName: "clock")
             Text(
                 .refreshStatusLastUpdated(
-                    timestampFormatter.string(from: date)
+                    timestampFormatter.string(from: date, relativeTo: clock.now)
                 )
             )
         }

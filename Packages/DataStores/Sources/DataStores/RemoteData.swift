@@ -5,7 +5,7 @@ public struct RemoteData<Value: Sendable>: Sendable {
     public var fetchedAt: Date?
     public var fetchState: DataFetchState
 
-    public mutating func succeed(with newValue: Value, fetchedAt: Date = .now) {
+    public mutating func succeed(with newValue: Value, fetchedAt: Date) {
         value = newValue
         self.fetchedAt = fetchedAt
         fetchState = .success

@@ -1,4 +1,5 @@
 import Models
+import Shared
 import SwiftUI
 
 struct LineDiagramItemView: View {
@@ -247,6 +248,7 @@ struct LineDiagramItemView: View {
                 )
                 .buttonStyle(.bordered)
                 .font(.subheadline)
+                .accessibilityIdentifier(AccessibilityID.JourneyResults.stopsToggle)
             }
 
         }
