@@ -104,4 +104,5 @@ jobs:
       - name: Install gems
         run: bundle install
       - name: Upload screenshots
+        timeout-minutes: 60
         run: bundle exec fastlane upload_screenshots screenshots_path:"$RUNNER_TEMP/screenshots"

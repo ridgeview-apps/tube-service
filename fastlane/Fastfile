@@ -309,6 +309,8 @@ private_lane :upload_to_app_store_connect do |options|
     submit_for_review: submit_for_review,
     overwrite_screenshots: screenshots_only,
     screenshots_path: screenshots_path,
+    # Re-uploads screenshots stuck processing after 10 minutes, not an hour
+    screenshot_processing_timeout: 600,
     # The Prod build job leaves its .ipa in the checkout, which deliver would
     # otherwise pick up and upload again
     skip_binary_upload: metadata_only || screenshots_only,
