@@ -1,3 +1,11 @@
+## Comments
+
+Write self-documenting code. This applies to every file: Swift, Ruby, YAML, shell scripts.
+
+- **Explain in code first:** before writing a comment, try a clearer name, or extract the expression into an explaining variable, e.g. `let isStillProcessing = …`.
+- **Comment only what the code can't say:** a non-obvious *why*, a quirk of an external system, or an alternative that was rejected. Never restate what the code does.
+- **Keep it short:** a line or so, above the code it explains.
+
 ## Localization (PresentationViews)
 
 All localized strings in PresentationViews use Xcode String Catalogs (`Localizable.xcstrings`), which auto-synthesize `LocalizedStringResource` extensions at compile time. Never use raw string literals or `"string \(interpolation)"` directly in SwiftUI modifiers.
