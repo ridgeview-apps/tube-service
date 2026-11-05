@@ -182,8 +182,8 @@
 		319E9AF5309CC8F1009DEEC6 /* Tooling */ = {
 			isa = PBXGroup;
 			children = (
-				319E9B47309CC98C009DEEC6 /* fastlane */,
 				319E9AFF309CC942009DEEC6 /* .github */,
+				319E9B47309CC98C009DEEC6 /* fastlane */,
 				319E9B0A309CC95A009DEEC6 /* Scripts */,
 				319E9B64309CCA03009DEEC6 /* .gitignore */,
 				319E9B65309CCA03009DEEC6 /* .ruby-version */,
