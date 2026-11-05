@@ -38,7 +38,7 @@ concurrency:
 jobs:
   release:
     name: Release
-    runs-on: macos-latest
+    runs-on: xcode-27
     permissions:
       contents: write # To push the release branch and the bump
     outputs:

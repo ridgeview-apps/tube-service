@@ -83,7 +83,7 @@ jobs:
   # Manual approval job
   upload:
     if: inputs.upload
-    runs-on: macos-latest
+    runs-on: xcode-27
     needs: generate
     environment:
       name: prod

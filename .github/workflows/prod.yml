@@ -50,7 +50,7 @@ jobs:
 
   # Manual approval job
   submit-for-review:
-    runs-on: macos-latest
+    runs-on: xcode-27
     needs: build-and-deploy-prod
     environment:
       name: prod
