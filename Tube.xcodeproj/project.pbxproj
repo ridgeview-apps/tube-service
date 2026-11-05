@@ -34,20 +34,25 @@
 /* Begin PBXFileReference section */
 		310BBAA42AD574350097BAD8 /* Shared */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Shared; sourceTree = "<group>"; };
 		310BBAA52AD574600097BAD8 /* PresentationViews */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PresentationViews; sourceTree = "<group>"; };
-		311FD6D32FF928E30089C709 /* beta.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = beta.yml; sourceTree = "<group>"; };
-		311FD6D42FF928E30089C709 /* feature-branch-checks.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = "feature-branch-checks.yml"; sourceTree = "<group>"; };
-		311FD6D52FF928E30089C709 /* prod.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = prod.yml; sourceTree = "<group>"; };
 		314D614A2B4C1F0800C08D67 /* DataStores */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DataStores; sourceTree = "<group>"; };
 		314D614D2B4C1F9D00C08D67 /* DataStores.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = DataStores.xctestplan; sourceTree = "<group>"; };
 		315F89C72567BCB70069DD2D /* TubeServiceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		316577342FD194F200CABBB4 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
-		3165775F2FD195B600CABBB4 /* screenshots.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = screenshots.sh; sourceTree = "<group>"; };
-		316577622FD195B600CABBB4 /* submit-for-review.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "submit-for-review.sh"; sourceTree = "<group>"; };
-		316577642FD195EC00CABBB4 /* swift-format-lint.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "swift-format-lint.sh"; sourceTree = "<group>"; };
 		318D482624EFC4900026B5F4 /* Tube Service.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Tube Service.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		318D72B22AE6787100DEBE06 /* Models.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Models.xctestplan; sourceTree = "<group>"; };
 		318D72B52AE6918E00DEBE06 /* Shared.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = Shared.xctestplan; sourceTree = "<group>"; };
 		318D72B62AE6B9E900DEBE06 /* PresentationViews.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = PresentationViews.xctestplan; sourceTree = "<group>"; };
+		319E9B40309CC98C009DEEC6 /* Appfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Appfile; sourceTree = "<group>"; };
+		319E9B41309CC98C009DEEC6 /* Deliverfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Deliverfile; sourceTree = "<group>"; };
+		319E9B42309CC98C009DEEC6 /* Fastfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Fastfile; sourceTree = "<group>"; };
+		319E9B43309CC98C009DEEC6 /* Pluginfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Pluginfile; sourceTree = "<group>"; };
+		319E9B46309CC98C009DEEC6 /* Snapfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Snapfile; sourceTree = "<group>"; };
+		319E9B64309CCA03009DEEC6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		319E9B65309CCA03009DEEC6 /* .ruby-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".ruby-version"; sourceTree = "<group>"; };
+		319E9B66309CCA03009DEEC6 /* .swift-format */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".swift-format"; sourceTree = "<group>"; };
+		319E9B67309CCA03009DEEC6 /* .xcode-version */ = {isa = PBXFileReference; lastKnownFileType = text; path = ".xcode-version"; sourceTree = "<group>"; };
+		319E9B68309CCA03009DEEC6 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
+		319E9B69309CCA03009DEEC6 /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
+		319E9B6A309CCA7C009DEEC6 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		31E6EEED2C9DB4980042A66A /* TubeServiceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TubeServiceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		31EE93512AE6BD0200AB20ED /* Models */ = {isa = PBXFileReference; lastKnownFileType = text; name = Models; path = Packages/Models; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -92,6 +97,9 @@
 		310B4C642FCDA3A4000BA667 /* TubeServiceTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (310B4C662FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 310B4C672FCDA3A5000BA667 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeServiceTests; sourceTree = "<group>"; };
 		310B4C7D2FCDA47D000BA667 /* Config */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Config; sourceTree = "<group>"; };
 		3192F9AF2FCDA24C00D46C61 /* TubeService */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3192F9D72FCDA24D00D46C61 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = TubeService; sourceTree = "<group>"; };
+		319E9AFF309CC942009DEEC6 /* .github */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = .github; sourceTree = "<group>"; };
+		319E9B0A309CC95A009DEEC6 /* Scripts */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Scripts; sourceTree = "<group>"; };
+		319E9B63309CC99F009DEEC6 /* metadata */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = metadata; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,46 +144,17 @@
 			path = Packages;
 			sourceTree = "<group>";
 		};
-		311FD6D62FF928E30089C709 /* workflows */ = {
-			isa = PBXGroup;
-			children = (
-				311FD6D32FF928E30089C709 /* beta.yml */,
-				311FD6D42FF928E30089C709 /* feature-branch-checks.yml */,
-				311FD6D52FF928E30089C709 /* prod.yml */,
-			);
-			path = workflows;
-			sourceTree = "<group>";
-		};
-		311FD6D72FF928E30089C709 /* .github */ = {
-			isa = PBXGroup;
-			children = (
-				311FD6D62FF928E30089C709 /* workflows */,
-			);
-			path = .github;
-			sourceTree = "<group>";
-		};
-		316577632FD195B600CABBB4 /* Scripts */ = {
-			isa = PBXGroup;
-			children = (
-				3165775F2FD195B600CABBB4 /* screenshots.sh */,
-				316577622FD195B600CABBB4 /* submit-for-review.sh */,
-				316577642FD195EC00CABBB4 /* swift-format-lint.sh */,
-			);
-			path = Scripts;
-			sourceTree = "<group>";
-		};
 		318D481D24EFC4900026B5F4 = {
 			isa = PBXGroup;
 			children = (
-				311FD6D72FF928E30089C709 /* .github */,
-				316577342FD194F200CABBB4 /* .swift-format */,
+				319E9B6A309CCA7C009DEEC6 /* README.md */,
+				319E9AF5309CC8F1009DEEC6 /* Tooling */,
 				310BBA792AD573FE0097BAD8 /* Packages */,
 				310B4C7D2FCDA47D000BA667 /* Config */,
 				3192F9AF2FCDA24C00D46C61 /* TubeService */,
 				310B4C642FCDA3A4000BA667 /* TubeServiceTests */,
 				310B4C572FCDA398000BA667 /* TubeServiceUITests */,
 				318D482724EFC4900026B5F4 /* Products */,
-				316577632FD195B600CABBB4 /* Scripts */,
 			);
 			sourceTree = "<group>";
 		};
@@ -198,6 +177,35 @@
 				318D72B62AE6B9E900DEBE06 /* PresentationViews.xctestplan */,
 			);
 			path = TestPlans;
+			sourceTree = "<group>";
+		};
+		319E9AF5309CC8F1009DEEC6 /* Tooling */ = {
+			isa = PBXGroup;
+			children = (
+				319E9B47309CC98C009DEEC6 /* fastlane */,
+				319E9AFF309CC942009DEEC6 /* .github */,
+				319E9B0A309CC95A009DEEC6 /* Scripts */,
+				319E9B64309CCA03009DEEC6 /* .gitignore */,
+				319E9B65309CCA03009DEEC6 /* .ruby-version */,
+				319E9B66309CCA03009DEEC6 /* .swift-format */,
+				319E9B67309CCA03009DEEC6 /* .xcode-version */,
+				319E9B68309CCA03009DEEC6 /* AGENTS.md */,
+				319E9B69309CCA03009DEEC6 /* Gemfile */,
+			);
+			name = Tooling;
+			sourceTree = "<group>";
+		};
+		319E9B47309CC98C009DEEC6 /* fastlane */ = {
+			isa = PBXGroup;
+			children = (
+				319E9B63309CC99F009DEEC6 /* metadata */,
+				319E9B40309CC98C009DEEC6 /* Appfile */,
+				319E9B41309CC98C009DEEC6 /* Deliverfile */,
+				319E9B42309CC98C009DEEC6 /* Fastfile */,
+				319E9B43309CC98C009DEEC6 /* Pluginfile */,
+				319E9B46309CC98C009DEEC6 /* Snapfile */,
+			);
+			path = fastlane;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
