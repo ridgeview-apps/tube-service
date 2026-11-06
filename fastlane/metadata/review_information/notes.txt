@@ -1,4 +1,4 @@
-- No demo user required
-- On the "Status" tab, tap any tube line for a detailed status and links to X
-- Tap "Live arrivals" and search for any station (e.g. "King" for "King's Cross") and view the live arrivals boards
-- Tap "Settings" for feedback / contact info
+- No account or demo login needed.
+- Line Status: switch between Today and This weekend, and tap any line for its full status and a link to TfL's posts on X.
+- Arrivals: search for a station (e.g. "King" for King's Cross) to see its live arrivals boards.
+- The gear button opens Settings, with feedback and contact details.

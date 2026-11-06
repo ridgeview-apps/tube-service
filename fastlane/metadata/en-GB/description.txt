@@ -1,12 +1,12 @@
-Tube Service is an app for London Underground commuters. It gives you the status of all London Underground lines as well as live tube arrivals at your favourite stations.
+Tube Service gives London commuters the status of every line and live arrivals at their stations, in one simple app.
 
-Tube Service features:
+• Line status for the Tube, Elizabeth line, Overground, DLR and Trams, with good-service lines grouped so disruptions stand out.
+• Planning ahead? Check this weekend's status for Saturday, Sunday or both.
+• Tap a line for the full details and TfL's latest updates on X.
+• Live arrivals and departures.
+• Favourite your lines and arrivals boards, then drag them into the order you want.
+• Find stations near you, with directions to get there.
+• Plan journeys across London by Tube, rail, bus, river, bike or on foot.
+• Tube, Night Tube, rail and Elizabeth line maps.
 
-- See the current status of all London Underground lines (including DLR, Trams and the Elizabeth line).
-- Tap to see a more detailed status for each line.
-- Search and view the live arrivals boards for a particular tube station.
-- Save your favourite arrivals boards for easy access in future.
-- Find stations nearby (including directions on how to get there)
-- Plan your journeys across London with the Journey Planner
-- Quick links to train maps
-- View the latest TfL posts on X (formerly Twitter)
+Powered by TfL Open Data. Tube Service is not affiliated with or endorsed by Transport for London.
