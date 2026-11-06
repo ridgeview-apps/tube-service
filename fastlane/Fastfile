@@ -316,6 +316,8 @@ private_lane :upload_to_app_store_connect do |options|
     skip_binary_upload: metadata_only || screenshots_only,
     skip_screenshots: !screenshots_only,
     skip_metadata: screenshots_only,
+    # deliver only uploads the age rating when given its path
+    app_rating_config_path: File.expand_path("metadata/rating_config.json"),
     precheck_include_in_app_purchases: false,
     force: true, # Skips the interactive preview of html file before uploading
     build_number: options[:build_number],
