@@ -130,6 +130,10 @@ private extension Device {
         "iPhone18,1": "iPhone 17 Pro",
         "iPhone18,2": "iPhone 17 Pro Max",
         "iPhone18,5": "iPhone 17e",
+        "iPhone19,2": "iPhone 18 Pro",
+        "iPhone19,3": "iPhone 18 Pro Max",
+        "iPhone19,7": "iPhone 18 Pro Max",
+        "iPhone19,4": "iPhone Duo",
         "iPhone8,4": "iPhone SE",
         "iPhone12,8": "iPhone SE (2nd generation)",
         "iPhone14,6": "iPhone SE (3rd generation)",
@@ -197,6 +201,8 @@ private extension Device {
         "iPad14,2": "iPad mini (6th generation)",
         "iPad16,1": "iPad mini (A17 Pro)",
         "iPad16,2": "iPad mini (A17 Pro)",
+        "iPad19,1": "iPad mini (A20 Pro)",
+        "iPad19,2": "iPad mini (A20 Pro)",
         "iPad6,3": "iPad Pro (9.7-inch)",
         "iPad6,4": "iPad Pro (9.7-inch)",
         "iPad7,3": "iPad Pro (10.5-inch)",
@@ -247,7 +253,8 @@ private extension Device {
     ]
 
     static let visionOSModelNamesByIdentifier = [
-        "RealityDevice14,1": "Apple Vision Pro"
+        "RealityDevice14,1": "Apple Vision Pro",
+        "RealityDevice17,1": "Apple Vision Pro (M5)"
     ]
 
     static let homePodModelNamesByIdentifier = [
