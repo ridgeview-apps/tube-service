@@ -2,8 +2,8 @@ name: Start release
 
 # Starts a release from main. In one atomic push it creates release/<version>
 # for the version in Base.xcconfig and bumps main to the next version, then it
-# starts Prod on the release branch and Beta on main (pushes made with the
-# workflow token don't start workflows by themselves).
+# starts the App Store workflow on the release branch and the Beta workflow on
+# main (pushes made with the workflow token don't start workflows by themselves).
 #
 # Refuses to run while another release is in progress (a release branch with no
 # tag yet), so running it twice can't start a second release.
@@ -11,8 +11,8 @@ name: Start release
 # If it fails:
 #   - in "Release": nothing was pushed. Fix the cause and run it again
 #   - in "Start builds": the release is pushed. "Re-run failed jobs" is safe (a
-#     second Prod run cancels the first), or run Prod on release/<version> and
-#     Beta on main by hand
+#     second App Store run cancels the first), or run the App Store workflow on
+#     release/<version> and the Beta workflow on main by hand
 # To abandon a release, delete release/<version> and revert the bump on main.
 
 on:
@@ -77,7 +77,7 @@ jobs:
           ### Release $VERSION: $OUTCOME
           - Push \`release/$VERSION\` at ${GITHUB_SHA:0:7}
           - Bump main from $VERSION to $NEXT_VERSION
-          - Start Prod on \`release/$VERSION\` and Beta on main
+          - Start the App Store workflow on \`release/$VERSION\` and the Beta workflow on main
           EOF
       # Atomic, so the branch and the bump are pushed together or not at all.
       # The leases make it fail if the branch has appeared or main has moved
@@ -98,12 +98,12 @@ jobs:
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     permissions:
-      actions: write # To start the Prod and Beta workflows
+      actions: write # To start the App Store and Beta workflows
     env:
       GH_TOKEN: ${{ github.token }}
       VERSION: ${{ needs.release.outputs.version }}
     steps:
-      - name: Start Prod
-        run: gh workflow run prod.yml --repo "$GITHUB_REPOSITORY" --ref "release/$VERSION"
-      - name: Start Beta
+      - name: Start App Store workflow
+        run: gh workflow run app-store.yml --repo "$GITHUB_REPOSITORY" --ref "release/$VERSION"
+      - name: Start Beta workflow
         run: gh workflow run beta.yml --repo "$GITHUB_REPOSITORY" --ref main

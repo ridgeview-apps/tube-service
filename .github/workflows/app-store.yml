@@ -1,4 +1,4 @@
-name: Prod
+name: App Store
 
 on:
   push:
@@ -24,7 +24,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy-prod:
+  build-and-upload:
+    name: Build and upload
     if: startsWith(github.ref, 'refs/heads/release/')
     runs-on: xcode-27
     steps:
@@ -50,10 +51,11 @@ jobs:
 
   # Manual approval job
   submit-for-review:
+    name: Submit for review
     runs-on: xcode-27
-    needs: build-and-deploy-prod
+    needs: build-and-upload
     environment:
-      name: prod
+      name: app-store
     permissions:
       contents: write # To push the release tag and create the GitHub release
     steps:

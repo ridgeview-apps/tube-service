@@ -86,7 +86,7 @@ jobs:
     runs-on: xcode-27
     needs: generate
     environment:
-      name: prod
+      name: app-store
     env:
       APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
       APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}

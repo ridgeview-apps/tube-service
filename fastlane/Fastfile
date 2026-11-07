@@ -311,8 +311,8 @@ private_lane :upload_to_app_store_connect do |options|
     screenshots_path: screenshots_path,
     # Re-uploads screenshots stuck processing after 10 minutes, not an hour
     screenshot_processing_timeout: 600,
-    # The Prod build job leaves its .ipa in the checkout, which deliver would
-    # otherwise pick up and upload again
+    # deliver uploads the newest .ipa in the working directory unless told not
+    # to, and the build lane leaves one there
     skip_binary_upload: metadata_only || screenshots_only,
     skip_screenshots: !screenshots_only,
     skip_metadata: screenshots_only,
