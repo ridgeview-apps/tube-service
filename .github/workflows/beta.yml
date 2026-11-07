@@ -21,7 +21,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy-beta:
+  build-and-upload:
+    name: Build and upload
     runs-on: xcode-27
     steps:
       - name: Checkout repo
