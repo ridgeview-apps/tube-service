@@ -85,6 +85,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
+### publish
+
+```sh
+[bundle exec] fastlane publish
+```
+
+
+
 ### upload_metadata
 
 ```sh

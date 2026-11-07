@@ -87,3 +87,18 @@ jobs:
           gh release delete "$VERSION" --yes 2>/dev/null || true
           gh release create "$VERSION" --verify-tag --title "$VERSION" \
             --notes-file fastlane/metadata/en-GB/release_notes.txt --generate-notes
+
+  # Manual approval job. Approve it once Apple has approved the version
+  publish:
+    name: Publish
+    runs-on: xcode-27
+    needs: submit-for-review
+    environment:
+      name: app-store
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: Install gems
+        run: bundle install
+      - name: Publish
+        run: bundle exec fastlane publish

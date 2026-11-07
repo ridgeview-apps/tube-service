@@ -233,6 +233,30 @@ lane :submit_for_review do |options|
   )
 end
 
+# Releases the approved version to the App Store. A version that's already live
+# is skipped, so re-running the job is harmless
+lane :publish do
+  app_store_connect_api_key(duration: 1200)
+
+  version = app_version_number
+  app = Spaceship::ConnectAPI::App.find(app_store_app_identifier)
+  app_store_version = app.get_app_store_versions(filter: { versionString: version }).first
+  UI.user_error!("#{version} isn't on App Store Connect") unless app_store_version
+
+  states = Spaceship::ConnectAPI::AppStoreVersion::AppVersionState
+  state = app_store_version.app_version_state
+  if state == states::READY_FOR_DISTRIBUTION
+    UI.important("#{version} is already on the App Store. Skipping")
+    next
+  end
+  unless state == states::PENDING_DEVELOPER_RELEASE
+    UI.user_error!("#{version} is #{state}, so it can't be published yet. Re-run this job once Apple has approved it")
+  end
+
+  app_store_version.create_app_store_version_release_request
+  UI.success("Released #{version} to the App Store")
+end
+
 # Syncs release notes and other metadata to the App Store version, creating it
 # if needed. Never uploads a binary or screenshots, or submits for review
 lane :upload_metadata do

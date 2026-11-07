@@ -96,5 +96,6 @@ fastlane build                # Build / archive the app
 fastlane distribute           # Distribute the app via TestFlight
 fastlane screenshots output_directory:/tmp/shots  # Generate App Store screenshots
 fastlane upload_screenshots screenshots_path:/tmp/shots  # Upload screenshots to App Store Connect (CI: Screenshots workflow)
-fastlane submit_for_review    # Submit the app for review (CI: App Store workflow's approval gate)
+fastlane submit_for_review    # Submit the app for review (CI: App Store workflow's Submit for review gate)
+fastlane publish              # Release the approved version to the App Store (CI: App Store workflow's Publish gate)
 ```
