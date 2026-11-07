@@ -95,6 +95,8 @@ jobs:
     needs: submit-for-review
     environment:
       name: app-store
+    permissions:
+      contents: write # To delete the release branch
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -102,3 +104,12 @@ jobs:
         run: bundle install
       - name: Publish
         run: bundle exec fastlane publish
+      # Submit for review tagged this commit, so the branch has nothing more to
+      # keep. The lease leaves it alone if anything was pushed after this build
+      - name: Delete release branch
+        run: |
+          if git ls-remote --exit-code --heads origin "$GITHUB_REF" > /dev/null; then
+            git push --force-with-lease="$GITHUB_REF:$GITHUB_SHA" origin ":$GITHUB_REF"
+          else
+            echo "${GITHUB_REF#refs/heads/} is already deleted"
+          fi
