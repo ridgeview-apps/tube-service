@@ -74,11 +74,17 @@ Line statuses are a good example of data used in multiple parts of the app. The 
 
 > Note: The `PresentationViews` package used to be a completely standalone package with its own separate models. However I found myself frequently transforming from a `Models` "model" -> `PresentationViews` "model". So I found it much simpler to cut out the middle man and gave `PresentationViews` direct access to the `Models` package (any "presentation"-specific properties could simply be added via Swift extensions). This also makes data stubbing much simpler (for example `ModelStubs` contains lots of pre-configured data models which are perfect for SwiftUI previews and unit testing).
 
-## Unit tests
+## Tests
+
+### Unit tests
 
 Unit tests are written for the key parts of the app (model layer, data stores, presentation views) and each Swift package's unit tests can either be run in isolation or all at once with the main app target.
 
 > Note: when using other approaches such as MVVM, pretty much all my tests were for view models. However, on SwiftUI, this always felt unnatural to me (i.e. view models served a great purpose in UIKit, RxSwift-world, but less so on SwiftUI). I took a closer look at what I was actually testing in the view models and found much of it was unnecessary (and the bits that *were* important could be easily extracted out & unit tested separately).
+
+### UI tests
+
+UI tests (`TubeServiceUITests`) drive the app through page objects, and launch it with a `UITestLaunchConfiguration` that fixes the clock, saved state and stubbed API responses, so every run sees the same app. The App Store screenshots come from the same target (`ScreenshotTests`). See [AGENTS.md](AGENTS.md#ui-tests-tubeserviceuitests) for how they're structured, and run them with `bundle exec fastlane ui_tests`.
 
 ## Config
 
