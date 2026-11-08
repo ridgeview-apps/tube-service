@@ -86,16 +86,17 @@ My preferred approach to config is to use `.xcconfig` files since they make it e
 
 The app's config files are set up as follows:
 
-1. Debug (see [`Debug.xcconfig`](Config/Debug.xcconfig)). This is used for previews, unit tests and debugging the app on the simulator or a device and uses AUTOMATIC code-signing.
-1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI  / App Store builds and uses MANUAL code-signing (see [Fastlane / CI](#fastlane--ci) below).
-1. Additional xcconfig files are used to build the app for specific environments (e.g. `Beta.xcconfig`)
+1. Base (see [`Base.xcconfig`](Config/Base.xcconfig)). This holds the app version and the values every build shares, and the others include it.
+1. Debug (see [`Debug.xcconfig`](Config/Debug.xcconfig)). This is used for previews, tests and debugging the app on the simulator or a device and uses AUTOMATIC code-signing.
+1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI / App Store builds and uses MANUAL code-signing (see [Fastlane / CI](#fastlane--ci) below).
+1. CI builds add an environment on top of Release: [`CI/Beta.xcconfig`](Config/CI/Beta.xcconfig) for TestFlight betas (with their own bundle ID) or [`CI/Prod.xcconfig`](Config/CI/Prod.xcconfig) for the App Store. The workflow picks one with `XCODE_CONFIG`.
 
-Note that the Xcconfig files themselves contain two "kinds" of config:
+Note that the xcconfig files themselves contain two "kinds" of config:
 
 1. Build & Archive settings (e.g. code signing settings, compilation settings, bundle ID)
-1. App config properties (API urls etc)
+1. App config properties (e.g. API URLs)
 
-The app config properties are exposed in the `Info.plist` file and are loaded / referenced from Swift code as `AppConfig`.
+The app config properties are exposed in the `Info.plist` file and are loaded / referenced from Swift code (see [`AppConfig`](TubeService/App/Core/AppConfig.swift)). The API keys are left blank in the xcconfigs, and CI supplies them for Beta and App Store builds.
 
 
 ## Fastlane / CI
