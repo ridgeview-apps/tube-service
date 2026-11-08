@@ -65,7 +65,8 @@ jobs:
         run: bundle install
       - name: Submit for review
         # Same workflow run as the build job, so this is the build number it uploaded
-        run: bundle exec fastlane submit_for_review build_number:"$GITHUB_RUN_NUMBER"
+        # The +40 matches the one-off offset in the Fastfile build lane
+        run: bundle exec fastlane submit_for_review build_number:"$((GITHUB_RUN_NUMBER + 40))"
       - name: Read version
         id: versions
         run: bundle exec fastlane release_versions

@@ -115,7 +115,9 @@ lane :build do
     "TUBE_SERVICE_API_KEY=#{ENV.fetch("TUBE_SERVICE_API_KEY")}",
   ].join(" ")
 
-  increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
+  # One-off for 2.1.0: the renamed workflow restarted run numbers at 1, below
+  # the builds of 2.1.0 the old workflow uploaded (up to 40)
+  increment_build_number(build_number: (ENV["GITHUB_RUN_NUMBER"].to_i + 40).to_s) if is_ci
 
   gym(
     clean: true,
