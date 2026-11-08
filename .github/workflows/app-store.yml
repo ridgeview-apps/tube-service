@@ -78,14 +78,15 @@ jobs:
           git tag --force "$VERSION"
           git push --force origin "refs/tags/$VERSION"
       # The App Store release notes, followed by GitHub's changelog link. A
-      # resubmission replaces the release (not the tag), so it's always current
-      - name: Create GitHub release
+      # resubmission replaces the release (not the tag), so it's always current.
+      # It stays a draft until Publish, in case App Review rejects the version
+      - name: Create draft GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.versions.outputs.version }}
         run: |
           gh release delete "$VERSION" --yes 2>/dev/null || true
-          gh release create "$VERSION" --verify-tag --title "$VERSION" \
+          gh release create "$VERSION" --draft --verify-tag --title "$VERSION" \
             --notes-file fastlane/metadata/en-GB/release_notes.txt --generate-notes
 
   # Manual approval job. Approve it once Apple has approved the version
@@ -96,7 +97,7 @@ jobs:
     environment:
       name: app-store
     permissions:
-      contents: write # To delete the release branch
+      contents: write # To publish the GitHub release and delete the release branch
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
@@ -104,6 +105,14 @@ jobs:
         run: bundle install
       - name: Publish
         run: bundle exec fastlane publish
+      - name: Read version
+        id: versions
+        run: bundle exec fastlane release_versions
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.versions.outputs.version }}
+        run: gh release edit "$VERSION" --draft=false --latest
       # Submit for review tagged this commit, so the branch has nothing more to
       # keep. The lease leaves it alone if anything was pushed after this build
       - name: Delete release branch
