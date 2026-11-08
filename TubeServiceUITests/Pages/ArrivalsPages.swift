@@ -12,13 +12,6 @@ struct ArrivalsPickerPage: Page {
     private static let closeSearchButtonLabel = "Close"
     private static let clearSearchButtonLabel = "Clear text"
 
-    /// Swipes down on the list, which reveals the search field hidden in the navigation bar.
-    func swipeDownToRevealSearchField() -> ArrivalsPickerPage {
-        rootElement.swipeDown()
-        searchField.waitToExist()
-        return self
-    }
-
     /// Types into the search field, which replaces the list with the matching stations.
     func typeInSearchField(_ text: String) -> ArrivalsPickerPage {
         searchField.tapWhenHittable()
