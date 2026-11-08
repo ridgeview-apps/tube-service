@@ -35,7 +35,18 @@ Swift Package Manager is used to modularize the app as follows:
 * `PresentationViews` - plain ("dumb") views / reusable components. These are purely for presentation purposes (hence perfect for SwiftUI previews). The components are typically just parts of a screen and contain no business logic.
 * `Shared` - shared logic that can be used by ANY part of the app (i.e. any package or target - for example, `String`, `Date` extensions etc)
 
-![](Docs/Images/swift-package-dependencies.png)
+Each arrow points from a package to the packages and targets that use it:
+
+```mermaid
+graph TD
+    Shared --> Models
+    Shared --> PresentationViews
+    Shared --> DataStores
+    Models --> PresentationViews
+    Models --> DataStores
+    PresentationViews --> App[App target]
+    DataStores --> App
+```
 
 The main point to note is that the `PresentationViews` and `DataStores` packages are completely isolated from one another. The main app target itself is predominantly just composed of "screens" (which do all the heavy lifting and wire everything together - see example below).
 
