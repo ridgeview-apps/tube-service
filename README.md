@@ -88,7 +88,7 @@ The app's config files are set up as follows:
 
 1. Base (see [`Base.xcconfig`](Config/Base.xcconfig)). This holds the app version and the values every build shares, and the others include it.
 1. Debug (see [`Debug.xcconfig`](Config/Debug.xcconfig)). This is used for previews, tests and debugging the app on the simulator or a device and uses AUTOMATIC code-signing.
-1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI / App Store builds and uses MANUAL code-signing (see [Fastlane / CI](#fastlane--ci) below).
+1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI / App Store builds and uses MANUAL code-signing (see [Fastlane](#fastlane) below).
 1. CI builds add an environment on top of Release: [`CI/Beta.xcconfig`](Config/CI/Beta.xcconfig) for TestFlight betas (with their own bundle ID) or [`CI/Prod.xcconfig`](Config/CI/Prod.xcconfig) for the App Store. The workflow picks one with `XCODE_CONFIG`.
 
 Note that the xcconfig files themselves contain two "kinds" of config:
@@ -99,12 +99,28 @@ Note that the xcconfig files themselves contain two "kinds" of config:
 The app config properties are exposed in the `Info.plist` file and are loaded / referenced from Swift code (see [`AppConfig`](TubeService/App/Core/AppConfig.swift)). The API keys are left blank in the xcconfigs, and CI supplies them for Beta and App Store builds.
 
 
-## Fastlane / CI
+## Fastlane
 
 * [`Fastlane`](https://fastlane.tools) is used to build and distribute the app.
 * [`Fastlane match`](https://docs.fastlane.tools/actions/match/) is used to handle provisioning of CI builds. Although Apple has greatly improved its tools in recent years (e.g. automatic provisioning), I still find `match` to be a more mature and reliable solution, particularly in CI environments. For example, Apple's automatic provisioning still relies on having a user signed into Xcode via the Preferences pane, which can be flaky in a CI environment.
 * Since [`Fastlane` now uses the App Store Connect API for most of its actions](https://docs.fastlane.tools/app-store-connect-api/), I have found it to be MUCH faster and easier to use (i.e. no longer need to worry about username/password credentials and all the headaches of 2-factor authentication in a CI environment).
 * [`Fastlane snapshot`](https://docs.fastlane.tools/actions/snapshot/) is used to generate / upload screenshots to App Store Connect
-* `Release` builds are used for uploading to [TestFlight](https://developer.apple.com/testflight/) and are eventually submitted for review.
 
 The lanes are listed in [`fastlane/README.md`](fastlane/README.md), which fastlane generates from the [`Fastfile`](fastlane/Fastfile).
+
+
+## CI and releases
+
+GitHub Actions workflows build, test and release the app. Their comments explain the details.
+
+* [Branch checks](.github/workflows/branch-checks.yml) lints and runs the unit tests on every push to a `feature/**` or `hotfix/**` branch.
+* [Beta](.github/workflows/beta.yml) lints, tests and builds every push to `main` with the Beta config, and uploads it to [TestFlight](https://developer.apple.com/testflight/).
+* [Screenshots](.github/workflows/screenshots.yml) generates the App Store screenshots when run by hand, and can upload them once approved.
+* [Check Secret](.github/workflows/check-secret.yml) prints a fingerprint of a repository secret, to compare with a local value from [`Scripts/fingerprint-secret.sh`](Scripts/fingerprint-secret.sh).
+
+To release a version:
+
+1. Run [Start release](.github/workflows/start-release.yml) on `main`. It's a dry run unless you untick it. It creates `release/<version>` for the version in `Base.xcconfig`, bumps `main` to the next version, and starts the App Store workflow on the release branch and Beta on `main`.
+1. The [App Store](.github/workflows/app-store.yml) workflow's **Build and upload** job builds with the Prod config, uploads to TestFlight and syncs the App Store metadata.
+1. Approve **Submit for review** to send the build to App Review. It also tags the commit with the version and creates the GitHub release.
+1. Once Apple approves the version, approve **Publish** to release it on the App Store. It also deletes the release branch.
