@@ -19,8 +19,19 @@ Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the
 
 ## Getting Started
 
-1. Install Xcode.
-1. Select an iOS simulator and tap "Run"
+1. Install the Xcode version in [`.xcode-version`](.xcode-version).
+1. Open `Tube.xcodeproj`, select an iOS simulator and tap "Run".
+
+Debug builds run without the `TFL_API_APP_KEY` and `TUBE_SERVICE_API_KEY` keys (see [`Debug.xcconfig`](Config/Debug.xcconfig)). There's no Tube Service API dev server yet, so features that use it need the API running locally on `localhost:8000`.
+
+To run fastlane locally, install the Ruby version in [`.ruby-version`](.ruby-version), then:
+
+```sh
+bundle install
+bundle exec fastlane unit_tests
+```
+
+The test and screenshot lanes need no secrets (see [`Scripts/screenshots.sh`](Scripts/screenshots.sh)). The signing and App Store Connect lanes run on CI, which holds the keys.
 
 ## Architecture
 
