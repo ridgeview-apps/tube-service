@@ -8,6 +8,7 @@ struct ArrivalsPickerScreen: View {
 
     @Environment(AppRouter.self) private var router
     @Environment(StationsDataStore.self) var stations
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -27,6 +28,11 @@ struct ArrivalsPickerScreen: View {
                 favourites: userPreferences.favouriteLineGroupIDs,
                 order: userPreferences.favouriteStationOrder
             )
+    }
+
+    // In regular width the drawer spans the whole window, wider than the list's maximum width
+    private var searchFieldPlacement: SearchFieldPlacement {
+        horizontalSizeClass == .compact ? .navigationBarDrawer(displayMode: .always) : .automatic
     }
 
 
@@ -59,7 +65,7 @@ struct ArrivalsPickerScreen: View {
         pickerListView
             .searchable(
                 text: $searchTerm,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: searchFieldPlacement,
                 prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
             ) {
                 searchSuggestionsView
