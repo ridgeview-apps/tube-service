@@ -1,6 +1,6 @@
 ## Tube Service
 
-Welcome to Tube Service iOS app!  This is a SwiftUI app and is available on [the app store](https://apps.apple.com/app/id1540626286#?platform=iphone).
+Welcome to the Tube Service iOS app! This is a SwiftUI app and is available on [the App Store](https://apps.apple.com/app/id1540626286#?platform=iphone).
 
 ## Screenshots
 
@@ -68,8 +68,8 @@ The main point to note is that the `PresentationViews` and `DataStores` packages
 Line statuses are a good example of data used in multiple parts of the app. The feature is set up as follows:
 
 * The data objects (e.g. `Line`, `LineStatus`) are defined in the `Models` package.
-* The `PresentationViews` package uses these models to build reusable / previewable components
-* The `LineStatusDataStore` (in the `DataStores` package) is responsible for loading and storing line status data (as an `Observable` / `Environment` object) which can then be used globally across the app). The `Observable` resides here rather than in the the main app target as this makes it more reusable across other targets (for example, widget extensions, watch etc).
+* The `PresentationViews` package uses these models to build reusable / previewable components.
+* The `LineStatusDataStore` (in the `DataStores` package) is responsible for loading and storing line status data (as an `Observable` / `Environment` object) which can then be used globally across the app. The `Observable` resides here rather than in the main app target as this makes it more reusable across other targets (for example, widget extensions, watch etc).
 * In the main app target, `LineStatusDataStore` is used in a couple of places (`LineStatusScreen` and `StationScreen`). These are completely separate screens and assembled with different presentation views but both share the same `LineStatusDataStore` object as their source of truth (hence any updates on one screen will automatically reflect on the other).
 
 > Note: The `PresentationViews` package used to be a completely standalone package with its own separate models. However I found myself frequently transforming from a `Models` "model" -> `PresentationViews` "model". So I found it much simpler to cut out the middle man and gave `PresentationViews` direct access to the `Models` package (any "presentation"-specific properties could simply be added via Swift extensions). This also makes data stubbing much simpler (for example `ModelStubs` contains lots of pre-configured data models which are perfect for SwiftUI previews and unit testing).
@@ -94,7 +94,7 @@ The app's config files are set up as follows:
 
 1. Base (see [`Base.xcconfig`](Config/Base.xcconfig)). This holds the app version and the values every build shares, and the others include it.
 1. Debug (see [`Debug.xcconfig`](Config/Debug.xcconfig)). This is used for previews, tests and debugging the app on the simulator or a device and uses AUTOMATIC code-signing.
-1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI / App Store builds and uses MANUAL code-signing (see [Fastlane](#fastlane) below).
+1. Release (see [`Release.xcconfig`](Config/Release.xcconfig)). This is used for CI / App Store builds and uses MANUAL code-signing (see [fastlane](#fastlane) below).
 1. CI builds add an environment on top of Release: [`CI/Beta.xcconfig`](Config/CI/Beta.xcconfig) for TestFlight betas (with their own bundle ID) or [`CI/Prod.xcconfig`](Config/CI/Prod.xcconfig) for the App Store. The workflow picks one with `XCODE_CONFIG`.
 
 Note that the xcconfig files themselves contain two "kinds" of config:
@@ -104,16 +104,14 @@ Note that the xcconfig files themselves contain two "kinds" of config:
 
 The app config properties are exposed in the `Info.plist` file and are loaded / referenced from Swift code (see [`AppConfig`](TubeService/App/Core/AppConfig.swift)). The API keys are left blank in the xcconfigs, and CI supplies them for Beta and App Store builds.
 
+## fastlane
 
-## Fastlane
-
-* [`Fastlane`](https://fastlane.tools) is used to build and distribute the app.
-* [`Fastlane match`](https://docs.fastlane.tools/actions/match/) is used to handle provisioning of CI builds. Although Apple has greatly improved its tools in recent years (e.g. automatic provisioning), I still find `match` to be a more mature and reliable solution, particularly in CI environments. For example, Apple's automatic provisioning still relies on having a user signed into Xcode via the Preferences pane, which can be flaky in a CI environment.
-* Since [`Fastlane` now uses the App Store Connect API for most of its actions](https://docs.fastlane.tools/app-store-connect-api/), I have found it to be MUCH faster and easier to use (i.e. no longer need to worry about username/password credentials and all the headaches of 2-factor authentication in a CI environment).
-* [`Fastlane snapshot`](https://docs.fastlane.tools/actions/snapshot/) is used to generate / upload screenshots to App Store Connect
+* [fastlane](https://fastlane.tools) is used to build and distribute the app.
+* fastlane's [`match`](https://docs.fastlane.tools/actions/match/) is used to handle provisioning of CI builds. Although Apple has greatly improved its tools in recent years (e.g. automatic provisioning), I still find `match` to be a more mature and reliable solution, particularly in CI environments. For example, Apple's automatic provisioning still relies on having a user signed into Xcode via its Settings, which can be flaky in a CI environment.
+* Since [fastlane now uses the App Store Connect API for most of its actions](https://docs.fastlane.tools/app-store-connect-api/), I have found it to be MUCH faster and easier to use (i.e. no longer need to worry about username/password credentials and all the headaches of 2-factor authentication in a CI environment).
+* fastlane's [`snapshot`](https://docs.fastlane.tools/actions/snapshot/) is used to generate the App Store screenshots, and [`deliver`](https://docs.fastlane.tools/actions/deliver/) uploads them to App Store Connect.
 
 The lanes are listed in [`fastlane/README.md`](fastlane/README.md), which fastlane generates from the [`Fastfile`](fastlane/Fastfile).
-
 
 ## CI and releases
 
