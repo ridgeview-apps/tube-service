@@ -22,7 +22,6 @@ final class ArrivalsBoardTests: UITestCase {
 
         let board =
             arrivalsPicker
-            .swipeDownToRevealSearchField()
             .typeInSearchField("King's Cross")
             .tapStation("HUBKGX")
             .tapLineGroup(kingsCrossNorthernLineGroupID)

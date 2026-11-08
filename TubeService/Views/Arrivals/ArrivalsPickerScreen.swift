@@ -59,6 +59,7 @@ struct ArrivalsPickerScreen: View {
         pickerListView
             .searchable(
                 text: $searchTerm,
+                placement: .navigationBarDrawer(displayMode: .always),
                 prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
             ) {
                 searchSuggestionsView
