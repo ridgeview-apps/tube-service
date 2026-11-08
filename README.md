@@ -107,15 +107,4 @@ The app config properties are exposed in the `Info.plist` file and are loaded / 
 * [`Fastlane snapshot`](https://docs.fastlane.tools/actions/snapshot/) is used to generate / upload screenshots to App Store Connect
 * `Release` builds are used for uploading to [TestFlight](https://developer.apple.com/testflight/) and are eventually submitted for review.
 
-Command examples
-
-```ruby
-fastlane unit_tests           # Run unit tests
-fastlane add_badge_overlay    # Add a 'Beta' badge overlay
-fastlane build                # Build / archive the app
-fastlane distribute           # Distribute the app via TestFlight
-fastlane screenshots output_directory:/tmp/shots  # Generate App Store screenshots
-fastlane upload_screenshots screenshots_path:/tmp/shots  # Upload screenshots to App Store Connect (CI: Screenshots workflow)
-fastlane submit_for_review    # Submit the app for review (CI: App Store workflow's Submit for review gate)
-fastlane publish              # Release the approved version to the App Store (CI: App Store workflow's Publish gate)
-```
+The lanes are listed in [`fastlane/README.md`](fastlane/README.md), which fastlane generates from the [`Fastfile`](fastlane/Fastfile).
