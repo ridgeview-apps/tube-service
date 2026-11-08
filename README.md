@@ -47,14 +47,6 @@ Line statuses are a good example of data used in multiple parts of the app. The 
 
 > Note: The `PresentationViews` package used to be a completely standalone package with its own separate models. However I found myself frequently transforming from a `Models` "model" -> `PresentationViews` "model". So I found it much simpler to cut out the middle man and gave `PresentationViews` direct access to the `Models` package (any "presentation"-specific properties could simply be added via Swift extensions). This also makes data stubbing much simpler (for example `ModelStubs` contains lots of pre-configured data models which are perfect for SwiftUI previews and unit testing).
 
-## Previews
-
-App previews use stub data (see `ModelStubs.swift`) to generate the different screen states (e.g. severe delays, good service etc)
-
-For example, the "Nearby stations" view (`NearbyStationsView.swift`), which requires access to the user's current location, can be quickly previewed in various different states (setup, loading, loaded, permission denied etc):
-
-![](Docs/Images/preview-example.png)
-
 ## Unit tests
 
 Unit tests are written for the key parts of the app (model layer, data stores, presentation views) and each Swift package's unit tests can either be run in isolation or all at once with the main app target.
