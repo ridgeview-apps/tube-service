@@ -113,15 +113,15 @@ lane :build do
   xcargs = [
     "TFL_API_APP_KEY=#{ENV.fetch("TFL_API_APP_KEY")}",
     "TUBE_SERVICE_API_KEY=#{ENV.fetch("TUBE_SERVICE_API_KEY")}",
-  ].join(" ")
-
-  increment_build_number(build_number: ENV["GITHUB_RUN_NUMBER"]) if is_ci
+  ]
+  # agvtool (increment_build_number) can't edit the JSON project format
+  xcargs << "CURRENT_PROJECT_VERSION=#{ENV.fetch("GITHUB_RUN_NUMBER")}" if is_ci
 
   gym(
     clean: true,
     scheme: "TubeService",
     configuration: "Release",
-    xcargs: xcargs,
+    xcargs: xcargs.join(" "),
     xcconfig: "./Config/CI/#{ENV["XCODE_CONFIG"]}.xcconfig",
     export_method: "app-store",
     skip_profile_detection: true,
