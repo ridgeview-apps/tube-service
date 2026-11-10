@@ -22,15 +22,11 @@ private struct PulsatingSymbolEffectModifier: ViewModifier {
     @State private var isAnimating = false
 
     func body(content: Content) -> some View {
-        if #available(iOS 17.0, *) {
-            content
-                .symbolEffect(.pulse, options: .repeating, value: isAnimating)
-                .onAppear {
-                    isAnimating = !pausesRepeatingAnimations
-                }
-        } else {
-            content
-        }
+        content
+            .symbolEffect(.pulse, options: .repeating, value: isAnimating)
+            .onAppear {
+                isAnimating = !pausesRepeatingAnimations
+            }
     }
 }
 
@@ -39,16 +35,12 @@ private struct BounceOnceSymbolEffectModifier: ViewModifier {
     @State private var isAnimating = false
 
     func body(content: Content) -> some View {
-        if #available(iOS 18.0, *) {
-            content
-                .symbolEffect(.bounce.wholeSymbol, value: isAnimating)
-                .onAppear {
-                    withAnimation {
-                        isAnimating = true
-                    }
+        content
+            .symbolEffect(.bounce.wholeSymbol, value: isAnimating)
+            .onAppear {
+                withAnimation {
+                    isAnimating = true
                 }
-        } else {
-            content
-        }
+            }
     }
 }
