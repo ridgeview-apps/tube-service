@@ -383,7 +383,7 @@ struct LineStatusDataStoreTests {
     @Test
     func disruptionSummaryHiddenWhenTubeServicePlusLapses() async {
         // Given
-        var hasTubeServicePlus = true
+        let subscription = StubSubscription()
         let tubeServiceAPI = StubTubeServiceAPIClient()
         tubeServiceAPI.stubbedDailyLineDisruptionSummary = .success200(
             .init(
@@ -397,14 +397,14 @@ struct LineStatusDataStoreTests {
         let model = makeStore(
             tubeServiceAPI: tubeServiceAPI,
             now: { .now },
-            hasTubeServicePlus: { hasTubeServicePlus }
+            hasTubeServicePlus: { subscription.hasTubeServicePlus }
         )
         await model.refreshDisruptionSummary()
         #expect(model.disruptionCountsByLineID == [.central: 1])
         #expect(model.disruptionSnapshots(for: .central) != nil)
 
         // When
-        hasTubeServicePlus = false
+        subscription.hasTubeServicePlus = false
 
         // Then
         #expect(model.disruptionCountsByLineID.isEmpty)
@@ -543,6 +543,13 @@ struct LineStatusDataStoreTests {
             hasTubeServicePlus: hasTubeServicePlus
         )
     }
+}
+
+/// Lets a test end the subscription after the store has captured it: a sendable closure can't capture a `var` that
+/// changes later.
+@MainActor
+private final class StubSubscription {
+    var hasTubeServicePlus = true
 }
 
 private extension FeatureFlags {
