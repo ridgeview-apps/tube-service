@@ -1,15 +1,16 @@
 import CoreLocation
 import Foundation
+import Models
 
 #if DEBUG
 
-    /// Finds no placemarks, so the current location has no name rather than one looked up over the network.
+    /// Returns no name, so the current location stays unnamed rather than being looked up over the network.
     public struct StubReverseGeocoder: ReverseGeocoderType {
 
         public init() {}
 
-        public func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark] {
-            []
+        public func locationName(for location: CLLocation) async throws -> LocationName? {
+            nil
         }
     }
 

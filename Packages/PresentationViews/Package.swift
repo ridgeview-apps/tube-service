@@ -7,7 +7,7 @@ let package = Package(
     name: "PresentationViews",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v18)
+        .iOS(.v26)
     ],
     products: [
         .library(name: "PresentationViews", targets: ["PresentationViews"])

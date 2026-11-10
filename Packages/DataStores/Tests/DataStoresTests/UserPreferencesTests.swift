@@ -238,6 +238,71 @@ struct UserPreferencesTests {
     }
 
     @Test
+    func saveJourneyFromNearbyPlaceWithDifferentName_replacesExistingJourney() throws {
+        // Given
+        var userPreferences = UserPreferences.default
+        let angelStationID = ModelStubs.angelStation.id
+
+        let oldJourney = SavedJourney(
+            id: UUID(),
+            fromLocation: .specific(
+                LocationName(title: "Pentonville Road", subtitle: "Islington"),
+                LocationCoordinate(lat: 51.531504, lon: -0.113384)
+            ),
+            toLocation: .station(id: angelStationID),
+            viaLocation: nil,
+            lastUsed: Date.utc(year: 2024, month: 4, day: 15)!
+        )
+        let newJourneyAbout50MetresAway = SavedJourney(
+            id: UUID(),
+            fromLocation: .specific(
+                LocationName(title: "144 Pentonville Road", subtitle: "Islington, London"),
+                LocationCoordinate(lat: 51.531900, lon: -0.113000)
+            ),
+            toLocation: .station(id: angelStationID),
+            viaLocation: nil,
+            lastUsed: Date.utc(year: 2024, month: 4, day: 16)!
+        )
+
+        // When
+        userPreferences.saveRecentJourney(oldJourney)
+        userPreferences.saveRecentJourney(newJourneyAbout50MetresAway)
+
+        // Then
+        #expect(userPreferences.recentlySavedJourneys == [newJourneyAbout50MetresAway])
+    }
+
+    @Test
+    func saveJourneyFromSameNamedPlaceFarAway_keepsBothJourneys() throws {
+        // Given
+        var userPreferences = UserPreferences.default
+        let angelStationID = ModelStubs.angelStation.id
+        let edgwareRoad = LocationName(title: "Edgware Road", subtitle: "Barnet")
+
+        let journeyFromOneEnd = SavedJourney(
+            id: UUID(),
+            fromLocation: .specific(edgwareRoad, LocationCoordinate(lat: 51.5780, lon: -0.2310)),
+            toLocation: .station(id: angelStationID),
+            viaLocation: nil,
+            lastUsed: Date.utc(year: 2024, month: 4, day: 15)!
+        )
+        let journeyFromAbout2KilometresAway = SavedJourney(
+            id: UUID(),
+            fromLocation: .specific(edgwareRoad, LocationCoordinate(lat: 51.5960, lon: -0.2500)),
+            toLocation: .station(id: angelStationID),
+            viaLocation: nil,
+            lastUsed: Date.utc(year: 2024, month: 4, day: 16)!
+        )
+
+        // When
+        userPreferences.saveRecentJourney(journeyFromOneEnd)
+        userPreferences.saveRecentJourney(journeyFromAbout2KilometresAway)
+
+        // Then
+        #expect(userPreferences.recentlySavedJourneys.count == 2)
+    }
+
+    @Test
     func cleanUpSavedJourneys_sortsMostRecentlyUsedFirst() throws {
         // Given
         var userPreferences = UserPreferences.default

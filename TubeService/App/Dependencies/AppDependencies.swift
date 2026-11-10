@@ -1,4 +1,3 @@
-import CoreLocation
 import DataStores
 import Foundation
 import Shared
@@ -25,7 +24,7 @@ struct AppDependencies: Sendable {
         notificationsAPI: NotificationsAPIClientType,
         systemStatusAPI: SystemStatusAPIClientType,
         locationManager: LocationManagerType,
-        reverseGeocoder: ReverseGeocoderType = CLGeocoder(),
+        reverseGeocoder: ReverseGeocoderType = MapKitReverseGeocoder(),
         localSearchCompleterClient: LocalSearchCompleterClientType,
         userDefaults: UserDefaultsProvider,
         pushNotificationEnvironment: PushNotificationEnvironment,

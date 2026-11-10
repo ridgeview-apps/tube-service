@@ -99,14 +99,14 @@ private final class StubReverseGeocoder: ReverseGeocoderType, @unchecked Sendabl
         self.delayNanoseconds = delayNanoseconds
     }
 
-    func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark] {
+    func locationName(for location: CLLocation) async throws -> LocationName? {
         callCount += 1
 
         do {
             if delayNanoseconds > 0 {
                 try await Task.sleep(nanoseconds: delayNanoseconds)
             }
-            return []
+            return nil
         } catch is CancellationError {
             cancellationCount += 1
             throw CancellationError()

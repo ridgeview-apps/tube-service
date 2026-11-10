@@ -52,11 +52,33 @@ public struct SavedJourney: Identifiable, Hashable, Codable, Sendable {
     }
 }
 
+extension SavedJourney.LocationType {
+    /// Matches places by distance, not name: a name like "Edgware Road" covers places kilometres apart, and the
+    /// same spot can be named differently over time. Kept out of `==`, which can't hash a distance.
+    func isSamePlace(as other: SavedJourney.LocationType) -> Bool {
+        switch (self, other) {
+        case let (.specific(_, lhsCoordinate), .specific(_, rhsCoordinate)):
+            let samePlaceMaxDistanceInMetres = 150.0
+            return lhsCoordinate.distance(to: rhsCoordinate) <= samePlaceMaxDistanceInMetres
+        default:
+            return self == other
+        }
+    }
+}
+
 extension SavedJourney {
     func isSameJourney(as otherJourney: SavedJourney) -> Bool {
-        fromLocation == otherJourney.fromLocation
-            && toLocation == otherJourney.toLocation
-            && viaLocation == otherJourney.viaLocation
+        fromLocation.isSamePlace(as: otherJourney.fromLocation)
+            && toLocation.isSamePlace(as: otherJourney.toLocation)
+            && isSameVia(as: otherJourney.viaLocation)
+    }
+
+    private func isSameVia(as otherViaLocation: LocationType?) -> Bool {
+        switch (viaLocation, otherViaLocation) {
+        case (nil, nil): true
+        case let (lhs?, rhs?): lhs.isSamePlace(as: rhs)
+        default: false
+        }
     }
 
     func isSameOrReverseJourney(of otherJourney: SavedJourney) -> Bool {

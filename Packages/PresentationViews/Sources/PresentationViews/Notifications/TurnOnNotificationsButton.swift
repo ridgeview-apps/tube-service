@@ -40,14 +40,8 @@ private struct TurnOnNotificationsBarModifier: ViewModifier {
     let action: () -> Void
 
     func body(content: Content) -> some View {
-        if #available(iOS 26, *) {
-            // Extends the scroll edge effect behind the button, matching the navigation bar.
-            content.safeAreaBar(edge: .bottom) { bar }
-        } else {
-            content.safeAreaInset(edge: .bottom) {
-                bar.background(.regularMaterial)
-            }
-        }
+        // Extends the scroll edge effect behind the button, matching the navigation bar.
+        content.safeAreaBar(edge: .bottom) { bar }
     }
 
     @ViewBuilder
