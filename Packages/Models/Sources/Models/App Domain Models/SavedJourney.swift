@@ -1,4 +1,3 @@
-import CoreLocation
 import Foundation
 
 public struct SavedJourney: Identifiable, Hashable, Codable, Sendable {
@@ -60,8 +59,7 @@ extension SavedJourney.LocationType {
         switch (self, other) {
         case let (.specific(_, lhsCoordinate), .specific(_, rhsCoordinate)):
             let samePlaceMaxDistanceInMetres = 150.0
-            return lhsCoordinate.toCLLocation().distance(from: rhsCoordinate.toCLLocation())
-                <= samePlaceMaxDistanceInMetres
+            return lhsCoordinate.distance(to: rhsCoordinate) <= samePlaceMaxDistanceInMetres
         default:
             return self == other
         }

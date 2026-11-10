@@ -169,7 +169,7 @@ public final class LocationDataStore: NSObject {
         let fiveHundredMeters = 500.0
 
         let nameUpdatedOverOneMinuteAgo = now().timeIntervalSince(currentLocationNameLastUpdated) > oneMinute
-        let locationHasChangedSignificantly = newValue.toCLLocation().distance(from: oldValue.toCLLocation()) > fiveHundredMeters
+        let locationHasChangedSignificantly = newValue.distance(to: oldValue) > fiveHundredMeters
 
         return locationHasChangedSignificantly && nameUpdatedOverOneMinuteAgo
     }
@@ -213,15 +213,8 @@ public final class LocationDataStore: NSObject {
 
 extension Sequence where Element == Station {
     func nearestStations(to location: LocationCoordinate) -> [LocatedStation] {
-        let userLocation = location.toCLLocation()
-
-        return map { station in
-            let stationLocation = station.location.toCLLocation()
-            return LocatedStation(
-                station,
-                distance: userLocation.distance(from: stationLocation),
-
-            )
+        map { station in
+            LocatedStation(station, distance: location.distance(to: station.location))
         }.sorted {
             $0.distance < $1.distance
         }
