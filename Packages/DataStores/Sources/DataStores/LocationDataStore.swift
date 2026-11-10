@@ -1,13 +1,24 @@
 import CoreLocation
 import Foundation
+import MapKit
 import Models
 import Shared
 
 public protocol ReverseGeocoderType: Sendable {
-    func reverseGeocodeLocation(_ location: CLLocation) async throws -> [CLPlacemark]
+    func locationName(for location: CLLocation) async throws -> LocationName?
 }
 
-extension CLGeocoder: ReverseGeocoderType {}
+public struct MapKitReverseGeocoder: ReverseGeocoderType {
+
+    public init() {}
+
+    public func locationName(for location: CLLocation) async throws -> LocationName? {
+        guard let request = MKReverseGeocodingRequest(location: location) else {
+            return nil
+        }
+        return try await request.mapItems.first?.toLocationName()
+    }
+}
 
 @Observable
 @MainActor
@@ -40,7 +51,7 @@ public final class LocationDataStore: NSObject {
     public init(
         locationManager: LocationManagerType,
         stations: StationsDataStore,
-        geocoder: ReverseGeocoderType = CLGeocoder(),
+        geocoder: ReverseGeocoderType = MapKitReverseGeocoder(),
         now: @escaping () -> Date = { .now }
     ) {
         self.locationManager = locationManager
@@ -168,7 +179,7 @@ public final class LocationDataStore: NSObject {
             return
         }
 
-        guard let placemark = try await geocoder.reverseGeocodeLocation(newLocation.toCLLocation()).first else {
+        guard let locationName = try await geocoder.locationName(for: newLocation.toCLLocation()) else {
             return
         }
 
@@ -176,7 +187,7 @@ public final class LocationDataStore: NSObject {
             return
         }
 
-        currentLocationName = placemark.toLocationName()
+        currentLocationName = locationName
         currentLocationNameLastUpdated = now()
     }
 
@@ -217,9 +228,9 @@ extension Sequence where Element == Station {
     }
 }
 
-private extension CLPlacemark {
+private extension MKMapItem {
     func toLocationName() -> LocationName {
-        let titleItems = [thoroughfare, subLocality].compactMap { $0 }.filter { !$0.isEmpty }
+        let titleItems = [name, addressRepresentations?.cityName].compactMap { $0 }.filter { !$0.isEmpty }
 
         let titleItem: String = titleItems.indices.contains(0) ? titleItems[0] : ""
         let subtitleItem: String = titleItems.indices.contains(1) ? titleItems[1] : ""

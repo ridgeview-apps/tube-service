@@ -63,7 +63,7 @@ public final class LocalSearchResultsStore {
         let search = MKLocalSearch(request: request)
 
         let response = try await search.start()
-        guard let coordinate = response.mapItems.first?.placemark.coordinate else {
+        guard let coordinate = response.mapItems.first?.location.coordinate else {
             throw LocalSearchError.coordinateNotFound
         }
 
