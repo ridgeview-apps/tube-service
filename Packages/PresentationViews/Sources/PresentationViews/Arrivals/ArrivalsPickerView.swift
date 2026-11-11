@@ -5,7 +5,7 @@ import Models
 // MARK: - Data types
 
 public enum ArrivalsPickerMode: Equatable {
-    case favouritesVisible(favourites: Set<Station.LineGroup.ID>, order: [Station.ID])
+    case favouritesVisible(favourites: [FavouriteStop])
     case searchResults
 }
 
@@ -16,7 +16,7 @@ public struct ArrivalsPickerView: View {
 
     public enum Action {
         case reorderFavourites([Station.ID])
-        case removeFavourites([Station.LineGroup.ID])
+        case removeFavourites([Station.ID])
     }
 
     public let mode: ArrivalsPickerMode
@@ -45,8 +45,8 @@ public struct ArrivalsPickerView: View {
         self.onAction = onAction
 
         switch mode {
-        case let .favouritesVisible(favourites, order):
-            self.favourites = allStations.favourites(matching: favourites, order: order)
+        case .favouritesVisible(let favourites):
+            self.favourites = allStations.favourites(matching: favourites)
         case .searchResults:
             self.favourites = []
         }
@@ -104,10 +104,9 @@ public struct ArrivalsPickerView: View {
         onAction(.reorderFavourites(reorderedStationIDs))
     }
 
-    // Favourite stations only hold their favourited line groups, so this removes the whole station
     private func removeFavourites(atOffsets offsets: IndexSet) {
-        let removedLineGroupIDs = offsets.flatMap { favourites[$0].lineGroups.map(\.id) }
-        withAnimation { onAction(.removeFavourites(removedLineGroupIDs)) }
+        let removedStationIDs = offsets.map { favourites[$0].id }
+        withAnimation { onAction(.removeFavourites(removedStationIDs)) }
     }
 
     private var allStationsSection: some View {
@@ -263,19 +262,16 @@ private struct WrapperView: View {
     WrapperView(
         mode: .favouritesVisible(
             favourites: [
-                "940GZZLUKSX-circle,hammersmith-city,metropolitan",  // Kings X - Circle, H&C, Met lines
-                "940GZZLUKSX-northern",  // Kings X - Northern line
-                "940GZZLUKSX-piccadilly",  // Kingx X - Piccadilly line
-                "940GZZLUPAC-bakerloo",
-                "940GZZLUHBT-northern"
-            ],
-            order: []
+                .station(id: "HUBKGX"),  // King's Cross & St Pancras International
+                .station(id: "HUBPAD"),  // Paddington
+                .station(id: "940GZZLUHBT")  // High Barnet
+            ]
         )
     )
 }
 
 #Preview("Normal mode (no favourites)") {
-    WrapperView(mode: .favouritesVisible(favourites: [], order: []))
+    WrapperView(mode: .favouritesVisible(favourites: []))
 }
 
 #Preview("Search results mode") {

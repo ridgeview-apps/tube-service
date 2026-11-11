@@ -4,7 +4,7 @@ import PresentationViews
 import SwiftUI
 
 struct ArrivalsBoardListScreen: View {
-    let stationName: String
+    let station: Station
     let lineGroup: Station.LineGroup
 
     @State private var store = ArrivalsBoardStore(
@@ -24,11 +24,11 @@ struct ArrivalsBoardListScreen: View {
             lineGroupName: lineGroup.name,
             refreshDate: store.boardData.fetchedAt,
             loadingState: loadingState,
-            isFavourite: isFavouriteLineGroup
+            isFavourite: isFavouriteStation
         )
-        .navigationTitle(stationName)
+        .navigationTitle(station.name)
         .toolbar {
-            FavouritesButton(style: .small, isSelected: isFavouriteLineGroup)
+            FavouritesButton(style: .small, isSelected: isFavouriteStation)
         }
         .refreshable {
             await store.refresh(for: lineGroup)
@@ -57,14 +57,14 @@ struct ArrivalsBoardListScreen: View {
         store.boardData.fetchState.loadingState
     }
 
-    private var isFavouriteLineGroup: Binding<Bool> {
+    private var isFavouriteStation: Binding<Bool> {
         .init {
-            userPreferences.containsFavouriteLineGroup(lineGroup.id)
+            userPreferences.containsFavouriteStop(.station(id: station.id))
         } set: { isFavourite in
             if isFavourite {
-                userPreferences.addFavouriteLineGroup(lineGroup.id)
+                userPreferences.addFavouriteStop(.station(id: station.id))
             } else {
-                userPreferences.removeFavouriteLineGroup(lineGroup.id)
+                userPreferences.removeFavouriteStops([.station(id: station.id)])
             }
         }
     }
@@ -80,7 +80,7 @@ import ModelStubs
         NavigationStack {
             PreviewEnvironment {
                 ArrivalsBoardListScreen(
-                    stationName: ModelStubs.stations.first!.name,
+                    station: ModelStubs.stations.first!,
                     lineGroup: ModelStubs.stations.first!.lineGroups[0]
                 )
             }

@@ -120,44 +120,37 @@ struct StationViewStateTests {
     }
 
     @Test
-    func stationsFilteredByFavouriteLineGroups() {
-        let stations = ModelStubs.stations
-
-        let favouriteLineGroupIDs = Set([
-            "940GZZLUKSX-circle,hammersmith-city,metropolitan",  // Kings X - Circle, H&C, Met lines
-            "940GZZLUKSX-northern",  // Kings X - Northern line
-            "940GZZLUKSX-piccadilly",  // Kingx X - Piccadilly line
-            "940GZZLUPAC-bakerloo",
-            "940GZZLUHBT-northern"
-        ])
-
-        let favouriteStations = stations.favourites(matching: favouriteLineGroupIDs)
-        let favouriteStationIDs = favouriteStations.map(\.id)
-
-        #expect(favouriteStations.count == 3)
-        #expect(favouriteStationIDs.contains(ModelStubs.kingsCrossStation.id))
-        #expect(favouriteStationIDs.contains(ModelStubs.paddingtonStation.id))
-        #expect(favouriteStationIDs.contains(ModelStubs.highBarnetStation.id))
-    }
-
-    @Test
-    func favouriteStationsFollowUserOrderThenName() {
-        let favouriteLineGroupIDs: Set<Station.LineGroup.ID> = [
-            "940GZZLUKSX-northern",
-            "940GZZLUPAC-bakerloo",
-            "940GZZLUHBT-northern"
+    func favouriteStationsFollowTheStopOrder() {
+        let stops: [FavouriteStop] = [
+            .station(id: ModelStubs.highBarnetStation.id),
+            .station(id: ModelStubs.paddingtonStation.id),
+            .station(id: ModelStubs.kingsCrossStation.id)
         ]
-        // Paddington isn't in the order (e.g. newly added), and Angel is no longer a favourite
-        let order = [ModelStubs.highBarnetStation.id, ModelStubs.angelStation.id, ModelStubs.kingsCrossStation.id]
 
-        let favouriteStations = ModelStubs.stations.favourites(matching: favouriteLineGroupIDs, order: order)
+        let favouriteStations = ModelStubs.stations.favourites(matching: stops)
 
         #expect(
             favouriteStations.map(\.id) == [
                 ModelStubs.highBarnetStation.id,
-                ModelStubs.kingsCrossStation.id,
-                ModelStubs.paddingtonStation.id
+                ModelStubs.paddingtonStation.id,
+                ModelStubs.kingsCrossStation.id
             ]
         )
+    }
+
+    @Test
+    func favouriteStationsSkipUnknownStations() {
+        let stops: [FavouriteStop] = [.station(id: "NOT-A-STATION"), .station(id: ModelStubs.angelStation.id)]
+
+        let favouriteStations = ModelStubs.stations.favourites(matching: stops)
+
+        #expect(favouriteStations.map(\.id) == [ModelStubs.angelStation.id])
+    }
+
+    @Test
+    func favouriteStationsIncludeAllTheirLineGroups() {
+        let favouriteStations = ModelStubs.stations.favourites(matching: [.station(id: ModelStubs.kingsCrossStation.id)])
+
+        #expect(favouriteStations.first?.lineGroups == ModelStubs.kingsCrossStation.lineGroups)
     }
 }

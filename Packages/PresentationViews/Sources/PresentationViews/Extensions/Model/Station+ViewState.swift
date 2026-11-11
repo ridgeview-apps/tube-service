@@ -11,36 +11,13 @@ public extension Station {
 
 public extension Sequence where Element == Station {
 
-    /// Returns stations in the user's chosen `order`; any not in it (e.g. new favourites) follow alphabetically.
-    func favourites(matching favourites: Set<Station.LineGroup.ID>, order: [Station.ID]) -> [Station] {
-        let favouriteStations = self.favourites(matching: favourites)
-        let positions = Dictionary(order.enumerated().map { ($1, $0) }, uniquingKeysWith: { first, _ in first })
-
-        let ordered =
-            favouriteStations
-            .filter { positions[$0.id] != nil }
-            .sorted { positions[$0.id, default: 0] < positions[$1.id, default: 0] }
-        let unordered =
-            favouriteStations
-            .filter { positions[$0.id] == nil }
-            .sortedByName()
-
-        return ordered + unordered
-    }
-
-    func favourites(matching favourites: Set<Station.LineGroup.ID>) -> [Station] {
-        return self.compactMap {
-            let filteredLineGroups = $0.lineGroups.filter { favourites.contains($0.id) }
-            guard !filteredLineGroups.isEmpty else {
-                return nil
+    /// Returns the favourited stations in the order of `stops`, skipping any that can't be found.
+    func favourites(matching stops: [FavouriteStop]) -> [Station] {
+        let stationsByID = Dictionary(map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return stops.compactMap { stop in
+            switch stop {
+            case .station(let id): stationsByID[id]
             }
-            return Station(
-                id: $0.id,
-                icsCode: $0.icsCode,
-                name: $0.name,
-                location: $0.location,
-                lineGroups: filteredLineGroups
-            )
         }
     }
 }

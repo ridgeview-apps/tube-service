@@ -4,18 +4,15 @@ import Shared
 public struct UserPreferences: Equatable, Codable, Sendable {
 
     public static let `default`: UserPreferences = .init(
-        favouriteLineGroupIDs: [],
+        favouriteStops: [],
         favouriteLineIDs: [],
-        favouriteStationOrder: [],
         recentlySelectedStations: [],
         journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
         readSystemStatusMessage: nil
     )
 
-    public var favouriteLineGroupIDs: Set<Station.LineGroup.ID>
-    /// The user's chosen order for stations in their favourite line groups (which are stored unordered).
-    public internal(set) var favouriteStationOrder: [Station.ID]
+    public internal(set) var favouriteStops: [FavouriteStop]
     public internal(set) var favouriteLineIDs: [Line.ID]
     public var recentlySelectedStations: [Station.ID]
     public var journeyModePreset: JourneyModePreset
@@ -23,45 +20,47 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var readSystemStatusMessage: SystemStatus.ID?
 
     public init(
-        favouriteLineGroupIDs: Set<Station.LineGroup.ID>,
+        favouriteStops: [FavouriteStop],
         favouriteLineIDs: [Line.ID] = [],
-        favouriteStationOrder: [Station.ID] = [],
         recentlySelectedStations: [Station.ID] = [],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
         readSystemStatusMessage: SystemStatus.ID?
     ) {
-        self.favouriteLineGroupIDs = favouriteLineGroupIDs
+        self.favouriteStops = favouriteStops.removingDuplicates()
         self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
-        self.favouriteStationOrder = favouriteStationOrder.removingDuplicates()
         self.recentlySelectedStations = recentlySelectedStations
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
     }
 
+    // MARK: - Favourite Stops
+
+    public func containsFavouriteStop(_ stop: FavouriteStop) -> Bool {
+        favouriteStops.contains(stop)
+    }
+
+    /// New favourites are added to the end of the user's ordering.
+    public mutating func addFavouriteStop(_ stop: FavouriteStop) {
+        guard !favouriteStops.contains(stop) else { return }
+        favouriteStops.append(stop)
+    }
+
+    public mutating func removeFavouriteStops(_ stops: some Sequence<FavouriteStop>) {
+        let removedStops = Set(stops)
+        favouriteStops.removeAll { removedStops.contains($0) }
+    }
+
+    /// Applies a new ordering without changing which stops are favourites:
+    /// stops that aren't already favourites are ignored, and any favourites missing from `orderedStops` keep their place at the end.
+    public mutating func reorderFavouriteStops(_ orderedStops: [FavouriteStop]) {
+        let reordered = orderedStops.removingDuplicates().filter { favouriteStops.contains($0) }
+        let missing = favouriteStops.filter { !reordered.contains($0) }
+        favouriteStops = reordered + missing
+    }
+
     // MARK: - Favourite Lines
-
-    public func containsFavouriteLineGroup(_ lineGroupID: Station.LineGroup.ID) -> Bool {
-        favouriteLineGroupIDs.contains(lineGroupID)
-    }
-
-    public mutating func addFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
-        favouriteLineGroupIDs.insert(favouriteLineGroupID)
-    }
-
-    public mutating func removeFavouriteLineGroup(_ favouriteLineGroupID: Station.LineGroup.ID) {
-        favouriteLineGroupIDs.remove(favouriteLineGroupID)
-    }
-
-    public mutating func removeFavouriteLineGroups(_ favouriteLineGroupIDs: some Sequence<Station.LineGroup.ID>) {
-        self.favouriteLineGroupIDs.subtract(favouriteLineGroupIDs)
-    }
-
-    /// Only affects display order: stations that are no longer favourites are ignored when sorting.
-    public mutating func reorderFavouriteStations(_ orderedStationIDs: [Station.ID]) {
-        favouriteStationOrder = orderedStationIDs.removingDuplicates()
-    }
 
     public func containsFavouriteLine(_ lineID: TrainLineID) -> Bool {
         favouriteLineIDs.contains(lineID)

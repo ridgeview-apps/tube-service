@@ -10,9 +10,9 @@ struct UserPreferencesTests {
     @Test
     func rawValueRoundTripPreservesPreferences() throws {
         var expected = UserPreferences.default
-        expected.addFavouriteLineGroup("line-group")
+        expected.addFavouriteStop(.station(id: ModelStubs.kingsCrossStation.id))
+        expected.addFavouriteStop(.station(id: ModelStubs.angelStation.id))
         expected.addFavouriteLine(.bakerloo)
-        expected.reorderFavouriteStations([ModelStubs.angelStation.id, ModelStubs.kingsCrossStation.id])
         expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
@@ -28,9 +28,8 @@ struct UserPreferencesTests {
 
         let decoded = try #require(UserPreferences(rawValue: expected.rawValue))
 
-        #expect(decoded.favouriteLineGroupIDs == expected.favouriteLineGroupIDs)
+        #expect(decoded.favouriteStops == expected.favouriteStops)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
-        #expect(decoded.favouriteStationOrder == expected.favouriteStationOrder)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
         #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
@@ -39,13 +38,12 @@ struct UserPreferencesTests {
 
     @Test
     func decodingOlderStoredValueUsesDefaultsForMissingPreferences() throws {
-        let data = try #require(#"{"favourites":["line-group"]}"#.data(using: .utf8))
+        let data = try #require(#"{"recentlySelectedStations":[]}"#.data(using: .utf8))
 
         let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
 
-        #expect(decoded.favouriteLineGroupIDs == ["line-group"])
+        #expect(decoded.favouriteStops.isEmpty)
         #expect(decoded.favouriteLineIDs.isEmpty)
-        #expect(decoded.favouriteStationOrder.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
         #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
@@ -104,33 +102,141 @@ struct UserPreferencesTests {
     }
 
     @Test
-    func addingAndRemovingFavouriteLineGroupIDs() throws {
+    func addingAndRemovingFavouriteStops() throws {
         var userPreferences = UserPreferences.default
-        let fakeID = "FakeLineGroupID"
+        let kingsCross = FavouriteStop.station(id: ModelStubs.kingsCrossStation.id)
 
         // 1. Initially empty
-        #expect(userPreferences.favouriteLineGroupIDs.isEmpty)
-        #expect(!userPreferences.containsFavouriteLineGroup(fakeID))
+        #expect(userPreferences.favouriteStops.isEmpty)
+        #expect(!userPreferences.containsFavouriteStop(kingsCross))
 
-        // 2. Add a line group ID
-        userPreferences.addFavouriteLineGroup(fakeID)
-        #expect(userPreferences.containsFavouriteLineGroup(fakeID))
+        // 2. Add a stop
+        userPreferences.addFavouriteStop(kingsCross)
+        #expect(userPreferences.containsFavouriteStop(kingsCross))
 
-        // 3. Remove the line group ID
-        userPreferences.removeFavouriteLineGroup(fakeID)
-        #expect(!userPreferences.containsFavouriteLineGroup(fakeID))
+        // 3. Remove the stop
+        userPreferences.removeFavouriteStops([kingsCross])
+        #expect(!userPreferences.containsFavouriteStop(kingsCross))
     }
 
     @Test
-    func removingSeveralFavouriteLineGroupIDsKeepsTheRest() throws {
+    func addingFavouriteStopsAppendsInOrderWithoutDuplicates() throws {
         var userPreferences = UserPreferences.default
-        userPreferences.addFavouriteLineGroup("LineGroupA")
-        userPreferences.addFavouriteLineGroup("LineGroupB")
-        userPreferences.addFavouriteLineGroup("LineGroupC")
 
-        userPreferences.removeFavouriteLineGroups(["LineGroupA", "LineGroupB"])
+        userPreferences.addFavouriteStop(.station(id: "HUBKGX"))
+        userPreferences.addFavouriteStop(.station(id: "HUBPAD"))
+        userPreferences.addFavouriteStop(.station(id: "HUBKGX"))
 
-        #expect(userPreferences.favouriteLineGroupIDs == ["LineGroupC"])
+        #expect(userPreferences.favouriteStops == [.station(id: "HUBKGX"), .station(id: "HUBPAD")])
+    }
+
+    @Test
+    func removingSeveralFavouriteStopsKeepsTheRest() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.addFavouriteStop(.station(id: "HUBKGX"))
+        userPreferences.addFavouriteStop(.station(id: "HUBPAD"))
+        userPreferences.addFavouriteStop(.station(id: "HUBABW"))
+
+        userPreferences.removeFavouriteStops([.station(id: "HUBKGX"), .station(id: "HUBPAD")])
+
+        #expect(userPreferences.favouriteStops == [.station(id: "HUBABW")])
+    }
+
+    @Test
+    func reorderingFavouriteStopsKeepsTheSameFavourites() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.addFavouriteStop(.station(id: "HUBKGX"))
+        userPreferences.addFavouriteStop(.station(id: "HUBPAD"))
+        userPreferences.addFavouriteStop(.station(id: "HUBABW"))
+
+        // Waterloo isn't a favourite (ignored) and Abbey Wood is missing (kept at the end)
+        userPreferences.reorderFavouriteStops([.station(id: "HUBPAD"), .station(id: "HUBWAT"), .station(id: "HUBKGX")])
+
+        #expect(
+            userPreferences.favouriteStops == [.station(id: "HUBPAD"), .station(id: "HUBKGX"), .station(id: "HUBABW")]
+        )
+    }
+
+    @Test
+    func decodingFavouriteStopsSkipsUnknownStopTypesAndDuplicates() throws {
+        let json = #"{"favouriteStops":[{"station":{"id":"HUBKGX"}},{"busStop":{"id":"490000001A"}},{"station":{"id":"HUBKGX"}}]}"#
+        let data = try #require(json.data(using: .utf8))
+
+        let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
+
+        #expect(decoded.favouriteStops == [.station(id: "HUBKGX")])
+    }
+
+    // MARK: - Legacy favourites migration
+
+    @Test
+    func migratingLegacyFavouritesMapsALineGroupToItsStation() throws {
+        let decoded = try decodePreferences(#"{"favourites":["940GZZLUKSX-victoria"]}"#)
+
+        #expect(decoded.favouriteStops == [.station(id: "HUBKGX")])
+    }
+
+    @Test
+    func migratingLegacyFavouritesMergesLineGroupsAtOneStation() throws {
+        let decoded = try decodePreferences(
+            #"{"favourites":["940GZZLUKSX-victoria","940GZZLUKSX-northern","910GPADTON-elizabeth","940GZZLUPAC-bakerloo"]}"#
+        )
+
+        #expect(decoded.favouriteStops == [.station(id: "HUBKGX"), .station(id: "HUBPAD")])
+    }
+
+    @Test
+    func migratingLegacyFavouritesDropsUnknownIDs() throws {
+        let decoded = try decodePreferences(#"{"favourites":["NOTANATCOCODE-victoria","line-group","910GABWDXR-elizabeth"]}"#)
+
+        #expect(decoded.favouriteStops == [.station(id: "HUBABW")])
+    }
+
+    @Test
+    func migratingLegacyFavouritesKeepsTheUsersOrderThenAlphabetical() throws {
+        // Paddington and Abbey Wood were never dragged, and Waterloo is in the order but no longer a favourite
+        let decoded = try decodePreferences(
+            """
+            {
+                "favourites": ["940GZZLUPAC-bakerloo", "940GZZLUHBT-northern", "910GABWDXR-elizabeth", "940GZZLUKSX-victoria"],
+                "favouriteStationOrder": ["HUBKGX", "HUBWAT", "940GZZLUHBT"]
+            }
+            """
+        )
+
+        #expect(
+            decoded.favouriteStops == [
+                .station(id: "HUBKGX"),
+                .station(id: "940GZZLUHBT"),
+                .station(id: "HUBABW"),
+                .station(id: "HUBPAD")
+            ]
+        )
+    }
+
+    @Test
+    func newFavouriteStopsTakePriorityOverLegacyFavourites() throws {
+        let decoded = try decodePreferences(
+            #"{"favouriteStops":[{"station":{"id":"HUBPAD"}}],"favourites":["940GZZLUKSX-victoria"],"favouriteStationOrder":["HUBKGX"]}"#
+        )
+
+        #expect(decoded.favouriteStops == [.station(id: "HUBPAD")])
+    }
+
+    @Test
+    func encodingMigratedPreferencesDropsTheLegacyKeys() throws {
+        let decoded = try decodePreferences(#"{"favourites":["940GZZLUKSX-victoria"],"favouriteStationOrder":["HUBKGX"]}"#)
+
+        let encoded = try JSONSerialization.jsonObject(with: JSONEncoder().encode(decoded)) as? [String: Any]
+
+        #expect(encoded?["favourites"] == nil)
+        #expect(encoded?["favouriteStationOrder"] == nil)
+        #expect(encoded?["favouriteStops"] != nil)
+    }
+
+    private func decodePreferences(_ json: String) throws -> UserPreferences {
+        let data = try #require(json.data(using: .utf8))
+        return try JSONDecoder().decode(UserPreferences.self, from: data)
     }
 
     @Test

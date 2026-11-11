@@ -58,9 +58,9 @@ import Shared
                 break
             case .returningUser:
                 userDefaults.userPreferences = UserPreferences(
-                    favouriteLineGroupIDs: [
-                        Station.LineGroup(atcoCode: "910GABWDXR", lineIds: [.elizabeth]).id,  // Abbey Wood
-                        Station.LineGroup(atcoCode: "940GZZLUKSX", lineIds: [.victoria]).id  // King's Cross
+                    favouriteStops: [
+                        .station(id: "HUBABW"),  // Abbey Wood
+                        .station(id: "HUBKGX")  // King's Cross & St Pancras International
                     ],
                     favouriteLineIDs: [.elizabeth, .victoria],
                     journeyModePreset: .trainAndBus,
