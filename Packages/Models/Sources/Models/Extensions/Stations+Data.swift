@@ -24,3 +24,12 @@ public extension Station {
         return decodedValue
     }()
 }
+
+extension Sequence where Element == Station {
+    var stationIDsByAtcoCode: [String: Station.ID] {
+        Dictionary(
+            flatMap { station in station.lineGroups.map { ($0.atcoCode, station.id) } },
+            uniquingKeysWith: { first, _ in first }
+        )
+    }
+}

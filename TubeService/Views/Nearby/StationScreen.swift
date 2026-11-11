@@ -82,7 +82,7 @@ struct StationScreen: View {
         case .tappedLine(let line):
             router.push(.lineStatusDetail(lineID: line.id, request: .live))
         case .tappedLineGroup(let lineGroup):
-            router.push(.arrivalsBoard(lineGroup: lineGroup, stationName: station.name))
+            router.push(.arrivalsBoard(lineGroup: lineGroup, station: station))
         }
     }
 }

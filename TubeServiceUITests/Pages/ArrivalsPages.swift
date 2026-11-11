@@ -48,6 +48,13 @@ struct ArrivalsPickerPage: Page {
         return .waitingToAppear(in: app)
     }
 
+    /// A station's row in the Favourites section, for a station with more than one line group.
+    ///
+    /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
+    func favouriteStation(_ stationID: String) -> XCUIElement {
+        app.buttons[AccessibilityID.ArrivalsPicker.favouriteStation(stationID)]
+    }
+
     /// A line group's row in the Favourites section.
     ///
     /// - Parameter lineGroupID: A `Station.LineGroup` ID, e.g. "910GABWDXR-elizabeth".

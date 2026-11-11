@@ -24,10 +24,7 @@ struct ArrivalsPickerScreen: View {
     private var pickerMode: ArrivalsPickerMode {
         isSearching
             ? .searchResults
-            : .favouritesVisible(
-                favourites: userPreferences.favouriteLineGroupIDs,
-                order: userPreferences.favouriteStationOrder
-            )
+            : .favouritesVisible(favourites: userPreferences.favouriteStops)
     }
 
     // In regular width the drawer spans the whole window, wider than the list's maximum width
@@ -50,13 +47,13 @@ struct ArrivalsPickerScreen: View {
         .onSubmit(of: .search) {
             reloadStations()
         }
-        .onChange(of: userPreferences.favouriteLineGroupIDs) {
+        .onChange(of: userPreferences.favouriteStops) {
             reloadStations()
         }
         .onChange(of: selection) { _, newValue in
-            guard let newValue else { return }
-            saveRecentSelection(for: newValue)
-            router.push(.arrivalsBoard(lineGroup: newValue, stationName: stationName(for: newValue)))
+            guard let newValue, let station = stations.station(forLineGroupID: newValue.id) else { return }
+            userPreferences.saveRecentlySelectedStation(station.id)
+            router.push(.arrivalsBoard(lineGroup: newValue, station: station))
             selection = nil
         }
     }
@@ -102,19 +99,9 @@ struct ArrivalsPickerScreen: View {
     private func handleAction(_ action: ArrivalsPickerView.Action) {
         switch action {
         case .reorderFavourites(let stationIDs):
-            userPreferences.reorderFavouriteStations(stationIDs)
-        case .removeFavourites(let lineGroupIDs):
-            userPreferences.removeFavouriteLineGroups(lineGroupIDs)
-        }
-    }
-
-    private func stationName(for lineGroup: Station.LineGroup) -> String {
-        stations.station(forLineGroupID: lineGroup.id)?.name ?? ""
-    }
-
-    private func saveRecentSelection(for lineGroup: Station.LineGroup) {
-        if let station = stations.station(forLineGroupID: lineGroup.id) {
-            userPreferences.saveRecentlySelectedStation(station.id)
+            userPreferences.reorderFavouriteStops(stationIDs.map { .station(id: $0) })
+        case .removeFavourites(let stationIDs):
+            userPreferences.removeFavouriteStops(stationIDs.map { .station(id: $0) })
         }
     }
 
