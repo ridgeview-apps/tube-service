@@ -4,11 +4,14 @@ public struct DisruptedPoint: Codable, Identifiable, Hashable, Sendable {
     public let atcoCode: String?
     public let description: String?
     public let appearance: DisruptionCategory?
+    /// TfL's free-text kind of notice, e.g. "Part Closure", "Exit Only" or "Information".
+    public let type: String?
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.atcoCode = try? container.decodeIfPresent(String.self, forKey: .atcoCode)
         self.description = try? container.decodeIfPresent(String.self, forKey: .description)
         self.appearance = try? container.decodeIfPresent(DisruptionCategory.self, forKey: .appearance)
+        self.type = try? container.decodeIfPresent(String.self, forKey: .type)
     }
 }

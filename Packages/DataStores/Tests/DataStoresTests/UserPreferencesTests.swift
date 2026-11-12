@@ -14,6 +14,7 @@ struct UserPreferencesTests {
         expected.addFavouriteStop(.station(id: ModelStubs.angelStation.id))
         expected.addFavouriteLine(.bakerloo)
         expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
+        expected.saveSelectedLineGroup(stationWithTwoLineGroups.lineGroups[1], at: stationWithTwoLineGroups)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
         expected.saveRecentJourney(
@@ -31,6 +32,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteStops == expected.favouriteStops)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
+        #expect(decoded.selectedLineGroupIDs == expected.selectedLineGroupIDs)
         #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
         #expect(decoded.readSystemStatusMessage == expected.readSystemStatusMessage)
@@ -45,6 +47,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteStops.isEmpty)
         #expect(decoded.favouriteLineIDs.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
+        #expect(decoded.selectedLineGroupIDs.isEmpty)
         #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
         #expect(decoded.readSystemStatusMessage == nil)
@@ -256,6 +259,44 @@ struct UserPreferencesTests {
 
         // 3. Verify most recent selection is East Finchley
         #expect(userPreferences.recentlySelectedStations == [eastFinchleyStationID, angelStationID])
+    }
+
+    // MARK: - Selected line groups
+
+    // Victoria is listed before Northern so the default (first by name) differs from the first in the seed data
+    private let stationWithTwoLineGroups = Station(
+        id: "HUBKGX",
+        icsCode: "1000129",
+        name: "King's Cross St. Pancras",
+        location: LocationCoordinate(lat: 51.530, lon: -0.123),
+        lineGroups: [
+            .init(atcoCode: "940GZZLUKSX", lineIds: [.victoria]),
+            .init(atcoCode: "940GZZLUKSX", lineIds: [.northern])
+        ]
+    )
+
+    @Test
+    func selectedLineGroupDefaultsToTheFirstByName() throws {
+        let userPreferences = UserPreferences.default
+
+        #expect(userPreferences.selectedLineGroup(at: stationWithTwoLineGroups)?.lineIds == [.northern])
+    }
+
+    @Test
+    func selectedLineGroupIsRememberedPerStation() throws {
+        var userPreferences = UserPreferences.default
+
+        userPreferences.saveSelectedLineGroup(stationWithTwoLineGroups.lineGroups[0], at: stationWithTwoLineGroups)
+
+        #expect(userPreferences.selectedLineGroup(at: stationWithTwoLineGroups)?.lineIds == [.victoria])
+    }
+
+    @Test
+    func selectedLineGroupThatNoLongerExistsFallsBackToTheDefault() throws {
+        let json = #"{"selectedLineGroupIDs":{"HUBKGX":"940GZZLUKSX-piccadilly,victoria"}}"#
+        let decoded = try decodePreferences(json)
+
+        #expect(decoded.selectedLineGroup(at: stationWithTwoLineGroups)?.lineIds == [.northern])
     }
 
     @Test

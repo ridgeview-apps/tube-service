@@ -15,6 +15,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public internal(set) var favouriteStops: [FavouriteStop]
     public internal(set) var favouriteLineIDs: [Line.ID]
     public var recentlySelectedStations: [Station.ID]
+    public internal(set) var selectedLineGroupIDs: [Station.ID: Station.LineGroup.ID]
     public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
     public var readSystemStatusMessage: SystemStatus.ID?
@@ -23,6 +24,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteStops: [FavouriteStop],
         favouriteLineIDs: [Line.ID] = [],
         recentlySelectedStations: [Station.ID] = [],
+        selectedLineGroupIDs: [Station.ID: Station.LineGroup.ID] = [:],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
         readSystemStatusMessage: SystemStatus.ID?
@@ -30,6 +32,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.favouriteStops = favouriteStops.removingDuplicates()
         self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
         self.recentlySelectedStations = recentlySelectedStations
+        self.selectedLineGroupIDs = selectedLineGroupIDs
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
@@ -82,6 +85,19 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         let reordered = orderedLineIDs.removingDuplicates().filter { favouriteLineIDs.contains($0) }
         let missing = favouriteLineIDs.filter { !reordered.contains($0) }
         favouriteLineIDs = reordered + missing
+    }
+
+    // MARK: - Selected Line Groups
+
+    /// The line group last chosen at a station, or its default (the first by name) if none was chosen or the chosen one
+    /// no longer exists, e.g. after the seed data regroups its lines.
+    public func selectedLineGroup(at station: Station) -> Station.LineGroup? {
+        let selectedID = selectedLineGroupIDs[station.id]
+        return station.lineGroups.first { $0.id == selectedID } ?? station.defaultLineGroup
+    }
+
+    public mutating func saveSelectedLineGroup(_ lineGroup: Station.LineGroup, at station: Station) {
+        selectedLineGroupIDs[station.id] = lineGroup.id
     }
 
     // MARK: - Recent Selections

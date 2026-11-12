@@ -51,6 +51,27 @@ extension Station.LineGroup: Identifiable {
     }
 }
 
+public extension Station {
+
+    /// The line group a station shows until the user picks another: the first by name, matching the order they're listed in.
+    var defaultLineGroup: LineGroup? {
+        lineGroups.sortedByName().first
+    }
+}
+
+public extension Station.LineGroup {
+
+    var name: String {
+        lineIds.sortedByName().map(\.name).joined(separator: ", ")
+    }
+}
+
+public extension Sequence where Element == Station.LineGroup {
+    func sortedByName() -> [Station.LineGroup] {
+        self.sorted(by: { $0.name < $1.name })
+    }
+}
+
 public extension Station.LineGroup {
 
     enum ArrivalsDataType: Equatable, Sendable {

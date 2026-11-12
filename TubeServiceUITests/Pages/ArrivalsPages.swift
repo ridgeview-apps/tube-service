@@ -32,60 +32,24 @@ struct ArrivalsPickerPage: Page {
         return self
     }
 
-    /// Taps a station outside the Favourites section, which expands it to show its line groups.
+    /// Taps a station outside the Favourites section, which opens its Station screen.
     ///
     /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
-    func tapStation(_ stationID: String) -> ArrivalsPickerPage {
+    func tapStation(_ stationID: String) -> StationPage {
         app.buttons[AccessibilityID.ArrivalsPicker.station(stationID)].tapWhenHittable()
-        return self
-    }
-
-    /// Taps a line group outside the Favourites section, which opens its arrivals board.
-    ///
-    /// - Parameter lineGroupID: A `Station.LineGroup` ID, e.g. "940GZZLUKSX-northern".
-    func tapLineGroup(_ lineGroupID: String) -> ArrivalsBoardPage {
-        app.buttons[AccessibilityID.ArrivalsPicker.lineGroup(lineGroupID)].tapWhenHittable()
         return .waitingToAppear(in: app)
     }
 
-    /// A station's row in the Favourites section, for a station with more than one line group.
+    /// A station's row in the Favourites section.
     ///
     /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
     func favouriteStation(_ stationID: String) -> XCUIElement {
         app.buttons[AccessibilityID.ArrivalsPicker.favouriteStation(stationID)]
     }
 
-    /// A line group's row in the Favourites section.
-    ///
-    /// - Parameter lineGroupID: A `Station.LineGroup` ID, e.g. "910GABWDXR-elizabeth".
-    func favouriteLineGroup(_ lineGroupID: String) -> XCUIElement {
-        app.buttons[AccessibilityID.ArrivalsPicker.favouriteLineGroup(lineGroupID)]
-    }
-
-    /// Taps a favourite line group, which opens its arrivals board.
-    func tapFavouriteLineGroup(_ lineGroupID: String) -> ArrivalsBoardPage {
-        favouriteLineGroup(lineGroupID).tapWhenHittable()
-        return .waitingToAppear(in: app)
-    }
-}
-
-struct ArrivalsBoardPage: Page {
-    let app: XCUIApplication
-    var rootElement: XCUIElement { app.scrollViews[AccessibilityID.ArrivalsBoard.content] }
-
-    /// The name of each platform's board, in the order they're shown.
-    var platformNames: XCUIElementQuery {
-        app.staticTexts.matching(identifier: AccessibilityID.ArrivalsBoard.platformName)
-    }
-
-    /// Taps the star in the navigation bar, which adds the line group to the favourites (or asks to remove it).
-    func tapFavouriteButton() -> ArrivalsBoardPage {
-        app.buttons[AccessibilityID.FavouritesButton.button("small")].tapWhenHittable()
-        return self
-    }
-
-    func tapBackButton() -> ArrivalsPickerPage {
-        app.tapBackButton()
+    /// Taps a favourite station, which opens its Station screen.
+    func tapFavouriteStation(_ stationID: String) -> StationPage {
+        favouriteStation(stationID).tapWhenHittable()
         return .waitingToAppear(in: app)
     }
 }

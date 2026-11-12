@@ -1932,9 +1932,6 @@
         }
       }
     },
-    "List preview" : {
-
-    },
     "location.services.access.denied.message.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2477,17 +2474,6 @@
         }
       }
     },
-    "notifications.line.config.status.on" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "On"
-          }
-        }
-      }
-    },
     "notifications.line.config.resume.line.button" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2495,6 +2481,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume"
+          }
+        }
+      }
+    },
+    "notifications.line.config.status.on" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
           }
         }
       }
@@ -3058,27 +3055,24 @@
         }
       }
     },
-    "Station preview" : {
-
-    },
-    "station.arrivals.section.header.title" : {
+    "station.arrivals.failure.retry.hint" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrivals"
+            "value" : "Pull down to try again."
           }
         }
       }
     },
-    "station.disruptions.section.header.title" : {
+    "station.line.chip.disrupted" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disruptions"
+            "value" : "Disrupted"
           }
         }
       }
@@ -3116,13 +3110,69 @@
         }
       }
     },
-    "station.status.section.header.title" : {
+    "station.notices.title" : {
+      "comment" : "Labels the Station screen card for the station's notices. A badge beside it shows how many there are.",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Status"
+            "value" : "Station notices"
+          }
+        }
+      }
+    },
+    "station.plan.journey.from.here.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From here"
+          }
+        }
+      }
+    },
+    "station.plan.journey.section.header.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plan a journey"
+          }
+        }
+      }
+    },
+    "station.plan.journey.to.here.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To here"
+          }
+        }
+      }
+    },
+    "station.status.disruption.on %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disruption on %@"
+          }
+        }
+      }
+    },
+    "station.status.line.on %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ on %2$@"
           }
         }
       }

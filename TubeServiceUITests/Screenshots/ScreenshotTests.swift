@@ -37,10 +37,10 @@ final class ScreenshotTests: ScreenshotTestCase {
         let arrivalsPicker = journeyResults.tabBar.tapArrivalsTab()
         capture(arrivalsPicker, as: "LiveArrivalsPicker")
 
-        let arrivalsBoard = arrivalsPicker.tapFavouriteLineGroup("910GABWDXR-elizabeth")  // Abbey Wood
-        capture(arrivalsBoard, as: "LiveArrivalsBoard1")
+        let arrivalsStation = arrivalsPicker.tapFavouriteStation("HUBABW")  // Abbey Wood
+        capture(arrivalsStation, as: "LiveArrivalsBoard1")
 
-        let nearby = arrivalsBoard.tabBar.tapNearbyTab()
+        let nearby = arrivalsStation.tabBar.tapNearbyTab()
         capture(nearby, as: "NearbyStations-List")
 
         let station = nearby.tapStation("HUBKGX")  // King's Cross St Pancras

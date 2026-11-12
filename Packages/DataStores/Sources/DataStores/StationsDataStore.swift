@@ -8,6 +8,7 @@ public final class StationsDataStore {
 
     struct FetchedDisruptionData {
         var messagesByStationID: [Station.ID: [String]]
+        var stationIDsWithClosures: Set<Station.ID> = []
         var fetchedAt: Date?
         var fetchState: DataFetchState
 
@@ -22,7 +23,6 @@ public final class StationsDataStore {
     private let now: () -> Date
 
     private var nationRailStations: [StopPoint] { Station.allNationalRail }
-    private var stationsByLineGroupID: [Station.LineGroup.ID: Station] = [:]
     private var stationsByID: [Station.ID: Station] = [:]
     private var stationsByAtcoCode: [String: Station] = [:]
     private var nationRailStationsByICSCode: [String: StopPoint] = [:]
@@ -45,10 +45,6 @@ public final class StationsDataStore {
 
     public func station(forID stationID: Station.ID) -> Station? {
         stationsByID[stationID]
-    }
-
-    public func station(forLineGroupID lineGroupID: Station.LineGroup.ID) -> Station? {
-        stationsByLineGroupID[lineGroupID]
     }
 
     public func nationalRailStation(forICSCode icsCode: String) -> StopPoint? {
@@ -77,6 +73,10 @@ public final class StationsDataStore {
         (fetchedDisruptionData.messagesByStationID[stationID] ?? []).map { $0.trimmed() }
     }
 
+    public func hasClosureNotice(forStationID stationID: Station.ID) -> Bool {
+        fetchedDisruptionData.stationIDsWithClosures.contains(stationID)
+    }
+
     // MARK: - Refreshing
 
     public func refreshStationDisruptionsIfStale() async {
@@ -97,6 +97,9 @@ public final class StationsDataStore {
         do {
             let disruptedPoints = try await tflAPI.fetchStationDisruptions().decodedModel
             fetchedDisruptionData.messagesByStationID = disruptedPoints.toMessagesGroupedByStationID(stationsByAtcoCode: stationsByAtcoCode)
+            fetchedDisruptionData.stationIDsWithClosures = Set(
+                disruptedPoints.filter(\.isClosure).compactMap { $0.atcoCode.flatMap { stationsByAtcoCode[$0]?.id } }
+            )
             fetchedDisruptionData.fetchState = .success
             fetchedDisruptionData.fetchedAt = now()
         } catch {
@@ -115,13 +118,11 @@ public final class StationsDataStore {
 
     private func saveStationsByID() {
         stationsByID = [:]
-        stationsByLineGroupID = [:]
         stationsByAtcoCode = [:]
 
         allLondon.forEach { station in
             stationsByID[station.id] = station
             station.lineGroups.forEach {
-                stationsByLineGroupID[$0.id] = station
                 stationsByAtcoCode[$0.atcoCode] = station
             }
         }
@@ -151,6 +152,7 @@ private extension Sequence where Element == DisruptedPoint {
         var messagesByStationID = [Station.ID: [String]]()
 
         self
+            .sorted { $0.noticePriority < $1.noticePriority }
             .forEach {
                 if let atcoCode = $0.atcoCode,
                     let disruptionMessage = $0.description,
@@ -166,5 +168,25 @@ private extension Sequence where Element == DisruptedPoint {
             }
 
         return messagesByStationID
+    }
+}
+
+private extension DisruptedPoint {
+    /// Closures change how people use the station, e.g. trains not stopping or an exit only entrance.
+    var isClosure: Bool {
+        guard let type else { return false }
+        return type.localizedCaseInsensitiveContains("closure") || type.localizedCaseInsensitiveCompare("Exit Only") == .orderedSame
+    }
+
+    /// The Station screen shows the first notice, so closures come first, then by how current the notice is.
+    /// TfL marks long-running notices (e.g. weeks of escalator works) as real-time too, so the category alone isn't enough.
+    var noticePriority: Int {
+        if isClosure { return 0 }
+        return switch appearance {
+        case .realTime, .statusAlert: 1
+        case .crowding, .event: 2
+        case .plannedWork: 3
+        case .information, nil: 4
+        }
     }
 }

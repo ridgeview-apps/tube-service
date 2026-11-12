@@ -36,6 +36,27 @@ struct StationViewStateTests {
     }
 
     @Test
+    func lineGroupShortNameAbbreviatesLongLineNames() {
+        let lineGroup = Station.LineGroup(atcoCode: "940GZZLUKSX", lineIds: [.metropolitan, .circle, .hammersmithAndCity])
+
+        #expect(lineGroup.shortName == "Circle, H&C, Met")
+    }
+
+    @Test
+    func lineGroupShortNameSpellsOutAMetropolitanLineOnItsOwn() {
+        let lineGroup = Station.LineGroup(atcoCode: "940GZZLUBST", lineIds: [.metropolitan])
+
+        #expect(lineGroup.shortName == "Metropolitan")
+    }
+
+    @Test
+    func lineGroupShortNameAbbreviatesAHammersmithAndCityLineOnItsOwn() {
+        let lineGroup = Station.LineGroup(atcoCode: "940GZZLUGHK", lineIds: [.hammersmithAndCity])
+
+        #expect(lineGroup.shortName == "H&C")
+    }
+
+    @Test
     func stationLineGroupNames() {
         let kingsCrossLineGroupNames = ModelStubs.kingsCrossStation.lineGroups.map(\.name)
         let paddingtonLineGroupNames = ModelStubs.paddingtonStation.lineGroups.map(\.name)
@@ -152,5 +173,85 @@ struct StationViewStateTests {
         let favouriteStations = ModelStubs.stations.favourites(matching: [.station(id: ModelStubs.kingsCrossStation.id)])
 
         #expect(favouriteStations.first?.lineGroups == ModelStubs.kingsCrossStation.lineGroups)
+    }
+
+    @Test
+    func lineGroupsDisruptedByALineIncludeEveryGroupContainingIt() {
+        let subSurface = Station.LineGroup(atcoCode: "940GZZLUKSX", lineIds: [.circle, .metropolitan])
+        let victoria = Station.LineGroup(atcoCode: "940GZZLUKSX", lineIds: [.victoria])
+        let metropolitanOnly = Station.LineGroup(atcoCode: "940GZZLUBST", lineIds: [.metropolitan])
+
+        let disruptedIDs = [subSurface, victoria, metropolitanOnly].ids(
+            disruptedBy: [Line(id: .metropolitan, lineStatuses: [.with(statusSeverity: .minorDelays)])]
+        )
+
+        #expect(disruptedIDs == [subSurface.id, metropolitanOnly.id])
+    }
+
+    @Test
+    func stationNamePrefixIsRemovedFromANotice() {
+        let notice = "KINGS CROSS ST. PANCRAS STATION: The escalator to platform 5 is closed."
+
+        #expect(notice.removingStationNamePrefix("King's Cross & St Pancras International") == "The escalator to platform 5 is closed.")
+    }
+
+    @Test
+    func noticeWithoutAStationNamePrefixIsUnchanged() {
+        let notice = "Step-free access: lifts are out of service."
+
+        #expect(notice.removingStationNamePrefix("Pimlico") == notice)
+    }
+
+    @Test
+    func noticeStartingWithTheStationsOwnNameHasItRemoved() {
+        let notice = "Pimlico: reduced escalator service."
+
+        #expect(notice.removingStationNamePrefix("Pimlico") == "reduced escalator service.")
+    }
+
+    @Test
+    func disruptionSummaryIsTheStatusWhenEveryLineInTheGroupShowsIt() {
+        let summary = LineDisruptionSummary(
+            disruptedLines: [.disrupted(.circle, .minorDelays), .disrupted(.metropolitan, .minorDelays)],
+            lineGroupLineIDs: [.metropolitan, .circle]
+        )
+
+        #expect(summary == .status("Minor delays"))
+    }
+
+    @Test
+    func disruptionSummaryNamesTheLinesSharingAStatus() {
+        let summary = LineDisruptionSummary(
+            disruptedLines: [.disrupted(.metropolitan, .minorDelays)],
+            lineGroupLineIDs: [.circle, .hammersmithAndCity, .metropolitan]
+        )
+
+        #expect(summary == .statusOnLines("Minor delays", [.metropolitan]))
+    }
+
+    @Test
+    func disruptionSummaryNamesTheLinesWhenTheirStatusesDiffer() {
+        let summary = LineDisruptionSummary(
+            disruptedLines: [.disrupted(.metropolitan, .minorDelays), .disrupted(.circle, .plannedClosure)],
+            lineGroupLineIDs: [.circle, .metropolitan]
+        )
+
+        #expect(summary == .disruptionOnLines([.circle, .metropolitan]))
+    }
+
+    @Test
+    func noDisruptionSummaryWithoutDisruptedLines() {
+        #expect(LineDisruptionSummary(disruptedLines: [], lineGroupLineIDs: [.northern]) == nil)
+    }
+}
+
+private extension Line {
+    static func disrupted(_ id: TrainLineID, _ severity: LineStatusSeverity) -> Line {
+        let description =
+            switch severity {
+            case .plannedClosure: "Planned Closure"
+            default: "Minor Delays"
+            }
+        return Line(id: id, lineStatuses: [.with(statusSeverity: severity, statusSeverityDescription: description)])
     }
 }

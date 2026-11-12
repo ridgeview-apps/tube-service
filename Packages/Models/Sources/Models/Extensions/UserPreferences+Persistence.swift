@@ -5,6 +5,7 @@ extension UserPreferences {
     enum CodingKeys: String, CodingKey {
         case favouriteStops
         case recentlySelectedStations
+        case selectedLineGroupIDs
         case favouriteLineIDs
         case journeyModePreset
         case recentlySavedJourneys
@@ -20,6 +21,8 @@ extension UserPreferences {
             favouriteStops = try Self.migratedLegacyFavouriteStops(from: decoder)
         }
         recentlySelectedStations = (try? container.decode([Station.ID].self, forKey: .recentlySelectedStations)) ?? []
+        selectedLineGroupIDs =
+            (try? container.decode([Station.ID: Station.LineGroup.ID].self, forKey: .selectedLineGroupIDs)) ?? [:]
 
         let rawLineIDs = (try? container.decode([String].self, forKey: .favouriteLineIDs)) ?? []
         favouriteLineIDs = rawLineIDs.compactMap { TrainLineID(rawValue: $0) }.removingDuplicates()
@@ -34,6 +37,7 @@ extension UserPreferences {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(favouriteStops, forKey: .favouriteStops)
         try container.encode(recentlySelectedStations, forKey: .recentlySelectedStations)
+        try container.encode(selectedLineGroupIDs, forKey: .selectedLineGroupIDs)
         try container.encode(favouriteLineIDs, forKey: .favouriteLineIDs)
         try container.encode(journeyModePreset, forKey: .journeyModePreset)
         try container.encode(recentlySavedJourneys, forKey: .recentlySavedJourneys)

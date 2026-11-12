@@ -21,20 +21,21 @@ final class ArrivalsBoardTests: UITestCase {
         let arrivalsPicker = LineStatusPage.waitingToAppear(in: app).tabBar.tapArrivalsTab()
         XCTAssertFalse(arrivalsPicker.favouriteStation(kingsCrossStationID).exists)
 
-        let board =
+        let station =
             arrivalsPicker
             .typeInSearchField("King's Cross")
             .tapStation(kingsCrossStationID)
-            .tapLineGroup(kingsCrossNorthernLineGroupID)
+            .tapLineChip(kingsCrossNorthernLineGroupID)
 
-        board.platformNames.firstMatch.waitToExist()
+        XCTAssertTrue(station.lineChip(kingsCrossNorthernLineGroupID).isSelected)
+        station.platformNames.firstMatch.waitToExist()
         XCTAssertEqual(
-            board.platformNames.allElementsBoundByIndex.map(\.label),
+            station.platformNames.allElementsBoundByIndex.map(\.label),
             ["Northbound - Platform 7", "Southbound - Platform 8"]
         )
 
         let returnedArrivalsPicker =
-            board
+            station
             .tapFavouriteButton()
             .tapBackButton()
             .tapEndSearchButton()

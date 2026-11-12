@@ -62,7 +62,7 @@ struct LocatedStationsScreen: View {
         case .tappedRefresh:
             location.refreshCurrentLocation()
         case .tappedStation(let station):
-            router.push(.stationDetail(station: station))
+            router.push(.station(station))
         }
     }
 
