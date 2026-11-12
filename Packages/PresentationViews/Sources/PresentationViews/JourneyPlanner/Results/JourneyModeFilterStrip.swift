@@ -8,43 +8,17 @@ struct JourneyModeFilterStrip: View {
     let onCustomTapped: () -> Void
 
     var body: some View {
-        HStack(spacing: 0) {
-            Image(systemName: "line.3.horizontal.decrease")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .padding(.leading, 14)
-                .padding(.vertical, 8)
-            ScrollView(.horizontal) {
-                HStack(spacing: 8) {
-                    ForEach(JourneyModePreset.displayCases, id: \.self) { preset in
-                        presetChip(for: preset)
-                    }
-                }
-                .padding(.leading, 10)
-                .padding(.trailing, 16)
-                .padding(.vertical, 8)
+        // The remembered chip can be off screen, e.g. "More…" at larger text sizes
+        FilterChipRow(initiallyVisibleID: selectedPreset.chipID) {
+            ForEach(JourneyModePreset.displayCases, id: \.chipID) { preset in
+                presetChip(for: preset)
             }
-            .scrollIndicators(.hidden)
-            .mask(
-                HStack(spacing: 0) {
-                    Rectangle()
-                    LinearGradient(
-                        colors: [.black, .clear],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                    .frame(width: 20)
-                }
-            )
         }
         .background(Color.defaultCellBackground)
     }
 
     private func presetChip(for preset: JourneyModePreset) -> some View {
-        let isSelected: Bool = {
-            if preset.isCustom { return selectedPreset.isCustom }
-            return selectedPreset == preset
-        }()
+        let isSelected = preset.chipID == selectedPreset.chipID
         return Button {
             if preset.isCustom {
                 onCustomTapped()
@@ -55,16 +29,9 @@ struct JourneyModeFilterStrip: View {
             }
         } label: {
             Text(isSelected && preset.isCustom ? selectedPreset.label : preset.label)
-                .lineLimit(1)
-                .font(.subheadline)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 7)
-                .foregroundStyle(isSelected ? Color.white : Color.secondary)
-                .background(isSelected ? Color.accentColor : .clear, in: Capsule())
-                .overlay(Capsule().strokeBorder(isSelected ? .clear : Color.secondary.opacity(0.4), lineWidth: 1))
         }
         .disabled(isDisabled && !preset.isCustom)
-        .buttonStyle(.plain)
+        .buttonStyle(.filterChip(isSelected: isSelected))
     }
 }
 
