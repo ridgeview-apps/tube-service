@@ -87,8 +87,15 @@ public extension TrainLineID {
     }
 }
 
-public extension Sequence where Element == TrainLineID {
-    func sortedByName() -> [TrainLineID] {
-        self.sorted(by: { $0.name < $1.name })
+public extension TrainLineID {
+
+    /// The name used where space is short, e.g. a line chip, with TfL's own abbreviations. Hammersmith & City is always
+    /// too long, but "Met" only reads as a line name beside other lines.
+    func abbreviatedName(besideOtherLines: Bool) -> String {
+        switch self {
+        case .hammersmithAndCity: "H&C"
+        case .metropolitan: besideOtherLines ? "Met" : name
+        default: name
+        }
     }
 }

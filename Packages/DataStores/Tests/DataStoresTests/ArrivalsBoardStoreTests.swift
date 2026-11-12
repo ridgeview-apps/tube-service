@@ -194,6 +194,60 @@ struct ArrivalsBoardStoreTests {
         }
     }
 
+    // MARK: - Switching line group
+
+    @Test
+    func switchingLineGroup_clearsThePreviousBoards() async {
+        let store = makeStore()
+        await store.refresh(for: predictionsLineGroup)
+
+        store.startAutoRefresh(for: departuresLineGroup)
+
+        #expect(store.boardData.value == nil)
+        #expect(store.boardData.fetchedAt == nil)
+        store.stopAutoRefresh()
+    }
+
+    @Test
+    func switchingLineGroupMidFetch_dropsThePreviousLineGroupsResult() async {
+        let tflAPI = StubTflAPIClient()
+        tflAPI.fetchArrivalPredictionsDelay = .milliseconds(100)
+        let store = makeStore(tflAPI: tflAPI)
+
+        let previousFetch = Task { await store.refresh(for: predictionsLineGroup) }
+        await Task.yield()  // Lets the predictions fetch start
+        await store.refresh(for: departuresLineGroup)
+        await previousFetch.value
+
+        guard case .departures = store.boardData.value else {
+            Issue.record("Expected the departures board, not the predictions that finished after it")
+            return
+        }
+        #expect(store.boardData.fetchState.isSuccess == true)
+    }
+
+    @Test
+    func switchingLineGroupMidFetch_cancellingThePreviousFetchKeepsTheNewOneFetching() async {
+        let tflAPI = StubTflAPIClient()
+        tflAPI.fetchArrivalPredictionsDelay = .seconds(10)
+        tflAPI.fetchArrivalDeparturesDelay = .seconds(10)
+        let store = makeStore(tflAPI: tflAPI)
+
+        let previousFetch = Task { await store.refresh(for: predictionsLineGroup) }
+        await Task.yield()  // Lets the predictions fetch start
+        let newFetch = Task { await store.refresh(for: departuresLineGroup) }
+        await Task.yield()  // Lets the departures fetch start
+        previousFetch.cancel()
+        await previousFetch.value
+
+        guard case .fetching = store.boardData.fetchState else {
+            Issue.record("Expected the departures fetch to still be in progress")
+            return
+        }
+        newFetch.cancel()
+        await newFetch.value
+    }
+
     // MARK: - resetAutoRefreshTimer
 
     @Test

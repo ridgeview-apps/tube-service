@@ -11,8 +11,3 @@ struct NearbyPage: Page {
         return .waitingToAppear(in: app)
     }
 }
-
-struct StationPage: Page {
-    let app: XCUIApplication
-    var rootElement: XCUIElement { app.scrollViews[AccessibilityID.Station.content] }
-}

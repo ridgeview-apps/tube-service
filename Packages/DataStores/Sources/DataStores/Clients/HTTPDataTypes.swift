@@ -107,13 +107,18 @@ private extension CharacterSet {
 
 extension URLSession {
 
+    // A cancelled task throws URLError.cancelled rather than CancellationError, which callers expect when they cancel
+    static func connectionError(for error: Error) -> Error {
+        (error as? URLError)?.code == .cancelled ? CancellationError() : HTTPError.connection(error)
+    }
+
     // For endpoints that return no body (e.g. DELETE → 204 No Content).
     func send(request: URLRequest, decodedBy jsonDecoder: JSONDecoder) async throws {
         let response: (data: Data, urlResponse: URLResponse)
         do {
             response = try await self.data(for: request)
         } catch {
-            throw HTTPError.connection(error)
+            throw Self.connectionError(for: error)
         }
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {
             throw HTTPError.statusCodeMissing
@@ -129,7 +134,7 @@ extension URLSession {
         do {
             response = try await self.data(for: request)
         } catch {
-            throw HTTPError.connection(error)
+            throw Self.connectionError(for: error)
         }
 
         guard let statusCode = (response.urlResponse as? HTTPURLResponse)?.statusCode else {

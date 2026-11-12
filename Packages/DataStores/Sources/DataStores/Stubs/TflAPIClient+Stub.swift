@@ -28,8 +28,11 @@ import Shared
         public private(set) var fetchArrivalPredictionsCallCount = 0
         public var stubbedArrivalPredictions: HTTPResponse<[ArrivalPrediction]> = .success200(ModelStubs.northernLineBothPlatforms)
         public var fetchArrivalPredictionsError: Error?
+        /// Holds each response back, like a slow network. Cancelling the fetch throws a `CancellationError`, as `URLSession` does.
+        public var fetchArrivalPredictionsDelay: Duration?
         public func fetchArrivalPredictions(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalPrediction]> {
             fetchArrivalPredictionsCallCount += 1
+            if let fetchArrivalPredictionsDelay { try await Task.sleep(for: fetchArrivalPredictionsDelay) }
             if let fetchArrivalPredictionsError { throw fetchArrivalPredictionsError }
             return stubbedArrivalPredictions
         }
@@ -37,8 +40,10 @@ import Shared
         public private(set) var fetchArrivalDeparturesCallCount = 0
         public var stubbedArrivalDepartures: HTTPResponse<[ArrivalDeparture]> = .success200(ModelStubs.elizabethLineBothPlatforms)
         public var fetchArrivalDeparturesError: Error?
+        public var fetchArrivalDeparturesDelay: Duration?
         public func fetchArrivalDepartures(forLineGroup lineGroup: Station.LineGroup) async throws -> HTTPResponse<[ArrivalDeparture]> {
             fetchArrivalDeparturesCallCount += 1
+            if let fetchArrivalDeparturesDelay { try await Task.sleep(for: fetchArrivalDeparturesDelay) }
             if let fetchArrivalDeparturesError { throw fetchArrivalDeparturesError }
             return stubbedArrivalDepartures
         }

@@ -45,3 +45,9 @@ public extension TrainLineID {
         }
     }
 }
+
+public extension Sequence where Element == TrainLineID {
+    func sortedByName() -> [TrainLineID] {
+        self.sorted(by: { $0.name < $1.name })
+    }
+}

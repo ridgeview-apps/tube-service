@@ -12,6 +12,8 @@ struct ArrivalsBoardView: View {
     @Binding var isExpanded: Bool
 
     var rotatingCellTimer = ObservableTimer.repeating(every: 3.0)
+    /// Fades the board's contents but not its frame, e.g. to pulse a loading placeholder.
+    var contentOpacity = 1.0
 
 
     // MARK: Private state
@@ -30,6 +32,7 @@ struct ArrivalsBoardView: View {
             cells
             expansionButton
         }
+        .opacity(contentOpacity)
         .padding()
         .background(Color.arrivalsBoardBackground)
         .roundedBorder(

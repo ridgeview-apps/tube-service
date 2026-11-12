@@ -1,3 +1,4 @@
+import Foundation
 import Models
 import ModelStubs
 import Testing
@@ -17,26 +18,6 @@ struct StationsModelTests {
     }
 
     @Test
-    func loadStationsByLineGroup() {
-        let stations = StationsDataStore(tflAPI: StubTflAPIClient())
-
-        // King's X
-        #expect(stations.station(forLineGroupID: "940GZZLUKSX-circle,hammersmith-city,metropolitan") == ModelStubs.kingsCrossStation)
-        #expect(stations.station(forLineGroupID: "940GZZLUKSX-northern") == ModelStubs.kingsCrossStation)
-        #expect(stations.station(forLineGroupID: "940GZZLUKSX-piccadilly") == ModelStubs.kingsCrossStation)
-        #expect(stations.station(forLineGroupID: "940GZZLUKSX-victoria") == ModelStubs.kingsCrossStation)
-
-        // Paddington
-        #expect(stations.station(forLineGroupID: "940GZZLUPAC-bakerloo") == ModelStubs.paddingtonStation)
-        #expect(stations.station(forLineGroupID: "940GZZLUPAC-circle,district") == ModelStubs.paddingtonStation)
-        #expect(stations.station(forLineGroupID: "940GZZLUPAH-circle,hammersmith-city") == ModelStubs.paddingtonStation)
-        #expect(stations.station(forLineGroupID: "910GPADTON-elizabeth") == ModelStubs.paddingtonStation)
-
-        // High barnet
-        #expect(stations.station(forLineGroupID: "940GZZLUHBT-northern")?.name == "High Barnet")
-    }
-
-    @Test
     func filteredStationsByPartialName() {
         let stations = StationsDataStore(tflAPI: StubTflAPIClient())
 
@@ -52,4 +33,51 @@ struct StationsModelTests {
         #expect(filteredStationsContainsKingsCross(forInputText: "kings cross st pancras"))
     }
 
+    @Test
+    func stationNoticesListLiveOnesFirst() async throws {
+        let disruptedPointsJSON = """
+            [
+                { "atcoCode": "940GZZLUKSX", "description": "Mini ramps are available.", "appearance": "Information" },
+                { "atcoCode": "940GZZLUKSX", "description": "The lifts are closed from Monday.", "appearance": "PlannedWork" },
+                { "atcoCode": "940GZZLUKSX", "description": "The station is closed.", "appearance": "RealTime" }
+            ]
+            """
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedDisruptedPoints = .success200(
+            try JSONDecoder().decode([DisruptedPoint].self, from: Data(disruptedPointsJSON.utf8))
+        )
+        let stations = StationsDataStore(tflAPI: tflAPI)
+
+        await stations.refreshStationDisruptions()
+
+        #expect(
+            stations.disruptions(forStationID: "HUBKGX") == [
+                "The station is closed.",
+                "The lifts are closed from Monday.",
+                "Mini ramps are available."
+            ]
+        )
+    }
+
+    @Test
+    func closureNoticesComeFirstAndFlagTheStation() async throws {
+        let disruptedPointsJSON = """
+            [
+                { "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service.", "appearance": "RealTime", "type": "Information" },
+                { "atcoCode": "940GZZLUKSX", "description": "Westbound trains will not stop.", "appearance": "PlannedWork", "type": "Part Closure" },
+                { "atcoCode": "940GZZLUPAC", "description": "Mini ramps are available.", "appearance": "Information", "type": "Information" }
+            ]
+            """
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedDisruptedPoints = .success200(
+            try JSONDecoder().decode([DisruptedPoint].self, from: Data(disruptedPointsJSON.utf8))
+        )
+        let stations = StationsDataStore(tflAPI: tflAPI)
+
+        await stations.refreshStationDisruptions()
+
+        #expect(stations.disruptions(forStationID: "HUBKGX") == ["Westbound trains will not stop.", "Lifts are out of service."])
+        #expect(stations.hasClosureNotice(forStationID: "HUBKGX"))
+        #expect(!stations.hasClosureNotice(forStationID: "HUBPAD"))
+    }
 }

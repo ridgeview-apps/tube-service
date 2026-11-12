@@ -66,22 +66,15 @@ public enum AccessibilityID {
     public enum ArrivalsPicker {
         public static let list = "arrivalsPicker.list"
 
-        /// A station row outside the Favourites section that expands to its line groups, by `Station` ID.
+        /// A station row outside the Favourites section that opens its Station screen, by `Station` ID.
         public static func station(_ stationID: String) -> String { "arrivalsPicker.station.\(stationID)" }
-        /// A line group row outside the Favourites section that opens its arrivals board, by `Station.LineGroup` ID.
-        public static func lineGroup(_ lineGroupID: String) -> String { "arrivalsPicker.lineGroup.\(lineGroupID)" }
-        /// A station row in the Favourites section that expands to its line groups, by `Station` ID.
+        /// A station row in the Favourites section that opens its Station screen, by `Station` ID.
         public static func favouriteStation(_ stationID: String) -> String {
             "arrivalsPicker.favourite.station.\(stationID)"
-        }
-        /// A line group row in the Favourites section that opens its arrivals board, by `Station.LineGroup` ID.
-        public static func favouriteLineGroup(_ lineGroupID: String) -> String {
-            "arrivalsPicker.favourite.lineGroup.\(lineGroupID)"
         }
     }
 
     public enum ArrivalsBoard {
-        public static let content = "arrivalsBoard.content"
         /// Each platform board's name. Every board shares this; query with `firstMatch` or by index.
         public static let platformName = "arrivalsBoard.platformName"
     }
@@ -95,6 +88,9 @@ public enum AccessibilityID {
 
     public enum Station {
         public static let content = "station.content"
+
+        /// The chip that shows a line group's boards, by `Station.LineGroup` ID.
+        public static func lineChip(_ lineGroupID: String) -> String { "station.lineChip.\(lineGroupID)" }
     }
 
     public enum Maps {

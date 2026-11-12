@@ -16,7 +16,7 @@ struct ArrivalsPickerScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    @State private var selection: Station.LineGroup?
+    @State private var selection: Station?
     @State private var searchTerm: String = ""
     @State private var selectableStations: [Station] = []
 
@@ -51,9 +51,8 @@ struct ArrivalsPickerScreen: View {
             reloadStations()
         }
         .onChange(of: selection) { _, newValue in
-            guard let newValue, let station = stations.station(forLineGroupID: newValue.id) else { return }
-            userPreferences.saveRecentlySelectedStation(station.id)
-            router.push(.arrivalsBoard(lineGroup: newValue, station: station))
+            guard let newValue else { return }
+            router.push(.station(newValue))
             selection = nil
         }
     }

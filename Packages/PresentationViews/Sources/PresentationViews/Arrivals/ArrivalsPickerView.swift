@@ -22,7 +22,7 @@ public struct ArrivalsPickerView: View {
     public let mode: ArrivalsPickerMode
     public let allStations: [Station]
 
-    @Binding public var selection: Station.LineGroup?
+    @Binding public var selection: Station?
     public let onAction: (Action) -> Void
 
     private let favourites: [Station]
@@ -36,7 +36,7 @@ public struct ArrivalsPickerView: View {
     public init(
         allStations: [Station],
         mode: ArrivalsPickerMode,
-        selection: Binding<Station.LineGroup?>,
+        selection: Binding<Station?>,
         onAction: @escaping (Action) -> Void
     ) {
         self.allStations = allStations
@@ -75,7 +75,7 @@ public struct ArrivalsPickerView: View {
         if !favourites.isEmpty {
             Section {
                 ForEach(favourites) { station in
-                    ArrivalsPickerExpandableCell(style: .plain, station: station, isEditable: true)
+                    ArrivalsPickerStationCell(station: station, isEditable: true)
                 }
                 .onMove(perform: moveFavourites)
                 .onDelete(perform: removeFavourites)
@@ -122,7 +122,7 @@ public struct ArrivalsPickerView: View {
     ) -> some View {
         Section {
             ForEach(stations) { station in
-                ArrivalsPickerExpandableCell(style: .plain, station: station)
+                ArrivalsPickerStationCell(station: station)
             }
         } header: {
             header
@@ -142,92 +142,37 @@ public struct ArrivalsPickerView: View {
 }
 
 
-private struct ArrivalsPickerExpandableCell: View {
+private struct ArrivalsPickerStationCell: View {
 
-    let style: LineGroupCell.Style
     let station: Station
     var isEditable = false
 
     @Environment(\.editMode) private var editMode
-    @State private var isExpanded = false
 
     private var isBeingEdited: Bool { isEditable && editMode?.wrappedValue.isEditing == true }
 
     var body: some View {
         Group {
             if isBeingEdited {
-                // A plain row while editing: it's dragged as a whole station, and has no chevron
-                // or link suggesting a tap will expand it or navigate away
+                // A plain row while editing: it's dragged as a whole station, and has no chevron suggesting a tap
+                // will navigate away
                 stationCell
-            } else if station.lineGroups.count == 1 {
-                lineGroupCellLink(
-                    for: station.lineGroups[0],
-                    title: station.name,
-                    showsDistance: true
-                )
             } else {
-                DisclosureGroup(isExpanded: $isExpanded) {
-                    ForEach(station.lineGroups.sortedByName()) { lineGroup in
-                        lineGroupCellLink(
-                            for: lineGroup,
-                            title: lineGroup.name,
-                            showsDistance: false
-                        )
-                    }
-                    // Only whole stations can be reordered, not the line groups within them
-                    .moveDisabled(true)
-                } label: {
+                NavigationLink(value: station) {
                     stationCell
                 }
-                .tint(.clear)
             }
         }
-        .frame(minHeight: 52)
-    }
-
-    private var stationCell: some View {
-        lineGroupCell(
-            withLineIDs: station.sortedLineIDs,
-            title: station.name,
-            showsDistance: true
-        )
         .accessibilityIdentifier(
             isEditable
                 ? AccessibilityID.ArrivalsPicker.favouriteStation(station.id)
                 : AccessibilityID.ArrivalsPicker.station(station.id)
         )
+        .frame(minHeight: 52)
     }
 
-
-    private func lineGroupCellLink(
-        for lineGroup: Station.LineGroup,
-        title: String,
-        showsDistance: Bool
-    ) -> some View {
-        NavigationLink(value: lineGroup) {
-            lineGroupCell(
-                withLineIDs: lineGroup.lineIds.sortedByName(),
-                title: title,
-                showsDistance: showsDistance
-            )
-        }
-        .accessibilityIdentifier(
-            isEditable
-                ? AccessibilityID.ArrivalsPicker.favouriteLineGroup(lineGroup.id)
-                : AccessibilityID.ArrivalsPicker.lineGroup(lineGroup.id)
-        )
-    }
-
-    private func lineGroupCell(
-        withLineIDs lineIDs: [TrainLineID],
-        title: String,
-        showsDistance: Bool
-    ) -> some View {
-        LineGroupCell(
-            style: style,
-            lineIDs: lineIDs,
-            title: title
-        )
+    private var stationCell: some View {
+        LineGroupCell(style: .plain, lineIDs: station.sortedLineIDs, title: station.name)
     }
 }
 
@@ -239,7 +184,7 @@ import ModelStubs
 private struct WrapperView: View {
     var allStations: [Station] = ModelStubs.stations
     var mode: ArrivalsPickerMode
-    @State var selection: Station.LineGroup?
+    @State var selection: Station?
 
     var body: some View {
         NavigationStack {

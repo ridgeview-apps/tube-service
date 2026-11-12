@@ -15,6 +15,7 @@ public final class ArrivalsBoardStore {
     private static let refreshInterval: TimeInterval = 20
 
     public private(set) var boardData = RemoteData<BoardData?>(value: nil, fetchedAt: nil, fetchState: .idle)
+    private var currentLineGroup: Station.LineGroup?
 
     private let tflAPI: TflAPIClientType
     private let now: () -> Date
@@ -29,6 +30,7 @@ public final class ArrivalsBoardStore {
     // Fetches immediately then starts the periodic refresh loop.
     public func startAutoRefresh(for lineGroup: Station.LineGroup) {
         stopAutoRefresh()
+        switchIfNeeded(to: lineGroup)
         initialFetchTask = Task {
             await self.refresh(for: lineGroup)
             guard !Task.isCancelled else { return }
@@ -50,16 +52,33 @@ public final class ArrivalsBoardStore {
     }
 
     public func refresh(for lineGroup: Station.LineGroup) async {
+        switchIfNeeded(to: lineGroup)
         if case .fetching = boardData.fetchState { return }
         let previousFetchState = boardData.fetchState
         boardData.fetchState = .fetching
         do {
-            boardData.succeed(with: try await fetchBoardData(for: lineGroup), fetchedAt: now())
+            let data = try await fetchBoardData(for: lineGroup)
+            guard isStillCurrent(lineGroup) else { return }
+            boardData.succeed(with: data, fetchedAt: now())
         } catch is CancellationError {
+            guard isStillCurrent(lineGroup) else { return }
             boardData.fetchState = previousFetchState
         } catch {
+            guard isStillCurrent(lineGroup) else { return }
             boardData.fetchState = .failure(error)
         }
+    }
+
+    // The board may have switched line group while a fetch was in flight, whose result then belongs to no board
+    private func isStillCurrent(_ lineGroup: Station.LineGroup) -> Bool {
+        lineGroup == currentLineGroup
+    }
+
+    // Clears the previous line group's boards, so they're never shown under another line group
+    private func switchIfNeeded(to lineGroup: Station.LineGroup) {
+        guard lineGroup != currentLineGroup else { return }
+        currentLineGroup = lineGroup
+        boardData = RemoteData(value: nil, fetchedAt: nil, fetchState: .idle)
     }
 
     private func startPeriodicRefresh(for lineGroup: Station.LineGroup) {
