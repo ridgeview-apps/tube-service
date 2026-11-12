@@ -14,7 +14,6 @@ struct JourneyModeFilterStrip: View {
                 presetChip(for: preset)
             }
         }
-        .background(Color.defaultCellBackground)
     }
 
     private func presetChip(for preset: JourneyModePreset) -> some View {
