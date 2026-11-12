@@ -122,7 +122,6 @@ public struct StationView: View {
                             disruptedLineGroupIDs: disruptedLineGroupIDs,
                             onSelect: { onAction(.selectedLineGroup($0)) }
                         )
-                        .background(Color.defaultBackground)
                     }
                 }
             }

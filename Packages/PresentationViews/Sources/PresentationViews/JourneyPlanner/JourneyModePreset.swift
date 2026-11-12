@@ -15,4 +15,9 @@ extension JourneyModePreset {
     static var displayCases: [JourneyModePreset] {
         [.trainAndBus, .trainOnly, .busOnly, .custom([])]
     }
+
+    /// Every custom selection shares the one "More…" chip, whichever modes it holds.
+    var chipID: JourneyModePreset {
+        isCustom ? .custom([]) : self
+    }
 }

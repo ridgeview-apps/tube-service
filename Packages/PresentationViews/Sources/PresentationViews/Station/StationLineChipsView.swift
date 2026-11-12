@@ -11,50 +11,19 @@ struct StationLineChipsView: View {
     var disruptedLineGroupIDs: Set<Station.LineGroup.ID> = []
     let onSelect: (Station.LineGroup) -> Void
 
-    // The pinned header can be rebuilt while the page scrolls, so this stops it snapping back after a manual scroll
-    @State private var hasScrolledToSelection = false
-
-    // Matches the Journey Planner's mode filter strip, so chips look the same across the app
     var body: some View {
-        HStack(spacing: 0) {
-            Image(systemName: "line.3.horizontal.decrease")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .padding(.leading, 16)
-                .accessibilityHidden(true)
-            ScrollViewReader { proxy in
-                ScrollView(.horizontal) {
-                    HStack(spacing: 8) {
-                        ForEach(lineGroups) { lineGroup in
-                            LineChip(
-                                lineGroup: lineGroup,
-                                isSelected: lineGroup == selectedLineGroup,
-                                isDisrupted: disruptedLineGroupIDs.contains(lineGroup.id)
-                            ) {
-                                onSelect(lineGroup)
-                            }
-                        }
-                    }
-                    .padding(.leading, 10)
-                    .padding(.trailing, 16)
-                    .padding(.vertical, 8)
-                }
-                .scrollIndicators(.hidden)
-                // A remembered chip can be off screen, e.g. the last of King's Cross's four.
-                // Not `ScrollPosition`: its initial position isn't applied to this row, so it starts at the first chip
-                .onAppear {
-                    guard !hasScrolledToSelection else { return }
-                    hasScrolledToSelection = true
-                    proxy.scrollTo(selectedLineGroup.id, anchor: .center)
+        // A remembered chip can be off screen, e.g. the last of King's Cross's four
+        // Solid, because the boards scrolling under the row are dark
+        FilterChipRow(initiallyVisibleID: selectedLineGroup.id, backing: .solid) {
+            ForEach(lineGroups) { lineGroup in
+                LineChip(
+                    lineGroup: lineGroup,
+                    isSelected: lineGroup == selectedLineGroup,
+                    isDisrupted: disruptedLineGroupIDs.contains(lineGroup.id)
+                ) {
+                    onSelect(lineGroup)
                 }
             }
-            .mask(
-                HStack(spacing: 0) {
-                    Rectangle()
-                    LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
-                        .frame(width: 20)
-                }
-            )
         }
         // The row is pinned, so it stops growing where the Journey Planner's mode chips do
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
@@ -72,23 +41,15 @@ private struct LineChip: View {
             HStack(spacing: 6) {
                 LineColourBar(lineIDs: lineGroup.lineIds.sortedByName(), isOnAccent: isSelected)
                 Text(lineGroup.shortName)
-                    .lineLimit(1)
                     .accessibilityLabel(lineGroup.name)
             }
-            .font(.subheadline)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 7)
-            .foregroundStyle(isSelected ? Color.white : Color.secondary)
-            .background(isSelected ? Color.accentColor : .clear, in: Capsule())
-            .overlay(Capsule().strokeBorder(isSelected ? .clear : Color.secondary.opacity(0.4), lineWidth: 1))
-            .contentShape(Capsule())
-            .overlay(alignment: .topTrailing) {
-                if isDisrupted {
-                    DisruptionBadge()
-                }
+        }
+        .buttonStyle(.filterChip(isSelected: isSelected))
+        .overlay(alignment: .topTrailing) {
+            if isDisrupted {
+                DisruptionBadge()
             }
         }
-        .buttonStyle(.plain)
         .accessibilityValue(isDisrupted ? Text(.stationLineChipDisrupted) : Text(verbatim: ""))
         .accessibilityIdentifier(AccessibilityID.Station.lineChip(lineGroup.id))
         .accessibilityAddTraits(isSelected ? .isSelected : [])

@@ -13,11 +13,10 @@ public struct JourneyResultsView: View {
     public let errorFormatter: (any Error) -> String
     public let onAction: (JourneyResultsAction) -> Void
 
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
     @State private var headerCollapseProgress: CGFloat = 0
     @State private var headerHeight: CGFloat = 0
     @State private var maxHeaderHeight: CGFloat = 0
+    @State private var filterStripHeight: CGFloat = 0
     @State private var expandedJourneyIDs: Set<String> = []
 
     private let headerCollapseThreshold: CGFloat = 60
@@ -56,8 +55,6 @@ public struct JourneyResultsView: View {
     public var body: some View {
         VStack(spacing: 0) {
             journeyHeaderView
-            modeFilterStrip
-            if horizontalSizeClass != .regular { Divider() }
             ScrollView {
                 contentView
             }
@@ -73,6 +70,15 @@ public struct JourneyResultsView: View {
                     onAction(.refresh)
                 }
             }
+            // An overlay rather than a safe area inset: the collapsing header reads the scroll offset, and an inset's
+            // height is recalculated in the same layout pass, which made the offset feed back on itself forever.
+            // Added last so the scroll modifiers above don't also reach the chips' horizontal scroll view
+            .overlay(alignment: .top) {
+                modeFilterStrip
+                    .onGeometryChange(for: CGFloat.self, of: \.size.height) { newHeight in
+                        filterStripHeight = newHeight
+                    }
+            }
         }
         .task {
             onAction(.initialFetch)
@@ -87,9 +93,6 @@ public struct JourneyResultsView: View {
             isDisabled: isAnyPageLoading,
             onCustomTapped: { onAction(.customPresetTapped) }
         )
-        .clipShape(RoundedRectangle(cornerRadius: horizontalSizeClass == .regular ? 14 : 0, style: .continuous))
-        .padding(.horizontal, horizontalSizeClass == .regular ? 16 : 0)
-        .padding(.vertical, horizontalSizeClass == .regular ? 8 : 0)
     }
 
     private var journeyHeaderView: some View {
@@ -131,7 +134,8 @@ public struct JourneyResultsView: View {
             }
             Spacer().frame(height: 30 + headerHeightCompensation)  // Bottom scroll padding (extra compensates for collapsed header to keep total scroll length stable)
         }
-        .padding(.top, 8)
+        // Starts the results below the filter strip, which floats over them
+        .padding(.top, 8 + filterStripHeight)
         .animation(.default, value: pages)
     }
 
