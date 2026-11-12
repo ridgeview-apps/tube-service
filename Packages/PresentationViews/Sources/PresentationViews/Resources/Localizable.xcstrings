@@ -3110,6 +3110,18 @@
         }
       }
     },
+    "station.notices.preview.from %@ %@" : {
+      "comment" : "A closure on the Station screen's notices card that starts later today, e.g. \"From 21:30: Exit only after the event.\"",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %1$@: %2$@"
+          }
+        }
+      }
+    },
     "station.notices.title" : {
       "comment" : "Labels the Station screen card for the station's notices. A badge beside it shows how many there are.",
       "extractionState" : "manual",

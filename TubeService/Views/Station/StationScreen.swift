@@ -119,8 +119,7 @@ struct StationScreen: View {
         let allLines = lineStatus.lineStatusData(for: .live)?.value ?? []
         return .init(
             lines: allLines.filter { station.sortedLineIDs.contains($0.id) },
-            disruptionMessages: stations.disruptions(forStationID: station.id),
-            hasClosureNotice: stations.hasClosureNotice(forStationID: station.id)
+            notices: stations.notices(forStationID: station.id)
         )
     }
 

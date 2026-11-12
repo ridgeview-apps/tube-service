@@ -28,13 +28,12 @@ public struct StationView: View {
     public struct Info {
         /// The status of every line at the station.
         public let lines: [Line]
-        public let disruptionMessages: [String]
-        public let hasClosureNotice: Bool
+        /// Closures first, and none that have ended.
+        public let notices: [StationNotice]
 
-        public init(lines: [Line], disruptionMessages: [String], hasClosureNotice: Bool = false) {
+        public init(lines: [Line], notices: [StationNotice]) {
             self.lines = lines
-            self.disruptionMessages = disruptionMessages
-            self.hasClosureNotice = hasClosureNotice
+            self.notices = notices
         }
     }
 
@@ -46,6 +45,7 @@ public struct StationView: View {
     public let onAction: (Action) -> Void
 
     @State private var isShowingNotices = false
+    @Environment(\.clock) private var clock
 
     public init(
         station: Station,
@@ -73,16 +73,15 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
-    private var notices: [String] {
-        info.disruptionMessages.map { $0.removingStationNamePrefix(station.name) }
+    private var noticeTexts: [String] {
+        info.notices.map { $0.text.removingStationNamePrefix(station.name) }
     }
 
     private var disruptions: StationDisruptionsView {
         StationDisruptionsView(
             selectedLineDisruptions: selectedLineDisruptions,
             selectedLineIDs: selectedLineGroup.lineIds,
-            notices: notices,
-            hasClosureNotice: info.hasClosureNotice,
+            noticesSummary: StationNoticesSummary(notices: info.notices, stationName: station.name, now: clock.now),
             onAction: handleDisruptionsAction
         )
     }
@@ -130,7 +129,7 @@ public struct StationView: View {
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $isShowingNotices) {
-            StationNoticesView(stationName: station.name, notices: notices)
+            StationNoticesView(stationName: station.name, notices: noticeTexts)
         }
     }
 
@@ -154,7 +153,7 @@ private struct WrapperView: View {
     var lines: [Line] = [.circle, .hammersmithAndCity, .metropolitan, .northern, .piccadilly, .victoria].map {
         Line(id: $0, lineStatuses: [.goodService])
     }
-    var disruptionMessages: [String] = []
+    var notices: [StationNotice] = []
     @State private var selectedLineGroup: Station.LineGroup?
     @State private var isFavourite = false
 
@@ -164,7 +163,7 @@ private struct WrapperView: View {
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
                 arrivals: .init(boardStates: boardStates, refreshDate: .now, loadingState: arrivalsLoadingState),
-                info: .init(lines: lines, disruptionMessages: disruptionMessages),
+                info: .init(lines: lines, notices: notices),
                 isFavourite: $isFavourite,
                 onAction: { action in
                     if case .selectedLineGroup(let lineGroup) = action { selectedLineGroup = lineGroup }
@@ -190,7 +189,7 @@ private struct WrapperView: View {
             Line(id: .northern, lineStatuses: [.goodService]),
             Line(id: .piccadilly, lineStatuses: [.goodService])
         ],
-        disruptionMessages: ["The escalator to platform 5 is closed"]
+        notices: [StationNotice(text: "The escalator to platform 5 is closed")]
     )
 }
 
@@ -209,7 +208,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Station notice only") {
-    WrapperView(disruptionMessages: ["The escalator to platform 5 is closed"])
+    WrapperView(notices: [StationNotice(text: "The escalator to platform 5 is closed")])
 }
 
 private extension LineStatus {

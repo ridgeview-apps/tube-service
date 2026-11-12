@@ -14,12 +14,11 @@ struct StationDisruptionsView: View {
     /// The selected line group's disrupted lines.
     let selectedLineDisruptions: [Line]
     let selectedLineIDs: [TrainLineID]
-    let notices: [String]
-    var hasClosureNotice = false
+    let noticesSummary: StationNoticesSummary
     let onAction: (Action) -> Void
 
     var isEmpty: Bool {
-        selectedLineDisruptions.isEmpty && notices.isEmpty
+        selectedLineDisruptions.isEmpty && noticesSummary.count == 0
     }
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -33,11 +32,11 @@ struct StationDisruptionsView: View {
                     onTapLine: { onAction(.tappedLine($0)) }
                 )
             }
-            if let notice = notices.first {
+            if noticesSummary.count > 0 {
                 Button {
                     onAction(.tappedNotices)
                 } label: {
-                    NoticesRow(firstNotice: notice, noticeCount: notices.count, isClosure: hasClosureNotice)
+                    NoticesRow(summary: noticesSummary)
                 }
                 .buttonStyle(.plain)
             }
@@ -190,10 +189,7 @@ private struct StatusRow: View {
 
 /// Matches the line status card's rows, but with no colour bar and regular weight, so line disruptions stand out more.
 private struct NoticesRow: View {
-    let firstNotice: String
-    let noticeCount: Int
-    /// Closures sort first, so the notice shown is the closure.
-    let isClosure: Bool
+    let summary: StationNoticesSummary
 
     var body: some View {
         HStack(spacing: 10) {
@@ -201,14 +197,15 @@ private struct NoticesRow: View {
                 Text(.stationNoticesTitle)
                     .foregroundStyle(.primary)
                 // Only closures change how people use the station, so only they earn a preview line
-                if isClosure {
-                    Text(firstNotice)
+                if let closurePreview = summary.closurePreview {
+                    Text(closurePreviewText(closurePreview))
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
             }
             Spacer(minLength: 8)
-            CountBadge(count: noticeCount, isHighlighted: isClosure)
+            // Orange only once a closure has started, so an evening closure doesn't look urgent all day
+            CountBadge(count: summary.count, isHighlighted: summary.hasCurrentClosure)
             Image(systemName: "chevron.right")
                 .font(.footnote)
                 .foregroundStyle(.tertiary)
@@ -221,6 +218,11 @@ private struct NoticesRow: View {
         .cardStyle()
         .contentShape(.rect)
         .accessibilityElement(children: .combine)
+    }
+
+    private func closurePreviewText(_ preview: StationNoticesSummary.ClosurePreview) -> String {
+        guard let startDate = preview.startDate else { return preview.text }
+        return String(localized: .stationNoticesPreviewFrom(startDate.formatted(date: .omitted, time: .shortened), preview.text))
     }
 }
 
@@ -283,11 +285,24 @@ private extension Line {
     }
 }
 
-// Already without TfL's station name prefix, which `StationView` removes
+// 14:00 today, so the evening closure below always starts later today
+private let previewNow = Calendar.current.date(bySettingHour: 14, minute: 0, second: 0, of: .now) ?? .now
+
 private let previewNotices = [
-    "Westbound trains will not stop here until 30 November.",
-    "Mini ramps are available on the Northern and Victoria lines."
+    StationNotice(text: "Westbound trains will not stop here until 30 November.", kind: "Part Closure"),
+    StationNotice(text: "Mini ramps are available on the Northern and Victoria lines.", kind: "Information")
 ]
+
+private let previewUpcomingClosure = StationNotice(
+    text: "WEMBLEY PARK STATION: Exit only after the event.",
+    kind: "Exit Only",
+    startDate: Calendar.current.date(bySettingHour: 21, minute: 30, second: 0, of: previewNow),
+    endDate: Calendar.current.date(bySettingHour: 22, minute: 40, second: 0, of: previewNow)
+)
+
+private func previewSummary(_ notices: [StationNotice]) -> StationNoticesSummary {
+    StationNoticesSummary(notices: notices, stationName: "Wembley Park", now: previewNow)
+}
 
 #Preview("Line status card") {
     ScrollView {
@@ -296,16 +311,15 @@ private let previewNotices = [
             StationDisruptionsView(
                 selectedLineDisruptions: [.disrupted(.northern, "Minor Delays")],
                 selectedLineIDs: [.northern],
-                notices: previewNotices,
-                hasClosureNotice: true,
+                noticesSummary: previewSummary(previewNotices),
                 onAction: { _ in }
             )
 
-            Text(verbatim: "Disruptions only: two of three lines")
+            Text(verbatim: "Two of three lines, closure later today")
             StationDisruptionsView(
                 selectedLineDisruptions: [.disrupted(.circle, "Planned Closure"), .disrupted(.metropolitan, "Minor Delays")],
                 selectedLineIDs: [.circle, .hammersmithAndCity, .metropolitan],
-                notices: previewNotices,
+                noticesSummary: previewSummary([previewUpcomingClosure, previewNotices[1]]),
                 onAction: { _ in }
             )
 
@@ -324,5 +338,5 @@ private let previewNotices = [
 }
 
 #Preview("Notices sheet") {
-    StationNoticesView(stationName: "King's Cross & St Pancras International", notices: previewNotices)
+    StationNoticesView(stationName: "King's Cross & St Pancras International", notices: previewNotices.map(\.text))
 }
