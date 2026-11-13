@@ -230,4 +230,42 @@ struct LineViewStateTests {
         )
         #expect(line.truncatedStatusText == "Part suspended, Severe delays…")
     }
+
+    // MARK: - Disruption reason
+
+    @Test(arguments: [
+        ("Bakerloo Line: No service between Stonebridge Park and Harrow.", "No service between Stonebridge Park and Harrow."),
+        ("DOCKLANDS LIGHT RAILWAY: Sunday 22 October, no service.", "Sunday 22 October, no service."),
+        ("London Overground: Minor delays between Sydenham and West Croydon.", "Minor delays between Sydenham and West Croydon."),
+        ("No service between Paddington and Abbey Wood.", "No service between Paddington and Abbey Wood."),
+        ("Sunday 22 October: no service.", "Sunday 22 October: no service.")
+    ])
+    func reasonLosesOnlyALineNamePrefix(reason: String, expected: String) {
+        #expect(reason.removingLineNamePrefix() == expected)
+    }
+
+    @Test
+    func disruptionReasonIsTheFirstDisruptedStatusReason() {
+        let line = Line(
+            id: .jubilee,
+            lineStatuses: [
+                LineStatus(
+                    statusSeverity: .minorDelays,
+                    statusSeverityDescription: "Minor Delays",
+                    reason: "Jubilee Line: Minor delays due to train cancellations. ",
+                    disruption: nil
+                )
+            ]
+        )
+        #expect(line.disruptionReason == "Minor delays due to train cancellations.")
+    }
+
+    @Test
+    func goodServiceHasNoDisruptionReason() {
+        let line = Line(
+            id: .jubilee,
+            lineStatuses: [LineStatus(statusSeverity: .goodService, statusSeverityDescription: "Good Service", reason: nil, disruption: nil)]
+        )
+        #expect(line.disruptionReason == nil)
+    }
 }

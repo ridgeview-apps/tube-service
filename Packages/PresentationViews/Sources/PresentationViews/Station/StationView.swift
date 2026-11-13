@@ -30,10 +30,14 @@ public struct StationView: View {
         public let lines: [Line]
         /// Closures first, and none that have ended.
         public let notices: [StationNotice]
+        /// False until the first fetch of line statuses and notices has finished, so their cards don't push the
+        /// screen down one by one as each arrives.
+        public let hasLoaded: Bool
 
-        public init(lines: [Line], notices: [StationNotice]) {
+        public init(lines: [Line], notices: [StationNotice], hasLoaded: Bool = true) {
             self.lines = lines
             self.notices = notices
+            self.hasLoaded = hasLoaded
         }
     }
 
@@ -73,62 +77,93 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
+    private var hasChips: Bool { station.lineGroups.count > 1 }
 
-    private var disruptions: StationDisruptionsView {
-        StationDisruptionsView(
-            selectedLineDisruptions: selectedLineDisruptions,
-            selectedLineIDs: selectedLineGroup.lineIds,
-            noticesSummary: StationNoticesSummary(notices: info.notices, stationName: station.name, now: clock.now),
-            onAction: handleDisruptionsAction
-        )
+    private var noticeSections: StationNoticeSections {
+        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
     }
 
-    private func handleDisruptionsAction(_ action: StationDisruptionsView.Action) {
-        switch action {
-        case .tappedLine(let line): onAction(.tappedLine(line))
-        case .tappedNotices: isShowingNotices = true
-        }
+    private var noticesSummary: StationNoticesSummary {
+        StationNoticesSummary(notices: info.notices, stationName: station.name, now: clock.now)
     }
 
     public var body: some View {
         ScrollView {
-            // A pinned header rather than safeAreaBar: a horizontal ScrollView in a safeAreaBar took on the navigation
-            // bar's inset twice after navigating back, hiding the chips behind a blank band
-            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: .sectionHeaders) {
-                Section {
+            // Notices, chips and the line status card scroll away together: the screen is short, and changing chip
+            // replaces everything below, so pinning the chips earned little
+            VStack(alignment: .leading, spacing: 0) {
+                // Above the chips, because a closure applies to the whole station. Other notices are only behind
+                // the toolbar's notices button, as most are routine (e.g. step-free access)
+                if info.hasLoaded, let closurePreview = noticesSummary.closurePreview {
+                    StationClosureBanner(preview: closurePreview, onTap: { isShowingNotices = true })
+                        .padding(.horizontal, 16)
+                        .padding(.top, 16)
+                        // With the chip row's own padding, this leaves the notices card 20 pt clear of the chips
+                        .padding(.bottom, hasChips ? 10 : 0)
+                }
+                if info.hasLoaded, hasChips {
+                    StationLineChipsView(
+                        lineGroups: station.lineGroups.sortedByName(),
+                        selectedLineGroup: selectedLineGroup,
+                        disruptedLineGroupIDs: disruptedLineGroupIDs,
+                        onSelect: { onAction(.selectedLineGroup($0)) }
+                    )
+                }
+                VStack(alignment: .leading, spacing: 20) {
+                    if info.hasLoaded, !selectedLineDisruptions.isEmpty {
+                        StationLineDisruptionsView(
+                            lines: selectedLineDisruptions,
+                            selectedLineIDs: selectedLineGroup.lineIds,
+                            onTapLine: { onAction(.tappedLine($0)) }
+                        )
+                        .padding(.horizontal, 16)
+                    }
                     VStack(alignment: .leading, spacing: 24) {
-                        if !disruptions.isEmpty {
-                            disruptions
-                                .padding(.horizontal, 16)
-                        }
+                        // Until the cards above have loaded, only the placeholder board shows, so everything appears
+                        // at once
                         StationArrivalsView(
-                            boardStates: arrivals.boardStates,
+                            boardStates: info.hasLoaded ? arrivals.boardStates : [],
                             refreshDate: arrivals.refreshDate,
-                            loadingState: arrivals.loadingState,
+                            loadingState: info.hasLoaded ? arrivals.loadingState : .loading,
                             isFavourite: $isFavourite
                         )
                         StationInfoView(station: station, onAction: handleInfoAction)
                     }
-                    .padding(.vertical, 16)
-                } header: {
-                    if station.lineGroups.count > 1 {
-                        StationLineChipsView(
-                            lineGroups: station.lineGroups.sortedByName(),
-                            selectedLineGroup: selectedLineGroup,
-                            disruptedLineGroupIDs: disruptedLineGroupIDs,
-                            onSelect: { onAction(.selectedLineGroup($0)) }
-                        )
-                    }
                 }
+                // The chip row's own padding is the gap below the chips, so the line status card sits under them
+                .padding(.top, hasChips ? 0 : 16)
+                .padding(.bottom, 16)
             }
         }
+        // Cards that appear or go after the first load (e.g. on pull-to-refresh) slide in rather than snap
+        .animation(.default, value: noticesSummary.closurePreview)
+        .animation(.default, value: disruptedLines.map(\.id))
         .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if info.hasLoaded, !noticeSections.isEmpty {
+                ToolbarItem {
+                    Button {
+                        isShowingNotices = true
+                    } label: {
+                        Label {
+                            Text(.stationNoticesTitle)
+                        } icon: {
+                            Image(systemName: "megaphone")
+                        }
+                    }
+                    .badge(noticesSummary.count)
+                }
+            }
+            ToolbarItem {
+                FavouritesButton(style: .small, isSelected: $isFavourite)
+            }
+        }
         .sheet(isPresented: $isShowingNotices) {
             StationNoticesView(
                 stationName: station.name,
-                sections: StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
+                sections: noticeSections
             )
         }
     }

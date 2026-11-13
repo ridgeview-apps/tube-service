@@ -22,6 +22,9 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
+    /// Set once the first fetch of line statuses and notices finishes, whether or not it succeeded.
+    @State private var hasLoadedInfo = false
+
     let station: Station
 
     // MARK: - Layout
@@ -47,16 +50,20 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
-        .toolbar {
-            FavouritesButton(style: .small, isSelected: isFavouriteStation)
-        }
         .refreshable {
             // In its own task because SwiftUI cancels the refreshable's task when the screen updates mid-refresh
             // (e.g. as line statuses arrive), which would cancel the board's fetch too
             await Task { await refreshData() }.value
         }
         .task {
+            // A slow connection mustn't hold the boards back for long, so the wait for the cards is capped
+            let waitCap = Task {
+                guard (try? await Task.sleep(for: .seconds(2))) != nil else { return }
+                hasLoadedInfo = true
+            }
             await refreshDataIfStale()
+            waitCap.cancel()
+            hasLoadedInfo = true
         }
         .onAppear {
             userPreferences.saveRecentlySelectedStation(station.id)
@@ -119,7 +126,8 @@ struct StationScreen: View {
         let allLines = lineStatus.lineStatusData(for: .live)?.value ?? []
         return .init(
             lines: allLines.filter { station.sortedLineIDs.contains($0.id) },
-            notices: stations.notices(forStationID: station.id)
+            notices: stations.notices(forStationID: station.id),
+            hasLoaded: hasLoadedInfo
         )
     }
 

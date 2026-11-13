@@ -2,7 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A chip per line group, pinned at the top of the Station screen at stations with more than one line group.
+/// A chip per line group, at the top of the Station screen at stations with more than one line group.
 struct StationLineChipsView: View {
 
     let lineGroups: [Station.LineGroup]
@@ -13,8 +13,7 @@ struct StationLineChipsView: View {
 
     var body: some View {
         // A remembered chip can be off screen, e.g. the last of King's Cross's four
-        // Solid, because the boards scrolling under the row are dark
-        FilterChipRow(initiallyVisibleID: selectedLineGroup.id, backing: .solid) {
+        FilterChipRow(initiallyVisibleID: selectedLineGroup.id, backing: .none) {
             ForEach(lineGroups) { lineGroup in
                 LineChip(
                     lineGroup: lineGroup,
@@ -25,7 +24,7 @@ struct StationLineChipsView: View {
                 }
             }
         }
-        // The row is pinned, so it stops growing where the Journey Planner's mode chips do
+        // Stops growing where the Journey Planner's mode chips do
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
     }
 }

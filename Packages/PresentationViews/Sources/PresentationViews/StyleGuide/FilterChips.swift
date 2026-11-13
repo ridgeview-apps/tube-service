@@ -38,9 +38,8 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
     enum Backing {
         /// Fades out content that scrolls under the chips, for content on the screen's background, e.g. white cards.
         case scrollEdgeFade
-        /// Hides content behind a solid strip, for dark content that a light fade would only wash out to grey,
-        /// e.g. the Station screen's boards.
-        case solid
+        /// For a row that scrolls with the page, so nothing passes behind it.
+        case none
     }
 
     /// A chip to scroll into view when the row first appears, e.g. a remembered selection that would be off screen.
@@ -89,7 +88,7 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
         .background {
             switch backing {
             case .scrollEdgeFade: scrollEdgeFade
-            case .solid: Color.defaultBackground
+            case .none: EmptyView()
             }
         }
     }
