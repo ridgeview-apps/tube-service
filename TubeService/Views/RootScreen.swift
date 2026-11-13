@@ -25,7 +25,7 @@ struct RootScreen: View {
         Tab(value: AppTab.lineStatus) {
             LineStatusScreen()
         } label: {
-            Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
+            Label(L10n.lineStatusTabTitle, systemImage: "waveform.path.ecg")
         }
         .accessibilityIdentifier(AccessibilityID.Tab.lineStatus)
     }
