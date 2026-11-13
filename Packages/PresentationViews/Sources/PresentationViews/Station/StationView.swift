@@ -73,9 +73,6 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
-    private var noticeTexts: [String] {
-        info.notices.map { $0.text.removingStationNamePrefix(station.name) }
-    }
 
     private var disruptions: StationDisruptionsView {
         StationDisruptionsView(
@@ -129,7 +126,10 @@ public struct StationView: View {
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $isShowingNotices) {
-            StationNoticesView(stationName: station.name, notices: noticeTexts)
+            StationNoticesView(
+                stationName: station.name,
+                sections: StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
+            )
         }
     }
 

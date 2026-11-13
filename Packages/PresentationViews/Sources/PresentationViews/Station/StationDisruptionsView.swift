@@ -242,36 +242,6 @@ private struct CountBadge: View {
     }
 }
 
-// MARK: - Notices sheet
-
-/// Every notice in full, opened from the notices row.
-struct StationNoticesView: View {
-    let stationName: String
-    let notices: [String]
-
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List(notices, id: \.self) { notice in
-                Label {
-                    Text(notice)
-                } icon: {
-                    Image(systemName: "info.circle")
-                        .foregroundStyle(.secondary)
-                }
-            }
-            .navigationTitle(stationName)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(.globalDone) { dismiss() }
-                }
-            }
-        }
-    }
-}
-
 // MARK: - Previews
 
 private extension Line {
@@ -335,8 +305,4 @@ private func previewSummary(_ notices: [StationNotice]) -> StationNoticesSummary
         .padding()
     }
     .background(Color.defaultBackground)
-}
-
-#Preview("Notices sheet") {
-    StationNoticesView(stationName: "King's Cross & St Pancras International", notices: previewNotices.map(\.text))
 }

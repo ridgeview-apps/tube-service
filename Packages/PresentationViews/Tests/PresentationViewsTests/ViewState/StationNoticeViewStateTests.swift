@@ -69,4 +69,66 @@ struct StationNoticeViewStateTests {
         #expect(!summary.hasCurrentClosure)
         #expect(summary.closurePreview == nil)
     }
+
+    // MARK: - Sheet sections
+
+    private func sections(_ notices: [StationNotice]) -> StationNoticeSections {
+        StationNoticeSections(notices: notices, stationName: "Wembley Park", now: Self.twoPM, calendar: Self.london)
+    }
+
+    @Test
+    func currentNoticesSplitIntoClosuresAndNotices() {
+        let sections = sections([Self.currentClosure, Self.information])
+
+        #expect(sections.closures.map(\.text) == ["Westbound trains will not stop."])
+        #expect(sections.closures.first?.id == Self.currentClosure.text)
+        #expect(sections.notices.map(\.text) == ["Mini ramps are available."])
+        #expect(sections.later.isEmpty)
+    }
+
+    @Test
+    func upcomingNoticesAreLaterAndSoonestFirst() {
+        let sections = sections([Self.closureNextWeek, Self.closureThisEvening])
+
+        #expect(sections.closures.isEmpty)
+        #expect(sections.later.map(\.text) == ["Exit only after the event.", "The station will close."])
+    }
+
+    @Test
+    func laterTodayShowsItsEndOnlyWhenItEndsTheSameDay() {
+        let endsAfterMidnight = StationNotice(
+            text: "Exit only after the concert.",
+            kind: "Exit Only",
+            startDate: Self.date("2026-11-12T23:00:00Z"),
+            endDate: Self.date("2026-11-13T01:29:00Z")
+        )
+
+        let later = sections([Self.closureThisEvening, endsAfterMidnight]).later
+
+        #expect(
+            later.map(\.startTime) == [
+                .laterToday(start: Self.date("2026-11-12T21:30:00Z"), end: Self.date("2026-11-12T22:40:00Z")),
+                .laterToday(start: Self.date("2026-11-12T23:00:00Z"), end: nil)
+            ]
+        )
+    }
+
+    @Test
+    func laterDayShowsItsStartDate() {
+        #expect(sections([Self.closureNextWeek]).later.first?.startTime == .laterDay(Self.date("2026-11-19T00:00:00Z")))
+    }
+
+    @Test
+    func currentNoticesShowNoTime() {
+        let rows = sections([Self.currentClosure, Self.information])
+
+        #expect((rows.closures + rows.notices).allSatisfy { $0.startTime == nil })
+    }
+
+    @Test
+    func tflKindsMapToLabels() {
+        #expect(StationNoticeSections.Kind(tflKind: "Part Closure") == .partClosure)
+        #expect(StationNoticeSections.Kind(tflKind: "Interchange Message") == .interchange)
+        #expect(StationNoticeSections.Kind(tflKind: "Lift Works") == .other("Lift Works"))
+    }
 }

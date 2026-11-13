@@ -3110,6 +3110,74 @@
         }
       }
     },
+    "station.notices.caption %@ %@" : {
+      "comment" : "A notice's kind and when it starts, e.g. \"Exit only · 21:30–22:40\"",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "station.notices.kind.closure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closure"
+          }
+        }
+      }
+    },
+    "station.notices.kind.exit.only" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit only"
+          }
+        }
+      }
+    },
+    "station.notices.kind.information" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Information"
+          }
+        }
+      }
+    },
+    "station.notices.kind.interchange" : {
+      "comment" : "A notice about changing between lines at the station",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interchange"
+          }
+        }
+      }
+    },
+    "station.notices.kind.part.closure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Part closure"
+          }
+        }
+      }
+    },
     "station.notices.preview.from %@ %@" : {
       "comment" : "A closure on the Station screen's notices card that starts later today, e.g. \"From 21:30: Exit only after the event.\"",
       "extractionState" : "manual",
@@ -3118,6 +3186,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "From %1$@: %2$@"
+          }
+        }
+      }
+    },
+    "station.notices.section.closures" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closures"
+          }
+        }
+      }
+    },
+    "station.notices.section.later" : {
+      "comment" : "Notices that haven't started yet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        }
+      }
+    },
+    "station.notices.section.notices" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notices"
+          }
+        }
+      }
+    },
+    "station.notices.time.from %@" : {
+      "comment" : "When an upcoming notice starts, e.g. \"From 21:30\" or \"From Thu 19 Nov\"",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@"
           }
         }
       }
