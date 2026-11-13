@@ -7,7 +7,6 @@ import SwiftUI
 struct StationScreen: View {
 
     @Environment(AppRouter.self) private var router
-    @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(LineStatusDataStore.self) private var lineStatus
     @Environment(StationsDataStore.self) private var stations
 
@@ -163,27 +162,9 @@ struct StationScreen: View {
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
         case .tappedLine(let line):
             router.push(.lineStatusDetail(lineID: line.id, request: .live))
-        case .planJourneyFromHere:
-            planJourney(placingStationIn: .from, opposite: .to)
-        case .planJourneyToHere:
-            planJourney(placingStationIn: .to, opposite: .from)
         case .openedNotices:
             userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
         }
-    }
-
-    private func planJourney(
-        placingStationIn field: JourneyPlannerForm.FieldID.LocationID,
-        opposite otherField: JourneyPlannerForm.FieldID.LocationID
-    ) {
-        let stationLocation = JourneyLocation.station(station)
-        // A journey from and to the same station can't be planned
-        if journeyPlanner.form.locationValue(for: otherField) == stationLocation {
-            journeyPlanner.form.populate(locationFieldID: otherField, with: nil)
-        }
-        journeyPlanner.form.populate(locationFieldID: field, with: stationLocation)
-        router.popToRoot(on: .journeyPlanner)
-        router.selectedTab = .journeyPlanner
     }
 }
 

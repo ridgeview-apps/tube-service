@@ -9,8 +9,6 @@ public struct StationView: View {
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
         case tappedLine(Line)
-        case planJourneyFromHere
-        case planJourneyToHere
         /// The notices sheet opened, so its notices now count as seen.
         case openedNotices
     }
@@ -155,7 +153,7 @@ public struct StationView: View {
                             loadingState: info.hasLoaded ? arrivals.loadingState : .loading,
                             isFavourite: $isFavourite
                         )
-                        StationInfoView(station: station, onAction: handleInfoAction)
+                        StationInfoView(station: station)
                     }
                 }
                 // The chip row's own padding is the gap below the chips, so the line status card sits under them
@@ -198,13 +196,6 @@ public struct StationView: View {
                 stationName: station.name,
                 sections: noticeSections
             )
-        }
-    }
-
-    private func handleInfoAction(_ action: StationInfoView.Action) {
-        switch action {
-        case .planJourneyFromHere: onAction(.planJourneyFromHere)
-        case .planJourneyToHere: onAction(.planJourneyToHere)
         }
     }
 }

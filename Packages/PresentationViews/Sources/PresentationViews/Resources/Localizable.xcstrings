@@ -3260,39 +3260,6 @@
         }
       }
     },
-    "station.plan.journey.from.here.button.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From here"
-          }
-        }
-      }
-    },
-    "station.plan.journey.section.header.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plan a journey"
-          }
-        }
-      }
-    },
-    "station.plan.journey.to.here.button.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To here"
-          }
-        }
-      }
-    },
     "stations.search.results.count %lld" : {
       "extractionState" : "manual",
       "localizations" : {

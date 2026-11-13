@@ -2,53 +2,14 @@ import MapKit
 import Models
 import SwiftUI
 
-/// The lower part of the Station screen: journey planning and location.
+/// The lower part of the Station screen: the station's location.
 struct StationInfoView: View {
-
-    enum Action {
-        case planJourneyFromHere
-        case planJourneyToHere
-    }
-
     let station: Station
-    let onAction: (Action) -> Void
 
     @State private var isLocationExpanded = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            planJourneySection
-            locationSection
-        }
-    }
-
-    // MARK: - Plan a journey
-
-    private var planJourneySection: some View {
-        StationSection {
-            VStack(spacing: 0) {
-                planJourneyButton(.stationPlanJourneyFromHereButtonTitle) { onAction(.planJourneyFromHere) }
-                Divider().padding(.leading, 16)
-                planJourneyButton(.stationPlanJourneyToHereButtonTitle) { onAction(.planJourneyToHere) }
-            }
-        } header: {
-            Text(.stationPlanJourneySectionHeaderTitle)
-        }
-    }
-
-    private func planJourneyButton(_ title: LocalizedStringResource, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack {
-                Text(title)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-            }
-            .contentShape(Rectangle())
-            .padding()
-        }
-        .buttonStyle(.plain)
+        locationSection
     }
 
     // MARK: - Location
