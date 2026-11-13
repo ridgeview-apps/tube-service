@@ -51,6 +51,7 @@ public struct StationView: View {
     public let arrivals: Arrivals
     public let info: Info
     @Binding public var isFavourite: Bool
+    public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
 
     @State private var isShowingNotices = false
@@ -62,6 +63,7 @@ public struct StationView: View {
         arrivals: Arrivals,
         info: Info,
         isFavourite: Binding<Bool>,
+        onRefresh: @escaping @Sendable () async -> Void,
         onAction: @escaping (Action) -> Void
     ) {
         self.station = station
@@ -69,6 +71,7 @@ public struct StationView: View {
         self.arrivals = arrivals
         self.info = info
         self._isFavourite = isFavourite
+        self.onRefresh = onRefresh
         self.onAction = onAction
     }
 
@@ -187,6 +190,9 @@ public struct StationView: View {
                 FavouritesButton(style: .small, isSelected: $isFavourite)
             }
         }
+        // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
+        // drag that dismisses it
+        .refreshable(action: onRefresh)
         .sheet(isPresented: $isShowingNotices) {
             StationNoticesView(
                 stationName: station.name,
@@ -227,6 +233,7 @@ private struct WrapperView: View {
                 arrivals: .init(boardStates: boardStates, refreshDate: .now, loadingState: arrivalsLoadingState),
                 info: .init(lines: lines, notices: notices),
                 isFavourite: $isFavourite,
+                onRefresh: {},
                 onAction: { action in
                     if case .selectedLineGroup(let lineGroup) = action { selectedLineGroup = lineGroup }
                 }

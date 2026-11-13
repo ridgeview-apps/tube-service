@@ -38,6 +38,11 @@ struct StationScreen: View {
                     arrivals: arrivals,
                     info: info,
                     isFavourite: isFavouriteStation,
+                    onRefresh: {
+                        // In its own task because SwiftUI cancels the refreshable's task when the screen updates
+                        // mid-refresh (e.g. as line statuses arrive), which would cancel the board's fetch too
+                        await Task { await refreshData() }.value
+                    },
                     onAction: handleAction
                 )
                 // Restarts on appear too, because the refresh stops while another screen is pushed on top
@@ -50,11 +55,6 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
-        .refreshable {
-            // In its own task because SwiftUI cancels the refreshable's task when the screen updates mid-refresh
-            // (e.g. as line statuses arrive), which would cancel the board's fetch too
-            await Task { await refreshData() }.value
-        }
         .task {
             // A slow connection mustn't hold the boards back for long, so the wait for the cards is capped
             let waitCap = Task {
