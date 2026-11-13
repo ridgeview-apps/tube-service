@@ -89,28 +89,41 @@ public struct StationView: View {
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
 
+    /// No count: it said little. Orange, like the sheet's closure icons, stays while a closure is on today, even once
+    /// seen, as the closure still applies. Otherwise the accent colour, not the chips' red, marks notices not seen yet.
+    private enum NoticesBadge {
+        case closureToday
+        case unseen
+
+        var style: AnyShapeStyle {
+            switch self {
+            case .closureToday: AnyShapeStyle(.orange)
+            case .unseen: AnyShapeStyle(.tint)
+            }
+        }
+
+        var accessibilityValue: Text {
+            switch self {
+            case .closureToday: Text(.stationNoticesClosureAccessibilityValue)
+            case .unseen: Text(.stationNoticesUnseenAccessibilityValue)
+            }
+        }
+    }
+
+    private var noticesBadge: NoticesBadge? {
+        if noticeSections.hasClosureToday { return .closureToday }
+        return info.hasUnseenNotices ? .unseen : nil
+    }
+
     private var noticeSections: StationNoticeSections {
         StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
     }
 
-    private var noticesSummary: StationNoticesSummary {
-        StationNoticesSummary(notices: info.notices, stationName: station.name, now: clock.now)
-    }
-
     public var body: some View {
         ScrollView {
-            // Notices, chips and the line status card scroll away together: the screen is short, and changing chip
-            // replaces everything below, so pinning the chips earned little
+            // The chips and line status card scroll away together: the screen is short, and changing chip replaces
+            // everything below, so pinning the chips earned little
             VStack(alignment: .leading, spacing: 0) {
-                // Above the chips, because a closure applies to the whole station. Other notices are only behind
-                // the toolbar's notices button, as most are routine (e.g. step-free access)
-                if info.hasLoaded, let closurePreview = noticesSummary.closurePreview {
-                    StationClosureBanner(preview: closurePreview, onTap: showNotices)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 16)
-                        // With the chip row's own padding, this leaves the notices card 20 pt clear of the chips
-                        .padding(.bottom, hasChips ? 10 : 0)
-                }
                 if info.hasLoaded, hasChips {
                     StationLineChipsView(
                         lineGroups: station.lineGroups.sortedByName(),
@@ -148,7 +161,6 @@ public struct StationView: View {
             }
         }
         // Cards that appear or go after the first load (e.g. on pull-to-refresh) slide in rather than snap
-        .animation(.default, value: noticesSummary.closurePreview)
         .animation(.default, value: disruptedLines.map(\.id))
         .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
@@ -160,20 +172,15 @@ public struct StationView: View {
                         Label {
                             Text(.stationNoticesTitle)
                         } icon: {
-                            // No count: it said little, and closures already have their own banner. The badge only
-                            // means there's something not seen yet, so it's the accent colour, not the chips' red
-                            Image(systemName: info.hasUnseenNotices ? "info.circle.badge" : "info.circle")
+                            Image(systemName: noticesBadge == nil ? "info.circle" : "info.circle.badge")
                                 // The first palette layer is the badge, but in the plain symbol it's the "i", which
                                 // would otherwise turn blue too
                                 .symbolRenderingMode(.palette)
-                                .foregroundStyle(
-                                    info.hasUnseenNotices ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary),
-                                    .primary
-                                )
+                                .foregroundStyle(noticesBadge?.style ?? AnyShapeStyle(.primary), .primary)
                                 .contentTransition(.symbolEffect(.replace))
                         }
                     }
-                    .accessibilityValue(info.hasUnseenNotices ? Text(.stationNoticesUnseenAccessibilityValue) : Text(verbatim: ""))
+                    .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
                 }
             }
             ToolbarItem {
@@ -264,6 +271,10 @@ private struct WrapperView: View {
 
 #Preview("Station notice only") {
     WrapperView(notices: [StationNotice(text: "The escalator to platform 5 is closed")])
+}
+
+#Preview("Closure today") {
+    WrapperView(notices: [StationNotice(text: "Westbound trains will not stop here.", kind: "Part Closure")])
 }
 
 private extension LineStatus {

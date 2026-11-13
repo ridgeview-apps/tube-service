@@ -32,38 +32,6 @@ struct StationNoticeViewStateTests {
         startDate: date("2026-11-19T00:00:00Z")
     )
 
-    private func summary(_ notices: [StationNotice]) -> StationNoticesSummary {
-        StationNoticesSummary(notices: notices, stationName: "Wembley Park", now: Self.twoPM, calendar: Self.london)
-    }
-
-    @Test
-    func currentClosureIsPreviewedWithoutStationName() {
-        let summary = summary([Self.currentClosure, Self.information])
-
-        #expect(summary.closurePreview == .init(text: "Westbound trains will not stop.", startDate: nil))
-    }
-
-    @Test
-    func closureLaterTodayIsPreviewedWithItsStart() {
-        let summary = summary([Self.closureThisEvening, Self.information])
-
-        #expect(summary.closurePreview == .init(text: "Exit only after the event.", startDate: Self.closureThisEvening.startDate))
-    }
-
-    @Test
-    func currentClosureIsPreviewedBeforeOneLaterToday() {
-        let summary = summary([Self.closureThisEvening, Self.currentClosure])
-
-        #expect(summary.closurePreview?.startDate == nil)
-    }
-
-    @Test
-    func noticeStartingOnALaterDayIsLeftToTheSheet() {
-        let summary = summary([Self.closureNextWeek, Self.information])
-
-        #expect(summary.closurePreview == nil)
-    }
-
     // MARK: - Sheet sections
 
     private func sections(_ notices: [StationNotice]) -> StationNoticeSections {
@@ -124,5 +92,17 @@ struct StationNoticeViewStateTests {
         #expect(StationNoticeSections.Kind(tflKind: "Part Closure") == .partClosure)
         #expect(StationNoticeSections.Kind(tflKind: "Interchange Message") == .interchange)
         #expect(StationNoticeSections.Kind(tflKind: "Lift Works") == .other("Lift Works"))
+    }
+
+    // MARK: - Closure today
+
+    @Test(arguments: [
+        ([Self.currentClosure, Self.information], true),
+        ([Self.closureThisEvening, Self.information], true),
+        ([Self.closureNextWeek, Self.information], false),
+        ([Self.information], false)
+    ])
+    func closureTodayCountsOnlyClosuresOnNowOrLaterToday(notices: [StationNotice], expected: Bool) {
+        #expect(sections(notices).hasClosureToday == expected)
     }
 }

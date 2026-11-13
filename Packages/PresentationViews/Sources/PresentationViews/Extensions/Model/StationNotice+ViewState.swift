@@ -1,36 +1,6 @@
 import Foundation
 import Models
 
-/// What the Station screen's closure banner shows. Closures starting on a later day are left to the notices sheet, so
-/// one weeks away doesn't take the banner every day until then.
-struct StationNoticesSummary: Equatable {
-
-    struct ClosurePreview: Equatable {
-        let text: String
-        /// Set while the closure hasn't started yet.
-        let startDate: Date?
-    }
-
-    let closurePreview: ClosurePreview?
-
-    /// - Parameter notices: closures first, as `StationsDataStore` sorts them.
-    init(notices: [StationNotice], stationName: String, now: Date, calendar: Calendar = .current) {
-        let timedNotices = notices.map { (notice: $0, timing: $0.timing(at: now, calendar: calendar)) }
-        let todaysNotices = timedNotices.filter { $0.timing == .current || $0.timing == .laterToday }
-
-        // A current closure matters more than one starting later today
-        let previewed =
-            todaysNotices.first { $0.notice.isClosure && $0.timing == .current }
-            ?? todaysNotices.first { $0.notice.isClosure }
-        closurePreview = previewed.map {
-            ClosurePreview(
-                text: $0.notice.text.removingStationNamePrefix(stationName),
-                startDate: $0.timing == .laterToday ? $0.notice.startDate : nil
-            )
-        }
-    }
-}
-
 /// The notices sheet's sections. Closures and notices keep `StationsDataStore`'s order; later ones come soonest first.
 struct StationNoticeSections: Equatable {
 
@@ -67,6 +37,16 @@ struct StationNoticeSections: Equatable {
 
     var isEmpty: Bool {
         closures.isEmpty && notices.isEmpty && later.isEmpty
+    }
+
+    /// A closure on now or later today, which turns the notices button's badge orange. One on a later day doesn't, so
+    /// a closure weeks away doesn't take the badge every day until then.
+    var hasClosureToday: Bool {
+        !closures.isEmpty
+            || later.contains { row in
+                guard row.isClosure, case .laterToday = row.startTime else { return false }
+                return true
+            }
     }
 
     init(notices: [StationNotice], stationName: String, now: Date, calendar: Calendar = .current) {

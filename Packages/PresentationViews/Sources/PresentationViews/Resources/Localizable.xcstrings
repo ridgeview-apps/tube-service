@@ -3122,6 +3122,18 @@
         }
       }
     },
+    "station.notices.closure.accessibility.value" : {
+      "comment" : "VoiceOver value for the notices button when the station has a closure on now or later today",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closure today"
+          }
+        }
+      }
+    },
     "station.notices.kind.closure" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3174,18 +3186,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Part closure"
-          }
-        }
-      }
-    },
-    "station.notices.preview.from %@ %@" : {
-      "comment" : "A closure on the Station screen's notices card that starts later today, e.g. \"From 21:30: Exit only after the event.\"",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "From %1$@: %2$@"
           }
         }
       }

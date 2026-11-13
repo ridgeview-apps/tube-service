@@ -31,42 +31,6 @@ struct StationLineDisruptionsView: View {
     }
 }
 
-/// A closure that's on now or starts later today, the one kind of notice that changes how people use the station, so
-/// it shows above the chips rather than only behind the toolbar's notices button.
-struct StationClosureBanner: View {
-    let preview: StationNoticesSummary.ClosurePreview
-    let onTap: () -> Void
-
-    var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 10) {
-                Label {
-                    Text(text)
-                } icon: {
-                    Image(systemName: preview.startDate == nil ? "exclamationmark.triangle.fill" : "clock")
-                        .foregroundStyle(.orange)
-                }
-                .font(.subheadline)
-                Spacer(minLength: 8)
-                Image(systemName: "chevron.right")
-                    .font(.footnote)
-                    .foregroundStyle(.tertiary)
-            }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .cardStyle()
-            .contentShape(.rect)
-        }
-        .buttonStyle(.plain)
-        .compactCardLineLimit()
-    }
-
-    private var text: String {
-        guard let startDate = preview.startDate else { return preview.text }
-        return String(localized: .stationNoticesPreviewFrom(startDate.formatted(date: .omitted, time: .shortened), preview.text))
-    }
-}
-
 private struct CompactCardLineLimit: ViewModifier {
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
@@ -151,38 +115,9 @@ private extension Line {
     }
 }
 
-// 14:00 today, so the evening closure below always starts later today
-private let previewNow = Calendar.current.date(bySettingHour: 14, minute: 0, second: 0, of: .now) ?? .now
-
-private let previewNotices = [
-    StationNotice(text: "Westbound trains will not stop here until 30 November.", kind: "Part Closure"),
-    StationNotice(text: "Mini ramps are available on the Northern and Victoria lines.", kind: "Information")
-]
-
-private let previewUpcomingClosure = StationNotice(
-    text: "WEMBLEY PARK STATION: Exit only after the event.",
-    kind: "Exit Only",
-    startDate: Calendar.current.date(bySettingHour: 21, minute: 30, second: 0, of: previewNow),
-    endDate: Calendar.current.date(bySettingHour: 22, minute: 40, second: 0, of: previewNow)
-)
-
-private func previewSummary(_ notices: [StationNotice]) -> StationNoticesSummary {
-    StationNoticesSummary(notices: notices, stationName: "Wembley Park", now: previewNow)
-}
-
 #Preview("Cards") {
     ScrollView {
         VStack(alignment: .leading, spacing: 12) {
-            Text(verbatim: "Current closure")
-            if let preview = previewSummary(previewNotices).closurePreview {
-                StationClosureBanner(preview: preview, onTap: {})
-            }
-
-            Text(verbatim: "Closure later today")
-            if let preview = previewSummary([previewUpcomingClosure, previewNotices[1]]).closurePreview {
-                StationClosureBanner(preview: preview, onTap: {})
-            }
-
             Text(verbatim: "One disrupted line")
             StationLineDisruptionsView(
                 lines: [.disrupted(.northern, "Minor Delays")],
