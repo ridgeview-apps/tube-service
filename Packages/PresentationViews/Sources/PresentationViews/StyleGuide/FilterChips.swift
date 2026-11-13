@@ -31,7 +31,7 @@ extension ButtonStyle where Self == FilterChipButtonStyle {
     }
 }
 
-/// A horizontally scrolling row of chips after a filter icon, fading out at the trailing edge.
+/// A horizontally scrolling row of chips, fading out at the trailing edge.
 ///
 /// Content scrolls under the glass, fading out as it nears the chips.
 struct FilterChipRow<ChipID: Hashable, Content: View>: View {
@@ -52,11 +52,6 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Image(systemName: "line.3.horizontal.decrease")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .padding(.leading, 16)
-                .accessibilityHidden(true)
             ScrollViewReader { proxy in
                 ScrollView(.horizontal) {
                     // No `GlassEffectContainer`: the chips never morph together, and it clips overlays that sit
@@ -64,8 +59,7 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
                     HStack(spacing: 8) {
                         content
                     }
-                    .padding(.leading, 10)
-                    .padding(.trailing, 16)
+                    .padding(.horizontal, 16)
                     // Room for the glass's edge highlight and shadow, which the scroll view would otherwise clip
                     .padding(.vertical, 10)
                 }
