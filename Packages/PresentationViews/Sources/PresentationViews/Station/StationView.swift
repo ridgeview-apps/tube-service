@@ -155,22 +155,22 @@ public struct StationView: View {
             if info.hasLoaded, !noticeSections.isEmpty {
                 ToolbarItem {
                     Button(action: showNotices) {
-                        // A ZStack rather than a Label: the toolbar turns a Label or Image into a native bar button
-                        // and keeps only the image, which dropped the dot
-                        ZStack(alignment: .topTrailing) {
-                            Image(systemName: "megaphone")
-                                .imageScale(.large)
-                            // No count: it said little, and closures already have their own banner. The dot only
+                        Label {
+                            Text(.stationNoticesTitle)
+                        } icon: {
+                            // No count: it said little, and closures already have their own banner. The badge only
                             // means there's something not seen yet, so it's the accent colour, not the chips' red
-                            if info.hasUnseenNotices {
-                                Circle()
-                                    .fill(.tint)
-                                    .frame(width: 8, height: 8)
-                                    .offset(x: 4, y: -3)
-                            }
+                            Image(systemName: info.hasUnseenNotices ? "info.circle.badge" : "info.circle")
+                                // The first palette layer is the badge, but in the plain symbol it's the "i", which
+                                // would otherwise turn blue too
+                                .symbolRenderingMode(.palette)
+                                .foregroundStyle(
+                                    info.hasUnseenNotices ? AnyShapeStyle(.tint) : AnyShapeStyle(.primary),
+                                    .primary
+                                )
+                                .contentTransition(.symbolEffect(.replace))
                         }
                     }
-                    .accessibilityLabel(Text(.stationNoticesTitle))
                     .accessibilityValue(info.hasUnseenNotices ? Text(.stationNoticesUnseenAccessibilityValue) : Text(verbatim: ""))
                 }
             }
