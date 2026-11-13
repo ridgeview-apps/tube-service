@@ -37,20 +37,16 @@ struct StationNoticeViewStateTests {
     }
 
     @Test
-    func currentClosureIsHighlightedAndPreviewedWithoutStationName() {
+    func currentClosureIsPreviewedWithoutStationName() {
         let summary = summary([Self.currentClosure, Self.information])
 
-        #expect(summary.count == 2)
-        #expect(summary.hasCurrentClosure)
         #expect(summary.closurePreview == .init(text: "Westbound trains will not stop.", startDate: nil))
     }
 
     @Test
-    func closureLaterTodayIsCountedAndPreviewedWithItsStartButNotHighlighted() {
+    func closureLaterTodayIsPreviewedWithItsStart() {
         let summary = summary([Self.closureThisEvening, Self.information])
 
-        #expect(summary.count == 2)
-        #expect(!summary.hasCurrentClosure)
         #expect(summary.closurePreview == .init(text: "Exit only after the event.", startDate: Self.closureThisEvening.startDate))
     }
 
@@ -65,8 +61,6 @@ struct StationNoticeViewStateTests {
     func noticeStartingOnALaterDayIsLeftToTheSheet() {
         let summary = summary([Self.closureNextWeek, Self.information])
 
-        #expect(summary.count == 1)
-        #expect(!summary.hasCurrentClosure)
         #expect(summary.closurePreview == nil)
     }
 

@@ -99,4 +99,21 @@ struct StationsModelTests {
 
         #expect(stations.notices(forStationID: "HUBKGX").map(\.text) == ["Lifts are out of service."])
     }
+
+    @Test
+    func publishedNoticeTextsOnlyAfterASuccessfulFetch() async throws {
+        let disruptedPointsJSON = """
+            [{ "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service." }]
+            """
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedDisruptedPoints = .success200(
+            try JSONDecoder().decode([DisruptedPoint].self, from: Data(disruptedPointsJSON.utf8))
+        )
+        let stations = StationsDataStore(tflAPI: tflAPI)
+        #expect(stations.publishedNoticeTexts == nil)
+
+        await stations.refreshStationDisruptions()
+
+        #expect(stations.publishedNoticeTexts == ["HUBKGX": ["Lifts are out of service."]])
+    }
 }

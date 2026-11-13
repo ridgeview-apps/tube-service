@@ -74,6 +74,13 @@ public final class StationsDataStore {
         return (fetchedDisruptionData.noticesByStationID[stationID] ?? []).filter { $0.timing(at: now) != .ended }
     }
 
+    /// Every station's published notice texts, or nil unless the last fetch succeeded, so that a failed fetch never
+    /// looks like TfL withdrawing every notice.
+    public var publishedNoticeTexts: [Station.ID: Set<String>]? {
+        guard case .success = fetchedDisruptionData.fetchState else { return nil }
+        return fetchedDisruptionData.noticesByStationID.mapValues { Set($0.map(\.text)) }
+    }
+
     // MARK: - Refreshing
 
     public func refreshStationDisruptionsIfStale() async {

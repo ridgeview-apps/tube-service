@@ -3248,6 +3248,18 @@
         }
       }
     },
+    "station.notices.unseen.accessibility.value" : {
+      "comment" : "VoiceOver value for the notices button when the station has a notice not opened yet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
+          }
+        }
+      }
+    },
     "station.plan.journey.from.here.button.title" : {
       "extractionState" : "manual",
       "localizations" : {

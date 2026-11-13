@@ -88,6 +88,7 @@ struct StationScreen: View {
         async let lineStatuses: () = lineStatus.refreshIfStale(for: .live)
         async let stationDisruptions: () = stations.refreshStationDisruptionsIfStale()
         _ = await (lineStatuses, stationDisruptions)
+        pruneSeenNotices()
     }
 
     private func refreshData() async {
@@ -95,6 +96,12 @@ struct StationScreen: View {
         async let stationDisruptions: () = stations.refreshStationDisruptions()
         async let boards: () = refreshArrivalsBoard()
         _ = await (lineStatuses, stationDisruptions, boards)
+        pruneSeenNotices()
+    }
+
+    private func pruneSeenNotices() {
+        guard let publishedNoticeTexts = stations.publishedNoticeTexts else { return }
+        userPreferences.pruneSeenNotices(keeping: publishedNoticeTexts)
     }
 
     private func refreshArrivalsBoard() async {
@@ -122,12 +129,17 @@ struct StationScreen: View {
         }
     }
 
+    private var notices: [StationNotice] {
+        stations.notices(forStationID: station.id)
+    }
+
     private var info: StationView.Info {
         let allLines = lineStatus.lineStatusData(for: .live)?.value ?? []
         return .init(
             lines: allLines.filter { station.sortedLineIDs.contains($0.id) },
-            notices: stations.notices(forStationID: station.id),
-            hasLoaded: hasLoadedInfo
+            notices: notices,
+            hasLoaded: hasLoadedInfo,
+            hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
         )
     }
 
@@ -155,6 +167,8 @@ struct StationScreen: View {
             planJourney(placingStationIn: .from, opposite: .to)
         case .planJourneyToHere:
             planJourney(placingStationIn: .to, opposite: .from)
+        case .openedNotices:
+            userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
         }
     }
 

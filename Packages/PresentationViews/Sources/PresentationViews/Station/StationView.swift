@@ -11,6 +11,8 @@ public struct StationView: View {
         case tappedLine(Line)
         case planJourneyFromHere
         case planJourneyToHere
+        /// The notices sheet opened, so its notices now count as seen.
+        case openedNotices
     }
 
     public struct Arrivals {
@@ -33,11 +35,14 @@ public struct StationView: View {
         /// False until the first fetch of line statuses and notices has finished, so their cards don't push the
         /// screen down one by one as each arrives.
         public let hasLoaded: Bool
+        /// Whether any notice hasn't been opened yet, which puts a dot on the notices button.
+        public let hasUnseenNotices: Bool
 
-        public init(lines: [Line], notices: [StationNotice], hasLoaded: Bool = true) {
+        public init(lines: [Line], notices: [StationNotice], hasLoaded: Bool = true, hasUnseenNotices: Bool = false) {
             self.lines = lines
             self.notices = notices
             self.hasLoaded = hasLoaded
+            self.hasUnseenNotices = hasUnseenNotices
         }
     }
 
@@ -77,6 +82,11 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
+    private func showNotices() {
+        isShowingNotices = true
+        onAction(.openedNotices)
+    }
+
     private var hasChips: Bool { station.lineGroups.count > 1 }
 
     private var noticeSections: StationNoticeSections {
@@ -95,7 +105,7 @@ public struct StationView: View {
                 // Above the chips, because a closure applies to the whole station. Other notices are only behind
                 // the toolbar's notices button, as most are routine (e.g. step-free access)
                 if info.hasLoaded, let closurePreview = noticesSummary.closurePreview {
-                    StationClosureBanner(preview: closurePreview, onTap: { isShowingNotices = true })
+                    StationClosureBanner(preview: closurePreview, onTap: showNotices)
                         .padding(.horizontal, 16)
                         .padding(.top, 16)
                         // With the chip row's own padding, this leaves the notices card 20 pt clear of the chips
@@ -144,16 +154,24 @@ public struct StationView: View {
         .toolbar {
             if info.hasLoaded, !noticeSections.isEmpty {
                 ToolbarItem {
-                    Button {
-                        isShowingNotices = true
-                    } label: {
-                        Label {
-                            Text(.stationNoticesTitle)
-                        } icon: {
+                    Button(action: showNotices) {
+                        // A ZStack rather than a Label: the toolbar turns a Label or Image into a native bar button
+                        // and keeps only the image, which dropped the dot
+                        ZStack(alignment: .topTrailing) {
                             Image(systemName: "megaphone")
+                                .imageScale(.large)
+                            // No count: it said little, and closures already have their own banner. The dot only
+                            // means there's something not seen yet, so it's the accent colour, not the chips' red
+                            if info.hasUnseenNotices {
+                                Circle()
+                                    .fill(.tint)
+                                    .frame(width: 8, height: 8)
+                                    .offset(x: 4, y: -3)
+                            }
                         }
                     }
-                    .badge(noticesSummary.count)
+                    .accessibilityLabel(Text(.stationNoticesTitle))
+                    .accessibilityValue(info.hasUnseenNotices ? Text(.stationNoticesUnseenAccessibilityValue) : Text(verbatim: ""))
                 }
             }
             ToolbarItem {

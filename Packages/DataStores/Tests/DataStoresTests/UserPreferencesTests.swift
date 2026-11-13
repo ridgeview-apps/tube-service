@@ -17,6 +17,7 @@ struct UserPreferencesTests {
         expected.saveSelectedLineGroup(stationWithTwoLineGroups.lineGroups[1], at: stationWithTwoLineGroups)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
+        expected.markNoticesSeen(["Lifts are out of service."], at: ModelStubs.kingsCrossStation.id)
         expected.saveRecentJourney(
             SavedJourney(
                 id: UUID(),
@@ -509,5 +510,50 @@ struct UserPreferencesTests {
         // 3. Check new message 2 is unread
         #expect(!userPreferences.hasReadSystemStatusMessage(id: messageID2))
 
+    }
+
+    // MARK: - Seen station notices
+
+    @Test
+    func openedNoticesAreSeenUntilANewOneAppears() {
+        var userPreferences = UserPreferences.default
+        let stationID = ModelStubs.kingsCrossStation.id
+
+        #expect(userPreferences.hasUnseenNotices(["Lifts are out of service."], at: stationID))
+
+        userPreferences.markNoticesSeen(["Lifts are out of service."], at: stationID)
+        #expect(!userPreferences.hasUnseenNotices(["Lifts are out of service."], at: stationID))
+        #expect(userPreferences.hasUnseenNotices(["Lifts are out of service.", "Exit only after the event."], at: stationID))
+    }
+
+    @Test
+    func noticesSeenAtOneStationAreUnseenAtAnother() {
+        var userPreferences = UserPreferences.default
+        userPreferences.markNoticesSeen(["Lifts are out of service."], at: ModelStubs.kingsCrossStation.id)
+
+        #expect(userPreferences.hasUnseenNotices(["Lifts are out of service."], at: ModelStubs.angelStation.id))
+    }
+
+    @Test
+    func pruningForgetsNoticesNoLongerPublished() {
+        var userPreferences = UserPreferences.default
+        let kingsCross = ModelStubs.kingsCrossStation.id
+        let angel = ModelStubs.angelStation.id
+        userPreferences.markNoticesSeen(["Lifts are out of service.", "Exit only after the event."], at: kingsCross)
+        userPreferences.markNoticesSeen(["Mini ramps are available."], at: angel)
+
+        userPreferences.pruneSeenNotices(keeping: [kingsCross: ["Lifts are out of service."]])
+
+        #expect(userPreferences.seenStationNotices == [kingsCross: ["Lifts are out of service."]])
+        // A notice that's withdrawn and later republished counts as new again
+        #expect(userPreferences.hasUnseenNotices(["Exit only after the event."], at: kingsCross))
+    }
+
+    @Test
+    func preferencesSavedBeforeSeenNoticesDecodeWithNoneSeen() throws {
+        let json = #"{ "favouriteStops": [], "journeyModePreset": "trainAndBus" }"#
+        let decoded = try JSONDecoder().decode(UserPreferences.self, from: Data(json.utf8))
+
+        #expect(decoded.seenStationNotices.isEmpty)
     }
 }
