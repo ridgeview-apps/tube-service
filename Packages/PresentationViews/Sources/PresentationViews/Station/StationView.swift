@@ -9,7 +9,7 @@ public struct StationView: View {
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
         case tappedLine(Line)
-        /// The notices sheet opened, so its notices now count as seen.
+        /// The station info sheet opened, so its notices now count as seen.
         case openedNotices
     }
 
@@ -52,7 +52,7 @@ public struct StationView: View {
     public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
 
-    @State private var isShowingNotices = false
+    @State private var isShowingInfo = false
     @Environment(\.clock) private var clock
 
     public init(
@@ -83,8 +83,8 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
-    private func showNotices() {
-        isShowingNotices = true
+    private func showInfo() {
+        isShowingInfo = true
         onAction(.openedNotices)
     }
 
@@ -153,7 +153,6 @@ public struct StationView: View {
                             loadingState: info.hasLoaded ? arrivals.loadingState : .loading,
                             isFavourite: $isFavourite
                         )
-                        StationInfoView(station: station)
                     }
                 }
                 // The chip row's own padding is the gap below the chips, so the line status card sits under them
@@ -167,22 +166,21 @@ public struct StationView: View {
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if info.hasLoaded, !noticeSections.isEmpty {
-                ToolbarItem {
-                    Button(action: showNotices) {
-                        Label {
-                            Text(.stationNoticesTitle)
-                        } icon: {
-                            Image(systemName: noticesBadge == nil ? "info.circle" : "info.circle.badge")
-                                // The first palette layer is the badge, but in the plain symbol it's the "i", which
-                                // would otherwise turn blue too
-                                .symbolRenderingMode(.palette)
-                                .foregroundStyle(noticesBadge?.style ?? AnyShapeStyle(.primary), .primary)
-                                .contentTransition(.symbolEffect(.replace))
-                        }
+            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
+            ToolbarItem {
+                Button(action: showInfo) {
+                    Label {
+                        Text(.stationInfoTitle)
+                    } icon: {
+                        Image(systemName: noticesBadge == nil ? "info.circle" : "info.circle.badge")
+                            // The first palette layer is the badge, but in the plain symbol it's the "i", which
+                            // would otherwise turn blue too
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(noticesBadge?.style ?? AnyShapeStyle(.primary), .primary)
+                            .contentTransition(.symbolEffect(.replace))
                     }
-                    .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
                 }
+                .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
             }
             ToolbarItem {
                 FavouritesButton(style: .small, isSelected: $isFavourite)
@@ -191,11 +189,8 @@ public struct StationView: View {
         // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
         // drag that dismisses it
         .refreshable(action: onRefresh)
-        .sheet(isPresented: $isShowingNotices) {
-            StationNoticesView(
-                stationName: station.name,
-                sections: noticeSections
-            )
+        .sheet(isPresented: $isShowingInfo) {
+            StationInfoView(station: station, noticeSections: noticeSections)
         }
     }
 }

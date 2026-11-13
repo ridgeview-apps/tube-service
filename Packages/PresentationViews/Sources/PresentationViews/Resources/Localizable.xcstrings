@@ -3077,6 +3077,18 @@
         }
       }
     },
+    "station.info.title" : {
+      "comment" : "Labels the Station screen's toolbar button that opens the station's notices and location",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Station info"
+          }
+        }
+      }
+    },
     "station.location.directions.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3130,6 +3142,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Closure today"
+          }
+        }
+      }
+    },
+    "station.notices.empty" : {
+      "comment" : "Shown in the station info sheet when TfL has no notices for the station",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No notices"
           }
         }
       }
@@ -3232,18 +3256,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "From %@"
-          }
-        }
-      }
-    },
-    "station.notices.title" : {
-      "comment" : "Labels the Station screen card for the station's notices. A badge beside it shows how many there are.",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Station notices"
           }
         }
       }
