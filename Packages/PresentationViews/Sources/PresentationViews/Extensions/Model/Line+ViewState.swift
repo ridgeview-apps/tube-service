@@ -137,27 +137,6 @@ extension Line {
 
 }
 
-extension Line {
-    /// The first disruption's reason without TfL's line name prefix, for the Station screen's line status card.
-    var disruptionReason: String? {
-        mergedLineStatuses
-            .first { $0.isDisrupted && !$0.reason.isEmpty }
-            .map { $0.reason.removingLineNamePrefix() }
-    }
-}
-
-extension String {
-    /// TfL starts most reasons with the line's name, which the card already shows, e.g. "Bakerloo Line: No service…",
-    /// "DOCKLANDS LIGHT RAILWAY: Sunday 22 October, …" or "London Overground: Minor delays…". A prefix with digits is
-    /// kept, as it's more likely a date, e.g. "Sunday 22 October: …".
-    func removingLineNamePrefix() -> String {
-        guard let separator = range(of: ": ") else { return self }
-        let prefix = self[..<separator.lowerBound]
-        let isLineName = prefix.split(separator: " ").count <= 4 && !prefix.contains(where: \.isNumber)
-        return isLineName ? String(self[separator.upperBound...]) : self
-    }
-}
-
 private extension String {
     var sentenceCase: String {
         guard let first = first else { return self }

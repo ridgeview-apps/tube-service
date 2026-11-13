@@ -2,8 +2,8 @@ import Models
 import Shared
 import SwiftUI
 
-/// The selected line group's disrupted lines, shown under the chips. Other line groups' disruptions show only as
-/// badges on their chips.
+/// The selected line group's disrupted lines, shown under the chips as a slim version of the line status screen's
+/// header card. Other line groups' disruptions show only as badges on their chips.
 struct StationLineDisruptionsView: View {
     /// The selected line group's disrupted lines.
     let lines: [Line]
@@ -11,8 +11,23 @@ struct StationLineDisruptionsView: View {
     let onTapLine: (Line) -> Void
 
     var body: some View {
-        StationLineStatusCard(lines: lines, lineGroupLineIDs: selectedLineIDs, onTapLine: onTapLine)
-            .compactCardLineLimit()
+        let sortedLines = lines.sorted { $0.id.name < $1.id.name }
+        VStack(spacing: 0) {
+            ForEach(sortedLines) { line in
+                if line.id != sortedLines.first?.id {
+                    Divider()
+                        .padding(.leading, 16)
+                }
+                Button {
+                    onTapLine(line)
+                } label: {
+                    StationLineStatusRow(line: line, showsLineName: selectedLineIDs.count > 1)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .cardStyle()
+        .compactCardLineLimit()
     }
 }
 
@@ -69,171 +84,68 @@ private extension View {
     }
 }
 
-// MARK: - Line status card
+// MARK: - Line status row
 
-/// A slim version of the line status screen's header card. One disrupted line opens directly; several start as
-/// one summary row that expands into a row per line.
-struct StationLineStatusCard: View {
-    let lines: [Line]
-    let lineGroupLineIDs: [TrainLineID]
-    let onTapLine: (Line) -> Void
+private struct StationLineStatusRow: View {
+    let line: Line
+    let showsLineName: Bool
 
-    @State private var isExpanded = false
-
-    var body: some View {
-        if let summary = LineDisruptionSummary(disruptedLines: lines, lineGroupLineIDs: lineGroupLineIDs) {
-            VStack(spacing: 0) {
-                if lines.count == 1, let line = lines.first {
-                    Button {
-                        onTapLine(line)
-                    } label: {
-                        StatusRow(
-                            text: summary.text,
-                            isDisrupted: line.isDisrupted,
-                            barLineIDs: [line.id],
-                            detail: line.disruptionReason
-                        )
-                    }
-                    .buttonStyle(.plain)
-                } else {
-                    summaryButton(summary)
-                    if isExpanded {
-                        lineRows
-                    }
-                }
-            }
-            .cardStyle()
-            .onChange(of: lineGroupLineIDs) { isExpanded = false }
-        }
-    }
-
-    private func summaryButton(_ summary: LineDisruptionSummary) -> some View {
-        Button {
-            withAnimation(.snappy) { isExpanded.toggle() }
-        } label: {
-            StatusRow(
-                text: summary.text,
-                isDisrupted: lines.contains(where: \.isDisrupted),
-                // Once expanded, each line's row shows its own colour
-                barLineIDs: isExpanded ? [] : lines.map(\.id).sortedByName(),
-                accessory: .disclosure(isExpanded: isExpanded)
-            )
-        }
-        .buttonStyle(.plain)
-        .accessibilityValue(
-            isExpanded
-                ? .lineStatusSectionGoodServiceAccessibilityExpanded
-                : .lineStatusSectionGoodServiceAccessibilityCollapsed
-        )
-    }
-
-    private var lineRows: some View {
-        ForEach(lines.sorted { $0.id.name < $1.id.name }) { line in
-            Divider()
-                .padding(.leading, 16)
-            Button {
-                onTapLine(line)
-            } label: {
-                StatusRow(
-                    text: line.shortStatusText,
-                    isDisrupted: line.isDisrupted,
-                    barLineIDs: [line.id],
-                    lineName: line.id.abbreviatedName(besideOtherLines: true)
-                )
-            }
-            .buttonStyle(.plain)
-        }
-    }
-}
-
-private struct StatusRow: View {
-    enum Accessory {
-        case opensDetails
-        case disclosure(isExpanded: Bool)
-    }
-
-    let text: String
-    let isDisrupted: Bool
-    let barLineIDs: [TrainLineID]
-    var lineName: String?
-    /// A line of context under the status, e.g. the disruption's reason.
-    var detail: String?
-    var accessory = Accessory.opensDetails
-
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         HStack(spacing: 10) {
             Label {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(text)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(isDisrupted ? .adaptiveRed : .primary)
-                    if let detail {
-                        Text(detail)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(dynamicTypeSize.isAccessibilitySize ? 2 : 1)
-                    }
-                }
+                Text(line.shortStatusText)
             } icon: {
-                (isDisrupted ? LineStatusAccessoryImageType.disruption : .goodService).image
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(isDisrupted ? .adaptiveRed : .primary)
+                line.accessoryImageType.image
             }
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(line.isDisrupted ? .adaptiveRed : .primary)
 
             Spacer(minLength: 8)
 
-            if let lineName {
-                Text(lineName)
+            if showsLineName {
+                Text(line.id.abbreviatedName(besideOtherLines: true))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
-            accessoryImage
+            Image(systemName: "chevron.right")
                 .font(.footnote)
                 .foregroundStyle(.tertiary)
         }
         .padding(.leading, 16)
         .padding(.trailing, 12)
-        .padding(.vertical, 10)
+        .padding(.vertical, 12)
         // A background stretches the bar to the row's full height
         .background(alignment: .leading) {
-            VStack(spacing: 0) {
-                ForEach(barLineIDs, id: \.self) { lineID in
-                    Rectangle().fill(lineID.backgroundColor)
+            Rectangle()
+                .fill(line.id.backgroundColor)
+                .frame(width: 6)
+                .overlay {
+                    if needsBarOutline {
+                        Rectangle().strokeBorder(.primary.opacity(0.5), lineWidth: 1)
+                    }
                 }
-            }
-            .frame(width: 6)
-            // Like the chips' colour bars, so dark lines (e.g. Northern) stay visible in dark mode
-            .overlay {
-                if !barLineIDs.isEmpty {
-                    Rectangle().strokeBorder(.primary.opacity(0.5), lineWidth: 1)
-                }
-            }
         }
         .contentShape(.rect)
         .accessibilityElement(children: .combine)
     }
 
-    @ViewBuilder private var accessoryImage: some View {
-        switch accessory {
-        case .opensDetails:
-            Image(systemName: "chevron.right")
-        case .disclosure(let isExpanded):
-            Image(systemName: "chevron.down")
-                .rotationEffect(isExpanded ? .degrees(180) : .zero)
-        }
+    /// Northern's black is the one line colour that disappears against the dark card. Outlining every bar would
+    /// drown out the other lines' colours.
+    private var needsBarOutline: Bool {
+        colorScheme == .dark && line.id == .northern
     }
 }
 
 // MARK: - Previews
 
 private extension Line {
-    static func disrupted(_ id: TrainLineID, _ description: String, reason: String = "") -> Line {
+    static func disrupted(_ id: TrainLineID, _ description: String) -> Line {
         Line(
             id: id,
             lineStatuses: [
-                .init(statusSeverity: .minorDelays, statusSeverityDescription: description, reason: reason, disruption: nil)
+                .init(statusSeverity: .minorDelays, statusSeverityDescription: description, reason: nil, disruption: nil)
             ]
         )
     }
@@ -273,13 +185,7 @@ private func previewSummary(_ notices: [StationNotice]) -> StationNoticesSummary
 
             Text(verbatim: "One disrupted line")
             StationLineDisruptionsView(
-                lines: [
-                    .disrupted(
-                        .northern,
-                        "Minor Delays",
-                        reason: "Northern Line: Minor delays between Kennington and Morden due to an earlier signal failure at Tooting Broadway."
-                    )
-                ],
+                lines: [.disrupted(.northern, "Minor Delays")],
                 selectedLineIDs: [.northern],
                 onTapLine: { _ in }
             )

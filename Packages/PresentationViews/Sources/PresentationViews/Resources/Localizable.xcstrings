@@ -3293,28 +3293,6 @@
         }
       }
     },
-    "station.status.disruption.on %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Disruption on %@"
-          }
-        }
-      }
-    },
-    "station.status.line.on %@ %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%1$@ on %2$@"
-          }
-        }
-      }
-    },
     "stations.search.results.count %lld" : {
       "extractionState" : "manual",
       "localizations" : {

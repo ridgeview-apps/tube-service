@@ -127,6 +127,8 @@ public struct StationView: View {
                             onTapLine: { onAction(.tappedLine($0)) }
                         )
                         .padding(.horizontal, 16)
+                        // Clears the selected chip's disruption badge, while staying closer to the chips than the boards
+                        .padding(.top, hasChips ? 6 : 0)
                     }
                     VStack(alignment: .leading, spacing: 24) {
                         // Until the cards above have loaded, only the placeholder board shows, so everything appears
