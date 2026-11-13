@@ -51,7 +51,7 @@ struct StationsModelTests {
         await stations.refreshStationDisruptions()
 
         #expect(
-            stations.disruptions(forStationID: "HUBKGX") == [
+            stations.notices(forStationID: "HUBKGX").map(\.text) == [
                 "The station is closed.",
                 "The lifts are closed from Monday.",
                 "Mini ramps are available."
@@ -60,7 +60,7 @@ struct StationsModelTests {
     }
 
     @Test
-    func closureNoticesComeFirstAndFlagTheStation() async throws {
+    func closureNoticesComeFirst() async throws {
         let disruptedPointsJSON = """
             [
                 { "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service.", "appearance": "RealTime", "type": "Information" },
@@ -76,8 +76,44 @@ struct StationsModelTests {
 
         await stations.refreshStationDisruptions()
 
-        #expect(stations.disruptions(forStationID: "HUBKGX") == ["Westbound trains will not stop.", "Lifts are out of service."])
-        #expect(stations.hasClosureNotice(forStationID: "HUBKGX"))
-        #expect(!stations.hasClosureNotice(forStationID: "HUBPAD"))
+        #expect(stations.notices(forStationID: "HUBKGX").map(\.text) == ["Westbound trains will not stop.", "Lifts are out of service."])
+        #expect(stations.notices(forStationID: "HUBKGX").first?.isClosure == true)
+    }
+
+    @Test
+    func endedNoticesAreLeftOut() async throws {
+        let disruptedPointsJSON = """
+            [
+                { "atcoCode": "940GZZLUKSX", "description": "Exit only after the event.", "toDate": "2026-11-12T12:40:00Z" },
+                { "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service.", "toDate": "2026-11-30T00:00:00Z" }
+            ]
+            """
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedDisruptedPoints = .success200(
+            try JSONDecoder.tflModelDecoder.decode([DisruptedPoint].self, from: Data(disruptedPointsJSON.utf8))
+        )
+        let twoPM = try Date("2026-11-12T14:00:00Z", strategy: .iso8601)
+        let stations = StationsDataStore(tflAPI: tflAPI, now: { twoPM })
+
+        await stations.refreshStationDisruptions()
+
+        #expect(stations.notices(forStationID: "HUBKGX").map(\.text) == ["Lifts are out of service."])
+    }
+
+    @Test
+    func publishedNoticeTextsOnlyAfterASuccessfulFetch() async throws {
+        let disruptedPointsJSON = """
+            [{ "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service." }]
+            """
+        let tflAPI = StubTflAPIClient()
+        tflAPI.stubbedDisruptedPoints = .success200(
+            try JSONDecoder().decode([DisruptedPoint].self, from: Data(disruptedPointsJSON.utf8))
+        )
+        let stations = StationsDataStore(tflAPI: tflAPI)
+        #expect(stations.publishedNoticeTexts == nil)
+
+        await stations.refreshStationDisruptions()
+
+        #expect(stations.publishedNoticeTexts == ["HUBKGX": ["Lifts are out of service."]])
     }
 }

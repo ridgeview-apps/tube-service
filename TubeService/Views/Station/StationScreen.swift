@@ -7,7 +7,6 @@ import SwiftUI
 struct StationScreen: View {
 
     @Environment(AppRouter.self) private var router
-    @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(LineStatusDataStore.self) private var lineStatus
     @Environment(StationsDataStore.self) private var stations
 
@@ -22,6 +21,9 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
+    /// Set once the first fetch of line statuses and notices finishes, whether or not it succeeded.
+    @State private var hasLoadedInfo = false
+
     let station: Station
 
     // MARK: - Layout
@@ -35,6 +37,11 @@ struct StationScreen: View {
                     arrivals: arrivals,
                     info: info,
                     isFavourite: isFavouriteStation,
+                    onRefresh: {
+                        // In its own task because SwiftUI cancels the refreshable's task when the screen updates
+                        // mid-refresh (e.g. as line statuses arrive), which would cancel the board's fetch too
+                        await Task { await refreshData() }.value
+                    },
                     onAction: handleAction
                 )
                 // Restarts on appear too, because the refresh stops while another screen is pushed on top
@@ -47,16 +54,15 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
-        .toolbar {
-            FavouritesButton(style: .small, isSelected: isFavouriteStation)
-        }
-        .refreshable {
-            // In its own task because SwiftUI cancels the refreshable's task when the screen updates mid-refresh
-            // (e.g. as line statuses arrive), which would cancel the board's fetch too
-            await Task { await refreshData() }.value
-        }
         .task {
+            // A slow connection mustn't hold the boards back for long, so the wait for the cards is capped
+            let waitCap = Task {
+                guard (try? await Task.sleep(for: .seconds(2))) != nil else { return }
+                hasLoadedInfo = true
+            }
             await refreshDataIfStale()
+            waitCap.cancel()
+            hasLoadedInfo = true
         }
         .onAppear {
             userPreferences.saveRecentlySelectedStation(station.id)
@@ -81,6 +87,7 @@ struct StationScreen: View {
         async let lineStatuses: () = lineStatus.refreshIfStale(for: .live)
         async let stationDisruptions: () = stations.refreshStationDisruptionsIfStale()
         _ = await (lineStatuses, stationDisruptions)
+        pruneSeenNotices()
     }
 
     private func refreshData() async {
@@ -88,6 +95,12 @@ struct StationScreen: View {
         async let stationDisruptions: () = stations.refreshStationDisruptions()
         async let boards: () = refreshArrivalsBoard()
         _ = await (lineStatuses, stationDisruptions, boards)
+        pruneSeenNotices()
+    }
+
+    private func pruneSeenNotices() {
+        guard let publishedNoticeTexts = stations.publishedNoticeTexts else { return }
+        userPreferences.pruneSeenNotices(keeping: publishedNoticeTexts)
     }
 
     private func refreshArrivalsBoard() async {
@@ -115,12 +128,17 @@ struct StationScreen: View {
         }
     }
 
+    private var notices: [StationNotice] {
+        stations.notices(forStationID: station.id)
+    }
+
     private var info: StationView.Info {
         let allLines = lineStatus.lineStatusData(for: .live)?.value ?? []
         return .init(
             lines: allLines.filter { station.sortedLineIDs.contains($0.id) },
-            disruptionMessages: stations.disruptions(forStationID: station.id),
-            hasClosureNotice: stations.hasClosureNotice(forStationID: station.id)
+            notices: notices,
+            hasLoaded: hasLoadedInfo,
+            hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
         )
     }
 
@@ -144,25 +162,9 @@ struct StationScreen: View {
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
         case .tappedLine(let line):
             router.push(.lineStatusDetail(lineID: line.id, request: .live))
-        case .planJourneyFromHere:
-            planJourney(placingStationIn: .from, opposite: .to)
-        case .planJourneyToHere:
-            planJourney(placingStationIn: .to, opposite: .from)
+        case .openedNotices:
+            userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
         }
-    }
-
-    private func planJourney(
-        placingStationIn field: JourneyPlannerForm.FieldID.LocationID,
-        opposite otherField: JourneyPlannerForm.FieldID.LocationID
-    ) {
-        let stationLocation = JourneyLocation.station(station)
-        // A journey from and to the same station can't be planned
-        if journeyPlanner.form.locationValue(for: otherField) == stationLocation {
-            journeyPlanner.form.populate(locationFieldID: otherField, with: nil)
-        }
-        journeyPlanner.form.populate(locationFieldID: field, with: stationLocation)
-        router.popToRoot(on: .journeyPlanner)
-        router.selectedTab = .journeyPlanner
     }
 }
 

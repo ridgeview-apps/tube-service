@@ -19,6 +19,8 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
     public var readSystemStatusMessage: SystemStatus.ID?
+    /// Each station's notices already opened, by TfL's text, which is all that identifies a notice.
+    public internal(set) var seenStationNotices: [Station.ID: Set<String>]
 
     public init(
         favouriteStops: [FavouriteStop],
@@ -27,7 +29,8 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         selectedLineGroupIDs: [Station.ID: Station.LineGroup.ID] = [:],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
-        readSystemStatusMessage: SystemStatus.ID?
+        readSystemStatusMessage: SystemStatus.ID?,
+        seenStationNotices: [Station.ID: Set<String>] = [:]
     ) {
         self.favouriteStops = favouriteStops.removingDuplicates()
         self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
@@ -36,6 +39,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
         self.readSystemStatusMessage = readSystemStatusMessage
+        self.seenStationNotices = seenStationNotices
     }
 
     // MARK: - Favourite Stops
@@ -98,6 +102,32 @@ public struct UserPreferences: Equatable, Codable, Sendable {
 
     public mutating func saveSelectedLineGroup(_ lineGroup: Station.LineGroup, at station: Station) {
         selectedLineGroupIDs[station.id] = lineGroup.id
+    }
+
+    // MARK: - Seen Station Notices
+
+    public func hasUnseenNotices(_ noticeTexts: some Sequence<String>, at stationID: Station.ID) -> Bool {
+        !Set(noticeTexts).isSubset(of: seenStationNotices[stationID] ?? [])
+    }
+
+    public mutating func markNoticesSeen(_ noticeTexts: some Sequence<String>, at stationID: Station.ID) {
+        seenStationNotices[stationID, default: []].formUnion(noticeTexts)
+    }
+
+    /// Forgets notices TfL no longer publishes, so the list doesn't grow forever and a notice that returns later
+    /// counts as new.
+    public mutating func pruneSeenNotices(keeping publishedNoticeTexts: [Station.ID: Set<String>]) {
+        var pruned = [Station.ID: Set<String>]()
+        for (stationID, seenTexts) in seenStationNotices {
+            let stillPublished = seenTexts.intersection(publishedNoticeTexts[stationID] ?? [])
+            if !stillPublished.isEmpty {
+                pruned[stationID] = stillPublished
+            }
+        }
+        // Avoids saving preferences, and redrawing every screen that reads them, when nothing changed
+        if pruned != seenStationNotices {
+            seenStationNotices = pruned
+        }
     }
 
     // MARK: - Recent Selections

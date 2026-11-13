@@ -3077,6 +3077,18 @@
         }
       }
     },
+    "station.info.title" : {
+      "comment" : "Labels the Station screen's toolbar button that opens the station's notices and location",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Station info"
+          }
+        }
+      }
+    },
     "station.location.directions.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3110,69 +3122,152 @@
         }
       }
     },
-    "station.notices.title" : {
-      "comment" : "Labels the Station screen card for the station's notices. A badge beside it shows how many there are.",
+    "station.notices.caption %@ %@" : {
+      "comment" : "A notice's kind and when it starts, e.g. \"Exit only · 21:30–22:40\"",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Station notices"
+            "value" : "%1$@ · %2$@"
           }
         }
       }
     },
-    "station.plan.journey.from.here.button.title" : {
+    "station.notices.closure.accessibility.value" : {
+      "comment" : "VoiceOver value for the notices button when the station has a closure on now or later today",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "From here"
+            "value" : "Closure today"
           }
         }
       }
     },
-    "station.plan.journey.section.header.title" : {
+    "station.notices.empty" : {
+      "comment" : "Shown in the station info sheet when TfL has no notices for the station",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plan a journey"
+            "value" : "No notices"
           }
         }
       }
     },
-    "station.plan.journey.to.here.button.title" : {
+    "station.notices.kind.closure" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "To here"
+            "value" : "Closure"
           }
         }
       }
     },
-    "station.status.disruption.on %@" : {
+    "station.notices.kind.exit.only" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disruption on %@"
+            "value" : "Exit only"
           }
         }
       }
     },
-    "station.status.line.on %@ %@" : {
+    "station.notices.kind.information" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$@ on %2$@"
+            "value" : "Information"
+          }
+        }
+      }
+    },
+    "station.notices.kind.interchange" : {
+      "comment" : "A notice about changing between lines at the station",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interchange"
+          }
+        }
+      }
+    },
+    "station.notices.kind.part.closure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Part closure"
+          }
+        }
+      }
+    },
+    "station.notices.section.closures" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Closures"
+          }
+        }
+      }
+    },
+    "station.notices.section.later" : {
+      "comment" : "Notices that haven't started yet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        }
+      }
+    },
+    "station.notices.section.notices" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notices"
+          }
+        }
+      }
+    },
+    "station.notices.time.from %@" : {
+      "comment" : "When an upcoming notice starts, e.g. \"From 21:30\" or \"From Thu 19 Nov\"",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "From %@"
+          }
+        }
+      }
+    },
+    "station.notices.unseen.accessibility.value" : {
+      "comment" : "VoiceOver value for the notices button when the station has a notice not opened yet",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New"
           }
         }
       }

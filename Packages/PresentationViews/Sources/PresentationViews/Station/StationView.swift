@@ -9,8 +9,8 @@ public struct StationView: View {
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
         case tappedLine(Line)
-        case planJourneyFromHere
-        case planJourneyToHere
+        /// The station info sheet opened, so its notices now count as seen.
+        case openedNotices
     }
 
     public struct Arrivals {
@@ -28,13 +28,19 @@ public struct StationView: View {
     public struct Info {
         /// The status of every line at the station.
         public let lines: [Line]
-        public let disruptionMessages: [String]
-        public let hasClosureNotice: Bool
+        /// Closures first, and none that have ended.
+        public let notices: [StationNotice]
+        /// False until the first fetch of line statuses and notices has finished, so their cards don't push the
+        /// screen down one by one as each arrives.
+        public let hasLoaded: Bool
+        /// Whether any notice hasn't been opened yet, which puts a dot on the notices button.
+        public let hasUnseenNotices: Bool
 
-        public init(lines: [Line], disruptionMessages: [String], hasClosureNotice: Bool = false) {
+        public init(lines: [Line], notices: [StationNotice], hasLoaded: Bool = true, hasUnseenNotices: Bool = false) {
             self.lines = lines
-            self.disruptionMessages = disruptionMessages
-            self.hasClosureNotice = hasClosureNotice
+            self.notices = notices
+            self.hasLoaded = hasLoaded
+            self.hasUnseenNotices = hasUnseenNotices
         }
     }
 
@@ -43,9 +49,11 @@ public struct StationView: View {
     public let arrivals: Arrivals
     public let info: Info
     @Binding public var isFavourite: Bool
+    public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
 
-    @State private var isShowingNotices = false
+    @State private var isShowingInfo = false
+    @Environment(\.clock) private var clock
 
     public init(
         station: Station,
@@ -53,6 +61,7 @@ public struct StationView: View {
         arrivals: Arrivals,
         info: Info,
         isFavourite: Binding<Bool>,
+        onRefresh: @escaping @Sendable () async -> Void,
         onAction: @escaping (Action) -> Void
     ) {
         self.station = station
@@ -60,6 +69,7 @@ public struct StationView: View {
         self.arrivals = arrivals
         self.info = info
         self._isFavourite = isFavourite
+        self.onRefresh = onRefresh
         self.onAction = onAction
     }
 
@@ -73,71 +83,114 @@ public struct StationView: View {
         station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
-    private var notices: [String] {
-        info.disruptionMessages.map { $0.removingStationNamePrefix(station.name) }
+    private func showInfo() {
+        isShowingInfo = true
+        onAction(.openedNotices)
     }
 
-    private var disruptions: StationDisruptionsView {
-        StationDisruptionsView(
-            selectedLineDisruptions: selectedLineDisruptions,
-            selectedLineIDs: selectedLineGroup.lineIds,
-            notices: notices,
-            hasClosureNotice: info.hasClosureNotice,
-            onAction: handleDisruptionsAction
-        )
-    }
+    private var hasChips: Bool { station.lineGroups.count > 1 }
 
-    private func handleDisruptionsAction(_ action: StationDisruptionsView.Action) {
-        switch action {
-        case .tappedLine(let line): onAction(.tappedLine(line))
-        case .tappedNotices: isShowingNotices = true
+    /// No count: it said little. Orange, like the sheet's closure icons, stays while a closure is on today, even once
+    /// seen, as the closure still applies. Otherwise the accent colour, not the chips' red, marks notices not seen yet.
+    private enum NoticesBadge {
+        case closureToday
+        case unseen
+
+        var style: AnyShapeStyle {
+            switch self {
+            case .closureToday: AnyShapeStyle(.orange)
+            case .unseen: AnyShapeStyle(.tint)
+            }
         }
+
+        var accessibilityValue: Text {
+            switch self {
+            case .closureToday: Text(.stationNoticesClosureAccessibilityValue)
+            case .unseen: Text(.stationNoticesUnseenAccessibilityValue)
+            }
+        }
+    }
+
+    private var noticesBadge: NoticesBadge? {
+        if noticeSections.hasClosureToday { return .closureToday }
+        return info.hasUnseenNotices ? .unseen : nil
+    }
+
+    private var noticeSections: StationNoticeSections {
+        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
     }
 
     public var body: some View {
         ScrollView {
-            // A pinned header rather than safeAreaBar: a horizontal ScrollView in a safeAreaBar took on the navigation
-            // bar's inset twice after navigating back, hiding the chips behind a blank band
-            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: .sectionHeaders) {
-                Section {
-                    VStack(alignment: .leading, spacing: 24) {
-                        if !disruptions.isEmpty {
-                            disruptions
-                                .padding(.horizontal, 16)
-                        }
-                        StationArrivalsView(
-                            boardStates: arrivals.boardStates,
-                            refreshDate: arrivals.refreshDate,
-                            loadingState: arrivals.loadingState,
-                            isFavourite: $isFavourite
+            // The chips and line status card scroll away together: the screen is short, and changing chip replaces
+            // everything below, so pinning the chips earned little
+            VStack(alignment: .leading, spacing: 0) {
+                if info.hasLoaded, hasChips {
+                    StationLineChipsView(
+                        lineGroups: station.lineGroups.sortedByName(),
+                        selectedLineGroup: selectedLineGroup,
+                        disruptedLineGroupIDs: disruptedLineGroupIDs,
+                        onSelect: { onAction(.selectedLineGroup($0)) }
+                    )
+                }
+                VStack(alignment: .leading, spacing: 20) {
+                    if info.hasLoaded, !selectedLineDisruptions.isEmpty {
+                        StationLineDisruptionsView(
+                            lines: selectedLineDisruptions,
+                            selectedLineIDs: selectedLineGroup.lineIds,
+                            onTapLine: { onAction(.tappedLine($0)) }
                         )
-                        StationInfoView(station: station, onAction: handleInfoAction)
+                        .padding(.horizontal, 16)
+                        // Clears the selected chip's disruption badge, while staying closer to the chips than the boards
+                        .padding(.top, hasChips ? 6 : 0)
                     }
-                    .padding(.vertical, 16)
-                } header: {
-                    if station.lineGroups.count > 1 {
-                        StationLineChipsView(
-                            lineGroups: station.lineGroups.sortedByName(),
-                            selectedLineGroup: selectedLineGroup,
-                            disruptedLineGroupIDs: disruptedLineGroupIDs,
-                            onSelect: { onAction(.selectedLineGroup($0)) }
+                    VStack(alignment: .leading, spacing: 24) {
+                        // Until the cards above have loaded, only the placeholder board shows, so everything appears
+                        // at once
+                        StationArrivalsView(
+                            boardStates: info.hasLoaded ? arrivals.boardStates : [],
+                            refreshDate: arrivals.refreshDate,
+                            loadingState: info.hasLoaded ? arrivals.loadingState : .loading,
+                            isFavourite: $isFavourite
                         )
                     }
                 }
+                // The chip row's own padding is the gap below the chips, so the line status card sits under them
+                .padding(.top, hasChips ? 0 : 16)
+                .padding(.bottom, 16)
             }
         }
+        // Cards that appear or go after the first load (e.g. on pull-to-refresh) slide in rather than snap
+        .animation(.default, value: disruptedLines.map(\.id))
         .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $isShowingNotices) {
-            StationNoticesView(stationName: station.name, notices: notices)
+        .toolbar {
+            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
+            ToolbarItem {
+                Button(action: showInfo) {
+                    Label {
+                        Text(.stationInfoTitle)
+                    } icon: {
+                        Image(systemName: noticesBadge == nil ? "info.circle" : "info.circle.badge")
+                            // The first palette layer is the badge, but in the plain symbol it's the "i", which
+                            // would otherwise turn blue too
+                            .symbolRenderingMode(.palette)
+                            .foregroundStyle(noticesBadge?.style ?? AnyShapeStyle(.primary), .primary)
+                            .contentTransition(.symbolEffect(.replace))
+                    }
+                }
+                .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
+            }
+            ToolbarItem {
+                FavouritesButton(style: .small, isSelected: $isFavourite)
+            }
         }
-    }
-
-    private func handleInfoAction(_ action: StationInfoView.Action) {
-        switch action {
-        case .planJourneyFromHere: onAction(.planJourneyFromHere)
-        case .planJourneyToHere: onAction(.planJourneyToHere)
+        // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
+        // drag that dismisses it
+        .refreshable(action: onRefresh)
+        .sheet(isPresented: $isShowingInfo) {
+            StationInfoView(station: station, noticeSections: noticeSections)
         }
     }
 }
@@ -154,7 +207,7 @@ private struct WrapperView: View {
     var lines: [Line] = [.circle, .hammersmithAndCity, .metropolitan, .northern, .piccadilly, .victoria].map {
         Line(id: $0, lineStatuses: [.goodService])
     }
-    var disruptionMessages: [String] = []
+    var notices: [StationNotice] = []
     @State private var selectedLineGroup: Station.LineGroup?
     @State private var isFavourite = false
 
@@ -164,8 +217,9 @@ private struct WrapperView: View {
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
                 arrivals: .init(boardStates: boardStates, refreshDate: .now, loadingState: arrivalsLoadingState),
-                info: .init(lines: lines, disruptionMessages: disruptionMessages),
+                info: .init(lines: lines, notices: notices),
                 isFavourite: $isFavourite,
+                onRefresh: {},
                 onAction: { action in
                     if case .selectedLineGroup(let lineGroup) = action { selectedLineGroup = lineGroup }
                 }
@@ -190,7 +244,7 @@ private struct WrapperView: View {
             Line(id: .northern, lineStatuses: [.goodService]),
             Line(id: .piccadilly, lineStatuses: [.goodService])
         ],
-        disruptionMessages: ["The escalator to platform 5 is closed"]
+        notices: [StationNotice(text: "The escalator to platform 5 is closed")]
     )
 }
 
@@ -209,7 +263,11 @@ private struct WrapperView: View {
 }
 
 #Preview("Station notice only") {
-    WrapperView(disruptionMessages: ["The escalator to platform 5 is closed"])
+    WrapperView(notices: [StationNotice(text: "The escalator to platform 5 is closed")])
+}
+
+#Preview("Closure today") {
+    WrapperView(notices: [StationNotice(text: "Westbound trains will not stop here.", kind: "Part Closure")])
 }
 
 private extension LineStatus {
