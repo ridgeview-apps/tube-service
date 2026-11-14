@@ -34,8 +34,9 @@ struct StationArrivalsView: View {
                 } else {
                     switch loadingState {
                     case .loading: placeholderBoard
-                    case .loaded: noDataView
-                    case .failure(let errorMessage): failureView(errorMessage: errorMessage)
+                    case .loaded: messageBoard(Text(.stationArrivalsEmpty), hint: Text(.stationArrivalsEmptyHint))
+                    case .failure(let errorMessage):
+                        messageBoard(Text(errorMessage), hint: Text(.stationArrivalsFailureRetryHint))
                     }
                 }
                 FavouritesButton(style: .large, isSelected: $isFavourite)
@@ -83,7 +84,7 @@ struct StationArrivalsView: View {
         .accessibilityHidden(true)
     }
 
-    // The text is only ever shown redacted, so it's never localized
+    // The text is only ever shown redacted or invisible, so it's never localized
     private static let placeholderBoardState = ArrivalsBoardState(
         platformName: "Northbound - Platform 1",
         cellItems: (1...3).map { number in
@@ -106,34 +107,28 @@ struct StationArrivalsView: View {
         }
     )
 
-    private func failureView(errorMessage: String) -> some View {
-        HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundStyle(.adaptiveRed)
-                .imageScale(.large)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(errorMessage)
-                Text(.stationArrivalsFailureRetryHint)
-                    .foregroundStyle(.secondary)
+    // Laid over an invisible placeholder board, so the screen doesn't jump when loading ends
+    private func messageBoard(_ message: Text, hint: Text) -> some View {
+        ArrivalsBoardView(
+            platformName: Self.placeholderBoardState.platformName,
+            cellItems: Self.placeholderBoardState.cellItems,
+            isExpanded: .constant(false),
+            contentOpacity: 0
+        )
+        .accessibilityHidden(true)
+        .overlay {
+            VStack(spacing: 8) {
+                message
+                    .font(.headline)
+                    .foregroundStyle(Color.arrivalsBoardPrimary)
+                hint
+                    .font(.caption)
+                    .foregroundStyle(.white)
             }
-            .font(.subheadline)
-            Spacer(minLength: 0)
+            .multilineTextAlignment(.center)
+            .padding()
+            .accessibilityElement(children: .combine)
         }
-        .padding()
-        .cardStyle()
-    }
-
-    private var noDataView: some View {
-        HStack {
-            Image(systemName: "exclamationmark.triangle.fill")
-                .foregroundColor(.yellow)
-                .imageScale(.large)
-            Text(.arrivalsNoData)
-                .font(.subheadline)
-            Spacer()
-        }
-        .padding()
-        .cardStyle()
     }
 
     private func isExpanded(boardID: String) -> Binding<Bool> {
