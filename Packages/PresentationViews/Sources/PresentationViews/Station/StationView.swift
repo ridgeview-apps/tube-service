@@ -75,12 +75,13 @@ public struct StationView: View {
 
     private var disruptedLines: [Line] { info.lines.disruptionsOnly() }
 
-    private var selectedLineDisruptions: [Line] {
-        disruptedLines.filter { selectedLineGroup.lineIds.contains($0.id) }
+    private var selectedLines: [Line] {
+        info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
+    /// The selected chip has no badge, as the line status card right below it already says it's disrupted.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
-        station.lineGroups.ids(disruptedBy: disruptedLines)
+        station.lineGroups.ids(disruptedBy: disruptedLines).subtracting([selectedLineGroup.id])
     }
 
     private func showInfo() {
@@ -134,15 +135,14 @@ public struct StationView: View {
                     )
                 }
                 VStack(alignment: .leading, spacing: 20) {
-                    if info.hasLoaded, !selectedLineDisruptions.isEmpty {
-                        StationLineDisruptionsView(
-                            lines: selectedLineDisruptions,
-                            selectedLineIDs: selectedLineGroup.lineIds,
+                    if info.hasLoaded {
+                        StationLineStatusCard(
+                            lines: selectedLines,
                             onTapLine: { onAction(.tappedLine($0)) }
                         )
+                        // A new chip starts with its groups collapsed
+                        .id(selectedLineGroup.id)
                         .padding(.horizontal, 16)
-                        // Clears the selected chip's disruption badge, while staying closer to the chips than the boards
-                        .padding(.top, hasChips ? 6 : 0)
                     }
                     VStack(alignment: .leading, spacing: 24) {
                         // Until the cards above have loaded, only the placeholder board shows, so everything appears
@@ -155,8 +155,8 @@ public struct StationView: View {
                         )
                     }
                 }
-                // The chip row's own padding is the gap below the chips, so the line status card sits under them
-                .padding(.top, hasChips ? 0 : 16)
+                // The chip row's own padding covers most of the gap below the chips
+                .padding(.top, hasChips ? 6 : 16)
                 .padding(.bottom, 16)
             }
         }

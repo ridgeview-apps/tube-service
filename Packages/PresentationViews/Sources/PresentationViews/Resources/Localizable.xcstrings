@@ -3077,6 +3077,42 @@
         }
       }
     },
+    "station.line.status.group.accessibility.collapsed" : {
+      "comment" : "Accessibility value for a Station screen line status row covering several lines, while its lines are hidden",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapsed"
+          }
+        }
+      }
+    },
+    "station.line.status.group.accessibility.expanded" : {
+      "comment" : "Accessibility value for a Station screen line status row covering several lines, while its lines are shown",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expanded"
+          }
+        }
+      }
+    },
+    "station.line.status.unavailable" : {
+      "comment" : "Shown on the Station screen's line status card when the lines' statuses couldn't be loaded",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line status unavailable"
+          }
+        }
+      }
+    },
     "station.info.title" : {
       "comment" : "Labels the Station screen's toolbar button that opens the station's notices and location",
       "extractionState" : "manual",
