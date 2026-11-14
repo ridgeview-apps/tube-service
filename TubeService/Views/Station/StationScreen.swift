@@ -21,9 +21,6 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
-    /// Set once the first fetch of line statuses and notices finishes, whether or not it succeeded.
-    @State private var hasLoadedInfo = false
-
     let station: Station
 
     // MARK: - Layout
@@ -55,14 +52,7 @@ struct StationScreen: View {
         }
         .navigationTitle(station.name)
         .task {
-            // A slow connection mustn't hold the boards back for long, so the wait for the cards is capped
-            let waitCap = Task {
-                guard (try? await Task.sleep(for: .seconds(2))) != nil else { return }
-                hasLoadedInfo = true
-            }
             await refreshDataIfStale()
-            waitCap.cancel()
-            hasLoadedInfo = true
         }
         .onAppear {
             userPreferences.saveRecentlySelectedStation(station.id)
@@ -133,13 +123,20 @@ struct StationScreen: View {
     }
 
     private var info: StationView.Info {
-        let allLines = lineStatus.lineStatusData(for: .live)?.value ?? []
+        let lineStatusData = lineStatus.lineStatusData(for: .live)
         return .init(
-            lines: allLines.filter { station.sortedLineIDs.contains($0.id) },
+            lines: (lineStatusData?.value ?? []).filter { station.sortedLineIDs.contains($0.id) },
             notices: notices,
-            hasLoaded: hasLoadedInfo,
+            isLoadingLines: isLoadingLines(lineStatusData),
             hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
         )
+    }
+
+    // Statuses already fetched elsewhere (e.g. the Status tab) show straight away, even while they refresh
+    private func isLoadingLines(_ lineStatusData: RemoteData<[Line]>?) -> Bool {
+        guard let lineStatusData else { return true }
+        if case .failure = lineStatusData.fetchState { return false }
+        return lineStatusData.fetchedAt == nil
     }
 
     private var isFavouriteStation: Binding<Bool> {

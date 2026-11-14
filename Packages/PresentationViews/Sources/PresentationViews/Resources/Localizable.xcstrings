@@ -142,17 +142,6 @@
         }
       }
     },
-    "arrivals.no.data" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Live arrivals are unavailable for this location at the moment."
-          }
-        }
-      }
-    },
     "arrivals.picker.all.stations.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3055,6 +3044,28 @@
         }
       }
     },
+    "station.arrivals.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No live arrivals right now"
+          }
+        }
+      }
+    },
+    "station.arrivals.empty.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pull down to refresh."
+          }
+        }
+      }
+    },
     "station.arrivals.failure.retry.hint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3062,6 +3073,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pull down to try again."
+          }
+        }
+      }
+    },
+    "station.arrivals.not.updated.since %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not updated since %@"
           }
         }
       }

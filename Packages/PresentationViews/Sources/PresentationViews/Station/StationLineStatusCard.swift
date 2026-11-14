@@ -8,6 +8,8 @@ import SwiftUI
 struct StationLineStatusCard: View {
     /// The selected line group's lines, empty if their statuses couldn't be loaded.
     let lines: [Line]
+    /// Shows a placeholder row, the height of a status row, so the boards below don't move when the statuses arrive.
+    var isLoading = false
     let onTapLine: (Line) -> Void
 
     var body: some View {
@@ -15,19 +17,37 @@ struct StationLineStatusCard: View {
         // Once lines differ, each row names its lines, as the bar colours alone don't say which line is which
         let showsLineNames = groups.count > 1
         VStack(spacing: 0) {
-            if groups.isEmpty {
+            if isLoading {
+                placeholderRow
+            } else if groups.isEmpty {
                 unavailableRow
-            }
-            ForEach(groups) { group in
-                if group.id != groups.first?.id {
-                    Divider()
-                        .padding(.leading, 16)
+            } else {
+                ForEach(groups) { group in
+                    if group.id != groups.first?.id {
+                        Divider()
+                            .padding(.leading, 16)
+                    }
+                    StationLineStatusGroupRow(group: group, showsLineNames: showsLineNames, onTapLine: onTapLine)
                 }
-                StationLineStatusGroupRow(group: group, showsLineNames: showsLineNames, onTapLine: onTapLine)
             }
         }
         .cardStyle()
         .compactCardLineLimit()
+    }
+
+    // The text is only ever shown redacted, so it's never localized
+    private var placeholderRow: some View {
+        Label {
+            Text(verbatim: "Good service")
+        } icon: {
+            LineStatusAccessoryImageType.goodService.image
+        }
+        .font(.subheadline)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .redacted(reason: .placeholder)
+        .accessibilityHidden(true)
     }
 
     private var unavailableRow: some View {
@@ -282,6 +302,9 @@ private extension Line {
                 ],
                 onTapLine: { _ in }
             )
+
+            Text(verbatim: "Loading")
+            StationLineStatusCard(lines: [], isLoading: true, onTapLine: { _ in })
 
             Text(verbatim: "Unavailable")
             StationLineStatusCard(lines: [], onTapLine: { _ in })
