@@ -351,46 +351,90 @@
         }
       }
     },
-    "favourites.button.alert.confirm.title" : {
+    "favourites.button.line.add" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to remove this favourite?"
+            "value" : "Add line to favourites"
           }
         }
       }
     },
-    "favourites.button.title.add" : {
+    "favourites.button.line.added" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add to favourites"
+            "value" : "Line added to favourites"
           }
         }
       }
     },
-    "favourites.button.title.added" : {
+    "favourites.button.line.remove" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Added to favourites"
+            "value" : "Remove line from favourites"
           }
         }
       }
     },
-    "favourites.button.title.remove" : {
+    "favourites.button.line.remove.confirm" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remove from favourites"
+            "value" : "Remove this line from your favourites?"
+          }
+        }
+      }
+    },
+    "favourites.button.station.add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add station to favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.station.added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Station added to favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.station.remove" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove station from favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.station.remove.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove this station from your favourites?"
           }
         }
       }
@@ -3211,7 +3255,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notices"
+            "value" : "No closures or lift problems reported at this station."
           }
         }
       }

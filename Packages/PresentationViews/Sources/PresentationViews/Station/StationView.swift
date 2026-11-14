@@ -92,7 +92,7 @@ public struct StationView: View {
 
     /// No count: it said little. Orange, like the sheet's closure icons, stays while a closure is on today, even once
     /// seen, as the closure still applies. Otherwise the accent colour, not the chips' red, marks notices not seen yet.
-    private enum NoticesBadge {
+    fileprivate enum NoticesBadge {
         case closureToday
         case unseen
 
@@ -167,18 +167,13 @@ public struct StationView: View {
                     Label {
                         Text(.stationInfoTitle)
                     } icon: {
-                        Image(systemName: noticesBadge == nil ? "info.circle" : "info.circle.badge")
-                            // The first palette layer is the badge, but in the plain symbol it's the "i", which
-                            // would otherwise turn blue too
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(noticesBadge?.style ?? AnyShapeStyle(.primary), .primary)
-                            .contentTransition(.symbolEffect(.replace))
+                        StationInfoIcon(badge: noticesBadge)
                     }
                 }
                 .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
             }
             ToolbarItem {
-                FavouritesButton(style: .small, isSelected: $isFavourite)
+                FavouritesButton(.station, style: .small, isSelected: $isFavourite)
             }
         }
         // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
@@ -186,6 +181,23 @@ public struct StationView: View {
         .refreshable(action: onRefresh)
         .sheet(isPresented: $isShowingInfo) {
             StationInfoView(station: station, noticeSections: noticeSections)
+        }
+    }
+}
+
+private struct StationInfoIcon: View {
+    let badge: StationView.NoticesBadge?
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        if let badge {
+            Image(systemName: "info.circle.badge")
+                .symbolRenderingMode(.palette)
+                // The toolbar fixes palette colours when it takes the image, so even adaptive colours stay
+                // light-mode; picking from the colour scheme redraws it on each change
+                .foregroundStyle(badge.style, colorScheme == .dark ? Color.white : Color.black)
+        } else {
+            Image(systemName: "info.circle")
         }
     }
 }

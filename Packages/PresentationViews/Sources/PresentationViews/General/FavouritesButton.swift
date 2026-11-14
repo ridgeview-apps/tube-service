@@ -7,8 +7,15 @@ public struct FavouritesButton: View {
         case large
     }
 
+    /// Named in the copy, as both screens use the same ★ and the Station screen pushes the line screen
+    public enum Kind {
+        case station
+        case line
+    }
+
     @Binding public var isSelected: Bool
     public let style: Style
+    public let kind: Kind
 
     private let confirmOnDelete: Bool
 
@@ -16,11 +23,13 @@ public struct FavouritesButton: View {
     @State private var showingConfirmation = false
 
     public init(
+        _ kind: Kind,
         style: Style,
         isSelected: Binding<Bool>,
         confirmOnDelete: Bool = true
     ) {
         self.style = style
+        self.kind = kind
         self._isSelected = isSelected
         self.confirmOnDelete = confirmOnDelete
     }
@@ -34,12 +43,13 @@ public struct FavouritesButton: View {
                 Image(systemName: isSelected ? "star.fill" : "star")
                     .contentTransition(.symbolEffect(.replace))
                     .imageScale(.large)
+                    .accessibilityLabel(Text(isSelected ? kind.removeTitle : kind.addTitle))
             case .large:
                 largeStyleLabel
             }
         }
         .confirmationDialog(
-            .favouritesButtonAlertConfirmTitle,
+            kind.removeConfirmTitle,
             isPresented: $showsConfirmDeleteAlert,
             titleVisibility: .visible
         ) {
@@ -72,17 +82,17 @@ public struct FavouritesButton: View {
             if showingConfirmation {
                 Image(systemName: "checkmark.circle.fill")
                     .transition(.scale.combined(with: .opacity))
-                Text(.favouritesButtonTitleAdded)
+                Text(kind.addedTitle)
                     .transition(.push(from: .bottom))
             } else if isSelected {
                 Image(systemName: "star.fill")
                     .transition(.scale.combined(with: .opacity))
-                Text(.favouritesButtonTitleRemove)
+                Text(kind.removeTitle)
                     .transition(.push(from: .bottom))
             } else {
                 Image(systemName: "star")
                     .transition(.scale.combined(with: .opacity))
-                Text(.favouritesButtonTitleAdd)
+                Text(kind.addTitle)
                     .transition(.push(from: .top))
             }
         }
@@ -118,6 +128,37 @@ public struct FavouritesButton: View {
     }
 }
 
+private extension FavouritesButton.Kind {
+
+    var addTitle: LocalizedStringResource {
+        switch self {
+        case .station: .favouritesButtonStationAdd
+        case .line: .favouritesButtonLineAdd
+        }
+    }
+
+    var addedTitle: LocalizedStringResource {
+        switch self {
+        case .station: .favouritesButtonStationAdded
+        case .line: .favouritesButtonLineAdded
+        }
+    }
+
+    var removeTitle: LocalizedStringResource {
+        switch self {
+        case .station: .favouritesButtonStationRemove
+        case .line: .favouritesButtonLineRemove
+        }
+    }
+
+    var removeConfirmTitle: LocalizedStringResource {
+        switch self {
+        case .station: .favouritesButtonStationRemoveConfirm
+        case .line: .favouritesButtonLineRemoveConfirm
+        }
+    }
+}
+
 private extension View {
 
     @ViewBuilder func applyingStyle(_ style: FavouritesButton.Style, tint: Color) -> some View {
@@ -137,6 +178,7 @@ private extension View {
 
         var body: some View {
             FavouritesButton(
+                .station,
                 style: style,
                 isSelected: $isSelected
             )

@@ -100,7 +100,8 @@ private struct StationMapView: View {
     }
 
     var body: some View {
-        Map(position: $position) {
+        // A draggable map inside a resizable sheet catches swipes meant for the sheet
+        Map(position: $position, interactionModes: []) {
             UserAnnotation()
             Marker(coordinate: stationCoordinate) {
                 Label(station.name, systemImage: "mappin")
