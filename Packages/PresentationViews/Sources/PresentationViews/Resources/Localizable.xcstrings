@@ -3211,7 +3211,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No notices"
+            "value" : "No closures or lift problems reported at this station."
           }
         }
       }
