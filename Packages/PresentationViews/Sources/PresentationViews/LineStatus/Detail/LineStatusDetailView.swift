@@ -211,7 +211,7 @@ public struct LineStatusDetailView: View {
     }
 
     private var favouritesButton: some View {
-        FavouritesButton(style: .large, isSelected: $isFavourite)
+        FavouritesButton(.line, style: .large, isSelected: $isFavourite)
     }
 
     private var xPostsSection: some View {

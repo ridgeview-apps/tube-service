@@ -125,7 +125,7 @@ struct LineStatusDetailScreen: View {
         .sensoryFeedback(.success, trigger: notificationSaveSuccessCount)
         .navigationTitle(lineID.name)
         .toolbar {
-            FavouritesButton(style: .small, isSelected: isFavouriteLine(for: lineID))
+            FavouritesButton(.line, style: .small, isSelected: isFavouriteLine(for: lineID))
         }
     }
 

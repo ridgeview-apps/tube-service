@@ -39,7 +39,7 @@ struct StationArrivalsView: View {
                         }
                     }
                 }
-                FavouritesButton(style: .large, isSelected: $isFavourite)
+                FavouritesButton(.station, style: .large, isSelected: $isFavourite)
             }
         }
     }

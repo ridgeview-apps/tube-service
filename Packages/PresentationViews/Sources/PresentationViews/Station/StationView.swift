@@ -173,7 +173,7 @@ public struct StationView: View {
                 .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
             }
             ToolbarItem {
-                FavouritesButton(style: .small, isSelected: $isFavourite)
+                FavouritesButton(.station, style: .small, isSelected: $isFavourite)
             }
         }
         // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
