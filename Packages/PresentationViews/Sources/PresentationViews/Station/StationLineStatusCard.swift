@@ -185,7 +185,7 @@ private struct StationLineStatusRowLabel: View {
             } icon: {
                 (group.isDisrupted ? LineStatusAccessoryImageType.disruption : .goodService).image
             }
-            .font(.subheadline.weight(.semibold))
+            .font(.subheadline.weight(group.isDisrupted ? .semibold : .regular))
             .foregroundStyle(group.isDisrupted ? .adaptiveRed : .primary)
 
             Spacer(minLength: 8)
