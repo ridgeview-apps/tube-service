@@ -209,7 +209,7 @@ private struct StationLineStatusRowLabel: View {
                     LineBarSegment(lineID: line.id)
                 }
             }
-            .frame(width: 6)
+            .frame(width: 8)
         }
         .contentShape(.rect)
         .accessibilityElement(children: .combine)
