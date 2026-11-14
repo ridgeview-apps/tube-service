@@ -230,4 +230,46 @@ struct LineViewStateTests {
         )
         #expect(line.truncatedStatusText == "Part suspended, Severe delays…")
     }
+
+    // MARK: - Grouped by status
+
+    @Test
+    func groupedByStatus_allSameStatus_isOneGroup() {
+        let lines = [
+            Line(id: .metropolitan, lineStatuses: [.goodService]),
+            Line(id: .circle, lineStatuses: [.goodService])
+        ]
+
+        let groups = lines.groupedByStatus()
+
+        #expect(groups.map(\.statusText) == ["Good service"])
+        #expect(groups.first?.lines.map(\.id) == [.circle, .metropolitan])
+    }
+
+    @Test
+    func groupedByStatus_mixedStatuses_putsDisruptedFirstAndGoodServiceLast() {
+        let lines = [
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService]),
+            Line(id: .metropolitan, lineStatuses: [.described(.minorDelays, "Minor Delays")]),
+            Line(id: .circle, lineStatuses: [.described(.plannedClosure, "Planned Closure")]),
+            Line(id: .district, lineStatuses: [.described(.minorDelays, "Minor Delays")])
+        ]
+
+        let groups = lines.groupedByStatus()
+
+        #expect(groups.map(\.statusText) == ["Planned closure", "Minor delays", "Good service"])
+        #expect(groups.map { $0.lines.map(\.id) } == [[.circle], [.district, .metropolitan], [.hammersmithAndCity]])
+        #expect(groups.map(\.isDisrupted) == [true, true, false])
+    }
+
+    @Test
+    func groupedByStatus_noLines_isEmpty() {
+        #expect([Line]().groupedByStatus().isEmpty)
+    }
+}
+
+private extension LineStatus {
+    static func described(_ severity: LineStatusSeverity, _ description: String) -> LineStatus {
+        .init(statusSeverity: severity, statusSeverityDescription: description, reason: nil, disruption: nil)
+    }
 }

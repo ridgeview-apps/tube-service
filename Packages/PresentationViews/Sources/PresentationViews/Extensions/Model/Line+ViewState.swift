@@ -40,6 +40,30 @@ public extension Sequence where Element == Line {
     }
 }
 
+/// Lines that share a status, which the Station screen shows as one row.
+struct LineStatusGroup: Identifiable {
+    let statusText: String
+    let isDisrupted: Bool
+    fileprivate(set) var lines: [Line]
+
+    var id: String { statusText }
+}
+
+extension Sequence where Element == Line {
+    /// Grouped by the status they show, in the Line Status tab's order: disrupted first, good service last.
+    func groupedByStatus() -> [LineStatusGroup] {
+        var groups: [LineStatusGroup] = []
+        for line in sortedByStatusSeverity() {
+            if let index = groups.firstIndex(where: { $0.statusText == line.shortStatusText }) {
+                groups[index].lines.append(line)
+            } else {
+                groups.append(.init(statusText: line.shortStatusText, isDisrupted: line.isDisrupted, lines: [line]))
+            }
+        }
+        return groups
+    }
+}
+
 public extension Line {
 
     typealias SortProperties = (
