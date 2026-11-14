@@ -30,16 +30,15 @@ public struct StationView: View {
         public let lines: [Line]
         /// Closures first, and none that have ended.
         public let notices: [StationNotice]
-        /// False until the first fetch of line statuses and notices has finished, so their cards don't push the
-        /// screen down one by one as each arrives.
-        public let hasLoaded: Bool
+        /// True until the line statuses first arrive or fail to load.
+        public let isLoadingLines: Bool
         /// Whether any notice hasn't been opened yet, which puts a dot on the notices button.
         public let hasUnseenNotices: Bool
 
-        public init(lines: [Line], notices: [StationNotice], hasLoaded: Bool = true, hasUnseenNotices: Bool = false) {
+        public init(lines: [Line], notices: [StationNotice], isLoadingLines: Bool = false, hasUnseenNotices: Bool = false) {
             self.lines = lines
             self.notices = notices
-            self.hasLoaded = hasLoaded
+            self.isLoadingLines = isLoadingLines
             self.hasUnseenNotices = hasUnseenNotices
         }
     }
@@ -126,7 +125,7 @@ public struct StationView: View {
             // The chips and line status card scroll away together: the screen is short, and changing chip replaces
             // everything below, so pinning the chips earned little
             VStack(alignment: .leading, spacing: 0) {
-                if info.hasLoaded, hasChips {
+                if hasChips {
                     StationLineChipsView(
                         lineGroups: station.lineGroups.sortedByName(),
                         selectedLineGroup: selectedLineGroup,
@@ -135,32 +134,28 @@ public struct StationView: View {
                     )
                 }
                 VStack(alignment: .leading, spacing: 20) {
-                    if info.hasLoaded {
-                        StationLineStatusCard(
-                            lines: selectedLines,
-                            onTapLine: { onAction(.tappedLine($0)) }
-                        )
-                        // A new chip starts with its groups collapsed
-                        .id(selectedLineGroup.id)
-                        .padding(.horizontal, 16)
-                    }
-                    VStack(alignment: .leading, spacing: 24) {
-                        // Until the cards above have loaded, only the placeholder board shows, so everything appears
-                        // at once
-                        StationArrivalsView(
-                            boardStates: info.hasLoaded ? arrivals.boardStates : [],
-                            refreshDate: arrivals.refreshDate,
-                            loadingState: info.hasLoaded ? arrivals.loadingState : .loading,
-                            isFavourite: $isFavourite
-                        )
-                    }
+                    StationLineStatusCard(
+                        lines: selectedLines,
+                        isLoading: info.isLoadingLines,
+                        onTapLine: { onAction(.tappedLine($0)) }
+                    )
+                    // A new chip starts with its groups collapsed
+                    .id(selectedLineGroup.id)
+                    .padding(.horizontal, 16)
+                    StationArrivalsView(
+                        boardStates: arrivals.boardStates,
+                        refreshDate: arrivals.refreshDate,
+                        loadingState: arrivals.loadingState,
+                        isFavourite: $isFavourite
+                    )
                 }
                 // The chip row's own padding covers most of the gap below the chips
                 .padding(.top, hasChips ? 6 : 16)
                 .padding(.bottom, 16)
             }
         }
-        // Cards that appear or go after the first load (e.g. on pull-to-refresh) slide in rather than snap
+        // Status rows that appear or go (e.g. a station with several statuses, once they arrive) slide in rather than
+        // snap
         .animation(.default, value: disruptedLines.map(\.id))
         .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
@@ -208,6 +203,7 @@ private struct WrapperView: View {
         Line(id: $0, lineStatuses: [.goodService])
     }
     var notices: [StationNotice] = []
+    var isLoadingLines = false
     @State private var selectedLineGroup: Station.LineGroup?
     @State private var isFavourite = false
 
@@ -217,7 +213,7 @@ private struct WrapperView: View {
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
                 arrivals: .init(boardStates: boardStates, refreshDate: .now, loadingState: arrivalsLoadingState),
-                info: .init(lines: lines, notices: notices),
+                info: .init(lines: lines, notices: notices, isLoadingLines: isLoadingLines),
                 isFavourite: $isFavourite,
                 onRefresh: {},
                 onAction: { action in
@@ -288,7 +284,7 @@ private extension LineStatus {
 }
 
 #Preview("Loading") {
-    WrapperView(boardStates: [], arrivalsLoadingState: .loading)
+    WrapperView(boardStates: [], arrivalsLoadingState: .loading, lines: [], isLoadingLines: true)
 }
 
 #Preview("Failure") {
