@@ -121,19 +121,19 @@ private extension DisclosureGroupStyle where Self == StationLineStatusDisclosure
     static var stationLineStatus: Self { .init() }
 }
 
-/// A line within an expanded group, which opens that line. Indented to the status text, with the chips' colour bar
+/// A line within an expanded group, which opens that line. Indented to the status text, with the chips' colour dot
 /// rather than a leading bar, so it reads as part of the group above.
 private struct StationLineRow: View {
     let line: Line
 
-    /// The row's inset plus the status icon and its spacing, so the bar lines up with the status text
+    /// The row's inset plus the status icon and its spacing, so the dot lines up with the status text
     @ScaledMetric(relativeTo: .subheadline) private var indent: CGFloat = 44
 
     var body: some View {
         VStack(spacing: 0) {
             Divider()
             HStack(spacing: 10) {
-                LineColourBar(lineIDs: [line.id])
+                LineColourDot(lineIDs: [line.id])
                 Text(line.id.name)
                     .font(.subheadline)
                     .foregroundStyle(.primary)

@@ -38,7 +38,7 @@ private struct LineChip: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
-                LineColourBar(lineIDs: lineGroup.lineIds.sortedByName(), isOnAccent: isSelected)
+                LineColourDot(lineIDs: lineGroup.lineIds.sortedByName(), isOnAccent: isSelected)
                 Text(lineGroup.shortName)
                     .accessibilityLabel(lineGroup.name)
             }
@@ -66,34 +66,6 @@ private struct DisruptionBadge: View {
             // Scaled with the badge, so a larger badge doesn't cover more of the chip's name
             .offset(x: size * 0.35, y: -size * 0.35)
             .accessibilityHidden(true)
-    }
-}
-
-/// One small bar with each line's colour stacked top to bottom, so every line group gets a marker of the same size.
-struct LineColourBar: View {
-    let lineIDs: [TrainLineID]
-    /// A white outline keeps dark blue lines (e.g. Piccadilly) distinct from an accent-coloured background.
-    var isOnAccent = false
-
-    @ScaledMetric(relativeTo: .subheadline) private var height: CGFloat = 16
-
-    private let shape = RoundedRectangle(cornerRadius: 2)
-
-    var body: some View {
-        VStack(spacing: 0) {
-            ForEach(lineIDs, id: \.self) { lineID in
-                Rectangle().fill(lineID.backgroundColor)
-            }
-        }
-        .frame(width: height / 2, height: height)
-        .clipShape(shape)
-        .overlay(
-            shape.stroke(
-                isOnAccent ? AnyShapeStyle(.white) : AnyShapeStyle(.primary.opacity(0.35)),
-                lineWidth: isOnAccent ? 1 : 0.5
-            )
-        )
-        .accessibilityHidden(true)
     }
 }
 
