@@ -3077,6 +3077,17 @@
         }
       }
     },
+    "station.arrivals.not.updated.since %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not updated since %@"
+          }
+        }
+      }
+    },
     "station.line.chip.disrupted" : {
       "extractionState" : "manual",
       "localizations" : {

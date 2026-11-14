@@ -199,6 +199,7 @@ private struct WrapperView: View {
     var station: Station = ModelStubs.kingsCrossStation
     var boardStates: [ArrivalsBoardState] = ModelStubs.northernLineBothPlatforms.toPlatformBoardStates()
     var arrivalsLoadingState: LoadingState = .loaded
+    var refreshDate: Date? = .now
     var lines: [Line] = [.circle, .hammersmithAndCity, .metropolitan, .northern, .piccadilly, .victoria].map {
         Line(id: $0, lineStatuses: [.goodService])
     }
@@ -212,7 +213,7 @@ private struct WrapperView: View {
             StationView(
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
-                arrivals: .init(boardStates: boardStates, refreshDate: .now, loadingState: arrivalsLoadingState),
+                arrivals: .init(boardStates: boardStates, refreshDate: refreshDate, loadingState: arrivalsLoadingState),
                 info: .init(lines: lines, notices: notices, isLoadingLines: isLoadingLines),
                 isFavourite: $isFavourite,
                 onRefresh: {},
@@ -284,7 +285,7 @@ private extension LineStatus {
 }
 
 #Preview("Loading") {
-    WrapperView(boardStates: [], arrivalsLoadingState: .loading, lines: [], isLoadingLines: true)
+    WrapperView(boardStates: [], arrivalsLoadingState: .loading, refreshDate: nil, lines: [], isLoadingLines: true)
 }
 
 #Preview("Failure") {
