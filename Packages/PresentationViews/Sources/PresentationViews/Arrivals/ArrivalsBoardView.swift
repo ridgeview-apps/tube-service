@@ -36,7 +36,7 @@ struct ArrivalsBoardView: View {
         .padding()
         .background(Color.arrivalsBoardBackground)
         .roundedBorder(
-            Color.arrivalsBoardPrimary,
+            Color.arrivalsBoardBezel,
             lineWidth: 4
         )
         .animation(.default, value: isExpanded)
