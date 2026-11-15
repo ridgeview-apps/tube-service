@@ -52,6 +52,7 @@ public struct StationView: View {
     public let onAction: (Action) -> Void
 
     @State private var isShowingInfo = false
+    @State private var isShowingLineStatus = false
     @Environment(\.clock) private var clock
 
     public init(
@@ -78,7 +79,7 @@ public struct StationView: View {
         info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
-    /// The selected chip has no badge, as the line status card right below it already says it's disrupted.
+    /// The selected chip has no badge, as the disruption row right below it already says it's disrupted.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
         station.lineGroups.ids(disruptedBy: disruptedLines).subtracting([selectedLineGroup.id])
     }
@@ -122,7 +123,7 @@ public struct StationView: View {
 
     public var body: some View {
         ScrollView {
-            // The chips and line status card scroll away together: the screen is short, and changing chip replaces
+            // The chips and disruption row scroll away together: the screen is short, and changing chip replaces
             // everything below, so pinning the chips earned little
             VStack(alignment: .leading, spacing: 0) {
                 if hasChips {
@@ -134,13 +135,11 @@ public struct StationView: View {
                     )
                 }
                 VStack(alignment: .leading, spacing: 20) {
-                    StationLineStatusCard(
+                    StationLineDisruptionRow(
                         lines: selectedLines,
                         isLoading: info.isLoadingLines,
-                        onTapLine: { onAction(.tappedLine($0)) }
+                        onTap: { isShowingLineStatus = true }
                     )
-                    // A new chip starts with its groups collapsed
-                    .id(selectedLineGroup.id)
                     .padding(.horizontal, 16)
                     StationArrivalsView(
                         boardStates: arrivals.boardStates,
@@ -181,6 +180,12 @@ public struct StationView: View {
         .refreshable(action: onRefresh)
         .sheet(isPresented: $isShowingInfo) {
             StationInfoView(station: station, noticeSections: noticeSections)
+        }
+        .sheet(isPresented: $isShowingLineStatus) {
+            StationLineStatusSheet(lines: selectedLines) { line in
+                isShowingLineStatus = false
+                onAction(.tappedLine(line))
+            }
         }
     }
 }

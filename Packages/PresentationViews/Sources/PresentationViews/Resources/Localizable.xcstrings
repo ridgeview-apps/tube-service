@@ -1431,6 +1431,138 @@
         }
       }
     },
+    "line.disruption.out.of.service.closed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "closed"
+          }
+        }
+      }
+    },
+    "line.disruption.out.of.service.not.running" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "not running"
+          }
+        }
+      }
+    },
+    "line.disruption.out.of.service.part.suspended" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "part suspended"
+          }
+        }
+      }
+    },
+    "line.disruption.out.of.service.suspended" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "suspended"
+          }
+        }
+      }
+    },
+    "line.disruption.summary %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ on %2$@"
+          }
+        }
+      }
+    },
+    "line.disruption.summary.mixed %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Disruption on %@"
+          }
+        }
+      }
+    },
+    "line.disruption.summary.out.of.service.many %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ are %2$@"
+          }
+        }
+      }
+    },
+    "line.disruption.summary.out.of.service.one %@ %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ is %2$@"
+          }
+        }
+      }
+    },
+    "line.name.in.sentence %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the %@ line"
+          }
+        }
+      }
+    },
+    "line.name.in.sentence.dlr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the DLR"
+          }
+        }
+      }
+    },
+    "line.name.in.sentence.tram" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "London Trams"
+          }
+        }
+      }
+    },
+    "line.names.in.sentence %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "the %@ lines"
+          }
+        }
+      }
+    },
     "line.status.date.picker.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3179,26 +3311,13 @@
         }
       }
     },
-    "station.line.status.group.accessibility.collapsed" : {
-      "comment" : "Accessibility value for a Station screen line status row covering several lines, while its lines are hidden",
+    "station.line.status.sheet.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Collapsed"
-          }
-        }
-      }
-    },
-    "station.line.status.group.accessibility.expanded" : {
-      "comment" : "Accessibility value for a Station screen line status row covering several lines, while its lines are shown",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expanded"
+            "value" : "Line status"
           }
         }
       }

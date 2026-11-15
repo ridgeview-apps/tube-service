@@ -76,6 +76,15 @@ public extension TrainLineID {
         }
     }
 
+    /// The line as it reads inside a sentence, e.g. "the Circle line" or "the DLR".
+    var nameInSentence: String {
+        switch self {
+        case .dlr: String(localized: .lineNameInSentenceDlr)
+        case .tram: String(localized: .lineNameInSentenceTram)
+        default: String(localized: .lineNameInSentence(name))
+        }
+    }
+
     var xPostsSearchNameFilter: String {
         switch self {
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,

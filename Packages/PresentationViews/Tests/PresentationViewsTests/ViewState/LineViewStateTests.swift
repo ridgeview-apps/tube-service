@@ -266,10 +266,97 @@ struct LineViewStateTests {
     func groupedByStatus_noLines_isEmpty() {
         #expect([Line]().groupedByStatus().isEmpty)
     }
+
+    // MARK: - Disruption summary
+
+    @Test
+    func disruptionSummary_goodService_isNil() {
+        #expect([Line.withStatus(.circle, .goodService, "Good Service")].disruptionSummary == nil)
+    }
+
+    @Test
+    func disruptionSummary_oneLine_namesTheLine() {
+        let lines = [
+            Line.withStatus(.circle, .minorDelays, "Minor Delays"),
+            Line.withStatus(.metropolitan, .goodService, "Good Service")
+        ]
+        #expect(lines.disruptionSummary == "Minor delays on the Circle line")
+    }
+
+    @Test
+    func disruptionSummary_dlrAndTramsAreNotLines() {
+        #expect([Line.withStatus(.dlr, .severeDelays, "Severe Delays")].disruptionSummary == "Severe delays on the DLR")
+        #expect([Line.withStatus(.tram, .minorDelays, "Minor Delays")].disruptionSummary == "Minor delays on London Trams")
+    }
+
+    @Test
+    func disruptionSummary_severalLinesWithOneStatus_shareOneLinesPhrase() {
+        let lines = [
+            Line.withStatus(.metropolitan, .minorDelays, "Minor Delays"),
+            Line.withStatus(.circle, .minorDelays, "Minor Delays"),
+            Line.withStatus(.hammersmithAndCity, .minorDelays, "Minor Delays")
+        ]
+        #expect(lines.disruptionSummary == "Minor delays on the Circle, H&C and Met lines")
+    }
+
+    @Test
+    func disruptionSummary_severalStatuses_saysDisruption() {
+        let lines = [
+            Line.withStatus(.circle, .plannedClosure, "Planned Closure"),
+            Line.withStatus(.metropolitan, .minorDelays, "Minor Delays")
+        ]
+        #expect(lines.disruptionSummary == "Disruption on the Circle and Met lines")
+    }
+
+    @Test
+    func disruptionSummary_outOfService_isASentenceAboutTheLine() {
+        #expect([Line.withStatus(.circle, .suspended, "Suspended")].disruptionSummary == "The Circle line is suspended")
+        #expect([Line.withStatus(.dlr, .notRunning, "Not Running")].disruptionSummary == "The DLR is not running")
+        #expect([Line.withStatus(.tram, .serviceClosed, "Service Closed")].disruptionSummary == "London Trams is closed")
+    }
+
+    @Test
+    func disruptionSummary_severalLinesOutOfService_usesAPluralVerb() {
+        let lines = [
+            Line.withStatus(.circle, .partSuspended, "Part Suspended"),
+            Line.withStatus(.metropolitan, .partSuspended, "Part Suspended")
+        ]
+        #expect(lines.disruptionSummary == "The Circle and Met lines are part suspended")
+    }
+
+    @Test
+    func disruptionSummary_outOfServiceWithDelays_leadsWithTheMostSevere() {
+        let line = Line(
+            id: .circle,
+            lineStatuses: [
+                .with(statusSeverity: .severeDelays, statusSeverityDescription: "Severe Delays", reason: "A"),
+                .with(statusSeverity: .partSuspended, statusSeverityDescription: "Part Suspended", reason: "B")
+            ]
+        )
+        #expect([line].disruptionSummary == "The Circle line is part suspended")
+    }
+
+    @Test
+    func disruptionSummary_oneLineWithTwoStatuses_joinsThemInASentence() {
+        let line = Line(
+            id: .circle,
+            lineStatuses: [
+                .with(statusSeverity: .partClosure, statusSeverityDescription: "Part Closure", reason: "A"),
+                .with(statusSeverity: .minorDelays, statusSeverityDescription: "Minor Delays", reason: "B")
+            ]
+        )
+        #expect([line].disruptionSummary == "Part closure and minor delays on the Circle line")
+    }
 }
 
 private extension LineStatus {
     static func described(_ severity: LineStatusSeverity, _ description: String) -> LineStatus {
         .init(statusSeverity: severity, statusSeverityDescription: description, reason: nil, disruption: nil)
+    }
+}
+
+private extension Line {
+    static func withStatus(_ id: TrainLineID, _ severity: LineStatusSeverity, _ description: String) -> Line {
+        Line(id: id, lineStatuses: [.with(statusSeverity: severity, statusSeverityDescription: description)])
     }
 }

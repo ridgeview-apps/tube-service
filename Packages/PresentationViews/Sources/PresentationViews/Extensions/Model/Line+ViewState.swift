@@ -64,6 +64,77 @@ extension Sequence where Element == Line {
     }
 }
 
+extension Sequence where Element == Line {
+    /// A sentence saying which lines aren't running normally, e.g. "Minor delays on the Circle line", or nil when they
+    /// all are.
+    var disruptionSummary: String? {
+        let disruptedLines = disruptionsOnly()
+        guard let firstLine = disruptedLines.first else { return nil }
+        let lineIDs = disruptedLines.map(\.id)
+        let lineNames = lineIDs.namesInSentence
+        // "Suspended on the Circle line" reads badly, so lines that are out of service say so as a sentence of their
+        // own. The most severe status leads, e.g. part suspended with severe delays.
+        let mostSevereStatuses = Set(disruptedLines.map(\.statusSeverity))
+        if mostSevereStatuses.count == 1, let outOfServiceText = firstLine.statusSeverity?.outOfServiceText {
+            let sentence: LocalizedStringResource =
+                lineIDs.count == 1
+                ? .lineDisruptionSummaryOutOfServiceOne(lineNames, outOfServiceText)
+                : .lineDisruptionSummaryOutOfServiceMany(lineNames, outOfServiceText)
+            return String(localized: sentence).capitalizingFirstLetter
+        }
+        guard disruptedLines.groupedByStatus().count == 1 else {
+            return String(localized: .lineDisruptionSummaryMixed(lineNames))
+        }
+        return String(localized: .lineDisruptionSummary(firstLine.statusInSentence, lineNames))
+    }
+}
+
+private extension LineStatusSeverity {
+    /// What follows "the Circle line is", for the statuses that mean no trains (or only some) are running.
+    var outOfServiceText: String? {
+        switch self {
+        case .suspended: String(localized: .lineDisruptionOutOfServiceSuspended)
+        case .partSuspended: String(localized: .lineDisruptionOutOfServicePartSuspended)
+        case .notRunning: String(localized: .lineDisruptionOutOfServiceNotRunning)
+        case .closed, .serviceClosed: String(localized: .lineDisruptionOutOfServiceClosed)
+        default: nil
+        }
+    }
+}
+
+private extension String {
+    var capitalizingFirstLetter: String {
+        prefix(1).uppercased() + dropFirst()
+    }
+}
+
+private extension Array where Element == TrainLineID {
+    var namesInSentence: String {
+        if let lineID = first, count == 1 {
+            return lineID.nameInSentence
+        }
+        // DLR and London Trams aren't "lines", so they can't share one "the … lines" phrase
+        let areAllNamedLines = allSatisfy { $0 != .dlr && $0 != .tram }
+        guard areAllNamedLines else {
+            return map(\.nameInSentence).formatted(.list(type: .and))
+        }
+        let shortNames = map { $0.abbreviatedName(besideOtherLines: true) }.formatted(.list(type: .and))
+        return String(localized: .lineNamesInSentence(shortNames))
+    }
+}
+
+private extension Line {
+    /// The statuses joined as a sentence opening, e.g. "Part closure and minor delays".
+    var statusInSentence: String {
+        mergedLineStatuses
+            .flatMap(\.severityDescriptions)
+            .removingDuplicates()
+            .enumerated()
+            .map { index, description in index == 0 ? description : description.lowercased() }
+            .formatted(.list(type: .and))
+    }
+}
+
 public extension Line {
 
     typealias SortProperties = (
