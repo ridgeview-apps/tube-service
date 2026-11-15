@@ -14,7 +14,6 @@ struct RootScreen: View {
             journeyPlannerTab
             liveArrivalsTab
             mapsTab
-            searchTab
         }
         .tabViewStyle(.sidebarAdaptable)
         .defaultAdaptableTabBarPlacement(adaptableTabBarPlacement)
@@ -55,13 +54,6 @@ struct RootScreen: View {
             Label(L10n.mapsTabTitle, systemImage: "map")
         }
         .accessibilityIdentifier(AccessibilityID.Tab.maps)
-    }
-
-    private var searchTab: some TabContent<AppTab> {
-        Tab(value: AppTab.search, role: .search) {
-            SearchScreen()
-        }
-        .accessibilityIdentifier(AccessibilityID.Tab.search)
     }
 }
 

@@ -1,6 +1,7 @@
 import DataStores
 import Models
 import PresentationViews
+import Shared
 import SwiftUI
 
 @MainActor
@@ -20,6 +21,8 @@ struct ArrivalsPickerScreen: View {
     private static let maxRecents = 3
 
     @State private var nearbyLimit = nearbyPageSize
+    @State private var searchText = ""
+    @State private var isSearchPresented = false
 
 
     // MARK: - Layout
@@ -28,14 +31,19 @@ struct ArrivalsPickerScreen: View {
         @Bindable var router = router
         NavigationStack(path: $router.arrivals.path) {
             ArrivalsPickerView(
-                favourites: favouriteStations.map { StopRow(station: $0) },
-                recents: recentRows,
-                nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
-                canShowMoreNearby: location.nearestStations.count > nearbyLimit,
+                content: content,
                 locationAccess: locationAccess,
                 onAction: handleAction
             )
             .navigationTitle(Text(L10n.arrivalsPickerNavigationTitle))
+            // An explicit placement, as the automatic one hides the field until you scroll on iOS 27
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearchPresented,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: Text(L10n.searchPrompt)
+            )
+            .autocorrectionDisabled()
             .withSettingsToolbarButton()
             .refreshable {
                 location.refreshCurrentLocation()
@@ -43,6 +51,22 @@ struct ArrivalsPickerScreen: View {
             .appRouteDestinations()
         }
         .detectsLocationChanges(action: handleLocationChangeAction)
+    }
+
+    private var content: ArrivalsPickerView.Content {
+        if searchText.trimmed().isEmpty {
+            .suggestions(
+                favourites: favouriteStations.map { StopRow(station: $0) },
+                recents: recentRows,
+                nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
+                canShowMoreNearby: location.nearestStations.count > nearbyLimit
+            )
+        } else {
+            .results(
+                searchTerm: searchText,
+                stations: stations.filteredStations(matchingName: searchText).map { StopRow(station: $0) }
+            )
+        }
     }
 
     private var favouriteStations: [Station] {
@@ -81,11 +105,13 @@ struct ArrivalsPickerScreen: View {
         case .tappedStation(let station):
             router.push(.station(station))
         case .tappedFindStation:
-            router.startSearch()
+            isSearchPresented = true
         case .tappedShowMoreNearby:
             nearbyLimit += Self.nearbyPageSize
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
+        case .tappedClearRecents:
+            userPreferences.clearRecentlySelectedStations()
         case .reorderFavourites(let stationIDs):
             userPreferences.reorderFavouriteStops(stationIDs.map { .station(id: $0) })
         case .removeFavourites(let stationIDs):

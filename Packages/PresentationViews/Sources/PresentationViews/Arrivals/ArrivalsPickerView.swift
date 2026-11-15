@@ -4,40 +4,41 @@ import Models
 
 public struct ArrivalsPickerView: View {
 
+    public enum Content: Sendable {
+        case suggestions(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
+        case results(searchTerm: String, stations: [StopRow])
+    }
+
     public enum Action: Sendable {
         case tappedStation(Station)
         case tappedFindStation
         case tappedShowMoreNearby
         case tappedRefreshNearby
+        case tappedClearRecents
         case reorderFavourites([Station.ID])
         case removeFavourites([Station.ID])
     }
 
-    let favourites: [StopRow]
-    let recents: [StopRow]
-    let nearby: [StopRow]
-    let canShowMoreNearby: Bool
+    let content: Content
     let locationAccess: LocationAccess
     let onAction: (Action) -> Void
 
     @State private var editMode: EditMode = .inactive
+
+    private var favourites: [StopRow] {
+        if case .suggestions(let favourites, _, _, _) = content { favourites } else { [] }
+    }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
 
     // MARK: - Init
 
     public init(
-        favourites: [StopRow],
-        recents: [StopRow],
-        nearby: [StopRow],
-        canShowMoreNearby: Bool,
+        content: Content,
         locationAccess: LocationAccess,
         onAction: @escaping (Action) -> Void
     ) {
-        self.favourites = favourites
-        self.recents = recents
-        self.nearby = nearby
-        self.canShowMoreNearby = canShowMoreNearby
+        self.content = content
         self.locationAccess = locationAccess
         self.onAction = onAction
     }
@@ -45,17 +46,52 @@ public struct ArrivalsPickerView: View {
     // MARK: Layout
 
     public var body: some View {
+        contentView
+            .defaultMaxWidthWithFullBackground()
+            .environment(\.editMode, $editMode)
+            .onChange(of: favourites.isEmpty) {
+                if favourites.isEmpty { editMode = .inactive }
+            }
+    }
+
+    @ViewBuilder private var contentView: some View {
+        switch content {
+        case .suggestions(let favourites, let recents, let nearby, let canShowMoreNearby):
+            suggestionsList(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: canShowMoreNearby)
+        case .results(let searchTerm, let stations) where stations.isEmpty:
+            ContentUnavailableView.search(text: searchTerm)
+        case .results(_, let stations):
+            List {
+                Section {
+                    ForEach(stations) { row in
+                        stationButton(for: row)
+                    }
+                }
+                .lineGroupListRowStyle()
+            }
+            .listSectionSpacing(.compact)
+        }
+    }
+
+    private func suggestionsList(
+        favourites: [StopRow],
+        recents: [StopRow],
+        nearby: [StopRow],
+        canShowMoreNearby: Bool
+    ) -> some View {
         ScrollViewReader { reader in
             List {
-                favouritesSection
-                recentsSection
+                favouritesSection(favourites)
+                recentsSection(recents)
                 LocatedStationsSection(
                     title: .searchNearbySectionTitle,
                     locationAccess: locationAccess,
                     rows: nearby,
                     onAction: handleNearbyAction
                 )
-                showMoreNearbyButton
+                if canShowMoreNearby {
+                    showMoreNearbyButton
+                }
             }
             .listSectionSpacing(.compact)
             .onChange(of: nearby.count) {
@@ -65,14 +101,9 @@ public struct ArrivalsPickerView: View {
             }
         }
         .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.list)
-        .defaultMaxWidthWithFullBackground()
-        .environment(\.editMode, $editMode)
-        .onChange(of: favourites.isEmpty) {
-            if favourites.isEmpty { editMode = .inactive }
-        }
     }
 
-    @ViewBuilder private var favouritesSection: some View {
+    @ViewBuilder private func favouritesSection(_ favourites: [StopRow]) -> some View {
         Section {
             if favourites.isEmpty {
                 noFavouritesHintRow
@@ -127,43 +158,51 @@ public struct ArrivalsPickerView: View {
         .frame(minHeight: 52)
     }
 
-    @ViewBuilder private var recentsSection: some View {
+    @ViewBuilder private func recentsSection(_ recents: [StopRow]) -> some View {
         if !recents.isEmpty {
             Section {
                 ForEach(recents) { row in
-                    Button {
-                        handleTap(on: row)
-                    } label: {
-                        StopRowCell(row: row)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(row.stationID))
+                    stationButton(for: row)
                 }
             } header: {
-                Text(.searchRecentSectionTitle)
+                HStack {
+                    Text(.searchRecentSectionTitle)
+                    Spacer()
+                    Button(.searchRecentClearButtonTitle) {
+                        withAnimation { onAction(.tappedClearRecents) }
+                    }
+                }
             }
             .lineGroupListRowStyle()
         }
     }
 
+    private func stationButton(for row: StopRow) -> some View {
+        Button {
+            handleTap(on: row)
+        } label: {
+            StopRowCell(row: row)
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(row.stationID))
+    }
+
     private static let showMoreNearbyButtonID = "showMoreNearbyButton"
 
-    @ViewBuilder private var showMoreNearbyButton: some View {
-        if canShowMoreNearby {
-            Section {
-                HStack {
-                    Spacer()
-                    PagerButton(style: .down, title: .nearbyStationsMoreResultsButtonTitle) {
-                        onAction(.tappedShowMoreNearby)
-                    }
-                    Spacer()
+    private var showMoreNearbyButton: some View {
+        Section {
+            HStack {
+                Spacer()
+                PagerButton(style: .down, title: .nearbyStationsMoreResultsButtonTitle) {
+                    onAction(.tappedShowMoreNearby)
                 }
-                .id(Self.showMoreNearbyButtonID)
+                Spacer()
             }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
+            .id(Self.showMoreNearbyButtonID)
         }
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
     }
 
     private func handleTap(on row: StopRow) {
@@ -238,15 +277,21 @@ private struct Previewer: View {
     var favourites: [StopRow] = previewFavourites
     var recents: [StopRow] = previewRecents
     var nearby: [StopRow] = previewNearby
+    var results: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
+
+    private var content: ArrivalsPickerView.Content {
+        if let results {
+            .results(searchTerm: results.searchTerm, stations: results.stations)
+        } else {
+            .suggestions(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: !nearby.isEmpty)
+        }
+    }
 
     var body: some View {
         NavigationStack {
             ArrivalsPickerView(
-                favourites: favourites,
-                recents: recents,
-                nearby: nearby,
-                canShowMoreNearby: !nearby.isEmpty,
+                content: content,
                 locationAccess: .init(state: locationAccessState) {
                     print("Permissions requested")
                 },
@@ -287,4 +332,17 @@ private let previewNearby = [
 
 #Preview("New user - location allowed") {
     Previewer(favourites: [], recents: [])
+}
+
+#Preview("Search results") {
+    Previewer(
+        results: (
+            searchTerm: "finchley",
+            stations: [ModelStubs.eastFinchleyStation, ModelStubs.finchleyCentralStation, ModelStubs.westFinchleyStation].map { StopRow(station: $0) }
+        )
+    )
+}
+
+#Preview("Search - no results") {
+    Previewer(results: (searchTerm: "xyz", stations: []))
 }

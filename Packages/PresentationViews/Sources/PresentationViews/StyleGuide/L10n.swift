@@ -37,7 +37,6 @@ public enum L10n {
     public static let mapsNavigationTitle = LocalizedStringResource.mapsNavigationTitle
     public static let mapsTabTitle = LocalizedStringResource.mapsTabTitle
 
-    public static let searchNavigationTitle = LocalizedStringResource.searchNavigationTitle
     public static let searchPrompt = LocalizedStringResource.searchPrompt
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
