@@ -173,6 +173,8 @@ private extension JourneyLocationPicker.SectionState {
         switch sectionID {
         case .suggestions:
             "sparkles"
+        case .favourites:
+            "star.fill"
         case .nearbyStations:
             "location"
         case .searchResults:
@@ -184,6 +186,8 @@ private extension JourneyLocationPicker.SectionState {
         switch sectionID {
         case .suggestions:
             .journeyLocationPickerSuggestionsSectionTitle
+        case .favourites:
+            .globalFavourites
         case .nearbyStations:
             .journeyLocationPickerNearbyStationsSectionTitle
         case let .searchResults(count):
@@ -226,6 +230,10 @@ private struct Previewer: View {
                     .nationalRail(ModelStubs.twickenhamRailStation)
                 ]
             ),
+            .favourites([
+                .station(ModelStubs.kingsCrossStation),
+                .station(ModelStubs.paddingtonStation)
+            ]),
             .init(
                 sectionID: .nearbyStations,
                 values: [
@@ -233,6 +241,20 @@ private struct Previewer: View {
                     .station(ModelStubs.eastFinchleyStation)
                 ]
             )
+        ]
+    )
+}
+
+#Preview("Suggestions - new user") {
+    Previewer(
+        sections: [
+            .suggestions([.unknownCurrentLocation]),
+            .favourites([]),
+            .nearbyStations([
+                .station(ModelStubs.angelStation),
+                .station(ModelStubs.kingsCrossStation),
+                .station(ModelStubs.russellSquareStation)
+            ])
         ]
     )
 }
