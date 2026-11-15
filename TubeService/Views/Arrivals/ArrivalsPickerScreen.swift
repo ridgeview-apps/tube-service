@@ -81,7 +81,7 @@ struct ArrivalsPickerScreen: View {
         case .tappedStation(let station):
             router.push(.station(station))
         case .tappedFindStation:
-            router.selectedTab = .search
+            router.startSearch()
         case .tappedShowMoreNearby:
             nearbyLimit += Self.nearbyPageSize
         case .tappedRefreshNearby:

@@ -12,6 +12,7 @@ public struct SearchView: View {
         case tappedStation(Station)
         case tappedLine(TrainLineID)
         case tappedRefreshNearby
+        case tappedHint
     }
 
     let content: Content
@@ -74,18 +75,23 @@ public struct SearchView: View {
     }
 
     private var hintRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(.searchHintTitle)
-                Text(.searchHintSubtitle)
-                    .font(.footnote)
+        Button {
+            onAction(.tappedHint)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(.searchHintTitle)
+                    Text(.searchHintSubtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
+            .frame(minHeight: 52)
         }
-        .frame(minHeight: 52)
+        .buttonStyle(.plain)
     }
 
     @ViewBuilder private func stopsSection(title: LocalizedStringResource, rows: [StopRow]) -> some View {

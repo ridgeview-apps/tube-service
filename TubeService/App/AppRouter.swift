@@ -23,6 +23,13 @@ enum AppRoute: Hashable {
     case mapDetail(mapLink: MapLink)
 }
 
+// MARK: - SearchFieldState
+
+struct SearchFieldState {
+    var text = ""
+    var isPresented = false
+}
+
 // MARK: - AppRouter
 
 @Observable
@@ -38,6 +45,14 @@ final class AppRouter {
     var arrivals = NavigationRouter<AppRoute>()
     var maps = NavigationRouter<AppRoute>()
     var search = NavigationRouter<AppRoute>()
+
+    // Search
+    var searchField = SearchFieldState()
+
+    func startSearch() {
+        selectedTab = .search
+        searchField.isPresented = true
+    }
 
     // Sheets
     var sheetPresenter = SheetPresenter()
