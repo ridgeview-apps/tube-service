@@ -266,10 +266,135 @@ struct LineViewStateTests {
     func groupedByStatus_noLines_isEmpty() {
         #expect([Line]().groupedByStatus().isEmpty)
     }
+
+    // MARK: - Line name prefix
+
+    @Test(arguments: [
+        (TrainLineID.central, "CENTRAL LINE: Severe delays due to a signal failure.", "Severe delays due to a signal failure."),
+        (.bakerloo, "Bakerloo Line: No service between Stonebridge Park and Harrow.", "No service between Stonebridge Park and Harrow."),
+        (.waterlooAndCity, "Waterloo & City line: Service operates Monday to Friday.", "Service operates Monday to Friday."),
+        (.dlr, "DOCKLANDS LIGHT RAILWAY: Sunday 22 October, no service.", "Sunday 22 October, no service."),
+        (.tram, "LONDON TRAMS: Saturday 21 to Sunday 29 October.", "Saturday 21 to Sunday 29 October."),
+        (.mildmay, "London Overground: Minor delays between Sydenham and West Croydon.", "Minor delays between Sydenham and West Croydon."),
+        (.windrush, "WINDRUSH: no service between Sydenham and Crystal Palace.", "No service between Sydenham and Crystal Palace.")
+    ])
+    func lineNamePrefixIsRemovedFromAReason(lineID: TrainLineID, reason: String, expected: String) {
+        #expect(reason.removingLineNamePrefix(for: lineID) == expected)
+    }
+
+    @Test
+    func reasonWithoutTheLinesNameIsUnchanged() {
+        let noPrefix = "No service between Paddington and Abbey Wood."
+        let otherLine = "Victoria Line: Minor delays due to train cancellations."
+        let otherLabel = "Sunday 22 October: no service before 10:00."
+
+        #expect(noPrefix.removingLineNamePrefix(for: .elizabeth) == noPrefix)
+        #expect(otherLine.removingLineNamePrefix(for: .circle) == otherLine)
+        #expect(otherLabel.removingLineNamePrefix(for: .circle) == otherLabel)
+    }
+
+    @Test
+    func mergedLineStatuses_reasonsLoseTheLinesNamePrefix() {
+        let line = Line(
+            id: .jubilee,
+            lineStatuses: [.with(statusSeverity: .minorDelays, reason: "Jubilee Line: Minor delays due to train cancellations. ")]
+        )
+
+        #expect(line.mergedLineStatuses.first?.reason == "Minor delays due to train cancellations.")
+    }
+
+    // MARK: - Disruption summary
+
+    @Test
+    func disruptionSummary_goodService_isNil() {
+        #expect([Line.withStatus(.circle, .goodService, "Good Service")].disruptionSummary == nil)
+    }
+
+    @Test
+    func disruptionSummary_oneLine_namesTheLine() {
+        let lines = [
+            Line.withStatus(.circle, .minorDelays, "Minor Delays"),
+            Line.withStatus(.metropolitan, .goodService, "Good Service")
+        ]
+        #expect(lines.disruptionSummary == "Minor delays on the Circle line")
+    }
+
+    @Test
+    func disruptionSummary_dlrAndTramsAreNotLines() {
+        #expect([Line.withStatus(.dlr, .severeDelays, "Severe Delays")].disruptionSummary == "Severe delays on the DLR")
+        #expect([Line.withStatus(.tram, .minorDelays, "Minor Delays")].disruptionSummary == "Minor delays on London Trams")
+    }
+
+    @Test
+    func disruptionSummary_severalLinesWithOneStatus_shareOneLinesPhrase() {
+        let lines = [
+            Line.withStatus(.metropolitan, .minorDelays, "Minor Delays"),
+            Line.withStatus(.circle, .minorDelays, "Minor Delays"),
+            Line.withStatus(.hammersmithAndCity, .minorDelays, "Minor Delays")
+        ]
+        // The list's punctuation follows the region, e.g. US English adds a comma before "and"
+        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and))
+        #expect(lines.disruptionSummary == "Minor delays on the \(lineNames) lines")
+    }
+
+    @Test
+    func disruptionSummary_severalStatuses_saysDisruption() {
+        let lines = [
+            Line.withStatus(.circle, .plannedClosure, "Planned Closure"),
+            Line.withStatus(.metropolitan, .minorDelays, "Minor Delays")
+        ]
+        #expect(lines.disruptionSummary == "Disruption on the Circle and Met lines")
+    }
+
+    @Test
+    func disruptionSummary_outOfService_isASentenceAboutTheLine() {
+        #expect([Line.withStatus(.circle, .suspended, "Suspended")].disruptionSummary == "The Circle line is suspended")
+        #expect([Line.withStatus(.dlr, .notRunning, "Not Running")].disruptionSummary == "The DLR is not running")
+        #expect([Line.withStatus(.tram, .serviceClosed, "Service Closed")].disruptionSummary == "London Trams is closed")
+    }
+
+    @Test
+    func disruptionSummary_severalLinesOutOfService_usesAPluralVerb() {
+        let lines = [
+            Line.withStatus(.circle, .partSuspended, "Part Suspended"),
+            Line.withStatus(.metropolitan, .partSuspended, "Part Suspended")
+        ]
+        #expect(lines.disruptionSummary == "The Circle and Met lines are part suspended")
+    }
+
+    @Test
+    func disruptionSummary_outOfServiceWithDelays_leadsWithTheMostSevere() {
+        let line = Line(
+            id: .circle,
+            lineStatuses: [
+                .with(statusSeverity: .severeDelays, statusSeverityDescription: "Severe Delays", reason: "A"),
+                .with(statusSeverity: .partSuspended, statusSeverityDescription: "Part Suspended", reason: "B")
+            ]
+        )
+        #expect([line].disruptionSummary == "The Circle line is part suspended")
+    }
+
+    @Test
+    func disruptionSummary_oneLineWithTwoStatuses_joinsThemInASentence() {
+        let line = Line(
+            id: .circle,
+            lineStatuses: [
+                .with(statusSeverity: .partClosure, statusSeverityDescription: "Part Closure", reason: "A"),
+                .with(statusSeverity: .minorDelays, statusSeverityDescription: "Minor Delays", reason: "B")
+            ]
+        )
+        #expect([line].disruptionSummary == "Part closure and minor delays on the Circle line")
+    }
 }
 
 private extension LineStatus {
     static func described(_ severity: LineStatusSeverity, _ description: String) -> LineStatus {
         .init(statusSeverity: severity, statusSeverityDescription: description, reason: nil, disruption: nil)
+    }
+}
+
+private extension Line {
+    static func withStatus(_ id: TrainLineID, _ severity: LineStatusSeverity, _ description: String) -> Line {
+        Line(id: id, lineStatuses: [.with(statusSeverity: severity, statusSeverityDescription: description)])
     }
 }

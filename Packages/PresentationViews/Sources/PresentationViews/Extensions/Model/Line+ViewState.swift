@@ -64,6 +64,77 @@ extension Sequence where Element == Line {
     }
 }
 
+extension Sequence where Element == Line {
+    /// A sentence saying which lines aren't running normally, e.g. "Minor delays on the Circle line", or nil when they
+    /// all are.
+    var disruptionSummary: String? {
+        let disruptedLines = disruptionsOnly()
+        guard let firstLine = disruptedLines.first else { return nil }
+        let lineIDs = disruptedLines.map(\.id)
+        let lineNames = lineIDs.namesInSentence
+        // "Suspended on the Circle line" reads badly, so lines that are out of service say so as a sentence of their
+        // own. The most severe status leads, e.g. part suspended with severe delays.
+        let mostSevereStatuses = Set(disruptedLines.map(\.statusSeverity))
+        if mostSevereStatuses.count == 1, let outOfServiceText = firstLine.statusSeverity?.outOfServiceText {
+            let sentence: LocalizedStringResource =
+                lineIDs.count == 1
+                ? .lineDisruptionSummaryOutOfServiceOne(lineNames, outOfServiceText)
+                : .lineDisruptionSummaryOutOfServiceMany(lineNames, outOfServiceText)
+            return String(localized: sentence).capitalizingFirstLetter
+        }
+        guard disruptedLines.groupedByStatus().count == 1 else {
+            return String(localized: .lineDisruptionSummaryMixed(lineNames))
+        }
+        return String(localized: .lineDisruptionSummary(firstLine.statusInSentence, lineNames))
+    }
+}
+
+private extension LineStatusSeverity {
+    /// What follows "the Circle line is", for the statuses that mean no trains (or only some) are running.
+    var outOfServiceText: String? {
+        switch self {
+        case .suspended: String(localized: .lineDisruptionOutOfServiceSuspended)
+        case .partSuspended: String(localized: .lineDisruptionOutOfServicePartSuspended)
+        case .notRunning: String(localized: .lineDisruptionOutOfServiceNotRunning)
+        case .closed, .serviceClosed: String(localized: .lineDisruptionOutOfServiceClosed)
+        default: nil
+        }
+    }
+}
+
+private extension String {
+    var capitalizingFirstLetter: String {
+        prefix(1).uppercased() + dropFirst()
+    }
+}
+
+private extension Array where Element == TrainLineID {
+    var namesInSentence: String {
+        if let lineID = first, count == 1 {
+            return lineID.nameInSentence
+        }
+        // DLR and London Trams aren't "lines", so they can't share one "the … lines" phrase
+        let areAllNamedLines = allSatisfy { $0 != .dlr && $0 != .tram }
+        guard areAllNamedLines else {
+            return map(\.nameInSentence).formatted(.list(type: .and))
+        }
+        let shortNames = map { $0.abbreviatedName(besideOtherLines: true) }.formatted(.list(type: .and))
+        return String(localized: .lineNamesInSentence(shortNames))
+    }
+}
+
+private extension Line {
+    /// The statuses joined as a sentence opening, e.g. "Part closure and minor delays".
+    var statusInSentence: String {
+        mergedLineStatuses
+            .flatMap(\.severityDescriptions)
+            .removingDuplicates()
+            .enumerated()
+            .map { index, description in index == 0 ? description : description.lowercased() }
+            .formatted(.list(type: .and))
+    }
+}
+
 public extension Line {
 
     typealias SortProperties = (
@@ -119,7 +190,7 @@ extension Line {
         var groups = [MergedStatus]()
 
         for status in lineStatusesSortedBySeverity {
-            let reason = status.reason?.trimmed() ?? ""
+            let reason = status.reason?.trimmed().removingLineNamePrefix(for: id) ?? ""
             let additionalInfo = status.disruption?.additionalInfo?.trimmed()
 
             if let index = groups.firstIndex(
@@ -159,6 +230,33 @@ extension Line {
         return descriptions.prefix(2).joined(separator: ", ") + "…"
     }
 
+}
+
+extension String {
+    /// TfL starts most reasons with the line's name, which only repeats the screen's title, in varying forms, e.g.
+    /// "CENTRAL LINE: Severe delays…", "Bakerloo Line: No service…" or "DOCKLANDS LIGHT RAILWAY: Sunday 22 October…".
+    func removingLineNamePrefix(for lineID: TrainLineID) -> String {
+        guard let separator = range(of: ": ") else { return self }
+        let prefix = self[..<separator.lowerBound]
+        let isLineName = lineID.namesUsedByTfL.contains {
+            prefix.compare($0, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+        }
+        guard isLineName else { return self }
+        let remainder = self[separator.upperBound...]
+        return remainder.prefix(1).uppercased() + remainder.dropFirst()
+    }
+}
+
+private extension TrainLineID {
+    var namesUsedByTfL: [String] {
+        let ownNames = [name, "\(name) line"]
+        switch self {
+        case .dlr: return ownNames + ["Docklands Light Railway"]
+        case .tram: return ownNames + ["Trams", "London Trams"]
+        case .liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush: return ownNames + ["London Overground"]
+        default: return ownNames
+        }
+    }
 }
 
 private extension String {

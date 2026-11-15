@@ -72,7 +72,16 @@ public extension TrainLineID {
             return name
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
             .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
-            return "\(name) line"
+            return String(localized: .lineLongName(name))
+        }
+    }
+
+    /// The line as it reads inside a sentence, e.g. "the Circle line" or "the DLR".
+    var nameInSentence: String {
+        switch self {
+        case .dlr: String(localized: .lineNameInSentenceDlr)
+        case .tram: String(localized: .lineNameInSentenceTram)
+        default: String(localized: .lineNameInSentence(name))
         }
     }
 

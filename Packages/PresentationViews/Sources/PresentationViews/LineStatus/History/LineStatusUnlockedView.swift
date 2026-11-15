@@ -56,7 +56,7 @@ struct LineStatusUnlockedView: View {
         ContentUnavailableView(
             .lineStatusHistoryEmptyTitle,
             systemImage: "clock.badge.questionmark",
-            description: Text(.lineStatusHistoryEmptyDescription(lineID.longName))
+            description: Text(.lineStatusHistoryEmptyDescription(lineID.nameInSentence))
         )
     }
 
