@@ -92,7 +92,7 @@ public struct ArrivalsPickerView: View {
         } header: {
             HStack {
                 LineGroupSectionHeader(
-                    title: .arrivalsPickerFavouritesSectionTitle,
+                    title: .globalFavourites,
                     imageName: "star.fill"
                 )
                 Spacer()

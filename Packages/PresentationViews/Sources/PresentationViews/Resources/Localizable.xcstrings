@@ -139,17 +139,6 @@
         }
       }
     },
-    "arrivals.picker.favourites.section.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favourites"
-          }
-        }
-      }
-    },
     "arrivals.picker.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -498,6 +487,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Edit"
+          }
+        }
+      }
+    },
+    "global.favourites" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favourites"
           }
         }
       }

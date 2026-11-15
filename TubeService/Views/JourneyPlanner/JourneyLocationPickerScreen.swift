@@ -36,6 +36,12 @@ struct JourneyLocationPickerScreen: View {
     @Environment(StationsDataStore.self) var stations
     @Environment(\.dismiss) var dismiss
 
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var userPreferences: UserPreferences = .default
+
     @State private var suggestionsSection: JourneyLocationPicker.SectionState = .suggestions([])
     @State private var nearbyStationsSection: JourneyLocationPicker.SectionState = .nearbyStations([])
     @State private var searchTerm = ""
@@ -51,9 +57,14 @@ struct JourneyLocationPickerScreen: View {
         } else {
             [
                 suggestionsSection,
+                .favourites(favouriteStations.map { .station($0) }),
                 nearbyStationsSection
             ]
         }
+    }
+
+    private var favouriteStations: [Station] {
+        stations.allLondon.favourites(matching: userPreferences.favouriteStops)
     }
 
 
@@ -106,21 +117,21 @@ struct JourneyLocationPickerScreen: View {
             )
         ]
 
-        if let currentSelection {
-            if !pickerValues.alreadyContains(currentSelection) {
-                pickerValues.append(currentSelection)
-            }
-        }
-
+        let favouriteIDs = Set(favouriteStations.map(\.id))
         let recentJourneyPickerValues =
             recentJourneys
             .flatMap {
                 [$0.fromLocation, $0.toLocation, $0.viaLocation]
             }
             .compactMap { $0 }
-        recentJourneyPickerValues.forEach {
-            if !pickerValues.alreadyContains($0) {
-                pickerValues.append($0)
+        let candidates = [currentSelection].compactMap { $0 } + recentJourneyPickerValues
+
+        for candidate in candidates {
+            if case .station(let station) = candidate, favouriteIDs.contains(station.id) {
+                continue
+            }
+            if !pickerValues.alreadyContains(candidate) {
+                pickerValues.append(candidate)
             }
         }
 

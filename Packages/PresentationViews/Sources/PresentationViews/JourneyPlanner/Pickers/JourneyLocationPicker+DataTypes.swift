@@ -8,7 +8,7 @@ public enum JourneyLocationPicker: Sendable {
 
     public struct SectionState: Hashable, Identifiable {
         public enum SectionID: Hashable {
-            case suggestions, nearbyStations, searchResults(count: Int)
+            case suggestions, favourites, nearbyStations, searchResults(count: Int)
         }
 
         public var id: SectionID { sectionID }
@@ -18,6 +18,10 @@ public enum JourneyLocationPicker: Sendable {
 
         public static func suggestions(_ values: [Value]) -> SectionState {
             .init(sectionID: .suggestions, values: values)
+        }
+
+        public static func favourites(_ values: [Value]) -> SectionState {
+            .init(sectionID: .favourites, values: values)
         }
 
         public static func nearbyStations(_ values: [Value]) -> SectionState {
