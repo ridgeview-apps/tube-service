@@ -68,6 +68,12 @@ public final class StationsDataStore {
         )
     }
 
+    public func filteredLines(matchingName name: String) -> [TrainLineID] {
+        TrainLineID.allCases
+            .filter { $0.name.alphaNumerics.localizedStandardContains(name.trimmed().alphaNumerics) }
+            .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
+    }
+
     /// The station's notices that haven't ended, closures first.
     public func notices(forStationID stationID: Station.ID) -> [StationNotice] {
         let now = now()

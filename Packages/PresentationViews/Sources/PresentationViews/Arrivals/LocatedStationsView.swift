@@ -54,32 +54,12 @@ public struct LocatedStationsView: View {
         }
     }
 
-    @ViewBuilder private var resultsSectionView: some View {
-        Section {
-            switch locationAccess.state {
-            case .notAsked:
-                allowLocationRow
-            case .denied:
-                locationOffRow
-            case .allowed(.loaded) where visibleStations.isEmpty:
-                zeroResultsView
-            case .allowed(.loaded), .allowed(.loading):
-                populatedResultsView
-            case .allowed(.failure):
-                errorView
-            }
-        } header: {
-            resultsHeaderView
-        }
-        .lineGroupListRowStyle()
-    }
-
-
-    @ViewBuilder private var resultsHeaderView: some View {
-        if let loadingState = locationAccess.loadingState {
-            LoadingStatusView(loadingState: loadingState)
-                .defaultLoadingStatusStyle()
-        }
+    private var resultsSectionView: some View {
+        LocatedStationsSection(
+            locationAccess: locationAccess,
+            rows: visibleStations.map(StopRow.init),
+            onAction: onAction
+        )
     }
 
     private var visibleStations: [LocatedStation] {
@@ -87,85 +67,6 @@ public struct LocatedStationsView: View {
         let pageSize = sectionState.pageSize
 
         return Array(sectionState.stations.prefix(currentPageNo * pageSize))
-    }
-
-    private var allowLocationRow: some View {
-        Button {
-            locationAccess.onRequestPermissions()
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "location.fill")
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(.locationAccessNearbyAllowTitle)
-                    Text(.locationAccessNearbyAllowSubtitle)
-                        .font(.footnote)
-                        // A hierarchical style would be tinted by the button
-                        .foregroundStyle(Color.secondary)
-                }
-            }
-            .frame(minHeight: 52)
-        }
-    }
-
-    private var locationOffRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "location.slash")
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(.locationAccessNearbyOffTitle)
-                Text(.locationAccessNearbyOffSubtitle)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            OpenSettingsButton()
-        }
-        .frame(minHeight: 52)
-    }
-
-    private var zeroResultsView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(.nearbyStationsNoResults)
-            refreshButton
-        }
-    }
-
-    @ViewBuilder
-    private var populatedResultsView: some View {
-        ForEach(visibleStations, id: \.station.id) { locatedStation in
-            Button {
-                onAction(.tappedStation(locatedStation.station))
-            } label: {
-                StationLineGroupCell(
-                    style: .distance(metres: locatedStation.distance),
-                    station: locatedStation.station
-                )
-                .frame(minHeight: 52)
-            }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier(AccessibilityID.Nearby.station(locatedStation.station.id))
-        }
-    }
-
-    private var errorView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(.nearbyStationsLoadFailureTitle)
-                .font(.headline)
-            refreshButton
-        }
-    }
-
-    private var refreshButton: some View {
-        Button {
-            onAction(.tappedRefresh)
-        } label: {
-            HStack(spacing: 4) {
-                Image(systemName: "arrow.clockwise")
-                Text(.refreshButtonTitle)
-            }
-        }
-        .buttonStyle(.primary)
     }
 
     @ViewBuilder private var showMoreResultsButton: some View {

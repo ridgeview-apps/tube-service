@@ -14,6 +14,7 @@ public enum AccessibilityID {
         public static let arrivals = "tab.arrivals"
         public static let nearby = "tab.nearby"
         public static let maps = "tab.maps"
+        public static let search = "tab.search"
     }
 
     public enum FavouritesButton {
