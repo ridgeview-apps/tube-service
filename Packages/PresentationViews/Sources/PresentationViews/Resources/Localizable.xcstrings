@@ -572,6 +572,17 @@
         }
       }
     },
+    "global.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
     "global.try.again" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1965,46 +1976,68 @@
         }
       }
     },
-    "location.services.access.denied.message.title" : {
+    "location.access.allow.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open App Settings to allow access to your current location"
+            "value" : "Allow location access"
           }
         }
       }
     },
-    "location.services.allow.access.button.title" : {
+    "location.access.nearby.allow.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Current location"
+            "value" : "Uses your location to find the closest stations"
           }
         }
       }
     },
-    "location.services.allow.access.footer.title" : {
+    "location.access.nearby.allow.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Your location will be used for journey planning and to detect stations nearby"
+            "value" : "Show stations near you"
           }
         }
       }
     },
-    "location.services.allow.access.header.title" : {
+    "location.access.nearby.off.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap the button below to allow access to your current location"
+            "value" : "Turn it on in Settings to see nearby stations"
+          }
+        }
+      }
+    },
+    "location.access.nearby.off.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location is off"
+          }
+        }
+      }
+    },
+    "location.access.off.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location access is off"
           }
         }
       }
@@ -2837,9 +2870,6 @@
         }
       }
     },
-    "Permissions granted view" : {
-
-    },
     "Picker preview" : {
 
     },
@@ -3132,6 +3162,18 @@
         }
       }
     },
+    "station.info.title" : {
+      "comment" : "Labels the Station screen's toolbar button that opens the station's notices and location",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Station info"
+          }
+        }
+      }
+    },
     "station.line.chip.disrupted" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3175,18 +3217,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Line status unavailable"
-          }
-        }
-      }
-    },
-    "station.info.title" : {
-      "comment" : "Labels the Station screen's toolbar button that opens the station's notices and location",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Station info"
           }
         }
       }
@@ -3835,9 +3865,6 @@
           }
         }
       }
-    },
-    "Warning" : {
-
     }
   },
   "version" : "1.2"
