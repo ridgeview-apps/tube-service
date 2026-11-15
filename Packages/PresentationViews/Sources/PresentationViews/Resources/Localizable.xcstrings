@@ -2950,6 +2950,17 @@
         }
       }
     },
+    "search.recent.clear.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
     "search.recent.section.title" : {
       "extractionState" : "manual",
       "localizations" : {

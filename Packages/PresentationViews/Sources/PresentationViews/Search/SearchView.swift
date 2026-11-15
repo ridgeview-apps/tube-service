@@ -13,6 +13,7 @@ public struct SearchView: View {
         case tappedLine(TrainLineID)
         case tappedRefreshNearby
         case tappedHint
+        case tappedClearRecents
     }
 
     let content: Content
@@ -70,7 +71,11 @@ public struct SearchView: View {
             }
             .lineGroupListRowStyle()
         } else {
-            stopsSection(title: .searchRecentSectionTitle, rows: recents)
+            stopsSection(title: .searchRecentSectionTitle, rows: recents) {
+                Button(.searchRecentClearButtonTitle) {
+                    withAnimation { onAction(.tappedClearRecents) }
+                }
+            }
         }
     }
 
@@ -94,7 +99,11 @@ public struct SearchView: View {
         .buttonStyle(.plain)
     }
 
-    @ViewBuilder private func stopsSection(title: LocalizedStringResource, rows: [StopRow]) -> some View {
+    @ViewBuilder private func stopsSection(
+        title: LocalizedStringResource,
+        rows: [StopRow],
+        @ViewBuilder headerAccessory: () -> some View = { EmptyView() }
+    ) -> some View {
         if !rows.isEmpty {
             Section {
                 ForEach(rows) { row in
@@ -106,7 +115,11 @@ public struct SearchView: View {
                     .buttonStyle(.plain)
                 }
             } header: {
-                Text(title)
+                HStack {
+                    Text(title)
+                    Spacer()
+                    headerAccessory()
+                }
             }
             .lineGroupListRowStyle()
         }

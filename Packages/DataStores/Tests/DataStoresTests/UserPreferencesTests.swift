@@ -262,6 +262,17 @@ struct UserPreferencesTests {
         #expect(userPreferences.recentlySelectedStations == [eastFinchleyStationID, angelStationID])
     }
 
+    @Test
+    func clearRecentlySelectedStations() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.saveRecentlySelectedStation(ModelStubs.angelStation.id)
+        userPreferences.saveRecentlySelectedStation(ModelStubs.eastFinchleyStation.id)
+
+        userPreferences.clearRecentlySelectedStations()
+
+        #expect(userPreferences.recentlySelectedStations.isEmpty)
+    }
+
     // MARK: - Selected line groups
 
     // Victoria is listed before Northern so the default (first by name) differs from the first in the seed data

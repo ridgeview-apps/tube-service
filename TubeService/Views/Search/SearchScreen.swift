@@ -85,6 +85,8 @@ struct SearchScreen: View {
             location.refreshCurrentLocation()
         case .tappedHint:
             router.searchField.isPresented = true
+        case .tappedClearRecents:
+            userPreferences.clearRecentlySelectedStations()
         }
     }
 }
