@@ -190,7 +190,7 @@ extension Line {
         var groups = [MergedStatus]()
 
         for status in lineStatusesSortedBySeverity {
-            let reason = status.reason?.trimmed() ?? ""
+            let reason = status.reason?.trimmed().removingLineNamePrefix(for: id) ?? ""
             let additionalInfo = status.disruption?.additionalInfo?.trimmed()
 
             if let index = groups.firstIndex(
@@ -230,6 +230,33 @@ extension Line {
         return descriptions.prefix(2).joined(separator: ", ") + "…"
     }
 
+}
+
+extension String {
+    /// TfL starts most reasons with the line's name, which only repeats the screen's title, in varying forms, e.g.
+    /// "CENTRAL LINE: Severe delays…", "Bakerloo Line: No service…" or "DOCKLANDS LIGHT RAILWAY: Sunday 22 October…".
+    func removingLineNamePrefix(for lineID: TrainLineID) -> String {
+        guard let separator = range(of: ": ") else { return self }
+        let prefix = self[..<separator.lowerBound]
+        let isLineName = lineID.namesUsedByTfL.contains {
+            prefix.compare($0, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+        }
+        guard isLineName else { return self }
+        let remainder = self[separator.upperBound...]
+        return remainder.prefix(1).uppercased() + remainder.dropFirst()
+    }
+}
+
+private extension TrainLineID {
+    var namesUsedByTfL: [String] {
+        let ownNames = [name, "\(name) line"]
+        switch self {
+        case .dlr: return ownNames + ["Docklands Light Railway"]
+        case .tram: return ownNames + ["Trams", "London Trams"]
+        case .liberty, .lioness, .mildmay, .suffragette, .weaver, .windrush: return ownNames + ["London Overground"]
+        default: return ownNames
+        }
+    }
 }
 
 private extension String {

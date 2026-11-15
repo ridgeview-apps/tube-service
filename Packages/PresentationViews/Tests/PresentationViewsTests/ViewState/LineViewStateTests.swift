@@ -267,6 +267,42 @@ struct LineViewStateTests {
         #expect([Line]().groupedByStatus().isEmpty)
     }
 
+    // MARK: - Line name prefix
+
+    @Test(arguments: [
+        (TrainLineID.central, "CENTRAL LINE: Severe delays due to a signal failure.", "Severe delays due to a signal failure."),
+        (.bakerloo, "Bakerloo Line: No service between Stonebridge Park and Harrow.", "No service between Stonebridge Park and Harrow."),
+        (.waterlooAndCity, "Waterloo & City line: Service operates Monday to Friday.", "Service operates Monday to Friday."),
+        (.dlr, "DOCKLANDS LIGHT RAILWAY: Sunday 22 October, no service.", "Sunday 22 October, no service."),
+        (.tram, "LONDON TRAMS: Saturday 21 to Sunday 29 October.", "Saturday 21 to Sunday 29 October."),
+        (.mildmay, "London Overground: Minor delays between Sydenham and West Croydon.", "Minor delays between Sydenham and West Croydon."),
+        (.windrush, "WINDRUSH: no service between Sydenham and Crystal Palace.", "No service between Sydenham and Crystal Palace.")
+    ])
+    func lineNamePrefixIsRemovedFromAReason(lineID: TrainLineID, reason: String, expected: String) {
+        #expect(reason.removingLineNamePrefix(for: lineID) == expected)
+    }
+
+    @Test
+    func reasonWithoutTheLinesNameIsUnchanged() {
+        let noPrefix = "No service between Paddington and Abbey Wood."
+        let otherLine = "Victoria Line: Minor delays due to train cancellations."
+        let otherLabel = "Sunday 22 October: no service before 10:00."
+
+        #expect(noPrefix.removingLineNamePrefix(for: .elizabeth) == noPrefix)
+        #expect(otherLine.removingLineNamePrefix(for: .circle) == otherLine)
+        #expect(otherLabel.removingLineNamePrefix(for: .circle) == otherLabel)
+    }
+
+    @Test
+    func mergedLineStatuses_reasonsLoseTheLinesNamePrefix() {
+        let line = Line(
+            id: .jubilee,
+            lineStatuses: [.with(statusSeverity: .minorDelays, reason: "Jubilee Line: Minor delays due to train cancellations. ")]
+        )
+
+        #expect(line.mergedLineStatuses.first?.reason == "Minor delays due to train cancellations.")
+    }
+
     // MARK: - Disruption summary
 
     @Test
