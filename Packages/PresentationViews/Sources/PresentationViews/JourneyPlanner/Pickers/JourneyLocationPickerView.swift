@@ -5,7 +5,7 @@ import SwiftUI
 public struct JourneyLocationPickerView: View {
 
     public let sections: [JourneyLocationPicker.SectionState]
-    public let locationUIStatus: LocationUIStatus
+    public let locationAccess: LocationAccess
     public let onAction: (JourneyLocationPicker.Action) -> Void
 
     @Binding public var searchTerm: String
@@ -14,12 +14,12 @@ public struct JourneyLocationPickerView: View {
     public init(
         searchTerm: Binding<String>,
         sections: [JourneyLocationPicker.SectionState],
-        locationUIStatus: LocationUIStatus,
+        locationAccess: LocationAccess,
         onAction: @escaping (JourneyLocationPicker.Action) -> Void
     ) {
         self._searchTerm = searchTerm
         self.sections = sections
-        self.locationUIStatus = locationUIStatus
+        self.locationAccess = locationAccess
         self.onAction = onAction
     }
 
@@ -83,11 +83,24 @@ public struct JourneyLocationPickerView: View {
         }
     }
 
+    @ViewBuilder
     private func selectableRow(for value: JourneyLocationPicker.Value) -> some View {
-        Button {
-            onAction(.valueSelected(value))
-        } label: {
-            rowLabel(forValue: value)
+        if value.isCurrentLocation, locationAccess.state == .denied {
+            HStack {
+                rowLabel(forValue: value)
+                Spacer()
+                OpenSettingsButton()
+            }
+        } else {
+            Button {
+                if value.isCurrentLocation, locationAccess.state == .notAsked {
+                    locationAccess.onRequestPermissions()
+                } else {
+                    onAction(.valueSelected(value))
+                }
+            } label: {
+                rowLabel(forValue: value)
+            }
         }
     }
 
@@ -108,18 +121,12 @@ public struct JourneyLocationPickerView: View {
                 }
             case .namedLocation(let location):
                 if location.isCurrentLocation {
-                    Group {
-                        Text(Image(systemName: "location.fill"))
-                            .imageScale(.small)
-                        VStack(alignment: .leading) {
-                            Text(.journeyPlannerLocationValueCurrentLocation)
-                            if let locationTitle = location.name?.formattedSingleLineTitle, !locationTitle.isEmpty {
-                                Text(locationTitle)
-                                    .font(.footnote)
-                            }
-                        }
+                    Text(Image(systemName: "location.fill"))
+                        .imageScale(.small)
+                    VStack(alignment: .leading) {
+                        Text(.journeyPlannerLocationValueCurrentLocation)
+                        currentLocationSubtitle(for: location)
                     }
-                    .locationUIStatus(locationUIStatus)
                 } else {
                     if let name = location.name {
                         VStack(alignment: .leading) {
@@ -134,6 +141,25 @@ public struct JourneyLocationPickerView: View {
             }
         }
         .foregroundStyle(.foreground)
+    }
+
+    @ViewBuilder
+    private func currentLocationSubtitle(for location: JourneyLocationPicker.NamedLocationValue) -> some View {
+        switch locationAccess.state {
+        case .notAsked:
+            Text(.locationAccessAllowSubtitle)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        case .denied:
+            Text(.locationAccessOffSubtitle)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        case .allowed:
+            if let locationTitle = location.name?.formattedSingleLineTitle, !locationTitle.isEmpty {
+                Text(locationTitle)
+                    .font(.footnote)
+            }
+        }
     }
 }
 
@@ -174,15 +200,15 @@ import ModelStubs
 private struct Previewer: View {
     @State var searchTerm: String = ""
     var sections: [JourneyLocationPicker.SectionState]
-    var locationUIStatus: LocationUIStatus = .init(style: .locationAllowed(.loaded)) {
-        print("Location allowed")
+    var locationAccess: LocationAccess = .init(state: .allowed(.loaded)) {
+        print("Permissions requested")
     }
 
     var body: some View {
         JourneyLocationPickerView(
             searchTerm: $searchTerm,
             sections: sections,
-            locationUIStatus: locationUIStatus
+            locationAccess: locationAccess
         ) {
             print("Action \($0)")
         }
@@ -221,8 +247,8 @@ private struct Previewer: View {
                 ]
             )
         ],
-        locationUIStatus: .init(
-            style: .setUp(showsHeader: false),
+        locationAccess: .init(
+            state: .notAsked,
             onRequestPermissions: {
                 print("Request permissions")
             }
@@ -240,8 +266,8 @@ private struct Previewer: View {
                 ]
             )
         ],
-        locationUIStatus: .init(
-            style: .openSettingsToAllowLocation,
+        locationAccess: .init(
+            state: .denied,
             onRequestPermissions: {
                 print("Request permissions")
             }

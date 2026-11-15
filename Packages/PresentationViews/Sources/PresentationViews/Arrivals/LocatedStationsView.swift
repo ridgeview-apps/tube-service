@@ -9,7 +9,7 @@ public struct LocatedStationsView: View {
         case tappedStation(Station)
     }
 
-    let locationUIStatus: LocationUIStatus
+    let locationAccess: LocationAccess
     let onAction: (Action) -> Void
 
     @Binding var sectionState: LocatedStationsResultsSectionState
@@ -17,11 +17,11 @@ public struct LocatedStationsView: View {
     // MARK: - Init
 
     public init(
-        locationUIStatus: LocationUIStatus,
+        locationAccess: LocationAccess,
         onAction: @escaping (Action) -> Void,
         sectionState: Binding<LocatedStationsResultsSectionState>
     ) {
-        self.locationUIStatus = locationUIStatus
+        self.locationAccess = locationAccess
         self.onAction = onAction
         self._sectionState = sectionState
     }
@@ -31,7 +31,6 @@ public struct LocatedStationsView: View {
 
     public var body: some View {
         locatedStationsListView
-            .locationUIStatus(locationUIStatus)
             .defaultMaxWidthWithFullBackground()
             .frame(maxHeight: .infinity)
             .background(Color.defaultBackground)
@@ -57,15 +56,17 @@ public struct LocatedStationsView: View {
 
     @ViewBuilder private var resultsSectionView: some View {
         Section {
-            if let loadingState = locationUIStatus.loadingState {
-                switch loadingState {
-                case .loaded where visibleStations.isEmpty:
-                    zeroResultsView
-                case .loaded, .loading:
-                    populatedResultsView
-                case .failure:
-                    errorView
-                }
+            switch locationAccess.state {
+            case .notAsked:
+                allowLocationRow
+            case .denied:
+                locationOffRow
+            case .allowed(.loaded) where visibleStations.isEmpty:
+                zeroResultsView
+            case .allowed(.loaded), .allowed(.loading):
+                populatedResultsView
+            case .allowed(.failure):
+                errorView
             }
         } header: {
             resultsHeaderView
@@ -75,7 +76,7 @@ public struct LocatedStationsView: View {
 
 
     @ViewBuilder private var resultsHeaderView: some View {
-        if let loadingState = locationUIStatus.loadingState {
+        if let loadingState = locationAccess.loadingState {
             LoadingStatusView(loadingState: loadingState)
                 .defaultLoadingStatusStyle()
         }
@@ -86,6 +87,41 @@ public struct LocatedStationsView: View {
         let pageSize = sectionState.pageSize
 
         return Array(sectionState.stations.prefix(currentPageNo * pageSize))
+    }
+
+    private var allowLocationRow: some View {
+        Button {
+            locationAccess.onRequestPermissions()
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "location.fill")
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(.locationAccessNearbyAllowTitle)
+                    Text(.locationAccessNearbyAllowSubtitle)
+                        .font(.footnote)
+                        // A hierarchical style would be tinted by the button
+                        .foregroundStyle(Color.secondary)
+                }
+            }
+            .frame(minHeight: 52)
+        }
+    }
+
+    private var locationOffRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "location.slash")
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(.locationAccessNearbyOffTitle)
+                Text(.locationAccessNearbyOffSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            OpenSettingsButton()
+        }
+        .frame(minHeight: 52)
     }
 
     private var zeroResultsView: some View {
@@ -166,22 +202,22 @@ public struct LocatedStationsView: View {
 import ModelStubs
 
 private struct Previewer: View {
-    var locationUIStyle: LocationUIStatus.Style
+    var locationAccessState: LocationAccess.State
     var onAction: (LocatedStationsView.Action) -> Void = { print($0) }
     @State var currentPageNo = 1
     @State var sectionState: LocatedStationsResultsSectionState = .init(stations: [])
     var pagedResultsSize: Int = 5
 
-    var locationUIStatus: LocationUIStatus {
-        .init(style: locationUIStyle) {
-            print("Location allowed")
+    var locationAccess: LocationAccess {
+        .init(state: locationAccessState) {
+            print("Permissions requested")
         }
     }
 
     var body: some View {
         NavigationStack {
             LocatedStationsView(
-                locationUIStatus: locationUIStatus,
+                locationAccess: locationAccess,
                 onAction: onAction,
                 sectionState: $sectionState
             )
@@ -192,23 +228,23 @@ private struct Previewer: View {
 
 
 #Preview("Setup") {
-    Previewer(locationUIStyle: .setUp(showsHeader: true))
+    Previewer(locationAccessState: .notAsked)
 }
 
 #Preview("Permission denied") {
-    Previewer(locationUIStyle: .openSettingsToAllowLocation)
+    Previewer(locationAccessState: .denied)
 }
 
 #Preview("Loading") {
     Previewer(
-        locationUIStyle: .locationAllowed(.loading),
+        locationAccessState: .allowed(.loading),
         sectionState: .init(stations: [])
     )
 }
 
 #Preview("Loaded - stations found") {
     Previewer(
-        locationUIStyle: .locationAllowed(.loaded),
+        locationAccessState: .allowed(.loaded),
         sectionState: .init(
             stations: [
                 ModelStubs.locatedStationWoodsidePark,
@@ -224,7 +260,7 @@ private struct Previewer: View {
 
 #Preview("Error") {
     Previewer(
-        locationUIStyle: .locationAllowed(.failure(errorMessage: "Oops something went wrong")),
+        locationAccessState: .allowed(.failure(errorMessage: "Oops something went wrong")),
         sectionState: .init(stations: [])
     )
 }
@@ -232,7 +268,7 @@ private struct Previewer: View {
 
 #Preview("Loaded - zero results") {
     Previewer(
-        locationUIStyle: .locationAllowed(.loaded),
+        locationAccessState: .allowed(.loaded),
         sectionState: .init(stations: [])
     )
 }

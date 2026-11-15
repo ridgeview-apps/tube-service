@@ -72,7 +72,7 @@ struct JourneyLocationPickerScreen: View {
         JourneyLocationPickerView(
             searchTerm: $searchTerm,
             sections: locationPickerSections,
-            locationUIStatus: locationUIStatus,
+            locationAccess: locationAccess,
             onAction: handleLocationPickerAction
         )
         .navigationTitle(Text(navigationTitle))
@@ -133,12 +133,9 @@ struct JourneyLocationPickerScreen: View {
         resultsAggregator.nationalRailStations = stations.filteredNationalRailStations(matching: searchTerm)
     }
 
-    private var locationUIStatus: LocationUIStatus {
+    private var locationAccess: LocationAccess {
         .init(
-            style: location.locationUIStyle(
-                showsSetUpHeader: false,
-                loadingState: location.detectionState.toLoadingState()
-            ),
+            state: location.locationAccessState(loadingState: location.detectionState.toLoadingState()),
             onRequestPermissions: {
                 location.promptForPermissions()
                 handleLocationPickerAction(.valueSelected(.unknownCurrentLocation))

@@ -3,16 +3,16 @@ import PresentationViews
 
 extension LocationDataStore {
 
-    func locationUIStyle(showsSetUpHeader: Bool = true, loadingState: LoadingState) -> LocationUIStatus.Style {
+    func locationAccessState(loadingState: LoadingState) -> LocationAccess.State {
         switch authorizationStatus {
         case .notDetermined:
-            return .setUp(showsHeader: showsSetUpHeader)
+            return .notAsked
         case .restricted, .denied:
-            return .openSettingsToAllowLocation
+            return .denied
         case .authorizedAlways, .authorizedWhenInUse, .authorized:
-            return .locationAllowed(loadingState)
+            return .allowed(loadingState)
         @unknown default:
-            return .locationAllowed(loadingState)
+            return .allowed(loadingState)
         }
     }
 }

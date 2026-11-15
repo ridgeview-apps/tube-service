@@ -8,12 +8,11 @@ struct OpenSettingsButton: View {
         Button {
             openSettings()
         } label: {
-            HStack(spacing: 4) {
-                Image(systemName: "gear")
-                    .imageScale(.large)
-                Text(.openAppSettingsButtonTitle)
-            }
+            Text(.globalSettings)
         }
+        .buttonStyle(.bordered)
+        .buttonBorderShape(.capsule)
+        .controlSize(.small)
     }
 
     private func openSettings() {
@@ -25,9 +24,5 @@ struct OpenSettingsButton: View {
 }
 
 #Preview {
-    VStack {
-        OpenSettingsButton()
-        OpenSettingsButton()
-            .buttonStyle(.primary)
-    }
+    OpenSettingsButton()
 }

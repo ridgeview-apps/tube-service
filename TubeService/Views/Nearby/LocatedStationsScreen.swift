@@ -28,7 +28,7 @@ struct LocatedStationsScreen: View {
 
     private var nearbyStationsListView: some View {
         LocatedStationsView(
-            locationUIStatus: locationUIStatus,
+            locationAccess: locationAccess,
             onAction: handleLocatedStationsViewAction,
             sectionState: $sectionState
         )
@@ -39,9 +39,9 @@ struct LocatedStationsScreen: View {
         }
     }
 
-    private var locationUIStatus: LocationUIStatus {
+    private var locationAccess: LocationAccess {
         .init(
-            style: location.locationUIStyle(loadingState: location.detectionState.toLoadingState()),
+            state: location.locationAccessState(loadingState: location.detectionState.toLoadingState()),
             onRequestPermissions: {
                 location.promptForPermissions()
             }
