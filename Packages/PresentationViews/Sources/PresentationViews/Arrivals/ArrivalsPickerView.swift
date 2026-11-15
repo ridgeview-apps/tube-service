@@ -166,12 +166,13 @@ public struct ArrivalsPickerView: View {
                 }
             } header: {
                 HStack {
-                    Text(.searchRecentSectionTitle)
+                    LineGroupSectionHeader(title: .searchRecentSectionTitle, imageName: "clock")
                     Spacer()
-                    Button(.searchRecentClearButtonTitle) {
+                    SectionHeaderButton(title: .searchRecentClearButtonTitle) {
                         withAnimation { onAction(.tappedClearRecents) }
                     }
                 }
+                .secondarySectionHeaderStyle()
             }
             .lineGroupListRowStyle()
         }
