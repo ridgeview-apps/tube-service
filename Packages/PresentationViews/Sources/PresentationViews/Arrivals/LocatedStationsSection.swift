@@ -38,10 +38,11 @@ struct LocatedStationsSection: View {
     @ViewBuilder private var headerView: some View {
         if let title {
             HStack {
-                Text(title)
+                LineGroupSectionHeader(title: title, imageName: "location")
                 Spacer()
                 loadingStatusView
             }
+            .secondarySectionHeaderStyle()
         } else {
             loadingStatusView
         }
