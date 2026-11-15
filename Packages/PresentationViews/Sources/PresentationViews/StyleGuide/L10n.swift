@@ -42,6 +42,8 @@ public enum L10n {
     public static let nearbyStationsNavigationTitle = LocalizedStringResource.nearbyStationsNavigationTitle
     public static let nearbyStationsTabTitle = LocalizedStringResource.nearbyStationsTabTitle
 
+    public static let searchNavigationTitle = LocalizedStringResource.searchNavigationTitle
+    public static let searchPrompt = LocalizedStringResource.searchPrompt
     public static let searchSuggestionsSectionTitle = LocalizedStringResource.searchSuggestionsSectionTitle
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle

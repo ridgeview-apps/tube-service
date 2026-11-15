@@ -11,6 +11,7 @@ enum AppTab: Hashable {
     case arrivals
     case nearby
     case maps
+    case search
 }
 
 // MARK: - AppRoute
@@ -38,6 +39,7 @@ final class AppRouter {
     var arrivals = NavigationRouter<AppRoute>()
     var nearby = NavigationRouter<AppRoute>()
     var maps = NavigationRouter<AppRoute>()
+    var search = NavigationRouter<AppRoute>()
 
     // Sheets
     var sheetPresenter = SheetPresenter()
@@ -64,6 +66,7 @@ final class AppRouter {
         case .arrivals: arrivals.push(route)
         case .nearby: nearby.push(route)
         case .maps: maps.push(route)
+        case .search: search.push(route)
         }
     }
 
@@ -74,6 +77,7 @@ final class AppRouter {
         case .arrivals: arrivals.popToRoot()
         case .nearby: nearby.popToRoot()
         case .maps: maps.popToRoot()
+        case .search: search.popToRoot()
         }
     }
 
