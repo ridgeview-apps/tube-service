@@ -9,7 +9,6 @@ enum AppTab: Hashable {
     case lineStatus
     case journeyPlanner
     case arrivals
-    case nearby
     case maps
     case search
 }
@@ -22,6 +21,13 @@ enum AppRoute: Hashable {
     case lineStatusHistory(lineID: TrainLineID)
     case station(Station)
     case mapDetail(mapLink: MapLink)
+}
+
+// MARK: - SearchFieldState
+
+struct SearchFieldState {
+    var text = ""
+    var isPresented = false
 }
 
 // MARK: - AppRouter
@@ -37,9 +43,16 @@ final class AppRouter {
     var lineStatus = NavigationRouter<AppRoute>()
     var journeyPlanner = NavigationRouter<AppRoute>()
     var arrivals = NavigationRouter<AppRoute>()
-    var nearby = NavigationRouter<AppRoute>()
     var maps = NavigationRouter<AppRoute>()
     var search = NavigationRouter<AppRoute>()
+
+    // Search
+    var searchField = SearchFieldState()
+
+    func startSearch() {
+        selectedTab = .search
+        searchField.isPresented = true
+    }
 
     // Sheets
     var sheetPresenter = SheetPresenter()
@@ -64,7 +77,6 @@ final class AppRouter {
         case .lineStatus: lineStatus.push(route)
         case .journeyPlanner: journeyPlanner.push(route)
         case .arrivals: arrivals.push(route)
-        case .nearby: nearby.push(route)
         case .maps: maps.push(route)
         case .search: search.push(route)
         }
@@ -75,7 +87,6 @@ final class AppRouter {
         case .lineStatus: lineStatus.popToRoot()
         case .journeyPlanner: journeyPlanner.popToRoot()
         case .arrivals: arrivals.popToRoot()
-        case .nearby: nearby.popToRoot()
         case .maps: maps.popToRoot()
         case .search: search.popToRoot()
         }

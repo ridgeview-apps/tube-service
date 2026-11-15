@@ -139,6 +139,10 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySelectedStations = Array(updatedValues.prefix(10))
     }
 
+    public mutating func clearRecentlySelectedStations() {
+        recentlySelectedStations = []
+    }
+
     public mutating func saveRecentJourney(_ journey: SavedJourney) {
         var updatedValues = recentlySavedJourneys
 

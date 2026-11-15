@@ -17,8 +17,6 @@ struct SearchScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    @State private var searchTerm: String = ""
-
     // MARK: - Layout
 
     var body: some View {
@@ -30,23 +28,29 @@ struct SearchScreen: View {
                 onAction: handleAction
             )
             .navigationTitle(Text(L10n.searchNavigationTitle))
+            // An explicit placement, as the automatic one hides the field until you scroll on iOS 27
+            .searchable(
+                text: $router.searchField.text,
+                isPresented: $router.searchField.isPresented,
+                placement: .navigationBarDrawer(displayMode: .always),
+                prompt: Text(L10n.searchPrompt)
+            )
+            .autocorrectionDisabled()
             .withSettingsToolbarButton()
             .appRouteDestinations()
         }
-        .searchable(text: $searchTerm, prompt: Text(L10n.searchPrompt))
-        .autocorrectionDisabled()
         // Starts location updates while the tab is visible, so the nearby stations stay current
         .detectsLocationChanges { _ in }
     }
 
     private var content: SearchView.Content {
-        if searchTerm.trimmed().isEmpty {
+        if router.searchField.text.trimmed().isEmpty {
             .suggestions(nearby: nearbyRows, recents: recentRows)
         } else {
             .results(
-                searchTerm: searchTerm,
-                stops: stations.filteredStations(matchingName: searchTerm).map { StopRow(station: $0) },
-                lines: stations.filteredLines(matchingName: searchTerm)
+                searchTerm: router.searchField.text,
+                stops: stations.filteredStations(matchingName: router.searchField.text).map { StopRow(station: $0) },
+                lines: stations.filteredLines(matchingName: router.searchField.text)
             )
         }
     }
@@ -79,6 +83,10 @@ struct SearchScreen: View {
             router.push(.lineStatusDetail(lineID: lineID, request: .live))
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
+        case .tappedHint:
+            router.searchField.isPresented = true
+        case .tappedClearRecents:
+            userPreferences.clearRecentlySelectedStations()
         }
     }
 }

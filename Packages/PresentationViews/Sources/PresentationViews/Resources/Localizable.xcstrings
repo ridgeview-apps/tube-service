@@ -4,9 +4,6 @@
     "" : {
 
     },
-    "%@ selected" : {
-
-    },
     "%@-%@" : {
       "localizations" : {
         "en" : {
@@ -142,17 +139,6 @@
         }
       }
     },
-    "arrivals.picker.all.stations.section.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All stations"
-          }
-        }
-      }
-    },
     "arrivals.picker.favourites.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -175,24 +161,35 @@
         }
       }
     },
-    "arrivals.picker.search.no.results" : {
+    "arrivals.picker.no.favourites.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No search results found"
+            "value" : "Find a station"
           }
         }
       }
     },
-    "arrivals.picker.search.placeholder" : {
+    "arrivals.picker.no.favourites.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Station name"
+            "value" : "Tap ★ on a station to see its arrivals here."
+          }
+        }
+      }
+    },
+    "arrivals.picker.no.favourites.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No favourites yet"
           }
         }
       }
@@ -1976,6 +1973,9 @@
         }
       }
     },
+    "Live arrivals" : {
+
+    },
     "location.access.allow.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2152,9 +2152,6 @@
         }
       }
     },
-    "Nearby stations" : {
-
-    },
     "nearby.stations.load.failure.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2177,17 +2174,6 @@
         }
       }
     },
-    "nearby.stations.navigation.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stations nearby"
-          }
-        }
-      }
-    },
     "nearby.stations.no.results" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2195,28 +2181,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No stations found"
-          }
-        }
-      }
-    },
-    "nearby.stations.no.selection" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select a station"
-          }
-        }
-      }
-    },
-    "nearby.stations.tab.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nearby"
           }
         }
       }
@@ -2870,9 +2834,6 @@
         }
       }
     },
-    "Picker preview" : {
-
-    },
     "Preview" : {
 
     },
@@ -2989,6 +2950,17 @@
         }
       }
     },
+    "search.recent.clear.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
     "search.recent.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3018,17 +2990,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stations"
-          }
-        }
-      }
-    },
-    "search.suggestions.section.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Suggestions"
           }
         }
       }
@@ -3491,29 +3452,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "New"
-          }
-        }
-      }
-    },
-    "stations.search.results.count %lld" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "1 station found"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld stations found"
-                }
-              }
-            }
           }
         }
       }

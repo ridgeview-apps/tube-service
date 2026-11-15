@@ -12,6 +12,8 @@ public struct SearchView: View {
         case tappedStation(Station)
         case tappedLine(TrainLineID)
         case tappedRefreshNearby
+        case tappedHint
+        case tappedClearRecents
     }
 
     let content: Content
@@ -69,26 +71,39 @@ public struct SearchView: View {
             }
             .lineGroupListRowStyle()
         } else {
-            stopsSection(title: .searchRecentSectionTitle, rows: recents)
+            stopsSection(title: .searchRecentSectionTitle, rows: recents) {
+                Button(.searchRecentClearButtonTitle) {
+                    withAnimation { onAction(.tappedClearRecents) }
+                }
+            }
         }
     }
 
     private var hintRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "magnifyingglass")
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(.searchHintTitle)
-                Text(.searchHintSubtitle)
-                    .font(.footnote)
+        Button {
+            onAction(.tappedHint)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(.searchHintTitle)
+                    Text(.searchHintSubtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
+            .frame(minHeight: 52)
         }
-        .frame(minHeight: 52)
+        .buttonStyle(.plain)
     }
 
-    @ViewBuilder private func stopsSection(title: LocalizedStringResource, rows: [StopRow]) -> some View {
+    @ViewBuilder private func stopsSection(
+        title: LocalizedStringResource,
+        rows: [StopRow],
+        @ViewBuilder headerAccessory: () -> some View = { EmptyView() }
+    ) -> some View {
         if !rows.isEmpty {
             Section {
                 ForEach(rows) { row in
@@ -100,7 +115,11 @@ public struct SearchView: View {
                     .buttonStyle(.plain)
                 }
             } header: {
-                Text(title)
+                HStack {
+                    Text(title)
+                    Spacer()
+                    headerAccessory()
+                }
             }
             .lineGroupListRowStyle()
         }
@@ -132,7 +151,7 @@ public struct SearchView: View {
         }
     }
 
-    private func handleNearbyAction(_ action: LocatedStationsView.Action) {
+    private func handleNearbyAction(_ action: LocatedStationsSection.Action) {
         switch action {
         case .tappedRefresh:
             onAction(.tappedRefreshNearby)

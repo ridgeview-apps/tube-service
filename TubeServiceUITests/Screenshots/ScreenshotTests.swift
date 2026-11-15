@@ -40,13 +40,7 @@ final class ScreenshotTests: ScreenshotTestCase {
         let arrivalsStation = arrivalsPicker.tapFavouriteStation("HUBABW")  // Abbey Wood
         capture(arrivalsStation, as: "LiveArrivalsBoard1")
 
-        let nearby = arrivalsStation.tabBar.tapNearbyTab()
-        capture(nearby, as: "NearbyStations-List")
-
-        let station = nearby.tapStation("HUBKGX")  // King's Cross St Pancras
-        capture(station, as: "NearbyStations-Detail")
-
-        let maps = station.tabBar.tapMapsTab()
+        let maps = arrivalsStation.tabBar.tapMapsTab()
         capture(maps, as: "Maps")
     }
 }

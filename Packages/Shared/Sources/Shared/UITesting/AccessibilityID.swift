@@ -12,7 +12,6 @@ public enum AccessibilityID {
         public static let lineStatus = "tab.lineStatus"
         public static let journeyPlanner = "tab.journeyPlanner"
         public static let arrivals = "tab.arrivals"
-        public static let nearby = "tab.nearby"
         public static let maps = "tab.maps"
         public static let search = "tab.search"
     }
@@ -67,7 +66,7 @@ public enum AccessibilityID {
     public enum ArrivalsPicker {
         public static let list = "arrivalsPicker.list"
 
-        /// A station row outside the Favourites section that opens its Station screen, by `Station` ID.
+        /// A station row in the Recent section that opens its Station screen, by `Station` ID.
         public static func station(_ stationID: String) -> String { "arrivalsPicker.station.\(stationID)" }
         /// A station row in the Favourites section that opens its Station screen, by `Station` ID.
         public static func favouriteStation(_ stationID: String) -> String {
@@ -81,8 +80,6 @@ public enum AccessibilityID {
     }
 
     public enum Nearby {
-        public static let list = "nearby.list"
-
         /// A nearby station row, by `Station` ID.
         public static func station(_ stationID: String) -> String { "nearby.station.\(stationID)" }
     }
