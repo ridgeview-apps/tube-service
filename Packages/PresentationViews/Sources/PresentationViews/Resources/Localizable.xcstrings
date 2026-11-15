@@ -1519,6 +1519,17 @@
         }
       }
     },
+    "line.long.name %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ line"
+          }
+        }
+      }
+    },
     "line.name.in.sentence %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1574,46 +1585,24 @@
         }
       }
     },
-    "line.status.detail.good.service.on.the %@" : {
+    "line.status.detail.good.service %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There is a good service operating on the %@."
+            "value" : "There is a good service operating on %@."
           }
         }
       }
     },
-    "line.status.detail.good.service.on.trams" : {
+    "line.status.detail.no.disruptions.planned %@" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There is a good service operating on London Trams."
-          }
-        }
-      }
-    },
-    "line.status.detail.no.disruptions.planned.on.the %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No engineering works or disruptions planned on the %@."
-          }
-        }
-      }
-    },
-    "line.status.detail.no.disruptions.planned.on.trams" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No engineering works or disruptions planned on London Trams."
+            "value" : "No engineering works or disruptions planned on %@."
           }
         }
       }
@@ -1735,7 +1724,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "There are no recorded service updates for the %@ yet."
+            "value" : "There are no recorded service updates for %@ yet."
           }
         }
       }

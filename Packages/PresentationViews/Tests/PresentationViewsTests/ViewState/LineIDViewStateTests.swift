@@ -40,4 +40,12 @@ struct LineIDViewStateTests {
         #expect(TrainLineID.dlr.longName == "DLR")
         #expect(TrainLineID.tram.longName == "Tram")
     }
+
+    @Test
+    func lineIDNamesInSentence() {
+        #expect(TrainLineID.circle.nameInSentence == "the Circle line")
+        #expect(TrainLineID.elizabeth.nameInSentence == "the Elizabeth line")
+        #expect(TrainLineID.dlr.nameInSentence == "the DLR")
+        #expect(TrainLineID.tram.nameInSentence == "London Trams")
+    }
 }

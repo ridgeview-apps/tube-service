@@ -72,7 +72,7 @@ public extension TrainLineID {
             return name
         case .bakerloo, .central, .circle, .district, .elizabeth, .hammersmithAndCity, .jubilee, .liberty, .lioness, .metropolitan,
             .mildmay, .northern, .piccadilly, .suffragette, .victoria, .waterlooAndCity, .weaver, .windrush:
-            return "\(name) line"
+            return String(localized: .lineLongName(name))
         }
     }
 
