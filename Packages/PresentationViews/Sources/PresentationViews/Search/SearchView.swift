@@ -132,7 +132,7 @@ public struct SearchView: View {
         }
     }
 
-    private func handleNearbyAction(_ action: LocatedStationsView.Action) {
+    private func handleNearbyAction(_ action: LocatedStationsSection.Action) {
         switch action {
         case .tappedRefresh:
             onAction(.tappedRefreshNearby)

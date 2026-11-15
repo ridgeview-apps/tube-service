@@ -5,10 +5,15 @@ import SwiftUI
 /// The nearby stations, or the location access, loading, empty or failure row in their place.
 struct LocatedStationsSection: View {
 
+    enum Action: Sendable {
+        case tappedRefresh
+        case tappedStation(Station)
+    }
+
     var title: LocalizedStringResource?
     let locationAccess: LocationAccess
     let rows: [StopRow]
-    let onAction: (LocatedStationsView.Action) -> Void
+    let onAction: (Action) -> Void
 
     var body: some View {
         Section {

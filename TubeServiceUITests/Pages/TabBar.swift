@@ -7,14 +7,13 @@ struct TabBar {
 
     /// The app's tabs, in the order it shows them.
     enum Tab: Int {
-        case lineStatus, journeyPlanner, arrivals, nearby, maps
+        case lineStatus, journeyPlanner, arrivals, maps
 
         var identifier: String {
             switch self {
             case .lineStatus: AccessibilityID.Tab.lineStatus
             case .journeyPlanner: AccessibilityID.Tab.journeyPlanner
             case .arrivals: AccessibilityID.Tab.arrivals
-            case .nearby: AccessibilityID.Tab.nearby
             case .maps: AccessibilityID.Tab.maps
             }
         }
@@ -29,11 +28,6 @@ struct TabBar {
 
     func tapArrivalsTab() -> ArrivalsPickerPage {
         tap(.arrivals)
-        return .waitingToAppear(in: app)
-    }
-
-    func tapNearbyTab() -> NearbyPage {
-        tap(.nearby)
         return .waitingToAppear(in: app)
     }
 

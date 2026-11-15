@@ -2,30 +2,23 @@ import Shared
 import SwiftUI
 import Models
 
-// MARK: - Data types
-
-public enum ArrivalsPickerMode: Equatable {
-    case favouritesVisible(favourites: [FavouriteStop])
-    case searchResults
-}
-
-
-// MARK: - ArrivalsPickerView
-
 public struct ArrivalsPickerView: View {
 
-    public enum Action {
+    public enum Action: Sendable {
+        case tappedStation(Station)
+        case tappedFindStation
+        case tappedShowMoreNearby
+        case tappedRefreshNearby
         case reorderFavourites([Station.ID])
         case removeFavourites([Station.ID])
     }
 
-    public let mode: ArrivalsPickerMode
-    public let allStations: [Station]
-
-    @Binding public var selection: Station?
-    public let onAction: (Action) -> Void
-
-    private let favourites: [Station]
+    let favourites: [StopRow]
+    let recents: [StopRow]
+    let nearby: [StopRow]
+    let canShowMoreNearby: Bool
+    let locationAccess: LocationAccess
+    let onAction: (Action) -> Void
 
     @State private var editMode: EditMode = .inactive
 
@@ -34,33 +27,41 @@ public struct ArrivalsPickerView: View {
     // MARK: - Init
 
     public init(
-        allStations: [Station],
-        mode: ArrivalsPickerMode,
-        selection: Binding<Station?>,
+        favourites: [StopRow],
+        recents: [StopRow],
+        nearby: [StopRow],
+        canShowMoreNearby: Bool,
+        locationAccess: LocationAccess,
         onAction: @escaping (Action) -> Void
     ) {
-        self.allStations = allStations
-        self.mode = mode
-        self._selection = selection
+        self.favourites = favourites
+        self.recents = recents
+        self.nearby = nearby
+        self.canShowMoreNearby = canShowMoreNearby
+        self.locationAccess = locationAccess
         self.onAction = onAction
-
-        switch mode {
-        case .favouritesVisible(let favourites):
-            self.favourites = allStations.favourites(matching: favourites)
-        case .searchResults:
-            self.favourites = []
-        }
     }
 
     // MARK: Layout
 
     public var body: some View {
-        List(selection: $selection) {
-            Group {
-                if case .favouritesVisible = mode {
-                    favouritesSection
+        ScrollViewReader { reader in
+            List {
+                favouritesSection
+                recentsSection
+                LocatedStationsSection(
+                    title: .searchNearbySectionTitle,
+                    locationAccess: locationAccess,
+                    rows: nearby,
+                    onAction: handleNearbyAction
+                )
+                showMoreNearbyButton
+            }
+            .listSectionSpacing(.compact)
+            .onChange(of: nearby.count) {
+                withAnimation {
+                    reader.scrollTo(Self.showMoreNearbyButtonID)
                 }
-                allStationsSection
             }
         }
         .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.list)
@@ -72,10 +73,14 @@ public struct ArrivalsPickerView: View {
     }
 
     @ViewBuilder private var favouritesSection: some View {
-        if !favourites.isEmpty {
-            Section {
-                ForEach(favourites) { station in
-                    ArrivalsPickerStationCell(station: station, isEditable: true)
+        Section {
+            if favourites.isEmpty {
+                noFavouritesHintRow
+            } else {
+                ForEach(favourites) { row in
+                    FavouriteStopRowCell(row: row) {
+                        handleTap(on: row)
+                    }
                 }
                 .onMove(perform: moveFavourites)
                 .onDelete(perform: removeFavourites)
@@ -83,96 +88,144 @@ public struct ArrivalsPickerView: View {
                 // Empty swipe actions replace onDelete's swipe-to-delete, so stations are only removable from
                 // edit mode. Toggling deleteDisabled with edit mode instead stops the delete controls animating in.
                 .swipeActions {}
-            } header: {
-                HStack {
-                    LineGroupSectionHeader(
-                        title: .arrivalsPickerFavouritesSectionTitle,
-                        imageName: "star.fill"
-                    )
-                    Spacer()
+            }
+        } header: {
+            HStack {
+                LineGroupSectionHeader(
+                    title: .arrivalsPickerFavouritesSectionTitle,
+                    imageName: "star.fill"
+                )
+                Spacer()
+                if !favourites.isEmpty {
                     EditModeButton(editMode: $editMode)
                 }
-                .secondarySectionHeaderStyle()
+            }
+            .secondarySectionHeaderStyle()
+        }
+        .lineGroupListRowStyle()
+    }
+
+    private var noFavouritesHintRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "star")
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(.arrivalsPickerNoFavouritesTitle)
+                Text(.arrivalsPickerNoFavouritesSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button(.arrivalsPickerNoFavouritesButtonTitle) {
+                onAction(.tappedFindStation)
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
+            .controlSize(.small)
+        }
+        .frame(minHeight: 52)
+    }
+
+    @ViewBuilder private var recentsSection: some View {
+        if !recents.isEmpty {
+            Section {
+                ForEach(recents) { row in
+                    Button {
+                        handleTap(on: row)
+                    } label: {
+                        StopRowCell(row: row)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(row.stationID))
+                }
+            } header: {
+                Text(.searchRecentSectionTitle)
             }
             .lineGroupListRowStyle()
         }
     }
 
+    private static let showMoreNearbyButtonID = "showMoreNearbyButton"
+
+    @ViewBuilder private var showMoreNearbyButton: some View {
+        if canShowMoreNearby {
+            Section {
+                HStack {
+                    Spacer()
+                    PagerButton(style: .down, title: .nearbyStationsMoreResultsButtonTitle) {
+                        onAction(.tappedShowMoreNearby)
+                    }
+                    Spacer()
+                }
+                .id(Self.showMoreNearbyButtonID)
+            }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
+        }
+    }
+
+    private func handleTap(on row: StopRow) {
+        switch row.kind {
+        case .station(let station):
+            onAction(.tappedStation(station))
+        }
+    }
+
+    private func handleNearbyAction(_ action: LocatedStationsSection.Action) {
+        switch action {
+        case .tappedRefresh:
+            onAction(.tappedRefreshNearby)
+        case .tappedStation(let station):
+            onAction(.tappedStation(station))
+        }
+    }
+
     private func moveFavourites(fromOffsets source: IndexSet, toOffset destination: Int) {
-        var reorderedStationIDs = favourites.map(\.id)
+        var reorderedStationIDs = favourites.map(\.stationID)
         reorderedStationIDs.move(fromOffsets: source, toOffset: destination)
         onAction(.reorderFavourites(reorderedStationIDs))
     }
 
     private func removeFavourites(atOffsets offsets: IndexSet) {
-        let removedStationIDs = offsets.map { favourites[$0].id }
+        let removedStationIDs = offsets.map { favourites[$0].stationID }
         withAnimation { onAction(.removeFavourites(removedStationIDs)) }
-    }
-
-    private var allStationsSection: some View {
-        stationsSection(
-            with: allStations,
-            header: .init(title: allStationsSectionHeaderTitle)
-        )
-    }
-
-    private func stationsSection(
-        with stations: [Station],
-        header: LineGroupSectionHeader
-    ) -> some View {
-        Section {
-            ForEach(stations) { station in
-                ArrivalsPickerStationCell(station: station)
-            }
-        } header: {
-            header
-                .secondarySectionHeaderStyle()
-        }
-        .lineGroupListRowStyle()
-    }
-
-    private var allStationsSectionHeaderTitle: LocalizedStringResource {
-        switch mode {
-        case .favouritesVisible:
-            .arrivalsPickerAllStationsSectionTitle
-        case .searchResults:
-            .stationsSearchResultsCount(allStations.count)
-        }
     }
 }
 
 
-private struct ArrivalsPickerStationCell: View {
+private struct FavouriteStopRowCell: View {
 
-    let station: Station
-    var isEditable = false
+    let row: StopRow
+    let onTap: () -> Void
 
     @Environment(\.editMode) private var editMode
 
-    private var isBeingEdited: Bool { isEditable && editMode?.wrappedValue.isEditing == true }
+    private var isEditing: Bool { editMode?.wrappedValue.isEditing == true }
 
     var body: some View {
         Group {
-            if isBeingEdited {
-                // A plain row while editing: it's dragged as a whole station, and has no chevron suggesting a tap
-                // will navigate away
-                stationCell
+            if isEditing {
+                // A plain row while editing: it's dragged as a whole station, and a tap mustn't navigate away
+                StopRowCell(row: row)
             } else {
-                NavigationLink(value: station) {
-                    stationCell
+                Button(action: onTap) {
+                    StopRowCell(row: row)
                 }
+                .buttonStyle(.plain)
             }
         }
-        .accessibilityIdentifier(
-            isEditable
-                ? AccessibilityID.ArrivalsPicker.favouriteStation(station.id)
-                : AccessibilityID.ArrivalsPicker.station(station.id)
-        )
-        .frame(minHeight: 52)
+        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.favouriteStation(row.stationID))
     }
+}
 
-    private var stationCell: some View {
-        LineGroupCell(style: .plain, lineIDs: station.sortedLineIDs, title: station.name)
+
+private extension StopRow {
+    var stationID: Station.ID {
+        switch kind {
+        case .station(let station): station.id
+        }
     }
 }
 
@@ -181,48 +234,57 @@ private struct ArrivalsPickerStationCell: View {
 
 import ModelStubs
 
-private struct WrapperView: View {
-    var allStations: [Station] = ModelStubs.stations
-    var mode: ArrivalsPickerMode
-    @State var selection: Station?
+private struct Previewer: View {
+    var favourites: [StopRow] = previewFavourites
+    var recents: [StopRow] = previewRecents
+    var nearby: [StopRow] = previewNearby
+    var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
     var body: some View {
         NavigationStack {
             ArrivalsPickerView(
-                allStations: allStations,
-                mode: mode,
-                selection: $selection,
-                onAction: { _ in }
+                favourites: favourites,
+                recents: recents,
+                nearby: nearby,
+                canShowMoreNearby: !nearby.isEmpty,
+                locationAccess: .init(state: locationAccessState) {
+                    print("Permissions requested")
+                },
+                onAction: { print($0) }
             )
-            .navigationTitle("Picker preview")
-            .navigationDestination(item: $selection) { selection in
-                Text("\(String(describing: selection)) selected")
-            }
+            .navigationTitle("Live arrivals")
         }
     }
 }
 
+private let previewFavourites = ModelStubs.stations
+    .favourites(matching: [
+        .station(id: "HUBKGX"),  // King's Cross & St Pancras International
+        .station(id: "HUBPAD"),  // Paddington
+        .station(id: "940GZZLUHBT")  // High Barnet
+    ])
+    .map { StopRow(station: $0) }
 
-#Preview("Normal mode (favourites)") {
-    WrapperView(
-        mode: .favouritesVisible(
-            favourites: [
-                .station(id: "HUBKGX"),  // King's Cross & St Pancras International
-                .station(id: "HUBPAD"),  // Paddington
-                .station(id: "940GZZLUHBT")  // High Barnet
-            ]
-        )
-    )
+private let previewRecents = [ModelStubs.eastFinchleyStation].map { StopRow(station: $0) }
+
+private let previewNearby = [
+    ModelStubs.locatedStationWoodsidePark,
+    ModelStubs.locatedStationWestFinchley,
+    ModelStubs.locatedStationTotteridgeAndWhetstone
+].map(StopRow.init)
+
+#Preview("Favourites, recents and nearby") {
+    Previewer()
 }
 
-#Preview("Normal mode (no favourites)") {
-    WrapperView(mode: .favouritesVisible(favourites: []))
+#Preview("New user - location not asked") {
+    Previewer(favourites: [], recents: [], nearby: [], locationAccessState: .notAsked)
 }
 
-#Preview("Search results mode") {
-    WrapperView(
-        allStations: Array(ModelStubs.stations.prefix(4)),
-        mode: .searchResults
-    )
-    .searchable(text: .constant(""), placement: .navigationBarDrawer(displayMode: .always))
+#Preview("New user - location off") {
+    Previewer(favourites: [], recents: [], nearby: [], locationAccessState: .denied)
+}
+
+#Preview("New user - location allowed") {
+    Previewer(favourites: [], recents: [])
 }

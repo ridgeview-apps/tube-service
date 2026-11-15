@@ -23,8 +23,7 @@ final class ArrivalsBoardTests: UITestCase {
 
         let station =
             arrivalsPicker
-            .typeInSearchField("King's Cross")
-            .tapStation(kingsCrossStationID)
+            .tapNearbyStation(kingsCrossStationID)
             .tapLineChip(kingsCrossNorthernLineGroupID)
 
         XCTAssertTrue(station.lineChip(kingsCrossNorthernLineGroupID).isSelected)
@@ -38,7 +37,6 @@ final class ArrivalsBoardTests: UITestCase {
             station
             .tapFavouriteButton()
             .tapBackButton()
-            .tapEndSearchButton()
         returnedArrivalsPicker.favouriteStation(kingsCrossStationID).waitToExist()
     }
 }

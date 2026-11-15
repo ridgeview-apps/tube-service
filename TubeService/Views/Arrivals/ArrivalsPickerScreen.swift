@@ -7,8 +7,8 @@ import SwiftUI
 struct ArrivalsPickerScreen: View {
 
     @Environment(AppRouter.self) private var router
-    @Environment(StationsDataStore.self) var stations
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(StationsDataStore.self) private var stations
+    @Environment(LocationDataStore.self) private var location
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -16,21 +16,10 @@ struct ArrivalsPickerScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
-    @State private var selection: Station?
-    @State private var searchTerm: String = ""
-    @State private var selectableStations: [Station] = []
+    private static let nearbyPageSize = 3
+    private static let maxRecents = 3
 
-    private var isSearching: Bool { !searchTerm.isEmpty }
-    private var pickerMode: ArrivalsPickerMode {
-        isSearching
-            ? .searchResults
-            : .favouritesVisible(favourites: userPreferences.favouriteStops)
-    }
-
-    // In regular width the drawer spans the whole window, wider than the list's maximum width
-    private var searchFieldPlacement: SearchFieldPlacement {
-        horizontalSizeClass == .compact ? .navigationBarDrawer(displayMode: .always) : .automatic
-    }
+    @State private var nearbyLimit = nearbyPageSize
 
 
     // MARK: - Layout
@@ -38,95 +27,69 @@ struct ArrivalsPickerScreen: View {
     var body: some View {
         @Bindable var router = router
         NavigationStack(path: $router.arrivals.path) {
-            rootView
-                .appRouteDestinations()
-        }
-        .onChange(of: searchTerm) {
-            reloadStations()
-        }
-        .onSubmit(of: .search) {
-            reloadStations()
-        }
-        .onChange(of: userPreferences.favouriteStops) {
-            reloadStations()
-        }
-        .onChange(of: selection) { _, newValue in
-            guard let newValue else { return }
-            router.push(.station(newValue))
-            selection = nil
-        }
-    }
-
-    private var rootView: some View {
-        pickerListView
-            .searchable(
-                text: $searchTerm,
-                placement: searchFieldPlacement,
-                prompt: Text(L10n.arrivalsPickerSearchPlaceholder)
-            ) {
-                searchSuggestionsView
-            }
-            .autocorrectionDisabled()
-    }
-
-    @ViewBuilder private var pickerListView: some View {
-        if isSearching && selectableStations.isEmpty {
-            Text(L10n.arrivalsPickerSearchNoResults)
-        } else {
             ArrivalsPickerView(
-                allStations: selectableStations,
-                mode: pickerMode,
-                selection: $selection,
+                favourites: favouriteStations.map { StopRow(station: $0) },
+                recents: recentRows,
+                nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
+                canShowMoreNearby: location.nearestStations.count > nearbyLimit,
+                locationAccess: locationAccess,
                 onAction: handleAction
             )
             .navigationTitle(Text(L10n.arrivalsPickerNavigationTitle))
             .withSettingsToolbarButton()
-            .onAppear {
-                reloadStations()
+            .refreshable {
+                location.refreshCurrentLocation()
             }
+            .appRouteDestinations()
         }
+        .detectsLocationChanges(action: handleLocationChangeAction)
     }
 
-    private func reloadStations() {
-        if isSearching {
-            selectableStations = stations.filteredStations(matchingName: searchTerm)
-        } else {
-            selectableStations = stations.allLondon
+    private var favouriteStations: [Station] {
+        stations.allLondon.favourites(matching: userPreferences.favouriteStops)
+    }
+
+    private var recentRows: [StopRow] {
+        let favouriteIDs = Set(favouriteStations.map(\.id))
+        return userPreferences.recentlySelectedStations
+            .filter { !favouriteIDs.contains($0) }
+            .compactMap { stations.station(forID: $0) }
+            .prefix(Self.maxRecents)
+            .map { StopRow(station: $0) }
+    }
+
+    private var locationAccess: LocationAccess {
+        .init(
+            state: location.locationAccessState(loadingState: location.detectionState.toLoadingState()),
+            onRequestPermissions: {
+                location.promptForPermissions()
+            }
+        )
+    }
+
+    private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
+        switch action {
+        case .coordinateChanged, .nameChanged:
+            nearbyLimit = Self.nearbyPageSize
+        case .authorizationStatusChanged:
+            return
         }
     }
 
     private func handleAction(_ action: ArrivalsPickerView.Action) {
         switch action {
+        case .tappedStation(let station):
+            router.push(.station(station))
+        case .tappedFindStation:
+            router.selectedTab = .search
+        case .tappedShowMoreNearby:
+            nearbyLimit += Self.nearbyPageSize
+        case .tappedRefreshNearby:
+            location.refreshCurrentLocation()
         case .reorderFavourites(let stationIDs):
             userPreferences.reorderFavouriteStops(stationIDs.map { .station(id: $0) })
         case .removeFavourites(let stationIDs):
             userPreferences.removeFavouriteStops(stationIDs.map { .station(id: $0) })
-        }
-    }
-
-    @ViewBuilder private var searchSuggestionsView: some View {
-        // N.B. Suggestions are only shown initially when the search bar is activated (i.e. once typing, results are shown).
-        if searchTerm.isEmpty {
-            Group {
-                if userPreferences.recentlySelectedStations.isEmpty {
-                    Text("")  // Workaround: prevents the results list from showing before a search is performed
-                } else {
-                    Section {
-                        ForEach(userPreferences.recentlySelectedStations, id: \.self) { stationID in
-                            if let station = stations.station(forID: stationID) {
-                                Text(station.name).searchCompletion(station.name)
-                            }
-                        }
-                    } header: {
-                        HStack(spacing: 4) {
-                            Image(systemName: "sparkles")
-                            Text(L10n.searchSuggestionsSectionTitle)
-                                .secondarySectionHeaderStyle()
-                        }
-                    }
-                }
-            }
-            .listRowSeparator(.hidden)
         }
     }
 }

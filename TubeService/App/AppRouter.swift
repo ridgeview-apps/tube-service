@@ -9,7 +9,6 @@ enum AppTab: Hashable {
     case lineStatus
     case journeyPlanner
     case arrivals
-    case nearby
     case maps
     case search
 }
@@ -37,7 +36,6 @@ final class AppRouter {
     var lineStatus = NavigationRouter<AppRoute>()
     var journeyPlanner = NavigationRouter<AppRoute>()
     var arrivals = NavigationRouter<AppRoute>()
-    var nearby = NavigationRouter<AppRoute>()
     var maps = NavigationRouter<AppRoute>()
     var search = NavigationRouter<AppRoute>()
 
@@ -64,7 +62,6 @@ final class AppRouter {
         case .lineStatus: lineStatus.push(route)
         case .journeyPlanner: journeyPlanner.push(route)
         case .arrivals: arrivals.push(route)
-        case .nearby: nearby.push(route)
         case .maps: maps.push(route)
         case .search: search.push(route)
         }
@@ -75,7 +72,6 @@ final class AppRouter {
         case .lineStatus: lineStatus.popToRoot()
         case .journeyPlanner: journeyPlanner.popToRoot()
         case .arrivals: arrivals.popToRoot()
-        case .nearby: nearby.popToRoot()
         case .maps: maps.popToRoot()
         case .search: search.popToRoot()
         }

@@ -13,7 +13,6 @@ struct RootScreen: View {
             lineStatusTab
             journeyPlannerTab
             liveArrivalsTab
-            nearbyStationsTab
             mapsTab
             searchTab
         }
@@ -47,15 +46,6 @@ struct RootScreen: View {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
         }
         .accessibilityIdentifier(AccessibilityID.Tab.arrivals)
-    }
-
-    private var nearbyStationsTab: some TabContent<AppTab> {
-        Tab(value: AppTab.nearby) {
-            LocatedStationsScreen()
-        } label: {
-            Label(L10n.nearbyStationsTabTitle, systemImage: "location.magnifyingglass")
-        }
-        .accessibilityIdentifier(AccessibilityID.Tab.nearby)
     }
 
     private var mapsTab: some TabContent<AppTab> {
