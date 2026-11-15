@@ -34,16 +34,6 @@ struct StationsModelTests {
     }
 
     @Test
-    func filteredLinesByPartialName() {
-        let stations = StationsDataStore(tflAPI: StubTflAPIClient())
-
-        #expect(stations.filteredLines(matchingName: "hammersmith city") == [.hammersmithAndCity])
-        #expect(stations.filteredLines(matchingName: "VIC") == [.victoria])
-        #expect(stations.filteredLines(matchingName: "city") == [.hammersmithAndCity, .waterlooAndCity])
-        #expect(stations.filteredLines(matchingName: "xyz").isEmpty)
-    }
-
-    @Test
     func stationNoticesListLiveOnesFirst() async throws {
         let disruptedPointsJSON = """
             [

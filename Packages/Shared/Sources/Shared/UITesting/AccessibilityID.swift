@@ -13,7 +13,6 @@ public enum AccessibilityID {
         public static let journeyPlanner = "tab.journeyPlanner"
         public static let arrivals = "tab.arrivals"
         public static let maps = "tab.maps"
-        public static let search = "tab.search"
     }
 
     public enum FavouritesButton {
