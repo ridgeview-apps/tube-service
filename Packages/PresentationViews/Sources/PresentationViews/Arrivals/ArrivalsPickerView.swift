@@ -97,7 +97,6 @@ public struct ArrivalsPickerView: View {
                     showMoreNearbyButton
                 }
             }
-            .listSectionSpacing(.compact)
             .onChange(of: nearby.count) {
                 withAnimation {
                     reader.scrollTo(Self.showMoreNearbyButtonID)
@@ -208,6 +207,8 @@ public struct ArrivalsPickerView: View {
             }
             .id(Self.showMoreNearbyButtonID)
         }
+        // Keeps the button against the Nearby card it pages, rather than a section's distance away
+        .listSectionSpacing(0)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
