@@ -5,8 +5,8 @@ import Models
 public struct ArrivalsPickerView: View {
 
     public enum Content: Sendable {
-        case suggestions(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
-        case results(searchTerm: String, stations: [StopRow])
+        case browse(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
+        case searchResults(searchTerm: String, stations: [StopRow])
     }
 
     public enum Action: Sendable {
@@ -24,12 +24,16 @@ public struct ArrivalsPickerView: View {
     let onAction: (Action) -> Void
 
     @State private var editMode: EditMode = .inactive
+    @Environment(\.isSearching) private var isSearching
 
     private var favourites: [StopRow] {
-        if case .suggestions(let favourites, _, _, _) = content { favourites } else { [] }
+        if case .browse(let favourites, _, _, _) = content { favourites } else { [] }
     }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
+
+    // Favourite rows can't be tapped in edit mode, so editing would leave them as dead shortcuts while searching
+    private var canEditFavourites: Bool { !favourites.isEmpty && !isSearching }
 
     // MARK: - Init
 
@@ -49,18 +53,18 @@ public struct ArrivalsPickerView: View {
         contentView
             .defaultMaxWidthWithFullBackground()
             .environment(\.editMode, $editMode)
-            .onChange(of: favourites.isEmpty) {
-                if favourites.isEmpty { editMode = .inactive }
+            .onChange(of: canEditFavourites) {
+                if !canEditFavourites { editMode = .inactive }
             }
     }
 
     @ViewBuilder private var contentView: some View {
         switch content {
-        case .suggestions(let favourites, let recents, let nearby, let canShowMoreNearby):
-            suggestionsList(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: canShowMoreNearby)
-        case .results(let searchTerm, let stations) where stations.isEmpty:
+        case .browse(let favourites, let recents, let nearby, let canShowMoreNearby):
+            browseList(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: canShowMoreNearby)
+        case .searchResults(let searchTerm, let stations) where stations.isEmpty:
             ContentUnavailableView.search(text: searchTerm)
-        case .results(_, let stations):
+        case .searchResults(_, let stations):
             List {
                 Section {
                     ForEach(stations) { row in
@@ -73,7 +77,7 @@ public struct ArrivalsPickerView: View {
         }
     }
 
-    private func suggestionsList(
+    private func browseList(
         favourites: [StopRow],
         recents: [StopRow],
         nearby: [StopRow],
@@ -93,7 +97,6 @@ public struct ArrivalsPickerView: View {
                     showMoreNearbyButton
                 }
             }
-            .listSectionSpacing(.compact)
             .onChange(of: nearby.count) {
                 withAnimation {
                     reader.scrollTo(Self.showMoreNearbyButtonID)
@@ -127,7 +130,7 @@ public struct ArrivalsPickerView: View {
                     imageName: "star.fill"
                 )
                 Spacer()
-                if !favourites.isEmpty {
+                if canEditFavourites {
                     EditModeButton(editMode: $editMode)
                 }
             }
@@ -148,12 +151,15 @@ public struct ArrivalsPickerView: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Button(.arrivalsPickerNoFavouritesButtonTitle) {
-                onAction(.tappedFindStation)
+            // The button only activates search, so it has nothing to do once search is active
+            if !isSearching {
+                Button(.arrivalsPickerNoFavouritesButtonTitle) {
+                    onAction(.tappedFindStation)
+                }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
-            .controlSize(.small)
         }
         .frame(minHeight: 52)
     }
@@ -201,6 +207,8 @@ public struct ArrivalsPickerView: View {
             }
             .id(Self.showMoreNearbyButtonID)
         }
+        // Keeps the button against the Nearby card it pages, rather than a section's distance away
+        .listSectionSpacing(0)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
         .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
@@ -278,14 +286,14 @@ private struct Previewer: View {
     var favourites: [StopRow] = previewFavourites
     var recents: [StopRow] = previewRecents
     var nearby: [StopRow] = previewNearby
-    var results: (searchTerm: String, stations: [StopRow])?
+    var searchResults: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
     private var content: ArrivalsPickerView.Content {
-        if let results {
-            .results(searchTerm: results.searchTerm, stations: results.stations)
+        if let searchResults {
+            .searchResults(searchTerm: searchResults.searchTerm, stations: searchResults.stations)
         } else {
-            .suggestions(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: !nearby.isEmpty)
+            .browse(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: !nearby.isEmpty)
         }
     }
 
@@ -337,7 +345,7 @@ private let previewNearby = [
 
 #Preview("Search results") {
     Previewer(
-        results: (
+        searchResults: (
             searchTerm: "finchley",
             stations: [ModelStubs.eastFinchleyStation, ModelStubs.finchleyCentralStation, ModelStubs.westFinchleyStation].map { StopRow(station: $0) }
         )
@@ -345,5 +353,5 @@ private let previewNearby = [
 }
 
 #Preview("Search - no results") {
-    Previewer(results: (searchTerm: "xyz", stations: []))
+    Previewer(searchResults: (searchTerm: "xyz", stations: []))
 }

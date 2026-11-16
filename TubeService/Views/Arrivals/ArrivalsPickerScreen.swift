@@ -10,6 +10,7 @@ struct ArrivalsPickerScreen: View {
     @Environment(AppRouter.self) private var router
     @Environment(StationsDataStore.self) private var stations
     @Environment(LocationDataStore.self) private var location
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -24,6 +25,11 @@ struct ArrivalsPickerScreen: View {
     @State private var searchText = ""
     @State private var isSearchPresented = false
 
+    // The automatic placement hides the field until you scroll on iOS 27 in compact width. In regular width the
+    // drawer spans the whole window, wider than the list's maximum width.
+    private var searchFieldPlacement: SearchFieldPlacement {
+        horizontalSizeClass == .compact ? .navigationBarDrawer(displayMode: .always) : .automatic
+    }
 
     // MARK: - Layout
 
@@ -36,11 +42,10 @@ struct ArrivalsPickerScreen: View {
                 onAction: handleAction
             )
             .navigationTitle(Text(L10n.arrivalsPickerNavigationTitle))
-            // An explicit placement, as the automatic one hides the field until you scroll on iOS 27
             .searchable(
                 text: $searchText,
                 isPresented: $isSearchPresented,
-                placement: .navigationBarDrawer(displayMode: .always),
+                placement: searchFieldPlacement,
                 prompt: Text(L10n.searchPrompt)
             )
             .autocorrectionDisabled()
@@ -55,14 +60,14 @@ struct ArrivalsPickerScreen: View {
 
     private var content: ArrivalsPickerView.Content {
         if searchText.trimmed().isEmpty {
-            .suggestions(
+            .browse(
                 favourites: favouriteStations.map { StopRow(station: $0) },
                 recents: recentRows,
                 nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
                 canShowMoreNearby: location.nearestStations.count > nearbyLimit
             )
         } else {
-            .results(
+            .searchResults(
                 searchTerm: searchText,
                 stations: stations.filteredStations(matchingName: searchText).map { StopRow(station: $0) }
             )
