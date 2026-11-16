@@ -10,9 +10,12 @@ class UITestCase: XCTestCase {
         continueAfterFailure = false
     }
 
-    /// Launches a fresh instance of the app with `configuration`.
+    /// Launches a fresh instance of the app with `configuration`, in portrait on iPhone and landscape on iPad.
     @MainActor
     func launchApp<Scenario>(with configuration: UITestLaunchConfiguration<Scenario>) throws -> XCUIApplication {
+        // The simulator keeps the last test's orientation, and in portrait the iPad's sidebar layout (forced in UI
+        // tests) swallows taps on the Line Status Edit button
+        XCUIDevice.shared.orientation = UIDevice.current.userInterfaceIdiom == .pad ? .landscapeLeft : .portrait
         let app = XCUIApplication()
         app.launchEnvironment.merge(try configuration.launchEnvironment()) { _, new in new }
         prepareForLaunch(app)
