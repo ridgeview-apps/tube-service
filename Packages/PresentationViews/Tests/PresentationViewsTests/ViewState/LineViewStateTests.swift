@@ -1,5 +1,4 @@
 import Models
-import ModelStubs
 import Testing
 
 @testable import PresentationViews
@@ -8,8 +7,8 @@ struct LineViewStateTests {
 
     @Test
     func lineDisruptionStatusDisruptedLine() {
-        let disruptedLine = ModelStubs.lineStatusDisrupted
-        let goodServiceLine = ModelStubs.lineStatusGoodService
+        let disruptedLine = Line.withStatus(.weaver, .partClosure, "Part Closure")
+        let goodServiceLine = Line.withStatus(.bakerloo, .goodService, "Good Service")
 
         #expect(disruptedLine.isDisrupted)
         #expect(!goodServiceLine.isDisrupted)

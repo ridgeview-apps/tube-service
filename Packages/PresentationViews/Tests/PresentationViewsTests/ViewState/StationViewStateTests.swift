@@ -1,38 +1,18 @@
 import Testing
 import Models
-import ModelStubs
 
 @testable import PresentationViews
 
 struct StationViewStateTests {
 
     @Test
-    func stationSortedLineIDs() {
-        let kingsCrossSortedLineIDs = ModelStubs.kingsCrossStation.sortedLineIDs
-        let paddingtonSortedLineIDs = ModelStubs.paddingtonStation.sortedLineIDs
-        let highBarnetSortedLineIDs = ModelStubs.highBarnetStation.sortedLineIDs
-
-        #expect(
-            kingsCrossSortedLineIDs == [
-                .circle,
-                .hammersmithAndCity,
-                .metropolitan,
-                .northern,
-                .piccadilly,
-                .victoria
-            ]
+    func stationSortedLineIDsAreUniqueAndSortedByName() {
+        let station = makeStation(
+            "HUBPAD",
+            lineGroups: [[.victoria], [.metropolitan, .circle, .hammersmithAndCity], [.circle, .district]]
         )
 
-        #expect(
-            paddingtonSortedLineIDs == [
-                .bakerloo,
-                .circle,
-                .district,
-                .elizabeth,
-                .hammersmithAndCity
-            ]
-        )
-        #expect(highBarnetSortedLineIDs == [.northern])
+        #expect(station.sortedLineIDs == [.circle, .district, .hammersmithAndCity, .metropolitan, .victoria])
     }
 
     @Test
@@ -57,47 +37,21 @@ struct StationViewStateTests {
     }
 
     @Test
-    func stationLineGroupNames() {
-        let kingsCrossLineGroupNames = ModelStubs.kingsCrossStation.lineGroups.map(\.name)
-        let paddingtonLineGroupNames = ModelStubs.paddingtonStation.lineGroups.map(\.name)
-        let highBarnetLineGroupNames = ModelStubs.highBarnetStation.lineGroups.map(\.name)
+    func lineGroupNameListsItsLinesByName() {
+        let lineGroup = Station.LineGroup(atcoCode: "940GZZLUKSX", lineIds: [.metropolitan, .circle, .hammersmithAndCity])
 
-        #expect(
-            kingsCrossLineGroupNames == [
-                "Circle, Hammersmith & City, Metropolitan",
-                "Northern",
-                "Piccadilly",
-                "Victoria"
-            ]
-        )
-        #expect(
-            paddingtonLineGroupNames == [
-                "Bakerloo",
-                "Circle, District",
-                "Circle, Hammersmith & City",
-                "Elizabeth"
-            ]
-        )
-        #expect(
-            highBarnetLineGroupNames == ["Northern"]
-        )
+        #expect(lineGroup.name == "Circle, Hammersmith & City, Metropolitan")
     }
 
     @Test
     func stationsAreSortedByName() {
-        let unsortedValues = [
-            ModelStubs.paddingtonStation,
-            ModelStubs.kingsCrossStation,
-            ModelStubs.highBarnetStation
+        let stations = [
+            makeStation("HUBPAD", name: "Paddington"),
+            makeStation("HUBKGX", name: "King's Cross & St Pancras International"),
+            makeStation("940GZZLUHBT", name: "High Barnet")
         ]
 
-        let expectedValues = [
-            ModelStubs.highBarnetStation,
-            ModelStubs.kingsCrossStation,
-            ModelStubs.paddingtonStation
-        ]
-
-        #expect(unsortedValues.sortedByName() == expectedValues)
+        #expect(stations.sortedByName().map(\.id) == ["940GZZLUHBT", "HUBKGX", "HUBPAD"])
     }
 
     @Test(
@@ -142,37 +96,27 @@ struct StationViewStateTests {
 
     @Test
     func favouriteStationsFollowTheStopOrder() {
-        let stops: [FavouriteStop] = [
-            .station(id: ModelStubs.highBarnetStation.id),
-            .station(id: ModelStubs.paddingtonStation.id),
-            .station(id: ModelStubs.kingsCrossStation.id)
-        ]
+        let stations = [makeStation("940GZZLUAGL"), makeStation("HUBKGX"), makeStation("HUBPAD"), makeStation("940GZZLUHBT")]
+        let stops: [FavouriteStop] = [.station(id: "940GZZLUHBT"), .station(id: "HUBPAD"), .station(id: "HUBKGX")]
 
-        let favouriteStations = ModelStubs.stations.favourites(matching: stops)
-
-        #expect(
-            favouriteStations.map(\.id) == [
-                ModelStubs.highBarnetStation.id,
-                ModelStubs.paddingtonStation.id,
-                ModelStubs.kingsCrossStation.id
-            ]
-        )
+        #expect(stations.favourites(matching: stops).map(\.id) == ["940GZZLUHBT", "HUBPAD", "HUBKGX"])
     }
 
     @Test
     func favouriteStationsSkipUnknownStations() {
-        let stops: [FavouriteStop] = [.station(id: "NOT-A-STATION"), .station(id: ModelStubs.angelStation.id)]
+        let stations = [makeStation("940GZZLUAGL"), makeStation("HUBKGX")]
+        let stops: [FavouriteStop] = [.station(id: "NOT-A-STATION"), .station(id: "940GZZLUAGL")]
 
-        let favouriteStations = ModelStubs.stations.favourites(matching: stops)
-
-        #expect(favouriteStations.map(\.id) == [ModelStubs.angelStation.id])
+        #expect(stations.favourites(matching: stops).map(\.id) == ["940GZZLUAGL"])
     }
 
     @Test
     func favouriteStationsIncludeAllTheirLineGroups() {
-        let favouriteStations = ModelStubs.stations.favourites(matching: [.station(id: ModelStubs.kingsCrossStation.id)])
+        let kingsCross = makeStation("HUBKGX", lineGroups: [[.circle, .hammersmithAndCity, .metropolitan], [.northern], [.victoria]])
 
-        #expect(favouriteStations.first?.lineGroups == ModelStubs.kingsCrossStation.lineGroups)
+        let favouriteStations = [makeStation("940GZZLUAGL"), kingsCross].favourites(matching: [.station(id: "HUBKGX")])
+
+        #expect(favouriteStations.first?.lineGroups == kingsCross.lineGroups)
     }
 
     @Test
@@ -207,5 +151,20 @@ struct StationViewStateTests {
         let notice = "Pimlico: reduced escalator service."
 
         #expect(notice.removingStationNamePrefix("Pimlico") == "reduced escalator service.")
+    }
+}
+
+// MARK: - Private helpers
+
+private extension StationViewStateTests {
+
+    func makeStation(_ id: String, name: String = "Station", lineGroups: [[TrainLineID]] = []) -> Station {
+        Station(
+            id: id,
+            icsCode: "1000000",
+            name: name,
+            location: LocationCoordinate(lat: 51.5, lon: -0.1),
+            lineGroups: lineGroups.map { Station.LineGroup(atcoCode: "\(id)-ATCO", lineIds: $0) }
+        )
     }
 }
