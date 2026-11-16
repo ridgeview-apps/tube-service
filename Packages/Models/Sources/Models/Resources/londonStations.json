@@ -729,23 +729,6 @@
     "name" : "Bermondsey"
   },
   {
-    "icsCode" : "1001023",
-    "id" : "910GBTHNLGR",
-    "lineGroups" : [
-      {
-        "atcoCode" : "910GBTHNLGR",
-        "lineIds" : [
-          "weaver"
-        ]
-      }
-    ],
-    "location" : {
-      "lat" : 51.523917,
-      "lon" : -0.059568
-    },
-    "name" : "Bethnal Green"
-  },
-  {
     "icsCode" : "1000022",
     "id" : "940GZZLUBLG",
     "lineGroups" : [
@@ -760,7 +743,24 @@
       "lat" : 51.527222,
       "lon" : -0.055506
     },
-    "name" : "Bethnal Green"
+    "name" : "Bethnal Green (Central)"
+  },
+  {
+    "icsCode" : "1001023",
+    "id" : "910GBTHNLGR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "910GBTHNLGR",
+        "lineIds" : [
+          "weaver"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.523917,
+      "lon" : -0.059568
+    },
+    "name" : "Bethnal Green (Weaver)"
   },
   {
     "icsCode" : "1001027",
@@ -1138,7 +1138,7 @@
       "lat" : 51.523506,
       "lon" : -0.646374
     },
-    "name" : "Burnham (Berks)"
+    "name" : "Burnham"
   },
   {
     "icsCode" : "1000034",
@@ -1240,7 +1240,7 @@
       "lat" : 51.531973,
       "lon" : -0.057279
     },
-    "name" : "Cambridge Heath (London)"
+    "name" : "Cambridge Heath"
   },
   {
     "icsCode" : "1001045",
@@ -1700,7 +1700,6 @@
       {
         "atcoCode" : "910GCLPHMJ1",
         "lineIds" : [
-          "mildmay",
           "windrush"
         ]
       }
@@ -2374,20 +2373,8 @@
       {
         "atcoCode" : "940GZZLUERC",
         "lineIds" : [
-          "circle"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUERC",
-        "lineIds" : [
           "circle",
-          "district"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUERC",
-        "lineIds" : [
-          "circle",
+          "district",
           "hammersmith-city"
         ]
       }
@@ -2883,19 +2870,7 @@
       {
         "atcoCode" : "940GZZLUGTR",
         "lineIds" : [
-          "circle"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUGTR",
-        "lineIds" : [
           "circle",
-          "district"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUGTR",
-        "lineIds" : [
           "district"
         ]
       },
@@ -4406,7 +4381,7 @@
       "lat" : 51.508062,
       "lon" : -0.541756
     },
-    "name" : "Langley (Berks)"
+    "name" : "Langley"
   },
   {
     "icsCode" : "1000134",
@@ -4589,7 +4564,12 @@
       {
         "atcoCode" : "910GLIVST",
         "lineIds" : [
-          "elizabeth",
+          "elizabeth"
+        ]
+      },
+      {
+        "atcoCode" : "910GLIVST",
+        "lineIds" : [
           "weaver"
         ]
       }
@@ -6722,7 +6702,7 @@
       "lat" : 51.580981,
       "lon" : -0.032918
     },
-    "name" : "St James Street (London)"
+    "name" : "St James Street"
   },
   {
     "icsCode" : "1000221",

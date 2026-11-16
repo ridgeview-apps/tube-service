@@ -53,7 +53,8 @@ struct LondonStationBuilderTests {
                 [stopPoint("910GPADTON", "Paddington Rail Station", hub: "HUBPAD", lat: 51.6, groups: [("910GPADTON", ["elizabeth"])])]
             ],
             hubs: [stopPoint("HUBPAD", "Paddington", icsCode: "1000174")],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(
@@ -80,7 +81,8 @@ struct LondonStationBuilderTests {
                 ]
             ],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(result.stations.map(\.id) == ["940GZZCRWAN"])
@@ -92,15 +94,154 @@ struct LondonStationBuilderTests {
         let result = LondonStationBuilder.build(
             stopPointsByLine: [
                 [
-                    stopPoint("910GLIVST", "London Liverpool Street Rail Station", groups: [("910GLIVST", ["elizabeth", "greater-anglia", "weaver"])]),
+                    stopPoint("910GLIVST", "London Liverpool Street Rail Station", groups: [("910GLIVST", ["elizabeth", "greater-anglia"])]),
                     stopPoint("490000138X", "Liverpool Street Bus Station", groups: [("490000138X", ["11", "23"])])
+                ]
+            ],
+            hubs: [],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(result.stations.map(\.lineGroups) == [[lineGroup("910GLIVST", ["elizabeth"])]])
+    }
+
+    @Test
+    func splitsDepartureBoardGroupsIntoOneGroupPerLine() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [
+                    stopPoint(
+                        "910GHGHI",
+                        "Highbury & Islington Rail Station",
+                        groups: [("910GHGHI", ["mildmay"]), ("910GHGHI", ["mildmay", "windrush"]), ("910GHGHI", ["windrush"])]
+                    )
+                ]
+            ],
+            hubs: [],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(result.stations.first?.lineGroups == [lineGroup("910GHGHI", ["mildmay"]), lineGroup("910GHGHI", ["windrush"])])
+    }
+
+    @Test
+    func keepsTubeGroupsWithSeveralLinesWhole() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [stopPoint("940GZZLUBST", "Baker Street Underground Station", groups: [("940GZZLUBST", ["circle", "hammersmith-city"])])]
+            ],
+            hubs: [],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(result.stations.first?.lineGroups == [lineGroup("940GZZLUBST", ["circle", "hammersmith-city"])])
+    }
+
+    @Test
+    func mergesGroupsThatShareALineAtOneAtcoCode() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [
+                    stopPoint(
+                        "940GZZLUERC",
+                        "Edgware Road (Circle Line) Underground Station",
+                        groups: [
+                            ("940GZZLUERC", ["circle"]),
+                            ("940GZZLUERC", ["circle", "district"]),
+                            ("940GZZLUERC", ["hammersmith-city", "circle"]),
+                            ("940GZZLUERC", ["piccadilly"])
+                        ]
+                    )
+                ]
+            ],
+            hubs: [],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(
+            result.stations.first?.lineGroups == [
+                lineGroup("940GZZLUERC", ["circle", "district", "hammersmith-city"]),
+                lineGroup("940GZZLUERC", ["piccadilly"])
+            ]
+        )
+    }
+
+    @Test
+    func keepsALineServedFromTwoAtcoCodes() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [
+                    stopPoint(
+                        "940GZZLUPAC",
+                        "Paddington Underground Station",
+                        hub: "HUBPAD",
+                        groups: [("940GZZLUPAC", ["circle", "district"]), ("940GZZLUPAH", ["circle", "hammersmith-city"])]
+                    )
+                ]
+            ],
+            hubs: [stopPoint("HUBPAD", "Paddington")],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(
+            result.stations.first?.lineGroups == [
+                lineGroup("940GZZLUPAC", ["circle", "district"]),
+                lineGroup("940GZZLUPAH", ["circle", "hammersmith-city"])
+            ]
+        )
+    }
+
+    @Test
+    func stripsRegionalSuffixesFromNames() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [
+                    stopPoint("910GCAMHTH", "Cambridge Heath (London) Rail Station", groups: [("910GCAMHTH", ["weaver"])]),
+                    stopPoint("910GBNHAM", "Burnham (Berks) Rail Station", groups: [("910GBNHAM", ["elizabeth"])]),
+                    stopPoint("HUBKPA", "Kensington (Olympia)", groups: [("940GZZLUKOY", ["district"])])
+                ]
+            ],
+            hubs: [],
+            patches: [],
+            renames: [:]
+        )
+
+        #expect(result.stations.map(\.name) == ["Burnham", "Cambridge Heath", "Kensington (Olympia)"])
+    }
+
+    @Test
+    func appliesRenames() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [
+                [
+                    stopPoint("940GZZLUBLG", "Bethnal Green Underground Station", groups: [("940GZZLUBLG", ["central"])]),
+                    stopPoint("910GBTHNLGR", "Bethnal Green Rail Station", groups: [("910GBTHNLGR", ["weaver"])])
                 ]
             ],
             hubs: [],
             patches: []
         )
 
-        #expect(result.stations.map(\.lineGroups) == [[lineGroup("910GLIVST", ["elizabeth", "weaver"])]])
+        #expect(result.stations.map(\.name) == ["Bethnal Green (Central)", "Bethnal Green (Weaver)"])
+        #expect(result.issues.isEmpty)
+    }
+
+    @Test
+    func warnsWhenARenamedStationIsMissing() {
+        let result = LondonStationBuilder.build(
+            stopPointsByLine: [[stopPoint("940GZZLUAGL", "Angel Underground Station", groups: [("940GZZLUAGL", ["northern"])])]],
+            hubs: [],
+            patches: [],
+            renames: ["940GZZLUBLG": "Bethnal Green (Central)"]
+        )
+
+        #expect(result.stations.map(\.name) == ["Angel"])
+        #expect(result.issues == [.warning("stale rename: no station 940GZZLUBLG")])
     }
 
     @Test
@@ -116,7 +257,8 @@ struct LondonStationBuilderTests {
                 ]
             ],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(
@@ -136,7 +278,8 @@ struct LondonStationBuilderTests {
                 [stopPoint("940GZZLUAGL", "Angel Underground Station", lat: 51.99, groups: [("940GZZLUAGL", ["northern"])])]
             ],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(result.stations.map(\.location) == [LondonStation.Location(lat: 51.53, lon: -0.1)])
@@ -153,7 +296,8 @@ struct LondonStationBuilderTests {
                 ]
             ],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(result.stations.map(\.id) == ["940GZZLUAGL", "910GBTHNLGR", "940GZZLUBLG"])
@@ -165,17 +309,18 @@ struct LondonStationBuilderTests {
             stopPointsByLine: [
                 [
                     stopPoint(
-                        "910GHGHI",
-                        "Highbury & Islington Rail Station",
-                        hub: "HUBHHY",
-                        groups: [("910GHGHI", ["mildmay"]), ("910GHGHI", ["mildmay", "windrush"]), ("910GHGHI", ["windrush"])]
+                        "910GCLPHMJC",
+                        "Clapham Junction Rail Station",
+                        hub: "HUBCLJ",
+                        groups: [("910GCLPHMJC", ["mildmay"]), ("910GCLPHMJ1", ["mildmay", "windrush"])]
                     )
                 ]
             ],
-            hubs: [stopPoint("HUBHHY", "Highbury & Islington")]
+            hubs: [stopPoint("HUBCLJ", "Clapham Junction")],
+            renames: [:]
         )
 
-        #expect(result.stations.first?.lineGroups == [lineGroup("910GHGHI", ["mildmay"]), lineGroup("910GHGHI", ["windrush"])])
+        #expect(result.stations.first?.lineGroups == [lineGroup("910GCLPHMJC", ["mildmay"]), lineGroup("910GCLPHMJ1", ["windrush"])])
         #expect(result.issues == [.warning("stale patch: no station HUBPAD (\(reason(of: "HUBPAD")))"), .warning("stale patch: no station HUBLST (\(reason(of: "HUBLST")))")])
     }
 
@@ -186,7 +331,8 @@ struct LondonStationBuilderTests {
         let result = LondonStationBuilder.build(
             stopPointsByLine: [[stopPoint("940GZZLUAGL", "Angel Underground Station", groups: [("940GZZLUAGL", ["northern"])])]],
             hubs: [],
-            patches: [patch]
+            patches: [patch],
+            renames: [:]
         )
 
         #expect(result.issues == [.warning("stale patch: removed nothing from 940GZZLUAGL (test)")])
@@ -197,7 +343,8 @@ struct LondonStationBuilderTests {
         let result = LondonStationBuilder.build(
             stopPointsByLine: [[stopPoint("940GZZLUPAC", "Paddington Underground Station", hub: "HUBPAD", groups: [("940GZZLUPAC", ["bakerloo"])])]],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(result.stations.isEmpty)
@@ -218,7 +365,8 @@ struct LondonStationBuilderTests {
         let result = LondonStationBuilder.build(
             stopPointsByLine: [[angelWithoutICSCode]],
             hubs: [],
-            patches: []
+            patches: [],
+            renames: [:]
         )
 
         #expect(result.stations.isEmpty)

@@ -26,7 +26,8 @@ public enum LondonStationBuilder {
     public static func build(
         stopPointsByLine: [[TfLStopPoint]],
         hubs: [TfLStopPoint],
-        patches: [LondonStationPatch] = LondonStationPatch.all
+        patches: [LondonStationPatch] = LondonStationPatch.all,
+        renames: [String: String] = LondonStationNames.renames
     ) -> Result {
         let hubsByCode = Dictionary(
             hubs.compactMap { hub in hub.naptanId.map { ($0, hub) } },
@@ -83,6 +84,10 @@ public enum LondonStationBuilder {
 
         var issues = unknownHubCodes.sorted().map { SeedIssue.error("no TransportInterchange stop point for hub \($0)") }
 
+        for stationID in stationIDs {
+            stationsByID[stationID]?.lineGroups.mergeOverlappingGroups()
+        }
+
         for patch in patches {
             guard let station = stationsByID[patch.stationID] else {
                 issues.append(.warning("stale patch: no station \(patch.stationID) (\(patch.reason))"))
@@ -95,6 +100,10 @@ public enum LondonStationBuilder {
             stationsByID[patch.stationID]?.lineGroups = patchedLineGroups
         }
 
+        for stationID in renames.keys.sorted() where stationsByID[stationID] == nil {
+            issues.append(.warning("stale rename: no station \(stationID)"))
+        }
+
         let stations = stationIDs.compactMap { stationsByID[$0] }
             .map { station in
                 LondonStation(
@@ -102,7 +111,7 @@ public enum LondonStationBuilder {
                     id: station.key.id,
                     lineGroups: station.lineGroups.sortedByLines(),
                     location: station.location,
-                    name: StationNameCleaner.clean(station.key.name)
+                    name: LondonStationNames.name(forStationID: station.key.id, tfLName: station.key.name, renames: renames)
                 )
             }
             .sorted { ($0.name, $0.id) < ($1.name, $1.id) }
@@ -111,11 +120,17 @@ public enum LondonStationBuilder {
     }
 
     /// The stop point's line groups with buses and national rail operators left out, keeping TfL's line order.
+    ///
+    /// A group with a departure-board line is split into one group per line, so each board shows a single line.
+    /// TfL's departures don't say which line a train is on, but filtering them by line ID separates them cleanly.
     private static func knownLineGroups(in stopPoint: TfLStopPoint, knownLineIDs: Set<String>) -> [LondonStation.LineGroup] {
-        (stopPoint.lineGroup ?? []).compactMap { lineGroup in
+        (stopPoint.lineGroup ?? []).flatMap { lineGroup -> [LondonStation.LineGroup] in
             let lineIDs = (lineGroup.lineIdentifier ?? []).filter(knownLineIDs.contains)
-            guard let atcoCode = lineGroup.stationAtcoCode, !lineIDs.isEmpty else { return nil }
-            return LondonStation.LineGroup(atcoCode: atcoCode, lineIds: lineIDs)
+            guard let atcoCode = lineGroup.stationAtcoCode, !lineIDs.isEmpty else { return [] }
+
+            let hasDepartureBoard = lineIDs.contains(where: KnownLines.departureBoardIDs.contains)
+            guard hasDepartureBoard else { return [LondonStation.LineGroup(atcoCode: atcoCode, lineIds: lineIDs)] }
+            return lineIDs.map { LondonStation.LineGroup(atcoCode: atcoCode, lineIds: [$0]) }
         }
     }
 }
@@ -133,6 +148,29 @@ private extension TfLStopPoint {
 }
 
 private extension Set where Element == LondonStation.LineGroup {
+
+    /// Merges groups at one ATCO code that share a line, e.g. "circle" and "circle, district" become "circle,
+    /// district", so no line is listed twice for the same platforms.
+    mutating func mergeOverlappingGroups() {
+        var mergedGroups: [LondonStation.LineGroup] = []
+
+        for group in sortedByLines() {
+            let overlappingGroups = mergedGroups.filter { mergedGroup in
+                mergedGroup.atcoCode == group.atcoCode && !Set<String>(mergedGroup.lineIds).isDisjoint(with: group.lineIds)
+            }
+            guard !overlappingGroups.isEmpty else {
+                mergedGroups.append(group)
+                continue
+            }
+
+            // A merged group's line order follows KnownLines.ids; groups left alone keep TfL's order and their ID.
+            let lineIDs = Set<String>(overlappingGroups.flatMap(\.lineIds) + group.lineIds)
+            mergedGroups.removeAll { overlappingGroups.contains($0) }
+            mergedGroups.append(LondonStation.LineGroup(atcoCode: group.atcoCode, lineIds: KnownLines.ids.filter(lineIDs.contains)))
+        }
+
+        self = Set(mergedGroups)
+    }
 
     /// By line IDs, then ATCO code, so groups with the same lines always come out in the same order.
     func sortedByLines() -> [LondonStation.LineGroup] {

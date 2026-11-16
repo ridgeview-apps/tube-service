@@ -26,4 +26,16 @@ public enum KnownLines {
         "weaver",
         "windrush"
     ]
+
+    /// Lines the app shows a departure board for. Keep in step with `Station.LineGroup.arrivalsDataType` in the
+    /// Models package.
+    public static let departureBoardIDs: Set<String> = [
+        "elizabeth",
+        "liberty",
+        "lioness",
+        "mildmay",
+        "suffragette",
+        "weaver",
+        "windrush"
+    ]
 }

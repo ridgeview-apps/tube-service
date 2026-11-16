@@ -69,6 +69,17 @@ public extension Validation {
             + withinUK(stations, coordinate: { ($0.location.lat, $0.location.lon) }, name: \.name, file: file)
             + everyKnownLineHasAStation(stations, file: file)
             + atcoCodesUsableAsFavouriteIDs(stations, file: file)
+            + uniqueNames(stations, file: file)
+    }
+
+    // Stations with the same name look the same in search; give them names in LondonStationNames.renames.
+    static func uniqueNames(_ stations: [LondonStation], file: String) -> [SeedIssue] {
+        let duplicateNames = Dictionary(grouping: stations.map(\.name), by: { $0 })
+            .filter { $0.value.count > 1 }
+            .keys
+            .sorted()
+
+        return duplicateNames.isEmpty ? [] : [.warning("\(file) has stations with the same name: \(duplicateNames.joined(separator: ", "))")]
     }
 
     /// A line TfL returns that the app doesn't know about yet; its stations are left out until `KnownLines` catches up.
