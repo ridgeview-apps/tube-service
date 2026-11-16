@@ -27,20 +27,27 @@ public final class StationsDataStore {
     private var nationRailStationsByICSCode: [String: StopPoint] = [:]
     private(set) var fetchedDisruptionData: FetchedDisruptionData = .defaultValue
 
-    public init(
+    public let allLondon: [Station]
+
+    public convenience init(
         tflAPI: TflAPIClientType,
         now: @escaping () -> Date = { .now }
     ) {
+        self.init(tflAPI: tflAPI, stations: Station.allLondonTrains, now: now)
+    }
+
+    init(
+        tflAPI: TflAPIClientType,
+        stations: [Station],
+        now: @escaping () -> Date = { .now }
+    ) {
         self.tflAPI = tflAPI
+        self.allLondon = stations
         self.now = now
         loadStations()
     }
 
     // MARK: - Outputs
-
-    public var allLondon: [Station] {
-        Station.allLondonTrains
-    }
 
     public func station(forID stationID: Station.ID) -> Station? {
         stationsByID[stationID]
