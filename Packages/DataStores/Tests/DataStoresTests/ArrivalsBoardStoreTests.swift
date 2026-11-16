@@ -17,6 +17,22 @@ struct ArrivalsBoardStoreTests {
         ArrivalsBoardStore(tflAPI: tflAPI)
     }
 
+    private func makeDeparture(destination: String, scheduledTimeOfDeparture: Date?) -> ArrivalDeparture {
+        ArrivalDeparture(
+            platformName: "Platform A",
+            destinationName: destination,
+            naptanId: "910GPADTLL",
+            stationName: "Paddington",
+            estimatedTimeOfArrival: nil,
+            scheduledTimeOfArrival: nil,
+            estimatedTimeOfDeparture: nil,
+            scheduledTimeOfDeparture: scheduledTimeOfDeparture,
+            minutesAndSecondsToArrival: nil,
+            minutesAndSecondsToDeparture: nil,
+            departureStatus: .onTime
+        )
+    }
+
     // MARK: - Initial state
 
     @Test
@@ -38,6 +54,18 @@ struct ArrivalsBoardStoreTests {
     @Test
     func refresh_predictions_success_setsBoardData() async {
         let tflAPI = StubTflAPIClient()
+        let prediction = ArrivalPrediction(
+            id: "-524999732",
+            currentLocation: "At Kentish Town",
+            destinationName: "Morden Underground Station",
+            destinationNaptanID: "940GZZLUMDN",
+            lineID: .northern,
+            naptanID: "940GZZLUAGL",
+            platformName: "Southbound - Platform 2",
+            timeToStation: 120,
+            towards: "Morden via Bank"
+        )
+        tflAPI.stubbedArrivalPredictions = .success200([prediction])
         let store = makeStore(tflAPI: tflAPI)
 
         await store.refresh(for: predictionsLineGroup)
@@ -46,7 +74,7 @@ struct ArrivalsBoardStoreTests {
             Issue.record("Expected .predictions board data")
             return
         }
-        #expect(!results.isEmpty)
+        #expect(results == [prediction])
         #expect(store.boardData.fetchState.isSuccess == true)
         #expect(store.boardData.fetchedAt != nil)
         #expect(tflAPI.fetchArrivalPredictionsCallCount == 1)
@@ -71,6 +99,8 @@ struct ArrivalsBoardStoreTests {
     @Test
     func refresh_departures_success_setsBoardData() async {
         let tflAPI = StubTflAPIClient()
+        let departure = makeDeparture(destination: "Abbey Wood", scheduledTimeOfDeparture: .now)
+        tflAPI.stubbedArrivalDepartures = .success200([departure])
         let store = makeStore(tflAPI: tflAPI)
 
         await store.refresh(for: departuresLineGroup)
@@ -80,7 +110,7 @@ struct ArrivalsBoardStoreTests {
             return
         }
         #expect(lineID == .elizabeth)
-        #expect(!items.isEmpty)
+        #expect(items == [departure])
         #expect(store.boardData.fetchState.isSuccess == true)
         #expect(store.boardData.fetchedAt != nil)
         #expect(tflAPI.fetchArrivalDeparturesCallCount == 1)
@@ -98,6 +128,23 @@ struct ArrivalsBoardStoreTests {
         #expect(store.boardData.fetchState.isError == true)
         #expect(store.boardData.fetchedAt == nil)
         #expect(tflAPI.fetchArrivalDeparturesCallCount == 1)
+    }
+
+    @Test
+    func refresh_departures_leavesOutDeparturesWithoutAScheduledTime() async {
+        let tflAPI = StubTflAPIClient()
+        let scheduled = makeDeparture(destination: "Abbey Wood", scheduledTimeOfDeparture: .now)
+        let unscheduled = makeDeparture(destination: "Shenfield", scheduledTimeOfDeparture: nil)
+        tflAPI.stubbedArrivalDepartures = .success200([unscheduled, scheduled])
+        let store = makeStore(tflAPI: tflAPI)
+
+        await store.refresh(for: departuresLineGroup)
+
+        guard case .departures(_, let items) = store.boardData.value else {
+            Issue.record("Expected .departures board data")
+            return
+        }
+        #expect(items == [scheduled])
     }
 
     // MARK: - Deduplication

@@ -1,5 +1,4 @@
 import Models
-import ModelStubs
 import Testing
 import CoreLocation
 
@@ -14,14 +13,12 @@ struct LocationDataStoreTests {
         let pentonville = LocationCoordinate(lat: 51.531504, lon: -0.113384)
 
         // When
-        let nearestStations = Station.allLondonTrains.nearestStations(to: pentonville)
+        let nearestStations = Self.stations.nearestStations(to: pentonville)
 
         // Then
-        #expect(nearestStations[0].station == ModelStubs.angelStation)
+        #expect(nearestStations.prefix(3).map(\.station.id) == ["940GZZLUAGL", "HUBKGX", "940GZZLURSQ"])
         #expect(nearestStations[0].distance.isApproximatelyEqual(to: 489.53, plusOrMinus: 0.1))
-        #expect(nearestStations[1].station == ModelStubs.kingsCrossStation)
         #expect(nearestStations[1].distance.isApproximatelyEqual(to: 687.13, plusOrMinus: 0.1))
-        #expect(nearestStations[2].station == ModelStubs.russellSquareStation)
         #expect(nearestStations[2].distance.isApproximatelyEqual(to: 1205.0274, plusOrMinus: 0.1))
     }
 
@@ -31,16 +28,13 @@ struct LocationDataStoreTests {
         let northFinchleyHighRoad = LocationCoordinate(lat: 51.618227, lon: -0.176675)
 
         // When
-        let nearestStations = Station.allLondonTrains.nearestStations(to: northFinchleyHighRoad)
+        let nearestStations = Self.stations.nearestStations(to: northFinchleyHighRoad)
 
         // Then
-        #expect(nearestStations[0].station == ModelStubs.woodsideParkStation)
+        #expect(nearestStations.prefix(4).map(\.station.id) == ["940GZZLUWOP", "940GZZLUWFN", "940GZZLUTAW", "940GZZLUFYC"])
         #expect(nearestStations[0].distance.isApproximatelyEqual(to: 606.16, plusOrMinus: 0.1))
-        #expect(nearestStations[1].station == ModelStubs.westFinchleyStation)
         #expect(nearestStations[1].distance.isApproximatelyEqual(to: 1270.45, plusOrMinus: 0.1))
-        #expect(nearestStations[2].station == ModelStubs.totteridgeAndWhetstoneStation)
         #expect(nearestStations[2].distance.isApproximatelyEqual(to: 1387.44, plusOrMinus: 0.1))
-        #expect(nearestStations[3].station == ModelStubs.finchleyCentralStation)
         #expect(nearestStations[3].distance.isApproximatelyEqual(to: 2216.50, plusOrMinus: 0.1))
     }
 
@@ -73,6 +67,21 @@ struct LocationDataStoreTests {
 
         // Then
         #expect(locationManager.requestLocationCallCount == 0)
+    }
+
+    // Given in no particular order, so the tests prove the sorting
+    private static let stations = [
+        makeStation("940GZZLUFYC", lat: 51.600921, lon: -0.192527),
+        makeStation("940GZZLURSQ", lat: 51.523073, lon: -0.124285),
+        makeStation("940GZZLUWOP", lat: 51.618014, lon: -0.18542),
+        makeStation("HUBKGX", lat: 51.530663, lon: -0.123194),
+        makeStation("940GZZLUTAW", lat: 51.630597, lon: -0.17921),
+        makeStation("940GZZLUAGL", lat: 51.53184, lon: -0.10635),
+        makeStation("940GZZLUWFN", lat: 51.609426, lon: -0.188362)
+    ]
+
+    private static func makeStation(_ id: String, lat: Double, lon: Double) -> Station {
+        Station(id: id, icsCode: "1000000", name: id, location: LocationCoordinate(lat: lat, lon: lon), lineGroups: [])
     }
 
     private func makeModel(

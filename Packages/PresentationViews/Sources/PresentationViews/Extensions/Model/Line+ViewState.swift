@@ -116,9 +116,9 @@ private extension Array where Element == TrainLineID {
         // DLR and London Trams aren't "lines", so they can't share one "the … lines" phrase
         let areAllNamedLines = allSatisfy { $0 != .dlr && $0 != .tram }
         guard areAllNamedLines else {
-            return map(\.nameInSentence).formatted(.list(type: .and))
+            return map(\.nameInSentence).formatted(.list(type: .and).locale(.copy))
         }
-        let shortNames = map { $0.abbreviatedName(besideOtherLines: true) }.formatted(.list(type: .and))
+        let shortNames = map { $0.abbreviatedName(besideOtherLines: true) }.formatted(.list(type: .and).locale(.copy))
         return String(localized: .lineNamesInSentence(shortNames))
     }
 }
@@ -131,7 +131,7 @@ private extension Line {
             .removingDuplicates()
             .enumerated()
             .map { index, description in index == 0 ? description : description.lowercased() }
-            .formatted(.list(type: .and))
+            .formatted(.list(type: .and).locale(.copy))
     }
 }
 

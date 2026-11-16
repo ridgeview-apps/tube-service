@@ -1,5 +1,4 @@
 import Models
-import ModelStubs
 import Testing
 
 @testable import PresentationViews
@@ -8,8 +7,8 @@ struct LineViewStateTests {
 
     @Test
     func lineDisruptionStatusDisruptedLine() {
-        let disruptedLine = ModelStubs.lineStatusDisrupted
-        let goodServiceLine = ModelStubs.lineStatusGoodService
+        let disruptedLine = Line.withStatus(.weaver, .partClosure, "Part Closure")
+        let goodServiceLine = Line.withStatus(.bakerloo, .goodService, "Good Service")
 
         #expect(disruptedLine.isDisrupted)
         #expect(!goodServiceLine.isDisrupted)
@@ -333,7 +332,7 @@ struct LineViewStateTests {
             Line.withStatus(.hammersmithAndCity, .minorDelays, "Minor Delays")
         ]
         // The list's punctuation follows the region, e.g. US English adds a comma before "and"
-        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and))
+        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and).locale(.copy))
         #expect(lines.disruptionSummary == "Minor delays on the \(lineNames) lines")
     }
 

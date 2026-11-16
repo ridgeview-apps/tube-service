@@ -14,7 +14,7 @@ extension NotificationTimeSlot {
     /// e.g. "6:30–9:30 AM and 4:00–7:00 PM". `nil` for all day, whose title already says everything.
     var timesDescription: String? {
         guard !windows.isEmpty else { return nil }
-        return windows.map(\.formatted).formatted(.list(type: .and))
+        return windows.map(\.formatted).formatted(.list(type: .and).locale(.copy))
     }
 }
 
@@ -54,7 +54,7 @@ extension NotificationScheduleSelection {
                 }
                 return String(localized: .notificationsScheduleRange(first.shortSymbol, last.shortSymbol))
             }
-            .formatted(.list(type: .and))
+            .formatted(.list(type: .and).locale(.copy))
     }
 }
 

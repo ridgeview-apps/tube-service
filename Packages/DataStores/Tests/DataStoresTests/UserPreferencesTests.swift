@@ -1,6 +1,5 @@
 import Foundation
 import Models
-import ModelStubs
 import Testing
 
 @testable import DataStores
@@ -10,19 +9,19 @@ struct UserPreferencesTests {
     @Test
     func rawValueRoundTripPreservesPreferences() throws {
         var expected = UserPreferences.default
-        expected.addFavouriteStop(.station(id: ModelStubs.kingsCrossStation.id))
-        expected.addFavouriteStop(.station(id: ModelStubs.angelStation.id))
+        expected.addFavouriteStop(.station(id: "HUBKGX"))
+        expected.addFavouriteStop(.station(id: "940GZZLUAGL"))
         expected.addFavouriteLine(.bakerloo)
-        expected.saveRecentlySelectedStation(ModelStubs.angelStation.id)
+        expected.saveRecentlySelectedStation("940GZZLUAGL")
         expected.saveSelectedLineGroup(stationWithTwoLineGroups.lineGroups[1], at: stationWithTwoLineGroups)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
-        expected.markNoticesSeen(["Lifts are out of service."], at: ModelStubs.kingsCrossStation.id)
+        expected.markNoticesSeen(["Lifts are out of service."], at: "HUBKGX")
         expected.saveRecentJourney(
             SavedJourney(
                 id: UUID(),
-                fromLocation: .station(id: ModelStubs.kingsCrossStation.id),
-                toLocation: .station(id: ModelStubs.angelStation.id),
+                fromLocation: .station(id: "HUBKGX"),
+                toLocation: .station(id: "940GZZLUAGL"),
                 viaLocation: nil,
                 lastUsed: Date(timeIntervalSince1970: 1_700_000_000)
             )
@@ -108,7 +107,7 @@ struct UserPreferencesTests {
     @Test
     func addingAndRemovingFavouriteStops() throws {
         var userPreferences = UserPreferences.default
-        let kingsCross = FavouriteStop.station(id: ModelStubs.kingsCrossStation.id)
+        let kingsCross = FavouriteStop.station(id: "HUBKGX")
 
         // 1. Initially empty
         #expect(userPreferences.favouriteStops.isEmpty)
@@ -247,8 +246,8 @@ struct UserPreferencesTests {
     func saveRecentlyUsedStationID() throws {
         var userPreferences = UserPreferences.default
 
-        let eastFinchleyStationID = ModelStubs.eastFinchleyStation.id
-        let angelStationID = ModelStubs.angelStation.id
+        let eastFinchleyStationID = "940GZZLUEFY"
+        let angelStationID = "940GZZLUAGL"
 
         // 1. Initially empty
         #expect(userPreferences.recentlySelectedStations.isEmpty)
@@ -265,8 +264,8 @@ struct UserPreferencesTests {
     @Test
     func clearRecentlySelectedStations() throws {
         var userPreferences = UserPreferences.default
-        userPreferences.saveRecentlySelectedStation(ModelStubs.angelStation.id)
-        userPreferences.saveRecentlySelectedStation(ModelStubs.eastFinchleyStation.id)
+        userPreferences.saveRecentlySelectedStation("940GZZLUAGL")
+        userPreferences.saveRecentlySelectedStation("940GZZLUEFY")
 
         userPreferences.clearRecentlySelectedStations()
 
@@ -325,8 +324,8 @@ struct UserPreferencesTests {
         // Given
         var userPreferences = UserPreferences.default
 
-        let kingsCrossStationID = ModelStubs.kingsCrossStation.id
-        let angelStationID = ModelStubs.angelStation.id
+        let kingsCrossStationID = "HUBKGX"
+        let angelStationID = "940GZZLUAGL"
 
         let journey = SavedJourney(
             id: UUID(),
@@ -355,8 +354,8 @@ struct UserPreferencesTests {
         var userPreferences = UserPreferences.default
         let wasInitiallyEmpty = userPreferences.recentlySavedJourneys.isEmpty
 
-        let kingsCrossStationID = ModelStubs.kingsCrossStation.id
-        let angelStationID = ModelStubs.angelStation.id
+        let kingsCrossStationID = "HUBKGX"
+        let angelStationID = "940GZZLUAGL"
 
         let timestamp1 = Date.utc(year: 2024, month: 4, day: 15)!
         let duplicateJourney1 = SavedJourney(
@@ -400,7 +399,7 @@ struct UserPreferencesTests {
     func saveJourneyFromNearbyPlaceWithDifferentName_replacesExistingJourney() throws {
         // Given
         var userPreferences = UserPreferences.default
-        let angelStationID = ModelStubs.angelStation.id
+        let angelStationID = "940GZZLUAGL"
 
         let oldJourney = SavedJourney(
             id: UUID(),
@@ -435,7 +434,7 @@ struct UserPreferencesTests {
     func saveJourneyFromSameNamedPlaceFarAway_keepsBothJourneys() throws {
         // Given
         var userPreferences = UserPreferences.default
-        let angelStationID = ModelStubs.angelStation.id
+        let angelStationID = "940GZZLUAGL"
         let edgwareRoad = LocationName(title: "Edgware Road", subtitle: "Barnet")
 
         let journeyFromOneEnd = SavedJourney(
@@ -466,8 +465,8 @@ struct UserPreferencesTests {
         // Given
         var userPreferences = UserPreferences.default
 
-        let kingsCrossStationID = ModelStubs.kingsCrossStation.id
-        let angelStationID = ModelStubs.angelStation.id
+        let kingsCrossStationID = "HUBKGX"
+        let angelStationID = "940GZZLUAGL"
 
         let timestamp1 = Date.utc(year: 2024, month: 4, day: 15)!
         let outboundJourney = SavedJourney(
@@ -528,7 +527,7 @@ struct UserPreferencesTests {
     @Test
     func openedNoticesAreSeenUntilANewOneAppears() {
         var userPreferences = UserPreferences.default
-        let stationID = ModelStubs.kingsCrossStation.id
+        let stationID = "HUBKGX"
 
         #expect(userPreferences.hasUnseenNotices(["Lifts are out of service."], at: stationID))
 
@@ -540,16 +539,16 @@ struct UserPreferencesTests {
     @Test
     func noticesSeenAtOneStationAreUnseenAtAnother() {
         var userPreferences = UserPreferences.default
-        userPreferences.markNoticesSeen(["Lifts are out of service."], at: ModelStubs.kingsCrossStation.id)
+        userPreferences.markNoticesSeen(["Lifts are out of service."], at: "HUBKGX")
 
-        #expect(userPreferences.hasUnseenNotices(["Lifts are out of service."], at: ModelStubs.angelStation.id))
+        #expect(userPreferences.hasUnseenNotices(["Lifts are out of service."], at: "940GZZLUAGL"))
     }
 
     @Test
     func pruningForgetsNoticesNoLongerPublished() {
         var userPreferences = UserPreferences.default
-        let kingsCross = ModelStubs.kingsCrossStation.id
-        let angel = ModelStubs.angelStation.id
+        let kingsCross = "HUBKGX"
+        let angel = "940GZZLUAGL"
         userPreferences.markNoticesSeen(["Lifts are out of service.", "Exit only after the event."], at: kingsCross)
         userPreferences.markNoticesSeen(["Mini ramps are available."], at: angel)
 
