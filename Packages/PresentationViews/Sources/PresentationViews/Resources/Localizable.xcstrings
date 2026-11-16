@@ -139,7 +139,7 @@
         }
       }
     },
-    "arrivals.picker.navigation.title" : {
+    "arrivals.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -150,7 +150,7 @@
         }
       }
     },
-    "arrivals.picker.no.favourites.button.title" : {
+    "arrivals.no.favourites.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -161,7 +161,7 @@
         }
       }
     },
-    "arrivals.picker.no.favourites.subtitle" : {
+    "arrivals.no.favourites.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -172,7 +172,7 @@
         }
       }
     },
-    "arrivals.picker.no.favourites.title" : {
+    "arrivals.no.favourites.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {

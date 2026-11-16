@@ -26,7 +26,7 @@ struct TabBar {
         return .waitingToAppear(in: app)
     }
 
-    func tapArrivalsTab() -> ArrivalsPickerPage {
+    func tapArrivalsTab() -> ArrivalsPage {
         tap(.arrivals)
         return .waitingToAppear(in: app)
     }

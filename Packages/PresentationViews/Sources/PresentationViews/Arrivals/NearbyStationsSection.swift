@@ -3,7 +3,7 @@ import Shared
 import SwiftUI
 
 /// The nearby stations, or the location access, loading, empty or failure row in their place.
-struct LocatedStationsSection: View {
+struct NearbyStationsSection: View {
 
     enum Action: Sendable {
         case tappedRefresh

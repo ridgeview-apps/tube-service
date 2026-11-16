@@ -40,7 +40,7 @@ struct RootScreen: View {
 
     private var liveArrivalsTab: some TabContent<AppTab> {
         Tab(value: AppTab.arrivals) {
-            ArrivalsPickerScreen()
+            ArrivalsScreen()
         } label: {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
         }

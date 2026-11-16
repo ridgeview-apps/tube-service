@@ -2,7 +2,7 @@ import Shared
 import SwiftUI
 import Models
 
-public struct ArrivalsPickerView: View {
+public struct ArrivalsView: View {
 
     public enum Content: Sendable {
         case browse(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
@@ -87,7 +87,7 @@ public struct ArrivalsPickerView: View {
             List {
                 favouritesSection(favourites)
                 recentsSection(recents)
-                LocatedStationsSection(
+                NearbyStationsSection(
                     title: .searchNearbySectionTitle,
                     locationAccess: locationAccess,
                     rows: nearby,
@@ -103,7 +103,7 @@ public struct ArrivalsPickerView: View {
                 }
             }
         }
-        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.list)
+        .accessibilityIdentifier(AccessibilityID.Arrivals.list)
     }
 
     @ViewBuilder private func favouritesSection(_ favourites: [StopRow]) -> some View {
@@ -145,15 +145,15 @@ public struct ArrivalsPickerView: View {
                 .foregroundStyle(.secondary)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(.arrivalsPickerNoFavouritesTitle)
-                Text(.arrivalsPickerNoFavouritesSubtitle)
+                Text(.arrivalsNoFavouritesTitle)
+                Text(.arrivalsNoFavouritesSubtitle)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
             Spacer()
             // The button only activates search, so it has nothing to do once search is active
             if !isSearching {
-                Button(.arrivalsPickerNoFavouritesButtonTitle) {
+                Button(.arrivalsNoFavouritesButtonTitle) {
                     onAction(.tappedFindStation)
                 }
                 .buttonStyle(.bordered)
@@ -191,7 +191,7 @@ public struct ArrivalsPickerView: View {
             StopRowCell(row: row)
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.station(row.stationID))
+        .accessibilityIdentifier(AccessibilityID.Arrivals.station(row.stationID))
     }
 
     private static let showMoreNearbyButtonID = "showMoreNearbyButton"
@@ -221,7 +221,7 @@ public struct ArrivalsPickerView: View {
         }
     }
 
-    private func handleNearbyAction(_ action: LocatedStationsSection.Action) {
+    private func handleNearbyAction(_ action: NearbyStationsSection.Action) {
         switch action {
         case .tappedRefresh:
             onAction(.tappedRefreshNearby)
@@ -264,7 +264,7 @@ private struct FavouriteStopRowCell: View {
                 .buttonStyle(.plain)
             }
         }
-        .accessibilityIdentifier(AccessibilityID.ArrivalsPicker.favouriteStation(row.stationID))
+        .accessibilityIdentifier(AccessibilityID.Arrivals.favouriteStation(row.stationID))
     }
 }
 
@@ -289,7 +289,7 @@ private struct Previewer: View {
     var searchResults: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
-    private var content: ArrivalsPickerView.Content {
+    private var content: ArrivalsView.Content {
         if let searchResults {
             .searchResults(searchTerm: searchResults.searchTerm, stations: searchResults.stations)
         } else {
@@ -299,7 +299,7 @@ private struct Previewer: View {
 
     var body: some View {
         NavigationStack {
-            ArrivalsPickerView(
+            ArrivalsView(
                 content: content,
                 locationAccess: .init(state: locationAccessState) {
                     print("Permissions requested")
@@ -322,9 +322,9 @@ private let previewFavourites = ModelStubs.stations
 private let previewRecents = [ModelStubs.eastFinchleyStation].map { StopRow(station: $0) }
 
 private let previewNearby = [
-    ModelStubs.locatedStationWoodsidePark,
-    ModelStubs.locatedStationWestFinchley,
-    ModelStubs.locatedStationTotteridgeAndWhetstone
+    ModelStubs.nearbyStationWoodsidePark,
+    ModelStubs.nearbyStationWestFinchley,
+    ModelStubs.nearbyStationTotteridgeAndWhetstone
 ].map(StopRow.init)
 
 #Preview("Favourites, recents and nearby") {

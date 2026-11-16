@@ -42,7 +42,7 @@ public final class LocationDataStore: NSObject {
     public private(set) var currentLocationCoordinate: LocationCoordinate?
     public private(set) var currentLocationName: LocationName?
     public private(set) var detectionState: DetectionState = .detected
-    public private(set) var nearestStations: [LocatedStation] = []
+    public private(set) var nearestStations: [NearbyStation] = []
 
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false
@@ -212,9 +212,9 @@ public final class LocationDataStore: NSObject {
 }
 
 extension Sequence where Element == Station {
-    func nearestStations(to location: LocationCoordinate) -> [LocatedStation] {
+    func nearestStations(to location: LocationCoordinate) -> [NearbyStation] {
         map { station in
-            LocatedStation(station, distance: location.distance(to: station.location))
+            NearbyStation(station, distance: location.distance(to: station.location))
         }.sorted {
             $0.distance < $1.distance
         }
