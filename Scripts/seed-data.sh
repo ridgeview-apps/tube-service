@@ -5,9 +5,8 @@
 #   Scripts/seed-data.sh --only national-rail   # regenerate one file
 #   Scripts/seed-data.sh --dry-run              # check the new data without writing it
 #   Scripts/seed-data.sh --allow-shrink         # write even if a file lost more than 5% of its entries
+#   Scripts/seed-data.sh --summary changes.md   # also write a Markdown summary of what changed
 #   Scripts/seed-data.sh --help
-#
-# Set TFL_API_APP_KEY to send a TfL key (optional).
 
 set -e
 

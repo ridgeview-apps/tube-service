@@ -7,25 +7,38 @@ struct SeedData {
     enum Dataset: String, CaseIterable {
         case london
         case nationalRail = "national-rail"
+
+        var fileName: String {
+            switch self {
+            case .london: "londonStations.json"
+            case .nationalRail: "nationalRailStations.json"
+            }
+        }
     }
 
     struct Options {
         var datasets = Dataset.allCases
         var isDryRun = false
         var allowShrink = false
+        var summaryURL: URL?
+    }
+
+    /// One dataset's run: whether it passed validation, and its section of the summary.
+    struct DatasetResult {
+        let succeeded: Bool
+        let summary: String
     }
 
     static let usage = """
-        Usage: seed-data [--only <dataset>] [--dry-run] [--allow-shrink]
+        Usage: seed-data [--only <dataset>] [--dry-run] [--allow-shrink] [--summary <path>]
 
         Regenerates the app's bundled station files from live TfL data.
 
           --only <dataset>   Regenerate one file: \(Dataset.allCases.map(\.rawValue).joined(separator: ", "))
           --dry-run          Check the new data without writing it
           --allow-shrink     Write a file even if it lost more than \(Int(Validation.maximumShrink * 100))% of its entries
+          --summary <path>   Write a Markdown summary of what changed, even if validation fails
           --help             Show this help
-
-        Set TFL_API_APP_KEY to send a TfL key (optional).
         """
 
     static func main() async {
@@ -35,18 +48,30 @@ struct SeedData {
                 return
             }
             let resourcesURL = try findResourcesDirectory()
-            let client = TfLClient(appKey: ProcessInfo.processInfo.environment["TFL_API_APP_KEY"])
+            let client = TfLClient()
 
-            var succeeded = true
+            var results: [DatasetResult] = []
             for dataset in options.datasets {
-                switch dataset {
-                case .london:
-                    succeeded = try await generateLondon(client: client, resourcesURL: resourcesURL, options: options) && succeeded
-                case .nationalRail:
-                    succeeded = try await generateNationalRail(client: client, resourcesURL: resourcesURL, options: options) && succeeded
+                do {
+                    switch dataset {
+                    case .london:
+                        results.append(try await generateLondon(client: client, resourcesURL: resourcesURL, options: options))
+                    case .nationalRail:
+                        results.append(try await generateNationalRail(client: client, resourcesURL: resourcesURL, options: options))
+                    }
+                } catch {
+                    print("error: \(error)")
+                    // URLError's description is a dump of its userInfo; its localized one reads better in a PR
+                    let message = (error as? URLError)?.localizedDescription ?? String(describing: error)
+                    results.append(DatasetResult(succeeded: false, summary: "## \(dataset.fileName)\n\nFailed: \(message)\n"))
                 }
             }
-            if !succeeded {
+            if let summaryURL = options.summaryURL {
+                let summary = (["# Station seed data", ""] + results.map(\.summary)).joined(separator: "\n")
+                try Data(summary.utf8).write(to: summaryURL)
+                print("Wrote summary to \(summaryURL.path)")
+            }
+            if results.contains(where: { !$0.succeeded }) {
                 exit(1)
             }
         } catch {
@@ -71,6 +96,11 @@ struct SeedData {
                 options.isDryRun = true
             case "--allow-shrink":
                 options.allowShrink = true
+            case "--summary":
+                guard let path = remaining.popFirst() else {
+                    throw UsageError("--summary needs a file path")
+                }
+                options.summaryURL = URL(filePath: path)
             case "--help", "-h":
                 return nil
             default:
@@ -95,9 +125,8 @@ struct SeedData {
         throw UsageError("couldn't find \(resourcesPath); run this from inside the tube-service repo")
     }
 
-    /// Returns `false` if validation failed and nothing was written.
-    static func generateLondon(client: TfLClient, resourcesURL: URL, options: Options) async throws -> Bool {
-        let fileURL = resourcesURL.appending(path: "londonStations.json")
+    static func generateLondon(client: TfLClient, resourcesURL: URL, options: Options) async throws -> DatasetResult {
+        let fileURL = resourcesURL.appending(path: Dataset.london.fileName)
         print("Fetching London lines…")
 
         let lineIDs = try await client.fetchLines(modes: KnownLines.modes).map(\.id)
@@ -118,16 +147,15 @@ struct SeedData {
         return try write(
             result.stations,
             to: fileURL,
-            currentCount: currentStations?.count,
+            current: currentStations,
             incompleteStopPointNames: result.incompleteStopPointNames,
             issues: issues,
             options: options
         )
     }
 
-    /// Returns `false` if validation failed and nothing was written.
-    static func generateNationalRail(client: TfLClient, resourcesURL: URL, options: Options) async throws -> Bool {
-        let fileURL = resourcesURL.appending(path: "nationalRailStations.json")
+    static func generateNationalRail(client: TfLClient, resourcesURL: URL, options: Options) async throws -> DatasetResult {
+        let fileURL = resourcesURL.appending(path: Dataset.nationalRail.fileName)
         print("Fetching national rail stations…")
 
         let result = NationalRailBuilder.build(from: try await client.fetchRailStations())
@@ -137,29 +165,32 @@ struct SeedData {
         return try write(
             result.stopPoints,
             to: fileURL,
-            currentCount: currentStopPoints?.count,
+            current: currentStopPoints,
             incompleteStopPointNames: result.incompleteStopPointNames,
             issues: issues,
             options: options
         )
     }
 
-    /// Reports the run and writes the file unless there's an error or it's a dry run. Returns `false` on an error.
-    static func write(
-        _ entries: [some Encodable],
+    /// Reports the run and writes the file unless there's an error or it's a dry run.
+    static func write<Entry: SeedEntry & Encodable>(
+        _ entries: [Entry],
         to fileURL: URL,
-        currentCount: Int?,
+        current: [Entry]?,
         incompleteStopPointNames: [String],
         issues: [SeedIssue],
         options: Options
-    ) throws -> Bool {
-        print("\(fileURL.lastPathComponent): \(currentCount ?? 0) → \(entries.count) stations")
+    ) throws -> DatasetResult {
+        let diff = SeedDiff(old: current, new: entries)
+        let summary = diff.markdown(file: fileURL.lastPathComponent, issues: issues)
+        print("\(fileURL.lastPathComponent): \(diff.oldCount) → \(diff.newCount) stations")
+        print("\(diff.added.count) added, \(diff.removed.count) removed, \(diff.changed.count) changed")
         print("Left out \(incompleteStopPointNames.count) TfL stop points missing an ID, ICS code, name or location")
         issues.forEach { print($0) }
 
         guard !issues.contains(where: { $0.severity == .error }) else {
             print("Not writing \(fileURL.lastPathComponent)")
-            return false
+            return DatasetResult(succeeded: false, summary: summary)
         }
         if options.isDryRun {
             print("Dry run: not writing \(fileURL.lastPathComponent)")
@@ -167,7 +198,7 @@ struct SeedData {
             try SeedOutput.encode(entries).write(to: fileURL)
             print("Wrote \(fileURL.lastPathComponent)")
         }
-        return true
+        return DatasetResult(succeeded: true, summary: summary)
     }
 }
 

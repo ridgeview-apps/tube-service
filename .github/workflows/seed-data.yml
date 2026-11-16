@@ -1,0 +1,91 @@
+name: Seed data
+
+# Regenerates the app's bundled station files from live TfL data and, if they
+# changed, opens a PR whose description summarises the changes. The PR targets
+# the branch the workflow ran on.
+#
+# No TfL key: the only one is the app's, and this would use up its users' rate
+# limit (see TfLClient).
+#
+# Needs Settings → Actions → General → "Allow GitHub Actions to create and
+# approve pull requests". The PR branch is named by date, so a second run on the
+# same day fails to push until the first PR's branch is merged or deleted.
+
+on:
+  workflow_dispatch:
+    inputs:
+      only:
+        description: 'Station file to regenerate'
+        type: choice
+        options:
+          - all
+          - london
+          - national-rail
+        default: all
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  seed-data:
+    runs-on: xcode-27
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_$(cat .xcode-version).app"
+      - name: Confirm Xcode version
+        run: xcodebuild -version
+      - name: Seed data tests
+        run: swift test --package-path Scripts/SeedData
+      - name: Regenerate station files
+        env:
+          ONLY: ${{ inputs.only }}
+        run: |
+          if [[ "$ONLY" == "all" ]]; then
+            Scripts/seed-data.sh --summary "$RUNNER_TEMP/seed-data.md"
+          else
+            Scripts/seed-data.sh --only "$ONLY" --summary "$RUNNER_TEMP/seed-data.md"
+          fi
+      # Also runs when validation fails, so the errors show on the run's page
+      - name: Show summary
+        if: always()
+        run: |
+          if [[ -f "$RUNNER_TEMP/seed-data.md" ]]; then
+            cat "$RUNNER_TEMP/seed-data.md" >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet -- Packages/Models/Sources/Models/Resources; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Install gems
+        if: steps.changes.outputs.changed == 'true'
+        run: bundle install
+      # A push made with GITHUB_TOKEN doesn't trigger branch-checks.yml, so the
+      # PR's unit tests run here instead
+      - name: Unit tests
+        if: steps.changes.outputs.changed == 'true'
+        run: bundle exec fastlane unit_tests
+      - name: Open pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_BRANCH: ${{ github.ref_name }}
+        run: |
+          branch="feature/seed-data-$(date -u +%F)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add Packages/Models/Sources/Models/Resources
+          git commit -m "Update station seed data"
+          git push origin "$branch"
+          gh pr create --base "$BASE_BRANCH" --head "$branch" --title "Update station seed data" --body-file "$RUNNER_TEMP/seed-data.md"
