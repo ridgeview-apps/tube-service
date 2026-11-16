@@ -208,7 +208,9 @@ lane :upload_screenshots do |options|
   end
   UI.user_error!("#{version} is in review, so its screenshots can't be changed") if build_number_in_review
 
-  upload_to_app_store_connect(screenshots_path: screenshots_path)
+  # Without overwrite, deliver keeps the shots the version inherited and only logs
+  # an error for each new one past the limit of 10
+  upload_to_app_store_connect(screenshots_path: screenshots_path, overwrite_screenshots: true)
 end
 
 # If another build of the version is in review, this is a resubmission, so
