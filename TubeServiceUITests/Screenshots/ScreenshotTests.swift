@@ -34,12 +34,19 @@ final class ScreenshotTests: ScreenshotTestCase {
         capture(journeyResults, as: "JourneyPlannerResults")
 
         let arrivals = journeyResults.tabBar.tapArrivalsTab()
-        capture(arrivals, as: "LiveArrivalsPicker")
+        capture(arrivals, as: "Arrivals")
 
-        let arrivalsStation = arrivals.tapFavouriteStation("HUBABW")  // Abbey Wood
-        capture(arrivalsStation, as: "LiveArrivalsBoard1")
+        let abbeyWood = arrivals.tapFavouriteStation("HUBABW")
+        capture(abbeyWood, as: "Station-AbbeyWood")
 
-        let maps = arrivalsStation.tabBar.tapMapsTab()
+        let kingsCross =
+            abbeyWood
+            .tapBackButton()
+            .tapFavouriteStation("HUBKGX")
+            .tapLineChip("940GZZLUKSX-northern")
+        capture(kingsCross, as: "Station-KingsCross")
+
+        let maps = kingsCross.tabBar.tapMapsTab()
         capture(maps, as: "Maps")
     }
 }
