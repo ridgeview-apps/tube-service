@@ -10,11 +10,10 @@ Welcome to the Tube Service iOS app! This is a SwiftUI app and is available on [
 <img width="200" alt="Service statuses at the weekend" src="Docs/Images/Screenshots/03-ServiceStatuses-Weekend.png" />
 <img width="200" alt="Journey planner form" src="Docs/Images/Screenshots/04-JourneyPlannerForm.png" />
 <img width="200" alt="Journey planner results" src="Docs/Images/Screenshots/05-JourneyPlannerResults.png" />
-<img width="200" alt="Live arrivals picker" src="Docs/Images/Screenshots/06-LiveArrivalsPicker.png" />
-<img width="200" alt="Live arrivals board" src="Docs/Images/Screenshots/07-LiveArrivalsBoard1.png" />
-<img width="200" alt="Nearby stations list" src="Docs/Images/Screenshots/08-NearbyStations-List.png" />
-<img width="200" alt="Nearby station detail" src="Docs/Images/Screenshots/09-NearbyStations-Detail.png" />
-<img width="200" alt="Maps" src="Docs/Images/Screenshots/10-Maps.png" />
+<img width="200" alt="Arrivals" src="Docs/Images/Screenshots/06-Arrivals.png" />
+<img width="200" alt="Abbey Wood station" src="Docs/Images/Screenshots/07-Station-AbbeyWood.png" />
+<img width="200" alt="King's Cross station" src="Docs/Images/Screenshots/08-Station-KingsCross.png" />
+<img width="200" alt="Maps" src="Docs/Images/Screenshots/09-Maps.png" />
 </p>
 
 ## Getting Started
