@@ -62,6 +62,10 @@ public extension Color {
 
     static let arrivalsBoardPrimary = Color.rgb(198, 188, 61)
     static let arrivalsBoardBackground = Color.rgb(34, 30, 40)
+    static let arrivalsBoardBezel = Color.adaptive(
+        lightMode: Color.rgb(118, 114, 124),
+        darkMode: Color.rgb(74, 70, 80)
+    )
 }
 
 public extension Color {

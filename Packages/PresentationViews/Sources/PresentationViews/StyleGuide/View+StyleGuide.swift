@@ -12,7 +12,7 @@ public extension View {
         self.clipShape(.rect(cornerRadius: cornerRadius))
             .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .stroke(color, lineWidth: lineWidth)
+                    .strokeBorder(color, lineWidth: lineWidth)
             )
     }
 
