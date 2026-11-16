@@ -14,7 +14,7 @@ fi
 cd "$REPO_ROOT"
 
 find TubeService Packages TubeServiceTests TubeServiceUITests \
-    Scripts/SeedData/Package.swift Scripts/SeedData/Sources Scripts/SeedData/Tests \
+    Scripts/SeedData \
     -path "*/.build" -prune -o \
     -name "*.swift" \
     ! -path "TubeServiceUITests/Support/SnapshotHelper.swift" \
