@@ -55,14 +55,14 @@ struct ArrivalsPickerScreen: View {
 
     private var content: ArrivalsPickerView.Content {
         if searchText.trimmed().isEmpty {
-            .suggestions(
+            .browse(
                 favourites: favouriteStations.map { StopRow(station: $0) },
                 recents: recentRows,
                 nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
                 canShowMoreNearby: location.nearestStations.count > nearbyLimit
             )
         } else {
-            .results(
+            .searchResults(
                 searchTerm: searchText,
                 stations: stations.filteredStations(matchingName: searchText).map { StopRow(station: $0) }
             )
