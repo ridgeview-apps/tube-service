@@ -333,7 +333,7 @@ struct LineViewStateTests {
             Line.withStatus(.hammersmithAndCity, .minorDelays, "Minor Delays")
         ]
         // The list's punctuation follows the region, e.g. US English adds a comma before "and"
-        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and))
+        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and).locale(.copy))
         #expect(lines.disruptionSummary == "Minor delays on the \(lineNames) lines")
     }
 
