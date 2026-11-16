@@ -56,4 +56,53 @@ public extension Validation {
             + notShrunk(newCount: stopPoints.count, currentCount: currentCount, allowShrink: allowShrink, file: file)
             + withinUK(stopPoints, coordinate: { ($0.lat, $0.lon) }, name: \.commonName, file: file)
     }
+
+    static func validate(
+        _ stations: [LondonStation],
+        currentCount: Int?,
+        allowShrink: Bool,
+        file: String = "londonStations.json"
+    ) -> [SeedIssue] {
+        nonEmpty(stations, file: file)
+            + unique(stations, by: \.id, idName: "id", file: file)
+            + notShrunk(newCount: stations.count, currentCount: currentCount, allowShrink: allowShrink, file: file)
+            + withinUK(stations, coordinate: { ($0.location.lat, $0.location.lon) }, name: \.name, file: file)
+            + everyKnownLineHasAStation(stations, file: file)
+            + atcoCodesUsableAsFavouriteIDs(stations, file: file)
+    }
+
+    /// A line TfL returns that the app doesn't know about yet; its stations are left out until `KnownLines` catches up.
+    static func unknownLines(_ lineIDs: [String]) -> [SeedIssue] {
+        lineIDs.filter { !KnownLines.ids.contains($0) }
+            .map { .warning("TfL has a line the app doesn't know: \($0). Add it to TrainLineID and KnownLines.ids") }
+    }
+
+    static func everyKnownLineHasAStation(_ stations: [LondonStation], file: String) -> [SeedIssue] {
+        let lineIDsWithStations = Set(stations.flatMap(\.lineGroups).flatMap(\.lineIds))
+        let linesWithoutStations = KnownLines.ids.filter { !lineIDsWithStations.contains($0) }
+
+        return linesWithoutStations.isEmpty ? [] : [.error("\(file) has no stations for: \(linesWithoutStations.joined(separator: ", "))")]
+    }
+
+    // The legacy favourites migration finds a station from the ATCO code before the first "-" in a line group ID,
+    // so each ATCO code must be hyphen-free and belong to one station. Mirrors StationDataTests in the Models package.
+    static func atcoCodesUsableAsFavouriteIDs(_ stations: [LondonStation], file: String) -> [SeedIssue] {
+        let atcoCodes = stations.flatMap(\.lineGroups).map(\.atcoCode)
+        let atcoCodesWithHyphens = Set(atcoCodes.filter { $0.contains("-") }).sorted()
+
+        let stationIDsByAtcoCode = Dictionary(
+            grouping: stations.flatMap { station in station.lineGroups.map { (atcoCode: $0.atcoCode, stationID: station.id) } },
+            by: \.atcoCode
+        )
+        let sharedAtcoCodes = stationIDsByAtcoCode.filter { Set($0.value.map(\.stationID)).count > 1 }.keys.sorted()
+
+        var issues: [SeedIssue] = []
+        if !atcoCodesWithHyphens.isEmpty {
+            issues.append(.error("\(file) has ATCO codes containing \"-\": \(atcoCodesWithHyphens.joined(separator: ", "))"))
+        }
+        if !sharedAtcoCodes.isEmpty {
+            issues.append(.error("\(file) has ATCO codes shared by more than one station: \(sharedAtcoCodes.joined(separator: ", "))"))
+        }
+        return issues
+    }
 }

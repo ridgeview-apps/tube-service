@@ -14,7 +14,7 @@ struct ValidationTests {
 
     @Test
     func failsWhenEmpty() {
-        let issues = Validation.validate([], currentCount: nil, allowShrink: false)
+        let issues = Validation.validate([NationalRailStopPoint](), currentCount: nil, allowShrink: false)
 
         #expect(issues == [.error("nationalRailStations.json has no entries")])
     }
@@ -55,5 +55,73 @@ struct ValidationTests {
     @Test
     func warnsInsteadWhenShrinkIsAllowed() {
         #expect(Validation.notShrunk(newCount: 50, currentCount: 100, allowShrink: true, file: "f") == [.warning("f would shrink from 100 to 50 entries")])
+    }
+
+    // MARK: - London
+
+    /// One station per known line, so only the check under test fails.
+    private let londonStations = KnownLines.ids.map { lineID in
+        LondonStation(
+            icsCode: "ics-\(lineID)",
+            id: "id-\(lineID)",
+            lineGroups: [LondonStation.LineGroup(atcoCode: "940G\(lineID.replacingOccurrences(of: "-", with: ""))", lineIds: [lineID])],
+            location: LondonStation.Location(lat: 51.5, lon: -0.1),
+            name: lineID
+        )
+    }
+
+    @Test
+    func passesValidLondonStations() {
+        #expect(Validation.validate(londonStations, currentCount: londonStations.count, allowShrink: false).isEmpty)
+    }
+
+    @Test
+    func failsWhenAKnownLineHasNoStation() {
+        let stations = londonStations.filter { !$0.lineGroups.flatMap(\.lineIds).contains("tram") }
+
+        #expect(Validation.validate(stations, currentCount: nil, allowShrink: false) == [.error("londonStations.json has no stations for: tram")])
+    }
+
+    @Test
+    func failsOnAtcoCodesWithHyphens() {
+        let station = LondonStation(
+            icsCode: "1",
+            id: "HUBX",
+            lineGroups: [LondonStation.LineGroup(atcoCode: "940G-X", lineIds: ["central"])],
+            location: LondonStation.Location(lat: 51.5, lon: -0.1),
+            name: "X"
+        )
+
+        #expect(
+            Validation.validate(londonStations + [station], currentCount: nil, allowShrink: false) == [
+                .error("londonStations.json has ATCO codes containing \"-\": 940G-X")
+            ]
+        )
+    }
+
+    @Test
+    func failsOnAtcoCodesSharedByTwoStations() {
+        let station = LondonStation(
+            icsCode: "1",
+            id: "HUBX",
+            lineGroups: [LondonStation.LineGroup(atcoCode: "940Gcentral", lineIds: ["central"])],
+            location: LondonStation.Location(lat: 51.5, lon: -0.1),
+            name: "X"
+        )
+
+        #expect(
+            Validation.validate(londonStations + [station], currentCount: nil, allowShrink: false) == [
+                .error("londonStations.json has ATCO codes shared by more than one station: 940Gcentral")
+            ]
+        )
+    }
+
+    @Test
+    func warnsOnLinesTheAppDoesntKnow() {
+        #expect(
+            Validation.unknownLines(["central", "purple"]) == [
+                .warning("TfL has a line the app doesn't know: purple. Add it to TrainLineID and KnownLines.ids")
+            ]
+        )
     }
 }

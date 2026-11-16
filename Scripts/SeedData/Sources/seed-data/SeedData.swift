@@ -5,6 +5,7 @@ import SeedDataCore
 struct SeedData {
 
     enum Dataset: String, CaseIterable {
+        case london
         case nationalRail = "national-rail"
     }
 
@@ -39,6 +40,8 @@ struct SeedData {
             var succeeded = true
             for dataset in options.datasets {
                 switch dataset {
+                case .london:
+                    succeeded = try await generateLondon(client: client, resourcesURL: resourcesURL, options: options) && succeeded
                 case .nationalRail:
                     succeeded = try await generateNationalRail(client: client, resourcesURL: resourcesURL, options: options) && succeeded
                 }
@@ -93,6 +96,36 @@ struct SeedData {
     }
 
     /// Returns `false` if validation failed and nothing was written.
+    static func generateLondon(client: TfLClient, resourcesURL: URL, options: Options) async throws -> Bool {
+        let fileURL = resourcesURL.appending(path: "londonStations.json")
+        print("Fetching London lines…")
+
+        let lineIDs = try await client.fetchLines(modes: KnownLines.modes).map(\.id)
+        var stopPointsByLine: [[TfLStopPoint]] = []
+        for lineID in KnownLines.ids where lineIDs.contains(lineID) {
+            print("Fetching stop points for \(lineID)…")
+            stopPointsByLine.append(try await client.fetchStopPoints(line: lineID))
+        }
+        print("Fetching interchanges…")
+        let result = LondonStationBuilder.build(stopPointsByLine: stopPointsByLine, hubs: try await client.fetchInterchanges())
+
+        let currentStations = try SeedOutput.read([LondonStation].self, from: fileURL)
+        let issues =
+            Validation.unknownLines(lineIDs)
+            + result.issues
+            + Validation.validate(result.stations, currentCount: currentStations?.count, allowShrink: options.allowShrink)
+
+        return try write(
+            result.stations,
+            to: fileURL,
+            currentCount: currentStations?.count,
+            incompleteStopPointNames: result.incompleteStopPointNames,
+            issues: issues,
+            options: options
+        )
+    }
+
+    /// Returns `false` if validation failed and nothing was written.
     static func generateNationalRail(client: TfLClient, resourcesURL: URL, options: Options) async throws -> Bool {
         let fileURL = resourcesURL.appending(path: "nationalRailStations.json")
         print("Fetching national rail stations…")
@@ -101,8 +134,27 @@ struct SeedData {
         let currentStopPoints = try SeedOutput.read([NationalRailStopPoint].self, from: fileURL)
         let issues = Validation.validate(result.stopPoints, currentCount: currentStopPoints?.count, allowShrink: options.allowShrink)
 
-        print("\(fileURL.lastPathComponent): \(currentStopPoints?.count ?? 0) → \(result.stopPoints.count) stations")
-        print("Left out \(result.incompleteStopPointNames.count) TfL stop points missing an ICS code, name or location")
+        return try write(
+            result.stopPoints,
+            to: fileURL,
+            currentCount: currentStopPoints?.count,
+            incompleteStopPointNames: result.incompleteStopPointNames,
+            issues: issues,
+            options: options
+        )
+    }
+
+    /// Reports the run and writes the file unless there's an error or it's a dry run. Returns `false` on an error.
+    static func write(
+        _ entries: [some Encodable],
+        to fileURL: URL,
+        currentCount: Int?,
+        incompleteStopPointNames: [String],
+        issues: [SeedIssue],
+        options: Options
+    ) throws -> Bool {
+        print("\(fileURL.lastPathComponent): \(currentCount ?? 0) → \(entries.count) stations")
+        print("Left out \(incompleteStopPointNames.count) TfL stop points missing an ID, ICS code, name or location")
         issues.forEach { print($0) }
 
         guard !issues.contains(where: { $0.severity == .error }) else {
@@ -112,7 +164,7 @@ struct SeedData {
         if options.isDryRun {
             print("Dry run: not writing \(fileURL.lastPathComponent)")
         } else {
-            try SeedOutput.encode(result.stopPoints).write(to: fileURL)
+            try SeedOutput.encode(entries).write(to: fileURL)
             print("Wrote \(fileURL.lastPathComponent)")
         }
         return true

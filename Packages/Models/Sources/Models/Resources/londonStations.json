@@ -28,8 +28,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.491241,
-      "lon" : 0.121374
+      "lat" : 51.491284,
+      "lon" : 0.121087
     },
     "name" : "Abbey Wood"
   },
@@ -102,8 +102,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.356241,
-      "lon" : -0.032694
+      "lat" : 51.356599,
+      "lon" : -0.032607
     },
     "name" : "Addington Village"
   },
@@ -228,8 +228,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.38222,
-      "lon" : -0.12386
+      "lat" : 51.382238,
+      "lon" : -0.123654
     },
     "name" : "Ampere Way"
   },
@@ -262,8 +262,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.531788,
-      "lon" : -0.105919
+      "lat" : 51.53184,
+      "lon" : -0.10635
     },
     "name" : "Angel"
   },
@@ -347,8 +347,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.4068,
-      "lon" : -0.049476
+      "lat" : 51.407037,
+      "lon" : -0.049092
     },
     "name" : "Avenue Road"
   },
@@ -466,19 +466,7 @@
       {
         "atcoCode" : "940GZZLUBKG",
         "lineIds" : [
-          "district"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUBKG",
-        "lineIds" : [
           "district",
-          "hammersmith-city"
-        ]
-      },
-      {
-        "atcoCode" : "940GZZLUBKG",
-        "lineIds" : [
           "hammersmith-city"
         ]
       },
@@ -684,8 +672,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.389242,
-      "lon" : -0.142167
+      "lat" : 51.3893,
+      "lon" : -0.142409
     },
     "name" : "Beddington Lane"
   },
@@ -701,8 +689,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.4011,
-      "lon" : -0.17774
+      "lat" : 51.399722,
+      "lon" : -0.180256
     },
     "name" : "Belgrave Walk"
   },
@@ -1096,8 +1084,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.540699,
-      "lon" : -0.210128
+      "lat" : 51.540734,
+      "lon" : -0.210054
     },
     "name" : "Brondesbury Park"
   },
@@ -1450,8 +1438,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.375769,
-      "lon" : -0.103917
+      "lat" : 51.376229,
+      "lon" : -0.103424
     },
     "name" : "Centrale"
   },
@@ -2149,8 +2137,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.417555,
-      "lon" : -0.207679
+      "lat" : 51.417608,
+      "lon" : -0.207648
     },
     "name" : "Dundonald Road"
   },
@@ -2684,8 +2672,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.351319,
-      "lon" : -0.024532
+      "lat" : 51.351305,
+      "lon" : -0.024245
     },
     "name" : "Fieldway"
   },
@@ -3045,8 +3033,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.354545,
-      "lon" : -0.04315
+      "lat" : 51.354676,
+      "lon" : -0.042355
     },
     "name" : "Gravel Hill"
   },
@@ -3945,8 +3933,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.56202,
-      "lon" : -0.4419
+      "lat" : 51.56177,
+      "lon" : -0.442225
     },
     "name" : "Ickenham"
   },
@@ -4624,8 +4612,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.364278,
-      "lon" : -0.080775
+      "lat" : 51.364193,
+      "lon" : -0.082229
     },
     "name" : "Lloyd Park"
   },
@@ -5021,8 +5009,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.408874,
-      "lon" : -0.192834
+      "lat" : 51.40905,
+      "lon" : -0.192597
     },
     "name" : "Morden Road"
   },
@@ -5089,8 +5077,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.342593,
-      "lon" : -0.017412
+      "lat" : 51.34313,
+      "lon" : -0.017805
     },
     "name" : "New Addington"
   },
@@ -5964,8 +5952,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.375279,
-      "lon" : -0.106408
+      "lat" : 51.37527,
+      "lon" : -0.10638
     },
     "name" : "Reeves Corner"
   },
@@ -7161,8 +7149,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.385697,
-      "lon" : -0.129045
+      "lat" : 51.385296,
+      "lon" : -0.128702
     },
     "name" : "Therapia Lane"
   },
@@ -7626,8 +7614,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.373403,
-      "lon" : -0.113282
+      "lat" : 51.373022,
+      "lon" : -0.113082
     },
     "name" : "Wandle Park"
   },
@@ -7837,8 +7825,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.37537,
-      "lon" : -0.097554
+      "lat" : 51.375369,
+      "lon" : -0.097539
     },
     "name" : "Wellesley Road"
   },
@@ -8453,8 +8441,8 @@
       }
     ],
     "location" : {
-      "lat" : 51.3871,
-      "lon" : -0.065361
+      "lat" : 51.38732,
+      "lon" : -0.064576
     },
     "name" : "Woodside"
   },
