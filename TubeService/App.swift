@@ -51,7 +51,9 @@ extension View {
             .environment(dataStore.journeyPlanner)
             .environment(\.clock, dataStore.clock)
             .environment(\.pausesRepeatingAnimations, ProcessInfo.isRunningUITests)
-            // The iPad otherwise restores whichever layout it last showed, which would change the screenshots
+            // The iPad otherwise restores whichever layout it last showed, which would change the screenshots. On iOS
+            // 27 the forced sidebar logs "Modifying state during view update" at launch and, in portrait, swallows
+            // some taps, so UI tests run the iPad in landscape (see UITestCase).
             .environment(\.adaptableTabBarPlacement, ProcessInfo.isRunningUITests ? .sidebar : .automatic)
     }
 }
