@@ -134,7 +134,7 @@ public struct StationView: View {
                         onSelect: { onAction(.selectedLineGroup($0)) }
                     )
                 }
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: 24) {
                     StationLineDisruptionRow(
                         lines: selectedLines,
                         isLoading: info.isLoadingLines,
@@ -148,8 +148,9 @@ public struct StationView: View {
                         isFavourite: $isFavourite
                     )
                 }
-                // The chip row's own padding covers most of the gap below the chips
-                .padding(.top, hasChips ? 6 : 16)
+                // The chip row's own padding covers most of the gap below the chips. The disruption row sits closer to
+                // the chips than to the boards, as it describes the selected chip.
+                .padding(.top, hasChips ? 2 : 16)
                 .padding(.bottom, 16)
             }
         }
