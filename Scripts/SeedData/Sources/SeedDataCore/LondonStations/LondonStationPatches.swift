@@ -27,10 +27,10 @@ public extension LondonStationPatch {
             $0.lineIds == ["elizabeth"] && $0.atcoCode == "910GLIVSTLL"
         },
         LondonStationPatch(
-            stationID: "HUBHHY",
-            reason: "Highbury's departures don't say which line each train is on, so a combined Mildmay and Windrush group can't be split"
+            stationID: "HUBCLJ",
+            reason: "Clapham Junction's Mildmay line is already listed under 910GCLPHMJC, whose departures are the same trains"
         ) {
-            $0.lineIds.contains("mildmay") && $0.lineIds.contains("windrush")
+            $0.lineIds == ["mildmay"] && $0.atcoCode == "910GCLPHMJ1"
         }
     ]
 }

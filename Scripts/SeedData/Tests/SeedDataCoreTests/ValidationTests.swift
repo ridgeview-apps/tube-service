@@ -117,6 +117,23 @@ struct ValidationTests {
     }
 
     @Test
+    func warnsOnStationsWithTheSameName() {
+        let station = LondonStation(
+            icsCode: "1",
+            id: "HUBX",
+            lineGroups: [LondonStation.LineGroup(atcoCode: "940GX", lineIds: ["central"])],
+            location: LondonStation.Location(lat: 51.5, lon: -0.1),
+            name: "central"
+        )
+
+        #expect(
+            Validation.validate(londonStations + [station], currentCount: nil, allowShrink: false) == [
+                .warning("londonStations.json has stations with the same name: central")
+            ]
+        )
+    }
+
+    @Test
     func warnsOnLinesTheAppDoesntKnow() {
         #expect(
             Validation.unknownLines(["central", "purple"]) == [
