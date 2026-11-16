@@ -1,5 +1,22 @@
 [
   {
+    "icsCode" : "1003006",
+    "id" : "940GZZDLABR",
+    "lineGroups" : [
+      {
+        "atcoCode" : "940GZZDLABR",
+        "lineIds" : [
+          "dlr"
+        ]
+      }
+    ],
+    "location" : {
+      "lat" : 51.531926,
+      "lon" : 0.003737
+    },
+    "name" : "Abbey Road"
+  },
+  {
     "icsCode" : "1001001",
     "id" : "HUBABW",
     "lineGroups" : [
@@ -31,7 +48,7 @@
       "lat" : 51.508716,
       "lon" : -0.262971
     },
-    "name" : "Acton Central Old"
+    "name" : "Acton Central"
   },
   {
     "icsCode" : "1001003",
@@ -7082,23 +7099,6 @@
       "lon" : -0.11426
     },
     "name" : "Temple"
-  },
-  {
-    "icsCode" : "1099999",
-    "id" : "940GZZTEST01",
-    "lineGroups" : [
-      {
-        "atcoCode" : "940GZZTEST01",
-        "lineIds" : [
-          "district"
-        ]
-      }
-    ],
-    "location" : {
-      "lat" : 51.5,
-      "lon" : -0.12
-    },
-    "name" : "Test Station"
   },
   {
     "icsCode" : "1001533",

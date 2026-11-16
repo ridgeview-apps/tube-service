@@ -7,6 +7,13 @@
     "naptanId" : "910GABWDXR"
   },
   {
+    "commonName" : "Aber",
+    "icsCode" : "90000007",
+    "lat" : 51.574966,
+    "lon" : -3.229828,
+    "naptanId" : "910GABER"
+  },
+  {
     "commonName" : "Abercynon",
     "icsCode" : "90000020",
     "lat" : 51.64345,
@@ -18,7 +25,7 @@
     "icsCode" : "90000004",
     "lat" : 51.715058,
     "lon" : -3.443083,
-    "naptanId" : "910GABDAREX"
+    "naptanId" : "910GABDARE"
   },
   {
     "commonName" : "Aberdeen",
