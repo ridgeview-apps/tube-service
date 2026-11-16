@@ -2,7 +2,6 @@ import Foundation
 import Testing
 
 @testable import Models
-@testable import ModelStubs
 
 struct TubeServiceModelDecoderTests {
 
@@ -293,18 +292,49 @@ struct TubeServiceModelDecoderTests {
     // MARK: - SystemStatus
 
     @Test
-    func decodedSystemStatusOK() {
-        #expect(ModelStubs.systemStatusOK.status == .ok)
+    func decodedSystemStatusOK() throws {
+        let json = #"{ "id": "d05618ec-7f7b-4b7f-97ec-6398721c4a09", "status": "ok" }"#
+
+        let systemStatus = try decodeSystemStatus(from: json)
+
+        #expect(systemStatus.status == .ok)
+        #expect(systemStatus.message == nil)
+        #expect(systemStatus.detail == nil)
     }
 
     @Test
-    func decodedSystemStatusOutage() {
-        #expect(ModelStubs.systemStatusOutage.status == .outage)
+    func decodedSystemStatusOutage() throws {
+        let json = """
+            {
+                "id": "e0e4ab39-5c2e-40c6-8641-96cae3251ee7",
+                "status": "outage",
+                "message": "Live tube arrival information is currently unavailable.",
+                "detail": "Live tube arrival information is unavailable due to an ongoing TfL incident."
+            }
+            """
+
+        let systemStatus = try decodeSystemStatus(from: json)
+
+        #expect(systemStatus.status == .outage)
+        #expect(systemStatus.message == "Live tube arrival information is currently unavailable.")
+        #expect(systemStatus.detail == "Live tube arrival information is unavailable due to an ongoing TfL incident.")
     }
 
     @Test
-    func decodedSystemStatusResolved() {
-        #expect(ModelStubs.systemStatusResolved.status == .resolved)
+    func decodedSystemStatusResolved() throws {
+        let json = """
+            {
+                "id": "852bca88-184e-4fc1-a754-9cf56de8bca5",
+                "status": "resolved",
+                "message": "Live tube arrivals are available once again."
+            }
+            """
+
+        let systemStatus = try decodeSystemStatus(from: json)
+
+        #expect(systemStatus.status == .resolved)
+        #expect(systemStatus.message == "Live tube arrivals are available once again.")
+        #expect(systemStatus.detail == nil)
     }
 }
 
@@ -314,6 +344,11 @@ private extension TubeServiceModelDecoderTests {
 
     func decode<T: Decodable>(_ type: T.Type, from json: String) throws -> T {
         try JSONDecoder.tubeServiceModelDecoder.decode(type, from: Data(json.utf8))
+    }
+
+    // The system status endpoint is decoded like the TfL API, not like the other Tube Service models
+    func decodeSystemStatus(from json: String) throws -> SystemStatus {
+        try JSONDecoder.tflModelDecoder.decode(SystemStatus.self, from: Data(json.utf8))
     }
 
     func dateOnly(_ string: String) -> Date {
