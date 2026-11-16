@@ -64,6 +64,15 @@ API clients describe the server; data stores describe what the caller wants. Don
 
 Keep lower-level helpers that only exist for tests `internal`, not `public`; tests reach them through `@testable import`.
 
+## Test Data (ModelStubs)
+
+ModelStubs is sample data, never a test's expected answer.
+
+- **Unit tests own their inputs:** if an assertion depends on a value, order or count, build the input in the test (inline JSON or a small model). ModelStubs is only for filler, e.g. a stub client's default response in a test that checks call counts or state.
+- **Previews:** use ModelStubs freely.
+- **Functional UI tests** run against the stub clients' ModelStubs defaults, so editing stub JSON can break them. Run them after changing it.
+- **Screenshots** use their own copy (`ModelStubs.Screenshots`, `Resources/UITests/Screenshots/`), so preview data changes don't alter App Store screenshots.
+
 ## UI Tests (TubeServiceUITests)
 
 UI tests drive the app through page objects in `TubeServiceUITests/Pages/`, one per screen, built on the generic `TubeServiceUITests/Support/` layer.
