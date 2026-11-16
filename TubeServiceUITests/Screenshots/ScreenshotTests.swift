@@ -16,7 +16,6 @@ final class ScreenshotTests: ScreenshotTestCase {
 
     @MainActor
     func testAppStoreScreenshots() throws {
-        XCUIDevice.shared.orientation = UIDevice.current.userInterfaceIdiom == .pad ? .landscapeLeft : .portrait
         let app = try launchApp(with: configuration)
 
         let lineStatus = LineStatusPage.waitingToAppear(in: app)
