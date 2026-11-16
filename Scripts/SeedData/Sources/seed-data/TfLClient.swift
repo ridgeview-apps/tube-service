@@ -26,6 +26,19 @@ struct TfLClient {
         try await get("/StopPoint/Type/NaptanRailStation")
     }
 
+    func fetchLines(modes: [String]) async throws -> [TfLLine] {
+        try await get("/Line/Mode/\(modes.joined(separator: ","))")
+    }
+
+    func fetchStopPoints(line lineID: String) async throws -> [TfLStopPoint] {
+        try await get("/Line/\(lineID)/StopPoints")
+    }
+
+    /// The hubs (e.g. "HUBPAD") that group a station's tube, rail and DLR stop points.
+    func fetchInterchanges() async throws -> [TfLStopPoint] {
+        try await get("/StopPoint/Type/TransportInterchange")
+    }
+
     private func get<Response: Decodable>(_ path: String) async throws -> Response {
         var components = URLComponents(url: baseURL.appending(path: path), resolvingAgainstBaseURL: false)!
         if let appKey {
