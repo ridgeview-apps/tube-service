@@ -3266,13 +3266,13 @@
         }
       }
     },
-    "station.arrivals.not.updated.since %@" : {
+    "station.arrivals.refresh.failed" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not updated since %@"
+            "value" : "Couldn't update. Pull down to try again."
           }
         }
       }

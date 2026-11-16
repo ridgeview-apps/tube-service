@@ -17,7 +17,7 @@ struct StationArrivalsView: View {
         StationSection(cardBackground: false) {
             VStack(spacing: 24) {
                 VStack(alignment: .leading, spacing: 8) {
-                    refreshStatus
+                    refreshFailure
                     if !boardStates.isEmpty {
                         VStack(spacing: 24) {
                             ForEach(boardStates) { boardState in
@@ -42,38 +42,25 @@ struct StationArrivalsView: View {
                 FavouritesButton(.station, style: .large, isSelected: $isFavourite)
             }
         }
+        .navigationSubtitle(lastUpdatedSubtitle)
     }
 
-    // One line just above the boards says how fresh they are, or how stale once a refresh fails, so a failure changes
-    // the text rather than adding a row
-    @ViewBuilder private var refreshStatus: some View {
-        if case .failure = loadingState, !boardStates.isEmpty, let refreshDate {
-            statusLabel(Text(.stationArrivalsNotUpdatedSince(Self.timeText(refreshDate))), systemImage: "exclamationmark.circle.fill")
-                .defaultLastUpdatedTimeLabelStyle(foregroundStyle: Color.adaptiveRed)
-        } else if let refreshDate {
-            lastUpdatedLabel(refreshDate)
-        } else {
-            // Keeps the line's space before the first arrivals, so the boards don't drop when it appears. Shown only
-            // while loading: above a failure board it would look like it's still loading.
-            lastUpdatedLabel(.now)
-                .redacted(reason: .placeholder)
-                .opacity(loadingState == .loading ? 1 : 0)
-                .accessibilityHidden(true)
+    // Only a failed refresh earns a row above the boards; the update time itself sits quietly in the navigation bar
+    @ViewBuilder private var refreshFailure: some View {
+        if case .failure = loadingState, !boardStates.isEmpty {
+            Label {
+                Text(.stationArrivalsRefreshFailed)
+            } icon: {
+                Image(systemName: "exclamationmark.circle.fill")
+            }
+            .labelStyle(.titleAndIcon)
+            .defaultLastUpdatedTimeLabelStyle(foregroundStyle: Color.adaptiveRed)
         }
     }
 
-    private func lastUpdatedLabel(_ date: Date) -> some View {
-        statusLabel(Text(.refreshStatusLastUpdated(Self.timeText(date))), systemImage: "clock")
-            .defaultLastUpdatedTimeLabelStyle()
-    }
-
-    private func statusLabel(_ text: Text, systemImage: String) -> some View {
-        Label {
-            text
-        } icon: {
-            Image(systemName: systemImage)
-        }
-        .labelStyle(.titleAndIcon)
+    private var lastUpdatedSubtitle: Text {
+        guard let refreshDate else { return Text(verbatim: "") }
+        return Text(.refreshStatusLastUpdated(Self.timeText(refreshDate)))
     }
 
     // Just the time: live arrivals are never from another day, so "today" adds nothing
