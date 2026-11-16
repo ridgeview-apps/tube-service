@@ -18,11 +18,11 @@ final class ArrivalsBoardTests: UITestCase {
     @MainActor
     func testFavouritedBoardAddsItsStationToFavourites() throws {
         let app = try launchApp(with: configuration)
-        let arrivalsPicker = LineStatusPage.waitingToAppear(in: app).tabBar.tapArrivalsTab()
-        XCTAssertFalse(arrivalsPicker.favouriteStation(kingsCrossStationID).exists)
+        let arrivals = LineStatusPage.waitingToAppear(in: app).tabBar.tapArrivalsTab()
+        XCTAssertFalse(arrivals.favouriteStation(kingsCrossStationID).exists)
 
         let station =
-            arrivalsPicker
+            arrivals
             .tapNearbyStation(kingsCrossStationID)
             .tapLineChip(kingsCrossNorthernLineGroupID)
 
@@ -33,10 +33,10 @@ final class ArrivalsBoardTests: UITestCase {
             ["Northbound - Platform 7", "Southbound - Platform 8"]
         )
 
-        let returnedArrivalsPicker =
+        let returnedArrivals =
             station
             .tapFavouriteButton()
             .tapBackButton()
-        returnedArrivalsPicker.favouriteStation(kingsCrossStationID).waitToExist()
+        returnedArrivals.favouriteStation(kingsCrossStationID).waitToExist()
     }
 }

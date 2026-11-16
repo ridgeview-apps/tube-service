@@ -88,21 +88,21 @@ public extension ModelStubs {
     static let oakleighParkRailStation = nationRailStopPoints.first { $0.icsCode == "1001218" }!
 }
 
-// MARK: - Located stations
+// MARK: - Nearby stations
 public extension ModelStubs {
-    static let locatedStationWoodsidePark = LocatedStation(
+    static let nearbyStationWoodsidePark = NearbyStation(
         woodsideParkStation,
         distance: 606.16
     )
-    static let locatedStationWestFinchley = LocatedStation(
+    static let nearbyStationWestFinchley = NearbyStation(
         westFinchleyStation,
         distance: 1270.45
     )
-    static let locatedStationTotteridgeAndWhetstone = LocatedStation(
+    static let nearbyStationTotteridgeAndWhetstone = NearbyStation(
         totteridgeAndWhetstoneStation,
         distance: 1387.44
     )
-    static let locatedStationFinchleyCentral = LocatedStation(
+    static let nearbyStationFinchleyCentral = NearbyStation(
         finchleyCentralStation,
         distance: 2216.50
     )

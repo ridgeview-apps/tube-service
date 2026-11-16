@@ -5,7 +5,7 @@ import SwiftUI
 
 public enum L10n {
 
-    public static let arrivalsPickerNavigationTitle = LocalizedStringResource.arrivalsPickerNavigationTitle
+    public static let arrivalsNavigationTitle = LocalizedStringResource.arrivalsNavigationTitle
     public static let arrivalsTabTitle = LocalizedStringResource.arrivalsTabTitle
 
     public static let errorNoInternetConnection = LocalizedStringResource.errorNoInternetConnection

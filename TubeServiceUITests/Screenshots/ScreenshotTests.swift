@@ -34,10 +34,10 @@ final class ScreenshotTests: ScreenshotTestCase {
         let journeyResults = journeyPlanner.tapFirstRecentJourney().tapFirstJourney().tapFirstStopsButton()
         capture(journeyResults, as: "JourneyPlannerResults")
 
-        let arrivalsPicker = journeyResults.tabBar.tapArrivalsTab()
-        capture(arrivalsPicker, as: "LiveArrivalsPicker")
+        let arrivals = journeyResults.tabBar.tapArrivalsTab()
+        capture(arrivals, as: "LiveArrivalsPicker")
 
-        let arrivalsStation = arrivalsPicker.tapFavouriteStation("HUBABW")  // Abbey Wood
+        let arrivalsStation = arrivals.tapFavouriteStation("HUBABW")  // Abbey Wood
         capture(arrivalsStation, as: "LiveArrivalsBoard1")
 
         let maps = arrivalsStation.tabBar.tapMapsTab()

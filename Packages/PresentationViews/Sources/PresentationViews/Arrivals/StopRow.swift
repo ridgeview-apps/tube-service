@@ -22,8 +22,8 @@ public struct StopRow: Identifiable, Hashable, Sendable {
         self.distance = distance
     }
 
-    public init(_ locatedStation: LocatedStation) {
-        self.init(station: locatedStation.station, distance: locatedStation.distance)
+    public init(_ nearbyStation: NearbyStation) {
+        self.init(station: nearbyStation.station, distance: nearbyStation.distance)
     }
 }
 
