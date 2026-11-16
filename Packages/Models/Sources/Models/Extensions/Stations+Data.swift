@@ -2,27 +2,33 @@ import Foundation
 
 public extension Station {
 
-    static let allLondonTrains: [Station] = {
-        guard let url = Bundle.module.url(forResource: "londonStations", withExtension: "json"),
-            let jsonData = try? Data(contentsOf: url),
-            let decodedValue = try? JSONDecoder.tflModelDecoder.decode([Station].self, from: jsonData)
-        else {
+    static let allLondonTrains: [Station] = loadBundledJSON(named: "londonStations")
+
+    static let allNationalRail: [StopPoint] = loadBundledJSON(named: "nationalRailStations")
+}
+
+extension Station {
+
+    struct MissingBundledFile: Error {
+        let name: String
+    }
+
+    static func decodeBundledJSON<Value: Decodable>(named name: String) throws -> Value {
+        guard let url = Bundle.module.url(forResource: name, withExtension: "json") else {
+            throw MissingBundledFile(name: name)
+        }
+        return try JSONDecoder.tflModelDecoder.decode(Value.self, from: Data(contentsOf: url))
+    }
+
+    // A broken seed file is a build mistake, so fail loudly in debug, but ship an empty list rather than crash.
+    private static func loadBundledJSON<Element: Decodable>(named name: String) -> [Element] {
+        do {
+            return try decodeBundledJSON(named: name)
+        } catch {
+            assertionFailure("Couldn't load \(name).json: \(error)")
             return []
         }
-
-        return decodedValue
-    }()
-
-    static let allNationalRail: [StopPoint] = {
-        guard let url = Bundle.module.url(forResource: "nationalRailStations", withExtension: "json"),
-            let jsonData = try? Data(contentsOf: url),
-            let decodedValue = try? JSONDecoder.tflModelDecoder.decode([StopPoint].self, from: jsonData)
-        else {
-            return []
-        }
-
-        return decodedValue
-    }()
+    }
 }
 
 extension Sequence where Element == Station {

@@ -2,8 +2,8 @@
   {
     "commonName" : "Abbey Wood",
     "icsCode" : "1001001",
-    "lat" : 51.491225,
-    "lon" : 0.12084,
+    "lat" : 51.491284,
+    "lon" : 0.121087,
     "naptanId" : "910GABWDXR"
   },
   {
@@ -65,8 +65,8 @@
   {
     "commonName" : "Abergele & Pensarn",
     "icsCode" : "90000008",
-    "lat" : 53.294573,
-    "lon" : -3.582622,
+    "lat" : 53.294764,
+    "lon" : -3.582449,
     "naptanId" : "910GABGLELE"
   },
   {
@@ -128,8 +128,8 @@
   {
     "commonName" : "Acton Bridge",
     "icsCode" : "90000051",
-    "lat" : 53.266507,
-    "lon" : -2.603127,
+    "lat" : 53.266293,
+    "lon" : -2.602869,
     "naptanId" : "910GACBG"
   },
   {
@@ -268,8 +268,8 @@
   {
     "commonName" : "Aldrington",
     "icsCode" : "90000115",
-    "lat" : 50.836384,
-    "lon" : -0.183821,
+    "lat" : 50.836364,
+    "lon" : -0.181365,
     "naptanId" : "910GALDTON"
   },
   {
@@ -520,8 +520,8 @@
   {
     "commonName" : "Ardgay",
     "icsCode" : "90000214",
-    "lat" : 57.881452,
-    "lon" : -4.362089,
+    "lat" : 57.881619,
+    "lon" : -4.362303,
     "naptanId" : "910GARDGAY"
   },
   {
@@ -597,8 +597,8 @@
   {
     "commonName" : "Arnside",
     "icsCode" : "90000241",
-    "lat" : 54.202729,
-    "lon" : -2.828241,
+    "lat" : 54.202461,
+    "lon" : -2.827929,
     "naptanId" : "910GARNSIDE"
   },
   {
@@ -686,6 +686,13 @@
     "naptanId" : "910GASHFKY"
   },
   {
+    "commonName" : "Ashington",
+    "icsCode" : "90091510",
+    "lat" : 55.18224,
+    "lon" : -1.57278,
+    "naptanId" : "910GASHGTN"
+  },
+  {
     "commonName" : "Ashley",
     "icsCode" : "90000295",
     "lat" : 53.355724,
@@ -765,8 +772,8 @@
   {
     "commonName" : "Atherstone",
     "icsCode" : "90000315",
-    "lat" : 52.578971,
-    "lon" : -1.552811,
+    "lat" : 52.578656,
+    "lon" : -1.552534,
     "naptanId" : "910GATHRSTN"
   },
   {
@@ -807,22 +814,22 @@
   {
     "commonName" : "Audley End",
     "icsCode" : "1001912",
-    "lat" : 52.004517,
-    "lon" : 0.207426,
+    "lat" : 52.004507,
+    "lon" : 0.207469,
     "naptanId" : "910GAUDLEYE"
   },
   {
     "commonName" : "Aughton Park",
     "icsCode" : "90000087",
-    "lat" : 53.554192,
-    "lon" : -2.895356,
+    "lat" : 53.554247,
+    "lon" : -2.895221,
     "naptanId" : "910GAGHTNPH"
   },
   {
     "commonName" : "Aviemore",
     "icsCode" : "90000329",
-    "lat" : 57.188512,
-    "lon" : -3.828867,
+    "lat" : 57.188746,
+    "lon" : -3.828829,
     "naptanId" : "910GAVIEMRE"
   },
   {
@@ -1003,8 +1010,8 @@
   {
     "commonName" : "Barassie",
     "icsCode" : "90000398",
-    "lat" : 55.561752,
-    "lon" : -4.651487,
+    "lat" : 55.561059,
+    "lon" : -4.651138,
     "naptanId" : "910GBARASIE"
   },
   {
@@ -1045,9 +1052,9 @@
   {
     "commonName" : "Barking Riverside",
     "icsCode" : "1002272",
-    "lat" : 51.519349,
-    "lon" : 0.116626,
-    "naptanId" : "910GBKRVS"
+    "lat" : 51.51953,
+    "lon" : 0.11596,
+    "naptanId" : "910GBARKRIV"
   },
   {
     "commonName" : "Barlaston",
@@ -1129,8 +1136,8 @@
   {
     "commonName" : "Barnt Green",
     "icsCode" : "90000581",
-    "lat" : 52.360908,
-    "lon" : -1.992173,
+    "lat" : 52.360864,
+    "lon" : -1.99276,
     "naptanId" : "910GBGRN"
   },
   {
@@ -1316,6 +1323,13 @@
     "naptanId" : "910GBEASDAL"
   },
   {
+    "commonName" : "Beaulieu Park",
+    "icsCode" : "90001415",
+    "lat" : 51.758057,
+    "lon" : 0.518336,
+    "naptanId" : "910GBEULYPK"
+  },
+  {
     "commonName" : "Beaulieu Road",
     "icsCode" : "90000657",
     "lat" : 50.855049,
@@ -1377,6 +1391,13 @@
     "lat" : 50.853957,
     "lon" : -0.995828,
     "naptanId" : "910GBDHMPTN"
+  },
+  {
+    "commonName" : "Bedlington",
+    "icsCode" : "90091539",
+    "lat" : 55.14051,
+    "lon" : -1.56867,
+    "naptanId" : "910GBDLNTN"
   },
   {
     "commonName" : "Bedminster",
@@ -1794,8 +1815,8 @@
   {
     "commonName" : "Birmingham Moor Street",
     "icsCode" : "90000588",
-    "lat" : 52.478656,
-    "lon" : -1.892002,
+    "lat" : 52.478962,
+    "lon" : -1.891884,
     "naptanId" : "910GBHAMMRS"
   },
   {
@@ -1969,8 +1990,8 @@
   {
     "commonName" : "Blaydon",
     "icsCode" : "90000631",
-    "lat" : 54.965789,
-    "lon" : -1.712581,
+    "lat" : 54.965896,
+    "lon" : -1.712533,
     "naptanId" : "910GBLAYDON"
   },
   {
@@ -2007,6 +2028,13 @@
     "lat" : 53.487683,
     "lon" : -3.03986,
     "naptanId" : "910GBLNDLAC"
+  },
+  {
+    "commonName" : "Blyth Bebside",
+    "icsCode" : "90091505",
+    "lat" : 55.12486,
+    "lon" : -1.55711,
+    "naptanId" : "910GBYBEB"
   },
   {
     "commonName" : "Blythe Bridge",
@@ -2053,15 +2081,15 @@
   {
     "commonName" : "Bolton-Upon-Dearne",
     "icsCode" : "90000698",
-    "lat" : 53.518947,
-    "lon" : -1.311546,
+    "lat" : 53.518803,
+    "lon" : -1.311533,
     "naptanId" : "910GBLTNODR"
   },
   {
     "commonName" : "Bond Street",
     "icsCode" : "1000025",
-    "lat" : 51.513895,
-    "lon" : -0.147246,
+    "lat" : 51.51369,
+    "lon" : -0.149517,
     "naptanId" : "910GBONDST"
   },
   {
@@ -2291,8 +2319,8 @@
   {
     "commonName" : "Branksome",
     "icsCode" : "90000848",
-    "lat" : 50.727055,
-    "lon" : -1.919744,
+    "lat" : 50.727054,
+    "lon" : -1.919517,
     "naptanId" : "910GBRANKSM"
   },
   {
@@ -2317,7 +2345,7 @@
     "naptanId" : "910GBREICH"
   },
   {
-    "commonName" : "Brent Cross West Station",
+    "commonName" : "Brent Cross West",
     "icsCode" : "1002310",
     "lat" : 51.568429,
     "lon" : -0.225488,
@@ -2571,8 +2599,8 @@
   {
     "commonName" : "Brondesbury Park",
     "icsCode" : "1001039",
-    "lat" : 51.540699,
-    "lon" : -0.210128,
+    "lat" : 51.540734,
+    "lon" : -0.210054,
     "naptanId" : "910GBRBYPK"
   },
   {
@@ -2648,8 +2676,8 @@
   {
     "commonName" : "Brundall Gardens",
     "icsCode" : "90001052",
-    "lat" : 52.623443,
-    "lon" : 1.418416,
+    "lat" : 52.623422,
+    "lon" : 1.418518,
     "naptanId" : "910GBRUNDLG"
   },
   {
@@ -2746,15 +2774,15 @@
   {
     "commonName" : "Burley Park",
     "icsCode" : "90000957",
-    "lat" : 53.81203,
-    "lon" : -1.577768,
+    "lat" : 53.812103,
+    "lon" : -1.577903,
     "naptanId" : "910GBRLEYPK"
   },
   {
     "commonName" : "Burley-in-Wharfedale",
     "icsCode" : "90001155",
-    "lat" : 53.90815,
-    "lon" : -1.753372,
+    "lat" : 53.907934,
+    "lon" : -1.753114,
     "naptanId" : "910GBURLYIW"
   },
   {
@@ -3010,6 +3038,13 @@
     "naptanId" : "910GCAMHTH"
   },
   {
+    "commonName" : "Cambridge South",
+    "icsCode" : "90097060",
+    "lat" : 52.174231,
+    "lon" : 0.131544,
+    "naptanId" : "910GCAMBSTH"
+  },
+  {
     "commonName" : "Cambuslang",
     "icsCode" : "90001598",
     "lat" : 55.819606,
@@ -3031,6 +3066,13 @@
     "naptanId" : "910GCAMELON"
   },
   {
+    "commonName" : "Cameron Bridge",
+    "icsCode" : "90092113",
+    "lat" : 56.190296,
+    "lon" : -3.047291,
+    "naptanId" : "910GCMRNBDG"
+  },
+  {
     "commonName" : "Canada Water",
     "icsCode" : "1000037",
     "lat" : 51.49799,
@@ -3040,8 +3082,8 @@
   {
     "commonName" : "Canary Wharf",
     "icsCode" : "1002163",
-    "lat" : 51.506098,
-    "lon" : -0.020121,
+    "lat" : 51.506203,
+    "lon" : -0.018834,
     "naptanId" : "910GCANWHRF"
   },
   {
@@ -3152,8 +3194,8 @@
   {
     "commonName" : "Cark",
     "icsCode" : "90001260",
-    "lat" : 54.177955,
-    "lon" : -2.974064,
+    "lat" : 54.177956,
+    "lon" : -2.973895,
     "naptanId" : "910GCARK"
   },
   {
@@ -3271,8 +3313,8 @@
   {
     "commonName" : "Castleford",
     "icsCode" : "90001298",
-    "lat" : 53.724077,
-    "lon" : -1.354653,
+    "lat" : 53.724096,
+    "lon" : -1.354895,
     "naptanId" : "910GCASTLFD"
   },
   {
@@ -3523,8 +3565,8 @@
   {
     "commonName" : "Chepstow",
     "icsCode" : "90001383",
-    "lat" : 51.640179,
-    "lon" : -2.671905,
+    "lat" : 51.640004,
+    "lon" : -2.671064,
     "naptanId" : "910GCHEPSTW"
   },
   {
@@ -3635,8 +3677,8 @@
   {
     "commonName" : "Chinley",
     "icsCode" : "90001425",
-    "lat" : 53.34029,
-    "lon" : -1.943941,
+    "lat" : 53.340281,
+    "lon" : -1.944301,
     "naptanId" : "910GCHNLY"
   },
   {
@@ -4053,7 +4095,7 @@
     "naptanId" : "910GCOKSBDG"
   },
   {
-    "commonName" : "Coombe Junction Halt ()",
+    "commonName" : "Coombe Junction Halt",
     "icsCode" : "90001686",
     "lat" : 50.44592,
     "lon" : -4.481851,
@@ -4363,8 +4405,8 @@
   {
     "commonName" : "Crosshill",
     "icsCode" : "90001901",
-    "lat" : 55.833285,
-    "lon" : -4.256811,
+    "lat" : 55.833376,
+    "lon" : -4.256785,
     "naptanId" : "910GCROSSHL"
   },
   {
@@ -4454,8 +4496,8 @@
   {
     "commonName" : "Culham",
     "icsCode" : "1001368",
-    "lat" : 51.653793,
-    "lon" : -1.236514,
+    "lat" : 51.65392,
+    "lon" : -1.236598,
     "naptanId" : "910GCULHAM"
   },
   {
@@ -4489,9 +4531,9 @@
   {
     "commonName" : "Custom House",
     "icsCode" : "1001079",
-    "lat" : 51.509436,
-    "lon" : 0.027681,
-    "naptanId" : "910GCSTMHSXR"
+    "lat" : 51.509769,
+    "lon" : 0.02673,
+    "naptanId" : "910GCUSTMHS"
   },
   {
     "commonName" : "Cuxton",
@@ -4524,8 +4566,8 @@
   {
     "commonName" : "Dagenham Dock",
     "icsCode" : "1001080",
-    "lat" : 51.526156,
-    "lon" : 0.145904,
+    "lat" : 51.52624,
+    "lon" : 0.14666,
     "naptanId" : "910GDGNHMDC"
   },
   {
@@ -4636,22 +4678,29 @@
   {
     "commonName" : "Danzey",
     "icsCode" : "90002026",
-    "lat" : 52.324813,
-    "lon" : -1.820877,
+    "lat" : 52.324705,
+    "lon" : -1.820922,
     "naptanId" : "910GDANZEY"
+  },
+  {
+    "commonName" : "Darlaston",
+    "icsCode" : "90021599",
+    "lat" : 52.57591,
+    "lon" : -2.020506,
+    "naptanId" : "910GDRLSTN"
   },
   {
     "commonName" : "Darlington",
     "icsCode" : "90002142",
-    "lat" : 54.520448,
-    "lon" : -1.547324,
+    "lat" : 54.520788,
+    "lon" : -1.547057,
     "naptanId" : "910GDLTN"
   },
   {
     "commonName" : "Darnall",
     "icsCode" : "90002028",
-    "lat" : 53.384584,
-    "lon" : -1.412567,
+    "lat" : 53.384539,
+    "lon" : -1.412462,
     "naptanId" : "910GDARNALL"
   },
   {
@@ -4720,8 +4769,8 @@
   {
     "commonName" : "Dean",
     "icsCode" : "90002046",
-    "lat" : 51.042461,
-    "lon" : -1.634867,
+    "lat" : 51.042443,
+    "lon" : -1.634796,
     "naptanId" : "910GDEAN"
   },
   {
@@ -4874,8 +4923,8 @@
   {
     "commonName" : "Dingwall",
     "icsCode" : "90002106",
-    "lat" : 57.594235,
-    "lon" : -4.422199,
+    "lat" : 57.594515,
+    "lon" : -4.42215,
     "naptanId" : "910GDINGWAL"
   },
   {
@@ -5020,7 +5069,7 @@
   },
   {
     "commonName" : "Dover Priory",
-    "icsCode" : "1001261",
+    "icsCode" : "1001247",
     "lat" : 51.125701,
     "lon" : 1.305294,
     "naptanId" : "910GDOVERP"
@@ -5350,8 +5399,8 @@
   {
     "commonName" : "Earlswood (West Midlands)",
     "icsCode" : "90002560",
-    "lat" : 52.366581,
-    "lon" : -1.861169,
+    "lat" : 52.3665,
+    "lon" : -1.861214,
     "naptanId" : "910GELWD"
   },
   {
@@ -5392,8 +5441,8 @@
   {
     "commonName" : "East Garforth",
     "icsCode" : "90002485",
-    "lat" : 53.791977,
-    "lon" : -1.370537,
+    "lat" : 53.792069,
+    "lon" : -1.370824,
     "naptanId" : "910GEGRFRTH"
   },
   {
@@ -5525,8 +5574,8 @@
   {
     "commonName" : "Edale",
     "icsCode" : "90002443",
-    "lat" : 53.364971,
-    "lon" : -1.816626,
+    "lat" : 53.364766,
+    "lon" : -1.817424,
     "naptanId" : "910GEDALE"
   },
   {
@@ -5553,8 +5602,8 @@
   {
     "commonName" : "Edge Hill",
     "icsCode" : "90002447",
-    "lat" : 53.402599,
-    "lon" : -2.946422,
+    "lat" : 53.402454,
+    "lon" : -2.946524,
     "naptanId" : "910GEDGH"
   },
   {
@@ -5812,15 +5861,15 @@
   {
     "commonName" : "Euxton Balshaw Lane",
     "icsCode" : "90002633",
-    "lat" : 53.660479,
-    "lon" : -2.672023,
+    "lat" : 53.659959,
+    "lon" : -2.671758,
     "naptanId" : "910GEUXT"
   },
   {
     "commonName" : "Evesham",
     "icsCode" : "90002638",
-    "lat" : 52.098397,
-    "lon" : -1.947313,
+    "lat" : 52.098496,
+    "lon" : -1.947211,
     "naptanId" : "910GEVESHAM"
   },
   {
@@ -6015,8 +6064,8 @@
   {
     "commonName" : "Farringdon",
     "icsCode" : "1000080",
-    "lat" : 51.51969,
-    "lon" : -0.10459,
+    "lat" : 51.520189,
+    "lon" : -0.104915,
     "naptanId" : "910GFRNDXR"
   },
   {
@@ -6028,7 +6077,7 @@
   },
   {
     "commonName" : "Faversham",
-    "icsCode" : "1001651",
+    "icsCode" : "1001650",
     "lat" : 51.311714,
     "lon" : 0.891045,
     "naptanId" : "910GFAVRSHM"
@@ -6539,7 +6588,7 @@
   },
   {
     "commonName" : "Gatwick Airport",
-    "icsCode" : "90003213",
+    "icsCode" : "1000901",
     "lat" : 51.156491,
     "lon" : -0.161041,
     "naptanId" : "910GGTWK"
@@ -6673,8 +6722,8 @@
   {
     "commonName" : "Gleneagles",
     "icsCode" : "90002993",
-    "lat" : 56.274859,
-    "lon" : -3.731168,
+    "lat" : 56.274826,
+    "lon" : -3.730957,
     "naptanId" : "910GGLNEGLS"
   },
   {
@@ -6799,8 +6848,8 @@
   {
     "commonName" : "Gordon Hill",
     "icsCode" : "1001118",
-    "lat" : 51.664113,
-    "lon" : -0.094997,
+    "lat" : 51.663335,
+    "lon" : -0.09461,
     "naptanId" : "910GGORDONH"
   },
   {
@@ -6869,8 +6918,8 @@
   {
     "commonName" : "Grange-over-Sands",
     "icsCode" : "90003080",
-    "lat" : 54.195722,
-    "lon" : -2.902747,
+    "lat" : 54.195602,
+    "lon" : -2.903128,
     "naptanId" : "910GGOVS"
   },
   {
@@ -7142,8 +7191,8 @@
   {
     "commonName" : "Hackbridge",
     "icsCode" : "1001126",
-    "lat" : 51.377872,
-    "lon" : -0.153907,
+    "lat" : 51.37672,
+    "lon" : -0.15329,
     "naptanId" : "910GHKBG"
   },
   {
@@ -7379,7 +7428,7 @@
   },
   {
     "commonName" : "Hanborough",
-    "icsCode" : "1000679",
+    "icsCode" : "1000700",
     "lat" : 51.825158,
     "lon" : -1.373525,
     "naptanId" : "910GHANDBRO"
@@ -7442,7 +7491,7 @@
   },
   {
     "commonName" : "Harlow Town",
-    "icsCode" : "90003664",
+    "icsCode" : "1000620",
     "lat" : 51.78107,
     "lon" : 0.095132,
     "naptanId" : "910GHRLWTWN"
@@ -7722,7 +7771,7 @@
   },
   {
     "commonName" : "Headcorn",
-    "icsCode" : "90003375",
+    "icsCode" : "900199110",
     "lat" : 51.165714,
     "lon" : 0.627482,
     "naptanId" : "910GHEADCRN"
@@ -7793,8 +7842,8 @@
   {
     "commonName" : "Heathrow Terminals 2 & 3",
     "icsCode" : "1001147",
-    "lat" : 51.470976,
-    "lon" : -0.458033,
+    "lat" : 51.471987,
+    "lon" : -0.454788,
     "naptanId" : "910GHTRWAPT"
   },
   {
@@ -7919,8 +7968,8 @@
   {
     "commonName" : "Hereford",
     "icsCode" : "90003405",
-    "lat" : 52.061162,
-    "lon" : -2.70821,
+    "lat" : 52.061331,
+    "lon" : -2.708534,
     "naptanId" : "910GHEREFRD"
   },
   {
@@ -7939,7 +7988,7 @@
   },
   {
     "commonName" : "Hersham",
-    "icsCode" : "1001520",
+    "icsCode" : "1001432",
     "lat" : 51.376812,
     "lon" : -0.389959,
     "naptanId" : "910GHERSHAM"
@@ -8206,8 +8255,8 @@
   {
     "commonName" : "Honeybourne",
     "icsCode" : "90003588",
-    "lat" : 52.1016,
-    "lon" : -1.833743,
+    "lat" : 52.101781,
+    "lon" : -1.834311,
     "naptanId" : "910GHONYBRN"
   },
   {
@@ -8276,8 +8325,8 @@
   {
     "commonName" : "Hornbeam Park",
     "icsCode" : "90003665",
-    "lat" : 53.979869,
-    "lon" : -1.526822,
+    "lat" : 53.980666,
+    "lon" : -1.528262,
     "naptanId" : "910GHRNBPK"
   },
   {
@@ -8311,8 +8360,8 @@
   {
     "commonName" : "Horton-in-Ribblesdale",
     "icsCode" : "90003738",
-    "lat" : 54.149386,
-    "lon" : -2.302033,
+    "lat" : 54.149188,
+    "lon" : -2.302123,
     "naptanId" : "910GHTNRIBL"
   },
   {
@@ -8409,8 +8458,8 @@
   {
     "commonName" : "Huddersfield",
     "icsCode" : "90003372",
-    "lat" : 53.648502,
-    "lon" : -1.78469,
+    "lat" : 53.648655,
+    "lon" : -1.784689,
     "naptanId" : "910GHDRSFLD"
   },
   {
@@ -8437,8 +8486,8 @@
   {
     "commonName" : "Hungerford",
     "icsCode" : "90003787",
-    "lat" : 51.41491,
-    "lon" : -1.512287,
+    "lat" : 51.414673,
+    "lon" : -1.511384,
     "naptanId" : "910GHUNGRFD"
   },
   {
@@ -8591,8 +8640,8 @@
   {
     "commonName" : "Invergordon",
     "icsCode" : "90003922",
-    "lat" : 57.689019,
-    "lon" : -4.17484,
+    "lat" : 57.689021,
+    "lon" : -4.174723,
     "naptanId" : "910GIVRGRD"
   },
   {
@@ -8647,8 +8696,8 @@
   {
     "commonName" : "Irlam",
     "icsCode" : "90003908",
-    "lat" : 53.43431,
-    "lon" : -2.43323,
+    "lat" : 53.43423,
+    "lon" : -2.432883,
     "naptanId" : "910GIRLAM"
   },
   {
@@ -9011,8 +9060,8 @@
   {
     "commonName" : "Kingham",
     "icsCode" : "1000712",
-    "lat" : 51.90225,
-    "lon" : -1.628786,
+    "lat" : 51.902474,
+    "lon" : -1.628624,
     "naptanId" : "910GKINGHAM"
   },
   {
@@ -9021,6 +9070,13 @@
     "lat" : 56.069338,
     "lon" : -3.174154,
     "naptanId" : "910GKGHN"
+  },
+  {
+    "commonName" : "Kings Heath",
+    "icsCode" : "90091511",
+    "lat" : 52.439003,
+    "lon" : -1.89357,
+    "naptanId" : "910GKIGSHTH"
   },
   {
     "commonName" : "Kings Langley",
@@ -9165,8 +9221,8 @@
   {
     "commonName" : "Kirkham & Wesham",
     "icsCode" : "90004073",
-    "lat" : 53.786915,
-    "lon" : -2.882941,
+    "lat" : 53.786975,
+    "lon" : -2.882198,
     "naptanId" : "910GKIRKHAM"
   },
   {
@@ -9382,8 +9438,8 @@
   {
     "commonName" : "Langley Mill",
     "icsCode" : "90004378",
-    "lat" : 53.01806,
-    "lon" : -1.331244,
+    "lat" : 53.017735,
+    "lon" : -1.331026,
     "naptanId" : "910GLGML"
   },
   {
@@ -9417,8 +9473,8 @@
   {
     "commonName" : "Lapworth",
     "icsCode" : "90004234",
-    "lat" : 52.342251,
-    "lon" : -1.725691,
+    "lat" : 52.341586,
+    "lon" : -1.725813,
     "naptanId" : "910GLAPWRTH"
   },
   {
@@ -9443,11 +9499,11 @@
     "naptanId" : "910GLARKHAL"
   },
   {
-    "commonName" : "Lawrence Hill",
-    "icsCode" : "90004257",
-    "lat" : 51.458193,
-    "lon" : -2.56413,
-    "naptanId" : "910GLAWRNCH"
+    "commonName" : "Laurencekirk",
+    "icsCode" : "90004584",
+    "lat" : 56.836805,
+    "lon" : -2.465505,
+    "naptanId" : "910GLRNCKRK"
   },
   {
     "commonName" : "Layton (Lancs)",
@@ -9536,8 +9592,8 @@
   {
     "commonName" : "Leeds",
     "icsCode" : "90004318",
-    "lat" : 53.795627,
-    "lon" : -1.548026,
+    "lat" : 53.794376,
+    "lon" : -1.547826,
     "naptanId" : "910GLEEDS"
   },
   {
@@ -9604,7 +9660,7 @@
     "naptanId" : "910GLEOMNST"
   },
   {
-    "commonName" : "Letchworth",
+    "commonName" : "Letchworth Garden City",
     "icsCode" : "1000460",
     "lat" : 51.979964,
     "lon" : -0.229264,
@@ -9616,6 +9672,13 @@
     "lat" : 56.375103,
     "lon" : -2.893713,
     "naptanId" : "910GLEUCHRS"
+  },
+  {
+    "commonName" : "Leven",
+    "icsCode" : "90092114",
+    "lat" : 56.192386,
+    "lon" : -3.001894,
+    "naptanId" : "910GLEVEN"
   },
   {
     "commonName" : "Levenshulme",
@@ -9823,8 +9886,8 @@
   {
     "commonName" : "Liverpool Street",
     "icsCode" : "1000138",
-    "lat" : 51.517066,
-    "lon" : -0.08367,
+    "lat" : 51.517721,
+    "lon" : -0.082043,
     "naptanId" : "910GLIVSTLL"
   },
   {
@@ -10236,8 +10299,8 @@
   {
     "commonName" : "Long Eaton",
     "icsCode" : "90004494",
-    "lat" : 52.884988,
-    "lon" : -1.287521,
+    "lat" : 52.884996,
+    "lon" : -1.287372,
     "naptanId" : "910GLNGEATN"
   },
   {
@@ -10397,8 +10460,8 @@
   {
     "commonName" : "Lydney",
     "icsCode" : "90004670",
-    "lat" : 51.714226,
-    "lon" : -2.530792,
+    "lat" : 51.714208,
+    "lon" : -2.530749,
     "naptanId" : "910GLYDNEY"
   },
   {
@@ -10572,8 +10635,8 @@
   {
     "commonName" : "Manchester Victoria",
     "icsCode" : "90004944",
-    "lat" : 53.487872,
-    "lon" : -2.243069,
+    "lat" : 53.487944,
+    "lon" : -2.242828,
     "naptanId" : "910GMNCRVIC"
   },
   {
@@ -10648,9 +10711,9 @@
   },
   {
     "commonName" : "Margate",
-    "icsCode" : "1001494",
-    "lat" : 51.385429,
-    "lon" : 1.372003,
+    "icsCode" : "1001492",
+    "lat" : 51.385545,
+    "lon" : 1.372343,
     "naptanId" : "910GMARGATE"
   },
   {
@@ -10670,8 +10733,8 @@
   {
     "commonName" : "Markinch",
     "icsCode" : "90004869",
-    "lat" : 56.201015,
-    "lon" : -3.130787,
+    "lat" : 56.200341,
+    "lon" : -3.13088,
     "naptanId" : "910GMKIN"
   },
   {
@@ -10761,8 +10824,8 @@
   {
     "commonName" : "Matlock",
     "icsCode" : "90004743",
-    "lat" : 53.138408,
-    "lon" : -1.558911,
+    "lat" : 53.138344,
+    "lon" : -1.558792,
     "naptanId" : "910GMATLOCK"
   },
   {
@@ -11046,7 +11109,7 @@
     "naptanId" : "910GMINFORD"
   },
   {
-    "commonName" : "Minffordd Ffestiniog Railway Station",
+    "commonName" : "Minffordd Ffestiniog Railway",
     "icsCode" : "90004855",
     "lat" : 52.925875,
     "lon" : -4.084209,
@@ -11109,13 +11172,6 @@
     "naptanId" : "910GMNKRISB"
   },
   {
-    "commonName" : "Montpelier",
-    "icsCode" : "90004977",
-    "lat" : 51.468349,
-    "lon" : -2.588686,
-    "naptanId" : "910GMONPELR"
-  },
-  {
     "commonName" : "Montrose",
     "icsCode" : "90004980",
     "lat" : 56.712798,
@@ -11139,8 +11195,8 @@
   {
     "commonName" : "Moorside",
     "icsCode" : "90005082",
-    "lat" : 53.516274,
-    "lon" : -2.351799,
+    "lat" : 53.516316,
+    "lon" : -2.352886,
     "naptanId" : "910GMRSD"
   },
   {
@@ -11233,6 +11289,13 @@
     "lat" : 51.468087,
     "lon" : -0.267106,
     "naptanId" : "910GMRTLKE"
+  },
+  {
+    "commonName" : "Moseley Village",
+    "icsCode" : "90092115",
+    "lat" : 52.446069,
+    "lon" : -1.885822,
+    "naptanId" : "910GMOSLEY"
   },
   {
     "commonName" : "Moses Gate",
@@ -11342,8 +11405,8 @@
   {
     "commonName" : "Muir of Ord",
     "icsCode" : "90005132",
-    "lat" : 57.517848,
-    "lon" : -4.460233,
+    "lat" : 57.517687,
+    "lon" : -4.460172,
     "naptanId" : "910GMUROORD"
   },
   {
@@ -11391,8 +11454,8 @@
   {
     "commonName" : "Nantwich",
     "icsCode" : "90005143",
-    "lat" : 53.063572,
-    "lon" : -2.518959,
+    "lat" : 53.063563,
+    "lon" : -2.51887,
     "naptanId" : "910GNANTWCH"
   },
   {
@@ -11620,7 +11683,7 @@
     "naptanId" : "910GNEWBURY"
   },
   {
-    "commonName" : "Newbury Park Station",
+    "commonName" : "Newbury Park",
     "icsCode" : "1000154",
     "lat" : 51.57504,
     "lon" : 0.089684,
@@ -11641,7 +11704,7 @@
     "naptanId" : "910GNWCSTLE"
   },
   {
-    "commonName" : "Newcastle Airport Metro Station",
+    "commonName" : "Newcastle Airport Metro",
     "icsCode" : "90000096",
     "lat" : 55.035949,
     "lon" : -1.711047,
@@ -11709,6 +11772,13 @@
     "lat" : 50.415095,
     "lon" : -5.075654,
     "naptanId" : "910GNEWQUAY"
+  },
+  {
+    "commonName" : "Newsham",
+    "icsCode" : "90091488",
+    "lat" : 55.10284,
+    "lon" : -1.5239,
+    "naptanId" : "910GNSHM"
   },
   {
     "commonName" : "Newstead",
@@ -12006,7 +12076,7 @@
   },
   {
     "commonName" : "Nutfield",
-    "icsCode" : "1001693",
+    "icsCode" : "90005346",
     "lat" : 51.226814,
     "lon" : -0.132531,
     "naptanId" : "910GNUTFILD"
@@ -12014,8 +12084,8 @@
   {
     "commonName" : "Oakengates",
     "icsCode" : "90005414",
-    "lat" : 52.693398,
-    "lon" : -2.450194,
+    "lat" : 52.692985,
+    "lon" : -2.450116,
     "naptanId" : "910GOAKNGTS"
   },
   {
@@ -12154,8 +12224,8 @@
   {
     "commonName" : "Outwood",
     "icsCode" : "90005480",
-    "lat" : 53.715287,
-    "lon" : -1.5104,
+    "lat" : 53.715484,
+    "lon" : -1.510322,
     "naptanId" : "910GOUTWOOD"
   },
   {
@@ -12306,13 +12376,6 @@
     "naptanId" : "910GPSTONE"
   },
   {
-    "commonName" : "Parson Street",
-    "icsCode" : "90005538",
-    "lat" : 51.433319,
-    "lon" : -2.607742,
-    "naptanId" : "910GPARSNST"
-  },
-  {
     "commonName" : "Partick",
     "icsCode" : "90005871",
     "lat" : 55.869888,
@@ -12329,8 +12392,8 @@
   {
     "commonName" : "Patchway",
     "icsCode" : "90005541",
-    "lat" : 51.525933,
-    "lon" : -2.562689,
+    "lat" : 51.525934,
+    "lon" : -2.562473,
     "naptanId" : "910GPATCHWY"
   },
   {
@@ -12560,8 +12623,8 @@
   {
     "commonName" : "Perry Barr",
     "icsCode" : "90005844",
-    "lat" : 52.516342,
-    "lon" : -1.902034,
+    "lat" : 52.516486,
+    "lon" : -1.90196,
     "naptanId" : "910GPRYBR"
   },
   {
@@ -12628,6 +12691,13 @@
     "naptanId" : "910GPILNING"
   },
   {
+    "commonName" : "Pineapple Road",
+    "icsCode" : "90092133",
+    "lat" : 52.430029,
+    "lon" : -1.908407,
+    "naptanId" : "910GHAZEWLL"
+  },
+  {
     "commonName" : "Pinhoe",
     "icsCode" : "90005651",
     "lat" : 50.737785,
@@ -12672,8 +12742,8 @@
   {
     "commonName" : "Plumley",
     "icsCode" : "90005699",
-    "lat" : 53.274674,
-    "lon" : -2.419662,
+    "lat" : 53.274908,
+    "lon" : -2.419694,
     "naptanId" : "910GPLUMLEY"
   },
   {
@@ -12833,8 +12903,8 @@
   {
     "commonName" : "Poole",
     "icsCode" : "90005753",
-    "lat" : 50.719428,
-    "lon" : -1.983318,
+    "lat" : 50.719455,
+    "lon" : -1.983601,
     "naptanId" : "910GPOOLE"
   },
   {
@@ -12887,7 +12957,7 @@
     "naptanId" : "910GPRTHMDG"
   },
   {
-    "commonName" : "Porthmadog Harbour Ffestiniog Railway Station",
+    "commonName" : "Porthmadog Harbour Ffestiniog Railway",
     "icsCode" : "90005837",
     "lat" : 52.924041,
     "lon" : -4.126818,
@@ -12927,6 +12997,13 @@
     "lat" : 50.796962,
     "lon" : -1.10784,
     "naptanId" : "910GPHBR"
+  },
+  {
+    "commonName" : "Portway Park & Ride",
+    "icsCode" : "90023456",
+    "lat" : 51.488108,
+    "lon" : -2.687559,
+    "naptanId" : "910GPTWYPR"
   },
   {
     "commonName" : "Possilpark & Parkhouse",
@@ -13043,8 +13120,8 @@
   {
     "commonName" : "Prudhoe",
     "icsCode" : "90005843",
-    "lat" : 54.965828,
-    "lon" : -1.864866,
+    "lat" : 54.965944,
+    "lon" : -1.86449,
     "naptanId" : "910GPRUDHOE"
   },
   {
@@ -13365,8 +13442,8 @@
   {
     "commonName" : "Reedham (Norfolk)",
     "icsCode" : "90005977",
-    "lat" : 52.564504,
-    "lon" : 1.559651,
+    "lat" : 52.564385,
+    "lon" : 1.559701,
     "naptanId" : "910GRDHAMN"
   },
   {
@@ -13729,8 +13806,8 @@
   {
     "commonName" : "Runcorn East",
     "icsCode" : "90006218",
-    "lat" : 53.327568,
-    "lon" : -2.665697,
+    "lat" : 53.327875,
+    "lon" : -2.665567,
     "naptanId" : "910GRUNCRNE"
   },
   {
@@ -13904,8 +13981,8 @@
   {
     "commonName" : "Sandhills",
     "icsCode" : "90006255",
-    "lat" : 53.429835,
-    "lon" : -2.991849,
+    "lat" : 53.429682,
+    "lon" : -2.991846,
     "naptanId" : "910GSANDH"
   },
   {
@@ -14072,8 +14149,8 @@
   {
     "commonName" : "Seaham",
     "icsCode" : "90006347",
-    "lat" : 54.839056,
-    "lon" : -1.346337,
+    "lat" : 54.839481,
+    "lon" : -1.346828,
     "naptanId" : "910GSEAHAM"
   },
   {
@@ -14096,6 +14173,13 @@
     "lat" : 54.658312,
     "lon" : -1.200429,
     "naptanId" : "910GSETNCRW"
+  },
+  {
+    "commonName" : "Seaton Delaval",
+    "icsCode" : "90092112",
+    "lat" : 55.074809,
+    "lon" : -1.538211,
+    "naptanId" : "910GSTDL"
   },
   {
     "commonName" : "Seer Green",
@@ -14135,8 +14219,8 @@
   {
     "commonName" : "Selly Oak",
     "icsCode" : "90006375",
-    "lat" : 52.441982,
-    "lon" : -1.935814,
+    "lat" : 52.442027,
+    "lon" : -1.935696,
     "naptanId" : "910GSELYOAK"
   },
   {
@@ -14254,8 +14338,8 @@
   {
     "commonName" : "Shenstone",
     "icsCode" : "90006474",
-    "lat" : 52.639359,
-    "lon" : -1.844202,
+    "lat" : 52.639,
+    "lon" : -1.844484,
     "naptanId" : "910GSHNS"
   },
   {
@@ -14324,8 +14408,8 @@
   {
     "commonName" : "Shieldmuir",
     "icsCode" : "90006461",
-    "lat" : 55.777491,
-    "lon" : -3.95699,
+    "lat" : 55.77744,
+    "lon" : -3.957928,
     "naptanId" : "910GSHILDMR"
   },
   {
@@ -14366,8 +14450,8 @@
   {
     "commonName" : "Shipton",
     "icsCode" : "1001764",
-    "lat" : 51.865654,
-    "lon" : -1.592693,
+    "lat" : 51.865933,
+    "lon" : -1.592604,
     "naptanId" : "910GSPTN"
   },
   {
@@ -14408,8 +14492,8 @@
   {
     "commonName" : "Sholing",
     "icsCode" : "90006475",
-    "lat" : 50.896754,
-    "lon" : -1.364915,
+    "lat" : 50.89659,
+    "lon" : -1.364619,
     "naptanId" : "910GSHOLING"
   },
   {
@@ -14471,8 +14555,8 @@
   {
     "commonName" : "Sileby",
     "icsCode" : "90006539",
-    "lat" : 52.731594,
-    "lon" : -1.109989,
+    "lat" : 52.731034,
+    "lon" : -1.109571,
     "naptanId" : "910GSILEBY"
   },
   {
@@ -14952,13 +15036,6 @@
     "naptanId" : "910GSTALBCY"
   },
   {
-    "commonName" : "St Andrews Road",
-    "icsCode" : "90006245",
-    "lat" : 51.512771,
-    "lon" : -2.696313,
-    "naptanId" : "910GSADWRD"
-  },
-  {
     "commonName" : "St Annes-on-the-Sea",
     "icsCode" : "90006779",
     "lat" : 53.753023,
@@ -14982,8 +15059,8 @@
   {
     "commonName" : "St Budeaux Ferry Road",
     "icsCode" : "90006783",
-    "lat" : 50.401396,
-    "lon" : -4.186601,
+    "lat" : 50.401356,
+    "lon" : -4.18681,
     "naptanId" : "910GSTBDXFR"
   },
   {
@@ -15071,7 +15148,7 @@
     "naptanId" : "910GSTJOHNS"
   },
   {
-    "commonName" : "St Keyne Wishing Well Halt ()",
+    "commonName" : "St Keyne Wishing Well Halt",
     "icsCode" : "90006869",
     "lat" : 50.42304,
     "lon" : -4.46352,
@@ -15311,8 +15388,8 @@
   {
     "commonName" : "Stockton",
     "icsCode" : "90006928",
-    "lat" : 54.569622,
-    "lon" : -1.318543,
+    "lat" : 54.569809,
+    "lon" : -1.318246,
     "naptanId" : "910GSTOCTON"
   },
   {
@@ -15653,14 +15730,14 @@
   },
   {
     "commonName" : "Swanley",
-    "icsCode" : "1001802",
+    "icsCode" : "1001801",
     "lat" : 51.393387,
     "lon" : 0.169225,
     "naptanId" : "910GSWLY"
   },
   {
     "commonName" : "Swanscombe",
-    "icsCode" : "1001542",
+    "icsCode" : "1001806",
     "lat" : 51.449071,
     "lon" : 0.309543,
     "naptanId" : "910GSWNSCMB"
@@ -15717,8 +15794,8 @@
   {
     "commonName" : "Swinton (Manchester)",
     "icsCode" : "90007072",
-    "lat" : 53.514832,
-    "lon" : -2.337461,
+    "lat" : 53.514753,
+    "lon" : -2.337023,
     "naptanId" : "910GSWNT"
   },
   {
@@ -15752,8 +15829,8 @@
   {
     "commonName" : "Syston",
     "icsCode" : "90007088",
-    "lat" : 52.694211,
-    "lon" : -1.082399,
+    "lat" : 52.694123,
+    "lon" : -1.082682,
     "naptanId" : "910GSYSTON"
   },
   {
@@ -15780,8 +15857,8 @@
   {
     "commonName" : "Tain",
     "icsCode" : "90007101",
-    "lat" : 57.81442,
-    "lon" : -4.052049,
+    "lat" : 57.814385,
+    "lon" : -4.051946,
     "naptanId" : "910GTAIN"
   },
   {
@@ -15827,7 +15904,7 @@
     "naptanId" : "910GTMWTHHL"
   },
   {
-    "commonName" : "Tan-y-Bwlch Ffestiniog Railway Station",
+    "commonName" : "Tan-y-Bwlch Ffestiniog Railway",
     "icsCode" : "90007117",
     "lat" : 52.954371,
     "lon" : -4.011515,
@@ -15885,8 +15962,8 @@
   {
     "commonName" : "Telford Central",
     "icsCode" : "90007152",
-    "lat" : 52.681108,
-    "lon" : -2.440971,
+    "lat" : 52.680803,
+    "lon" : -2.440805,
     "naptanId" : "910GTELFRDC"
   },
   {
@@ -16060,8 +16137,8 @@
   {
     "commonName" : "Three Oaks",
     "icsCode" : "1001822",
-    "lat" : 50.901168,
-    "lon" : 0.612698,
+    "lat" : 50.901115,
+    "lon" : 0.613051,
     "naptanId" : "910GTHOK"
   },
   {
@@ -16094,7 +16171,7 @@
   },
   {
     "commonName" : "Tilbury Town",
-    "icsCode" : "1000758",
+    "icsCode" : "1000757",
     "lat" : 51.462359,
     "lon" : 0.354039,
     "naptanId" : "910GTLBYTWN"
@@ -16228,8 +16305,8 @@
   {
     "commonName" : "Tottenham Court Road",
     "icsCode" : "1000235",
-    "lat" : 51.515542,
-    "lon" : -0.129682,
+    "lat" : 51.515005,
+    "lon" : -0.130396,
     "naptanId" : "910GTOTCTRD"
   },
   {
@@ -16242,8 +16319,8 @@
   {
     "commonName" : "Totton",
     "icsCode" : "90007351",
-    "lat" : 50.917881,
-    "lon" : -1.482417,
+    "lat" : 50.917996,
+    "lon" : -1.481975,
     "naptanId" : "910GTOTTON"
   },
   {
@@ -16353,7 +16430,7 @@
   },
   {
     "commonName" : "Tunbridge Wells",
-    "icsCode" : "1001824",
+    "icsCode" : "1001823",
     "lat" : 51.130234,
     "lon" : 0.26281,
     "naptanId" : "910GTUNWELL"
@@ -16606,8 +16683,8 @@
   {
     "commonName" : "Wakefield Kirkgate",
     "icsCode" : "90007852",
-    "lat" : 53.678659,
-    "lon" : -1.488571,
+    "lat" : 53.6787,
+    "lon" : -1.487813,
     "naptanId" : "910GWKFLDKG"
   },
   {
@@ -16774,8 +16851,8 @@
   {
     "commonName" : "Wareham",
     "icsCode" : "90007578",
-    "lat" : 50.692888,
-    "lon" : -2.115246,
+    "lat" : 50.692916,
+    "lon" : -2.115034,
     "naptanId" : "910GWARHAM"
   },
   {
@@ -17017,6 +17094,13 @@
     "naptanId" : "910GWENNGTN"
   },
   {
+    "commonName" : "West Allerton",
+    "icsCode" : "90007549",
+    "lat" : 53.369125,
+    "lon" : -2.906964,
+    "naptanId" : "910GWALERTN"
+  },
+  {
     "commonName" : "West Brompton",
     "icsCode" : "1000260",
     "lat" : 51.487061,
@@ -17171,7 +17255,7 @@
     "naptanId" : "910GWSTBRYW"
   },
   {
-    "commonName" : "Westcliff-on-Sea",
+    "commonName" : "Westcliff",
     "icsCode" : "90007630",
     "lat" : 51.537334,
     "lon" : 0.691466,
@@ -17236,8 +17320,8 @@
   {
     "commonName" : "Weston-super-Mare",
     "icsCode" : "90008087",
-    "lat" : 51.34432,
-    "lon" : -2.971662,
+    "lat" : 51.344388,
+    "lon" : -2.972066,
     "naptanId" : "910GWSMARE"
   },
   {
@@ -17306,8 +17390,8 @@
   {
     "commonName" : "Whiston",
     "icsCode" : "90007762",
-    "lat" : 53.41385,
-    "lon" : -2.796597,
+    "lat" : 53.41394,
+    "lon" : -2.796614,
     "naptanId" : "910GWHISTON"
   },
   {
@@ -17355,8 +17439,8 @@
   {
     "commonName" : "Whitechapel",
     "icsCode" : "1000268",
-    "lat" : 51.519555,
-    "lon" : -0.059537,
+    "lat" : 51.520392,
+    "lon" : -0.060121,
     "naptanId" : "910GWCHAPXR"
   },
   {
@@ -17514,6 +17598,13 @@
     "naptanId" : "910GWLDMILL"
   },
   {
+    "commonName" : "Willenhall",
+    "icsCode" : "90013403",
+    "lat" : 52.581899,
+    "lon" : -2.055095,
+    "naptanId" : "910GWILHAL"
+  },
+  {
     "commonName" : "Willesden Junction",
     "icsCode" : "1000271",
     "lat" : 51.532497,
@@ -17551,8 +17642,8 @@
   {
     "commonName" : "Wilnecote (Staffs)",
     "icsCode" : "90007823",
-    "lat" : 52.610712,
-    "lon" : -1.679714,
+    "lat" : 52.610505,
+    "lon" : -1.679701,
     "naptanId" : "910GWILNECT"
   },
   {
@@ -17817,8 +17908,8 @@
   {
     "commonName" : "Woolwich",
     "icsCode" : "1002162",
-    "lat" : 51.491851,
-    "lon" : 0.070737,
+    "lat" : 51.492168,
+    "lon" : 0.070593,
     "naptanId" : "910GWOLWXR"
   },
   {
@@ -17865,7 +17956,7 @@
   },
   {
     "commonName" : "Worcestershire Parkway",
-    "icsCode" : "90000185",
+    "icsCode" : "90000349",
     "lat" : 52.156046,
     "lon" : -2.160025,
     "naptanId" : "910GWORCPWY"
@@ -17964,8 +18055,8 @@
   {
     "commonName" : "Wylam",
     "icsCode" : "90008149",
-    "lat" : 54.974972,
-    "lon" : -1.814062,
+    "lat" : 54.974552,
+    "lon" : -1.815704,
     "naptanId" : "910GWYLAM"
   },
   {
@@ -18006,8 +18097,8 @@
   {
     "commonName" : "Yarm",
     "icsCode" : "90008156",
-    "lat" : 54.493899,
-    "lon" : -1.351545,
+    "lat" : 54.493746,
+    "lon" : -1.351486,
     "naptanId" : "910GYAAM"
   },
   {
@@ -18076,8 +18167,8 @@
   {
     "commonName" : "Yorton",
     "icsCode" : "90008205",
-    "lat" : 52.808957,
-    "lon" : -2.736461,
+    "lat" : 52.809047,
+    "lon" : -2.736433,
     "naptanId" : "910GYORTON"
   },
   {
