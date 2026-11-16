@@ -24,12 +24,16 @@ public struct ArrivalsPickerView: View {
     let onAction: (Action) -> Void
 
     @State private var editMode: EditMode = .inactive
+    @Environment(\.isSearching) private var isSearching
 
     private var favourites: [StopRow] {
         if case .browse(let favourites, _, _, _) = content { favourites } else { [] }
     }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
+
+    // Favourite rows can't be tapped in edit mode, so editing would leave them as dead shortcuts while searching
+    private var canEditFavourites: Bool { !favourites.isEmpty && !isSearching }
 
     // MARK: - Init
 
@@ -49,8 +53,8 @@ public struct ArrivalsPickerView: View {
         contentView
             .defaultMaxWidthWithFullBackground()
             .environment(\.editMode, $editMode)
-            .onChange(of: favourites.isEmpty) {
-                if favourites.isEmpty { editMode = .inactive }
+            .onChange(of: canEditFavourites) {
+                if !canEditFavourites { editMode = .inactive }
             }
     }
 
@@ -127,7 +131,7 @@ public struct ArrivalsPickerView: View {
                     imageName: "star.fill"
                 )
                 Spacer()
-                if !favourites.isEmpty {
+                if canEditFavourites {
                     EditModeButton(editMode: $editMode)
                 }
             }
@@ -148,12 +152,15 @@ public struct ArrivalsPickerView: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
-            Button(.arrivalsPickerNoFavouritesButtonTitle) {
-                onAction(.tappedFindStation)
+            // The button only activates search, so it has nothing to do once search is active
+            if !isSearching {
+                Button(.arrivalsPickerNoFavouritesButtonTitle) {
+                    onAction(.tappedFindStation)
+                }
+                .buttonStyle(.bordered)
+                .buttonBorderShape(.capsule)
+                .controlSize(.small)
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
-            .controlSize(.small)
         }
         .frame(minHeight: 52)
     }
