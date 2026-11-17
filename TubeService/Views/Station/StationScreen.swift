@@ -166,7 +166,7 @@ struct StationScreen: View {
         switch action {
         case .selectedLineGroup(let lineGroup):
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
-        case .tappedInfo, .tappedDisruptionRow:
+        case .tappedInfo, .tappedLineStatusRow:
             userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
             isShowingInfo = true
         }

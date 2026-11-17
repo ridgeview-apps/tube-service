@@ -1519,6 +1519,17 @@
         }
       }
     },
+    "line.good.service.summary %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good service on %@"
+          }
+        }
+      }
+    },
     "line.long.name %@" : {
       "extractionState" : "manual",
       "localizations" : {

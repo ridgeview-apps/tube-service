@@ -89,6 +89,16 @@ extension Sequence where Element == Line {
     }
 }
 
+extension Sequence where Element == Line {
+    /// A sentence saying the lines are running normally, e.g. "Good service on the Circle line", or nil when any isn't
+    /// (or there are no lines).
+    var goodServiceSummary: String? {
+        let lineIDs = sortedByStatusSeverity().map(\.id)
+        guard !lineIDs.isEmpty, !hasDisruptions else { return nil }
+        return String(localized: .lineGoodServiceSummary(lineIDs.namesInSentence))
+    }
+}
+
 private extension LineStatusSeverity {
     /// What follows "the Circle line is", for the statuses that mean no trains (or only some) are running.
     var outOfServiceText: String? {

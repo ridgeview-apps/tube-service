@@ -384,6 +384,40 @@ struct LineViewStateTests {
         )
         #expect([line].disruptionSummary == "Part closure and minor delays on the Circle line")
     }
+
+    // MARK: - Good service summary
+
+    @Test
+    func goodServiceSummary_oneLine_namesTheLine() {
+        #expect([Line.withStatus(.northern, .goodService, "Good Service")].goodServiceSummary == "Good service on the Northern line")
+        #expect([Line.withStatus(.dlr, .goodService, "Good Service")].goodServiceSummary == "Good service on the DLR")
+    }
+
+    @Test
+    func goodServiceSummary_severalLines_shareOneLinesPhrase() {
+        let lines = [
+            Line.withStatus(.metropolitan, .goodService, "Good Service"),
+            Line.withStatus(.circle, .goodService, "Good Service"),
+            Line.withStatus(.hammersmithAndCity, .goodService, "Good Service")
+        ]
+        // The list's punctuation follows the region, e.g. US English adds a comma before "and"
+        let lineNames = ["Circle", "H&C", "Met"].formatted(.list(type: .and).locale(.copy))
+        #expect(lines.goodServiceSummary == "Good service on the \(lineNames) lines")
+    }
+
+    @Test
+    func goodServiceSummary_anyLineDisrupted_isNil() {
+        let lines = [
+            Line.withStatus(.circle, .goodService, "Good Service"),
+            Line.withStatus(.metropolitan, .minorDelays, "Minor Delays")
+        ]
+        #expect(lines.goodServiceSummary == nil)
+    }
+
+    @Test
+    func goodServiceSummary_noLines_isNil() {
+        #expect([Line]().goodServiceSummary == nil)
+    }
 }
 
 private extension LineStatus {
