@@ -3,7 +3,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A station's line statuses, notices and location, opened from the Station screen's toolbar or disruption row.
+/// A station's line statuses, notices and location, opened from the Station screen's toolbar or line status row.
 public struct StationInfoView: View {
     let station: Station
     let info: StationView.Info

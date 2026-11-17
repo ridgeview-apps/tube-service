@@ -8,7 +8,7 @@ public struct StationView: View {
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
         case tappedInfo
-        case tappedDisruptionRow
+        case tappedLineStatusRow
     }
 
     public struct Arrivals {
@@ -75,7 +75,7 @@ public struct StationView: View {
         info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
-    /// The selected chip has no badge, as the disruption row right below it already says it's disrupted.
+    /// The selected chip has no badge, as the line status row right below it already says it's disrupted.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
         station.lineGroups.ids(disruptedBy: disruptedLines).subtracting([selectedLineGroup.id])
     }
@@ -94,10 +94,10 @@ public struct StationView: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                StationLineDisruptionRow(
+                StationLineStatusRow(
                     lines: selectedLines,
                     isLoading: info.isLoadingLines,
-                    onTap: { onAction(.tappedDisruptionRow) }
+                    onTap: { onAction(.tappedLineStatusRow) }
                 )
                 .padding(.horizontal, 16)
                 StationArrivalsView(
@@ -107,7 +107,7 @@ public struct StationView: View {
                     isFavourite: $isFavourite
                 )
             }
-            // Closer to the chips than the boards, as the disruption row describes the selected chip
+            // Closer to the chips than the boards, as the line status row describes the selected chip
             .padding(.top, hasChips ? 2 : 16)
             .padding(.bottom, 16)
         }
@@ -181,7 +181,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Disrupted lines") {
-    // Circle is on the selected chip, so the disruption row names it; Victoria badges its chip
+    // Circle is on the selected chip, so the line status row names it; Victoria badges its chip
     WrapperView(
         lines: [
             Line(id: .circle, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
@@ -196,7 +196,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Another line disrupted") {
-    // The selected chip is fine, so there's no disruption row; only Piccadilly's chip has a badge
+    // The selected chip has a good service; only Piccadilly's chip has a badge
     WrapperView(
         lines: [
             Line(id: .piccadilly, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),

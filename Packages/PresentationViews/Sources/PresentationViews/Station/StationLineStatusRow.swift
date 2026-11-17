@@ -2,10 +2,9 @@ import Models
 import Shared
 import SwiftUI
 
-/// A quiet line under the chips saying the selected line group isn't running normally, which opens the station info.
-/// Nothing shows for a good service, as that's the norm. Other line groups' disruptions show only as badges on their
-/// chips.
-struct StationLineDisruptionRow: View {
+/// A quiet line under the chips giving the selected line group's status, which opens the station info. Other line
+/// groups' disruptions show only as badges on their chips.
+struct StationLineStatusRow: View {
     /// The selected line group's lines, empty if their statuses couldn't be loaded.
     let lines: [Line]
     var isLoading = false
@@ -13,28 +12,41 @@ struct StationLineDisruptionRow: View {
 
     var body: some View {
         if let title = lines.disruptionSummary {
-            Button(action: onTap) {
-                HStack(spacing: 6) {
-                    LineStatusAccessoryImageType.disruption.image
-                    Text(title)
-                        .foregroundStyle(.primary)
-                    Image(systemName: "chevron.right")
-                        .font(.footnote)
-                        .foregroundStyle(.tertiary)
-                    Spacer(minLength: 0)
-                }
-                .font(.subheadline)
-                .compactLineLimit()
-                .contentShape(.rect)
-                .accessibilityElement(children: .combine)
-            }
-            .buttonStyle(.plain)
-        } else if lines.isEmpty && !isLoading {
+            statusButton(.disruption, title: title)
+        } else if let title = lines.goodServiceSummary {
+            statusButton(.goodService, title: title)
+        } else if isLoading {
+            // Holds the row's space so the boards don't move down once the statuses arrive. The text is hidden, so
+            // any line's name will do.
+            let placeholderTitle = String(localized: .lineGoodServiceSummary(TrainLineID.northern.nameInSentence))
+            statusButton(.goodService, title: placeholderTitle)
+                .redacted(reason: .placeholder)
+                .disabled(true)
+        } else {
             Text(.stationLineStatusUnavailable)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .compactLineLimit()
         }
+    }
+
+    private func statusButton(_ imageType: LineStatusAccessoryImageType, title: String) -> some View {
+        Button(action: onTap) {
+            HStack(spacing: 6) {
+                imageType.image
+                Text(title)
+                    .foregroundStyle(.primary)
+                Image(systemName: "chevron.right")
+                    .font(.footnote)
+                    .foregroundStyle(.tertiary)
+                Spacer(minLength: 0)
+            }
+            .font(.subheadline)
+            .compactLineLimit()
+            .contentShape(.rect)
+            .accessibilityElement(children: .combine)
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -79,26 +91,32 @@ private extension Line {
 #Preview("Rows") {
     ScrollView {
         VStack(alignment: .leading, spacing: 12) {
-            Text(verbatim: "One line, good service (nothing shown)")
-            StationLineDisruptionRow(lines: [.goodService(.northern)], onTap: {})
+            Text(verbatim: "One line, good service")
+            StationLineStatusRow(lines: [.goodService(.northern)], onTap: {})
+
+            Text(verbatim: "Three lines, good service")
+            StationLineStatusRow(
+                lines: [.goodService(.circle), .goodService(.hammersmithAndCity), .goodService(.metropolitan)],
+                onTap: {}
+            )
 
             Text(verbatim: "One line, disrupted")
-            StationLineDisruptionRow(lines: [.minorDelays(.northern)], onTap: {})
+            StationLineStatusRow(lines: [.minorDelays(.northern)], onTap: {})
 
             Text(verbatim: "Three lines, one disrupted")
-            StationLineDisruptionRow(
+            StationLineStatusRow(
                 lines: [.goodService(.circle), .goodService(.hammersmithAndCity), .minorDelays(.metropolitan)],
                 onTap: {}
             )
 
             Text(verbatim: "Three lines, all minor delays")
-            StationLineDisruptionRow(
+            StationLineStatusRow(
                 lines: [.minorDelays(.circle), .minorDelays(.hammersmithAndCity), .minorDelays(.metropolitan)],
                 onTap: {}
             )
 
             Text(verbatim: "Three lines, mixed")
-            StationLineDisruptionRow(
+            StationLineStatusRow(
                 lines: [
                     .withStatus(.circle, .plannedClosure, "Planned Closure"), .goodService(.hammersmithAndCity),
                     .minorDelays(.metropolitan)
@@ -106,11 +124,11 @@ private extension Line {
                 onTap: {}
             )
 
-            Text(verbatim: "Loading (nothing shown)")
-            StationLineDisruptionRow(lines: [], isLoading: true, onTap: {})
+            Text(verbatim: "Loading")
+            StationLineStatusRow(lines: [], isLoading: true, onTap: {})
 
             Text(verbatim: "Unavailable")
-            StationLineDisruptionRow(lines: [], onTap: {})
+            StationLineStatusRow(lines: [], onTap: {})
         }
         .font(.caption)
         .foregroundStyle(.secondary)
