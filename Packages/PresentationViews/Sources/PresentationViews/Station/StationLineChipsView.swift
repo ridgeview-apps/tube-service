@@ -38,7 +38,7 @@ private struct LineChip: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
-                LineColourDot(lineIDs: lineGroup.lineIds.sortedByName(), isOnAccent: isSelected)
+                LineColourTile(lineIDs: lineGroup.lineIds.sortedByName(), isOnAccent: isSelected)
                 Text(lineGroup.shortName)
                     .accessibilityLabel(lineGroup.name)
             }
