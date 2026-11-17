@@ -2,8 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A quiet line under the chips giving the selected line group's status, which opens the station info. Other line
-/// groups' disruptions show only as badges on their chips.
+/// A quiet line under the chips giving the selected line group's status, which opens the station info.
 struct StationLineStatusRow: View {
     /// The selected line group's lines, empty if their statuses couldn't be loaded.
     let lines: [Line]

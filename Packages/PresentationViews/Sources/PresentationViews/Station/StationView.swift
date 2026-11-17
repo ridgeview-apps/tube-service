@@ -75,9 +75,9 @@ public struct StationView: View {
         info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
-    /// The selected chip has no badge, as the line status row right below it already says it's disrupted.
+    /// The selected chip keeps its badge too, so the badges don't move around as the selection changes.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
-        station.lineGroups.ids(disruptedBy: disruptedLines).subtracting([selectedLineGroup.id])
+        station.lineGroups.ids(disruptedBy: disruptedLines)
     }
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
@@ -181,7 +181,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Disrupted lines") {
-    // Circle is on the selected chip, so the line status row names it; Victoria badges its chip
+    // Circle is on the selected chip, so the line status row names it; both disrupted chips have a badge
     WrapperView(
         lines: [
             Line(id: .circle, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
