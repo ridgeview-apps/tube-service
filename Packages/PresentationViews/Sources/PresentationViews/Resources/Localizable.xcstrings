@@ -3300,7 +3300,7 @@
         }
       }
     },
-    "station.line.status.sheet.title" : {
+    "station.line.status.section.header.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -3312,7 +3312,7 @@
       }
     },
     "station.line.status.unavailable" : {
-      "comment" : "Shown on the Station screen's line status card when the lines' statuses couldn't be loaded",
+      "comment" : "Shown on the Station screen and its info sheet when the lines' statuses couldn't be loaded",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
