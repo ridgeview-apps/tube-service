@@ -1,18 +1,31 @@
 import MapKit
 import Models
+import Shared
 import SwiftUI
 
-/// A station's notices and location, opened from the Station screen's toolbar.
-struct StationInfoView: View {
+/// A station's line statuses, notices and location, opened from the Station screen's toolbar or disruption row.
+public struct StationInfoView: View {
     let station: Station
-    let noticeSections: StationNoticeSections
+    let info: StationView.Info
+    let onTapLine: (Line) -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.clock) private var clock
 
-    var body: some View {
+    public init(station: Station, info: StationView.Info, onTapLine: @escaping (Line) -> Void) {
+        self.station = station
+        self.info = info
+        self.onTapLine = onTapLine
+    }
+
+    private var noticeSections: StationNoticeSections {
+        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
+    }
+
+    public var body: some View {
         NavigationStack {
             List {
-                // Notices first, as they're what the toolbar badge points to
+                linesSection
                 if noticeSections.isEmpty {
                     Section {
                         Text(.stationNoticesEmpty)
@@ -36,10 +49,37 @@ struct StationInfoView: View {
                 }
             }
         }
-        .presentationDetents([.medium, .large])
-        // At medium height the sheet is glass by default, and the boards showing through made long notices hard to read
-        .presentationBackground(Color.defaultBackground)
     }
+
+    // MARK: - Lines
+
+    private var linesSection: some View {
+        Section {
+            if !info.lines.isEmpty {
+                ForEach(info.lines.sortedByStatusSeverity()) { line in
+                    Button {
+                        onTapLine(line)
+                    } label: {
+                        LineStatusCell(style: .singleLine(line, isFavourite: false), showsAccessory: true)
+                            .frame(minHeight: 56)
+                            .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                    .listRowInsets(EdgeInsets())
+                }
+            } else if info.isLoadingLines {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+            } else {
+                Text(.stationLineStatusUnavailable)
+                    .foregroundStyle(.secondary)
+            }
+        } header: {
+            Text(.stationLineStatusSectionHeaderTitle)
+        }
+    }
+
+    // MARK: - Notices
 
     @ViewBuilder
     private func section(_ title: LocalizedStringResource, rows: [StationNoticeSections.Row]) -> some View {
@@ -181,6 +221,16 @@ private struct StationNoticeRow: View {
 // Wembley Park, which the notices below are about
 private let previewStation = Station.allLondonTrains.first { $0.name == "Wembley Park" } ?? Station.allLondonTrains[0]
 
+private let previewLines = [
+    Line(
+        id: .metropolitan,
+        lineStatuses: [
+            .init(statusSeverity: .minorDelays, statusSeverityDescription: "Minor Delays", reason: nil, disruption: nil)
+        ]
+    ),
+    Line(id: .jubilee, lineStatuses: [.goodService])
+]
+
 #Preview("Station info") {
     // 14:00 today, so the exit only notice starts later today
     let now = Calendar.current.date(bySettingHour: 14, minute: 0, second: 0, of: .now) ?? .now
@@ -201,18 +251,25 @@ private let previewStation = Station.allLondonTrains.first { $0.name == "Wembley
         )
     ]
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(
-            station: previewStation,
-            noticeSections: StationNoticeSections(notices: notices, stationName: previewStation.name, now: now)
-        )
+        StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: notices), onTapLine: { _ in })
+            .environment(\.clock, .fixed(at: now))
     }
 }
 
 #Preview("No notices") {
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(
-            station: previewStation,
-            noticeSections: StationNoticeSections(notices: [], stationName: previewStation.name, now: .now)
-        )
+        StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: []), onTapLine: { _ in })
+    }
+}
+
+#Preview("Lines loading") {
+    Color.clear.sheet(isPresented: .constant(true)) {
+        StationInfoView(station: previewStation, info: .init(lines: [], notices: [], isLoadingLines: true), onTapLine: { _ in })
+    }
+}
+
+#Preview("Lines unavailable") {
+    Color.clear.sheet(isPresented: .constant(true)) {
+        StationInfoView(station: previewStation, info: .init(lines: [], notices: []), onTapLine: { _ in })
     }
 }

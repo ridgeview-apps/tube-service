@@ -21,6 +21,9 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
+    // Not the router's sheet, which keeps the contents it opened with: this one shows the screen's live data
+    @State private var isShowingInfo = false
+
     let station: Station
 
     // MARK: - Layout
@@ -51,6 +54,12 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
+        .sheet(isPresented: $isShowingInfo) {
+            StationInfoView(station: station, info: info) { line in
+                isShowingInfo = false
+                router.push(.lineStatusDetail(lineID: line.id, request: .live))
+            }
+        }
         .task {
             await refreshDataIfStale()
         }
@@ -157,10 +166,9 @@ struct StationScreen: View {
         switch action {
         case .selectedLineGroup(let lineGroup):
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
-        case .tappedLine(let line):
-            router.push(.lineStatusDetail(lineID: line.id, request: .live))
-        case .openedNotices:
+        case .tappedInfo, .tappedDisruptionRow:
             userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
+            isShowingInfo = true
         }
     }
 }

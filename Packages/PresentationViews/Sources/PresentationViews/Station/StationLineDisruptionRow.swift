@@ -2,9 +2,9 @@ import Models
 import Shared
 import SwiftUI
 
-/// A quiet line under the chips saying the selected line group isn't running normally, which opens every line's
-/// status. Nothing shows for a good service, as that's the norm. Other line groups' disruptions show only as badges on
-/// their chips.
+/// A quiet line under the chips saying the selected line group isn't running normally, which opens the station info.
+/// Nothing shows for a good service, as that's the norm. Other line groups' disruptions show only as badges on their
+/// chips.
 struct StationLineDisruptionRow: View {
     /// The selected line group's lines, empty if their statuses couldn't be loaded.
     let lines: [Line]
@@ -52,46 +52,6 @@ private struct CompactLineLimit: ViewModifier {
 private extension View {
     func compactLineLimit() -> some View {
         modifier(CompactLineLimit())
-    }
-}
-
-// MARK: - Line status sheet
-
-/// Every line in the selected line group, as the Line Status tab shows them, each opening its line.
-struct StationLineStatusSheet: View {
-    let lines: [Line]
-    let onTapLine: (Line) -> Void
-
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 8) {
-                    ForEach(lines.sortedByStatusSeverity()) { line in
-                        Button {
-                            onTapLine(line)
-                        } label: {
-                            LineStatusCell(style: .singleLine(line, isFavourite: false), showsAccessory: true)
-                                .frame(minHeight: 56)
-                                .cardStyle()
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-                .padding(16)
-            }
-            .navigationTitle(Text(.stationLineStatusSheetTitle))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(.globalDone) { dismiss() }
-                }
-            }
-        }
-        .presentationDetents([.medium, .large])
-        // Matches the station info sheet: glass at medium height lets the boards show through the rows
-        .presentationBackground(Color.defaultBackground)
     }
 }
 
@@ -157,14 +117,4 @@ private extension Line {
         .padding()
     }
     .background(Color.defaultBackground)
-}
-
-#Preview("Sheet") {
-    StationLineStatusSheet(
-        lines: [
-            .withStatus(.circle, .plannedClosure, "Planned Closure"), .goodService(.hammersmithAndCity),
-            .minorDelays(.metropolitan)
-        ],
-        onTapLine: { _ in }
-    )
 }

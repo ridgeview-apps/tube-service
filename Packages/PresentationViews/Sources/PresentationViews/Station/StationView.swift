@@ -7,9 +7,8 @@ public struct StationView: View {
 
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
-        case tappedLine(Line)
-        /// The station info sheet opened, so its notices now count as seen.
-        case openedNotices
+        case tappedInfo
+        case tappedDisruptionRow
     }
 
     public struct Arrivals {
@@ -50,8 +49,6 @@ public struct StationView: View {
     public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
 
-    @State private var isShowingInfo = false
-    @State private var isShowingLineStatus = false
     @Environment(\.clock) private var clock
 
     public init(
@@ -81,11 +78,6 @@ public struct StationView: View {
     /// The selected chip has no badge, as the disruption row right below it already says it's disrupted.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
         station.lineGroups.ids(disruptedBy: disruptedLines).subtracting([selectedLineGroup.id])
-    }
-
-    private func showInfo() {
-        isShowingInfo = true
-        onAction(.openedNotices)
     }
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
@@ -126,7 +118,7 @@ public struct StationView: View {
                 StationLineDisruptionRow(
                     lines: selectedLines,
                     isLoading: info.isLoadingLines,
-                    onTap: { isShowingLineStatus = true }
+                    onTap: { onAction(.tappedDisruptionRow) }
                 )
                 .padding(.horizontal, 16)
                 StationArrivalsView(
@@ -140,8 +132,7 @@ public struct StationView: View {
             .padding(.top, hasChips ? 2 : 16)
             .padding(.bottom, 16)
         }
-        // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening.
-        // The sheets would also inherit pull-to-refresh, which fights the drag that dismisses them.
+        // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening
         .refreshable(action: onRefresh)
         .accessibilityIdentifier(AccessibilityID.Station.content)
         // Pinned, so they still show other lines have arrivals once the boards scroll
@@ -162,7 +153,9 @@ public struct StationView: View {
         .toolbar {
             // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
             ToolbarItem {
-                Button(action: showInfo) {
+                Button {
+                    onAction(.tappedInfo)
+                } label: {
                     Label {
                         Text(.stationInfoTitle)
                     } icon: {
@@ -173,15 +166,6 @@ public struct StationView: View {
             }
             ToolbarItem {
                 FavouritesButton(.station, style: .small, isSelected: $isFavourite)
-            }
-        }
-        .sheet(isPresented: $isShowingInfo) {
-            StationInfoView(station: station, noticeSections: noticeSections)
-        }
-        .sheet(isPresented: $isShowingLineStatus) {
-            StationLineStatusSheet(lines: selectedLines) { line in
-                isShowingLineStatus = false
-                onAction(.tappedLine(line))
             }
         }
     }
