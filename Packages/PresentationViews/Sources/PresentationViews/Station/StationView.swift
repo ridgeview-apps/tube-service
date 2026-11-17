@@ -2,8 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A station's live boards and information, built from a header, an arrivals part and an info part so that a bus Stop
-/// screen can reuse the same shape.
+/// A station's live boards and information, split into parts that a bus Stop screen can reuse.
 public struct StationView: View {
 
     public enum Action {
@@ -91,8 +90,8 @@ public struct StationView: View {
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
 
-    /// No count: it said little. Orange, like the sheet's closure icons, stays while a closure is on today, even once
-    /// seen, as the closure still applies. Otherwise the accent colour, not the chips' red, marks notices not seen yet.
+    /// Orange while a closure is on today, even once seen; otherwise the accent colour (not the chips' red) marks
+    /// unseen notices.
     fileprivate enum NoticesBadge {
         case closureToday
         case unseen
@@ -137,19 +136,15 @@ public struct StationView: View {
                     isFavourite: $isFavourite
                 )
             }
-            // The chip row's own padding covers most of the gap below the chips. The disruption row sits closer to
-            // the chips than to the boards, as it describes the selected chip.
+            // Closer to the chips than the boards, as the disruption row describes the selected chip
             .padding(.top, hasChips ? 2 : 16)
             .padding(.bottom, 16)
         }
-        // On the scroll view alone. Applied to the whole screen, the sheets would inherit pull-to-refresh, which fights
-        // the drag that dismisses them, and the chips' horizontal scroll view in the bar below would get a refresh
-        // control too: its inset pushes the chips out of view when the screen is reopened.
+        // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening.
+        // The sheets would also inherit pull-to-refresh, which fights the drag that dismisses them.
         .refreshable(action: onRefresh)
-        // Before the bar, so the identifier stays on this scroll view rather than spreading to the chips' row
         .accessibilityIdentifier(AccessibilityID.Station.content)
-        // The chips stay pinned, so they're still there to say other lines have arrivals once the boards are
-        // scrolled down
+        // Pinned, so they still show other lines have arrivals once the boards scroll
         .safeAreaBar(edge: .top) {
             if hasChips {
                 StationLineChipsView(
@@ -160,8 +155,7 @@ public struct StationView: View {
                 )
             }
         }
-        // Status rows that appear or go (e.g. a station with several statuses, once they arrive) slide in rather than
-        // snap
+        // Status rows that come and go slide rather than snap
         .animation(.default, value: disruptedLines.map(\.id))
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
@@ -210,7 +204,6 @@ private struct StationInfoIcon: View {
     }
 }
 
-
 // MARK: - Previews
 
 import ModelStubs
@@ -251,7 +244,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Disrupted lines") {
-    // Circle is on the selected chip, so it leads the summary; Victoria is counted in "+N more"
+    // Circle is on the selected chip, so the disruption row names it; Victoria badges its chip
     WrapperView(
         lines: [
             Line(id: .circle, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
@@ -266,7 +259,7 @@ private struct WrapperView: View {
 }
 
 #Preview("Another line disrupted") {
-    // The selected chip is fine, so the summary says so and only counts Piccadilly's delays
+    // The selected chip is fine, so there's no disruption row; only Piccadilly's chip has a badge
     WrapperView(
         lines: [
             Line(id: .piccadilly, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
