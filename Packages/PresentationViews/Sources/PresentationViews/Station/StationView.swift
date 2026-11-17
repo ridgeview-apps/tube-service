@@ -82,28 +82,7 @@ public struct StationView: View {
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
 
-    /// Orange while a closure is on today, even once seen; otherwise the accent colour (not the chips' red) marks
-    /// unseen notices.
-    fileprivate enum NoticesBadge {
-        case closureToday
-        case unseen
-
-        var style: AnyShapeStyle {
-            switch self {
-            case .closureToday: AnyShapeStyle(.orange)
-            case .unseen: AnyShapeStyle(.tint)
-            }
-        }
-
-        var accessibilityValue: Text {
-            switch self {
-            case .closureToday: Text(.stationNoticesClosureAccessibilityValue)
-            case .unseen: Text(.stationNoticesUnseenAccessibilityValue)
-            }
-        }
-    }
-
-    private var noticesBadge: NoticesBadge? {
+    private var noticesBadge: StationInfoButton.Badge? {
         if noticeSections.hasClosureToday { return .closureToday }
         return info.hasUnseenNotices ? .unseen : nil
     }
@@ -153,37 +132,11 @@ public struct StationView: View {
         .toolbar {
             // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
             ToolbarItem {
-                Button {
-                    onAction(.tappedInfo)
-                } label: {
-                    Label {
-                        Text(.stationInfoTitle)
-                    } icon: {
-                        StationInfoIcon(badge: noticesBadge)
-                    }
-                }
-                .accessibilityValue(noticesBadge?.accessibilityValue ?? Text(verbatim: ""))
+                StationInfoButton(badge: noticesBadge) { onAction(.tappedInfo) }
             }
             ToolbarItem {
                 FavouritesButton(.station, style: .small, isSelected: $isFavourite)
             }
-        }
-    }
-}
-
-private struct StationInfoIcon: View {
-    let badge: StationView.NoticesBadge?
-    @Environment(\.colorScheme) private var colorScheme
-
-    var body: some View {
-        if let badge {
-            Image(systemName: "info.circle.badge")
-                .symbolRenderingMode(.palette)
-                // The toolbar fixes palette colours when it takes the image, so even adaptive colours stay
-                // light-mode; picking from the colour scheme redraws it on each change
-                .foregroundStyle(badge.style, colorScheme == .dark ? Color.white : Color.black)
-        } else {
-            Image(systemName: "info.circle")
         }
     }
 }
