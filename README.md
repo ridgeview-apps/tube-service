@@ -119,6 +119,7 @@ GitHub Actions workflows build, test and release the app. Their comments explain
 * [Branch checks](.github/workflows/branch-checks.yml) lints and runs the unit tests on every push to a `feature/**` or `hotfix/**` branch.
 * [Beta](.github/workflows/beta.yml) lints, tests and builds every push to `main` with the Beta config, and uploads it to [TestFlight](https://developer.apple.com/testflight/).
 * [Screenshots](.github/workflows/screenshots.yml) generates the App Store screenshots when run by hand, and can upload them once approved.
+* [Seed data](.github/workflows/seed-data.yml) regenerates the bundled station files from live TfL data when run by hand, and opens a PR if they changed.
 * [Check Secret](.github/workflows/check-secret.yml) prints a fingerprint of a repository secret, to compare with a local value from [`Scripts/fingerprint-secret.sh`](Scripts/fingerprint-secret.sh).
 
 To release a version:
