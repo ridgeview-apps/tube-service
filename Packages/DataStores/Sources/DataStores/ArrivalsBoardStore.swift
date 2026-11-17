@@ -12,7 +12,8 @@ public final class ArrivalsBoardStore {
         case departures(lineID: TrainLineID, items: [ArrivalDeparture])
     }
 
-    private static let refreshInterval: TimeInterval = 20
+    // Matches the max-age TfL sends with arrivals responses
+    private static let refreshInterval: TimeInterval = 30
 
     public private(set) var boardData = RemoteData<BoardData?>(value: nil, fetchedAt: nil, fetchState: .idle)
     private var currentLineGroup: Station.LineGroup?
