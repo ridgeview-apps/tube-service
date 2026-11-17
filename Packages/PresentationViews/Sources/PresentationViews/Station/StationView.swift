@@ -123,41 +123,46 @@ public struct StationView: View {
 
     public var body: some View {
         ScrollView {
-            // The chips and disruption row scroll away together: the screen is short, and changing chip replaces
-            // everything below, so pinning the chips earned little
-            VStack(alignment: .leading, spacing: 0) {
-                if hasChips {
-                    StationLineChipsView(
-                        lineGroups: station.lineGroups.sortedByName(),
-                        selectedLineGroup: selectedLineGroup,
-                        disruptedLineGroupIDs: disruptedLineGroupIDs,
-                        onSelect: { onAction(.selectedLineGroup($0)) }
-                    )
-                }
-                VStack(alignment: .leading, spacing: 24) {
-                    StationLineDisruptionRow(
-                        lines: selectedLines,
-                        isLoading: info.isLoadingLines,
-                        onTap: { isShowingLineStatus = true }
-                    )
-                    .padding(.horizontal, 16)
-                    StationArrivalsView(
-                        boardStates: arrivals.boardStates,
-                        refreshDate: arrivals.refreshDate,
-                        loadingState: arrivals.loadingState,
-                        isFavourite: $isFavourite
-                    )
-                }
-                // The chip row's own padding covers most of the gap below the chips. The disruption row sits closer to
-                // the chips than to the boards, as it describes the selected chip.
-                .padding(.top, hasChips ? 2 : 16)
-                .padding(.bottom, 16)
+            VStack(alignment: .leading, spacing: 24) {
+                StationLineDisruptionRow(
+                    lines: selectedLines,
+                    isLoading: info.isLoadingLines,
+                    onTap: { isShowingLineStatus = true }
+                )
+                .padding(.horizontal, 16)
+                StationArrivalsView(
+                    boardStates: arrivals.boardStates,
+                    refreshDate: arrivals.refreshDate,
+                    loadingState: arrivals.loadingState,
+                    isFavourite: $isFavourite
+                )
+            }
+            // The chip row's own padding covers most of the gap below the chips. The disruption row sits closer to
+            // the chips than to the boards, as it describes the selected chip.
+            .padding(.top, hasChips ? 2 : 16)
+            .padding(.bottom, 16)
+        }
+        // On the scroll view alone. Applied to the whole screen, the sheets would inherit pull-to-refresh, which fights
+        // the drag that dismisses them, and the chips' horizontal scroll view in the bar below would get a refresh
+        // control too: its inset pushes the chips out of view when the screen is reopened.
+        .refreshable(action: onRefresh)
+        // Before the bar, so the identifier stays on this scroll view rather than spreading to the chips' row
+        .accessibilityIdentifier(AccessibilityID.Station.content)
+        // The chips stay pinned, so they're still there to say other lines have arrivals once the boards are
+        // scrolled down
+        .safeAreaBar(edge: .top) {
+            if hasChips {
+                StationLineChipsView(
+                    lineGroups: station.lineGroups.sortedByName(),
+                    selectedLineGroup: selectedLineGroup,
+                    disruptedLineGroupIDs: disruptedLineGroupIDs,
+                    onSelect: { onAction(.selectedLineGroup($0)) }
+                )
             }
         }
         // Status rows that appear or go (e.g. a station with several statuses, once they arrive) slide in rather than
         // snap
         .animation(.default, value: disruptedLines.map(\.id))
-        .accessibilityIdentifier(AccessibilityID.Station.content)
         .defaultMaxWidthWithFullBackground()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -176,9 +181,6 @@ public struct StationView: View {
                 FavouritesButton(.station, style: .small, isSelected: $isFavourite)
             }
         }
-        // Here rather than on the whole screen, so the sheet below doesn't inherit pull-to-refresh, which fights the
-        // drag that dismisses it
-        .refreshable(action: onRefresh)
         .sheet(isPresented: $isShowingInfo) {
             StationInfoView(station: station, noticeSections: noticeSections)
         }
