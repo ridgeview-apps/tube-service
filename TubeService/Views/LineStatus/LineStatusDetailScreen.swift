@@ -135,13 +135,13 @@ struct LineStatusDetailScreen: View {
             openURL(link.url)
         case .statusHistoryTapped:
             newFeatureBadges.recordUsed(.statusHistory)
-            navigator.push(.lineStatusHistory(lineID: lineID))
+            navigator.push(.lineStatus(.history(lineID: lineID)))
         case .notifyMeTapped(let state):
             newFeatureBadges.recordUsed(.lineNotifications)
             if state == .permissionDenied {
                 openSettings()
             } else {
-                navigator.present(.notifications(lineID: lineID))
+                navigator.present(.notifications(.root(lineID: lineID)))
             }
         case .setNotificationsPaused(let isPaused):
             setNotificationsPaused(isPaused)

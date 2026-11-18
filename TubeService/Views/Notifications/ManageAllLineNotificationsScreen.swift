@@ -8,7 +8,7 @@ struct ManageAllLineNotificationsScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
-    @Environment(Router<ManageNotificationsRoute>.self) private var manageNotificationsRouter
+    @Environment(Navigator.self) private var navigator
 
     @State private var savingState: LoadingState = .loaded
 
@@ -25,10 +25,8 @@ struct ManageAllLineNotificationsScreen: View {
         switch action {
         case .cancel:
             dismiss()
-        case .tappedOtherLine(let otherLineID):
-            manageNotificationsRouter.navigation.push(.editLine(lineID: otherLineID))
-        case .addedLine(let otherLineID):
-            manageNotificationsRouter.navigation.push(.addLine(lineID: otherLineID))
+        case .tappedOtherLine(let otherLineID), .addedLine(let otherLineID):
+            navigator.push(.notifications(.line(lineID: otherLineID)))
         case .openSettings:
             openSettings()
         case .deleteAllSettings:

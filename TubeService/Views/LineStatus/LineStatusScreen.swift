@@ -88,7 +88,7 @@ struct LineStatusScreen: View {
     private func handleAction(_ action: LineStatusListView.Action) {
         switch action {
         case .selectLine(let line):
-            navigator.push(.lineStatusDetail(lineID: line.id, request: request))
+            navigator.push(.lineStatus(.detail(lineID: line.id, request: request)))
         case .reorderFavourites(let lineIDs):
             userPreferences.reorderFavouriteLines(lineIDs)
         case .removeFavourites(let lineIDs):

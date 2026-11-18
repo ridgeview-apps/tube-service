@@ -81,7 +81,7 @@ struct JourneyPlannerScreen: View {
     private func handleFormAction(_ actionEvent: JourneyPlannerForm.Action) {
         switch actionEvent {
         case let .tappedLocationField(locationFieldID):
-            navigator.present(.journeyLocationPicker(locationFieldID))
+            navigator.present(.journeyPlanner(.locationPicker(locationFieldID)))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
@@ -94,7 +94,7 @@ struct JourneyPlannerScreen: View {
 
     private func showResults() {
         journeyPlanner.resetForNewJourney()
-        navigator.push(.journeyResults)
+        navigator.push(.journeyPlanner(.results))
     }
 }
 

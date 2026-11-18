@@ -1,3 +1,4 @@
+import DataStores
 import PresentationViews
 import SwiftUI
 
@@ -15,79 +16,97 @@ struct NavigationHost<Root: View>: View {
     var body: some View {
         NavigationStack(path: $navigator.path) {
             root()
-                .navigationDestination(for: Destination.self, destination: destinationView)
+                .navigationDestination(for: Destination.self) { $0.screen }
         }
         .environment(navigator)
-        .sheet(item: $navigator.modal) { modal in
+        .sheet(item: $navigator.modal) { destination in
             if ProcessInfo.processInfo.isiOSAppOnMac {
-                ModalHost(modal: modal, presentingNavigator: navigator)
+                ModalHost(destination: destination, presentingNavigator: navigator)
                     .appEnvironment(dataStore: appData, appNavigator: appNavigator)
             } else {
-                ModalHost(modal: modal, presentingNavigator: navigator)
+                ModalHost(destination: destination, presentingNavigator: navigator)
             }
-        }
-    }
-
-    @ViewBuilder
-    private func destinationView(_ destination: Destination) -> some View {
-        switch destination {
-        case .journeyResults:
-            JourneyResultsScreen()
-        case .lineStatusDetail(let lineID, let request):
-            LineStatusDetailScreen(lineID: lineID, request: request)
-        case .lineStatusHistory(let lineID):
-            LineStatusHistoryScreen(lineID: lineID)
-        case .station(let station):
-            StationScreen(station: station)
-        case .mapDetail(let mapLink):
-            MapDetailView(mapLink: mapLink)
-        case .debugSettings:
-            DebugSettingsScreen()
         }
     }
 }
 
-/// A modal in a host of its own, with a close button unless the screen has its own way out.
+extension Destination {
+
+    @MainActor
+    @ViewBuilder
+    fileprivate var screen: some View {
+        switch self {
+        case .journeyPlanner(let destination):
+            destination.screen
+        case .lineStatus(let destination):
+            destination.screen
+        case .notifications(let destination):
+            destination.screen
+        case .station(let station):
+            StationScreen(station: station)
+        case .mapDetail(let mapLink):
+            MapDetailView(mapLink: mapLink)
+        case .settings:
+            SettingsScreen()
+        case .debugSettings:
+            DebugSettingsScreen()
+        case .systemStatus:
+            SystemStatusScreen()
+        case .paywall(let context):
+            PlusGatePaywallScreen(context: context)
+        }
+    }
+}
+
+/// A destination presented in a host of its own, with a close button unless the screen has its own way out.
 private struct ModalHost: View {
 
-    let modal: Modal
+    @Environment(PurchaseStore.self) private var purchases
+
+    let destination: Destination
     let presentingNavigator: Navigator
 
+    /// The gate only checks on presentation, but Plus can lapse while the modal is open.
+    private var lapsedPaywallContext: PaywallContext? {
+        purchases.hasTubeServicePlus ? nil : destination.paywallContext
+    }
+
     var body: some View {
-        if case .notifications(let lineID) = modal {
-            // The notifications flows still build their own stacks.
-            NotificationsFlow(lineID: lineID)
-        } else if let modalNavigator = presentingNavigator.modalNavigator {
+        if let modalNavigator = presentingNavigator.modalNavigator {
             NavigationHost(navigator: modalNavigator) {
-                root
+                if let lapsedPaywallContext {
+                    // Subscribing again swaps the modal's root back in.
+                    TubeServicePlusView(context: lapsedPaywallContext)
+                        .withCloseToolbarButton()
+                } else if destination.hasOwnCloseButton {
+                    destination.screen
+                } else {
+                    destination.screen
+                        .withCloseToolbarButton()
+                }
+            }
+            .onChange(of: lapsedPaywallContext) { _, lapsedPaywallContext in
+                if lapsedPaywallContext != nil {
+                    modalNavigator.popToRoot()
+                }
             }
         }
     }
+}
 
-    @ViewBuilder
-    private var root: some View {
-        switch modal {
-        case .settings:
-            SettingsScreen()
-                .withCloseToolbarButton()
-        case .systemStatus:
-            SystemStatusScreen()
-                .withCloseToolbarButton()
-        case .journeyLocationPicker(let fieldID):
-            JourneyLocationPickerScreen(fieldID: fieldID)
-                .withCloseToolbarButton()
-        case .journeyModePicker:
-            JourneyModePickerScreen()
-        case .paywall(let context):
-            TubeServicePlusView(context: context) { action in
-                switch action {
-                case .purchaseSuccess:
-                    presentingNavigator.continueAfterPurchase()
-                }
+/// The paywall the Plus gate shows in place of a destination, which continues to it after a purchase.
+private struct PlusGatePaywallScreen: View {
+
+    @Environment(Navigator.self) private var navigator
+
+    let context: PaywallContext
+
+    var body: some View {
+        TubeServicePlusView(context: context) { action in
+            switch action {
+            case .purchaseSuccess:
+                navigator.continueAfterPurchase()
             }
-            .withCloseToolbarButton()
-        case .notifications:
-            EmptyView()
         }
     }
 }

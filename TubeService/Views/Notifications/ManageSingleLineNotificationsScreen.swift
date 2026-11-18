@@ -8,7 +8,7 @@ struct ManageSingleLineNotificationsScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
-    @Environment(Router<ManageNotificationsRoute>.self) private var manageNotificationsRouter
+    @Environment(Navigator.self) private var navigator
 
     @State private var savingState: LoadingState = .loaded
     @State private var pendingUpdateCount = 0
@@ -16,10 +16,6 @@ struct ManageSingleLineNotificationsScreen: View {
     let lineID: TrainLineID
     /// Whether the other set-up lines are listed below this one's settings.
     let showsOtherLines: Bool
-    /// Called when the close button is tapped.
-    let onClose: () -> Void
-    /// Called once a new line has been turned on and saved.
-    let onAdded: () -> Void
 
     var body: some View {
         ManageSingleLineNotificationsView(
@@ -35,7 +31,7 @@ struct ManageSingleLineNotificationsScreen: View {
     private func handleAction(_ action: ManageSingleLineNotificationsView.Action) {
         switch action {
         case .close:
-            onClose()
+            navigator.dismissPresentingModal()
         case .openSettings:
             openSettings()
         case .add(let newSettings):
@@ -43,7 +39,8 @@ struct ManageSingleLineNotificationsScreen: View {
                 savingState = .loading
                 do {
                     try await notifications.updateLinePreferences(with: .add(newSettings))
-                    onAdded()
+                    // Pushed from the list, this goes back to it so several lines can be added in a row.
+                    dismiss()
                 } catch {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
                 }
@@ -77,7 +74,7 @@ struct ManageSingleLineNotificationsScreen: View {
                 }
             }
         case .tappedOtherLine(let otherLineID):
-            manageNotificationsRouter.navigation.push(.editLine(lineID: otherLineID))
+            navigator.push(.notifications(.line(lineID: otherLineID)))
         }
     }
 
