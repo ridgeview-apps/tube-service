@@ -5,7 +5,7 @@ struct AppLifecycleModifier: ViewModifier {
 
     let appData: AppDataStore
     let appDelegate: AppDelegate
-    let router: AppRouter
+    let appNavigator: AppNavigator
 
     func body(content: Content) -> some View {
         content
@@ -18,7 +18,7 @@ struct AppLifecycleModifier: ViewModifier {
             .task {
                 for await payload in appDelegate.notificationLaunches {
                     await appData.handleNotificationLaunch(payload)
-                    router.handleNotificationLaunch(payload)
+                    appNavigator.handleNotificationLaunch(payload)
                 }
             }
             .onChange(of: appData.purchases.hasTubeServicePlus) { _, hasTubeServicePlus in
@@ -32,7 +32,7 @@ struct AppLifecycleModifier: ViewModifier {
 
 extension View {
 
-    func appLifecycle(appData: AppDataStore, appDelegate: AppDelegate, router: AppRouter) -> some View {
-        modifier(AppLifecycleModifier(appData: appData, appDelegate: appDelegate, router: router))
+    func appLifecycle(appData: AppDataStore, appDelegate: AppDelegate, appNavigator: AppNavigator) -> some View {
+        modifier(AppLifecycleModifier(appData: appData, appDelegate: appDelegate, appNavigator: appNavigator))
     }
 }

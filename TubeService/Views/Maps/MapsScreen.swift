@@ -3,18 +3,10 @@ import SwiftUI
 
 struct MapsScreen: View {
 
-    @Environment(AppRouter.self) private var router
+    @Environment(Navigator.self) private var navigator
 
     var body: some View {
-        @Bindable var router = router
-        NavigationStack(path: $router.maps.path) {
-            rootView
-                .appRouteDestinations()
-        }
-    }
-
-    private var rootView: some View {
-        MapsListView(onSelectMap: { router.push(.mapDetail(mapLink: $0)) })
+        MapsListView(onSelectMap: { navigator.push(.mapDetail(mapLink: $0)) })
             .navigationTitle(Text(L10n.mapsNavigationTitle))
             .withSettingsToolbarButton()
     }
@@ -23,7 +15,12 @@ struct MapsScreen: View {
 
 // MARK: - Previews
 
-#Preview {
-    MapsScreen()
-        .environment(AppRouter())
-}
+#if DEBUG
+    #Preview {
+        PreviewEnvironment {
+            NavigationHost(navigator: Navigator()) {
+                MapsScreen()
+            }
+        }
+    }
+#endif

@@ -8,7 +8,7 @@ struct RootScene: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var appData = AppDataStore(dependencies: .current)
-    @State private var appRouter = AppRouter()
+    @State private var appNavigator = AppNavigator()
 
     init() {
         #if DEBUG
@@ -22,9 +22,9 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
-                    .sheetPresenter($appRouter.sheetPresenter)
-                    .appLifecycle(appData: appData, appDelegate: appDelegate, router: appRouter)
-                    .appEnvironment(dataStore: appData, router: appRouter)
+                    .sheetPresenter($appNavigator.sheetPresenter)
+                    .appLifecycle(appData: appData, appDelegate: appDelegate, appNavigator: appNavigator)
+                    .appEnvironment(dataStore: appData, appNavigator: appNavigator)
             }
         }
     }
@@ -36,10 +36,10 @@ extension View {
 
     func appEnvironment(
         dataStore: AppDataStore,
-        router: AppRouter
+        appNavigator: AppNavigator
     ) -> some View {
         self
-            .environment(router)
+            .environment(appNavigator)
             .environment(dataStore)
             .environment(dataStore.lineStatus)
             .environment(dataStore.stations)
@@ -72,7 +72,7 @@ private struct SheetPresenterModifier: ViewModifier {
 
     // These are only needed for iOS App on Mac sheets to work (they crash otherwise)
     @Environment(AppDataStore.self) private var appData
-    @Environment(AppRouter.self) private var appRouter
+    @Environment(AppNavigator.self) private var appNavigator
 
     func body(content: Content) -> some View {
         content
@@ -90,7 +90,7 @@ private struct SheetPresenterModifier: ViewModifier {
             SheetView(sheet: sheet)
                 .appEnvironment(
                     dataStore: appData,
-                    router: appRouter
+                    appNavigator: appNavigator
                 )
         } else {
             SheetView(sheet: sheet)
