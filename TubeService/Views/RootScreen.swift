@@ -24,6 +24,7 @@ struct RootScreen: View {
         Tab(value: AppTab.lineStatus) {
             NavigationHost(navigator: appNavigator.lineStatus) {
                 LineStatusScreen()
+                    .toolbar { SettingsToolbarItem() }
             }
         } label: {
             Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
@@ -35,6 +36,7 @@ struct RootScreen: View {
         Tab(value: AppTab.journeyPlanner) {
             NavigationHost(navigator: appNavigator.journeyPlanner) {
                 JourneyPlannerScreen()
+                    .toolbar { SettingsToolbarItem() }
             }
         } label: {
             Label(L10n.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
@@ -46,6 +48,7 @@ struct RootScreen: View {
         Tab(value: AppTab.arrivals) {
             NavigationHost(navigator: appNavigator.arrivals) {
                 ArrivalsScreen()
+                    .toolbar { SettingsToolbarItem() }
             }
         } label: {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
@@ -57,6 +60,7 @@ struct RootScreen: View {
         Tab(value: AppTab.maps) {
             NavigationHost(navigator: appNavigator.maps) {
                 MapsScreen()
+                    .toolbar { SettingsToolbarItem() }
             }
         } label: {
             Label(L10n.mapsTabTitle, systemImage: "map")
