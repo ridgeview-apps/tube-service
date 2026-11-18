@@ -50,8 +50,10 @@ import Shared
 
         public private(set) var fetchStationDisruptionsCallCount = 0
         public var stubbedDisruptedPoints: HTTPResponse<[DisruptedPoint]> = .success200(ModelStubs.disruptedStations)
+        public var fetchStationDisruptionsError: Error?
         public func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]> {
             fetchStationDisruptionsCallCount += 1
+            if let fetchStationDisruptionsError { throw fetchStationDisruptionsError }
             return stubbedDisruptedPoints
         }
 

@@ -9,8 +9,6 @@ struct StationArrivalsScreen: View {
 
     @Environment(Navigator.self) private var navigator
     @Environment(LineStatusDataStore.self) private var lineStatus
-    @Environment(StationsDataStore.self) private var stations
-    @Environment(\.clock) private var clock
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -34,7 +32,8 @@ struct StationArrivalsScreen: View {
                     station: station,
                     selectedLineGroup: selectedLineGroup,
                     arrivals: arrivals,
-                    info: info,
+                    lines: lineStatus.liveLines(at: station),
+                    isLoadingLines: lineStatus.isLoadingLiveLines,
                     isFavourite: isFavouriteStation,
                     onRefresh: {
                         // In its own task because SwiftUI cancels the refreshable's task when the screen updates
@@ -56,9 +55,8 @@ struct StationArrivalsScreen: View {
         .navigationSubtitle(arrivals.lastUpdatedSubtitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
             ToolbarItem {
-                StationInfoButton(badge: .init(info: info, stationName: station.name, now: clock.now)) {
+                StationInfoButton {
                     openInfo()
                 }
             }
@@ -89,23 +87,13 @@ struct StationArrivalsScreen: View {
     // MARK: - Data
 
     private func refreshDataIfStale() async {
-        async let lineStatuses: () = lineStatus.refreshIfStale(for: .live)
-        async let stationDisruptions: () = stations.refreshStationDisruptionsIfStale()
-        _ = await (lineStatuses, stationDisruptions)
-        pruneSeenNotices()
+        await lineStatus.refreshIfStale(for: .live)
     }
 
     private func refreshData() async {
         async let lineStatuses: () = lineStatus.refresh(for: .live)
-        async let stationDisruptions: () = stations.refreshStationDisruptions()
         async let boards: () = refreshArrivalsBoard()
-        _ = await (lineStatuses, stationDisruptions, boards)
-        pruneSeenNotices()
-    }
-
-    private func pruneSeenNotices() {
-        guard let publishedNoticeTexts = stations.publishedNoticeTexts else { return }
-        userPreferences.pruneSeenNotices(keeping: publishedNoticeTexts)
+        _ = await (lineStatuses, boards)
     }
 
     private func refreshArrivalsBoard() async {
@@ -133,14 +121,6 @@ struct StationArrivalsScreen: View {
         }
     }
 
-    private var notices: [StationNotice] {
-        stations.notices(forStationID: station.id)
-    }
-
-    private var info: StationInfo {
-        .init(station: station, lineStatus: lineStatus, stations: stations, userPreferences: userPreferences)
-    }
-
     private var isFavouriteStation: Binding<Bool> {
         .init {
             userPreferences.containsFavouriteStop(.station(id: station.id))
@@ -165,7 +145,6 @@ struct StationArrivalsScreen: View {
     }
 
     private func openInfo() {
-        userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
         navigator.present(.station(.info(station)))
     }
 }

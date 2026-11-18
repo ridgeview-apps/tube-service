@@ -36,7 +36,10 @@ public struct StationArrivalsView: View {
     public let station: Station
     public let selectedLineGroup: Station.LineGroup
     public let arrivals: Arrivals
-    public let info: StationInfo
+    /// The status of every line at the station.
+    public let lines: [Line]
+    /// True until the line statuses first arrive or fail to load.
+    public let isLoadingLines: Bool
     @Binding public var isFavourite: Bool
     public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
@@ -45,7 +48,8 @@ public struct StationArrivalsView: View {
         station: Station,
         selectedLineGroup: Station.LineGroup,
         arrivals: Arrivals,
-        info: StationInfo,
+        lines: [Line],
+        isLoadingLines: Bool,
         isFavourite: Binding<Bool>,
         onRefresh: @escaping @Sendable () async -> Void,
         onAction: @escaping (Action) -> Void
@@ -53,20 +57,21 @@ public struct StationArrivalsView: View {
         self.station = station
         self.selectedLineGroup = selectedLineGroup
         self.arrivals = arrivals
-        self.info = info
+        self.lines = lines
+        self.isLoadingLines = isLoadingLines
         self._isFavourite = isFavourite
         self.onRefresh = onRefresh
         self.onAction = onAction
     }
 
-    private var disruptedLines: [Line] { info.lines.disruptionsOnly() }
+    private var disruptedLines: [Line] { lines.disruptionsOnly() }
 
     private var selectedLines: [Line] {
-        info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
+        lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
     private var lineStatus: StationLineStatusRow.Status {
-        .init(lines: selectedLines, isLoading: info.isLoadingLines)
+        .init(lines: selectedLines, isLoading: isLoadingLines)
     }
 
     /// The selected chip keeps its badge too, so the badges don't move around as the selection changes.
@@ -126,7 +131,6 @@ private struct WrapperView: View {
     var lines: [Line] = [.circle, .hammersmithAndCity, .metropolitan, .northern, .piccadilly, .victoria].map {
         Line(id: $0, lineStatuses: [.goodService])
     }
-    var notices: [StationNotice] = []
     var isLoadingLines = false
     @State private var selectedLineGroup: Station.LineGroup?
     @State private var isFavourite = false
@@ -137,7 +141,8 @@ private struct WrapperView: View {
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
                 arrivals: .init(boardStates: boardStates, refreshDate: refreshDate, loadingState: arrivalsLoadingState),
-                info: .init(lines: lines, notices: notices, isLoadingLines: isLoadingLines),
+                lines: lines,
+                isLoadingLines: isLoadingLines,
                 isFavourite: $isFavourite,
                 onRefresh: {},
                 onAction: { action in
@@ -163,8 +168,7 @@ private struct WrapperView: View {
             Line(id: .metropolitan, lineStatuses: [.goodService]),
             Line(id: .northern, lineStatuses: [.goodService]),
             Line(id: .piccadilly, lineStatuses: [.goodService])
-        ],
-        notices: [StationNotice(text: "The escalator to platform 5 is closed")]
+        ]
     )
 }
 
@@ -180,14 +184,6 @@ private struct WrapperView: View {
             Line(id: .victoria, lineStatuses: [.goodService])
         ]
     )
-}
-
-#Preview("Station notice only") {
-    WrapperView(notices: [StationNotice(text: "The escalator to platform 5 is closed")])
-}
-
-#Preview("Closure today") {
-    WrapperView(notices: [StationNotice(text: "Westbound trains will not stop here.", kind: "Part Closure")])
 }
 
 private extension LineStatus {

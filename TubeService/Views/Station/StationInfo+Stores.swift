@@ -4,27 +4,27 @@ import PresentationViews
 
 extension StationInfo {
 
-    /// Shared by the Station screen and its info sheet, so both show the same live data.
     @MainActor
-    init(
-        station: Station,
-        lineStatus: LineStatusDataStore,
-        stations: StationsDataStore,
-        userPreferences: UserPreferences
-    ) {
-        let lineStatusData = lineStatus.lineStatusData(for: .live)
-        let notices = stations.notices(forStationID: station.id)
+    init(station: Station, lineStatus: LineStatusDataStore, stations: StationsDataStore) {
         self.init(
-            lines: (lineStatusData?.value ?? []).filter { station.sortedLineIDs.contains($0.id) },
-            notices: notices,
-            isLoadingLines: Self.isLoadingLines(lineStatusData),
-            hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
+            lines: lineStatus.liveLines(at: station),
+            isLoadingLines: lineStatus.isLoadingLiveLines,
+            notices: stations.notices(forStationID: station.id),
+            isLoadingNotices: stations.isLoadingNotices
         )
+    }
+}
+
+/// Shared by the Station screen and its info sheet, so both show the same live data.
+extension LineStatusDataStore {
+
+    func liveLines(at station: Station) -> [Line] {
+        (lineStatusData(for: .live)?.value ?? []).filter { station.sortedLineIDs.contains($0.id) }
     }
 
     // Statuses already fetched elsewhere (e.g. the Status tab) show straight away, even while they refresh
-    private static func isLoadingLines(_ lineStatusData: RemoteData<[Line]>?) -> Bool {
-        guard let lineStatusData else { return true }
+    var isLoadingLiveLines: Bool {
+        guard let lineStatusData = lineStatusData(for: .live) else { return true }
         if case .failure = lineStatusData.fetchState { return false }
         return lineStatusData.fetchedAt == nil
     }

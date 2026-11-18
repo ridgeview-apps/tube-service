@@ -75,17 +75,17 @@ public final class StationsDataStore {
         )
     }
 
-    /// The station's notices that haven't ended, closures first.
-    public func notices(forStationID stationID: Station.ID) -> [StationNotice] {
+    /// The station's notices that haven't ended, closures first, or nil until they first arrive.
+    public func notices(forStationID stationID: Station.ID) -> [StationNotice]? {
+        guard fetchedDisruptionData.fetchedAt != nil else { return nil }
         let now = now()
         return (fetchedDisruptionData.noticesByStationID[stationID] ?? []).filter { $0.timing(at: now) != .ended }
     }
 
-    /// Every station's published notice texts, or nil unless the last fetch succeeded, so that a failed fetch never
-    /// looks like TfL withdrawing every notice.
-    public var publishedNoticeTexts: [Station.ID: Set<String>]? {
-        guard case .success = fetchedDisruptionData.fetchState else { return nil }
-        return fetchedDisruptionData.noticesByStationID.mapValues { Set($0.map(\.text)) }
+    /// True until the notices first arrive or fail to load.
+    public var isLoadingNotices: Bool {
+        if case .failure = fetchedDisruptionData.fetchState { return false }
+        return fetchedDisruptionData.fetchedAt == nil
     }
 
     // MARK: - Refreshing

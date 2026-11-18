@@ -17,25 +17,14 @@ public struct StationInfoView: View {
         self.onTapLine = onTapLine
     }
 
-    private var noticeSections: StationNoticeSections {
-        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
+    private var noticeSections: StationNoticeSections? {
+        info.notices.map { StationNoticeSections(notices: $0, stationName: station.name, now: clock.now) }
     }
 
     public var body: some View {
         List {
             linesSection
-            if noticeSections.isEmpty {
-                Section {
-                    Text(.stationNoticesEmpty)
-                        .foregroundStyle(.secondary)
-                } header: {
-                    Text(.stationNoticesSectionNotices)
-                }
-            } else {
-                section(.stationNoticesSectionClosures, rows: noticeSections.closures)
-                section(.stationNoticesSectionNotices, rows: noticeSections.notices)
-                section(.stationNoticesSectionLater, rows: noticeSections.later)
-            }
+            noticesSections
             locationSection
         }
         .listStyle(.insetGrouped)
@@ -72,6 +61,30 @@ public struct StationInfoView: View {
     }
 
     // MARK: - Notices
+
+    @ViewBuilder
+    private var noticesSections: some View {
+        if let noticeSections, !noticeSections.isEmpty {
+            section(.stationNoticesSectionClosures, rows: noticeSections.closures)
+            section(.stationNoticesSectionNotices, rows: noticeSections.notices)
+            section(.stationNoticesSectionLater, rows: noticeSections.later)
+        } else {
+            Section {
+                if noticeSections != nil {
+                    Text(.stationNoticesEmpty)
+                        .foregroundStyle(.secondary)
+                } else if info.isLoadingNotices {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text(.stationNoticesUnavailable)
+                        .foregroundStyle(.secondary)
+                }
+            } header: {
+                Text(.stationNoticesSectionNotices)
+            }
+        }
+    }
 
     @ViewBuilder
     private func section(_ title: LocalizedStringResource, rows: [StationNoticeSections.Row]) -> some View {
@@ -258,18 +271,22 @@ private let previewLines = [
     }
 }
 
-#Preview("Lines loading") {
+#Preview("Loading") {
     Color.clear.sheet(isPresented: .constant(true)) {
         NavigationStack {
-            StationInfoView(station: previewStation, info: .init(lines: [], notices: [], isLoadingLines: true), onTapLine: { _ in })
+            StationInfoView(
+                station: previewStation,
+                info: .init(lines: [], isLoadingLines: true, notices: nil, isLoadingNotices: true),
+                onTapLine: { _ in }
+            )
         }
     }
 }
 
-#Preview("Lines unavailable") {
+#Preview("Unavailable") {
     Color.clear.sheet(isPresented: .constant(true)) {
         NavigationStack {
-            StationInfoView(station: previewStation, info: .init(lines: [], notices: []), onTapLine: { _ in })
+            StationInfoView(station: previewStation, info: .init(lines: [], notices: nil), onTapLine: { _ in })
         }
     }
 }
