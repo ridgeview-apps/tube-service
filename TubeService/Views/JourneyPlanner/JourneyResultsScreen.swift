@@ -8,7 +8,7 @@ import SwiftUI
 struct JourneyResultsScreen: View {
 
     @Environment(JourneyPlannerStore.self) private var journeyPlanner
-    @Environment(AppNavigator.self) private var appNavigator
+    @Environment(Navigator.self) private var navigator
     @Environment(\.clock) private var clock
 
     @AppStorage(
@@ -32,8 +32,7 @@ struct JourneyResultsScreen: View {
         )
         .navigationBarTitleDisplayMode(.inline)
         .navigationTitle(Text(L10n.journeyResultsNavigationTitle))
-        .onChange(of: userPreferences.journeyModePreset) { _, newValue in
-            guard !newValue.isCustom else { return }
+        .onChange(of: userPreferences.journeyModePreset) {
             Task { await loadJourneys() }
         }
     }
@@ -50,21 +49,7 @@ struct JourneyResultsScreen: View {
         case .laterJourneys:
             Task { await journeyPlanner.loadMoreJourneys(.laterJourneys, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
-            let seedModeIDs: Set<ModeID>
-            if case .custom(let modeIDs) = userPreferences.journeyModePreset {
-                seedModeIDs = modeIDs
-            } else {
-                seedModeIDs = JourneyModePreset.trainAndBus.modeIDs
-            }
-            appNavigator.showSheet(
-                .journeyModePicker(
-                    initialModeIDs: seedModeIDs,
-                    onDone: { modeIDs in
-                        userPreferences.journeyModePreset = .custom(modeIDs)
-                        Task { await loadJourneys() }
-                    }
-                )
-            )
+            navigator.present(.journeyModePicker)
         }
     }
 

@@ -11,7 +11,6 @@ struct LineStatusDetailScreen: View {
     @Environment(LineStatusDataStore.self) var model
     @Environment(NotificationsDataStore.self) var notifications
     @Environment(Navigator.self) private var navigator
-    @Environment(AppNavigator.self) private var appNavigator
     @Environment(\.openURL) var openURL
     @Environment(\.openSettings) var openSettings
     @Environment(\.clock) private var clock
@@ -136,28 +135,13 @@ struct LineStatusDetailScreen: View {
             openURL(link.url)
         case .statusHistoryTapped:
             newFeatureBadges.recordUsed(.statusHistory)
-            if purchases.hasTubeServicePlus {
-                navigator.push(.lineStatusHistory(lineID: lineID))
-            } else {
-                appNavigator.showSheet(
-                    .tubeServicePlus(
-                        .statusHistory,
-                        onAction: handleTubeServicePlusAction
-                    )
-                )
-            }
+            navigator.push(.lineStatusHistory(lineID: lineID))
         case .notifyMeTapped(let state):
             newFeatureBadges.recordUsed(.lineNotifications)
             if state == .permissionDenied {
                 openSettings()
-            } else if notifications.isConfigured {
-                appNavigator.showSheet(
-                    .notificationsFlow(.manage(.singleLine(lineID)))
-                )
             } else {
-                appNavigator.showSheet(
-                    .notificationsFlow(.onboarding(defaultLineID: lineID))
-                )
+                navigator.present(.notifications(lineID: lineID))
             }
         case .setNotificationsPaused(let isPaused):
             setNotificationsPaused(isPaused)
@@ -179,14 +163,6 @@ struct LineStatusDetailScreen: View {
             } catch {
                 notificationSavingState = .failure(errorMessage: error.toSaveErrorMessage())
             }
-        }
-    }
-
-    private func handleTubeServicePlusAction(_ action: TubeServicePlusView.Action) {
-        switch action {
-        case .purchaseSuccess:
-            appNavigator.dismissSheets()
-            navigator.push(.lineStatusHistory(lineID: lineID))
         }
     }
 

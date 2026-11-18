@@ -66,7 +66,8 @@ struct SystemStatusRefreshableModifier: ViewModifier {
         showBanner = false
         userPreferences.markAsRead(systemStatusMessageID: message.id)
         if moreInfo {
-            appNavigator.showSheet(.systemStatusDetail(message))
+            // The banner sits above the tabs, so it has no host of its own to present from.
+            appNavigator.selectedTabNavigator.present(.systemStatus)
         }
     }
 }

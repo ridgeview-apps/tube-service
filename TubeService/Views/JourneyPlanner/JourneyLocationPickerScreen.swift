@@ -4,12 +4,6 @@ import PresentationViews
 import SwiftUI
 
 extension JourneyLocationPickerScreen {
-    struct Config {
-        let navigationTitle: LocalizedStringResource
-        let recentJourneys: [RecentJourneyItem]
-        let currentSelection: Binding<JourneyLocationPicker.Value?>
-    }
-
     @Observable
     @MainActor
     final class ResultsAggregator {
@@ -31,6 +25,7 @@ extension JourneyLocationPickerScreen {
 
 struct JourneyLocationPickerScreen: View {
 
+    @Environment(JourneyPlannerStore.self) var journeyPlanner
     @Environment(LocalSearchResultsStore.self) var localSearchResults
     @Environment(LocationDataStore.self) var location
     @Environment(StationsDataStore.self) var stations
@@ -47,9 +42,19 @@ struct JourneyLocationPickerScreen: View {
     @State private var searchTerm = ""
     @State private var resultsAggregator = ResultsAggregator()
 
-    let navigationTitle: LocalizedStringResource
-    let recentJourneys: [RecentJourneyItem]
-    @Binding var currentSelection: JourneyLocationPicker.Value?
+    let fieldID: JourneyPlannerForm.FieldID.LocationID
+
+    private var currentSelection: JourneyLocationPicker.Value? {
+        journeyPlanner.form.locationValue(for: fieldID)
+    }
+
+    private var recentJourneys: [RecentJourneyItem] {
+        userPreferences.recentlySavedJourneys.toRecentJourneyItems(
+            findStationByID: stations.station(forID:),
+            findNationalRailByICSCode: stations.nationalRailStation(forICSCode:),
+            sortByLastUsedDate: true
+        )
+    }
 
     private var locationPickerSections: [JourneyLocationPicker.SectionState] {
         if !searchTerm.isEmpty {
@@ -68,15 +73,6 @@ struct JourneyLocationPickerScreen: View {
     }
 
 
-    // MARK: - Init
-
-    init(config: JourneyLocationPickerScreen.Config) {
-        self.navigationTitle = config.navigationTitle
-        self.recentJourneys = config.recentJourneys
-        self._currentSelection = config.currentSelection
-    }
-
-
     // MARK: - Layout
 
     var body: some View {
@@ -86,7 +82,7 @@ struct JourneyLocationPickerScreen: View {
             locationAccess: locationAccess,
             onAction: handleLocationPickerAction
         )
-        .navigationTitle(Text(navigationTitle))
+        .navigationTitle(Text(fieldID.navigationTitle))
         .detectsLocationChanges {
             handleLocationChangeAction($0)
         }
@@ -169,13 +165,27 @@ struct JourneyLocationPickerScreen: View {
             location.refreshCurrentLocation(forceRefreshLocationName: true)
         }
 
-        currentSelection = value
+        journeyPlanner.form.populate(locationFieldID: fieldID, with: value)
     }
 
     private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
         switch action {
         case .nameChanged, .coordinateChanged, .authorizationStatusChanged:
             refreshAllSections()
+        }
+    }
+}
+
+private extension JourneyPlannerForm.FieldID.LocationID {
+
+    var navigationTitle: LocalizedStringResource {
+        switch self {
+        case .from:
+            L10n.journeyPlannerLocationPickerScreenFromNavigationTitle
+        case .to:
+            L10n.journeyPlannerLocationPickerScreenToNavigationTitle
+        case .via:
+            L10n.journeyPlannerLocationPickerScreenViaNavigationTitle
         }
     }
 }

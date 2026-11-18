@@ -126,10 +126,8 @@ struct ArrivalsScreen: View {
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
-            NavigationHost(navigator: Navigator()) {
-                ArrivalsScreen()
-            }
+        PreviewEnvironment(withNavigationHost: true) {
+            ArrivalsScreen()
         }
     }
 #endif

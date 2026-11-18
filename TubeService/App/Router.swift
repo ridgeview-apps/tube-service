@@ -4,7 +4,6 @@ import Observation
 @MainActor
 final class Router<Route: Hashable> {
     var navigation: NavigationRouter<Route>
-    var sheetPresenter = SheetPresenter()
 
     // `@Observable` moves a property's default value outside the class's main-actor isolation, where creating a
     // main-actor `NavigationRouter<Route>` can't be shown to be safe. Creating it here keeps it on the main actor.
@@ -33,33 +32,5 @@ final class NavigationRouter<Route: Hashable> {
 
     func goBack() {
         _ = path.popLast()
-    }
-}
-
-@Observable
-@MainActor
-final class SheetPresenter {
-    var presentedSheet: Sheet?
-    var presentedFullScreenSheet: Sheet?
-
-    func show(_ sheet: Sheet?, style: Sheet.ModalStyle = .standard) {
-        switch style {
-        case .standard:
-            self.presentedSheet = sheet
-        case .fullScreen:
-            presentedFullScreenSheet = sheet
-        }
-    }
-
-    func dismiss(
-        closePresentedSheet: Bool = true,
-        closeFullScreenSheet: Bool = true
-    ) {
-        if closePresentedSheet {
-            self.presentedSheet = nil
-        }
-        if closeFullScreenSheet {
-            self.presentedFullScreenSheet = nil
-        }
     }
 }
