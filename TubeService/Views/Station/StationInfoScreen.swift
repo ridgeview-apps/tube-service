@@ -26,6 +26,7 @@ struct StationInfoScreen: View {
         ) { line in
             navigator.push(.lineStatus(.detail(lineID: line.id, request: .live)))
         }
+        .toolbar { CloseToolbarItem() }
     }
 }
 

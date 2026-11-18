@@ -47,7 +47,7 @@ struct ArrivalsScreen: View {
             prompt: Text(L10n.searchPrompt)
         )
         .autocorrectionDisabled()
-        .withSettingsToolbarButton()
+        .toolbar { SettingsToolbarItem() }
         .refreshable {
             location.refreshCurrentLocation()
         }

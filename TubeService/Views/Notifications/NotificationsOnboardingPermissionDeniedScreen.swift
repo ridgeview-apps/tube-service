@@ -8,6 +8,7 @@ struct NotificationsOnboardingPermissionDeniedScreen: View {
 
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(Navigator.self) private var navigator
+    @Environment(\.dismissModal) private var dismissModal
 
     let lineSettings: [LineNotificationSettings]
 
@@ -18,7 +19,7 @@ struct NotificationsOnboardingPermissionDeniedScreen: View {
                 openSettings()
             case .notNow:
                 notifications.completeOnboarding(with: lineSettings.toNotificationPreferencesUpdate())
-                navigator.dismissPresentingModal()
+                dismissModal?()
             }
         }
         .onChange(of: notifications.canReceivePushNotifications) { _, canReceivePush in

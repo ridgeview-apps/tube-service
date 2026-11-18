@@ -4,7 +4,6 @@ import SwiftUI
 public struct ManageAllLineNotificationsView: View {
 
     public enum Action {
-        case cancel
         case tappedOtherLine(TrainLineID)
         case addedLine(TrainLineID)
         case openSettings
@@ -76,9 +75,6 @@ public struct ManageAllLineNotificationsView: View {
         .navigationTitle(String(localized: .notificationsLineAlertsNavigationTitle))
         .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) { cancelButton }
-        }
     }
 
     // MARK: - Permission Warning
@@ -168,16 +164,6 @@ public struct ManageAllLineNotificationsView: View {
             label: .notificationsManageAddLineButton,
             onSelect: { onAction(.addedLine($0)) }
         )
-    }
-
-    // MARK: - Toolbar
-
-    private var cancelButton: some View {
-        Button {
-            onAction(.cancel)
-        } label: {
-            Image(systemName: "xmark")
-        }
     }
 }
 

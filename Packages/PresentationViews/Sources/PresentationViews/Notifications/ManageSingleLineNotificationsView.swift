@@ -147,7 +147,9 @@ public struct ManageSingleLineNotificationsView: View {
             // an existing line's edits are already saved, so closing confirms them.
             // Both sit on the trailing side, clear of the back button when the screen is pushed.
             ToolbarItem(placement: .topBarTrailing) {
-                closeButton(systemImage: isAddingSingleLine ? "xmark" : "checkmark")
+                Button(role: isAddingSingleLine ? .close : .confirm) {
+                    onAction(.close)
+                }
             }
         }
     }
@@ -319,21 +321,6 @@ public struct ManageSingleLineNotificationsView: View {
             }
         }
         .cardStyle()
-    }
-
-    // MARK: - Toolbar
-
-    private func closeButton(systemImage: String) -> some View {
-        Button {
-            onAction(.close)
-        } label: {
-            Label {
-                Text(isAddingSingleLine ? .globalCancel : .globalDone)
-            } icon: {
-                Image(systemName: systemImage)
-            }
-            .labelStyle(.iconOnly)
-        }
     }
 }
 

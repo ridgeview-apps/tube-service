@@ -9,6 +9,7 @@ struct ManageSingleLineNotificationsScreen: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
     @Environment(Navigator.self) private var navigator
+    @Environment(\.dismissModal) private var dismissModal
 
     @State private var savingState: LoadingState = .loaded
     @State private var pendingUpdateCount = 0
@@ -31,7 +32,7 @@ struct ManageSingleLineNotificationsScreen: View {
     private func handleAction(_ action: ManageSingleLineNotificationsView.Action) {
         switch action {
         case .close:
-            navigator.dismissPresentingModal()
+            dismissModal?()
         case .openSettings:
             openSettings()
         case .add(let newSettings):
