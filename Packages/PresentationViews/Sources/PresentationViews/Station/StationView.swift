@@ -100,7 +100,7 @@ public struct StationView: View {
                     onTap: { onAction(.tappedLineStatusRow) }
                 )
                 .padding(.horizontal, 16)
-                StationArrivalsView(
+                StationBoardsView(
                     boardStates: arrivals.boardStates,
                     refreshDate: arrivals.refreshDate,
                     loadingState: arrivals.loadingState,

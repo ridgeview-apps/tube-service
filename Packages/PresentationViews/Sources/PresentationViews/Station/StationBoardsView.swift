@@ -2,7 +2,7 @@ import Shared
 import SwiftUI
 
 /// The Station screen's live platform boards for the selected line group, followed by the favourite button.
-struct StationArrivalsView: View {
+struct StationBoardsView: View {
 
     let boardStates: [ArrivalsBoardState]
     let refreshDate: Date?
