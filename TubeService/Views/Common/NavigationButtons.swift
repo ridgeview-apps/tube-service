@@ -2,13 +2,13 @@ import SwiftUI
 import PresentationViews
 
 struct SettingsToolBarButton: ViewModifier {
-    @Environment(AppRouter.self) private var router
+    @Environment(AppNavigator.self) private var appNavigator
 
     func body(content: Content) -> some View {
         content
             .toolbar {
                 NavigationButton.Settings {
-                    router.showSheet(.settings)
+                    appNavigator.showSheet(.settings)
                 }
             }
     }

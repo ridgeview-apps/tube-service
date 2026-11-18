@@ -12,7 +12,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
     private var userPreferences: UserPreferences = .default
 
     @Environment(SystemStatusDataStore.self) var systemStatus: SystemStatusDataStore
-    @Environment(AppRouter.self) var router
+    @Environment(AppNavigator.self) var appNavigator
     @State private var showBanner = false
 
     func body(content: Content) -> some View {
@@ -66,7 +66,7 @@ struct SystemStatusRefreshableModifier: ViewModifier {
         showBanner = false
         userPreferences.markAsRead(systemStatusMessageID: message.id)
         if moreInfo {
-            router.showSheet(.systemStatusDetail(message))
+            appNavigator.showSheet(.systemStatusDetail(message))
         }
     }
 }

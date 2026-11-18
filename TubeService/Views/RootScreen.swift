@@ -4,12 +4,12 @@ import SwiftUI
 
 struct RootScreen: View {
 
-    @Environment(AppRouter.self) private var router
+    @Environment(AppNavigator.self) private var appNavigator
     @Environment(\.adaptableTabBarPlacement) private var adaptableTabBarPlacement
 
     var body: some View {
-        @Bindable var router = router
-        TabView(selection: $router.selectedTab) {
+        @Bindable var appNavigator = appNavigator
+        TabView(selection: $appNavigator.selectedTab) {
             lineStatusTab
             journeyPlannerTab
             liveArrivalsTab
@@ -22,7 +22,9 @@ struct RootScreen: View {
 
     private var lineStatusTab: some TabContent<AppTab> {
         Tab(value: AppTab.lineStatus) {
-            LineStatusScreen()
+            NavigationHost(navigator: appNavigator.lineStatus) {
+                LineStatusScreen()
+            }
         } label: {
             Label(L10n.lineStatusTabTitle, systemImage: "info.circle")
         }
@@ -31,7 +33,9 @@ struct RootScreen: View {
 
     private var journeyPlannerTab: some TabContent<AppTab> {
         Tab(value: AppTab.journeyPlanner) {
-            JourneyPlannerScreen()
+            NavigationHost(navigator: appNavigator.journeyPlanner) {
+                JourneyPlannerScreen()
+            }
         } label: {
             Label(L10n.journeyPlannerTabTitle, systemImage: "arrow.triangle.swap")
         }
@@ -40,7 +44,9 @@ struct RootScreen: View {
 
     private var liveArrivalsTab: some TabContent<AppTab> {
         Tab(value: AppTab.arrivals) {
-            ArrivalsScreen()
+            NavigationHost(navigator: appNavigator.arrivals) {
+                ArrivalsScreen()
+            }
         } label: {
             Label(L10n.arrivalsTabTitle, systemImage: "tram")
         }
@@ -49,7 +55,9 @@ struct RootScreen: View {
 
     private var mapsTab: some TabContent<AppTab> {
         Tab(value: AppTab.maps) {
-            MapsScreen()
+            NavigationHost(navigator: appNavigator.maps) {
+                MapsScreen()
+            }
         } label: {
             Label(L10n.mapsTabTitle, systemImage: "map")
         }
@@ -65,6 +73,5 @@ struct RootScreen: View {
         PreviewEnvironment {
             RootScreen()
         }
-        .environment(AppRouter())
     }
 #endif

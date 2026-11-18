@@ -10,7 +10,8 @@ struct LineStatusDetailScreen: View {
     @Environment(PurchaseStore.self) var purchases
     @Environment(LineStatusDataStore.self) var model
     @Environment(NotificationsDataStore.self) var notifications
-    @Environment(AppRouter.self) var router
+    @Environment(Navigator.self) private var navigator
+    @Environment(AppNavigator.self) private var appNavigator
     @Environment(\.openURL) var openURL
     @Environment(\.openSettings) var openSettings
     @Environment(\.clock) private var clock
@@ -136,9 +137,9 @@ struct LineStatusDetailScreen: View {
         case .statusHistoryTapped:
             newFeatureBadges.recordUsed(.statusHistory)
             if purchases.hasTubeServicePlus {
-                router.push(.lineStatusHistory(lineID: lineID))
+                navigator.push(.lineStatusHistory(lineID: lineID))
             } else {
-                router.showSheet(
+                appNavigator.showSheet(
                     .tubeServicePlus(
                         .statusHistory,
                         onAction: handleTubeServicePlusAction
@@ -150,11 +151,11 @@ struct LineStatusDetailScreen: View {
             if state == .permissionDenied {
                 openSettings()
             } else if notifications.isConfigured {
-                router.showSheet(
+                appNavigator.showSheet(
                     .notificationsFlow(.manage(.singleLine(lineID)))
                 )
             } else {
-                router.showSheet(
+                appNavigator.showSheet(
                     .notificationsFlow(.onboarding(defaultLineID: lineID))
                 )
             }
@@ -184,8 +185,8 @@ struct LineStatusDetailScreen: View {
     private func handleTubeServicePlusAction(_ action: TubeServicePlusView.Action) {
         switch action {
         case .purchaseSuccess:
-            router.dismissSheets()
-            router.push(.lineStatusHistory(lineID: lineID))
+            appNavigator.dismissSheets()
+            navigator.push(.lineStatusHistory(lineID: lineID))
         }
     }
 

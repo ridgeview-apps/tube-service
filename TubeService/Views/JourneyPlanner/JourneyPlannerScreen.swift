@@ -9,7 +9,8 @@ struct JourneyPlannerScreen: View {
     @State private var recentJourneys: [RecentJourneyItem] = []
     @State private var hasLoaded = false
 
-    @Environment(AppRouter.self) private var router
+    @Environment(Navigator.self) private var navigator
+    @Environment(AppNavigator.self) private var appNavigator
     @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(LocationDataStore.self) private var location
     @Environment(StationsDataStore.self) private var stations
@@ -21,14 +22,6 @@ struct JourneyPlannerScreen: View {
     private var userPreferences: UserPreferences = .default
 
     var body: some View {
-        @Bindable var router = router
-        NavigationStack(path: $router.journeyPlanner.path) {
-            rootView
-                .appRouteDestinations()
-        }
-    }
-
-    private var rootView: some View {
         JourneyPlannerFormView(
             form: Bindable(journeyPlanner).form,
             recentJourneys: $recentJourneys,
@@ -101,7 +94,7 @@ struct JourneyPlannerScreen: View {
                 recentJourneys: recentJourneys,
                 currentSelection: currentFormValue(forLocationFieldID: locationFieldID)
             )
-            router.showSheet(.journeyLocationPicker(config))
+            appNavigator.showSheet(.journeyLocationPicker(config))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
@@ -114,7 +107,7 @@ struct JourneyPlannerScreen: View {
 
     private func showResults() {
         journeyPlanner.resetForNewJourney()
-        router.push(.journeyResults)
+        navigator.push(.journeyResults)
     }
 }
 
@@ -138,8 +131,9 @@ private extension JourneyPlannerForm.FieldID.LocationID {
 #if DEBUG
     #Preview {
         PreviewEnvironment {
-            JourneyPlannerScreen()
+            NavigationHost(navigator: Navigator()) {
+                JourneyPlannerScreen()
+            }
         }
-        .environment(AppRouter())
     }
 #endif

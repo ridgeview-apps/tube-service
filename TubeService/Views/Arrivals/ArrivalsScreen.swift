@@ -7,7 +7,7 @@ import SwiftUI
 @MainActor
 struct ArrivalsScreen: View {
 
-    @Environment(AppRouter.self) private var router
+    @Environment(Navigator.self) private var navigator
     @Environment(StationsDataStore.self) private var stations
     @Environment(LocationDataStore.self) private var location
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -34,26 +34,22 @@ struct ArrivalsScreen: View {
     // MARK: - Layout
 
     var body: some View {
-        @Bindable var router = router
-        NavigationStack(path: $router.arrivals.path) {
-            ArrivalsView(
-                content: content,
-                locationAccess: locationAccess,
-                onAction: handleAction
-            )
-            .navigationTitle(Text(L10n.arrivalsNavigationTitle))
-            .searchable(
-                text: $searchText,
-                isPresented: $isSearchPresented,
-                placement: searchFieldPlacement,
-                prompt: Text(L10n.searchPrompt)
-            )
-            .autocorrectionDisabled()
-            .withSettingsToolbarButton()
-            .refreshable {
-                location.refreshCurrentLocation()
-            }
-            .appRouteDestinations()
+        ArrivalsView(
+            content: content,
+            locationAccess: locationAccess,
+            onAction: handleAction
+        )
+        .navigationTitle(Text(L10n.arrivalsNavigationTitle))
+        .searchable(
+            text: $searchText,
+            isPresented: $isSearchPresented,
+            placement: searchFieldPlacement,
+            prompt: Text(L10n.searchPrompt)
+        )
+        .autocorrectionDisabled()
+        .withSettingsToolbarButton()
+        .refreshable {
+            location.refreshCurrentLocation()
         }
         .detectsLocationChanges(action: handleLocationChangeAction)
     }
@@ -108,7 +104,7 @@ struct ArrivalsScreen: View {
     private func handleAction(_ action: ArrivalsView.Action) {
         switch action {
         case .tappedStation(let station):
-            router.push(.station(station))
+            navigator.push(.station(station))
         case .tappedFindStation:
             isSearchPresented = true
         case .tappedShowMoreNearby:
@@ -131,8 +127,9 @@ struct ArrivalsScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment {
-            ArrivalsScreen()
+            NavigationHost(navigator: Navigator()) {
+                ArrivalsScreen()
+            }
         }
-        .environment(AppRouter())
     }
 #endif

@@ -6,7 +6,7 @@ import SwiftUI
 @MainActor
 struct StationScreen: View {
 
-    @Environment(AppRouter.self) private var router
+    @Environment(Navigator.self) private var navigator
     @Environment(LineStatusDataStore.self) private var lineStatus
     @Environment(StationsDataStore.self) private var stations
 
@@ -21,7 +21,7 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
-    // Not the router's sheet, which keeps the contents it opened with: this one shows the screen's live data
+    // Not the app navigator's sheet, which keeps the contents it opened with: this one shows the screen's live data
     @State private var isShowingInfo = false
 
     let station: Station
@@ -57,7 +57,7 @@ struct StationScreen: View {
         .sheet(isPresented: $isShowingInfo) {
             StationInfoView(station: station, info: info) { line in
                 isShowingInfo = false
-                router.push(.lineStatusDetail(lineID: line.id, request: .live))
+                navigator.push(.lineStatusDetail(lineID: line.id, request: .live))
             }
         }
         .task {
@@ -179,11 +179,10 @@ import ModelStubs
 
 #if DEBUG
     #Preview {
-        NavigationStack {
-            PreviewEnvironment {
+        PreviewEnvironment {
+            NavigationHost(navigator: Navigator()) {
                 StationScreen(station: ModelStubs.kingsCrossStation)
             }
-            .environment(AppRouter())
         }
     }
 #endif

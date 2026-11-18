@@ -7,7 +7,7 @@ import SwiftUI
 @MainActor
 struct LineStatusScreen: View {
     @Environment(LineStatusDataStore.self) var model
-    @Environment(AppRouter.self) private var router
+    @Environment(Navigator.self) private var navigator
     @Environment(\.clock) private var clock
 
     @AppStorage(
@@ -30,14 +30,6 @@ struct LineStatusScreen: View {
     }
 
     var body: some View {
-        @Bindable var router = router
-        NavigationStack(path: $router.lineStatus.path) {
-            statusListView
-                .appRouteDestinations()
-        }
-    }
-
-    private var statusListView: some View {
         LineStatusListView(
             loadingState: loadingState,
             lines: lines,
@@ -61,7 +53,7 @@ struct LineStatusScreen: View {
             refreshIfStale()
         }
         .onChange(of: selectedFilterOption) {
-            router.popToRoot(on: .lineStatus)
+            navigator.popToRoot()
             selectedWeekendDayFilter = .both
             refreshIfStale()
         }
@@ -96,7 +88,7 @@ struct LineStatusScreen: View {
     private func handleAction(_ action: LineStatusListView.Action) {
         switch action {
         case .selectLine(let line):
-            router.push(.lineStatusDetail(lineID: line.id, request: request))
+            navigator.push(.lineStatusDetail(lineID: line.id, request: request))
         case .reorderFavourites(let lineIDs):
             userPreferences.reorderFavouriteLines(lineIDs)
         case .removeFavourites(let lineIDs):
@@ -110,7 +102,9 @@ struct LineStatusScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment {
-            LineStatusScreen()
+            NavigationHost(navigator: Navigator()) {
+                LineStatusScreen()
+            }
         }
     }
 #endif

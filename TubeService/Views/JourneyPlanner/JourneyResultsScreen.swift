@@ -8,7 +8,7 @@ import SwiftUI
 struct JourneyResultsScreen: View {
 
     @Environment(JourneyPlannerStore.self) private var journeyPlanner
-    @Environment(AppRouter.self) private var router
+    @Environment(AppNavigator.self) private var appNavigator
     @Environment(\.clock) private var clock
 
     @AppStorage(
@@ -56,7 +56,7 @@ struct JourneyResultsScreen: View {
             } else {
                 seedModeIDs = JourneyModePreset.trainAndBus.modeIDs
             }
-            router.showSheet(
+            appNavigator.showSheet(
                 .journeyModePicker(
                     initialModeIDs: seedModeIDs,
                     onDone: { modeIDs in
