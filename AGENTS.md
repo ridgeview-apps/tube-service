@@ -41,6 +41,15 @@ private func handleAction(_ action: SomeView.Action) {
 
 Apply retroactively if editing a view that already has multiple separate `on*` callbacks.
 
+## Navigation Destinations
+
+Screens push or present a `Destination` (`App/Navigator.swift`) through the nearest `Navigator` in the environment. The caller chooses push or present; a destination doesn't fix how it's shown. Destinations carry identity only: no data snapshots, closures or `Binding`s.
+
+- **Nest by feature:** once a feature (a `Views/` folder) has more than one destination, they move into its own enum in that folder, e.g. `LineStatusDestination`, `JourneyPlannerDestination`. The enum holds its cases, its `paywallContext`, `hasOwnCloseButton` if any of its screens need it, and a `screen` that builds them. `Destination` forwards one case per feature.
+- **Until then, keep a flat case** whose name says which feature it belongs to, e.g. `.debugSettings`, `.systemStatus`.
+- **Close buttons come from the presentation:** a presented root gets one unless its destination's `hasOwnCloseButton` is true. To close the whole modal from a pushed screen, call `navigator.dismissPresentingModal()`.
+- `.paywall` stays top-level: it belongs to the Plus gate, not a feature.
+
 ## Data Layer Naming (DataStores)
 
 API clients describe the server; data stores describe what the caller wants. Don't let one layer's vocabulary leak into the other.

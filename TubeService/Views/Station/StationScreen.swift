@@ -57,7 +57,7 @@ struct StationScreen: View {
         .sheet(isPresented: $isShowingInfo) {
             StationInfoView(station: station, info: info) { line in
                 isShowingInfo = false
-                navigator.push(.lineStatusDetail(lineID: line.id, request: .live))
+                navigator.push(.lineStatus(.detail(lineID: line.id, request: .live)))
             }
         }
         .task {

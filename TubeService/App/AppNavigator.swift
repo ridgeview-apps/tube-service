@@ -48,6 +48,6 @@ final class AppNavigator {
         }
         selectedTab = .lineStatus
         lineStatus.popToRoot()
-        lineStatus.push(.lineStatusDetail(lineID: payload.lineID, request: .live))
+        lineStatus.push(.lineStatus(.detail(lineID: payload.lineID, request: .live)))
     }
 }

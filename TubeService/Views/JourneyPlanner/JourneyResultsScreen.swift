@@ -49,7 +49,7 @@ struct JourneyResultsScreen: View {
         case .laterJourneys:
             Task { await journeyPlanner.loadMoreJourneys(.laterJourneys, modeIDs: sessionModeIDs) }
         case .customPresetTapped:
-            navigator.present(.journeyModePicker)
+            navigator.present(.journeyPlanner(.modePicker))
         }
     }
 
