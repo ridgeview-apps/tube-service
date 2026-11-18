@@ -13,7 +13,7 @@ struct StationLineChipsView: View {
 
     var body: some View {
         // A remembered chip can be off screen, e.g. the last of King's Cross's four
-        FilterChipRow(initiallyVisibleID: selectedLineGroup.id, backing: .none) {
+        FilterChipRow(selectedID: selectedLineGroup.id, backing: .none) {
             ForEach(lineGroups) { lineGroup in
                 LineChip(
                     lineGroup: lineGroup,
