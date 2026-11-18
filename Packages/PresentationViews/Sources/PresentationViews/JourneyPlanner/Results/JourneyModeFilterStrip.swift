@@ -9,7 +9,7 @@ struct JourneyModeFilterStrip: View {
 
     var body: some View {
         // The remembered chip can be off screen, e.g. "More…" at larger text sizes
-        FilterChipRow(initiallyVisibleID: selectedPreset.chipID) {
+        FilterChipRow(selectedID: selectedPreset.chipID) {
             ForEach(JourneyModePreset.displayCases, id: \.chipID) { preset in
                 presetChip(for: preset)
             }

@@ -42,8 +42,9 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
         case none
     }
 
-    /// A chip to scroll into view when the row first appears, e.g. a remembered selection that would be off screen.
-    var initiallyVisibleID: ChipID?
+    /// The selected chip, scrolled into view when the row appears and whenever it changes, e.g. a remembered or tapped
+    /// chip that would be partly off screen.
+    var selectedID: ChipID?
     var backing: Backing = .scrollEdgeFade
     @ViewBuilder let content: Content
 
@@ -66,9 +67,13 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
             .scrollIndicators(.hidden)
             // Not `ScrollPosition`: its initial position isn't applied to this row, so it starts at the first chip
             .onAppear {
-                guard !hasScrolledToInitialID, let initiallyVisibleID else { return }
+                guard !hasScrolledToInitialID, let selectedID else { return }
                 hasScrolledToInitialID = true
-                proxy.scrollTo(initiallyVisibleID, anchor: .center)
+                proxy.scrollTo(selectedID, anchor: .center)
+            }
+            .onChange(of: selectedID) { _, selectedID in
+                guard let selectedID else { return }
+                withAnimation(.snappy) { proxy.scrollTo(selectedID, anchor: .center) }
             }
             // Each edge fades only while there are chips beyond it, so a row that fits shows no fade at all
             .onScrollGeometryChange(for: HorizontalEdge.Set.self) { geometry in
@@ -121,7 +126,7 @@ struct FilterChipRow<ChipID: Hashable, Content: View>: View {
 
 extension FilterChipRow where ChipID == Never {
     init(@ViewBuilder content: () -> Content) {
-        self.initiallyVisibleID = nil
+        self.selectedID = nil
         self.content = content()
     }
 }
