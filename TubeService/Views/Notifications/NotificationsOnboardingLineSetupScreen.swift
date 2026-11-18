@@ -34,7 +34,7 @@ struct NotificationsOnboardingLineSetupScreen: View {
                 requestPushPermissionsAndFinish(with: lineSettings)
             }
         }
-        .withCloseToolbarButton()
+        .toolbar { CloseToolbarItem() }
     }
 
     private func requestPushPermissionsAndFinish(with lineSettings: [LineNotificationSettings]) {

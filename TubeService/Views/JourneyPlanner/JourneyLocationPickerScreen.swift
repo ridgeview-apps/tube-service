@@ -83,6 +83,7 @@ struct JourneyLocationPickerScreen: View {
             onAction: handleLocationPickerAction
         )
         .navigationTitle(Text(fieldID.navigationTitle))
+        .toolbar { CloseToolbarItem() }
         .detectsLocationChanges {
             handleLocationChangeAction($0)
         }

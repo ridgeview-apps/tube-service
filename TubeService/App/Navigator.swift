@@ -28,15 +28,6 @@ enum Destination: Hashable, Identifiable {
         case .journeyPlanner, .station, .mapDetail, .settings, .debugSettings, .systemStatus, .paywall: nil
         }
     }
-
-    /// Whether the screen brings its own way out when presented, so its host doesn't add a close button.
-    var hasOwnCloseButton: Bool {
-        switch self {
-        case .journeyPlanner(let destination): destination.hasOwnCloseButton
-        case .notifications(let destination): destination.hasOwnCloseButton
-        case .lineStatus, .station, .mapDetail, .settings, .debugSettings, .systemStatus, .paywall: false
-        }
-    }
 }
 
 // MARK: - Navigator
@@ -80,15 +71,6 @@ final class Navigator {
 
     func dismissModal() {
         modal = nil
-    }
-
-    /// Closes the modal this navigator's host is shown in, from any screen in its stack.
-    func dismissPresentingModal() {
-        guard let presentingNavigator else {
-            assertionFailure("Not shown in a modal: was a destination that closes its modal pushed instead?")
-            return
-        }
-        presentingNavigator.dismissModal()
     }
 
     func popToRoot() {

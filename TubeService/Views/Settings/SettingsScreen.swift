@@ -40,6 +40,7 @@ struct SettingsScreen: View {
         )
         .manageSubscriptions(isPresented: $showManageSubscriptionsSheet)
         .navigationTitle(Text(L10n.settingsNavigationTitle))
+        .toolbar { CloseToolbarItem() }
     }
 
     private var showNotificationsRow: Bool {

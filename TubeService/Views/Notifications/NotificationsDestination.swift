@@ -16,14 +16,6 @@ enum NotificationsDestination: Hashable {
         }
     }
 
-    /// Onboarding's first step and the Manage screens bring their own close buttons.
-    var hasOwnCloseButton: Bool {
-        switch self {
-        case .root, .line: true
-        case .onboardingPermissionDenied, .onboardingConfirmation: false
-        }
-    }
-
     @MainActor
     @ViewBuilder
     var screen: some View {

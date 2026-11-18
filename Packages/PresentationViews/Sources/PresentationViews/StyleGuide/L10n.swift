@@ -13,9 +13,7 @@ public enum L10n {
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong
     public static let errorSomethingWentWrongTryAgain = LocalizedStringResource.errorSomethingWentWrongTryAgain
 
-    public static let globalCancel = LocalizedStringResource.globalCancel
     public static let globalDeselectAll = LocalizedStringResource.globalDeselectAll
-    public static let globalDone = LocalizedStringResource.globalDone
     public static let globalSelectAll = LocalizedStringResource.globalSelectAll
 
     public static let journeyPlannerLocationPickerScreenFromNavigationTitle = LocalizedStringResource.journeyPlannerLocationPickerScreenFromNavigationTitle

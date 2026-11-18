@@ -6,14 +6,6 @@ enum JourneyPlannerDestination: Hashable {
     case locationPicker(JourneyPlannerForm.FieldID.LocationID)
     case modePicker
 
-    /// Discarding unsaved mode changes needs a confirmation, so the picker has its own cancel button.
-    var hasOwnCloseButton: Bool {
-        switch self {
-        case .modePicker: true
-        case .results, .locationPicker: false
-        }
-    }
-
     @MainActor
     @ViewBuilder
     var screen: some View {

@@ -36,7 +36,7 @@ struct JourneyModePickerScreen: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(L10n.globalCancel) {
+                    Button(role: .cancel) {
                         if hasUnsavedChanges {
                             showingDiscardConfirmation = true
                         } else {
@@ -45,7 +45,7 @@ struct JourneyModePickerScreen: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(L10n.globalDone) {
+                    Button(role: .confirm) {
                         userPreferences.journeyModePreset = .custom(pendingModeIDs)
                         dismiss()
                     }

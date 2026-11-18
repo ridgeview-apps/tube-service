@@ -8,6 +8,7 @@ struct SystemStatusScreen: View {
 
     var body: some View {
         SystemStatusDetailView(systemStatus: systemStatusData.currentStatus)
+            .toolbar { CloseToolbarItem() }
     }
 }
 

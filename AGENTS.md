@@ -45,9 +45,10 @@ Apply retroactively if editing a view that already has multiple separate `on*` c
 
 Screens push or present a `Destination` (`App/Navigator.swift`) through the nearest `Navigator` in the environment. The caller chooses push or present; a destination doesn't fix how it's shown. Destinations carry identity only: no data snapshots, closures or `Binding`s.
 
-- **Nest by feature:** once a feature (a `Views/` folder) has more than one destination, they move into its own enum in that folder, e.g. `LineStatusDestination`, `JourneyPlannerDestination`. The enum holds its cases, its `paywallContext`, `hasOwnCloseButton` if any of its screens need it, and a `screen` that builds them. `Destination` forwards one case per feature.
+- **Nest by feature:** once a feature (a `Views/` folder) has more than one destination, they move into its own enum in that folder, e.g. `LineStatusDestination`, `JourneyPlannerDestination`. The enum holds its cases, its `paywallContext` and a `screen` that builds them. `Destination` forwards one case per feature.
 - **Until then, keep a flat case** whose name says which feature it belongs to, e.g. `.debugSettings`, `.systemStatus`.
-- **Close buttons come from the presentation:** a presented root gets one unless its destination's `hasOwnCloseButton` is true. To close the whole modal from a pushed screen, call `navigator.dismissPresentingModal()`.
+- **Screens own their toolbars, using SwiftUI's own pieces:** every button sits in the screen's `.toolbar { }`, and reusable ones are `ToolbarContent` types in `Views/Common/ToolbarItems.swift`, not view modifiers. When you present a destination, its screen needs `CloseToolbarItem()` or exits of its own. `CloseToolbarItem()` is the system close button (`Button(role: .close)`) and only shows on a modal's first screen, so it's harmless when the same screen is pushed. Tab roots add `SettingsToolbarItem()`. Screens with their own exits use `Button(role: .cancel)` / `Button(role: .confirm)` in the `.cancellationAction` / `.confirmationAction` placements. The host never adds buttons.
+- **Closing:** `@Environment(\.dismiss)` closes or goes back from the current screen. To close the whole modal from a pushed screen, use `@Environment(\.dismissModal)`.
 - `.paywall` stays top-level: it belongs to the Plus gate, not a feature.
 
 ## Data Layer Naming (DataStores)

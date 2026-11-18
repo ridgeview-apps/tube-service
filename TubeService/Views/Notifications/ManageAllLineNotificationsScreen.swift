@@ -19,12 +19,11 @@ struct ManageAllLineNotificationsScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
+        .toolbar { CloseToolbarItem() }
     }
 
     private func handleAction(_ action: ManageAllLineNotificationsView.Action) {
         switch action {
-        case .cancel:
-            dismiss()
         case .tappedOtherLine(let otherLineID), .addedLine(let otherLineID):
             navigator.push(.notifications(.line(lineID: otherLineID)))
         case .openSettings:

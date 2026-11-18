@@ -3,13 +3,13 @@ import SwiftUI
 
 struct NotificationsOnboardingConfirmationScreen: View {
 
-    @Environment(Navigator.self) private var navigator
+    @Environment(\.dismissModal) private var dismissModal
 
     let lineSettings: [LineNotificationSettings]
 
     var body: some View {
         NotificationsOnboardingConfirmationView(lineSettings: lineSettings) {
-            navigator.dismissPresentingModal()
+            dismissModal?()
         }
     }
 }

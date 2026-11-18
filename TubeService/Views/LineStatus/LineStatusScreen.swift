@@ -45,7 +45,7 @@ struct LineStatusScreen: View {
         .refreshable {
             await model.refresh(for: request)
         }
-        .withSettingsToolbarButton()
+        .toolbar { SettingsToolbarItem() }
         .onAppear {
             refreshIfStale()
         }
