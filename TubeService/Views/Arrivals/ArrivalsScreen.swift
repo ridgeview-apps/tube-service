@@ -104,7 +104,7 @@ struct ArrivalsScreen: View {
     private func handleAction(_ action: ArrivalsView.Action) {
         switch action {
         case .tappedStation(let station):
-            navigator.push(.station(station))
+            navigator.push(.station(.detail(station)))
         case .tappedFindStation:
             isSearchPresented = true
         case .tappedShowMoreNearby:

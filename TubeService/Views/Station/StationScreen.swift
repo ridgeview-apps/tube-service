@@ -21,9 +21,6 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
-    // Not the app navigator's sheet, which keeps the contents it opened with: this one shows the screen's live data
-    @State private var isShowingInfo = false
-
     let station: Station
 
     // MARK: - Layout
@@ -54,12 +51,6 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
-        .sheet(isPresented: $isShowingInfo) {
-            StationInfoView(station: station, info: info) { line in
-                isShowingInfo = false
-                navigator.push(.lineStatus(.detail(lineID: line.id, request: .live)))
-            }
-        }
         .task {
             await refreshDataIfStale()
         }
@@ -132,20 +123,7 @@ struct StationScreen: View {
     }
 
     private var info: StationView.Info {
-        let lineStatusData = lineStatus.lineStatusData(for: .live)
-        return .init(
-            lines: (lineStatusData?.value ?? []).filter { station.sortedLineIDs.contains($0.id) },
-            notices: notices,
-            isLoadingLines: isLoadingLines(lineStatusData),
-            hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
-        )
-    }
-
-    // Statuses already fetched elsewhere (e.g. the Status tab) show straight away, even while they refresh
-    private func isLoadingLines(_ lineStatusData: RemoteData<[Line]>?) -> Bool {
-        guard let lineStatusData else { return true }
-        if case .failure = lineStatusData.fetchState { return false }
-        return lineStatusData.fetchedAt == nil
+        .init(station: station, lineStatus: lineStatus, stations: stations, userPreferences: userPreferences)
     }
 
     private var isFavouriteStation: Binding<Bool> {
@@ -168,7 +146,7 @@ struct StationScreen: View {
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
         case .tappedInfo, .tappedLineStatusRow:
             userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
-            isShowingInfo = true
+            navigator.present(.station(.info(station)))
         }
     }
 }

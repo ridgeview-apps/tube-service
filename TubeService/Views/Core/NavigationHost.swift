@@ -42,8 +42,8 @@ extension Destination {
             destination.screen
         case .notifications(let destination):
             destination.screen
-        case .station(let station):
-            StationScreen(station: station)
+        case .station(let destination):
+            destination.screen
         case .mapDetail(let mapLink):
             MapDetailView(mapLink: mapLink)
         case .settings:

@@ -29,9 +29,34 @@ struct StationPage: Page {
         return self
     }
 
+    /// Taps the info button in the navigation bar, which presents the station's line statuses and notices.
+    func tapInfoButton() -> StationInfoPage {
+        app.buttons[AccessibilityID.Station.infoButton].tapWhenHittable()
+        return .waitingToAppear(in: app)
+    }
+
     /// Taps the back button, which returns to the Arrivals screen the Station screen was opened from.
     func tapBackButton() -> ArrivalsPage {
         app.tapBackButton()
+        return .waitingToAppear(in: app)
+    }
+}
+
+struct StationInfoPage: Page {
+    let app: XCUIApplication
+    var rootElement: XCUIElement { app.collectionViews[AccessibilityID.StationInfo.list] }
+
+    /// Taps a line's row, which pushes its detail inside the sheet.
+    ///
+    /// - Parameter lineID: A `TrainLineID` raw value, e.g. "northern".
+    func tapLine(_ lineID: String) -> LineDetailPage<StationInfoPage> {
+        app.buttons[AccessibilityID.StationInfo.line(lineID)].tapWhenHittable()
+        return .waitingToAppear(in: app)
+    }
+
+    /// Taps the close button, which returns to the Station screen underneath.
+    func tapCloseButton() -> StationPage {
+        app.buttons[AccessibilityID.NavigationButton.close].tapWhenHittable()
         return .waitingToAppear(in: app)
     }
 }
