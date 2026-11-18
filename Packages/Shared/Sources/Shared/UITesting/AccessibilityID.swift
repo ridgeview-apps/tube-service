@@ -15,6 +15,11 @@ public enum AccessibilityID {
         public static let maps = "tab.maps"
     }
 
+    public enum NavigationButton {
+        /// The close button of a presented screen.
+        public static let close = "navigationButton.close"
+    }
+
     public enum FavouritesButton {
         /// The add/remove favourite button, by `FavouritesButton.Style` raw value (`small` or `large`).
         public static func button(_ style: String) -> String { "favouritesButton.\(style)" }
@@ -83,11 +88,19 @@ public enum AccessibilityID {
         public static func station(_ stationID: String) -> String { "nearby.station.\(stationID)" }
     }
 
-    public enum Station {
-        public static let content = "station.content"
+    public enum StationArrivals {
+        public static let content = "stationArrivals.content"
+        public static let infoButton = "stationArrivals.infoButton"
 
         /// The chip that shows a line group's boards, by `Station.LineGroup` ID.
-        public static func lineChip(_ lineGroupID: String) -> String { "station.lineChip.\(lineGroupID)" }
+        public static func lineChip(_ lineGroupID: String) -> String { "stationArrivals.lineChip.\(lineGroupID)" }
+    }
+
+    public enum StationInfo {
+        public static let list = "stationInfo.list"
+
+        /// A line's row, by `TrainLineID` raw value.
+        public static func line(_ lineID: String) -> String { "stationInfo.line.\(lineID)" }
     }
 
     public enum Maps {

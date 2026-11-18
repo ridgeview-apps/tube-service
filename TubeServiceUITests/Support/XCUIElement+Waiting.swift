@@ -93,6 +93,7 @@ extension XCUIApplication {
 
     /// Taps the navigation bar's back button, which the system identifies as "BackButton" whatever its title.
     func tapBackButton() {
-        navigationBars.buttons["BackButton"].tapWhenHittable()
+        // Inside a sheet, the screen underneath keeps a covered one too; the sheet's navigation bar comes first
+        navigationBars.firstMatch.buttons["BackButton"].tapWhenHittable()
     }
 }

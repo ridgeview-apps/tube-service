@@ -1,3 +1,4 @@
+import Shared
 import SwiftUI
 
 /// The Station screen's toolbar button that opens the station info, with a dot when its notices need a look.
@@ -35,6 +36,7 @@ struct StationInfoButton: View {
             }
         }
         .accessibilityValue(badge?.accessibilityValue ?? Text(verbatim: ""))
+        .accessibilityIdentifier(AccessibilityID.StationArrivals.infoButton)
     }
 }
 

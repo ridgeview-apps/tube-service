@@ -1,148 +1,225 @@
+import Models
 import Shared
 import SwiftUI
 
-/// The Station screen's live platform boards for the selected line group, followed by the favourite button.
-struct StationArrivalsView: View {
+/// A station's live boards, split into parts that a bus Stop screen can reuse.
+public struct StationArrivalsView: View {
 
-    let boardStates: [ArrivalsBoardState]
-    let refreshDate: Date?
-    let loadingState: LoadingState
-    @Binding var isFavourite: Bool
+    public enum Action {
+        case selectedLineGroup(Station.LineGroup)
+        case tappedInfo
+        case tappedLineStatusRow
+    }
 
-    private let rotatingCellTimer = ObservableTimer.repeating(every: 3.0)
-    @State private var expandedBoardIDs = Set<String>()
-    @Environment(\.pausesRepeatingAnimations) private var pausesRepeatingAnimations
+    public struct Arrivals {
+        public let boardStates: [ArrivalsBoardState]
+        public let refreshDate: Date?
+        public let loadingState: LoadingState
+
+        public init(boardStates: [ArrivalsBoardState], refreshDate: Date?, loadingState: LoadingState) {
+            self.boardStates = boardStates
+            self.refreshDate = refreshDate
+            self.loadingState = loadingState
+        }
+    }
+
+    public let station: Station
+    public let selectedLineGroup: Station.LineGroup
+    public let arrivals: Arrivals
+    public let info: StationInfo
+    @Binding public var isFavourite: Bool
+    public let onRefresh: @Sendable () async -> Void
+    public let onAction: (Action) -> Void
+
+    @Environment(\.clock) private var clock
+
+    public init(
+        station: Station,
+        selectedLineGroup: Station.LineGroup,
+        arrivals: Arrivals,
+        info: StationInfo,
+        isFavourite: Binding<Bool>,
+        onRefresh: @escaping @Sendable () async -> Void,
+        onAction: @escaping (Action) -> Void
+    ) {
+        self.station = station
+        self.selectedLineGroup = selectedLineGroup
+        self.arrivals = arrivals
+        self.info = info
+        self._isFavourite = isFavourite
+        self.onRefresh = onRefresh
+        self.onAction = onAction
+    }
+
+    private var disruptedLines: [Line] { info.lines.disruptionsOnly() }
+
+    private var selectedLines: [Line] {
+        info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
+    }
+
+    /// The selected chip keeps its badge too, so the badges don't move around as the selection changes.
+    private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
+        station.lineGroups.ids(disruptedBy: disruptedLines)
+    }
+
+    private var hasChips: Bool { station.lineGroups.count > 1 }
+
+    private var noticesBadge: StationInfoButton.Badge? {
+        if noticeSections.hasClosureToday { return .closureToday }
+        return info.hasUnseenNotices ? .unseen : nil
+    }
+
+    private var noticeSections: StationNoticeSections {
+        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
+    }
+
+    public var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                StationLineStatusRow(
+                    lines: selectedLines,
+                    isLoading: info.isLoadingLines,
+                    onTap: { onAction(.tappedLineStatusRow) }
+                )
+                .padding(.horizontal, 16)
+                StationBoardsView(
+                    boardStates: arrivals.boardStates,
+                    refreshDate: arrivals.refreshDate,
+                    loadingState: arrivals.loadingState,
+                    isFavourite: $isFavourite
+                )
+            }
+            // Closer to the chips than the boards, as the line status row describes the selected chip
+            .padding(.top, hasChips ? 2 : 16)
+            .padding(.bottom, 16)
+        }
+        // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening
+        .refreshable(action: onRefresh)
+        .accessibilityIdentifier(AccessibilityID.StationArrivals.content)
+        // Pinned, so they still show other lines have arrivals once the boards scroll
+        .safeAreaBar(edge: .top) {
+            if hasChips {
+                StationLineChipsView(
+                    lineGroups: station.lineGroups.sortedByName(),
+                    selectedLineGroup: selectedLineGroup,
+                    disruptedLineGroupIDs: disruptedLineGroupIDs,
+                    onSelect: { onAction(.selectedLineGroup($0)) }
+                )
+            }
+        }
+        // Status rows that come and go slide rather than snap
+        .animation(.default, value: disruptedLines.map(\.id))
+        .defaultMaxWidthWithFullBackground()
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
+            ToolbarItem {
+                StationInfoButton(badge: noticesBadge) { onAction(.tappedInfo) }
+            }
+            ToolbarItem {
+                FavouritesButton(.station, style: .small, isSelected: $isFavourite)
+            }
+        }
+    }
+}
+
+// MARK: - Previews
+
+import ModelStubs
+
+private struct WrapperView: View {
+    var station: Station = ModelStubs.kingsCrossStation
+    var boardStates: [ArrivalsBoardState] = ModelStubs.northernLineBothPlatforms.toPlatformBoardStates()
+    var arrivalsLoadingState: LoadingState = .loaded
+    var refreshDate: Date? = .now
+    var lines: [Line] = [.circle, .hammersmithAndCity, .metropolitan, .northern, .piccadilly, .victoria].map {
+        Line(id: $0, lineStatuses: [.goodService])
+    }
+    var notices: [StationNotice] = []
+    var isLoadingLines = false
+    @State private var selectedLineGroup: Station.LineGroup?
+    @State private var isFavourite = false
 
     var body: some View {
-        StationSection(cardBackground: false) {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 8) {
-                    refreshFailure
-                    if !boardStates.isEmpty {
-                        VStack(spacing: 24) {
-                            ForEach(boardStates) { boardState in
-                                ArrivalsBoardView(
-                                    platformName: boardState.platformName,
-                                    cellItems: boardState.cellItems,
-                                    isExpanded: isExpanded(boardID: boardState.id),
-                                    rotatingCellTimer: rotatingCellTimer
-                                )
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    } else {
-                        switch loadingState {
-                        case .loading: placeholderBoard
-                        case .loaded: messageBoard(Text(.stationArrivalsEmpty), hint: Text(.stationArrivalsEmptyHint))
-                        case .failure(let errorMessage):
-                            messageBoard(Text(errorMessage), hint: Text(.stationArrivalsFailureRetryHint))
-                        }
-                    }
+        NavigationStack {
+            StationArrivalsView(
+                station: station,
+                selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
+                arrivals: .init(boardStates: boardStates, refreshDate: refreshDate, loadingState: arrivalsLoadingState),
+                info: .init(lines: lines, notices: notices, isLoadingLines: isLoadingLines),
+                isFavourite: $isFavourite,
+                onRefresh: {},
+                onAction: { action in
+                    if case .selectedLineGroup(let lineGroup) = action { selectedLineGroup = lineGroup }
                 }
-                FavouritesButton(.station, style: .large, isSelected: $isFavourite)
-            }
-        }
-        .navigationSubtitle(lastUpdatedSubtitle)
-    }
-
-    // Only a failed refresh earns a row above the boards; the update time itself sits quietly in the navigation bar
-    @ViewBuilder private var refreshFailure: some View {
-        if case .failure = loadingState, !boardStates.isEmpty {
-            Label {
-                Text(.stationArrivalsRefreshFailed)
-            } icon: {
-                Image(systemName: "exclamationmark.circle.fill")
-            }
-            .labelStyle(.titleAndIcon)
-            .defaultLastUpdatedTimeLabelStyle(foregroundStyle: Color.adaptiveRed)
-        }
-    }
-
-    private var lastUpdatedSubtitle: Text {
-        guard let refreshDate else { return Text(verbatim: "") }
-        return Text(.refreshStatusLastUpdated(Self.timeText(refreshDate)))
-    }
-
-    // Just the time: live arrivals are never from another day, so "today" adds nothing
-    private static func timeText(_ date: Date) -> String {
-        date.formatted(date: .omitted, time: .shortened)
-    }
-
-    // Stands in for the boards while they first load, so the layout doesn't jump when they arrive
-    private var placeholderBoard: some View {
-        // Only the contents pulse, so a slow load still looks alive while the board keeps its frame
-        PhaseAnimator(pausesRepeatingAnimations ? [false] : [false, true]) { isDimmed in
-            ArrivalsBoardView(
-                platformName: Self.placeholderBoardState.platformName,
-                cellItems: Self.placeholderBoardState.cellItems,
-                isExpanded: .constant(false),
-                contentOpacity: isDimmed ? 0.4 : 1
             )
-        } animation: { _ in
-            .easeInOut(duration: 0.9)
+            .navigationTitle(station.name)
         }
-        .redacted(reason: .placeholder)
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
     }
+}
 
-    // The text is only ever shown redacted or invisible, so it's never localized
-    private static let placeholderBoardState = ArrivalsBoardState(
-        platformName: "Northbound - Platform 1",
-        cellItems: (1...3).map { number in
-            ArrivalsBoardCellItem(
-                id: "placeholder-\(number)",
-                numberLabel: .init(
-                    value: number,
-                    backgroundColor: .black,
-                    textColor: .white,
-                    textShadow: (color: .clear, radius: 0, x: 0, y: 0)
-                ),
-                headerRow: .init(
-                    style: .tube,
-                    destination: .towards("Placeholder destination"),
-                    countdownText: .verbatim("0 mins"),
-                    needsStrikethrough: false
-                ),
-                footerRow: .tubeLiveLocation("Between two placeholder stations")
-            )
-        }
+#Preview("Several line groups") {
+    WrapperView()
+}
+
+#Preview("Disrupted lines") {
+    // Circle is on the selected chip, so the line status row names it; both disrupted chips have a badge
+    WrapperView(
+        lines: [
+            Line(id: .circle, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
+            Line(id: .victoria, lineStatuses: [.disrupted(.severeDelays, "Severe Delays", "Due to a fire alert at Brixton.")]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService]),
+            Line(id: .metropolitan, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .piccadilly, lineStatuses: [.goodService])
+        ],
+        notices: [StationNotice(text: "The escalator to platform 5 is closed")]
     )
+}
 
-    // Laid over an invisible placeholder board, so the screen doesn't jump when loading ends
-    private func messageBoard(_ message: Text, hint: Text) -> some View {
-        ArrivalsBoardView(
-            platformName: Self.placeholderBoardState.platformName,
-            cellItems: Self.placeholderBoardState.cellItems,
-            isExpanded: .constant(false),
-            contentOpacity: 0
-        )
-        .accessibilityHidden(true)
-        .overlay {
-            VStack(spacing: 8) {
-                message
-                    .font(.headline)
-                    .foregroundStyle(Color.arrivalsBoardPrimary)
-                hint
-                    .font(.caption)
-                    .foregroundStyle(.white)
-            }
-            .multilineTextAlignment(.center)
-            .padding()
-            .accessibilityElement(children: .combine)
-        }
-    }
+#Preview("Another line disrupted") {
+    // The selected chip has a good service; only Piccadilly's chip has a badge
+    WrapperView(
+        lines: [
+            Line(id: .piccadilly, lineStatuses: [.disrupted(.minorDelays, "Minor Delays", "Due to an earlier signal failure.")]),
+            Line(id: .circle, lineStatuses: [.goodService]),
+            Line(id: .hammersmithAndCity, lineStatuses: [.goodService]),
+            Line(id: .metropolitan, lineStatuses: [.goodService]),
+            Line(id: .northern, lineStatuses: [.goodService]),
+            Line(id: .victoria, lineStatuses: [.goodService])
+        ]
+    )
+}
 
-    private func isExpanded(boardID: String) -> Binding<Bool> {
-        .init(
-            get: { expandedBoardIDs.contains(boardID) },
-            set: { isExpanded in
-                if isExpanded {
-                    expandedBoardIDs.insert(boardID)
-                } else {
-                    expandedBoardIDs.remove(boardID)
-                }
-            }
-        )
+#Preview("Station notice only") {
+    WrapperView(notices: [StationNotice(text: "The escalator to platform 5 is closed")])
+}
+
+#Preview("Closure today") {
+    WrapperView(notices: [StationNotice(text: "Westbound trains will not stop here.", kind: "Part Closure")])
+}
+
+private extension LineStatus {
+    static func disrupted(_ severity: LineStatusSeverity, _ description: String, _ reason: String) -> LineStatus {
+        .init(statusSeverity: severity, statusSeverityDescription: description, reason: reason, disruption: nil)
     }
+}
+
+#Preview("One line group") {
+    WrapperView(
+        station: ModelStubs.stations.first { $0.lineGroups.count == 1 }!,
+        boardStates: ModelStubs.elizabethLineBothPlatforms.toPlatformBoardStates(forLineID: .elizabeth)
+    )
+}
+
+#Preview("No arrivals") {
+    WrapperView(boardStates: [])
+}
+
+#Preview("Loading") {
+    WrapperView(boardStates: [], arrivalsLoadingState: .loading, refreshDate: nil, lines: [], isLoadingLines: true)
+}
+
+#Preview("Failure") {
+    WrapperView(boardStates: [], arrivalsLoadingState: .failure(errorMessage: "Loading failure"))
 }

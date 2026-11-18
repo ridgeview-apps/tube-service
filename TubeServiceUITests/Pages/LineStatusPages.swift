@@ -18,7 +18,7 @@ struct LineStatusPage: Page {
     }
 
     /// Taps a favourite line, which shows its detail.
-    func tapFavouriteLine(_ lineID: String) -> LineDetailPage {
+    func tapFavouriteLine(_ lineID: String) -> LineDetailPage<LineStatusPage> {
         favouriteLine(lineID).tapWhenHittable()
         return .waitingToAppear(in: app)
     }
@@ -85,11 +85,12 @@ struct LineStatusPage: Page {
     }
 }
 
-struct LineDetailPage: Page {
+/// Line detail, pushed from more than one screen: `Previous` is the one the back button returns to.
+struct LineDetailPage<Previous: Page>: Page {
     let app: XCUIApplication
     var rootElement: XCUIElement { app.scrollViews[AccessibilityID.LineStatusDetail.content] }
 
-    func tapBackButton() -> LineStatusPage {
+    func tapBackButton() -> Previous {
         app.tapBackButton()
         return .waitingToAppear(in: app)
     }

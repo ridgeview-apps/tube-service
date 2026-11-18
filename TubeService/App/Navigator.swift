@@ -10,7 +10,7 @@ enum Destination: Hashable, Identifiable {
     case journeyPlanner(JourneyPlannerDestination)
     case lineStatus(LineStatusDestination)
     case notifications(NotificationsDestination)
-    case station(Station)
+    case station(StationDestination)
     case mapDetail(mapLink: MapLink)
     case settings
     case debugSettings

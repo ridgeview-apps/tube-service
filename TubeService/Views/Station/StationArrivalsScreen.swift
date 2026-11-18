@@ -4,7 +4,7 @@ import PresentationViews
 import SwiftUI
 
 @MainActor
-struct StationScreen: View {
+struct StationArrivalsScreen: View {
 
     @Environment(Navigator.self) private var navigator
     @Environment(LineStatusDataStore.self) private var lineStatus
@@ -21,9 +21,6 @@ struct StationScreen: View {
         now: { AppDependencies.current.clock.now }
     )
 
-    // Not the app navigator's sheet, which keeps the contents it opened with: this one shows the screen's live data
-    @State private var isShowingInfo = false
-
     let station: Station
 
     // MARK: - Layout
@@ -31,7 +28,7 @@ struct StationScreen: View {
     var body: some View {
         Group {
             if let selectedLineGroup {
-                StationView(
+                StationArrivalsView(
                     station: station,
                     selectedLineGroup: selectedLineGroup,
                     arrivals: arrivals,
@@ -54,12 +51,6 @@ struct StationScreen: View {
             }
         }
         .navigationTitle(station.name)
-        .sheet(isPresented: $isShowingInfo) {
-            StationInfoView(station: station, info: info) { line in
-                isShowingInfo = false
-                navigator.push(.lineStatus(.detail(lineID: line.id, request: .live)))
-            }
-        }
         .task {
             await refreshDataIfStale()
         }
@@ -108,7 +99,7 @@ struct StationScreen: View {
         arrivalsBoard.resetAutoRefreshTimer(for: selectedLineGroup)
     }
 
-    private var arrivals: StationView.Arrivals {
+    private var arrivals: StationArrivalsView.Arrivals {
         .init(
             boardStates: boardStates,
             refreshDate: arrivalsBoard.boardData.fetchedAt,
@@ -131,21 +122,8 @@ struct StationScreen: View {
         stations.notices(forStationID: station.id)
     }
 
-    private var info: StationView.Info {
-        let lineStatusData = lineStatus.lineStatusData(for: .live)
-        return .init(
-            lines: (lineStatusData?.value ?? []).filter { station.sortedLineIDs.contains($0.id) },
-            notices: notices,
-            isLoadingLines: isLoadingLines(lineStatusData),
-            hasUnseenNotices: userPreferences.hasUnseenNotices(notices.map(\.text), at: station.id)
-        )
-    }
-
-    // Statuses already fetched elsewhere (e.g. the Status tab) show straight away, even while they refresh
-    private func isLoadingLines(_ lineStatusData: RemoteData<[Line]>?) -> Bool {
-        guard let lineStatusData else { return true }
-        if case .failure = lineStatusData.fetchState { return false }
-        return lineStatusData.fetchedAt == nil
+    private var info: StationInfo {
+        .init(station: station, lineStatus: lineStatus, stations: stations, userPreferences: userPreferences)
     }
 
     private var isFavouriteStation: Binding<Bool> {
@@ -162,13 +140,13 @@ struct StationScreen: View {
 
     // MARK: - Actions
 
-    private func handleAction(_ action: StationView.Action) {
+    private func handleAction(_ action: StationArrivalsView.Action) {
         switch action {
         case .selectedLineGroup(let lineGroup):
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
         case .tappedInfo, .tappedLineStatusRow:
             userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
-            isShowingInfo = true
+            navigator.present(.station(.info(station)))
         }
     }
 }
@@ -180,7 +158,7 @@ import ModelStubs
 #if DEBUG
     #Preview {
         PreviewEnvironment(withNavigationHost: true) {
-            StationScreen(station: ModelStubs.kingsCrossStation)
+            StationArrivalsScreen(station: ModelStubs.kingsCrossStation)
         }
     }
 #endif

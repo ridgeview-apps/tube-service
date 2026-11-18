@@ -50,7 +50,7 @@ private struct LineChip: View {
             }
         }
         .accessibilityValue(isDisrupted ? Text(.stationLineChipDisrupted) : Text(verbatim: ""))
-        .accessibilityIdentifier(AccessibilityID.Station.lineChip(lineGroup.id))
+        .accessibilityIdentifier(AccessibilityID.StationArrivals.lineChip(lineGroup.id))
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }

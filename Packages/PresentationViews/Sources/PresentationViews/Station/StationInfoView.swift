@@ -6,13 +6,12 @@ import SwiftUI
 /// A station's line statuses, notices and location, opened from the Station screen's toolbar or line status row.
 public struct StationInfoView: View {
     let station: Station
-    let info: StationView.Info
+    let info: StationInfo
     let onTapLine: (Line) -> Void
 
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.clock) private var clock
 
-    public init(station: Station, info: StationView.Info, onTapLine: @escaping (Line) -> Void) {
+    public init(station: Station, info: StationInfo, onTapLine: @escaping (Line) -> Void) {
         self.station = station
         self.info = info
         self.onTapLine = onTapLine
@@ -23,32 +22,26 @@ public struct StationInfoView: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            List {
-                linesSection
-                if noticeSections.isEmpty {
-                    Section {
-                        Text(.stationNoticesEmpty)
-                            .foregroundStyle(.secondary)
-                    } header: {
-                        Text(.stationNoticesSectionNotices)
-                    }
-                } else {
-                    section(.stationNoticesSectionClosures, rows: noticeSections.closures)
-                    section(.stationNoticesSectionNotices, rows: noticeSections.notices)
-                    section(.stationNoticesSectionLater, rows: noticeSections.later)
+        List {
+            linesSection
+            if noticeSections.isEmpty {
+                Section {
+                    Text(.stationNoticesEmpty)
+                        .foregroundStyle(.secondary)
+                } header: {
+                    Text(.stationNoticesSectionNotices)
                 }
-                locationSection
+            } else {
+                section(.stationNoticesSectionClosures, rows: noticeSections.closures)
+                section(.stationNoticesSectionNotices, rows: noticeSections.notices)
+                section(.stationNoticesSectionLater, rows: noticeSections.later)
             }
-            .listStyle(.insetGrouped)
-            .navigationTitle(station.name)
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button(.globalDone) { dismiss() }
-                }
-            }
+            locationSection
         }
+        .listStyle(.insetGrouped)
+        .accessibilityIdentifier(AccessibilityID.StationInfo.list)
+        .navigationTitle(station.name)
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Lines
@@ -65,6 +58,7 @@ public struct StationInfoView: View {
                             .contentShape(.rect)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityIdentifier(AccessibilityID.StationInfo.line(line.id.rawValue))
                     .listRowInsets(EdgeInsets())
                 }
             } else if info.isLoadingLines {
@@ -251,25 +245,33 @@ private let previewLines = [
         )
     ]
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: notices), onTapLine: { _ in })
-            .environment(\.clock, .fixed(at: now))
+        NavigationStack {
+            StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: notices), onTapLine: { _ in })
+        }
+        .environment(\.clock, .fixed(at: now))
     }
 }
 
 #Preview("No notices") {
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: []), onTapLine: { _ in })
+        NavigationStack {
+            StationInfoView(station: previewStation, info: .init(lines: previewLines, notices: []), onTapLine: { _ in })
+        }
     }
 }
 
 #Preview("Lines loading") {
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(station: previewStation, info: .init(lines: [], notices: [], isLoadingLines: true), onTapLine: { _ in })
+        NavigationStack {
+            StationInfoView(station: previewStation, info: .init(lines: [], notices: [], isLoadingLines: true), onTapLine: { _ in })
+        }
     }
 }
 
 #Preview("Lines unavailable") {
     Color.clear.sheet(isPresented: .constant(true)) {
-        StationInfoView(station: previewStation, info: .init(lines: [], notices: []), onTapLine: { _ in })
+        NavigationStack {
+            StationInfoView(station: previewStation, info: .init(lines: [], notices: []), onTapLine: { _ in })
+        }
     }
 }

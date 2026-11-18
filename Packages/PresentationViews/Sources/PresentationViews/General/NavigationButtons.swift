@@ -1,3 +1,4 @@
+import Shared
 import SwiftUI
 
 public enum NavigationButton {
@@ -27,6 +28,7 @@ public enum NavigationButton {
             Button(action: action) {
                 Image(systemName: "xmark")
             }
+            .accessibilityIdentifier(AccessibilityID.NavigationButton.close)
         }
     }
 
