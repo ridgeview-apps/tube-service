@@ -88,12 +88,12 @@ public enum AccessibilityID {
         public static func station(_ stationID: String) -> String { "nearby.station.\(stationID)" }
     }
 
-    public enum Station {
-        public static let content = "station.content"
-        public static let infoButton = "station.infoButton"
+    public enum StationArrivals {
+        public static let content = "stationArrivals.content"
+        public static let infoButton = "stationArrivals.infoButton"
 
         /// The chip that shows a line group's boards, by `Station.LineGroup` ID.
-        public static func lineChip(_ lineGroupID: String) -> String { "station.lineChip.\(lineGroupID)" }
+        public static func lineChip(_ lineGroupID: String) -> String { "stationArrivals.lineChip.\(lineGroupID)" }
     }
 
     public enum StationInfo {

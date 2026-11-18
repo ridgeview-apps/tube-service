@@ -8,7 +8,7 @@ struct ArrivalsPage: Page {
     /// Taps a station in the Nearby section, which opens its Station screen.
     ///
     /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
-    func tapNearbyStation(_ stationID: String) -> StationPage {
+    func tapNearbyStation(_ stationID: String) -> StationArrivalsPage {
         app.buttons[AccessibilityID.Nearby.station(stationID)].tapWhenHittable()
         return .waitingToAppear(in: app)
     }
@@ -21,7 +21,7 @@ struct ArrivalsPage: Page {
     }
 
     /// Taps a favourite station, which opens its Station screen.
-    func tapFavouriteStation(_ stationID: String) -> StationPage {
+    func tapFavouriteStation(_ stationID: String) -> StationArrivalsPage {
         favouriteStation(stationID).tapWhenHittable()
         return .waitingToAppear(in: app)
     }

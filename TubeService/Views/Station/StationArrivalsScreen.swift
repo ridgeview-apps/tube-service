@@ -4,7 +4,7 @@ import PresentationViews
 import SwiftUI
 
 @MainActor
-struct StationScreen: View {
+struct StationArrivalsScreen: View {
 
     @Environment(Navigator.self) private var navigator
     @Environment(LineStatusDataStore.self) private var lineStatus
@@ -28,7 +28,7 @@ struct StationScreen: View {
     var body: some View {
         Group {
             if let selectedLineGroup {
-                StationView(
+                StationArrivalsView(
                     station: station,
                     selectedLineGroup: selectedLineGroup,
                     arrivals: arrivals,
@@ -99,7 +99,7 @@ struct StationScreen: View {
         arrivalsBoard.resetAutoRefreshTimer(for: selectedLineGroup)
     }
 
-    private var arrivals: StationView.Arrivals {
+    private var arrivals: StationArrivalsView.Arrivals {
         .init(
             boardStates: boardStates,
             refreshDate: arrivalsBoard.boardData.fetchedAt,
@@ -122,7 +122,7 @@ struct StationScreen: View {
         stations.notices(forStationID: station.id)
     }
 
-    private var info: StationView.Info {
+    private var info: StationInfo {
         .init(station: station, lineStatus: lineStatus, stations: stations, userPreferences: userPreferences)
     }
 
@@ -140,7 +140,7 @@ struct StationScreen: View {
 
     // MARK: - Actions
 
-    private func handleAction(_ action: StationView.Action) {
+    private func handleAction(_ action: StationArrivalsView.Action) {
         switch action {
         case .selectedLineGroup(let lineGroup):
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
@@ -158,7 +158,7 @@ import ModelStubs
 #if DEBUG
     #Preview {
         PreviewEnvironment(withNavigationHost: true) {
-            StationScreen(station: ModelStubs.kingsCrossStation)
+            StationArrivalsScreen(station: ModelStubs.kingsCrossStation)
         }
     }
 #endif

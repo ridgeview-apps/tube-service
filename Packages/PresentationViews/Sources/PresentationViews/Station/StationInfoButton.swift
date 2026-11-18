@@ -36,7 +36,7 @@ struct StationInfoButton: View {
             }
         }
         .accessibilityValue(badge?.accessibilityValue ?? Text(verbatim: ""))
-        .accessibilityIdentifier(AccessibilityID.Station.infoButton)
+        .accessibilityIdentifier(AccessibilityID.StationArrivals.infoButton)
     }
 }
 

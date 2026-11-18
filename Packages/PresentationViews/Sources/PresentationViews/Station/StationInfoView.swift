@@ -6,12 +6,12 @@ import SwiftUI
 /// A station's line statuses, notices and location, opened from the Station screen's toolbar or line status row.
 public struct StationInfoView: View {
     let station: Station
-    let info: StationView.Info
+    let info: StationInfo
     let onTapLine: (Line) -> Void
 
     @Environment(\.clock) private var clock
 
-    public init(station: Station, info: StationView.Info, onTapLine: @escaping (Line) -> Void) {
+    public init(station: Station, info: StationInfo, onTapLine: @escaping (Line) -> Void) {
         self.station = station
         self.info = info
         self.onTapLine = onTapLine

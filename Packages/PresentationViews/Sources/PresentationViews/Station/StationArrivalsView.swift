@@ -2,8 +2,8 @@ import Models
 import Shared
 import SwiftUI
 
-/// A station's live boards and information, split into parts that a bus Stop screen can reuse.
-public struct StationView: View {
+/// A station's live boards, split into parts that a bus Stop screen can reuse.
+public struct StationArrivalsView: View {
 
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
@@ -23,28 +23,10 @@ public struct StationView: View {
         }
     }
 
-    public struct Info {
-        /// The status of every line at the station.
-        public let lines: [Line]
-        /// Closures first, and none that have ended.
-        public let notices: [StationNotice]
-        /// True until the line statuses first arrive or fail to load.
-        public let isLoadingLines: Bool
-        /// Whether any notice hasn't been opened yet, which puts a dot on the notices button.
-        public let hasUnseenNotices: Bool
-
-        public init(lines: [Line], notices: [StationNotice], isLoadingLines: Bool = false, hasUnseenNotices: Bool = false) {
-            self.lines = lines
-            self.notices = notices
-            self.isLoadingLines = isLoadingLines
-            self.hasUnseenNotices = hasUnseenNotices
-        }
-    }
-
     public let station: Station
     public let selectedLineGroup: Station.LineGroup
     public let arrivals: Arrivals
-    public let info: Info
+    public let info: StationInfo
     @Binding public var isFavourite: Bool
     public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
@@ -55,7 +37,7 @@ public struct StationView: View {
         station: Station,
         selectedLineGroup: Station.LineGroup,
         arrivals: Arrivals,
-        info: Info,
+        info: StationInfo,
         isFavourite: Binding<Bool>,
         onRefresh: @escaping @Sendable () async -> Void,
         onAction: @escaping (Action) -> Void
@@ -113,7 +95,7 @@ public struct StationView: View {
         }
         // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening
         .refreshable(action: onRefresh)
-        .accessibilityIdentifier(AccessibilityID.Station.content)
+        .accessibilityIdentifier(AccessibilityID.StationArrivals.content)
         // Pinned, so they still show other lines have arrivals once the boards scroll
         .safeAreaBar(edge: .top) {
             if hasChips {
@@ -160,7 +142,7 @@ private struct WrapperView: View {
 
     var body: some View {
         NavigationStack {
-            StationView(
+            StationArrivalsView(
                 station: station,
                 selectedLineGroup: selectedLineGroup ?? station.defaultLineGroup!,
                 arrivals: .init(boardStates: boardStates, refreshDate: refreshDate, loadingState: arrivalsLoadingState),

@@ -2,7 +2,7 @@ import DataStores
 import Models
 import PresentationViews
 
-extension StationView.Info {
+extension StationInfo {
 
     /// Shared by the Station screen and its info sheet, so both show the same live data.
     @MainActor
