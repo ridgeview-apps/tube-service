@@ -73,7 +73,7 @@ struct SettingsScreen: View {
         case .manageSubscription:
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
-            navigator.present(.notifications(.root(lineID: nil)))
+            navigator.present(.notifications(.root(openedFromLineID: nil)))
         case .systemStatusTapped:
             navigator.push(.systemStatus)
         }

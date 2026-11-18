@@ -3,8 +3,7 @@ import PresentationViews
 import SwiftUI
 
 enum NotificationsDestination: Hashable {
-    /// Every line when `lineID` is `nil`.
-    case root(lineID: TrainLineID?)
+    case root(openedFromLineID: TrainLineID?)
     case line(lineID: TrainLineID)
     case onboardingPermissionDenied([LineNotificationSettings])
     case onboardingConfirmation([LineNotificationSettings])
@@ -20,10 +19,10 @@ enum NotificationsDestination: Hashable {
     @ViewBuilder
     var screen: some View {
         switch self {
-        case .root(let lineID):
-            NotificationsRootScreen(lineID: lineID)
+        case .root(let openedFromLineID):
+            NotificationsRootScreen(openedFromLineID: openedFromLineID)
         case .line(let lineID):
-            ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: false)
+            ManageSingleLineNotificationsScreen(lineID: lineID)
         case .onboardingPermissionDenied(let lineSettings):
             NotificationsOnboardingPermissionDeniedScreen(lineSettings: lineSettings)
         case .onboardingConfirmation(let lineSettings):

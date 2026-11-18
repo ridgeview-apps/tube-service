@@ -2834,17 +2834,6 @@
         }
       }
     },
-    "notifications.other.lines.section.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other lines"
-          }
-        }
-      }
-    },
     "notifications.permission.denied.description" : {
       "extractionState" : "manual",
       "localizations" : {

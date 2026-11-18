@@ -142,7 +142,7 @@ struct LineStatusDetailScreen: View {
             if state == .permissionDenied {
                 openSettings()
             } else {
-                navigator.present(.notifications(.root(lineID: lineID)))
+                navigator.present(.notifications(.root(openedFromLineID: lineID)))
             }
         case .setNotificationsPaused(let isPaused):
             setNotificationsPaused(isPaused)

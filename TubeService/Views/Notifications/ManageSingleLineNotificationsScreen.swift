@@ -8,21 +8,17 @@ struct ManageSingleLineNotificationsScreen: View {
     @Environment(NotificationsDataStore.self) private var notifications
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openSettings) private var openSettings
-    @Environment(Navigator.self) private var navigator
     @Environment(\.dismissModal) private var dismissModal
 
     @State private var savingState: LoadingState = .loaded
     @State private var pendingUpdateCount = 0
 
     let lineID: TrainLineID
-    /// Whether the other set-up lines are listed below this one's settings.
-    let showsOtherLines: Bool
 
     var body: some View {
         ManageSingleLineNotificationsView(
             lineID: lineID,
             existingSettings: existingSettings(for: lineID),
-            otherLines: showsOtherLines ? allSettings : [],
             showsPermissionWarning: notifications.isPermissionDenied,
             savingState: savingState,
             onAction: handleAction
@@ -88,16 +84,10 @@ struct ManageSingleLineNotificationsScreen: View {
                     savingState = .failure(errorMessage: error.toSaveErrorMessage())
                 }
             }
-        case .tappedOtherLine(let otherLineID):
-            navigator.push(.notifications(.line(lineID: otherLineID)))
         }
     }
 
-    private var allSettings: [LineNotificationSettings] {
-        notifications.linePreferences.toLineNotificationSettings()
-    }
-
     private func existingSettings(for lineID: TrainLineID) -> LineNotificationSettings? {
-        allSettings.first { $0.lineID == lineID }
+        notifications.linePreferences.toLineNotificationSettings().first { $0.lineID == lineID }
     }
 }

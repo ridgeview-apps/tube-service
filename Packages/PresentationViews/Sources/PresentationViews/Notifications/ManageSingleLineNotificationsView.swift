@@ -10,38 +10,30 @@ public struct ManageSingleLineNotificationsView: View {
         /// An existing line's settings were edited; each edit is saved as it's made.
         case update(LineNotificationSettings)
         case remove
-        case tappedOtherLine(TrainLineID)
     }
 
     private let lineID: TrainLineID
     private let existingSettings: LineNotificationSettings?
-    private let otherLines: [LineNotificationSettings]
     private let showsPermissionWarning: Bool
     private let savingState: LoadingState
     private let onAction: (Action) -> Void
 
     @State private var settings: LineNotificationSettings
 
-    /// Collapsed each time the screen opens, so it stays about this line until the user asks for the others.
-    @State private var isOtherLinesExpanded = false
     @State private var showRemoveConfirmation = false
     @State private var saveFeedbackTrigger = false
     @State private var removeFeedbackTrigger = false
     @State private var pauseFeedbackTrigger = false
 
-    /// - Parameter otherLines: Other set-up lines to list below an existing line's settings, so they're reachable
-    ///   without going back. Leave empty where the screen was opened from the list of all lines.
     public init(
         lineID: TrainLineID,
         existingSettings: LineNotificationSettings?,
-        otherLines: [LineNotificationSettings] = [],
         showsPermissionWarning: Bool = false,
         savingState: LoadingState = .loaded,
         onAction: @escaping (Action) -> Void
     ) {
         self.lineID = lineID
         self.existingSettings = existingSettings
-        self.otherLines = otherLines.filter { $0.lineID != lineID }
         self.showsPermissionWarning = showsPermissionWarning
         self.savingState = savingState
         self.onAction = onAction
@@ -53,9 +45,6 @@ public struct ManageSingleLineNotificationsView: View {
     private var isAddingSingleLine: Bool { existingSettings == nil }
 
     private var showsPausedLineWarning: Bool { !isAddingSingleLine && !settings.isEnabled }
-
-    /// A line being turned on stays focused on that line, so other lines only show once it's set up.
-    private var showsOtherLines: Bool { !isAddingSingleLine && !otherLines.isEmpty }
 
     // MARK: - Body
 
@@ -104,13 +93,6 @@ public struct ManageSingleLineNotificationsView: View {
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 32, leading: 20, bottom: 12, trailing: 20))
-            }
-
-            if showsOtherLines {
-                otherLinesSection
-                    .listRowBackground(Color.clear)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 24, leading: 20, bottom: 12, trailing: 20))
             }
         }
         .listStyle(.plain)
@@ -266,49 +248,6 @@ public struct ManageSingleLineNotificationsView: View {
             Text(.notificationsLineConfigRemoveConfirmationMessage)
         }
     }
-
-    // MARK: - Other Lines
-
-    private var otherLinesSection: some View {
-        VStack(spacing: 0) {
-            Button {
-                withAnimation(.spring(duration: 0.3)) {
-                    isOtherLinesExpanded.toggle()
-                }
-            } label: {
-                HStack(spacing: 12) {
-                    Text(.notificationsOtherLinesSectionTitle)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(.secondary)
-                    Spacer()
-                    if !isOtherLinesExpanded {
-                        Text(otherLines.count, format: .number)
-                            .font(.subheadline)
-                            .foregroundStyle(.tertiary)
-                            .transition(.opacity)
-                    }
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(isOtherLinesExpanded ? 90 : 0))
-                        .foregroundStyle(.tertiary)
-                        .font(.caption.weight(.semibold))
-                }
-                .padding(.horizontal, 16)
-                .frame(minHeight: 52)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-
-            if isOtherLinesExpanded {
-                Divider()
-                    .padding(.leading, 40)
-                LineNotificationSettingsSummary(
-                    settings: otherLines,
-                    onSelect: { onAction(.tappedOtherLine($0)) }
-                )
-            }
-        }
-        .cardStyle()
-    }
 }
 
 // MARK: - Previews
@@ -331,17 +270,6 @@ public struct ManageSingleLineNotificationsView: View {
             ManageSingleLineNotificationsView(
                 lineID: .jubilee,
                 existingSettings: .defaultValue(lineID: .jubilee),
-                onAction: { print($0) }
-            )
-        }
-    }
-
-    #Preview("Editing with other lines") {
-        NavigationStack {
-            ManageSingleLineNotificationsView(
-                lineID: .jubilee,
-                existingSettings: .defaultValue(lineID: .jubilee),
-                otherLines: [.victoria, .central, .northern].map { .defaultValue(lineID: $0) },
                 onAction: { print($0) }
             )
         }
