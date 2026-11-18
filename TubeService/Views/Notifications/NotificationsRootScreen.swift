@@ -5,19 +5,19 @@ import SwiftUI
 /// The root of the notifications modal: onboarding until notifications are set up, then managing them.
 struct NotificationsRootScreen: View {
 
-    /// Decided once, on appear: finishing onboarding sets notifications up, which mustn't swap the screen under the user.
+    /// Decided once, on appear, so finishing onboarding or turning a line on doesn't swap the screen under the user.
     private enum Start {
         case undecided
         case onboarding
-        case manage
+        case addLine(TrainLineID)
+        case manageAllLines
     }
 
     @Environment(NotificationsDataStore.self) private var notifications
 
     @State private var start = Start.undecided
 
-    /// The line the modal opens on, or every line when `nil`.
-    let lineID: TrainLineID?
+    let openedFromLineID: TrainLineID?
 
     var body: some View {
         Group {
@@ -26,27 +26,28 @@ struct NotificationsRootScreen: View {
                 // The choice depends on the environment, which isn't available until the view appears.
                 Color.clear
             case .onboarding:
-                NotificationsOnboardingLineSetupScreen(defaultLineID: lineID)
-            case .manage:
-                manageRoot
+                NotificationsOnboardingLineSetupScreen(defaultLineID: openedFromLineID)
+            case .addLine(let lineID):
+                ManageSingleLineNotificationsScreen(lineID: lineID)
+            case .manageAllLines:
+                ManageAllLineNotificationsScreen()
             }
         }
         .onAppear {
-            if start == .undecided {
-                start = notifications.isConfigured ? .manage : .onboarding
+            if case .undecided = start {
+                start = initialStart
             }
         }
     }
 
-    /// A line opened from its status screen is the root, so there's nothing to go back to. Once it's set up it lists
-    /// the other lines below its settings; until then it stays focused on turning it on, which finishes what the user
-    /// came to do and closes the modal.
-    @ViewBuilder
-    private var manageRoot: some View {
-        if let lineID {
-            ManageSingleLineNotificationsScreen(lineID: lineID, showsOtherLines: true)
-        } else {
-            ManageAllLineNotificationsScreen()
+    private var initialStart: Start {
+        guard notifications.isConfigured else { return .onboarding }
+        if let openedFromLineID,
+            !notifications.linePreferences.contains(where: { $0.lineId == openedFromLineID.rawValue })
+        {
+            return .addLine(openedFromLineID)
         }
+        // The same list as Settings, so notifications are managed in one place wherever they're opened from.
+        return .manageAllLines
     }
 }
