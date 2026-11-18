@@ -73,5 +73,5 @@ struct RootScreen: View {
         PreviewEnvironment {
             RootScreen()
         }
-            }
+    }
 #endif
