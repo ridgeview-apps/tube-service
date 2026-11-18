@@ -17,12 +17,4 @@ public struct LocationAccess {
         self.state = state
         self.onRequestPermissions = onRequestPermissions
     }
-
-    var loadingState: LoadingState? {
-        if case let .allowed(loadingState) = state {
-            loadingState
-        } else {
-            nil
-        }
-    }
 }

@@ -75,7 +75,7 @@ struct JourneyPlannerFromToSelectionView: View {
     private func buttonStyle(
         forFieldID fieldID: JourneyPlannerForm.FieldID.LocationID
     ) -> JourneyLocationFormButton.Style {
-        if let errors = inlineErrors(forFieldID: fieldID), !errors.isEmpty {
+        if !inlineErrors(forFieldID: fieldID).isEmpty {
             return .error
         }
         return .normal
@@ -83,9 +83,16 @@ struct JourneyPlannerFromToSelectionView: View {
 
     private func inlineErrors(
         forFieldID fieldID: JourneyPlannerForm.FieldID.LocationID
-    ) -> [String]? {
-        guard form.showsInlineErrors else { return nil }
-        return form.validate().errors[.location(fieldID)]
+    ) -> [String] {
+        var errors: [String] = []
+        // Shown straight away: unlike a missing field, it isn't something the user has yet to fill in
+        if form.fieldsMissingCurrentLocation(locationStatus: locationAccessoryStatus).contains(fieldID) {
+            errors.append(String(localized: .locationDetectionFailure))
+        }
+        if form.showsInlineErrors {
+            errors += form.validate().errors[.location(fieldID)] ?? []
+        }
+        return errors
     }
 
     @ViewBuilder
@@ -129,6 +136,16 @@ private struct Previewer: View {
             from: .unknownCurrentLocation,
             to: .station(ModelStubs.eastFinchleyStation)
         )
+    )
+}
+
+#Preview("Location failure") {
+    Previewer(
+        form: .init(
+            from: .unknownCurrentLocation,
+            to: .station(ModelStubs.eastFinchleyStation)
+        ),
+        locationAccessoryStatus: .loadingState(.failure(errorMessage: "Location unavailable"))
     )
 }
 

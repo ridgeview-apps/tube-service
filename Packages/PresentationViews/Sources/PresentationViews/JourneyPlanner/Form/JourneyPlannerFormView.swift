@@ -121,7 +121,7 @@ public struct JourneyPlannerFormView: View {
             Text(.journeyPlannerPlanMyJourneyButtonTitle)
         }
         .buttonStyle(.primary)
-        .disabled(!form.canSubmit)
+        .disabled(!canSubmit)
         .accessibilityIdentifier(AccessibilityID.JourneyPlanner.planMyJourneyButton)
     }
 
@@ -152,6 +152,10 @@ public struct JourneyPlannerFormView: View {
             .listRowBackground(Color.defaultBackground)
             .listRowInsets(.init(top: 0, leading: 16, bottom: 12, trailing: 16))
         }
+    }
+
+    private var canSubmit: Bool {
+        form.canSubmit && form.fieldsMissingCurrentLocation(locationStatus: locationAccessoryStatus).isEmpty
     }
 
     private func submitForm() {

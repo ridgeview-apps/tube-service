@@ -21,6 +21,9 @@ extension Error {
         if let httpError = self as? HTTPError {
             return httpError.toUIErrorMessage() ?? fallback
         }
+        if case .currentLocationUnknown = self as? JourneyPlannerError {
+            return String(localized: L10n.locationDetectionFailure)
+        }
         return fallback
     }
 }

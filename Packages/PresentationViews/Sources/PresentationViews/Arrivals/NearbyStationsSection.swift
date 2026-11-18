@@ -24,10 +24,11 @@ struct NearbyStationsSection: View {
                 locationOffRow
             case .allowed(.loaded) where rows.isEmpty:
                 zeroResultsView
-            case .allowed(.loaded), .allowed(.loading):
+            case .allowed(.failure) where rows.isEmpty:
+                failureRow
+            case .allowed:
+                // A failed update keeps the last stations, which are usually still right
                 stationRows
-            case .allowed(.failure):
-                errorView
             }
         } header: {
             headerView
@@ -40,18 +41,42 @@ struct NearbyStationsSection: View {
             HStack {
                 LineGroupSectionHeader(title: title, imageName: "location")
                 Spacer()
-                loadingStatusView
+                statusView
             }
             .secondarySectionHeaderStyle()
         } else {
-            loadingStatusView
+            statusView
         }
     }
 
-    @ViewBuilder private var loadingStatusView: some View {
-        if let loadingState = locationAccess.loadingState {
-            LoadingStatusView(loadingState: loadingState)
+    @ViewBuilder private var statusView: some View {
+        switch locationAccess.state {
+        case .allowed(.loading):
+            LoadingStatusView(loadingState: .loading)
                 .defaultLoadingStatusStyle()
+        // Without stations, the failure row explains the error instead
+        case .allowed(.failure) where !rows.isEmpty:
+            updateFailureView
+        default:
+            EmptyView()
+        }
+    }
+
+    private var updateFailureView: some View {
+        HStack(spacing: 8) {
+            LoadingStatusView(
+                loadingState: .failure(errorMessage: String(localized: .nearbyStationsUpdateFailure))
+            )
+            .defaultLoadingStatusStyle()
+            Button {
+                onAction(.tappedRefresh)
+            } label: {
+                Label(.refreshButtonTitle, systemImage: "arrow.clockwise")
+                    .labelStyle(.iconOnly)
+            }
+            .buttonStyle(.borderless)
+            // The header's secondary style would otherwise grey it out
+            .foregroundStyle(.tint)
         }
     }
 
@@ -119,12 +144,28 @@ struct NearbyStationsSection: View {
         }
     }
 
-    private var errorView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(.nearbyStationsLoadFailureTitle)
-                .font(.headline)
-            refreshButton
+    private var failureRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(.locationDetectionFailure)
+                Text(.nearbyStationsLoadFailureSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button {
+                onAction(.tappedRefresh)
+            } label: {
+                Text(.refreshButtonTitle)
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
+            .controlSize(.small)
         }
+        .frame(minHeight: 52)
     }
 
     private var refreshButton: some View {

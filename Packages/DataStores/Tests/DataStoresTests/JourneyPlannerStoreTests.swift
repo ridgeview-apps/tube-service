@@ -100,6 +100,22 @@ struct JourneyPlannerStoreTests {
         #expect(model.pages.first?.isFailed == true)
     }
 
+    @Test
+    func loadJourneys_currentLocationUndetected_failsWithoutRequest() async throws {
+        let model = makeStore()
+        model.form.from = .unknownCurrentLocation
+        model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
+
+        await model.loadJourneys(modeIDs: modeIDs)
+
+        let page = try #require(model.pages.first)
+        guard case .failed(_, JourneyPlannerError.currentLocationUnknown) = page else {
+            Issue.record("Expected a currentLocationUnknown failure, got \(page)")
+            return
+        }
+        #expect(tflAPI.fetchJourneyResultsCallCount == 0)
+    }
+
     // MARK: - prepareForInitialLoad
 
     @Test

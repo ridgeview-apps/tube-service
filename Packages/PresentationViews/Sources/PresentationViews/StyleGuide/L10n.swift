@@ -33,6 +33,8 @@ public enum L10n {
     public static let lineStatusNavigationTitle = LocalizedStringResource.lineStatusNavigationTitle
     public static let lineStatusTabTitle = LocalizedStringResource.lineStatusTabTitle
 
+    public static let locationDetectionFailure = LocalizedStringResource.locationDetectionFailure
+
     public static let mapsNavigationTitle = LocalizedStringResource.mapsNavigationTitle
     public static let mapsTabTitle = LocalizedStringResource.mapsTabTitle
 
