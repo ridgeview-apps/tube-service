@@ -7,6 +7,7 @@ public struct SettingsView: View {
         case openDebugSettings
         case notificationsTapped
         case manageSubscription
+        case systemStatusTapped
     }
 
     public typealias ContactUs = Settings.ContactUs
@@ -96,8 +97,8 @@ public struct SettingsView: View {
             Link(destination: appReviewURL) {
                 Label(.settingsRateThisAppTitle, systemImage: "star.fill")
             }
-            NavigationLink {
-                SystemStatusDetailView(systemStatus: systemStatus)
+            Button {
+                onAction(.systemStatusTapped)
             } label: {
                 systemStatusLabelTitle
             }
@@ -114,7 +115,12 @@ public struct SettingsView: View {
                     .foregroundStyle(systemStatus.tint)
             }
             Text(.settingsSystemStatusTitle)
+                .foregroundStyle(.primary)
             Spacer()
+            // A button, so Settings can push the shared System status screen, drawn like the NavigationLink rows
+            Image(systemName: "chevron.forward")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
     }
 
@@ -133,6 +139,8 @@ public struct SettingsView: View {
             }
             NavigationLink {
                 acknowledgements
+                    .navigationTitle(Text(.settingsAcknowledgementsTitle))
+                    .navigationBarTitleDisplayMode(.inline)
             } label: {
                 Label(.settingsAcknowledgementsTitle, systemImage: "doc.text.fill")
             }

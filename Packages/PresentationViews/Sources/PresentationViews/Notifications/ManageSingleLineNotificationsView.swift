@@ -4,7 +4,6 @@ import SwiftUI
 public struct ManageSingleLineNotificationsView: View {
 
     public enum Action {
-        case close
         case openSettings
         /// The pinned "Turn on notifications" button was tapped for a line that has no settings yet.
         case add(LineNotificationSettings)
@@ -136,22 +135,10 @@ public struct ManageSingleLineNotificationsView: View {
                 settings = existingSettings
             }
         }
-        .navigationTitle(Text(.notificationsLineConfigNavTitle))
-        .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.success, trigger: saveFeedbackTrigger)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
         .sensoryFeedback(.selection, trigger: pauseFeedbackTrigger)
         .animation(.easeInOut(duration: 0.2), value: settings.isEnabled)
-        .toolbar {
-            // Nothing is saved for a new line until it's turned on, so closing cancels it;
-            // an existing line's edits are already saved, so closing confirms them.
-            // Both sit on the trailing side, clear of the back button when the screen is pushed.
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(role: isAddingSingleLine ? .close : .confirm) {
-                    onAction(.close)
-                }
-            }
-        }
     }
 
     // MARK: - Permission Warning

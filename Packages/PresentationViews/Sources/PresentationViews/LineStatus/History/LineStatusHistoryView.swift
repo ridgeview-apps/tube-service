@@ -34,8 +34,6 @@ public struct LineStatusHistoryView: View {
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .defaultMaxWidthWithFullBackground()
-        .navigationTitle(.lineStatusHistoryNavigationTitle)
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

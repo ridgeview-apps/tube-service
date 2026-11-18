@@ -4,14 +4,9 @@ import SwiftUI
 public struct NotificationsOnboardingConfirmationView: View {
 
     public let lineSettings: [LineNotificationSettings]
-    public let onDone: () -> Void
 
-    public init(
-        lineSettings: [LineNotificationSettings],
-        onDone: @escaping () -> Void
-    ) {
+    public init(lineSettings: [LineNotificationSettings]) {
         self.lineSettings = lineSettings
-        self.onDone = onDone
     }
 
     public var body: some View {
@@ -49,16 +44,6 @@ public struct NotificationsOnboardingConfirmationView: View {
             }
             .padding(20)
         }
-        .navigationTitle(Text(.notificationsConfirmationNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden()
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button(String(localized: .globalDone)) {
-                    onDone()
-                }
-            }
-        }
     }
 }
 
@@ -73,8 +58,7 @@ public struct NotificationsOnboardingConfirmationView: View {
                     .defaultValue(lineID: .victoria),
                     .defaultValue(lineID: .jubilee),
                     .defaultValue(lineID: .central)
-                ],
-                onDone: {}
+                ]
             )
         }
     }

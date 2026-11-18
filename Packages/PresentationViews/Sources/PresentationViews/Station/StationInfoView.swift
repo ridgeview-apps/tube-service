@@ -40,8 +40,6 @@ public struct StationInfoView: View {
         }
         .listStyle(.insetGrouped)
         .accessibilityIdentifier(AccessibilityID.StationInfo.list)
-        .navigationTitle(station.name)
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     // MARK: - Lines

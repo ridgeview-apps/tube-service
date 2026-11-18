@@ -124,6 +124,7 @@ struct LineStatusDetailScreen: View {
         }
         .sensoryFeedback(.success, trigger: notificationSaveSuccessCount)
         .navigationTitle(lineID.name)
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             FavouritesButton(.line, style: .small, isSelected: isFavouriteLine(for: lineID))
         }

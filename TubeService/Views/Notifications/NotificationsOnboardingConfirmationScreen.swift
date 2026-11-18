@@ -8,8 +8,16 @@ struct NotificationsOnboardingConfirmationScreen: View {
     let lineSettings: [LineNotificationSettings]
 
     var body: some View {
-        NotificationsOnboardingConfirmationView(lineSettings: lineSettings) {
-            dismissModal?()
-        }
+        NotificationsOnboardingConfirmationView(lineSettings: lineSettings)
+            .navigationTitle(Text(L10n.notificationsConfirmationNavigationTitle))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(role: .confirm) {
+                        dismissModal?()
+                    }
+                }
+            }
     }
 }

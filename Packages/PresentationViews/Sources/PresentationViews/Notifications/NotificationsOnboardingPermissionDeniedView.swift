@@ -57,8 +57,6 @@ public struct NotificationsOnboardingPermissionDeniedView: View {
             }
             .padding(20)
         }
-        .navigationTitle(Text(.notificationsPermissionDeniedNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

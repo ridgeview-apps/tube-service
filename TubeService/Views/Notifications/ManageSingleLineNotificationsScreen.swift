@@ -27,12 +27,26 @@ struct ManageSingleLineNotificationsScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
+        .navigationTitle(Text(L10n.notificationsLineConfigNavTitle))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // Nothing is saved for a new line until it's turned on, so closing cancels it;
+            // an existing line's edits are already saved, so closing confirms them.
+            // Both sit on the trailing side, clear of the back button when the screen is pushed.
+            ToolbarItem(placement: .topBarTrailing) {
+                Button(role: isAddingLine ? .close : .confirm) {
+                    dismissModal?()
+                }
+            }
+        }
+    }
+
+    private var isAddingLine: Bool {
+        existingSettings(for: lineID) == nil
     }
 
     private func handleAction(_ action: ManageSingleLineNotificationsView.Action) {
         switch action {
-        case .close:
-            dismissModal?()
         case .openSettings:
             openSettings()
         case .add(let newSettings):

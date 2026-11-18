@@ -7,7 +7,6 @@ public struct StationArrivalsView: View {
 
     public enum Action {
         case selectedLineGroup(Station.LineGroup)
-        case tappedInfo
         case tappedLineStatusRow
     }
 
@@ -21,6 +20,17 @@ public struct StationArrivalsView: View {
             self.refreshDate = refreshDate
             self.loadingState = loadingState
         }
+
+        /// The update time, for the navigation bar's subtitle.
+        public var lastUpdatedSubtitle: Text {
+            guard let refreshDate else { return Text(verbatim: "") }
+            return Text(.refreshStatusLastUpdated(Self.timeText(refreshDate)))
+        }
+
+        // Just the time: live arrivals are never from another day, so "today" adds nothing
+        private static func timeText(_ date: Date) -> String {
+            date.formatted(date: .omitted, time: .shortened)
+        }
     }
 
     public let station: Station
@@ -30,8 +40,6 @@ public struct StationArrivalsView: View {
     @Binding public var isFavourite: Bool
     public let onRefresh: @Sendable () async -> Void
     public let onAction: (Action) -> Void
-
-    @Environment(\.clock) private var clock
 
     public init(
         station: Station,
@@ -57,6 +65,10 @@ public struct StationArrivalsView: View {
         info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
+    private var lineStatus: StationLineStatusRow.Status {
+        .init(lines: selectedLines, isLoading: info.isLoadingLines)
+    }
+
     /// The selected chip keeps its badge too, so the badges don't move around as the selection changes.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
         station.lineGroups.ids(disruptedBy: disruptedLines)
@@ -64,27 +76,16 @@ public struct StationArrivalsView: View {
 
     private var hasChips: Bool { station.lineGroups.count > 1 }
 
-    private var noticesBadge: StationInfoButton.Badge? {
-        if noticeSections.hasClosureToday { return .closureToday }
-        return info.hasUnseenNotices ? .unseen : nil
-    }
-
-    private var noticeSections: StationNoticeSections {
-        StationNoticeSections(notices: info.notices, stationName: station.name, now: clock.now)
-    }
-
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 StationLineStatusRow(
-                    lines: selectedLines,
-                    isLoading: info.isLoadingLines,
-                    onTap: { onAction(.tappedLineStatusRow) }
+                    status: lineStatus,
+                    onTap: lineStatus.isDisruption ? { onAction(.tappedLineStatusRow) } : nil
                 )
                 .padding(.horizontal, 16)
                 StationBoardsView(
                     boardStates: arrivals.boardStates,
-                    refreshDate: arrivals.refreshDate,
                     loadingState: arrivals.loadingState,
                     isFavourite: $isFavourite
                 )
@@ -110,16 +111,6 @@ public struct StationArrivalsView: View {
         // Status rows that come and go slide rather than snap
         .animation(.default, value: disruptedLines.map(\.id))
         .defaultMaxWidthWithFullBackground()
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
-            ToolbarItem {
-                StationInfoButton(badge: noticesBadge) { onAction(.tappedInfo) }
-            }
-            ToolbarItem {
-                FavouritesButton(.station, style: .small, isSelected: $isFavourite)
-            }
-        }
     }
 }
 

@@ -41,8 +41,6 @@ public struct NotificationsOnboardingLineSetupView: View {
         .turnOnNotificationsBar(isDisabled: items.isEmpty) {
             onAction(.turnOnAlerts(items: items))
         }
-        .navigationTitle(Text(.notificationsLineAlertsNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.impact(weight: .light), trigger: removeFeedbackTrigger)
     }
 

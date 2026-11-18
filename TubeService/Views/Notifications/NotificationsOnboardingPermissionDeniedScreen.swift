@@ -22,6 +22,8 @@ struct NotificationsOnboardingPermissionDeniedScreen: View {
                 dismissModal?()
             }
         }
+        .navigationTitle(Text(L10n.notificationsPermissionDeniedNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .onChange(of: notifications.canReceivePushNotifications) { _, canReceivePush in
             if canReceivePush {
                 notifications.completeOnboarding(with: lineSettings.toNotificationPreferencesUpdate())

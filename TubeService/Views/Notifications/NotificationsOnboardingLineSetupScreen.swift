@@ -34,6 +34,8 @@ struct NotificationsOnboardingLineSetupScreen: View {
                 requestPushPermissionsAndFinish(with: lineSettings)
             }
         }
+        .navigationTitle(Text(L10n.notificationsLineAlertsNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { CloseToolbarItem() }
     }
 

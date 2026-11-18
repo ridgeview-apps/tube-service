@@ -1,6 +1,7 @@
 import DataStores
 import Models
 import PresentationViews
+import Shared
 import SwiftUI
 
 @MainActor
@@ -9,6 +10,7 @@ struct StationArrivalsScreen: View {
     @Environment(Navigator.self) private var navigator
     @Environment(LineStatusDataStore.self) private var lineStatus
     @Environment(StationsDataStore.self) private var stations
+    @Environment(\.clock) private var clock
 
     @AppStorage(
         UserDefaults.Keys.userPreferences.rawValue,
@@ -51,6 +53,19 @@ struct StationArrivalsScreen: View {
             }
         }
         .navigationTitle(station.name)
+        .navigationSubtitle(arrivals.lastUpdatedSubtitle)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            // Always shown, as every station has a location, so the toolbar doesn't shift once notices load
+            ToolbarItem {
+                StationInfoButton(badge: .init(info: info, stationName: station.name, now: clock.now)) {
+                    openInfo()
+                }
+            }
+            ToolbarItem {
+                FavouritesButton(.station, style: .small, isSelected: isFavouriteStation)
+            }
+        }
         .task {
             await refreshDataIfStale()
         }
@@ -144,10 +159,14 @@ struct StationArrivalsScreen: View {
         switch action {
         case .selectedLineGroup(let lineGroup):
             userPreferences.saveSelectedLineGroup(lineGroup, at: station)
-        case .tappedInfo, .tappedLineStatusRow:
-            userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
-            navigator.present(.station(.info(station)))
+        case .tappedLineStatusRow:
+            openInfo()
         }
+    }
+
+    private func openInfo() {
+        userPreferences.markNoticesSeen(notices.map(\.text), at: station.id)
+        navigator.present(.station(.info(station)))
     }
 }
 
