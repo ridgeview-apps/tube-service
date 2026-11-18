@@ -27,7 +27,6 @@ struct JourneyPlannerScreen: View {
             locationAccessoryStatus: .loadingState(location.detectionState.toLoadingState()),
             onAction: handleFormAction
         )
-        .toolbar { SettingsToolbarItem() }
         .onSceneDidBecomeActive { restoreUIState() }
         .onSceneDidBecomeInactive { saveUIState() }
         .onChange(of: userPreferences.recentlySavedJourneys) {

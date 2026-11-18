@@ -5,7 +5,7 @@ import SwiftUI
 
 // MARK: - AppTab
 
-enum AppTab: Hashable {
+enum AppTab: CaseIterable, Hashable {
     case lineStatus
     case journeyPlanner
     case arrivals
@@ -33,7 +33,11 @@ final class AppNavigator {
     }
 
     var selectedTabNavigator: Navigator {
-        switch selectedTab {
+        navigator(for: selectedTab)
+    }
+
+    func navigator(for tab: AppTab) -> Navigator {
+        switch tab {
         case .lineStatus: lineStatus
         case .journeyPlanner: journeyPlanner
         case .arrivals: arrivals
@@ -43,8 +47,8 @@ final class AppNavigator {
 
     /// Dismissing a tab's modal also takes down any sheets presented above it.
     func handleNotificationLaunch(_ payload: LineStatusNotificationPayload) {
-        for navigator in [lineStatus, journeyPlanner, arrivals, maps] {
-            navigator.dismissModal()
+        for tab in AppTab.allCases {
+            navigator(for: tab).dismissModal()
         }
         selectedTab = .lineStatus
         lineStatus.popToRoot()
