@@ -93,16 +93,4 @@ struct StationNoticeViewStateTests {
         #expect(StationNoticeSections.Kind(tflKind: "Interchange Message") == .interchange)
         #expect(StationNoticeSections.Kind(tflKind: "Lift Works") == .other("Lift Works"))
     }
-
-    // MARK: - Closure today
-
-    @Test(arguments: [
-        ([Self.currentClosure, Self.information], true),
-        ([Self.closureThisEvening, Self.information], true),
-        ([Self.closureNextWeek, Self.information], false),
-        ([Self.information], false)
-    ])
-    func closureTodayCountsOnlyClosuresOnNowOrLaterToday(notices: [StationNotice], expected: Bool) {
-        #expect(sections(notices).hasClosureToday == expected)
-    }
 }

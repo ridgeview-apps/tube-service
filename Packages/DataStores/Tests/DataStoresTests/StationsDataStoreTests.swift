@@ -88,7 +88,7 @@ struct StationsDataStoreTests {
         await stations.refreshStationDisruptions()
 
         #expect(
-            stations.notices(forStationID: "HUBKGX").map(\.text) == [
+            stations.notices(forStationID: "HUBKGX")?.map(\.text) == [
                 "The station is closed.",
                 "The lifts are closed from Monday.",
                 "Mini ramps are available."
@@ -109,8 +109,8 @@ struct StationsDataStoreTests {
 
         await stations.refreshStationDisruptions()
 
-        #expect(stations.notices(forStationID: "HUBKGX").map(\.text) == ["Westbound trains will not stop.", "Lifts are out of service."])
-        #expect(stations.notices(forStationID: "HUBKGX").first?.isClosure == true)
+        #expect(stations.notices(forStationID: "HUBKGX")?.map(\.text) == ["Westbound trains will not stop.", "Lifts are out of service."])
+        #expect(stations.notices(forStationID: "HUBKGX")?.first?.isClosure == true)
     }
 
     @Test
@@ -129,11 +129,12 @@ struct StationsDataStoreTests {
         await stations.refreshStationDisruptions()
 
         #expect(
-            stations.publishedNoticeTexts == [
-                "HUBPAD": ["Bakerloo line: mini ramps are available.", "Elizabeth line: lifts are out of service."],
-                "HUBKGX": ["Lifts are out of service."]
+            stations.notices(forStationID: "HUBPAD")?.map(\.text) == [
+                "Bakerloo line: mini ramps are available.", "Elizabeth line: lifts are out of service."
             ]
         )
+        #expect(stations.notices(forStationID: "HUBKGX")?.map(\.text) == ["Lifts are out of service."])
+        #expect(stations.notices(forStationID: "940GZZLUAGL") == [])
     }
 
     @Test
@@ -151,21 +152,35 @@ struct StationsDataStoreTests {
 
         await stations.refreshStationDisruptions()
 
-        #expect(stations.notices(forStationID: "HUBKGX").map(\.text) == ["Lifts are out of service."])
+        #expect(stations.notices(forStationID: "HUBKGX")?.map(\.text) == ["Lifts are out of service."])
     }
 
     @Test
-    func publishedNoticeTextsOnlyAfterASuccessfulFetch() async throws {
+    func noticesLoadUntilTheFirstFetchSucceeds() async throws {
         let stations = try makeStore(
             disruptedPointsJSON: """
                 [{ "atcoCode": "940GZZLUKSX", "description": "Lifts are out of service." }]
                 """
         )
-        #expect(stations.publishedNoticeTexts == nil)
+        #expect(stations.isLoadingNotices)
+        #expect(stations.notices(forStationID: "HUBKGX") == nil)
 
         await stations.refreshStationDisruptions()
 
-        #expect(stations.publishedNoticeTexts == ["HUBKGX": ["Lifts are out of service."]])
+        #expect(!stations.isLoadingNotices)
+        #expect(stations.notices(forStationID: "HUBKGX")?.map(\.text) == ["Lifts are out of service."])
+    }
+
+    @Test
+    func noticesStopLoadingWhenTheFirstFetchFails() async {
+        let tflAPI = StubTflAPIClient()
+        tflAPI.fetchStationDisruptionsError = URLError(.notConnectedToInternet)
+        let stations = StationsDataStore(tflAPI: tflAPI, stations: [kingsCross], now: { .now })
+
+        await stations.refreshStationDisruptions()
+
+        #expect(!stations.isLoadingNotices)
+        #expect(stations.notices(forStationID: "HUBKGX") == nil)
     }
 }
 

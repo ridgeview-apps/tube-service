@@ -39,16 +39,6 @@ struct StationNoticeSections: Equatable {
         closures.isEmpty && notices.isEmpty && later.isEmpty
     }
 
-    /// A closure on now or later today, which turns the notices button's badge orange. One on a later day doesn't, so
-    /// a closure weeks away doesn't take the badge every day until then.
-    var hasClosureToday: Bool {
-        !closures.isEmpty
-            || later.contains { row in
-                guard row.isClosure, case .laterToday = row.startTime else { return false }
-                return true
-            }
-    }
-
     init(notices: [StationNotice], stationName: String, now: Date, calendar: Calendar = .current) {
         var closures: [Row] = []
         var current: [Row] = []

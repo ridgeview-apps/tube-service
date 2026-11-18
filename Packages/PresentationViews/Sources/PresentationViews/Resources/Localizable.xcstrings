@@ -3379,18 +3379,6 @@
         }
       }
     },
-    "station.notices.closure.accessibility.value" : {
-      "comment" : "VoiceOver value for the notices button when the station has a closure on now or later today",
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Closure today"
-          }
-        }
-      }
-    },
     "station.notices.empty" : {
       "comment" : "Shown in the station info sheet when TfL has no notices for the station",
       "extractionState" : "manual",
@@ -3505,14 +3493,14 @@
         }
       }
     },
-    "station.notices.unseen.accessibility.value" : {
-      "comment" : "VoiceOver value for the notices button when the station has a notice not opened yet",
+    "station.notices.unavailable" : {
+      "comment" : "Shown in the station info sheet when the station's notices couldn't be loaded",
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "New"
+            "value" : "Notices unavailable"
           }
         }
       }
