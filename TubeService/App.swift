@@ -7,10 +7,13 @@ import SwiftUI
 struct RootScene: App {
 
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @State private var appData = AppDataStore(dependencies: .current)
-    @State private var appNavigator = AppNavigator()
+    @State private var appData: AppDataStore
+    @State private var appNavigator: AppNavigator
 
     init() {
+        let appData = AppDataStore(dependencies: .current)
+        _appData = State(initialValue: appData)
+        _appNavigator = State(initialValue: AppNavigator(purchases: appData.purchases))
         #if DEBUG
             TubeUITestLaunchConfiguration.fromProcessEnvironment()?.applyProcessSettings()
         #endif
@@ -22,7 +25,6 @@ struct RootScene: App {
                 Text("Running unit tests...")
             } else {
                 RootScreen()
-                    .sheetPresenter($appNavigator.sheetPresenter)
                     .appLifecycle(appData: appData, appDelegate: appDelegate, appNavigator: appNavigator)
                     .appEnvironment(dataStore: appData, appNavigator: appNavigator)
             }
@@ -55,45 +57,5 @@ extension View {
             // 27 the forced sidebar logs "Modifying state during view update" at launch and, in portrait, swallows
             // some taps, so UI tests run the iPad in landscape (see UITestCase).
             .environment(\.adaptableTabBarPlacement, ProcessInfo.isRunningUITests ? .sidebar : .automatic)
-    }
-}
-
-// MARK: - Sheets
-
-extension View {
-    func sheetPresenter(_ sheetPresenter: Binding<SheetPresenter>) -> some View {
-        self
-            .modifier(SheetPresenterModifier(sheetPresenter: sheetPresenter))
-    }
-}
-
-private struct SheetPresenterModifier: ViewModifier {
-    @Binding var sheetPresenter: SheetPresenter
-
-    // These are only needed for iOS App on Mac sheets to work (they crash otherwise)
-    @Environment(AppDataStore.self) private var appData
-    @Environment(AppNavigator.self) private var appNavigator
-
-    func body(content: Content) -> some View {
-        content
-            .sheet(item: $sheetPresenter.presentedSheet) { sheet in
-                sheetContentView(sheet)
-            }
-            .fullScreenCover(item: $sheetPresenter.presentedFullScreenSheet) { sheet in
-                sheetContentView(sheet)
-            }
-    }
-
-    @ViewBuilder
-    private func sheetContentView(_ sheet: Sheet) -> some View {
-        if ProcessInfo.processInfo.isiOSAppOnMac {
-            SheetView(sheet: sheet)
-                .appEnvironment(
-                    dataStore: appData,
-                    appNavigator: appNavigator
-                )
-        } else {
-            SheetView(sheet: sheet)
-        }
     }
 }

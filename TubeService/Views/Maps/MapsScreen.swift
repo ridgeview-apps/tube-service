@@ -17,10 +17,8 @@ struct MapsScreen: View {
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
-            NavigationHost(navigator: Navigator()) {
-                MapsScreen()
-            }
+        PreviewEnvironment(withNavigationHost: true) {
+            MapsScreen()
         }
     }
 #endif

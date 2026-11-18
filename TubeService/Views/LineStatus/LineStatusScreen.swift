@@ -101,10 +101,8 @@ struct LineStatusScreen: View {
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
-            NavigationHost(navigator: Navigator()) {
-                LineStatusScreen()
-            }
+        PreviewEnvironment(withNavigationHost: true) {
+            LineStatusScreen()
         }
     }
 #endif

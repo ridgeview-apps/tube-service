@@ -12,8 +12,8 @@ struct SettingsScreen: View {
     @Environment(PurchaseStore.self) private var purchases
     @Environment(SystemStatusDataStore.self) private var systemStatusData
     @Environment(NotificationsDataStore.self) private var notifications
+    @Environment(Navigator.self) private var navigator
 
-    @State private var router = Router<SettingsRoute>()
     @State private var showManageSubscriptionsSheet = false
 
     @AppStorage(
@@ -29,16 +29,6 @@ struct SettingsScreen: View {
     private var featureFlags: FeatureFlags = .default
 
     var body: some View {
-        NavigationStack(path: $router.navigation.path) {
-            rootView
-                .sheetPresenter($router.sheetPresenter)
-                .navigationDestination(for: SettingsRoute.self) { route in
-                    destinationView(for: route)
-                }
-        }
-    }
-
-    private var rootView: some View {
         SettingsView(
             appVersionNumber: Bundle.main.appVersionDisplayString ?? "",
             appReviewURL: appConfig.appReviewURL,
@@ -77,23 +67,11 @@ struct SettingsScreen: View {
     private func handleAction(_ action: SettingsView.Action) {
         switch action {
         case .openDebugSettings:
-            router.navigation.push(.debugSettings)
+            navigator.push(.debugSettings)
         case .manageSubscription:
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
-            router.sheetPresenter.show(
-                .notificationsFlow(
-                    notifications.isConfigured ? .manage(.all) : .onboarding(defaultLineID: nil)
-                )
-            )
-        }
-    }
-
-    @ViewBuilder
-    private func destinationView(for route: SettingsRoute) -> some View {
-        switch route {
-        case .debugSettings:
-            DebugSettingsScreen()
+            navigator.present(.notifications(lineID: nil))
         }
     }
 }
@@ -103,7 +81,7 @@ struct SettingsScreen: View {
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
+        PreviewEnvironment(withNavigationHost: true) {
             SettingsScreen()
         }
     }

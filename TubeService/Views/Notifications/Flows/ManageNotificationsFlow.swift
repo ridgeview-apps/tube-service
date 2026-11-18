@@ -10,9 +10,14 @@ enum ManageNotificationsRoute: Hashable {
 
 struct ManageNotificationsFlow: View {
 
+    enum Mode {
+        case singleLine(TrainLineID)
+        case all
+    }
+
     @Environment(PurchaseStore.self) private var purchases
 
-    let mode: NotificationsFlow.Context.ManageMode
+    let mode: Mode
 
     var body: some View {
         if !purchases.hasTubeServicePlus {
@@ -32,7 +37,7 @@ private struct ManageNotificationsStack: View {
 
     @State private var manageNotificationsRouter = Router<ManageNotificationsRoute>()
 
-    let mode: NotificationsFlow.Context.ManageMode
+    let mode: ManageNotificationsFlow.Mode
 
     var body: some View {
         NavigationStack(path: $manageNotificationsRouter.navigation.path) {

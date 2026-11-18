@@ -2,13 +2,13 @@ import SwiftUI
 import PresentationViews
 
 struct SettingsToolBarButton: ViewModifier {
-    @Environment(AppNavigator.self) private var appNavigator
+    @Environment(Navigator.self) private var navigator
 
     func body(content: Content) -> some View {
         content
             .toolbar {
                 NavigationButton.Settings {
-                    appNavigator.showSheet(.settings)
+                    navigator.present(.settings)
                 }
             }
     }
@@ -34,11 +34,5 @@ extension View {
 
     func withCloseToolbarButton() -> some View {
         self.modifier(CloseToolbarButtonModifier())
-    }
-
-    func asModalScreen() -> some View {
-        NavigationStack {
-            self.withCloseToolbarButton()
-        }
     }
 }

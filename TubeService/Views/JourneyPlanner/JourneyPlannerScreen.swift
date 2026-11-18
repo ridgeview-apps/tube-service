@@ -10,7 +10,6 @@ struct JourneyPlannerScreen: View {
     @State private var hasLoaded = false
 
     @Environment(Navigator.self) private var navigator
-    @Environment(AppNavigator.self) private var appNavigator
     @Environment(JourneyPlannerStore.self) private var journeyPlanner
     @Environment(LocationDataStore.self) private var location
     @Environment(StationsDataStore.self) private var stations
@@ -77,24 +76,12 @@ struct JourneyPlannerScreen: View {
         )
     }
 
-    private func currentFormValue(forLocationFieldID locationFieldID: JourneyPlannerForm.FieldID.LocationID) -> Binding<JourneyLocationPicker.Value?> {
-        .init(
-            get: { journeyPlanner.form.locationValue(for: locationFieldID) },
-            set: { newValue in journeyPlanner.form.populate(locationFieldID: locationFieldID, with: newValue) }
-        )
-    }
-
     // MARK: - Form actions
 
     private func handleFormAction(_ actionEvent: JourneyPlannerForm.Action) {
         switch actionEvent {
         case let .tappedLocationField(locationFieldID):
-            let config = JourneyLocationPickerScreen.Config(
-                navigationTitle: locationFieldID.navigationTitle,
-                recentJourneys: recentJourneys,
-                currentSelection: currentFormValue(forLocationFieldID: locationFieldID)
-            )
-            appNavigator.showSheet(.journeyLocationPicker(config))
+            navigator.present(.journeyLocationPicker(locationFieldID))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
         case let .tappedRecentJourney(recentJourneyItem):
@@ -111,29 +98,13 @@ struct JourneyPlannerScreen: View {
     }
 }
 
-private extension JourneyPlannerForm.FieldID.LocationID {
-
-    var navigationTitle: LocalizedStringResource {
-        switch self {
-        case .from:
-            L10n.journeyPlannerLocationPickerScreenFromNavigationTitle
-        case .to:
-            L10n.journeyPlannerLocationPickerScreenToNavigationTitle
-        case .via:
-            L10n.journeyPlannerLocationPickerScreenViaNavigationTitle
-        }
-    }
-}
-
 
 // MARK: - Previews
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
-            NavigationHost(navigator: Navigator()) {
-                JourneyPlannerScreen()
-            }
+        PreviewEnvironment(withNavigationHost: true) {
+            JourneyPlannerScreen()
         }
     }
 #endif

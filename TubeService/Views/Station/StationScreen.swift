@@ -179,10 +179,8 @@ import ModelStubs
 
 #if DEBUG
     #Preview {
-        PreviewEnvironment {
-            NavigationHost(navigator: Navigator()) {
-                StationScreen(station: ModelStubs.kingsCrossStation)
-            }
+        PreviewEnvironment(withNavigationHost: true) {
+            StationScreen(station: ModelStubs.kingsCrossStation)
         }
     }
 #endif
