@@ -40,6 +40,18 @@ extension JourneyPlannerForm {
         case visible
     }
 
+    /// The from/to fields that need the current location while it can't be detected.
+    func fieldsMissingCurrentLocation(
+        locationStatus: JourneyLocationTitleLabel.AccessoryStatus
+    ) -> Set<FieldID.LocationID> {
+        guard locationStatus.isFailure else { return [] }
+        return Set(
+            [FieldID.LocationID.from, .to].filter {
+                locationValue(for: $0)?.isCurrentLocation == true
+            }
+        )
+    }
+
     func validate() -> ValidationResult {
         var result = ValidationResult(errors: [:])
 

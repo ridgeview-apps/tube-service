@@ -6,6 +6,10 @@ public struct JourneyLocationTitleLabel: View {
     public enum AccessoryStatus {
         case warning
         case loadingState(LoadingState)
+
+        var isFailure: Bool {
+            if case .loadingState(.failure) = self { true } else { false }
+        }
     }
 
     let value: JourneyLocationPicker.Value
@@ -38,8 +42,6 @@ public struct JourneyLocationTitleLabel: View {
                             .foregroundColor(.yellow)
                     case .loadingState(.loading):
                         ProgressView()
-                    case .loadingState(.failure):
-                        Image(systemName: "exclamationmark.circle.fill")
                     default:
                         EmptyView()
                     }
@@ -60,7 +62,6 @@ import ModelStubs
     VStack {
         JourneyLocationTitleLabel(value: .unknownCurrentLocation)
         JourneyLocationTitleLabel(value: .unknownCurrentLocation, accessoryStatus: .loadingState(.loading))
-        JourneyLocationTitleLabel(value: .unknownCurrentLocation, accessoryStatus: .loadingState(.failure(errorMessage: "")))
         JourneyLocationTitleLabel(value: .unknownCurrentLocation, accessoryStatus: .warning)
         JourneyLocationTitleLabel(
             value: .currentLocation(

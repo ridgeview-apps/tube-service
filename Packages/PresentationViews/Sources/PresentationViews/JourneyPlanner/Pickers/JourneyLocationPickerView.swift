@@ -154,6 +154,10 @@ public struct JourneyLocationPickerView: View {
             Text(.locationAccessOffSubtitle)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+        case .allowed(.failure):
+            Text(.locationDetectionFailure)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
         case .allowed:
             if let locationTitle = location.name?.formattedSingleLineTitle, !locationTitle.isEmpty {
                 Text(locationTitle)
@@ -290,6 +294,20 @@ private struct Previewer: View {
         ],
         locationAccess: .init(
             state: .denied,
+            onRequestPermissions: {
+                print("Request permissions")
+            }
+        )
+    )
+}
+
+#Preview("Suggestions - location failure") {
+    Previewer(
+        sections: [
+            .suggestions([.unknownCurrentLocation])
+        ],
+        locationAccess: .init(
+            state: .allowed(.failure(errorMessage: "Location unavailable")),
             onRequestPermissions: {
                 print("Request permissions")
             }

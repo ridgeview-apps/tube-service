@@ -2174,6 +2174,17 @@
         }
       }
     },
+    "location.detection.failure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't get your location"
+          }
+        }
+      }
+    },
     "mail.not.supported" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2284,13 +2295,13 @@
         }
       }
     },
-    "nearby.stations.load.failure.title" : {
+    "nearby.stations.load.failure.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sorry, there was a problem getting your current location. Tap refresh to try again."
+            "value" : "Tap refresh to try again"
           }
         }
       }

@@ -27,7 +27,7 @@ struct NearbyStationsSection: View {
             case .allowed(.loaded), .allowed(.loading):
                 stationRows
             case .allowed(.failure):
-                errorView
+                failureRow
             }
         } header: {
             headerView
@@ -48,9 +48,10 @@ struct NearbyStationsSection: View {
         }
     }
 
+    // The failure row explains the error, so the header only shows progress
     @ViewBuilder private var loadingStatusView: some View {
-        if let loadingState = locationAccess.loadingState {
-            LoadingStatusView(loadingState: loadingState)
+        if locationAccess.loadingState == .loading {
+            LoadingStatusView(loadingState: .loading)
                 .defaultLoadingStatusStyle()
         }
     }
@@ -119,12 +120,28 @@ struct NearbyStationsSection: View {
         }
     }
 
-    private var errorView: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            Text(.nearbyStationsLoadFailureTitle)
-                .font(.headline)
-            refreshButton
+    private var failureRow: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle")
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(.locationDetectionFailure)
+                Text(.nearbyStationsLoadFailureSubtitle)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button {
+                onAction(.tappedRefresh)
+            } label: {
+                Text(.refreshButtonTitle)
+            }
+            .buttonStyle(.bordered)
+            .buttonBorderShape(.capsule)
+            .controlSize(.small)
         }
+        .frame(minHeight: 52)
     }
 
     private var refreshButton: some View {

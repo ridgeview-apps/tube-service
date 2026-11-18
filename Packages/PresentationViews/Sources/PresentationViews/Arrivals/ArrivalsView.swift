@@ -339,6 +339,10 @@ private let previewNearby = [
     Previewer(favourites: [], recents: [], nearby: [], locationAccessState: .denied)
 }
 
+#Preview("Location failure") {
+    Previewer(nearby: [], locationAccessState: .allowed(.failure(errorMessage: "Location unavailable")))
+}
+
 #Preview("New user - location allowed") {
     Previewer(favourites: [], recents: [])
 }

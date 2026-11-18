@@ -26,8 +26,9 @@ extension LocalSearchResultsStore {
         case .namedLocation(let value):
             guard !value.isResolved else { return location }
 
+            // Only location detection can give the current location a coordinate
             if value.isCurrentLocation {
-                assertionFailure("Current location should already be resolved")
+                throw JourneyPlannerError.currentLocationUnknown
             }
 
             guard let locationName = value.name else {
