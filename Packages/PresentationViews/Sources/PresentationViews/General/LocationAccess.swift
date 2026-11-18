@@ -17,22 +17,4 @@ public struct LocationAccess {
         self.state = state
         self.onRequestPermissions = onRequestPermissions
     }
-
-    /// False when a prompt or error stands in for the nearby results.
-    var showsResults: Bool {
-        switch state {
-        case .allowed(.loaded), .allowed(.loading):
-            true
-        case .notAsked, .denied, .allowed(.failure):
-            false
-        }
-    }
-
-    var loadingState: LoadingState? {
-        if case let .allowed(loadingState) = state {
-            loadingState
-        } else {
-            nil
-        }
-    }
 }

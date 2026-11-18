@@ -24,10 +24,11 @@ struct NearbyStationsSection: View {
                 locationOffRow
             case .allowed(.loaded) where rows.isEmpty:
                 zeroResultsView
-            case .allowed(.loaded), .allowed(.loading):
-                stationRows
-            case .allowed(.failure):
+            case .allowed(.failure) where rows.isEmpty:
                 failureRow
+            case .allowed:
+                // A failed update keeps the last stations, which are usually still right
+                stationRows
             }
         } header: {
             headerView
@@ -40,19 +41,42 @@ struct NearbyStationsSection: View {
             HStack {
                 LineGroupSectionHeader(title: title, imageName: "location")
                 Spacer()
-                loadingStatusView
+                statusView
             }
             .secondarySectionHeaderStyle()
         } else {
-            loadingStatusView
+            statusView
         }
     }
 
-    // The failure row explains the error, so the header only shows progress
-    @ViewBuilder private var loadingStatusView: some View {
-        if locationAccess.loadingState == .loading {
+    @ViewBuilder private var statusView: some View {
+        switch locationAccess.state {
+        case .allowed(.loading):
             LoadingStatusView(loadingState: .loading)
                 .defaultLoadingStatusStyle()
+        // Without stations, the failure row explains the error instead
+        case .allowed(.failure) where !rows.isEmpty:
+            updateFailureView
+        default:
+            EmptyView()
+        }
+    }
+
+    private var updateFailureView: some View {
+        HStack(spacing: 8) {
+            LoadingStatusView(
+                loadingState: .failure(errorMessage: String(localized: .nearbyStationsUpdateFailure))
+            )
+            .defaultLoadingStatusStyle()
+            Button {
+                onAction(.tappedRefresh)
+            } label: {
+                Label(.refreshButtonTitle, systemImage: "arrow.clockwise")
+                    .labelStyle(.iconOnly)
+            }
+            .buttonStyle(.borderless)
+            // The header's secondary style would otherwise grey it out
+            .foregroundStyle(.tint)
         }
     }
 

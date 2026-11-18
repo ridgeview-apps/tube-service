@@ -93,7 +93,7 @@ public struct ArrivalsView: View {
                     rows: nearby,
                     onAction: handleNearbyAction
                 )
-                if canShowMoreNearby && locationAccess.showsResults {
+                if canShowMoreNearby {
                     showMoreNearbyButton
                 }
             }
@@ -339,9 +339,13 @@ private let previewNearby = [
     Previewer(favourites: [], recents: [], nearby: [], locationAccessState: .denied)
 }
 
-#Preview("Location failure") {
+#Preview("Location update failure") {
     // Keeps the last nearby stations, as the store does when a refresh fails
     Previewer(locationAccessState: .allowed(.failure(errorMessage: "Location unavailable")))
+}
+
+#Preview("Location failure - no stations") {
+    Previewer(nearby: [], locationAccessState: .allowed(.failure(errorMessage: "Location unavailable")))
 }
 
 #Preview("New user - location allowed") {

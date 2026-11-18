@@ -2328,6 +2328,17 @@
         }
       }
     },
+    "nearby.stations.update.failure" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couldn't update your location"
+          }
+        }
+      }
+    },
     "notifications.button.line.active.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
