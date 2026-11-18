@@ -65,6 +65,10 @@ public struct StationArrivalsView: View {
         info.lines.filter { selectedLineGroup.lineIds.contains($0.id) }
     }
 
+    private var lineStatus: StationLineStatusRow.Status {
+        .init(lines: selectedLines, isLoading: info.isLoadingLines)
+    }
+
     /// The selected chip keeps its badge too, so the badges don't move around as the selection changes.
     private var disruptedLineGroupIDs: Set<Station.LineGroup.ID> {
         station.lineGroups.ids(disruptedBy: disruptedLines)
@@ -76,9 +80,8 @@ public struct StationArrivalsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 StationLineStatusRow(
-                    lines: selectedLines,
-                    isLoading: info.isLoadingLines,
-                    onTap: { onAction(.tappedLineStatusRow) }
+                    status: lineStatus,
+                    onTap: lineStatus.isDisruption ? { onAction(.tappedLineStatusRow) } : nil
                 )
                 .padding(.horizontal, 16)
                 StationBoardsView(
