@@ -53,7 +53,7 @@ extension Destination {
         case .systemStatus:
             SystemStatusScreen()
         case .paywall(let context):
-            PlusGatePaywallScreen(context: context)
+            PaywallScreen(context: context, continuesAfterPurchase: true)
         }
     }
 }
@@ -80,8 +80,7 @@ private struct ModalHost: View {
                 Group {
                     if let lapsedPaywallContext {
                         // Subscribing again swaps the modal's root back in.
-                        TubeServicePlusView(context: lapsedPaywallContext)
-                            .toolbar { CloseToolbarItem() }
+                        PaywallScreen(context: lapsedPaywallContext)
                     } else {
                         destination.screen
                     }
@@ -99,20 +98,26 @@ private struct ModalHost: View {
     }
 }
 
-/// The paywall the Plus gate shows in place of a destination, which continues to it after a purchase.
-private struct PlusGatePaywallScreen: View {
+/// The paywall, shown by the Plus gate in place of a destination and when Plus lapses while a modal is open.
+private struct PaywallScreen: View {
 
     @Environment(Navigator.self) private var navigator
 
     let context: PaywallContext
+    /// Only the gate's paywall continues: a lapsed modal's own root swaps back in after a purchase.
+    var continuesAfterPurchase = false
 
     var body: some View {
         TubeServicePlusView(context: context) { action in
             switch action {
             case .purchaseSuccess:
-                navigator.continueAfterPurchase()
+                if continuesAfterPurchase {
+                    navigator.continueAfterPurchase()
+                }
             }
         }
+        .navigationTitle(Text(L10n.tubeServicePlusNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { CloseToolbarItem() }
     }
 }

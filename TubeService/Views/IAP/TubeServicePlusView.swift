@@ -55,8 +55,6 @@ struct TubeServicePlusView: View {
                 onAction(.purchaseSuccess)
             }
         }
-        .navigationTitle(Text(L10n.tubeServicePlusNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
     }
 
     /// A restore that finds a subscription needs no feedback here: `hasTubeServicePlus` changing completes the flow.

@@ -29,6 +29,7 @@ public enum L10n {
 
     public static let journeyResultsNavigationTitle = LocalizedStringResource.journeyResultsNavigationTitle
 
+    public static let lineStatusHistoryNavigationTitle = LocalizedStringResource.lineStatusHistoryNavigationTitle
     public static let lineStatusNavigationTitle = LocalizedStringResource.lineStatusNavigationTitle
     public static let lineStatusTabTitle = LocalizedStringResource.lineStatusTabTitle
 
@@ -38,11 +39,16 @@ public enum L10n {
     public static let searchPrompt = LocalizedStringResource.searchPrompt
 
     public static let settingsNavigationTitle = LocalizedStringResource.settingsNavigationTitle
+    public static let settingsSystemStatusTitle = LocalizedStringResource.settingsSystemStatusTitle
     public static let tubeServicePlusNavigationTitle = LocalizedStringResource.tubeServicePlusNavigationTitle
 
+    public static let notificationsConfirmationNavigationTitle = LocalizedStringResource.notificationsConfirmationNavigationTitle
     public static let notificationsConfirmationScheduleLabel = LocalizedStringResource.notificationsConfirmationScheduleLabel
+    public static let notificationsLineAlertsNavigationTitle = LocalizedStringResource.notificationsLineAlertsNavigationTitle
+    public static let notificationsLineConfigNavTitle = LocalizedStringResource.notificationsLineConfigNavTitle
     public static let notificationsOtherLinesSectionTitle = LocalizedStringResource.notificationsOtherLinesSectionTitle
     public static let notificationsLineStatusNotSetUp = LocalizedStringResource.notificationsLineStatusNotSetUp
+    public static let notificationsPermissionDeniedNavigationTitle = LocalizedStringResource.notificationsPermissionDeniedNavigationTitle
 
     public static let notificationsPreferencesDisableButtonTitle = LocalizedStringResource.notificationsPreferencesDisableButtonTitle
     public static let notificationsPreferencesLinesSectionTitle = LocalizedStringResource.notificationsPreferencesLinesSectionTitle

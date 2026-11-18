@@ -19,6 +19,8 @@ struct ManageAllLineNotificationsScreen: View {
             savingState: savingState,
             onAction: handleAction
         )
+        .navigationTitle(Text(L10n.notificationsLineAlertsNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { CloseToolbarItem() }
     }
 

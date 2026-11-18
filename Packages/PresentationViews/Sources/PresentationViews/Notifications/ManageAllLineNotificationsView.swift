@@ -72,8 +72,6 @@ public struct ManageAllLineNotificationsView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
-        .navigationTitle(String(localized: .notificationsLineAlertsNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
         .sensoryFeedback(.warning, trigger: removeFeedbackTrigger)
     }
 

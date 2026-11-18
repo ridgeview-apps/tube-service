@@ -40,6 +40,7 @@ struct SettingsScreen: View {
         )
         .manageSubscriptions(isPresented: $showManageSubscriptionsSheet)
         .navigationTitle(Text(L10n.settingsNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar { CloseToolbarItem() }
     }
 
@@ -73,6 +74,8 @@ struct SettingsScreen: View {
             showManageSubscriptionsSheet = true
         case .notificationsTapped:
             navigator.present(.notifications(.root(lineID: nil)))
+        case .systemStatusTapped:
+            navigator.push(.systemStatus)
         }
     }
 }

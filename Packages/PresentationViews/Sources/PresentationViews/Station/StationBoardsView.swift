@@ -5,7 +5,6 @@ import SwiftUI
 struct StationBoardsView: View {
 
     let boardStates: [ArrivalsBoardState]
-    let refreshDate: Date?
     let loadingState: LoadingState
     @Binding var isFavourite: Bool
 
@@ -42,7 +41,6 @@ struct StationBoardsView: View {
                 FavouritesButton(.station, style: .large, isSelected: $isFavourite)
             }
         }
-        .navigationSubtitle(lastUpdatedSubtitle)
     }
 
     // Only a failed refresh earns a row above the boards; the update time itself sits quietly in the navigation bar
@@ -56,16 +54,6 @@ struct StationBoardsView: View {
             .labelStyle(.titleAndIcon)
             .defaultLastUpdatedTimeLabelStyle(foregroundStyle: Color.adaptiveRed)
         }
-    }
-
-    private var lastUpdatedSubtitle: Text {
-        guard let refreshDate else { return Text(verbatim: "") }
-        return Text(.refreshStatusLastUpdated(Self.timeText(refreshDate)))
-    }
-
-    // Just the time: live arrivals are never from another day, so "today" adds nothing
-    private static func timeText(_ date: Date) -> String {
-        date.formatted(date: .omitted, time: .shortened)
     }
 
     // Stands in for the boards while they first load, so the layout doesn't jump when they arrive

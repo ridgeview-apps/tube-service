@@ -72,6 +72,8 @@ struct DebugSettingsScreen: View {
             purchaseStoreSection
             pushNotificationsSection
         }
+        .navigationTitle(Text(verbatim: "Debug settings"))
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var purchaseStoreSection: some View {

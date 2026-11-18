@@ -8,6 +8,8 @@ struct SystemStatusScreen: View {
 
     var body: some View {
         SystemStatusDetailView(systemStatus: systemStatusData.currentStatus)
+            .navigationTitle(Text(L10n.settingsSystemStatusTitle))
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar { CloseToolbarItem() }
     }
 }

@@ -17,6 +17,8 @@ struct LineStatusHistoryScreen: View {
             loadingState: loadingState,
             onAction: handleAction
         )
+        .navigationTitle(Text(L10n.lineStatusHistoryNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear { fetchIfStale() }
         .onSceneDidBecomeActive { fetchIfStale() }
     }

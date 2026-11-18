@@ -2,12 +2,24 @@ import Shared
 import SwiftUI
 
 /// The Station screen's toolbar button that opens the station info, with a dot when its notices need a look.
-struct StationInfoButton: View {
+public struct StationInfoButton: View {
     /// Orange while a closure is on today, even once seen; otherwise the accent colour (not the chips' red) marks
     /// unseen notices.
-    enum Badge {
+    public enum Badge {
         case closureToday
         case unseen
+
+        /// `nil` when no notice needs a look.
+        public init?(info: StationInfo, stationName: String, now: Date) {
+            let noticeSections = StationNoticeSections(notices: info.notices, stationName: stationName, now: now)
+            if noticeSections.hasClosureToday {
+                self = .closureToday
+            } else if info.hasUnseenNotices {
+                self = .unseen
+            } else {
+                return nil
+            }
+        }
 
         var style: AnyShapeStyle {
             switch self {
@@ -27,7 +39,12 @@ struct StationInfoButton: View {
     let badge: Badge?
     let action: () -> Void
 
-    var body: some View {
+    public init(badge: Badge?, action: @escaping () -> Void) {
+        self.badge = badge
+        self.action = action
+    }
+
+    public var body: some View {
         Button(action: action) {
             Label {
                 Text(.stationInfoTitle)
