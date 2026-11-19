@@ -2,7 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A quiet line under the chips giving the selected line group's status.
+/// A slim strip above the boards giving the selected line group's status.
 struct StationLineStatusRow: View {
     enum Status: Equatable {
         case disruption(String)
@@ -45,10 +45,12 @@ struct StationLineStatusRow: View {
             statusRow(.goodService, title: placeholderTitle)
                 .redacted(reason: .placeholder)
         case .unavailable:
-            Text(.stationLineStatusUnavailable)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .compactLineLimit()
+            boardStrip(
+                Text(.stationLineStatusUnavailable)
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.7))
+                    .compactLineLimit()
+            )
         }
     }
 
@@ -56,26 +58,39 @@ struct StationLineStatusRow: View {
     private func statusRow(_ imageType: LineStatusAccessoryImageType, title: String) -> some View {
         if let onTap {
             Button(action: onTap) {
-                statusLabel(imageType, title: title, showsChevron: true)
-                    .contentShape(.rect)
+                boardStrip(statusLabel(imageType, title: title, showsChevron: true))
             }
             .buttonStyle(.plain)
         } else {
-            statusLabel(imageType, title: title, showsChevron: false)
+            boardStrip(statusLabel(imageType, title: title, showsChevron: false))
         }
+    }
+
+    private func boardStrip(_ content: some View) -> some View {
+        content
+            .multilineTextAlignment(.center)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 10)
+            .background(Color.arrivalsBoardBackground)
+            .roundedBorder(Color.arrivalsBoardBezel, lineWidth: 2)
     }
 
     private func statusLabel(_ imageType: LineStatusAccessoryImageType, title: String, showsChevron: Bool) -> some View {
         HStack(spacing: 6) {
             imageType.image
             Text(title)
-                .foregroundStyle(.primary)
+                .foregroundStyle(imageType == .disruption ? Color.arrivalsBoardPrimary : .white)
+        }
+        // Clears the chevron on both sides, so the message stays centred in the strip
+        .padding(.horizontal, showsChevron ? 16 : 0)
+        .frame(maxWidth: .infinity)
+        .overlay(alignment: .trailing) {
             if showsChevron {
                 Image(systemName: "chevron.right")
                     .font(.footnote)
-                    .foregroundStyle(.tertiary)
+                    .foregroundStyle(.white.opacity(0.7))
             }
-            Spacer(minLength: 0)
         }
         .font(.subheadline)
         .compactLineLimit()

@@ -83,7 +83,7 @@ public struct StationArrivalsView: View {
 
     public var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 12) {
                 StationLineStatusRow(
                     status: lineStatus,
                     onTap: lineStatus.isDisruption ? { onAction(.tappedLineStatusRow) } : nil
@@ -95,8 +95,7 @@ public struct StationArrivalsView: View {
                     isFavourite: $isFavourite
                 )
             }
-            // Closer to the chips than the boards, as the line status row describes the selected chip
-            .padding(.top, hasChips ? 2 : 16)
+            .padding(.top, hasChips ? 8 : 16)
             .padding(.bottom, 16)
         }
         // Before the bar, so neither reaches the chips' scroll view, whose refresh inset hides the chips on reopening
