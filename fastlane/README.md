@@ -29,14 +29,6 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 
 
-### add_badge_overlay
-
-```sh
-[bundle exec] fastlane add_badge_overlay
-```
-
-
-
 ### sync_signing
 
 ```sh
