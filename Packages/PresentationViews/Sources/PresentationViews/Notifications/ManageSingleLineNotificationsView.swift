@@ -98,8 +98,8 @@ public struct ManageSingleLineNotificationsView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         // New lines are saved from the pinned button; edits to existing lines are saved as they're made.
+        // The card above names the line, so the buttons don't, and fit on one line whatever its length.
         .turnOnNotificationsBar(
-            title: .notificationsLineConfigTurnOnButton(lineID.longName),
             isShown: isAddingSingleLine,
             isDisabled: savingState == .loading
         ) {
@@ -212,7 +212,7 @@ public struct ManageSingleLineNotificationsView: View {
             settings.isEnabled = false
         } label: {
             Label {
-                Text(.notificationsLineConfigPauseButton(lineID.longName))
+                Text(.notificationsLineConfigPauseButton)
             } icon: {
                 Image(systemName: "bell.slash.fill")
             }
@@ -227,7 +227,7 @@ public struct ManageSingleLineNotificationsView: View {
             showRemoveConfirmation = true
         } label: {
             Label {
-                Text(.notificationsLineConfigRemoveButton(lineID.longName))
+                Text(.notificationsLineConfigRemoveButton)
             } icon: {
                 Image(systemName: "trash.fill")
             }
