@@ -28,9 +28,6 @@ GEM
     aws-sigv4 (1.12.1)
       aws-eventstream (~> 1, >= 1.0.2)
     babosa (1.0.4)
-    badge (0.13.2)
-      fastlane (>= 2.0)
-      mini_magick (>= 4.9.4, < 5.0.0)
     base64 (0.3.0)
     benchmark (0.5.0)
     bigdecimal (4.1.3)
@@ -120,8 +117,6 @@ GEM
       xcodeproj (>= 1.13.0, < 2.0.0)
       xcpretty (~> 0.4.1)
       xcpretty-travis-formatter (>= 0.0.3, < 2.0.0)
-    fastlane-plugin-badge (1.5.0)
-      badge (~> 0.13.0)
     fastlane-sirp (1.1.0)
     gh_inspector (1.1.3)
     google-apis-androidpublisher_v3 (0.111.0)
@@ -268,7 +263,6 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
-  fastlane-plugin-badge
 
 CHECKSUMS
   CFPropertyList (3.0.8) sha256=2c99d0d980536d3d7ab252f7bd59ac8be50fbdd1ff487c98c949bb66bb114261
@@ -283,7 +277,6 @@ CHECKSUMS
   aws-sdk-s3 (1.245.0) sha256=16f76ae1d8eb7cab0d0034c053398c1ae98d08f5b14feaa8628ac4e6cab9faf5
   aws-sigv4 (1.12.1) sha256=6973ff95cb0fd0dc58ba26e90e9510a2219525d07620c8babeb70ef831826c00
   babosa (1.0.4) sha256=18dea450f595462ed7cb80595abd76b2e535db8c91b350f6c4b3d73986c5bc99
-  badge (0.13.2) sha256=606b643c5275268ac0ea1f7cdd536e4bff32c87638154c290d8eae8f64f84c43
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   benchmark (0.5.0) sha256=465df122341aedcb81a2a24b4d3bd19b6c67c1530713fd533f3ff034e419236c
   bigdecimal (4.1.3) sha256=61ebe1e5e559bdc3cc6f2c0ee7f427321fc838f59611c294356eb04d6e21cf66
@@ -309,7 +302,6 @@ CHECKSUMS
   faraday-retry (2.4.0) sha256=7b79c48fb7e56526faf247b12d94a680071ff40c9fda7cf1ec1549439ad11ebe
   fastimage (2.4.3) sha256=304457e3c35bfdaefda3f1dacab2222a96b230b8ce6977b6b54748c1cc7ec539
   fastlane (2.242.0) sha256=c1df04d5ba83049b239c9979727c2adf05f19e8bd8ad9e183a3df27029d16d2e
-  fastlane-plugin-badge (1.5.0) sha256=28b352ba20071aa41bf15d8698bfb9bc94fded089c222516aff225a9ed63b675
   fastlane-sirp (1.1.0) sha256=10bc94f9682efd8e1badfb31452a76dd8981f1f3a33717c765fde6d75b54d847
   gh_inspector (1.1.3) sha256=04cca7171b87164e053aa43147971d3b7f500fcb58177698886b48a9fc4a1939
   google-apis-androidpublisher_v3 (0.111.0) sha256=b39703104506f9879c5c1de4d93150f4f1c677a30abf179b8a9f85941de00dd4

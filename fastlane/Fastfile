@@ -52,16 +52,6 @@ end
 # Build & distribute
 #######################
 
-lane :add_badge_overlay do
-  badge_shield_title = ENV["XCODE_CONFIG"].slice(0, 4)
-  badge_shield_date_text = Time.new.strftime("%d.%m.%y")
-
-  add_badge(
-    shield: "#{badge_shield_title}-#{badge_shield_date_text}-blue",
-    no_badge: true
-  )
-end
-
 private_lane :main_target_bundle_id do
   read_xcconfig_file.attributes['MAIN_TARGET_BUNDLE_ID']
 end

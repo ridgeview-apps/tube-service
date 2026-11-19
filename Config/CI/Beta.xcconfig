@@ -2,6 +2,7 @@
 
 // Build/archive settings
 MAIN_TARGET_BUNDLE_ID = com.ridgeviewapps.tube-service.beta
+MAIN_TARGET_APP_ICON_NAME = AppIconBeta
 
 // App config / Info.plist values
 TFL_API_BASE_URL = https:/$()/api.tfl.gov.uk
