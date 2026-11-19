@@ -2592,13 +2592,13 @@
         }
       }
     },
-    "notifications.line.config.pause.button %@" : {
+    "notifications.line.config.pause.button" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pause %@ notifications"
+            "value" : "Pause notifications"
           }
         }
       }
@@ -2621,6 +2621,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ notifications are paused"
+          }
+        }
+      }
+    },
+    "notifications.line.config.remove.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove notifications"
           }
         }
       }
@@ -2687,17 +2698,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Turn on notifications"
-          }
-        }
-      }
-    },
-    "notifications.line.config.turn.on.button %@" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn on %@ notifications"
           }
         }
       }

@@ -4,7 +4,6 @@ import SwiftUI
 /// Use `turnOnNotificationsBar(isShown:isDisabled:action:)` so it's always pinned to the bottom of the screen.
 struct TurnOnNotificationsButton: View {
 
-    let title: LocalizedStringResource
     let isDisabled: Bool
     let action: () -> Void
 
@@ -13,7 +12,7 @@ struct TurnOnNotificationsButton: View {
     var body: some View {
         Button(action: action) {
             Label {
-                Text(title)
+                Text(.notificationsLineConfigTurnOnButton)
             } icon: {
                 Image(systemName: "bell.and.waves.left.and.right.fill")
                     .symbolEffect(.bounce, value: bellBounce)
@@ -34,7 +33,6 @@ struct TurnOnNotificationsButton: View {
 
 private struct TurnOnNotificationsBarModifier: ViewModifier {
 
-    let title: LocalizedStringResource
     let isShown: Bool
     let isDisabled: Bool
     let action: () -> Void
@@ -47,7 +45,7 @@ private struct TurnOnNotificationsBarModifier: ViewModifier {
     @ViewBuilder
     private var bar: some View {
         if isShown {
-            TurnOnNotificationsButton(title: title, isDisabled: isDisabled, action: action)
+            TurnOnNotificationsButton(isDisabled: isDisabled, action: action)
         }
     }
 }
@@ -56,16 +54,14 @@ extension View {
 
     /// Pins `TurnOnNotificationsButton` below the view.
     /// - Parameters:
-    ///   - title: Names the line when the screen is about a single one; onboarding covers several, so keeps the default.
     ///   - isShown: Whether the screen offers the button at all; editing existing lines saves from the toolbar.
     func turnOnNotificationsBar(
-        title: LocalizedStringResource = .notificationsLineConfigTurnOnButton,
         isShown: Bool = true,
         isDisabled: Bool,
         action: @escaping () -> Void
     ) -> some View {
         modifier(
-            TurnOnNotificationsBarModifier(title: title, isShown: isShown, isDisabled: isDisabled, action: action)
+            TurnOnNotificationsBarModifier(isShown: isShown, isDisabled: isDisabled, action: action)
         )
     }
 }
