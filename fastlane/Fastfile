@@ -35,7 +35,8 @@ private_lane :xcode_tests do |options|
   scan(
     scheme: options[:scheme],
     configuration: "Debug",
-    device: "iPhone 18 Pro"
+    device: "iPhone 18 Pro",
+    output_types: "junit"
   )
 end
 
