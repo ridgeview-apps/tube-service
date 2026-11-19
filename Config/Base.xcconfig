@@ -1,5 +1,6 @@
 // Default build/archive settings
 APP_VERSION_NUMBER=2.2.0
+MAIN_TARGET_APP_ICON_NAME = AppIcon
 
 // Default app config / Info.plist values
 APP_STORE_PRODUCT_URL = https:/$()/apps.apple.com/app/id1540626286
