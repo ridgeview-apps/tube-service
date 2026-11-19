@@ -49,9 +49,9 @@ public struct NotificationScheduleSelection: Hashable, Sendable {
         }
     }
 
-    /// One schedule per distinct day schedule, ordered by its first day, with days in week order (Mon–Sun),
-    /// so the payload is stable and no day is in two schedules.
-    public var schedules: [NotificationSchedule] {
+    /// The days that are on, grouped by schedule. Groups are ordered by their first day, with days in week order
+    /// (Mon–Sun), so the result is stable and no day is in two groups.
+    public var dayGroups: [(schedule: NotificationDaySchedule, days: [NotificationWeekday])] {
         var groups: [(schedule: NotificationDaySchedule, days: [NotificationWeekday])] = []
         for day in NotificationWeekday.allCases where self[day] != .off {
             if let index = groups.firstIndex(where: { $0.schedule == self[day] }) {
@@ -60,7 +60,12 @@ public struct NotificationScheduleSelection: Hashable, Sendable {
                 groups.append((self[day], [day]))
             }
         }
-        return groups.compactMap { group in
+        return groups
+    }
+
+    /// One schedule per day group, so the payload is stable and no day is in two schedules.
+    public var schedules: [NotificationSchedule] {
+        dayGroups.compactMap { group in
             switch group.schedule {
             case .off: nil
             case .allDay: .allDay(group.days)

@@ -14,6 +14,8 @@ public struct LineScheduleCard: View {
     @Binding public var settings: LineNotificationSettings
     private let accessory: Accessory
 
+    @State private var isEditingCustomSchedule = false
+
     private let barWidth: CGFloat = 8
 
     public init(settings: Binding<LineNotificationSettings>, accessory: Accessory = .none) {
@@ -30,13 +32,10 @@ public struct LineScheduleCard: View {
 
             Divider()
 
-            // The rows' own 44pt height provides the spacing between them and below the divider.
-            VStack(alignment: .leading, spacing: 0) {
-                NotificationDaysPicker(days: $settings.schedule.onDays)
-                timeSlotPicker
-            }
-            // Faded while paused but still editable, so the schedule can be set before resuming.
-            .opacity(settings.isEnabled ? 1 : 0.5)
+            // The row's own 44pt height provides the spacing below the divider.
+            schedulePicker
+                // Faded while paused but still editable, so the schedule can be set before resuming.
+                .opacity(settings.isEnabled ? 1 : 0.5)
         }
         .padding(16)
         // Content keeps its full 16pt inset from the bar's inner edge, not from the card's edge.
@@ -110,15 +109,16 @@ public struct LineScheduleCard: View {
 
     // MARK: - Schedule
 
-    /// The time slot row, with the slot's times (if any) under the value.
-    private var timeSlotPicker: some View {
-        ScheduleMenuRow(
-            title: .notificationsLineScheduleTimeLabel,
-            value: String(localized: settings.schedule.timeSlotTitle),
-            detail: settings.schedule.sharedDaySchedule?.timesDescription
+    /// The schedule row: a preset's name, or "Custom" with a summary of the days under it.
+    private var schedulePicker: some View {
+        let preset = settings.schedule.preset
+        return ScheduleMenuRow(
+            title: .notificationsLineScheduleLabel,
+            value: String(localized: preset?.title ?? .notificationsScheduleCustomTitle),
+            detail: preset == nil ? settings.schedule.summary : nil
         ) {
             // Toggles rather than a Picker: menus document title-and-subtitle labels for toggles, not picker options.
-            ForEach(NotificationDaySchedule.timeSlots, id: \.self) { option in
+            ForEach(NotificationSchedulePreset.allCases, id: \.self) { option in
                 Toggle(isOn: selectionBinding(for: option)) {
                     Text(option.title)
                     if let times = option.timesDescription {
@@ -126,16 +126,26 @@ public struct LineScheduleCard: View {
                     }
                 }
             }
+            Section {
+                Button(preset == nil ? .notificationsScheduleCustomEditButton : .notificationsScheduleCustomButton) {
+                    isEditingCustomSchedule = true
+                }
+            }
+        }
+        .sheet(isPresented: $isEditingCustomSchedule) {
+            NotificationScheduleEditorView(schedule: settings.schedule) { schedule in
+                settings.schedule = schedule
+            }
         }
     }
 
     /// On when `option` is selected; turning it on selects it. Turning the selected option off does nothing,
-    /// so exactly one time slot is always selected, as with a picker.
-    private func selectionBinding(for option: NotificationDaySchedule) -> Binding<Bool> {
+    /// so the schedule is never left empty.
+    private func selectionBinding(for option: NotificationSchedulePreset) -> Binding<Bool> {
         Binding(
-            get: { settings.schedule.sharedDaySchedule == option },
+            get: { settings.schedule.preset == option },
             set: { isOn in
-                if isOn { settings.schedule.applyToOnDays(option) }
+                if isOn { settings.schedule = option.selection }
             }
         )
     }
@@ -163,6 +173,22 @@ public struct LineScheduleCard: View {
             lineID: .circle,
             isEnabled: false,
             schedule: .init(days: NotificationWeekday.weekend, schedule: .allDay)
+        )
+        LineScheduleCard(settings: $settings, accessory: .status)
+            .padding(20)
+    }
+
+    #Preview("Custom schedule") {
+        @Previewable @State var settings = LineNotificationSettings.defaultValue(
+            lineID: .elizabeth,
+            schedule: .init([
+                .monday: .peakHours,
+                .tuesday: .peakHours,
+                .wednesday: .times([
+                    .init(startTime: .init(hour: 7, minute: 0), endTime: .init(hour: 9, minute: 0))
+                ]),
+                .saturday: .allDay
+            ])
         )
         LineScheduleCard(settings: $settings, accessory: .status)
             .padding(20)

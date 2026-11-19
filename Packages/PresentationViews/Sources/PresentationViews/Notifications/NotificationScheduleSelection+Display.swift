@@ -2,18 +2,38 @@ import Foundation
 import Models
 import SwiftUI
 
-extension NotificationDaySchedule {
-
-    /// The options the Time row offers.
-    static let timeSlots: [Self] = [.peakHours, .allDay]
+extension NotificationSchedulePreset {
 
     var title: LocalizedStringResource {
+        switch self {
+        case .weekdayPeakHours: .notificationsSchedulePresetWeekdayPeakHours
+        case .weekdaysAllDay: .notificationsSchedulePresetWeekdaysAllDay
+        case .everyDayPeakHours: .notificationsSchedulePresetEveryDayPeakHours
+        case .everyDayAllDay: .notificationsSchedulePresetEveryDayAllDay
+        }
+    }
+
+    /// The peak times, for presets that use them. `nil` for all-day presets, as the title already says everything.
+    var timesDescription: String? {
+        switch self {
+        case .weekdayPeakHours, .everyDayPeakHours: NotificationDaySchedule.peakHours.timesDescription
+        case .weekdaysAllDay, .everyDayAllDay: nil
+        }
+    }
+}
+
+extension NotificationDaySchedule {
+
+    /// e.g. "Off", "Peak hours" or "7:00–9:00 AM".
+    var summary: String {
         if self == .peakHours {
-            .notificationsScheduleTimeSlotPeakTitle
+            String(localized: .notificationsScheduleTimeSlotPeakTitle)
+        } else if let timesDescription {
+            timesDescription
         } else if self == .allDay {
-            .notificationsScheduleTimeSlotAllDayTitle
+            String(localized: .notificationsScheduleTimeSlotAllDayTitle)
         } else {
-            .notificationsScheduleTimeSlotCustomTitle
+            String(localized: .notificationsScheduleDayOffTitle)
         }
     }
 
@@ -26,44 +46,26 @@ extension NotificationDaySchedule {
 
 extension NotificationScheduleSelection {
 
-    /// A compact one-line summary, e.g. "Mon–Fri · Peak hours".
+    var preset: NotificationSchedulePreset? {
+        NotificationSchedulePreset(matching: self)
+    }
+
+    /// The preset's name, or a line per group of days that share a schedule, e.g. "Mon–Fri · Peak hours".
     var summary: String {
-        String(localized: .notificationsScheduleSummary(daysDescription, String(localized: timeSlotTitle)))
-    }
-
-    var daysDescription: String {
-        Self.daysDescription(for: onDays)
-    }
-
-    /// The days the Days row shows as selected. Days turned on get the schedule the others share.
-    var onDays: Set<NotificationWeekday> {
-        get { Set(NotificationWeekday.allCases.filter { self[$0] != .off }) }
-        set {
-            let addedDaySchedule = sharedDaySchedule ?? .peakHours
-            for day in NotificationWeekday.allCases {
-                if !newValue.contains(day) {
-                    self[day] = .off
-                } else if self[day] == .off {
-                    self[day] = addedDaySchedule
-                }
+        if let preset {
+            return String(localized: preset.title)
+        }
+        return
+            dayGroups
+            .map { group in
+                String(
+                    localized: .notificationsScheduleSummary(
+                        Self.daysDescription(for: Set(group.days)),
+                        group.schedule.summary
+                    )
+                )
             }
-        }
-    }
-
-    /// The schedule every on day shares, which the Time row shows. `nil` when the days differ.
-    var sharedDaySchedule: NotificationDaySchedule? {
-        let daySchedules = Set(onDays.map { self[$0] })
-        return daySchedules.count == 1 ? daySchedules.first : nil
-    }
-
-    var timeSlotTitle: LocalizedStringResource {
-        sharedDaySchedule?.title ?? .notificationsScheduleTimeSlotCustomTitle
-    }
-
-    mutating func applyToOnDays(_ daySchedule: NotificationDaySchedule) {
-        for day in onDays {
-            self[day] = daySchedule
-        }
+            .joined(separator: "\n")
     }
 
     /// e.g. "Mon–Fri", "Mon, Wed and Sat–Sun" or "Every day".
@@ -106,8 +108,17 @@ extension NotificationScheduleWindow {
 
 extension NotificationTimeOfDay {
 
-    /// The time on a fixed, DST-free date, for formatting only.
-    fileprivate var referenceDate: Date {
+    /// The latest time a window can end, as windows can't run past midnight.
+    static let endOfDay = Self(hour: 23, minute: 59)
+
+    /// The time from a date picker, which edits `referenceDate`.
+    init(_ date: Date) {
+        let components = Calendar.current.dateComponents([.hour, .minute], from: date)
+        self.init(hour: components.hour ?? 0, minute: components.minute ?? 0)
+    }
+
+    /// The time on a fixed, DST-free date, for formatting and date pickers.
+    var referenceDate: Date {
         let components = DateComponents(year: 2000, month: 1, day: 1, hour: hour, minute: minute)
         return Calendar.current.date(from: components) ?? .now
     }

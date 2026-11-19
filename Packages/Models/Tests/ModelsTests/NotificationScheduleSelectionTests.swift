@@ -136,6 +136,19 @@ struct NotificationScheduleSelectionTests {
         #expect(selection.schedules == [.allDay([.thursday])])
     }
 
+    @Test
+    func dayGroupsGroupIdenticalDaysInWeekOrder() {
+        let selection = NotificationScheduleSelection([
+            .sunday: .allDay,
+            .tuesday: .times(peakWindows),
+            .monday: .allDay,
+            .wednesday: .off
+        ])
+
+        #expect(selection.dayGroups.map(\.schedule) == [.allDay, .times(peakWindows)])
+        #expect(selection.dayGroups.map(\.days) == [[.monday, .sunday], [.tuesday]])
+    }
+
     // MARK: - Presets
 
     @Test

@@ -2702,24 +2702,13 @@
         }
       }
     },
-    "notifications.line.schedule.days.label" : {
+    "notifications.line.schedule.label" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Days"
-          }
-        }
-      }
-    },
-    "notifications.line.schedule.time.label" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Time"
+            "value" : "Schedule"
           }
         }
       }
@@ -2911,6 +2900,127 @@
         }
       }
     },
+    "notifications.schedule.custom.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom…"
+          }
+        }
+      }
+    },
+    "notifications.schedule.custom.edit.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit custom…"
+          }
+        }
+      }
+    },
+    "notifications.schedule.custom.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.add.time.button" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add time"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.also.apply.header" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Also apply to"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.custom.times.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom times"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.end.time.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End time"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.off.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off"
+          }
+        }
+      }
+    },
+    "notifications.schedule.day.start.time.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start time"
+          }
+        }
+      }
+    },
+    "notifications.schedule.editor.no.days.footer" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on at least one day to save."
+          }
+        }
+      }
+    },
+    "notifications.schedule.editor.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom schedule"
+          }
+        }
+      }
+    },
     "notifications.schedule.every.day" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2918,6 +3028,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Every day"
+          }
+        }
+      }
+    },
+    "notifications.schedule.preset.every.day.all.day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day all day"
+          }
+        }
+      }
+    },
+    "notifications.schedule.preset.every.day.peak.hours" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every day peak hours"
+          }
+        }
+      }
+    },
+    "notifications.schedule.preset.weekday.peak.hours" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekday peak hours"
+          }
+        }
+      }
+    },
+    "notifications.schedule.preset.weekdays.all.day" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays all day"
           }
         }
       }
@@ -2951,17 +3105,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "All day"
-          }
-        }
-      }
-    },
-    "notifications.schedule.time.slot.custom.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Custom"
           }
         }
       }
