@@ -104,7 +104,7 @@ struct NotificationScheduleSelectionTests {
     // MARK: - Saving
 
     @Test
-    func weekdayPeakHoursSavesOneSchedule() {
+    func weekdaysPeakHoursSavesOneSchedule() {
         let selection = NotificationScheduleSelection(days: weekdays, schedule: .times(peakWindows))
 
         #expect(selection.schedules == [NotificationSchedule(days: weekdays, allDay: false, windows: peakWindows)])
@@ -152,7 +152,7 @@ struct NotificationScheduleSelectionTests {
     // MARK: - Presets
 
     @Test
-    func defaultIsWeekdayPeakHours() {
+    func defaultIsWeekdaysPeakHours() {
         #expect(
             NotificationScheduleSelection.default.schedules == [
                 NotificationSchedule(days: weekdays, allDay: false, windows: peakWindows)
@@ -162,18 +162,14 @@ struct NotificationScheduleSelectionTests {
 
     @Test
     func presetsMatchTheirSchedulesHoweverTheyWereBuilt() {
-        var everyDayPeakHours = NotificationScheduleSelection([:])
-        for day in NotificationWeekday.allCases {
-            everyDayPeakHours[day] = .times(peakWindows.reversed())
+        var weekdaysPeakHours = NotificationScheduleSelection([:])
+        for day in weekdays.reversed() {
+            weekdaysPeakHours[day] = .times(peakWindows.reversed())
         }
         let weekdaysAllDay = NotificationScheduleSelection(schedules: [.allDay([.friday, .monday, .wednesday]), .allDay([.tuesday, .thursday])])
 
-        #expect(
-            NotificationSchedulePreset(matching: NotificationScheduleSelection(days: weekdays, schedule: .times(peakWindows)))
-                == .weekdayPeakHours
-        )
+        #expect(NotificationSchedulePreset(matching: weekdaysPeakHours) == .weekdaysPeakHours)
         #expect(NotificationSchedulePreset(matching: weekdaysAllDay) == .weekdaysAllDay)
-        #expect(NotificationSchedulePreset(matching: everyDayPeakHours) == .everyDayPeakHours)
         #expect(
             NotificationSchedulePreset(matching: NotificationScheduleSelection(days: NotificationWeekday.allCases, schedule: .allDay))
                 == .everyDayAllDay
@@ -182,13 +178,19 @@ struct NotificationScheduleSelectionTests {
 
     @Test
     func scheduleCloseToAPresetMatchesNone() {
-        var weekdayPeakHoursPlusSaturday = NotificationScheduleSelection(days: weekdays, schedule: .times(peakWindows))
-        weekdayPeakHoursPlusSaturday[.saturday] = .times(peakWindows)
+        var weekdaysPeakHoursPlusSaturday = NotificationScheduleSelection(days: weekdays, schedule: .times(peakWindows))
+        weekdaysPeakHoursPlusSaturday[.saturday] = .times(peakWindows)
         var weekdaysAllDayButFridayPeak = NotificationScheduleSelection(days: weekdays, schedule: .allDay)
         weekdaysAllDayButFridayPeak[.friday] = .times(peakWindows)
+        // Weekends have no peak hours, so peak times every day are offered through Custom only.
+        let everyDayPeakHours = NotificationScheduleSelection(
+            days: NotificationWeekday.allCases,
+            schedule: .times(peakWindows)
+        )
 
-        #expect(NotificationSchedulePreset(matching: weekdayPeakHoursPlusSaturday) == nil)
+        #expect(NotificationSchedulePreset(matching: weekdaysPeakHoursPlusSaturday) == nil)
         #expect(NotificationSchedulePreset(matching: weekdaysAllDayButFridayPeak) == nil)
+        #expect(NotificationSchedulePreset(matching: everyDayPeakHours) == nil)
     }
 
     // MARK: - Merging windows

@@ -3038,29 +3038,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Every day all day"
-          }
-        }
-      }
-    },
-    "notifications.schedule.preset.every.day.peak.hours" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Every day peak hours"
-          }
-        }
-      }
-    },
-    "notifications.schedule.preset.weekday.peak.hours" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Weekday peak hours"
+            "value" : "Every day, all day"
           }
         }
       }
@@ -3071,7 +3049,18 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weekdays all day"
+            "value" : "Weekdays, all day"
+          }
+        }
+      }
+    },
+    "notifications.schedule.preset.weekdays.peak.hours" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekdays, peak hours"
           }
         }
       }

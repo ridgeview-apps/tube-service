@@ -6,17 +6,17 @@ extension NotificationSchedulePreset {
 
     var title: LocalizedStringResource {
         switch self {
-        case .weekdayPeakHours: .notificationsSchedulePresetWeekdayPeakHours
+        case .weekdaysPeakHours: .notificationsSchedulePresetWeekdaysPeakHours
         case .weekdaysAllDay: .notificationsSchedulePresetWeekdaysAllDay
-        case .everyDayPeakHours: .notificationsSchedulePresetEveryDayPeakHours
         case .everyDayAllDay: .notificationsSchedulePresetEveryDayAllDay
         }
     }
 
-    /// The peak times, for presets that use them. `nil` for all-day presets, as the title already says everything.
+    /// The peak times, one window per line so a range never wraps. `nil` for all-day presets, as the title
+    /// already says everything.
     var timesDescription: String? {
         switch self {
-        case .weekdayPeakHours, .everyDayPeakHours: NotificationDaySchedule.peakHours.timesDescription
+        case .weekdaysPeakHours: NotificationDaySchedule.peakHours.timesLines
         case .weekdaysAllDay, .everyDayAllDay: nil
         }
     }
@@ -41,6 +41,12 @@ extension NotificationDaySchedule {
     var timesDescription: String? {
         guard case .times(let windows) = self, !windows.isEmpty else { return nil }
         return windows.map(\.formatted).formatted(.list(type: .and).locale(.copy))
+    }
+
+    /// e.g. "6:30–9:30 AM" and "4:00–7:00 PM" on separate lines. `nil` unless there are times.
+    var timesLines: String? {
+        guard case .times(let windows) = self, !windows.isEmpty else { return nil }
+        return windows.map(\.formatted).joined(separator: "\n")
     }
 }
 

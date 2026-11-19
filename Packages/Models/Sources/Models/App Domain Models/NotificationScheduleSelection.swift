@@ -17,7 +17,7 @@ public struct NotificationScheduleSelection: Hashable, Sendable {
         self.init(Dictionary(uniqueKeysWithValues: Set(days).map { ($0, schedule) }))
     }
 
-    public static let `default` = NotificationSchedulePreset.weekdayPeakHours.selection
+    public static let `default` = NotificationSchedulePreset.weekdaysPeakHours.selection
 
     /// Merges a day's times as they're stored, so the user sees the merged result and the API never gets overlaps.
     public subscript(day: NotificationWeekday) -> NotificationDaySchedule {
@@ -116,16 +116,14 @@ public enum NotificationDaySchedule: Hashable, Sendable {
 /// The common schedules, offered by name. Matched by equality, so a custom schedule that happens to equal
 /// one is shown as that preset.
 public enum NotificationSchedulePreset: Hashable, Sendable, CaseIterable {
-    case weekdayPeakHours
+    case weekdaysPeakHours
     case weekdaysAllDay
-    case everyDayPeakHours
     case everyDayAllDay
 
     public var selection: NotificationScheduleSelection {
         switch self {
-        case .weekdayPeakHours: .init(days: NotificationWeekday.weekdays, schedule: .peakHours)
+        case .weekdaysPeakHours: .init(days: NotificationWeekday.weekdays, schedule: .peakHours)
         case .weekdaysAllDay: .init(days: NotificationWeekday.weekdays, schedule: .allDay)
-        case .everyDayPeakHours: .init(days: NotificationWeekday.allCases, schedule: .peakHours)
         case .everyDayAllDay: .init(days: NotificationWeekday.allCases, schedule: .allDay)
         }
     }
