@@ -139,7 +139,7 @@ public struct NotificationsOnboardingLineSetupView: View {
                             items.append(
                                 .defaultValue(
                                     lineID: lineID,
-                                    schedule: .init(days: Set(NotificationWeekday.allCases), timeSlot: .allDay)
+                                    schedule: NotificationSchedulePreset.everyDayAllDay.selection
                                 )
                             )
                         }

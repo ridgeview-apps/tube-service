@@ -29,7 +29,7 @@ struct NotificationPreferencesPatchBuilderTests {
         // Then – fields the user can't edit are left for the server to keep
         let line = try #require(patch.lines["victoria"] ?? nil)
         #expect(line.enabled == false)
-        #expect(line.schedules == [settings.schedule.schedule])
+        #expect(line.schedules == settings.schedule.schedules)
         #expect(line.severityThreshold == nil)
         #expect(line.notifyRecoveries == nil)
     }
@@ -47,7 +47,7 @@ struct NotificationPreferencesPatchBuilderTests {
         #expect(line.enabled == true)
         #expect(line.severityThreshold == .minorDelays)
         #expect(line.notifyRecoveries == true)
-        #expect(line.schedules == [settings.schedule.schedule])
+        #expect(line.schedules == settings.schedule.schedules)
     }
 
     @Test

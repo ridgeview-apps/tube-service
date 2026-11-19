@@ -1,70 +1,133 @@
 import Foundation
 
-/// When a line's alerts are sent: a set of days, with the same time slot on each of them.
+/// When a line's notifications are sent: a schedule for each day of the week.
 ///
-/// Always maps to exactly one API `NotificationSchedule`. Server schedules that can't be expressed this way
-/// (several schedules, or windows other than peak hours) fall back to `.default`.
+/// Reads any server schedules without loss, and saves days with the same schedule as one API `NotificationSchedule`.
 public struct NotificationScheduleSelection: Hashable, Sendable {
-    /// Never empty in practice: the API requires at least one day, so the UI won't deselect the last one.
-    public var days: Set<NotificationWeekday>
-    public var timeSlot: NotificationTimeSlot
+    /// Days that are off have no entry, so equal schedules compare equal however they were built.
+    private var daySchedules: [NotificationWeekday: NotificationDaySchedule] = [:]
 
-    public init(days: Set<NotificationWeekday>, timeSlot: NotificationTimeSlot) {
-        self.days = days
-        self.timeSlot = timeSlot
-    }
-
-    public static let `default` = NotificationScheduleSelection(days: Set(NotificationWeekday.weekdays), timeSlot: .peak)
-
-    public init(schedules: [NotificationSchedule]) {
-        guard
-            schedules.count == 1,
-            let schedule = schedules.first,
-            !schedule.days.isEmpty,
-            let timeSlot = NotificationTimeSlot(schedule: schedule)
-        else {
-            self = .default
-            return
+    public init(_ daySchedules: [NotificationWeekday: NotificationDaySchedule]) {
+        for (day, schedule) in daySchedules {
+            self[day] = schedule
         }
-        self.init(days: Set(schedule.days), timeSlot: timeSlot)
     }
 
-    /// Days are sent in week order (Mon–Sun) so the payload is stable.
-    public var schedule: NotificationSchedule {
-        NotificationSchedule(
-            days: NotificationWeekday.allCases.filter(days.contains),
-            allDay: timeSlot == .allDay,
-            windows: timeSlot.windows
-        )
+    public init(days: some Sequence<NotificationWeekday>, schedule: NotificationDaySchedule) {
+        self.init(Dictionary(uniqueKeysWithValues: Set(days).map { ($0, schedule) }))
+    }
+
+    public static let `default` = NotificationSchedulePreset.weekdayPeakHours.selection
+
+    /// Merges a day's times as they're stored, so the user sees the merged result and the API never gets overlaps.
+    public subscript(day: NotificationWeekday) -> NotificationDaySchedule {
+        get { daySchedules[day] ?? .off }
+        set {
+            let schedule = newValue.normalized
+            daySchedules[day] = schedule == .off ? nil : schedule
+        }
+    }
+
+    /// The API requires at least one day, so a selection with none can't be saved.
+    public var hasAnyDayOn: Bool {
+        !daySchedules.isEmpty
+    }
+
+    /// A day in several schedules gets all their times, or all day if any of them is all day.
+    public init(schedules: [NotificationSchedule]) {
+        for schedule in schedules {
+            for day in schedule.days {
+                switch (self[day], NotificationDaySchedule(schedule)) {
+                case (.allDay, _), (_, .allDay):
+                    self[day] = .allDay
+                case (.times(let existing), .times(let added)):
+                    self[day] = .times(existing + added)
+                case (.off, let added), (let added, .off):
+                    self[day] = added
+                }
+            }
+        }
+    }
+
+    /// One schedule per distinct day schedule, ordered by its first day, with days in week order (Mon–Sun),
+    /// so the payload is stable and no day is in two schedules.
+    public var schedules: [NotificationSchedule] {
+        var groups: [(schedule: NotificationDaySchedule, days: [NotificationWeekday])] = []
+        for day in NotificationWeekday.allCases where self[day] != .off {
+            if let index = groups.firstIndex(where: { $0.schedule == self[day] }) {
+                groups[index].days.append(day)
+            } else {
+                groups.append((self[day], [day]))
+            }
+        }
+        return groups.compactMap { group in
+            switch group.schedule {
+            case .off: nil
+            case .allDay: .allDay(group.days)
+            case .times(let windows): NotificationSchedule(days: group.days, allDay: false, windows: windows)
+            }
+        }
     }
 }
 
-public enum NotificationTimeSlot: Hashable, Sendable, CaseIterable {
-    /// TfL peak hours: 06:30–09:30 and 16:00–19:00.
-    case peak
+/// When notifications are sent on one day.
+public enum NotificationDaySchedule: Hashable, Sendable {
+    case off
     case allDay
+    /// Sorted and merged once stored in a `NotificationScheduleSelection`, which treats no times as off.
+    case times([NotificationScheduleWindow])
 
-    public var windows: [NotificationScheduleWindow] {
+    /// TfL peak hours: 06:30–09:30 and 16:00–19:00.
+    public static let peakHours = Self.times([
+        NotificationScheduleWindow(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30)),
+        NotificationScheduleWindow(startTime: .init(hour: 16, minute: 0), endTime: .init(hour: 19, minute: 0))
+    ])
+
+    /// Ignores any windows sent alongside `all_day`.
+    init(_ schedule: NotificationSchedule) {
+        self = schedule.allDay ? .allDay : .times(schedule.windows)
+    }
+
+    /// The API rejects overlapping or duplicate windows, so they're merged, along with adjacent ones.
+    /// Empty and backwards windows are dropped, because the API rejects those too.
+    var normalized: Self {
+        guard case .times(let windows) = self else { return self }
+
+        var merged: [NotificationScheduleWindow] = []
+        for window in windows.filter({ $0.startTime < $0.endTime }).sorted(by: { $0.startTime < $1.startTime }) {
+            if let last = merged.last, window.startTime <= last.endTime {
+                merged[merged.count - 1] = NotificationScheduleWindow(
+                    startTime: last.startTime,
+                    endTime: max(last.endTime, window.endTime)
+                )
+            } else {
+                merged.append(window)
+            }
+        }
+        return merged.isEmpty ? .off : .times(merged)
+    }
+}
+
+/// The common schedules, offered by name. Matched by equality, so a custom schedule that happens to equal
+/// one is shown as that preset.
+public enum NotificationSchedulePreset: Hashable, Sendable, CaseIterable {
+    case weekdayPeakHours
+    case weekdaysAllDay
+    case everyDayPeakHours
+    case everyDayAllDay
+
+    public var selection: NotificationScheduleSelection {
         switch self {
-        case .peak:
-            [
-                NotificationScheduleWindow(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30)),
-                NotificationScheduleWindow(startTime: .init(hour: 16, minute: 0), endTime: .init(hour: 19, minute: 0))
-            ]
-        case .allDay:
-            []
+        case .weekdayPeakHours: .init(days: NotificationWeekday.weekdays, schedule: .peakHours)
+        case .weekdaysAllDay: .init(days: NotificationWeekday.weekdays, schedule: .allDay)
+        case .everyDayPeakHours: .init(days: NotificationWeekday.allCases, schedule: .peakHours)
+        case .everyDayAllDay: .init(days: NotificationWeekday.allCases, schedule: .allDay)
         }
     }
 
-    /// Matches regardless of window order, and ignores any windows sent alongside `all_day`.
-    init?(schedule: NotificationSchedule) {
-        if schedule.allDay {
-            self = .allDay
-        } else if Set(schedule.windows) == Set(Self.peak.windows), schedule.windows.count == Self.peak.windows.count {
-            self = .peak
-        } else {
-            return nil
-        }
+    public init?(matching selection: NotificationScheduleSelection) {
+        guard let preset = Self.allCases.first(where: { $0.selection == selection }) else { return nil }
+        self = preset
     }
 }
 

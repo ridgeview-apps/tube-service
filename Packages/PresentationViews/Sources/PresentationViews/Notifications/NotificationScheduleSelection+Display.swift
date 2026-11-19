@@ -2,18 +2,24 @@ import Foundation
 import Models
 import SwiftUI
 
-extension NotificationTimeSlot {
+extension NotificationDaySchedule {
+
+    /// The options the Time row offers.
+    static let timeSlots: [Self] = [.peakHours, .allDay]
 
     var title: LocalizedStringResource {
-        switch self {
-        case .peak: .notificationsScheduleTimeSlotPeakTitle
-        case .allDay: .notificationsScheduleTimeSlotAllDayTitle
+        if self == .peakHours {
+            .notificationsScheduleTimeSlotPeakTitle
+        } else if self == .allDay {
+            .notificationsScheduleTimeSlotAllDayTitle
+        } else {
+            .notificationsScheduleTimeSlotCustomTitle
         }
     }
 
-    /// e.g. "6:30–9:30 AM and 4:00–7:00 PM". `nil` for all day, whose title already says everything.
+    /// e.g. "6:30–9:30 AM and 4:00–7:00 PM". `nil` unless there are times, as the title already says everything.
     var timesDescription: String? {
-        guard !windows.isEmpty else { return nil }
+        guard case .times(let windows) = self, !windows.isEmpty else { return nil }
         return windows.map(\.formatted).formatted(.list(type: .and).locale(.copy))
     }
 }
@@ -22,11 +28,42 @@ extension NotificationScheduleSelection {
 
     /// A compact one-line summary, e.g. "Mon–Fri · Peak hours".
     var summary: String {
-        String(localized: .notificationsScheduleSummary(daysDescription, String(localized: timeSlot.title)))
+        String(localized: .notificationsScheduleSummary(daysDescription, String(localized: timeSlotTitle)))
     }
 
     var daysDescription: String {
-        Self.daysDescription(for: days)
+        Self.daysDescription(for: onDays)
+    }
+
+    /// The days the Days row shows as selected. Days turned on get the schedule the others share.
+    var onDays: Set<NotificationWeekday> {
+        get { Set(NotificationWeekday.allCases.filter { self[$0] != .off }) }
+        set {
+            let addedDaySchedule = sharedDaySchedule ?? .peakHours
+            for day in NotificationWeekday.allCases {
+                if !newValue.contains(day) {
+                    self[day] = .off
+                } else if self[day] == .off {
+                    self[day] = addedDaySchedule
+                }
+            }
+        }
+    }
+
+    /// The schedule every on day shares, which the Time row shows. `nil` when the days differ.
+    var sharedDaySchedule: NotificationDaySchedule? {
+        let daySchedules = Set(onDays.map { self[$0] })
+        return daySchedules.count == 1 ? daySchedules.first : nil
+    }
+
+    var timeSlotTitle: LocalizedStringResource {
+        sharedDaySchedule?.title ?? .notificationsScheduleTimeSlotCustomTitle
+    }
+
+    mutating func applyToOnDays(_ daySchedule: NotificationDaySchedule) {
+        for day in onDays {
+            self[day] = daySchedule
+        }
     }
 
     /// e.g. "Mon–Fri", "Mon, Wed and Sat–Sun" or "Every day".

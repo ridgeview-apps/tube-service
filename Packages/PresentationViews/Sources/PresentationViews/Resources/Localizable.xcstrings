@@ -2955,6 +2955,17 @@
         }
       }
     },
+    "notifications.schedule.time.slot.custom.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom"
+          }
+        }
+      }
+    },
     "notifications.schedule.time.slot.peak.title" : {
       "extractionState" : "manual",
       "localizations" : {

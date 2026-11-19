@@ -30,7 +30,18 @@ struct NotificationScheduleTests {
 
         let preference = try decode(NotificationLinePreference.self, from: json)
 
-        #expect(preference.schedules == [NotificationScheduleSelection.default.schedule])
+        #expect(
+            preference.schedules == [
+                NotificationSchedule(
+                    days: [.monday, .tuesday, .wednesday, .thursday, .friday],
+                    allDay: false,
+                    windows: [
+                        .init(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30)),
+                        .init(startTime: .init(hour: 16, minute: 0), endTime: .init(hour: 19, minute: 0))
+                    ]
+                )
+            ]
+        )
     }
 
     @Test
@@ -54,152 +65,18 @@ struct NotificationScheduleTests {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.outputFormatting = .sortedKeys
+        let schedule = NotificationSchedule(
+            days: [.monday, .friday],
+            allDay: false,
+            windows: [.init(startTime: .init(hour: 6, minute: 5), endTime: .init(hour: 19, minute: 0))]
+        )
 
-        let data = try encoder.encode(NotificationScheduleSelection.default.schedule)
+        let data = try encoder.encode(schedule)
 
         #expect(
             String(decoding: data, as: UTF8.self)
-                == #"{"all_day":false,"days":["mon","tue","wed","thu","fri"],"#
-                + #""windows":[{"end_time":"09:30","start_time":"06:30"},"#
-                + #"{"end_time":"19:00","start_time":"16:00"}]}"#
+                == #"{"all_day":false,"days":["mon","fri"],"windows":[{"end_time":"19:00","start_time":"06:05"}]}"#
         )
-    }
-
-    @Test
-    func allDayScheduleHasNoWindows() {
-        let selection = NotificationScheduleSelection(days: [.saturday, .sunday], timeSlot: .allDay)
-
-        #expect(selection.schedule == NotificationSchedule(days: [.saturday, .sunday], allDay: true, windows: []))
-    }
-
-    @Test
-    func scheduleDaysAreSentInWeekOrder() {
-        let selection = NotificationScheduleSelection(days: [.sunday, .wednesday, .monday], timeSlot: .peak)
-
-        #expect(selection.schedule.days == [.monday, .wednesday, .sunday])
-    }
-
-    // MARK: - Mapping from server schedules
-
-    @Test(arguments: [
-        NotificationScheduleSelection(days: Set(NotificationWeekday.weekdays), timeSlot: .peak),
-        NotificationScheduleSelection(days: Set(NotificationWeekday.weekdays), timeSlot: .allDay),
-        NotificationScheduleSelection(days: Set(NotificationWeekday.weekend), timeSlot: .allDay),
-        NotificationScheduleSelection(days: Set(NotificationWeekday.allCases), timeSlot: .allDay),
-        NotificationScheduleSelection(days: [.tuesday, .saturday], timeSlot: .peak)
-    ])
-    func selectionRoundTripsThroughSchedule(selection: NotificationScheduleSelection) {
-        #expect(NotificationScheduleSelection(schedules: [selection.schedule]) == selection)
-    }
-
-    /// The schedules the old presets (weekday peak, weekday all day, weekends, anytime) sent carry over unchanged.
-    @Test
-    func legacyPresetSchedulesCarryOver() {
-        let weekdayPeak = NotificationSchedule(
-            days: NotificationWeekday.weekdays,
-            allDay: false,
-            windows: [
-                .init(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30)),
-                .init(startTime: .init(hour: 16, minute: 0), endTime: .init(hour: 19, minute: 0))
-            ]
-        )
-
-        #expect(
-            NotificationScheduleSelection(schedules: [weekdayPeak])
-                == NotificationScheduleSelection(days: Set(NotificationWeekday.weekdays), timeSlot: .peak)
-        )
-        #expect(
-            NotificationScheduleSelection(schedules: [.allDay(NotificationWeekday.weekdays)])
-                == NotificationScheduleSelection(days: Set(NotificationWeekday.weekdays), timeSlot: .allDay)
-        )
-        #expect(
-            NotificationScheduleSelection(schedules: [.allDay(NotificationWeekday.weekend)])
-                == NotificationScheduleSelection(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
-        )
-        #expect(
-            NotificationScheduleSelection(schedules: [.allDay(NotificationWeekday.allCases)])
-                == NotificationScheduleSelection(days: Set(NotificationWeekday.allCases), timeSlot: .allDay)
-        )
-    }
-
-    @Test
-    func mappingIgnoresDayAndWindowOrder() {
-        let schedules = [
-            NotificationSchedule(
-                days: [.friday, .monday, .wednesday, .tuesday, .thursday],
-                allDay: false,
-                windows: [
-                    .init(startTime: .init(hour: 16, minute: 0), endTime: .init(hour: 19, minute: 0)),
-                    .init(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30))
-                ]
-            )
-        ]
-
-        #expect(NotificationScheduleSelection(schedules: schedules) == .default)
-    }
-
-    @Test
-    func mappingIgnoresWindowsWhenAllDay() {
-        let schedules = [
-            NotificationSchedule(
-                days: [.sunday, .saturday],
-                allDay: true,
-                windows: [.init(startTime: .init(hour: 9, minute: 0), endTime: .init(hour: 17, minute: 0))]
-            )
-        ]
-
-        #expect(
-            NotificationScheduleSelection(schedules: schedules)
-                == NotificationScheduleSelection(days: [.saturday, .sunday], timeSlot: .allDay)
-        )
-    }
-
-    // MARK: - Unsupported server schedules fall back to the default
-
-    @Test
-    func otherWindowsFallBackToDefault() {
-        let schedules = [
-            NotificationSchedule(
-                days: [.saturday],
-                allDay: false,
-                windows: [.init(startTime: .init(hour: 7, minute: 0), endTime: .init(hour: 10, minute: 0))]
-            )
-        ]
-
-        #expect(NotificationScheduleSelection(schedules: schedules) == .default)
-    }
-
-    @Test
-    func morningPeakOnlyFallsBackToDefault() {
-        let schedules = [
-            NotificationSchedule(
-                days: [.saturday],
-                allDay: false,
-                windows: [.init(startTime: .init(hour: 6, minute: 30), endTime: .init(hour: 9, minute: 30))]
-            )
-        ]
-
-        #expect(NotificationScheduleSelection(schedules: schedules) == .default)
-    }
-
-    @Test
-    func multipleSchedulesFallBackToDefault() {
-        let schedules: [NotificationSchedule] = [.allDay([.monday]), .allDay([.saturday])]
-
-        #expect(NotificationScheduleSelection(schedules: schedules) == .default)
-    }
-
-    @Test
-    func emptySchedulesOrDaysFallBackToDefault() {
-        #expect(NotificationScheduleSelection(schedules: []) == .default)
-        #expect(NotificationScheduleSelection(schedules: [.allDay([])]) == .default)
-    }
-
-    @Test
-    func timedScheduleWithoutWindowsFallsBackToDefault() {
-        let schedules = [NotificationSchedule(days: [.monday], allDay: false, windows: [])]
-
-        #expect(NotificationScheduleSelection(schedules: schedules) == .default)
     }
 }
 
