@@ -14,7 +14,7 @@ extension LineNotificationSettings {
             enabled: isEnabled,
             notifyRecoveries: defaultNotifyRecoveries,
             severityThreshold: defaultSeverityThreshold,
-            schedules: [schedule.schedule]
+            schedules: schedule.schedules
         )
     }
 }
@@ -40,7 +40,7 @@ extension NotificationPreferencesPatch {
         .init(lines: [
             settings.lineID.rawValue: NotificationLinePreferencePatch(
                 enabled: settings.isEnabled,
-                schedules: [settings.schedule.schedule]
+                schedules: settings.schedule.schedules
             )
         ])
     }
@@ -52,7 +52,7 @@ extension NotificationPreferencesPatch {
                 enabled: settings.isEnabled,
                 severityThreshold: defaultSeverityThreshold,
                 notifyRecoveries: defaultNotifyRecoveries,
-                schedules: [settings.schedule.schedule]
+                schedules: settings.schedule.schedules
             )
         ])
     }

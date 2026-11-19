@@ -402,7 +402,7 @@ struct NotificationsDataStoreTests {
         #expect(api.replaceAllPreferencesCallCount == 1)
         #expect(api.fetchPreferencesCallCount == 0)
         #expect(store.state.preferences?.lines.map(\.lineId) == ["victoria"])
-        #expect(store.state.preferences?.lines.first?.schedules == [NotificationScheduleSelection.weekends.schedule])
+        #expect(store.state.preferences?.lines.first?.schedules == [.weekends])
     }
 
     @Test
@@ -610,7 +610,7 @@ struct NotificationsDataStoreTests {
                 enabled: false,
                 notifyRecoveries: true,
                 severityThreshold: .minorDelays,
-                schedules: [NotificationScheduleSelection.anytime.schedule]
+                schedules: [.anytime]
             )
         ])
         store.completeOnboarding(with: update)
@@ -684,7 +684,7 @@ struct NotificationsDataStoreTests {
 
     private func makePreferenceUpdate(
         lineId: String,
-        schedule: NotificationScheduleSelection,
+        schedule: NotificationSchedule,
         severityThreshold: NotificationSeverityThreshold = .minorDelays
     ) -> NotificationLinePreferenceUpdate {
         NotificationLinePreferenceUpdate(
@@ -692,14 +692,14 @@ struct NotificationsDataStoreTests {
             enabled: true,
             notifyRecoveries: true,
             severityThreshold: severityThreshold,
-            schedules: [schedule.schedule]
+            schedules: [schedule]
         )
     }
 }
 
-private extension NotificationScheduleSelection {
-    static let anytime = NotificationScheduleSelection(days: Set(NotificationWeekday.allCases), timeSlot: .allDay)
-    static let weekends = NotificationScheduleSelection(days: Set(NotificationWeekday.weekend), timeSlot: .allDay)
+private extension NotificationSchedule {
+    static let anytime = NotificationSchedule.allDay(NotificationWeekday.allCases)
+    static let weekends = NotificationSchedule.allDay(NotificationWeekday.weekend)
 }
 
 
