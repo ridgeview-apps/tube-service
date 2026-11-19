@@ -47,9 +47,14 @@ struct LineNotificationSettingsSummary: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
-                    Label(.globalPaused, systemImage: "bell.slash.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(.orange)
+                    // Not a Label: inside a List it reserves a wide icon column, pushing the text away from the bell
+                    HStack(spacing: 4) {
+                        Image(systemName: "bell.slash.fill")
+                            .imageScale(.small)
+                        Text(.globalPaused)
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(.orange)
                 }
             }
             Spacer()
