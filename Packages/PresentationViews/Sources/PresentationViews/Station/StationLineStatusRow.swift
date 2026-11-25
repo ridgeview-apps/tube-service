@@ -2,7 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A slim strip above the boards giving the selected line group's status.
+/// A banner above the boards giving the selected line group's status.
 struct StationLineStatusRow: View {
     enum Status: Equatable {
         case disruption(String)
@@ -42,14 +42,15 @@ struct StationLineStatusRow: View {
             // Holds the row's space so the boards don't move down once the statuses arrive. The text is hidden, so
             // any line's name will do.
             let placeholderTitle = String(localized: .lineGoodServiceSummary(TrainLineID.northern.nameInSentence))
-            statusRow(.goodService, title: placeholderTitle)
+            banner(statusLabel(.goodService, title: placeholderTitle, showsChevron: false), tint: .secondary)
                 .redacted(reason: .placeholder)
         case .unavailable:
-            boardStrip(
+            banner(
                 Text(.stationLineStatusUnavailable)
                     .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.7))
-                    .compactLineLimit()
+                    .foregroundStyle(.secondary)
+                    .compactLineLimit(),
+                tint: .secondary
             )
         }
     }
@@ -58,43 +59,46 @@ struct StationLineStatusRow: View {
     private func statusRow(_ imageType: LineStatusAccessoryImageType, title: String) -> some View {
         if let onTap {
             Button(action: onTap) {
-                boardStrip(statusLabel(imageType, title: title, showsChevron: true))
+                banner(statusLabel(imageType, title: title, showsChevron: true), tint: imageType.tint)
             }
             .buttonStyle(.plain)
         } else {
-            boardStrip(statusLabel(imageType, title: title, showsChevron: false))
+            banner(statusLabel(imageType, title: title, showsChevron: false), tint: imageType.tint)
         }
     }
 
-    private func boardStrip(_ content: some View) -> some View {
+    private func banner(_ content: some View, tint: Color) -> some View {
         content
-            .multilineTextAlignment(.center)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(Color.arrivalsBoardBackground)
-            .roundedBorder(Color.arrivalsBoardBezel, lineWidth: 2)
+            .padding(.vertical, 14)
+            .background(tint.opacity(0.12), in: .rect(cornerRadius: 12))
     }
 
     private func statusLabel(_ imageType: LineStatusAccessoryImageType, title: String, showsChevron: Bool) -> some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 8) {
             imageType.image
             Text(title)
-                .foregroundStyle(imageType == .disruption ? Color.arrivalsBoardPrimary : .white)
-        }
-        // Clears the chevron on both sides, so the message stays centred in the strip
-        .padding(.horizontal, showsChevron ? 16 : 0)
-        .frame(maxWidth: .infinity)
-        .overlay(alignment: .trailing) {
+                .foregroundStyle(.primary)
+            Spacer(minLength: 0)
             if showsChevron {
                 Image(systemName: "chevron.right")
-                    .font(.footnote)
-                    .foregroundStyle(.white.opacity(0.7))
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.tertiary)
             }
         }
         .font(.subheadline)
         .compactLineLimit()
         .accessibilityElement(children: .combine)
+    }
+}
+
+private extension LineStatusAccessoryImageType {
+    var tint: Color {
+        switch self {
+        case .disruption: .adaptiveRed
+        case .goodService: .secondary
+        }
     }
 }
 
