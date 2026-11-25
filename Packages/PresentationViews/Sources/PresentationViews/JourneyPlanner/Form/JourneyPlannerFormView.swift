@@ -150,19 +150,19 @@ public struct JourneyPlannerFormView: View {
                     SectionHeaderButton(title: .journeyPlannerRecentJourneysClearButtonTitle) {
                         showsClearRecentJourneysConfirmation = true
                     }
-                }
-                .secondarySectionHeaderStyle()
-                .confirmationDialog(
-                    Text(.journeyPlannerRecentJourneysClearConfirmationTitle),
-                    isPresented: $showsClearRecentJourneysConfirmation,
-                    titleVisibility: .visible
-                ) {
-                    Button(role: .destructive) {
-                        withAnimation { onAction(.confirmedClearRecentJourneys) }
-                    } label: {
-                        Text(.journeyPlannerRecentJourneysClearConfirmationAction)
+                    .confirmationDialog(
+                        Text(.journeyPlannerRecentJourneysClearConfirmationTitle),
+                        isPresented: $showsClearRecentJourneysConfirmation,
+                        titleVisibility: .visible
+                    ) {
+                        Button(role: .destructive) {
+                            withAnimation { onAction(.confirmedClearRecentJourneys) }
+                        } label: {
+                            Text(.journeyPlannerRecentJourneysClearConfirmationAction)
+                        }
                     }
                 }
+                .secondarySectionHeaderStyle()
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)
