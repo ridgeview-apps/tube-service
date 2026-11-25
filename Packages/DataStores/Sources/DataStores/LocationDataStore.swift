@@ -44,6 +44,7 @@ public final class LocationDataStore: NSObject {
     public private(set) var detectionState: DetectionState = .detected
     public private(set) var nearestStations: [NearbyStation] = []
 
+    private var currentLocationCoordinateLastUpdated: Date = .distantPast
     private var currentLocationNameLastUpdated: Date = .distantPast
     private var forceRefreshLocationName: Bool = false
     private var locationNameUpdateTask: Task<Void, Never>?
@@ -98,7 +99,7 @@ public final class LocationDataStore: NSObject {
         guard isAuthorized else {
             return
         }
-        refreshCurrentLocation(forceRefreshLocationName: forceRefreshLocationName)
+        refreshCurrentLocationIfStale()
         locationManager.startMonitoringSignificantLocationChanges()
     }
 
@@ -107,6 +108,15 @@ public final class LocationDataStore: NSObject {
     }
 
     // MARK: - Implementation
+
+    private func refreshCurrentLocationIfStale() {
+        let oneMinute = 60.0
+        let isCoordinateStale = now().timeIntervalSince(currentLocationCoordinateLastUpdated) > oneMinute
+        guard isCoordinateStale else {
+            return
+        }
+        refreshCurrentLocation(forceRefreshLocationName: forceRefreshLocationName)
+    }
 
     private func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
         switch action {
@@ -131,6 +141,7 @@ public final class LocationDataStore: NSObject {
     private func processLocationUpdate(_ newValue: LocationCoordinate) {
         let oldValue = currentLocationCoordinate
         currentLocationCoordinate = newValue
+        currentLocationCoordinateLastUpdated = now()
         if shouldRefreshLocationName(forOldCoordinate: oldValue, newCoordinate: newValue) {
             refreshLocationNameForChangedCoordinate()
         }
@@ -204,6 +215,7 @@ public final class LocationDataStore: NSObject {
         locationNameUpdateTask?.cancel()
         locationNameUpdateTask = nil
         currentLocationCoordinate = nil
+        currentLocationCoordinateLastUpdated = .distantPast
         currentLocationName = nil
         currentLocationNameLastUpdated = .distantPast
         detectionState = .detected
