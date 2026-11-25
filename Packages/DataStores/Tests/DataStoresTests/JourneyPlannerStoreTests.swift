@@ -48,6 +48,26 @@ struct JourneyPlannerStoreTests {
         #expect(model.hasLoadedJourneys == false)
     }
 
+    // MARK: - resetForm
+
+    @Test
+    func resetForm_clearsLocationsTimeAndInlineErrors() {
+        let model = makeStore()
+        model.form.from = .station(makeStation(id: "940GZZLUAGL", icsCode: "1000004", name: "Angel"))
+        model.form.to = .station(makeStation(id: "940GZZLUKSX", icsCode: "1000129", name: "King's Cross"))
+        model.form.via = .station(makeStation(id: "940GZZLUEFY", icsCode: "1000067", name: "East Finchley"))
+        model.form.timeSelection = JourneyTimeSelection.arriveBy(.distantFuture)
+        #expect(model.form.showsInlineErrors == true)
+
+        model.resetForm()
+
+        #expect(model.form.from == nil)
+        #expect(model.form.to == nil)
+        #expect(model.form.via == nil)
+        #expect(model.form.timeSelection.option == .leaveNow)
+        #expect(model.form.showsInlineErrors == false)
+    }
+
     // MARK: - resetTimeSelectionIfPast
 
     @Test

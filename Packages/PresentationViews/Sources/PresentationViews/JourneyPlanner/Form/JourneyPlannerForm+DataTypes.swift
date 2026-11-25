@@ -12,6 +12,7 @@ extension JourneyPlannerForm {
     public enum Action: Sendable {
         case tappedLocationField(JourneyPlannerForm.FieldID.LocationID)
         case tappedSubmit
+        case tappedReset
         case tappedRecentJourney(RecentJourneyItem)
         case swipedToDelete(RecentJourneyItem)
         case confirmedClearRecentJourneys

@@ -91,6 +91,8 @@ struct JourneyPlannerScreen: View {
             showResults()
         case .tappedSubmit:
             showResults()
+        case .tappedReset:
+            journeyPlanner.resetForm()
         }
     }
 

@@ -50,23 +50,34 @@ public struct JourneyPlannerFormView: View {
 
     private var formSection: some View {
         Section {
-            VStack(spacing: 16) {
-                fromToSelectionView
-                    .padding(.leading, 8)
-                    .padding(.trailing, 16)
-                Group {
-                    travelOptionsChips
-                    planMyJourneyButton
-                }
-                .padding(.horizontal, 16)
+            VStack(alignment: .trailing, spacing: 8) {
+                resetButton
+                VStack(spacing: 16) {
+                    fromToSelectionView
+                        .padding(.leading, 8)
+                        .padding(.trailing, 16)
+                    Group {
+                        travelOptionsChips
+                        planMyJourneyButton
+                    }
+                    .padding(.horizontal, 16)
 
+                }
+                .padding(.vertical, 16)
+                .cardStyle()
             }
-            .padding(.vertical, 16)
-            .cardStyle()
         }
         .listRowBackground(Color.defaultBackground)
         .listRowSeparator(.hidden)
-        .listRowInsets(.init(top: 8, leading: 16, bottom: 8, trailing: 16))
+        .listRowInsets(.init(top: 12, leading: 16, bottom: 8, trailing: 16))
+    }
+
+    private var resetButton: some View {
+        SectionHeaderButton(title: .journeyPlannerResetButtonTitle) {
+            withAnimation { onAction(.tappedReset) }
+        }
+        .disabled(form.isEmpty)
+        .secondarySectionHeaderStyle()
     }
 
     private var fromToSelectionView: some View {

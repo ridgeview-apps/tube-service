@@ -74,6 +74,10 @@ public final class JourneyPlannerStore {
         prepareForInitialLoad()
     }
 
+    public func resetForm() {
+        form = JourneyPlannerForm(timeSelection: JourneyTimeSelection(option: .leaveNow, date: now()))
+    }
+
     public func resetTimeSelectionIfPast() {
         let now = now()
         if form.timeSelection.date < now {

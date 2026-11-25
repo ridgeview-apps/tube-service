@@ -51,6 +51,10 @@ public struct JourneyPlannerForm: Hashable, Sendable {
         }
     }
 
+    public var isEmpty: Bool {
+        from == nil && to == nil && via == nil && timeSelection.option == .leaveNow
+    }
+
     public var canSubmit: Bool {
         guard let from, let to else { return false }
         return from != to
