@@ -28,6 +28,7 @@ struct LineGroupSectionHeader: View {
 struct LineGroupCell: View {
 
     @Environment(\.locale) var locale
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     enum Style {
         case plain
@@ -39,28 +40,44 @@ struct LineGroupCell: View {
     let title: String
 
     var body: some View {
-        HStack(spacing: 8) {
-            LineColourKeyView(lineIDs: lineIDs)
-                .frame(width: 40, height: 40)
-                .roundedBorder(.white)
-            Text(title)
-            Spacer()
-            if case .distance(let metres) = style {
-                formattedDistanceText(for: metres)
+        HStack(spacing: 12) {
+            LineColourTile(lineIDs: lineIDs, size: 30)
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            if dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                    distanceText
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } else {
+                Text(title)
+                Spacer()
+                distanceText
             }
         }
         .contentShape(Rectangle())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityLabel)
     }
 
-    private func formattedDistanceText(for metres: Double) -> some View {
-        Text(
-            Measurement(value: metres, unit: UnitLength.meters)
-                .formatted(
-                    .measurement(width: .abbreviated, usage: .road).locale(locale)
-                )
-        )
-        .font(.subheadline)
-        .foregroundStyle(Color.secondary)
+    @ViewBuilder private var distanceText: some View {
+        if let formattedDistance {
+            Text(formattedDistance)
+                .font(.subheadline)
+                .foregroundStyle(Color.secondary)
+        }
+    }
+
+    private var formattedDistance: String? {
+        guard case .distance(let metres) = style else { return nil }
+        return Measurement(value: metres, unit: UnitLength.meters)
+            .formatted(.measurement(width: .abbreviated, usage: .road).locale(locale))
+    }
+
+    private var accessibilityLabel: String {
+        let lineNames = lineIDs.map(\.name)
+        let parts = [title, lineNames.formatted(.list(type: .and).locale(locale)), formattedDistance]
+        return parts.compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
     }
 }
 
@@ -85,6 +102,11 @@ import ModelStubs
                     style: .distance(metres: 600),
                     lineIDs: ModelStubs.eastFinchleyStation.sortedLineIDs,
                     title: ModelStubs.eastFinchleyStation.name
+                )
+                LineGroupCell(
+                    style: .distance(metres: 1200),
+                    lineIDs: ModelStubs.stations.first { $0.name == "Bank" }?.sortedLineIDs ?? [],
+                    title: "Bank"
                 )
                 LineGroupCell(
                     style: .distance(metres: 7000),

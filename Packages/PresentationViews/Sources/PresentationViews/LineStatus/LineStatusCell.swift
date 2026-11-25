@@ -85,7 +85,7 @@ public struct LineStatusCell: View {
     }
 
     private func multilineLeadingColumn(with lines: [Line]) -> some View {
-        LineColourKeyView(lineIDs: lines.prefix(12).map(\.id))
+        MultiLineColourColumn(lineIDs: lines.prefix(12).map(\.id))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .frame(idealHeight: 72)
     }
@@ -154,6 +154,25 @@ public struct LineStatusCell: View {
         }
     }
 
+}
+
+
+private struct MultiLineColourColumn: View {
+
+    let lineIDs: [TrainLineID]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ForEach(lineIDs, id: \.self.rawValue) { lineID in
+                lineID.backgroundColor
+                if lineID != lineIDs.last {
+                    Divider()
+                        .frame(height: 1)
+                        .background(.white)
+                }
+            }
+        }
+    }
 }
 
 
