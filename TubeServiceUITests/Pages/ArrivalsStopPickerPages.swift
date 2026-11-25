@@ -1,9 +1,9 @@
 import Shared
 import XCTest
 
-struct ArrivalsPage: Page {
+struct ArrivalsStopPickerPage: Page {
     let app: XCUIApplication
-    var rootElement: XCUIElement { app.collectionViews[AccessibilityID.Arrivals.list] }
+    var rootElement: XCUIElement { app.collectionViews[AccessibilityID.ArrivalsStopPicker.list] }
 
     /// Taps a station in the Nearby section, which opens its Station screen.
     ///
@@ -17,7 +17,7 @@ struct ArrivalsPage: Page {
     ///
     /// - Parameter stationID: A `Station` ID, e.g. "HUBKGX".
     func favouriteStation(_ stationID: String) -> XCUIElement {
-        app.buttons[AccessibilityID.Arrivals.favouriteStation(stationID)]
+        app.buttons[AccessibilityID.ArrivalsStopPicker.favouriteStation(stationID)]
     }
 
     /// Taps a favourite station, which opens its Station screen.

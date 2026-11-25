@@ -36,7 +36,7 @@ struct StationArrivalsPage: Page {
     }
 
     /// Taps the back button, which returns to the Arrivals screen the Station screen was opened from.
-    func tapBackButton() -> ArrivalsPage {
+    func tapBackButton() -> ArrivalsStopPickerPage {
         app.tapBackButton()
         return .waitingToAppear(in: app)
     }

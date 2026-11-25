@@ -47,7 +47,7 @@ struct RootScreen: View {
     private var liveArrivalsTab: some TabContent<AppTab> {
         Tab(value: AppTab.arrivals) {
             NavigationHost(navigator: appNavigator.arrivals) {
-                ArrivalsScreen()
+                ArrivalsStopPickerScreen()
                     .toolbar { SettingsToolbarItem() }
             }
         } label: {
