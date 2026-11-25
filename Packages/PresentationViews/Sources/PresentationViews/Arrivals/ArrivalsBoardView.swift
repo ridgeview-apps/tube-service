@@ -60,8 +60,12 @@ struct ArrivalsBoardView: View {
                     .animation(nil, value: rotatingCellIndex)
             }
             if let rotatingCellItem {
-                makeCell(with: rotatingCellItem)
-                    .transition(.slideUp)
+                // Clipped, so the outgoing arrival slides out of its own slot rather than over the row above
+                ZStack {
+                    makeCell(with: rotatingCellItem)
+                        .transition(.slideUp)
+                }
+                .clipped()
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility1)

@@ -4,6 +4,9 @@ import SwiftUI
 struct ArrivalsBoardCellView: View {
     let item: ArrivalsBoardCellItem
 
+    @ScaledMetric(relativeTo: .headline) private var numberLabelWidth: CGFloat = 28
+    @ScaledMetric(relativeTo: .headline) private var numberLabelHeight: CGFloat = 32
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             numberLabel
@@ -12,6 +15,7 @@ struct ArrivalsBoardCellView: View {
                 footerRow
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     private var numberLabel: some View {
@@ -27,9 +31,17 @@ struct ArrivalsBoardCellView: View {
                 x: label.textShadow.x,
                 y: label.textShadow.y
             )
-            .frame(width: 28, height: 32)
+            .frame(width: numberLabelWidth, height: numberLabelHeight)
             .background(label.backgroundColor)
-            .roundedBorder(.white, cornerRadius: 4)
+            .clipShape(numberLabelShape)
+            .overlay(numberLabelShape.strokeBorder(.white, lineWidth: 0.75))
+            // Only orders the rows on screen, so it would be noise read out before each arrival
+            .accessibilityHidden(true)
+    }
+
+    /// Matches `LineColourTile`, the line colour square in the chips above the boards.
+    private var numberLabelShape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: numberLabelWidth * 0.25, style: .continuous)
     }
 
     private var headerRow: some View {
@@ -41,6 +53,7 @@ struct ArrivalsBoardCellView: View {
 
             text(for: item.headerRow.countdownText)
                 .font(.callout)
+                .monospacedDigit()
         }
         .strikethrough(item.headerRow.needsStrikethrough)
         .foregroundStyle(Color.arrivalsBoardPrimary)
@@ -60,7 +73,7 @@ struct ArrivalsBoardCellView: View {
             switch footerRow {
             case .tubeLiveLocation(let currentLocation):
                 text(for: .verbatim(currentLocation))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.white.opacity(0.75))
                     .font(.caption)
             case .departureStatus(let departureStatus):
                 departureStatusRow(departureStatus)
@@ -92,7 +105,7 @@ struct ArrivalsBoardCellView: View {
             if let statusText = departureStatus.statusText {
                 text(for: statusText)
                     .foregroundStyle(
-                        departureStatus.style == .warning ? .midRed1 : .white
+                        departureStatus.style == .warning ? .midRed1 : .white.opacity(0.75)
                     )
                     .fontWeight(
                         departureStatus.style == .warning ? .semibold : .regular
