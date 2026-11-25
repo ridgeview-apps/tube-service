@@ -72,7 +72,7 @@ struct ArrivalsBoardCellView: View {
             switch footerRow {
             case .tubeLiveLocation(let currentLocation):
                 text(for: .verbatim(currentLocation))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(.white.opacity(0.75))
                     .font(.caption)
             case .departureStatus(let departureStatus):
                 departureStatusRow(departureStatus)
@@ -104,7 +104,7 @@ struct ArrivalsBoardCellView: View {
             if let statusText = departureStatus.statusText {
                 text(for: statusText)
                     .foregroundStyle(
-                        departureStatus.style == .warning ? .midRed1 : .white
+                        departureStatus.style == .warning ? .midRed1 : .white.opacity(0.75)
                     )
                     .fontWeight(
                         departureStatus.style == .warning ? .semibold : .regular
