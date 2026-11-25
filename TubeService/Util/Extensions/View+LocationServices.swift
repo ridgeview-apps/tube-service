@@ -11,8 +11,8 @@ enum DetectLocationChangesAction {
 
 @MainActor
 struct DetectsLocationChangesViewModifier: ViewModifier {
-    @Environment(LocationDataStore.self) var location
-    @State var isVisible: Bool = false
+    @Environment(LocationDataStore.self) private var location
+    @State private var isVisible = false
 
     let action: (DetectLocationChangesAction) -> Void
 
@@ -20,19 +20,15 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
         content
             .onAppear {
                 isVisible = true
-                resumeLocationDetection()
+                location.refreshCurrentLocationIfStale()
             }
             .onDisappear {
                 isVisible = false
-                location.stopLocationUpdates()
             }
             .onSceneDidBecomeActive {
                 if isVisible {
-                    resumeLocationDetection()
+                    location.refreshCurrentLocationIfStale()
                 }
-            }
-            .onSceneDidBecomeInactive {
-                location.stopLocationUpdates()
             }
             .onChange(of: location.currentLocationCoordinate) { _, updatedValue in
                 action(.coordinateChanged(updatedValue))
@@ -43,10 +39,6 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
             .onChange(of: location.authorizationStatus) { _, updatedValue in
                 action(.authorizationStatusChanged(updatedValue))
             }
-    }
-
-    private func resumeLocationDetection() {
-        location.startLocationUpdatesIfAuthorized()
     }
 }
 

@@ -70,56 +70,56 @@ struct LocationDataStoreTests {
     }
 
     @Test
-    func startLocationUpdatesSkipsTheRequestWhenTheLocationIsUnderAMinuteOld() {
+    func refreshIfStaleSkipsTheRequestWhenTheLocationIsUnderAMinuteOld() {
         // Given
         var currentTime = Date(timeIntervalSince1970: 0)
         let locationManager = StubLocationManager()
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
         let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // When
         currentTime += 59
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 1)
     }
 
     @Test
-    func startLocationUpdatesRequestsAgainOnceTheLocationIsOverAMinuteOld() {
+    func refreshIfStaleRequestsAgainOnceTheLocationIsOverAMinuteOld() {
         // Given
         var currentTime = Date(timeIntervalSince1970: 0)
         let locationManager = StubLocationManager()
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
         let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // When
         currentTime += 61
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 2)
     }
 
     @Test
-    func startLocationUpdatesRequestsAgainAfterAFailedRequest() {
+    func refreshIfStaleRequestsAgainAfterAFailedRequest() {
         // Given
         let locationManager = StubLocationManager()
         let (_, model) = makeModel(locationManager: locationManager)
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
         locationManager.simulateLocationFailure(TestError.expected)
 
         // When
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 2)
     }
 
     @Test
-    func forcedLocationNameRefreshOnlyAppliesToTheNextLocation() async {
+    func freshNameOnlyAppliesToTheNextLocation() async {
         // Given
         let locationManager = StubLocationManager()
         let geocoder = StubReverseGeocoder()
@@ -129,7 +129,7 @@ struct LocationDataStoreTests {
         await model.locationNameUpdateTask?.value
 
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531600, longitude: -0.113384)]
-        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocationWithFreshName()
         await model.locationNameUpdateTask?.value
 
         // When
@@ -142,7 +142,7 @@ struct LocationDataStoreTests {
     }
 
     @Test
-    func forcedLocationNameRefreshSurvivesAnUnforcedRefreshBeforeTheLocationArrives() async {
+    func freshNameSurvivesAPlainRefreshBeforeTheLocationArrives() async {
         // Given
         let locationManager = StubLocationManager()
         let geocoder = StubReverseGeocoder()
@@ -152,7 +152,7 @@ struct LocationDataStoreTests {
         await model.locationNameUpdateTask?.value
 
         locationManager.locationsToReturnOnRequest = nil
-        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocationWithFreshName()
         model.refreshCurrentLocation()
 
         // When

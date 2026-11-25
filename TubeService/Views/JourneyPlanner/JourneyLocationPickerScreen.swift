@@ -164,7 +164,7 @@ struct JourneyLocationPickerScreen: View {
 
     private func handleSelectedLocationValue(_ value: JourneyLocationPicker.Value) {
         if case .namedLocation(let locationValue) = value, locationValue.isCurrentLocation {
-            location.refreshCurrentLocation(forceRefreshLocationName: true)
+            location.refreshCurrentLocationWithFreshName()
         }
 
         journeyPlanner.form.populate(locationFieldID: fieldID, with: value)

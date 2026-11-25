@@ -7,8 +7,6 @@ public final class StubLocationManager: LocationManagerType, @unchecked Sendable
     public var authorizationStatus: CLAuthorizationStatus = .authorizedWhenInUse
     public private(set) var requestLocationCallCount = 0
     public private(set) var requestWhenInUseAuthorizationCallCount = 0
-    public private(set) var startMonitoringChangesCallCount = 0
-    public private(set) var stopMonitoringChangesCallCount = 0
     public var locationsToReturnOnRequest: [CLLocation]?
     private weak var delegate: CLLocationManagerDelegate?
 
@@ -26,14 +24,6 @@ public final class StubLocationManager: LocationManagerType, @unchecked Sendable
 
     public func requestWhenInUseAuthorization() {
         requestWhenInUseAuthorizationCallCount += 1
-    }
-
-    public func startMonitoringSignificantLocationChanges() {
-        startMonitoringChangesCallCount += 1
-    }
-
-    public func stopMonitoringSignificantLocationChanges() {
-        stopMonitoringChangesCallCount += 1
     }
 
     public func simulateAuthorizationChange(_ authorizationStatus: CLAuthorizationStatus) {
