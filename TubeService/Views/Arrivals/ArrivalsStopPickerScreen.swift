@@ -40,6 +40,7 @@ struct ArrivalsStopPickerScreen: View {
             onAction: handleAction
         )
         .navigationTitle(Text(L10n.arrivalsNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .searchable(
             text: $searchText,
             isPresented: $isSearchPresented,

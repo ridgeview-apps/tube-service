@@ -33,6 +33,7 @@ struct JourneyPlannerScreen: View {
             refreshRecentJourneys(sortByLastUsedDate: false)  // Preserve the current order (e.g. user selects a journey, we DON'T want it to jump to the top)
         }
         .navigationTitle(Text(L10n.journeyPlannerNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .detectsLocationChanges {
             handleLocationChangeAction($0)
         }
