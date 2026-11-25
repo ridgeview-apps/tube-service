@@ -4,6 +4,9 @@ import SwiftUI
 struct ArrivalsBoardCellView: View {
     let item: ArrivalsBoardCellItem
 
+    @ScaledMetric(relativeTo: .headline) private var numberLabelWidth: CGFloat = 28
+    @ScaledMetric(relativeTo: .headline) private var numberLabelHeight: CGFloat = 32
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             numberLabel
@@ -27,9 +30,15 @@ struct ArrivalsBoardCellView: View {
                 x: label.textShadow.x,
                 y: label.textShadow.y
             )
-            .frame(width: 28, height: 32)
+            .frame(width: numberLabelWidth, height: numberLabelHeight)
             .background(label.backgroundColor)
-            .roundedBorder(.white, cornerRadius: 4)
+            .clipShape(numberLabelShape)
+            .overlay(numberLabelShape.strokeBorder(.white, lineWidth: 0.75))
+    }
+
+    /// Matches `LineColourTile`, the line colour square in the chips above the boards.
+    private var numberLabelShape: RoundedRectangle {
+        RoundedRectangle(cornerRadius: numberLabelWidth * 0.25, style: .continuous)
     }
 
     private var headerRow: some View {
