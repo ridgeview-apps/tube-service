@@ -67,14 +67,14 @@ public enum AccessibilityID {
         public static let stopsToggle = "journeyResults.stopsToggle"
     }
 
-    public enum Arrivals {
-        public static let list = "arrivals.list"
+    public enum ArrivalsStopPicker {
+        public static let list = "arrivalsStopPicker.list"
 
         /// A station row in the Recent section that opens its Station screen, by `Station` ID.
-        public static func station(_ stationID: String) -> String { "arrivals.station.\(stationID)" }
+        public static func station(_ stationID: String) -> String { "arrivalsStopPicker.station.\(stationID)" }
         /// A station row in the Favourites section that opens its Station screen, by `Station` ID.
         public static func favouriteStation(_ stationID: String) -> String {
-            "arrivals.favourite.station.\(stationID)"
+            "arrivalsStopPicker.favourite.station.\(stationID)"
         }
     }
 

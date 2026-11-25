@@ -2,7 +2,7 @@ import Shared
 import SwiftUI
 import Models
 
-public struct ArrivalsView: View {
+public struct ArrivalsStopPickerView: View {
 
     public enum Content: Sendable {
         case browse(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
@@ -103,7 +103,7 @@ public struct ArrivalsView: View {
                 }
             }
         }
-        .accessibilityIdentifier(AccessibilityID.Arrivals.list)
+        .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.list)
     }
 
     @ViewBuilder private func favouritesSection(_ favourites: [StopRow]) -> some View {
@@ -191,7 +191,7 @@ public struct ArrivalsView: View {
             StopRowCell(row: row)
         }
         .buttonStyle(.plain)
-        .accessibilityIdentifier(AccessibilityID.Arrivals.station(row.stationID))
+        .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.station(row.stationID))
     }
 
     private static let showMoreNearbyButtonID = "showMoreNearbyButton"
@@ -264,7 +264,7 @@ private struct FavouriteStopRowCell: View {
                 .buttonStyle(.plain)
             }
         }
-        .accessibilityIdentifier(AccessibilityID.Arrivals.favouriteStation(row.stationID))
+        .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.favouriteStation(row.stationID))
     }
 }
 
@@ -289,7 +289,7 @@ private struct Previewer: View {
     var searchResults: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
-    private var content: ArrivalsView.Content {
+    private var content: ArrivalsStopPickerView.Content {
         if let searchResults {
             .searchResults(searchTerm: searchResults.searchTerm, stations: searchResults.stations)
         } else {
@@ -299,7 +299,7 @@ private struct Previewer: View {
 
     var body: some View {
         NavigationStack {
-            ArrivalsView(
+            ArrivalsStopPickerView(
                 content: content,
                 locationAccess: .init(state: locationAccessState) {
                     print("Permissions requested")

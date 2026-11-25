@@ -5,7 +5,7 @@ import Shared
 import SwiftUI
 
 @MainActor
-struct ArrivalsScreen: View {
+struct ArrivalsStopPickerScreen: View {
 
     @Environment(Navigator.self) private var navigator
     @Environment(StationsDataStore.self) private var stations
@@ -34,7 +34,7 @@ struct ArrivalsScreen: View {
     // MARK: - Layout
 
     var body: some View {
-        ArrivalsView(
+        ArrivalsStopPickerView(
             content: content,
             locationAccess: locationAccess,
             onAction: handleAction
@@ -53,7 +53,7 @@ struct ArrivalsScreen: View {
         .detectsLocationChanges(action: handleLocationChangeAction)
     }
 
-    private var content: ArrivalsView.Content {
+    private var content: ArrivalsStopPickerView.Content {
         if searchText.trimmed().isEmpty {
             .browse(
                 favourites: favouriteStations.map { StopRow(station: $0) },
@@ -100,7 +100,7 @@ struct ArrivalsScreen: View {
         }
     }
 
-    private func handleAction(_ action: ArrivalsView.Action) {
+    private func handleAction(_ action: ArrivalsStopPickerView.Action) {
         switch action {
         case .tappedStation(let station):
             navigator.push(.station(.arrivals(station)))
@@ -126,7 +126,7 @@ struct ArrivalsScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment(withNavigationHost: true) {
-            ArrivalsScreen()
+            ArrivalsStopPickerScreen()
         }
     }
 #endif
