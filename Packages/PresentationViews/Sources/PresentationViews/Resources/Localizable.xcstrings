@@ -1077,13 +1077,46 @@
         }
       }
     },
+    "journey.planner.recent.journeys.clear.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
+          }
+        }
+      }
+    },
+    "journey.planner.recent.journeys.clear.confirmation.action" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear recent journeys"
+          }
+        }
+      }
+    },
+    "journey.planner.recent.journeys.clear.confirmation.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear all recent journeys?"
+          }
+        }
+      }
+    },
     "journey.planner.recent.journeys.section.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recent journeys"
+            "value" : "Recent"
           }
         }
       }
@@ -3133,17 +3166,6 @@
     },
     "Preview" : {
 
-    },
-    "recent.journey.cell.to" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "To"
-          }
-        }
-      }
     },
     "recent.journey.cell.via %@" : {
       "extractionState" : "manual",

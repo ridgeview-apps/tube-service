@@ -147,6 +147,10 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySavedJourneys.removeAll { $0.id == journeyID }
     }
 
+    public mutating func clearRecentJourneys() {
+        recentlySavedJourneys = []
+    }
+
     // MARK: - System Status
 
     public func hasReadSystemStatusMessage(id: SystemStatus.ID) -> Bool {

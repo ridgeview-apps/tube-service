@@ -84,6 +84,8 @@ struct JourneyPlannerScreen: View {
             navigator.present(.journeyPlanner(.locationPicker(locationFieldID)))
         case let .swipedToDelete(recentJourneyItem):
             userPreferences.removeRecentJourney(recentJourneyItem.id)
+        case .confirmedClearRecentJourneys:
+            userPreferences.clearRecentJourneys()
         case let .tappedRecentJourney(recentJourneyItem):
             journeyPlanner.form.populate(with: recentJourneyItem)
             showResults()

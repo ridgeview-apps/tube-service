@@ -348,6 +348,33 @@ struct UserPreferencesTests {
     }
 
     @Test
+    func clearRecentJourneys() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.saveRecentJourney(
+            SavedJourney(
+                id: UUID(),
+                fromLocation: .station(id: "HUBKGX"),
+                toLocation: .station(id: "940GZZLUAGL"),
+                viaLocation: nil,
+                lastUsed: .now
+            )
+        )
+        userPreferences.saveRecentJourney(
+            SavedJourney(
+                id: UUID(),
+                fromLocation: .station(id: "940GZZLUEFY"),
+                toLocation: .station(id: "HUBKGX"),
+                viaLocation: nil,
+                lastUsed: .now
+            )
+        )
+
+        userPreferences.clearRecentJourneys()
+
+        #expect(userPreferences.recentlySavedJourneys.isEmpty)
+    }
+
+    @Test
     func saveDuplicateJourneys_savesMostRecentValueOnly() throws {
         // Given
         var userPreferences = UserPreferences.default
