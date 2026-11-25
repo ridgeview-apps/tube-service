@@ -984,7 +984,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Departure location"
+            "value" : "Where from?"
           }
         }
       }
@@ -1228,7 +1228,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrival location"
+            "value" : "Where to?"
           }
         }
       }
