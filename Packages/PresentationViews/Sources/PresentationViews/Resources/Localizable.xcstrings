@@ -984,7 +984,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Departure location"
+            "value" : "Where from?"
           }
         }
       }
@@ -1121,6 +1121,17 @@
         }
       }
     },
+    "journey.planner.reset.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        }
+      }
+    },
     "journey.planner.results.count %lld" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1228,7 +1239,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Arrival location"
+            "value" : "Where to?"
           }
         }
       }
