@@ -51,7 +51,14 @@ struct ArrivalsStopPickerScreen: View {
         .refreshable {
             location.refreshCurrentLocation()
         }
-        .detectsLocationChanges(action: handleLocationChangeAction)
+        .detectsLocationChanges()
+        .onChange(of: nearestStationIDs) {
+            nearbyLimit = Self.nearbyPageSize
+        }
+    }
+
+    private var nearestStationIDs: Set<Station.ID> {
+        Set(location.nearestStations.prefix(Self.maxNearby).map(\.station.id))
     }
 
     private var content: ArrivalsStopPickerView.Content {
@@ -91,15 +98,6 @@ struct ArrivalsStopPickerScreen: View {
                 location.promptForPermissions()
             }
         )
-    }
-
-    private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
-        switch action {
-        case .coordinateChanged, .nameChanged:
-            nearbyLimit = Self.nearbyPageSize
-        case .authorizationStatusChanged:
-            return
-        }
     }
 
     private func handleAction(_ action: ArrivalsStopPickerView.Action) {

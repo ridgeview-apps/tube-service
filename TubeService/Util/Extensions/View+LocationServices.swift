@@ -51,7 +51,7 @@ struct DetectsLocationChangesViewModifier: ViewModifier {
 }
 
 extension View {
-    func detectsLocationChanges(action: @escaping (DetectLocationChangesAction) -> Void) -> some View {
+    func detectsLocationChanges(action: @escaping (DetectLocationChangesAction) -> Void = { _ in }) -> some View {
         self.modifier(
             DetectsLocationChangesViewModifier(action: action)
         )
