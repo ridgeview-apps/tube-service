@@ -17,7 +17,7 @@ struct JourneyPlannerFromToSelectionView: View {
     @State private var isSwapped = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 20) {
             fromLocationField
             toLocationField
         }
@@ -44,10 +44,9 @@ struct JourneyPlannerFromToSelectionView: View {
             isSwapped: isSwapped,
             in: animationNamespace
         )
-        .formDetailCell(
-            title: .journeyPlannerFromLabelTitle,
-            errors: inlineErrors(forFieldID: .from)
-        )
+        .accessibilityLabel(Text(.journeyPlannerFromLabelTitle))
+        .accessibilityValue(form.from?.name ?? String(localized: .journeyPlannerFromPlaceholderTitle))
+        .formDetailCell(errors: inlineErrors(forFieldID: .from))
     }
 
     private var toLocationField: some View {
@@ -66,10 +65,9 @@ struct JourneyPlannerFromToSelectionView: View {
             isSwapped: isSwapped,
             in: animationNamespace
         )
-        .formDetailCell(
-            title: .journeyPlannerToLabelTitle,
-            errors: inlineErrors(forFieldID: .to)
-        )
+        .accessibilityLabel(Text(.journeyPlannerToLabelTitle))
+        .accessibilityValue(form.to?.name ?? String(localized: .journeyPlannerToPlaceholderTitle))
+        .formDetailCell(errors: inlineErrors(forFieldID: .to))
     }
 
     private func buttonStyle(
