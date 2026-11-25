@@ -11,8 +11,8 @@ enum DetectLocationChangesAction {
 
 @MainActor
 struct DetectsLocationChangesViewModifier: ViewModifier {
-    @Environment(LocationDataStore.self) var location
-    @State var isVisible: Bool = false
+    @Environment(LocationDataStore.self) private var location
+    @State private var isVisible = false
 
     let action: (DetectLocationChangesAction) -> Void
 
