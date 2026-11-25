@@ -69,6 +69,100 @@ struct LocationDataStoreTests {
         #expect(locationManager.requestLocationCallCount == 0)
     }
 
+    @Test
+    func startLocationUpdatesSkipsTheRequestWhenTheLocationIsUnderAMinuteOld() {
+        // Given
+        var currentTime = Date(timeIntervalSince1970: 0)
+        let locationManager = StubLocationManager()
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
+        model.startLocationUpdatesIfAuthorized()
+
+        // When
+        currentTime += 59
+        model.startLocationUpdatesIfAuthorized()
+
+        // Then
+        #expect(locationManager.requestLocationCallCount == 1)
+    }
+
+    @Test
+    func startLocationUpdatesRequestsAgainOnceTheLocationIsOverAMinuteOld() {
+        // Given
+        var currentTime = Date(timeIntervalSince1970: 0)
+        let locationManager = StubLocationManager()
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
+        model.startLocationUpdatesIfAuthorized()
+
+        // When
+        currentTime += 61
+        model.startLocationUpdatesIfAuthorized()
+
+        // Then
+        #expect(locationManager.requestLocationCallCount == 2)
+    }
+
+    @Test
+    func startLocationUpdatesRequestsAgainAfterAFailedRequest() {
+        // Given
+        let locationManager = StubLocationManager()
+        let (_, model) = makeModel(locationManager: locationManager)
+        model.startLocationUpdatesIfAuthorized()
+        locationManager.simulateLocationFailure(TestError.expected)
+
+        // When
+        model.startLocationUpdatesIfAuthorized()
+
+        // Then
+        #expect(locationManager.requestLocationCallCount == 2)
+    }
+
+    @Test
+    func forcedLocationNameRefreshOnlyAppliesToTheNextLocation() async {
+        // Given
+        let locationManager = StubLocationManager()
+        let geocoder = StubReverseGeocoder()
+        let (_, model) = makeModel(locationManager: locationManager, geocoder: geocoder)
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531600, longitude: -0.113384)]
+        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        await model.locationNameUpdateTask?.value
+
+        // When
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531700, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        // Then
+        #expect(geocoder.callCount == 2)
+    }
+
+    @Test
+    func forcedLocationNameRefreshSurvivesAnUnforcedRefreshBeforeTheLocationArrives() async {
+        // Given
+        let locationManager = StubLocationManager()
+        let geocoder = StubReverseGeocoder()
+        let (_, model) = makeModel(locationManager: locationManager, geocoder: geocoder)
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        locationManager.locationsToReturnOnRequest = nil
+        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocation()
+
+        // When
+        locationManager.simulateLocationUpdate([CLLocation(latitude: 51.531600, longitude: -0.113384)])
+        await model.locationNameUpdateTask?.value
+
+        // Then
+        #expect(geocoder.callCount == 2)
+    }
+
     // Given in no particular order, so the tests prove the sorting
     private static let stations = [
         makeStation("940GZZLUFYC", lat: 51.600921, lon: -0.192527),
@@ -86,11 +180,12 @@ struct LocationDataStoreTests {
 
     private func makeModel(
         locationManager: StubLocationManager = StubLocationManager(),
-        geocoder: ReverseGeocoderType = StubReverseGeocoder()
+        geocoder: ReverseGeocoderType = StubReverseGeocoder(),
+        now: @escaping () -> Date = { .now }
     ) -> (StubLocationManager, LocationDataStore) {
         let tflAPI = StubTflAPIClient()
         let stations = StationsDataStore.stub(tflAPI: tflAPI)
-        let model = LocationDataStore(locationManager: locationManager, stations: stations, geocoder: geocoder)
+        let model = LocationDataStore(locationManager: locationManager, stations: stations, geocoder: geocoder, now: now)
         return (locationManager, model)
     }
 }

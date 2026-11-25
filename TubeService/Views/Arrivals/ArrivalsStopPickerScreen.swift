@@ -19,6 +19,7 @@ struct ArrivalsStopPickerScreen: View {
     private var userPreferences: UserPreferences = .default
 
     private static let nearbyPageSize = 3
+    private static let maxNearby = 9
     private static let maxRecents = 3
 
     @State private var nearbyLimit = nearbyPageSize
@@ -51,7 +52,14 @@ struct ArrivalsStopPickerScreen: View {
         .refreshable {
             location.refreshCurrentLocation()
         }
-        .detectsLocationChanges(action: handleLocationChangeAction)
+        .detectsLocationChanges()
+        .onChange(of: nearestStationIDs) {
+            nearbyLimit = Self.nearbyPageSize
+        }
+    }
+
+    private var nearestStationIDs: Set<Station.ID> {
+        Set(location.nearestStations.prefix(Self.maxNearby).map(\.station.id))
     }
 
     private var content: ArrivalsStopPickerView.Content {
@@ -60,7 +68,8 @@ struct ArrivalsStopPickerScreen: View {
                 favourites: favouriteStations.map { StopRow(station: $0) },
                 recents: recentRows,
                 nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
-                canShowMoreNearby: location.nearestStations.count > nearbyLimit
+                canShowMoreNearby: nearbyLimit < Self.maxNearby && location.nearestStations.count > nearbyLimit,
+                canShowLessNearby: nearbyLimit > Self.nearbyPageSize
             )
         } else {
             .searchResults(
@@ -92,15 +101,6 @@ struct ArrivalsStopPickerScreen: View {
         )
     }
 
-    private func handleLocationChangeAction(_ action: DetectLocationChangesAction) {
-        switch action {
-        case .coordinateChanged, .nameChanged:
-            nearbyLimit = Self.nearbyPageSize
-        case .authorizationStatusChanged:
-            return
-        }
-    }
-
     private func handleAction(_ action: ArrivalsStopPickerView.Action) {
         switch action {
         case .tappedStation(let station):
@@ -109,6 +109,8 @@ struct ArrivalsStopPickerScreen: View {
             isSearchPresented = true
         case .tappedShowMoreNearby:
             nearbyLimit += Self.nearbyPageSize
+        case .tappedShowLessNearby:
+            nearbyLimit = Self.nearbyPageSize
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
         case .tappedClearRecents:

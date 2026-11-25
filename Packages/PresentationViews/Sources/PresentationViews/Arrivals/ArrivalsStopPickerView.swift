@@ -5,7 +5,13 @@ import Models
 public struct ArrivalsStopPickerView: View {
 
     public enum Content: Sendable {
-        case browse(favourites: [StopRow], recents: [StopRow], nearby: [StopRow], canShowMoreNearby: Bool)
+        case browse(
+            favourites: [StopRow],
+            recents: [StopRow],
+            nearby: [StopRow],
+            canShowMoreNearby: Bool,
+            canShowLessNearby: Bool
+        )
         case searchResults(searchTerm: String, stations: [StopRow])
     }
 
@@ -13,6 +19,7 @@ public struct ArrivalsStopPickerView: View {
         case tappedStation(Station)
         case tappedFindStation
         case tappedShowMoreNearby
+        case tappedShowLessNearby
         case tappedRefreshNearby
         case tappedClearRecents
         case reorderFavourites([Station.ID])
@@ -27,7 +34,7 @@ public struct ArrivalsStopPickerView: View {
     @Environment(\.isSearching) private var isSearching
 
     private var favourites: [StopRow] {
-        if case .browse(let favourites, _, _, _) = content { favourites } else { [] }
+        if case .browse(let favourites, _, _, _, _) = content { favourites } else { [] }
     }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
@@ -60,8 +67,14 @@ public struct ArrivalsStopPickerView: View {
 
     @ViewBuilder private var contentView: some View {
         switch content {
-        case .browse(let favourites, let recents, let nearby, let canShowMoreNearby):
-            browseList(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: canShowMoreNearby)
+        case .browse(let favourites, let recents, let nearby, let canShowMoreNearby, let canShowLessNearby):
+            browseList(
+                favourites: favourites,
+                recents: recents,
+                nearby: nearby,
+                canShowMoreNearby: canShowMoreNearby,
+                canShowLessNearby: canShowLessNearby
+            )
         case .searchResults(let searchTerm, let stations) where stations.isEmpty:
             ContentUnavailableView.search(text: searchTerm)
         case .searchResults(_, let stations):
@@ -81,7 +94,8 @@ public struct ArrivalsStopPickerView: View {
         favourites: [StopRow],
         recents: [StopRow],
         nearby: [StopRow],
-        canShowMoreNearby: Bool
+        canShowMoreNearby: Bool,
+        canShowLessNearby: Bool
     ) -> some View {
         ScrollViewReader { reader in
             List {
@@ -89,6 +103,7 @@ public struct ArrivalsStopPickerView: View {
                 recentsSection(recents)
                 NearbyStationsSection(
                     title: .searchNearbySectionTitle,
+                    canShowLess: canShowLessNearby,
                     locationAccess: locationAccess,
                     rows: nearby,
                     onAction: handleNearbyAction
@@ -99,7 +114,11 @@ public struct ArrivalsStopPickerView: View {
             }
             .onChange(of: nearby.count) {
                 withAnimation {
-                    reader.scrollTo(Self.showMoreNearbyButtonID)
+                    if canShowMoreNearby {
+                        reader.scrollTo(Self.showMoreNearbyButtonID)
+                    } else if let lastRow = nearby.last {
+                        reader.scrollTo(lastRow.id)
+                    }
                 }
             }
         }
@@ -227,6 +246,8 @@ public struct ArrivalsStopPickerView: View {
             onAction(.tappedRefreshNearby)
         case .tappedStation(let station):
             onAction(.tappedStation(station))
+        case .tappedShowLess:
+            onAction(.tappedShowLessNearby)
         }
     }
 
@@ -286,6 +307,7 @@ private struct Previewer: View {
     var favourites: [StopRow] = previewFavourites
     var recents: [StopRow] = previewRecents
     var nearby: [StopRow] = previewNearby
+    var isNearbyExpanded = false
     var searchResults: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
@@ -293,7 +315,13 @@ private struct Previewer: View {
         if let searchResults {
             .searchResults(searchTerm: searchResults.searchTerm, stations: searchResults.stations)
         } else {
-            .browse(favourites: favourites, recents: recents, nearby: nearby, canShowMoreNearby: !nearby.isEmpty)
+            .browse(
+                favourites: favourites,
+                recents: recents,
+                nearby: nearby,
+                canShowMoreNearby: !nearby.isEmpty && !isNearbyExpanded,
+                canShowLessNearby: isNearbyExpanded
+            )
         }
     }
 
@@ -329,6 +357,13 @@ private let previewNearby = [
 
 #Preview("Favourites, recents and nearby") {
     Previewer()
+}
+
+#Preview("Nearby - expanded to the limit") {
+    Previewer(
+        nearby: previewNearby + [StopRow(ModelStubs.nearbyStationFinchleyCentral)],
+        isNearbyExpanded: true
+    )
 }
 
 #Preview("New user - location not asked") {
