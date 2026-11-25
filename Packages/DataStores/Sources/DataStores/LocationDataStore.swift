@@ -95,6 +95,13 @@ public final class LocationDataStore: NSObject {
         locationManager.requestWhenInUseAuthorization()
     }
 
+    public func refreshCurrentLocationIfStale() {
+        if let currentLocation, !currentLocation.isOlder(than: Self.maxLocationAge, at: now()) {
+            return
+        }
+        refreshCurrentLocation()
+    }
+
     public func refreshCurrentLocation() {
         guard isAuthorized else {
             return
@@ -111,34 +118,15 @@ public final class LocationDataStore: NSObject {
         refreshCurrentLocation()
     }
 
-    public func startLocationUpdatesIfAuthorized() {
-        guard isAuthorized else {
-            return
-        }
-        refreshCurrentLocationIfStale()
-        locationManager.startMonitoringSignificantLocationChanges()
-    }
-
-    public func stopLocationUpdates() {
-        locationManager.stopMonitoringSignificantLocationChanges()
-    }
-
     // MARK: - Implementation
-
-    private func refreshCurrentLocationIfStale() {
-        if let currentLocation, !currentLocation.isOlder(than: Self.maxLocationAge, at: now()) {
-            return
-        }
-        refreshCurrentLocation()
-    }
 
     private func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
         switch action {
         case .didChangeAuthorization:
             authorizationStatus = locationManager.authorizationStatus
-            startLocationUpdatesIfAuthorized()
-
-            if !isAuthorized {
+            if isAuthorized {
+                refreshCurrentLocationIfStale()
+            } else {
                 resetLocationState()
             }
         case .didFailWithError(_, let error):

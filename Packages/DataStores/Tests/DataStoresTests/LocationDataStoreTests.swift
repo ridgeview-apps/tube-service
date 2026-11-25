@@ -70,49 +70,49 @@ struct LocationDataStoreTests {
     }
 
     @Test
-    func startLocationUpdatesSkipsTheRequestWhenTheLocationIsUnderAMinuteOld() {
+    func refreshIfStaleSkipsTheRequestWhenTheLocationIsUnderAMinuteOld() {
         // Given
         var currentTime = Date(timeIntervalSince1970: 0)
         let locationManager = StubLocationManager()
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
         let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // When
         currentTime += 59
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 1)
     }
 
     @Test
-    func startLocationUpdatesRequestsAgainOnceTheLocationIsOverAMinuteOld() {
+    func refreshIfStaleRequestsAgainOnceTheLocationIsOverAMinuteOld() {
         // Given
         var currentTime = Date(timeIntervalSince1970: 0)
         let locationManager = StubLocationManager()
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
         let (_, model) = makeModel(locationManager: locationManager, now: { currentTime })
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // When
         currentTime += 61
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 2)
     }
 
     @Test
-    func startLocationUpdatesRequestsAgainAfterAFailedRequest() {
+    func refreshIfStaleRequestsAgainAfterAFailedRequest() {
         // Given
         let locationManager = StubLocationManager()
         let (_, model) = makeModel(locationManager: locationManager)
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
         locationManager.simulateLocationFailure(TestError.expected)
 
         // When
-        model.startLocationUpdatesIfAuthorized()
+        model.refreshCurrentLocationIfStale()
 
         // Then
         #expect(locationManager.requestLocationCallCount == 2)

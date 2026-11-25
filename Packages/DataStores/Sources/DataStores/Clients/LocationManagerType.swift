@@ -7,8 +7,6 @@ public protocol LocationManagerType: Sendable {
     func setDelegate(_ delegate: CLLocationManagerDelegate)
     func requestLocation()
     func requestWhenInUseAuthorization()
-    func startMonitoringSignificantLocationChanges()
-    func stopMonitoringSignificantLocationChanges()
 }
 
 public extension LocationManagerType {
