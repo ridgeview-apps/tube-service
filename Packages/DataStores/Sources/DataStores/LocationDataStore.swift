@@ -39,15 +39,17 @@ public final class LocationDataStore: NSObject {
     private let now: () -> Date
 
     public private(set) var authorizationStatus: CLAuthorizationStatus
-    public private(set) var currentLocationCoordinate: LocationCoordinate?
-    public private(set) var currentLocationName: LocationName?
     public private(set) var detectionState: DetectionState = .detected
     public private(set) var nearestStations: [NearbyStation] = []
 
-    private var currentLocationCoordinateLastUpdated: Date = .distantPast
-    private var currentLocationNameLastUpdated: Date = .distantPast
-    private var isForcedLocationNameRefreshPending = false
+    private var currentLocation: Timestamped<LocationCoordinate>?
+    private var locationName: Timestamped<LocationName>?
+    private var needsFreshLocationName = false
     private(set) var locationNameUpdateTask: Task<Void, Never>?
+
+    private static let maxLocationAge: TimeInterval = 60
+    private static let minLocationNameRefreshInterval: TimeInterval = 60
+    private static let minLocationNameRefreshDistance: Double = 500
 
     public init(
         locationManager: LocationManagerType,
@@ -70,6 +72,14 @@ public final class LocationDataStore: NSObject {
 
     // MARK: - Outputs
 
+    public var currentLocationCoordinate: LocationCoordinate? {
+        currentLocation?.value
+    }
+
+    public var currentLocationName: LocationName? {
+        locationName?.value
+    }
+
     public var isAuthorized: Bool {
         locationManager.isAuthorized
     }
@@ -85,16 +95,20 @@ public final class LocationDataStore: NSObject {
         locationManager.requestWhenInUseAuthorization()
     }
 
-    public func refreshCurrentLocation(forceRefreshLocationName: Bool = false) {
+    public func refreshCurrentLocation() {
         guard isAuthorized else {
             return
         }
-
-        if forceRefreshLocationName {
-            isForcedLocationNameRefreshPending = true
-        }
         detectionState = .detecting
         locationManager.requestLocation()
+    }
+
+    public func refreshCurrentLocationWithFreshName() {
+        guard isAuthorized else {
+            return
+        }
+        needsFreshLocationName = true
+        refreshCurrentLocation()
     }
 
     public func startLocationUpdatesIfAuthorized() {
@@ -112,9 +126,7 @@ public final class LocationDataStore: NSObject {
     // MARK: - Implementation
 
     private func refreshCurrentLocationIfStale() {
-        let oneMinute = 60.0
-        let isCoordinateStale = now().timeIntervalSince(currentLocationCoordinateLastUpdated) > oneMinute
-        guard isCoordinateStale else {
+        if let currentLocation, !currentLocation.isOlder(than: Self.maxLocationAge, at: now()) {
             return
         }
         refreshCurrentLocation()
@@ -140,24 +152,39 @@ public final class LocationDataStore: NSObject {
         }
     }
 
-    private func processLocationUpdate(_ newValue: LocationCoordinate) {
-        let oldValue = currentLocationCoordinate
-        currentLocationCoordinate = newValue
-        currentLocationCoordinateLastUpdated = now()
-        if shouldRefreshLocationName(forOldCoordinate: oldValue, newCoordinate: newValue) {
-            refreshLocationNameForChangedCoordinate()
+    private func processLocationUpdate(_ newCoordinate: LocationCoordinate) {
+        let oldCoordinate = currentLocationCoordinate
+        currentLocation = Timestamped(value: newCoordinate, date: now())
+        if shouldRefreshLocationName(from: oldCoordinate, to: newCoordinate) {
+            refreshLocationName(for: newCoordinate)
         }
-        isForcedLocationNameRefreshPending = false
-        updateNearestStations()
+        needsFreshLocationName = false
+        nearestStations = stations.allLondon.nearestStations(to: newCoordinate)
     }
 
-    private func refreshLocationNameForChangedCoordinate() {
-        guard let currentLocationCoordinate else { return }
+    private func shouldRefreshLocationName(
+        from oldCoordinate: LocationCoordinate?,
+        to newCoordinate: LocationCoordinate
+    ) -> Bool {
+        guard !needsFreshLocationName, let oldCoordinate else {
+            return true
+        }
+        let hasMovedFarEnough = newCoordinate.distance(to: oldCoordinate) > Self.minLocationNameRefreshDistance
+        let isNameOldEnough = locationName?.isOlder(than: Self.minLocationNameRefreshInterval, at: now()) ?? true
+        return hasMovedFarEnough && isNameOldEnough
+    }
+
+    private func refreshLocationName(for coordinate: LocationCoordinate) {
         locationNameUpdateTask?.cancel()
         locationNameUpdateTask = Task { [weak self] in
             guard let self else { return }
             do {
-                try await reverseGeocodeLocationName(for: currentLocationCoordinate)
+                guard let name = try await geocoder.locationName(for: coordinate.toCLLocation()),
+                    currentLocationCoordinate == coordinate
+                else {
+                    return
+                }
+                locationName = Timestamped(value: name, date: now())
             } catch {
                 if Task.isCancelled {
                     return
@@ -167,63 +194,23 @@ public final class LocationDataStore: NSObject {
         }
     }
 
-    private func shouldRefreshLocationName(
-        forOldCoordinate oldValue: LocationCoordinate?,
-        newCoordinate newValue: LocationCoordinate
-    ) -> Bool {
-        if isForcedLocationNameRefreshPending {
-            return true
-        }
-
-        guard let oldValue else {
-            return true
-        }
-
-        let oneMinute = 60.0
-        let fiveHundredMeters = 500.0
-
-        let nameUpdatedOverOneMinuteAgo = now().timeIntervalSince(currentLocationNameLastUpdated) > oneMinute
-        let locationHasChangedSignificantly = newValue.distance(to: oldValue) > fiveHundredMeters
-
-        return locationHasChangedSignificantly && nameUpdatedOverOneMinuteAgo
-    }
-
-    private func reverseGeocodeLocationName(for newLocation: LocationCoordinate) async throws {
-        guard currentLocationCoordinate == newLocation else {
-            return
-        }
-
-        guard let locationName = try await geocoder.locationName(for: newLocation.toCLLocation()) else {
-            return
-        }
-
-        guard currentLocationCoordinate == newLocation else {
-            return
-        }
-
-        currentLocationName = locationName
-        currentLocationNameLastUpdated = now()
-    }
-
-    private func updateNearestStations() {
-        guard let currentLocationCoordinate else {
-            assertionFailure("Trying to update nearby stations without a location")
-            return
-        }
-
-        nearestStations = stations.allLondon.nearestStations(to: currentLocationCoordinate)
-    }
-
     private func resetLocationState() {
         locationNameUpdateTask?.cancel()
         locationNameUpdateTask = nil
-        currentLocationCoordinate = nil
-        currentLocationCoordinateLastUpdated = .distantPast
-        currentLocationName = nil
-        currentLocationNameLastUpdated = .distantPast
-        isForcedLocationNameRefreshPending = false
+        currentLocation = nil
+        locationName = nil
+        needsFreshLocationName = false
         detectionState = .detected
         nearestStations = []
+    }
+}
+
+private struct Timestamped<Value> {
+    let value: Value
+    let date: Date
+
+    func isOlder(than age: TimeInterval, at now: Date) -> Bool {
+        now.timeIntervalSince(date) > age
     }
 }
 

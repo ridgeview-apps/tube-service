@@ -119,7 +119,7 @@ struct LocationDataStoreTests {
     }
 
     @Test
-    func forcedLocationNameRefreshOnlyAppliesToTheNextLocation() async {
+    func freshNameOnlyAppliesToTheNextLocation() async {
         // Given
         let locationManager = StubLocationManager()
         let geocoder = StubReverseGeocoder()
@@ -129,7 +129,7 @@ struct LocationDataStoreTests {
         await model.locationNameUpdateTask?.value
 
         locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531600, longitude: -0.113384)]
-        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocationWithFreshName()
         await model.locationNameUpdateTask?.value
 
         // When
@@ -142,7 +142,7 @@ struct LocationDataStoreTests {
     }
 
     @Test
-    func forcedLocationNameRefreshSurvivesAnUnforcedRefreshBeforeTheLocationArrives() async {
+    func freshNameSurvivesAPlainRefreshBeforeTheLocationArrives() async {
         // Given
         let locationManager = StubLocationManager()
         let geocoder = StubReverseGeocoder()
@@ -152,7 +152,7 @@ struct LocationDataStoreTests {
         await model.locationNameUpdateTask?.value
 
         locationManager.locationsToReturnOnRequest = nil
-        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocationWithFreshName()
         model.refreshCurrentLocation()
 
         // When
