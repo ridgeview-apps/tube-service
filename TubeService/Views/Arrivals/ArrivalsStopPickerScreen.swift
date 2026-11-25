@@ -19,6 +19,7 @@ struct ArrivalsStopPickerScreen: View {
     private var userPreferences: UserPreferences = .default
 
     private static let nearbyPageSize = 3
+    private static let maxNearby = 9
     private static let maxRecents = 3
 
     @State private var nearbyLimit = nearbyPageSize
@@ -59,7 +60,8 @@ struct ArrivalsStopPickerScreen: View {
                 favourites: favouriteStations.map { StopRow(station: $0) },
                 recents: recentRows,
                 nearby: location.nearestStations.prefix(nearbyLimit).map(StopRow.init),
-                canShowMoreNearby: location.nearestStations.count > nearbyLimit
+                canShowMoreNearby: nearbyLimit < Self.maxNearby && location.nearestStations.count > nearbyLimit,
+                canShowLessNearby: nearbyLimit > Self.nearbyPageSize
             )
         } else {
             .searchResults(
@@ -108,6 +110,8 @@ struct ArrivalsStopPickerScreen: View {
             isSearchPresented = true
         case .tappedShowMoreNearby:
             nearbyLimit += Self.nearbyPageSize
+        case .tappedShowLessNearby:
+            nearbyLimit = Self.nearbyPageSize
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
         case .tappedClearRecents:

@@ -2295,6 +2295,17 @@
         }
       }
     },
+    "nearby.stations.less.results.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show less"
+          }
+        }
+      }
+    },
     "nearby.stations.load.failure.subtitle" : {
       "extractionState" : "manual",
       "localizations" : {
