@@ -15,6 +15,7 @@ struct ArrivalsBoardCellView: View {
                 footerRow
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     private var numberLabel: some View {
@@ -34,6 +35,8 @@ struct ArrivalsBoardCellView: View {
             .background(label.backgroundColor)
             .clipShape(numberLabelShape)
             .overlay(numberLabelShape.strokeBorder(.white, lineWidth: 0.75))
+            // Only orders the rows on screen, so it would be noise read out before each arrival
+            .accessibilityHidden(true)
     }
 
     /// Matches `LineColourTile`, the line colour square in the chips above the boards.
