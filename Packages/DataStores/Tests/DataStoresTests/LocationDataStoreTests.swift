@@ -118,6 +118,51 @@ struct LocationDataStoreTests {
         #expect(locationManager.requestLocationCallCount == 2)
     }
 
+    @Test
+    func forcedLocationNameRefreshOnlyAppliesToTheNextLocation() async {
+        // Given
+        let locationManager = StubLocationManager()
+        let geocoder = StubReverseGeocoder()
+        let (_, model) = makeModel(locationManager: locationManager, geocoder: geocoder)
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531600, longitude: -0.113384)]
+        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        await model.locationNameUpdateTask?.value
+
+        // When
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531700, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        // Then
+        #expect(geocoder.callCount == 2)
+    }
+
+    @Test
+    func forcedLocationNameRefreshSurvivesAnUnforcedRefreshBeforeTheLocationArrives() async {
+        // Given
+        let locationManager = StubLocationManager()
+        let geocoder = StubReverseGeocoder()
+        let (_, model) = makeModel(locationManager: locationManager, geocoder: geocoder)
+        locationManager.locationsToReturnOnRequest = [CLLocation(latitude: 51.531504, longitude: -0.113384)]
+        model.refreshCurrentLocation()
+        await model.locationNameUpdateTask?.value
+
+        locationManager.locationsToReturnOnRequest = nil
+        model.refreshCurrentLocation(forceRefreshLocationName: true)
+        model.refreshCurrentLocation()
+
+        // When
+        locationManager.simulateLocationUpdate([CLLocation(latitude: 51.531600, longitude: -0.113384)])
+        await model.locationNameUpdateTask?.value
+
+        // Then
+        #expect(geocoder.callCount == 2)
+    }
+
     // Given in no particular order, so the tests prove the sorting
     private static let stations = [
         makeStation("940GZZLUFYC", lat: 51.600921, lon: -0.192527),

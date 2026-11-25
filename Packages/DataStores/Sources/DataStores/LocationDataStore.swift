@@ -46,8 +46,8 @@ public final class LocationDataStore: NSObject {
 
     private var currentLocationCoordinateLastUpdated: Date = .distantPast
     private var currentLocationNameLastUpdated: Date = .distantPast
-    private var forceRefreshLocationName: Bool = false
-    private var locationNameUpdateTask: Task<Void, Never>?
+    private var isForcedLocationNameRefreshPending = false
+    private(set) var locationNameUpdateTask: Task<Void, Never>?
 
     public init(
         locationManager: LocationManagerType,
@@ -90,7 +90,9 @@ public final class LocationDataStore: NSObject {
             return
         }
 
-        self.forceRefreshLocationName = forceRefreshLocationName
+        if forceRefreshLocationName {
+            isForcedLocationNameRefreshPending = true
+        }
         detectionState = .detecting
         locationManager.requestLocation()
     }
@@ -115,7 +117,7 @@ public final class LocationDataStore: NSObject {
         guard isCoordinateStale else {
             return
         }
-        refreshCurrentLocation(forceRefreshLocationName: forceRefreshLocationName)
+        refreshCurrentLocation()
     }
 
     private func handleLocationManagerDelegateAction(_ action: LocationManagerDelegate.Action) {
@@ -145,6 +147,7 @@ public final class LocationDataStore: NSObject {
         if shouldRefreshLocationName(forOldCoordinate: oldValue, newCoordinate: newValue) {
             refreshLocationNameForChangedCoordinate()
         }
+        isForcedLocationNameRefreshPending = false
         updateNearestStations()
     }
 
@@ -168,7 +171,7 @@ public final class LocationDataStore: NSObject {
         forOldCoordinate oldValue: LocationCoordinate?,
         newCoordinate newValue: LocationCoordinate
     ) -> Bool {
-        if forceRefreshLocationName {
+        if isForcedLocationNameRefreshPending {
             return true
         }
 
@@ -218,6 +221,7 @@ public final class LocationDataStore: NSObject {
         currentLocationCoordinateLastUpdated = .distantPast
         currentLocationName = nil
         currentLocationNameLastUpdated = .distantPast
+        isForcedLocationNameRefreshPending = false
         detectionState = .detected
         nearestStations = []
     }
