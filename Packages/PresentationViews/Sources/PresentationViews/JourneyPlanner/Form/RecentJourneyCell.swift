@@ -34,13 +34,13 @@ struct RecentJourneyCell: View {
     @State private var isSwapped = false
 
     var body: some View {
-        HStack(spacing: 0) {
+        HStack(alignment: .fromToCenter, spacing: 0) {
             JourneyPlannerSwapButton(
                 isSwapped: $isSwapped,
                 valueA: $item.fromLocation,
                 valueB: $item.toLocation
             )
-            .padding()
+            .padding(.leading, 12)
             Button {
                 withAnimation {
                     onAction()
@@ -54,12 +54,13 @@ struct RecentJourneyCell: View {
     }
 
     var buttonLabel: some View {
-        HStack {
-            VStack(alignment: .leading) {
+        HStack(alignment: .fromToCenter) {
+            VStack(alignment: .leading, spacing: 2) {
                 journeyFromToLocation
                 journeyViaLocation
             }
             .lineLimit(1)
+            .routeIndicatorOverlay(leadingOffset: 14, leadingPadding: 28)
             Spacer()
             Image(systemName: "chevron.right")
                 .imageScale(.small)
@@ -71,7 +72,7 @@ struct RecentJourneyCell: View {
     }
 
     private var journeyFromToLocation: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 6) {
             Text(item.fromLocation.name)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(
@@ -79,8 +80,7 @@ struct RecentJourneyCell: View {
                     isSwapped: isSwapped,
                     in: animationNamespace
                 )
-            Text(.recentJourneyCellTo)
-                .font(.caption)
+                .routeAnchor(.from)
             Text(item.toLocation.name)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(
@@ -88,9 +88,11 @@ struct RecentJourneyCell: View {
                     isSwapped: isSwapped,
                     in: animationNamespace
                 )
+                .routeAnchor(.to)
         }
         .font(.subheadline)
         .foregroundStyle(.primary)
+        .alignmentGuide(.fromToCenter) { $0[VerticalAlignment.center] }
     }
 
     @ViewBuilder
@@ -103,6 +105,16 @@ struct RecentJourneyCell: View {
             .font(.caption)
         }
     }
+}
+
+extension VerticalAlignment {
+    private enum FromToCenter: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[VerticalAlignment.center]
+        }
+    }
+
+    fileprivate static let fromToCenter = VerticalAlignment(FromToCenter.self)
 }
 
 // MARK: - Previews
