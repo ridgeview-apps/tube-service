@@ -37,6 +37,5 @@ struct StopRowCell: View {
             lineIDs: row.lineIDs,
             title: row.title
         )
-        .frame(minHeight: 52)
     }
 }

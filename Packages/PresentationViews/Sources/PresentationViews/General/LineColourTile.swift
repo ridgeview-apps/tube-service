@@ -8,7 +8,13 @@ struct LineColourTile: View {
     /// A white outline keeps dark blue lines (e.g. Piccadilly) distinct from an accent-coloured background.
     var isOnAccent = false
 
-    @ScaledMetric(relativeTo: .subheadline) private var size: CGFloat = 14
+    @ScaledMetric private var size: CGFloat
+
+    init(lineIDs: [TrainLineID], isOnAccent: Bool = false, size: CGFloat = 14) {
+        self.lineIDs = lineIDs
+        self.isOnAccent = isOnAccent
+        self._size = ScaledMetric(wrappedValue: size, relativeTo: .subheadline)
+    }
 
     var body: some View {
         VStack(spacing: 0) {

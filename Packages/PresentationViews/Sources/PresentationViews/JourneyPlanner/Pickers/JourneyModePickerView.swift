@@ -35,9 +35,8 @@ public struct JourneyModePickerView: View {
         } label: {
             HStack {
                 if let lineIDs = modeID.pickerLineIDs {
-                    LineColourKeyView(lineIDs: lineIDs)
-                        .frame(width: 40, height: 40)
-                        .roundedBorder(.white)
+                    LineColourTile(lineIDs: lineIDs, size: 30)
+                        .frame(minWidth: 40, minHeight: 40)
                 } else {
                     modeID.image
                         .resizable()

@@ -110,13 +110,9 @@ public struct JourneyLocationPickerView: View {
             case .station(let station):
                 StationLineGroupCell(station: station)
             case .nationalRail(let stopPoint):
-                HStack(spacing: 8) {
-                    Image("national-rail", bundle: .module)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(2)
-                        .frame(width: 40)
-                        .foregroundStyle(Color.nationalRail)
+                HStack(spacing: 12) {
+                    NationalRailMarker()
+                        .dynamicTypeSize(...DynamicTypeSize.accessibility1)
                     Text(stopPoint.sanitizedName ?? "")
                 }
             case .namedLocation(let location):
@@ -197,6 +193,18 @@ private extension JourneyLocationPicker.SectionState {
         case let .searchResults(count):
             .journeyLocationSearchResultsCount(count)
         }
+    }
+}
+
+private struct NationalRailMarker: View {
+    @ScaledMetric(relativeTo: .subheadline) private var width: CGFloat = 30
+
+    var body: some View {
+        Image("national-rail", bundle: .module)
+            .resizable()
+            .scaledToFit()
+            .frame(width: width)
+            .foregroundStyle(Color.nationalRail)
     }
 }
 
