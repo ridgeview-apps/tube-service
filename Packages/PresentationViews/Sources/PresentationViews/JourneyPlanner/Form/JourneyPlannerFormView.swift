@@ -14,6 +14,7 @@ public struct JourneyPlannerFormView: View {
 
     @Namespace private var animationNamespace
     @Environment(\.clock) private var clock
+    @State private var showsClearRecentJourneysConfirmation = false
     private var showsDatePicker: Bool {
         form.timeSelection.option != .leaveNow
     }
@@ -145,8 +146,23 @@ public struct JourneyPlannerFormView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "clock.arrow.circlepath")
                     Text(.journeyPlannerRecentJourneysSectionTitle)
+                    Spacer()
+                    SectionHeaderButton(title: .journeyPlannerRecentJourneysClearButtonTitle) {
+                        showsClearRecentJourneysConfirmation = true
+                    }
                 }
                 .secondarySectionHeaderStyle()
+                .confirmationDialog(
+                    Text(.journeyPlannerRecentJourneysClearConfirmationTitle),
+                    isPresented: $showsClearRecentJourneysConfirmation,
+                    titleVisibility: .visible
+                ) {
+                    Button(role: .destructive) {
+                        withAnimation { onAction(.confirmedClearRecentJourneys) }
+                    } label: {
+                        Text(.journeyPlannerRecentJourneysClearConfirmationAction)
+                    }
+                }
             }
             .listRowSeparator(.hidden)
             .listRowBackground(Color.defaultBackground)

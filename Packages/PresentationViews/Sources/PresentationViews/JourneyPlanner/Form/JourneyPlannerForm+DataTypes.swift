@@ -14,6 +14,7 @@ extension JourneyPlannerForm {
         case tappedSubmit
         case tappedRecentJourney(RecentJourneyItem)
         case swipedToDelete(RecentJourneyItem)
+        case confirmedClearRecentJourneys
     }
 
     struct ValidationResult {
