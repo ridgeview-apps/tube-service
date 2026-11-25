@@ -8,6 +8,7 @@ struct MapsScreen: View {
     var body: some View {
         MapsListView(onSelectMap: { navigator.push(.mapDetail(mapLink: $0)) })
             .navigationTitle(Text(L10n.mapsNavigationTitle))
+            .navigationBarTitleDisplayMode(.inline)
     }
 }
 

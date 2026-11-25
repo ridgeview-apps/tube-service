@@ -42,6 +42,7 @@ struct LineStatusScreen: View {
             selectedWeekendDayFilter: $selectedWeekendDayFilter
         )
         .navigationTitle(Text(L10n.lineStatusNavigationTitle))
+        .navigationBarTitleDisplayMode(.inline)
         .refreshable {
             await model.refresh(for: request)
         }
