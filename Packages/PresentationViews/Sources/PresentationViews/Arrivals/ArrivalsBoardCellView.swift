@@ -53,6 +53,7 @@ struct ArrivalsBoardCellView: View {
 
             text(for: item.headerRow.countdownText)
                 .font(.callout)
+                .monospacedDigit()
         }
         .strikethrough(item.headerRow.needsStrikethrough)
         .foregroundStyle(Color.arrivalsBoardPrimary)
