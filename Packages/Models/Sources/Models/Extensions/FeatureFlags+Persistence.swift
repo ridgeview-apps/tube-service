@@ -6,6 +6,7 @@ extension FeatureFlags {
         case isStatusHistoryEnabled
         case isNotificationsEnabled
         case isPaywallBypassed
+        case isBusesEnabled
     }
 
     // Manual decoding lets new flags gain their defaults when reading older stored values.
@@ -17,6 +18,8 @@ extension FeatureFlags {
             (try? container.decode(Bool.self, forKey: .isNotificationsEnabled)) ?? false
         isPaywallBypassed =
             (try? container.decode(Bool.self, forKey: .isPaywallBypassed)) ?? false
+        isBusesEnabled =
+            (try? container.decode(Bool.self, forKey: .isBusesEnabled)) ?? false
     }
 
     public func encode(to encoder: any Encoder) throws {
@@ -24,6 +27,7 @@ extension FeatureFlags {
         try container.encode(isStatusHistoryEnabled, forKey: .isStatusHistoryEnabled)
         try container.encode(isNotificationsEnabled, forKey: .isNotificationsEnabled)
         try container.encode(isPaywallBypassed, forKey: .isPaywallBypassed)
+        try container.encode(isBusesEnabled, forKey: .isBusesEnabled)
     }
 }
 

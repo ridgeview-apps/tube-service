@@ -50,8 +50,11 @@ public struct ArrivalsStopPickerView: View {
     }
 
     private var firstNewNearbyScrollID: String? {
-        nearby.dropFirst(Self.collapsedNearbyCount).first.map(NearbyStationsSection.scrollID)
+        nearby.dropFirst(Self.collapsedNearbyCount).first.map(Self.nearbyScrollID)
     }
+
+    // A nearby station can also be in Recents, so the row's own ID isn't unique in the list
+    private static func nearbyScrollID(for row: StopRow) -> String { "nearby-\(row.id)" }
 
     // MARK: - Init
 
@@ -100,14 +103,26 @@ public struct ArrivalsStopPickerView: View {
             List {
                 favouritesSection(favourites)
                 recentsSection(recents)
-                NearbyStationsSection(
+                NearbySection(
                     title: .searchNearbySectionTitle,
                     locationAccess: locationAccess,
-                    rows: visibleNearby,
-                    onAction: handleNearbyAction
-                )
+                    isEmpty: nearby.isEmpty,
+                    noResultsText: .nearbyStationsNoResults,
+                    onRefresh: { onAction(.tappedRefreshNearby) }
+                ) {
+                    ForEach(visibleNearby) { row in
+                        Button {
+                            handleTap(on: row)
+                        } label: {
+                            StopRowCell(row: row)
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityIdentifier(AccessibilityID.Nearby.station(row.stationID))
+                        .id(Self.nearbyScrollID(for: row))
+                    }
+                }
                 if isNearbyExpandable {
-                    nearbyExpansionButton
+                    NearbyExpansionButton(isExpanded: $isNearbyExpanded)
                 }
             }
             .onChange(of: isNearbyExpanded) {
@@ -211,38 +226,9 @@ public struct ArrivalsStopPickerView: View {
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.station(row.stationID))
     }
 
-    private var nearbyExpansionButton: some View {
-        Section {
-            HStack {
-                Spacer()
-                ExpansionInfoButton(
-                    titleState: .init(collapsed: .nearbyShowAllButtonTitle, expanded: .nearbyShowLessButtonTitle),
-                    isExpanded: $isNearbyExpanded
-                )
-                .buttonStyle(.borderless)
-                .font(.subheadline)
-                Spacer()
-            }
-        }
-        // Keeps the button against the Nearby card it expands, rather than a section's distance away
-        .listSectionSpacing(0)
-        .listRowBackground(Color.clear)
-        .listRowSeparator(.hidden)
-        .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 0))
-    }
-
     private func handleTap(on row: StopRow) {
         switch row.kind {
         case .station(let station):
-            onAction(.tappedStation(station))
-        }
-    }
-
-    private func handleNearbyAction(_ action: NearbyStationsSection.Action) {
-        switch action {
-        case .tappedRefresh:
-            onAction(.tappedRefreshNearby)
-        case .tappedStation(let station):
             onAction(.tappedStation(station))
         }
     }
