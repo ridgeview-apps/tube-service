@@ -23,9 +23,9 @@ public struct LineStatusListView: View {
 
     private var favourites: [Line] { lines.favouritesOnly(matching: favouriteLineIDs) }
     private var disruptions: [Line] { lines.disruptionsOnly().removingLineIDs(favouriteLineIDs) }
-    private var goodServiceLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
+    private var otherLines: [Line] { lines.goodServiceOnly().removingLineIDs(favouriteLineIDs) }
 
-    @State private var isGoodServiceSectionExpanded = false
+    @State private var isOtherLinesSectionExpanded = false
     @State private var editMode: EditMode = .inactive
     @Environment(\.clock) private var clock
 
@@ -77,7 +77,7 @@ public struct LineStatusListView: View {
         .environment(\.defaultMinListRowHeight, 0)
         .environment(\.editMode, $editMode)
         .onChange(of: selectedFilterOption) {
-            isGoodServiceSectionExpanded = false
+            isOtherLinesSectionExpanded = false
             editMode = .inactive
         }
         .onChange(of: favourites.isEmpty) {
@@ -97,7 +97,7 @@ public struct LineStatusListView: View {
         if shouldShowLineStatusCells {
             favouriteLineCells
             disruptionLineCells
-            goodServiceLineCells
+            otherLineCells
         }
     }
 
@@ -138,19 +138,19 @@ public struct LineStatusListView: View {
     }
 
     @ViewBuilder
-    private var goodServiceLineCells: some View {
-        if !goodServiceLines.isEmpty {
-            if goodServiceLines.count == 1 {
-                sectionLabel(.lineStatusSectionGoodService)
-                tappableStatusCells(with: goodServiceLines)
+    private var otherLineCells: some View {
+        if !otherLines.isEmpty {
+            if otherLines.count == 1 {
+                sectionLabel(.lineStatusSectionOtherLines)
+                tappableStatusCells(with: otherLines)
             } else {
-                collapsibleGoodServiceSectionLabel
-                if isGoodServiceSectionExpanded {
-                    tappableStatusCells(with: goodServiceLines)
+                collapsibleOtherLinesSectionLabel
+                if isOtherLinesSectionExpanded {
+                    tappableStatusCells(with: otherLines)
                 } else {
                     // The summary card expands the lines too, as it's the larger tap target
-                    Button(action: toggleGoodServiceSection) {
-                        goodServiceSummaryCell
+                    Button(action: toggleOtherLinesSection) {
+                        otherLinesSummaryCell
                     }
                     .buttonStyle(.borderless)
                 }
@@ -158,20 +158,20 @@ public struct LineStatusListView: View {
         }
     }
 
-    private func toggleGoodServiceSection() {
-        withAnimation(.easeInOut) { isGoodServiceSectionExpanded.toggle() }
+    private func toggleOtherLinesSection() {
+        withAnimation(.easeInOut) { isOtherLinesSectionExpanded.toggle() }
     }
 
-    private var collapsibleGoodServiceSectionLabel: some View {
-        Button(action: toggleGoodServiceSection) {
+    private var collapsibleOtherLinesSectionLabel: some View {
+        Button(action: toggleOtherLinesSection) {
             HStack(spacing: 8) {
-                Text(.lineStatusSectionGoodService)
+                Text(.lineStatusSectionOtherLines)
                     .secondarySectionHeaderStyle()
                 Spacer()
                 Image(systemName: "chevron.right")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
-                    .rotationEffect(.degrees(isGoodServiceSectionExpanded ? 90 : 0))
+                    .rotationEffect(.degrees(isOtherLinesSectionExpanded ? 90 : 0))
             }
             .contentShape(.rect)
             .padding(.top, 8)
@@ -180,9 +180,9 @@ public struct LineStatusListView: View {
         .accessibilityAddTraits(.isHeader)
         .accessibilityValue(
             Text(
-                isGoodServiceSectionExpanded
-                    ? .lineStatusSectionGoodServiceAccessibilityExpanded
-                    : .lineStatusSectionGoodServiceAccessibilityCollapsed
+                isOtherLinesSectionExpanded
+                    ? .lineStatusSectionOtherLinesAccessibilityExpanded
+                    : .lineStatusSectionOtherLinesAccessibilityCollapsed
             )
         )
     }
@@ -262,9 +262,9 @@ public struct LineStatusListView: View {
         return selectedDate >= startOfTomorrow
     }
 
-    private var goodServiceSummaryCell: some View {
+    private var otherLinesSummaryCell: some View {
         LineStatusCell(
-            style: .multiLine(goodServiceLines),
+            style: .multiLine(otherLines),
             showsAccessory: true
         )
         .cardStyle()
