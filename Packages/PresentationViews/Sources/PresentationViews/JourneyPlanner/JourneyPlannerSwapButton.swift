@@ -2,18 +2,26 @@ import SwiftUI
 
 struct JourneyPlannerSwapButton<Value>: View {
 
+    enum Style {
+        case circled
+        case plain
+    }
+
     @Binding var isSwapped: Bool
     @Binding var valueA: Value
     @Binding var valueB: Value
+    let style: Style
 
     init(
         isSwapped: Binding<Bool>,
         valueA: Binding<Value>,
-        valueB: Binding<Value>
+        valueB: Binding<Value>,
+        style: Style = .circled
     ) {
         self._isSwapped = isSwapped
         self._valueA = valueA
         self._valueB = valueB
+        self.style = style
     }
 
     var body: some View {
@@ -30,9 +38,22 @@ struct JourneyPlannerSwapButton<Value>: View {
                 .accessibilityLabel(Text(.swapButtonAccessibilityTitle))
         }
         .font(.system(size: 13, weight: .semibold))
-        .foregroundStyle(Color.accentColor)
-        .frame(width: 34, height: 34)
-        .background {
+        .foregroundStyle(style == .circled ? Color.accentColor : Color.secondary)
+        .frame(width: style == .circled ? 34 : 24, height: 34)
+        .background { circleBackground }
+        .contentShape(hitArea)
+    }
+
+    private var hitArea: AnyShape {
+        switch style {
+        case .circled: AnyShape(Circle().scale(1.3))
+        case .plain: AnyShape(Rectangle().inset(by: -8))
+        }
+    }
+
+    @ViewBuilder
+    private var circleBackground: some View {
+        if style == .circled {
             Circle()
                 .fill(Color.defaultCellBackground)
             Circle()
@@ -40,7 +61,6 @@ struct JourneyPlannerSwapButton<Value>: View {
             Circle()
                 .strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1.5)
         }
-        .contentShape(Circle().scale(1.3))
     }
 }
 
