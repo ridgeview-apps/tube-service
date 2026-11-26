@@ -5,21 +5,13 @@ import Models
 public struct ArrivalsStopPickerView: View {
 
     public enum Content: Sendable {
-        case browse(
-            favourites: [StopRow],
-            recents: [StopRow],
-            nearby: [StopRow],
-            canShowMoreNearby: Bool,
-            canShowLessNearby: Bool
-        )
+        case browse(favourites: [StopRow], recents: [StopRow], nearby: [StopRow])
         case searchResults(searchTerm: String, stations: [StopRow])
     }
 
     public enum Action: Sendable {
         case tappedStation(Station)
         case tappedFindStation
-        case tappedShowMoreNearby
-        case tappedShowLessNearby
         case tappedRefreshNearby
         case tappedClearRecents
         case reorderFavourites([Station.ID])
@@ -30,11 +22,14 @@ public struct ArrivalsStopPickerView: View {
     let locationAccess: LocationAccess
     let onAction: (Action) -> Void
 
+    private static let collapsedNearbyCount = 3
+
     @State private var editMode: EditMode = .inactive
+    @State private var isNearbyExpanded = false
     @Environment(\.isSearching) private var isSearching
 
     private var favourites: [StopRow] {
-        if case .browse(let favourites, _, _, _, _) = content { favourites } else { [] }
+        if case .browse(let favourites, _, _) = content { favourites } else { [] }
     }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
@@ -67,14 +62,8 @@ public struct ArrivalsStopPickerView: View {
 
     @ViewBuilder private var contentView: some View {
         switch content {
-        case .browse(let favourites, let recents, let nearby, let canShowMoreNearby, let canShowLessNearby):
-            browseList(
-                favourites: favourites,
-                recents: recents,
-                nearby: nearby,
-                canShowMoreNearby: canShowMoreNearby,
-                canShowLessNearby: canShowLessNearby
-            )
+        case .browse(let favourites, let recents, let nearby):
+            browseList(favourites: favourites, recents: recents, nearby: nearby)
         case .searchResults(let searchTerm, let stations) where stations.isEmpty:
             ContentUnavailableView.search(text: searchTerm)
         case .searchResults(_, let stations):
@@ -90,36 +79,30 @@ public struct ArrivalsStopPickerView: View {
         }
     }
 
-    private func browseList(
-        favourites: [StopRow],
-        recents: [StopRow],
-        nearby: [StopRow],
-        canShowMoreNearby: Bool,
-        canShowLessNearby: Bool
-    ) -> some View {
-        ScrollViewReader { reader in
+    private func browseList(favourites: [StopRow], recents: [StopRow], nearby: [StopRow]) -> some View {
+        let isNearbyExpandable = nearby.count > Self.collapsedNearbyCount
+        let visibleNearby = isNearbyExpanded ? nearby : Array(nearby.prefix(Self.collapsedNearbyCount))
+        return ScrollViewReader { reader in
             List {
                 favouritesSection(favourites)
                 recentsSection(recents)
                 NearbyStationsSection(
                     title: .searchNearbySectionTitle,
-                    canShowLess: canShowLessNearby,
                     locationAccess: locationAccess,
-                    rows: nearby,
+                    rows: visibleNearby,
                     onAction: handleNearbyAction
                 )
-                if canShowMoreNearby {
-                    showMoreNearbyButton
+                if isNearbyExpandable {
+                    nearbyExpansionButton
                 }
             }
-            .onChange(of: nearby.count) {
-                withAnimation {
-                    if canShowMoreNearby {
-                        reader.scrollTo(Self.showMoreNearbyButtonID)
-                    } else if let lastRow = nearby.last {
-                        reader.scrollTo(lastRow.id)
-                    }
+            .onChange(of: isNearbyExpanded) {
+                if isNearbyExpanded {
+                    withAnimation { reader.scrollTo(Self.nearbyExpansionButtonID) }
                 }
+            }
+            .onChange(of: Set(nearby.map(\.id))) {
+                isNearbyExpanded = false
             }
         }
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.list)
@@ -213,20 +196,23 @@ public struct ArrivalsStopPickerView: View {
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.station(row.stationID))
     }
 
-    private static let showMoreNearbyButtonID = "showMoreNearbyButton"
+    private static let nearbyExpansionButtonID = "nearbyExpansionButton"
 
-    private var showMoreNearbyButton: some View {
+    private var nearbyExpansionButton: some View {
         Section {
             HStack {
                 Spacer()
-                PagerButton(style: .down, title: .nearbyStationsMoreResultsButtonTitle) {
-                    onAction(.tappedShowMoreNearby)
-                }
+                ExpansionInfoButton(
+                    titleState: .init(collapsed: .nearbyShowAllButtonTitle, expanded: .nearbyShowLessButtonTitle),
+                    isExpanded: $isNearbyExpanded
+                )
+                .buttonStyle(.borderless)
+                .font(.subheadline)
                 Spacer()
             }
-            .id(Self.showMoreNearbyButtonID)
+            .id(Self.nearbyExpansionButtonID)
         }
-        // Keeps the button against the Nearby card it pages, rather than a section's distance away
+        // Keeps the button against the Nearby card it expands, rather than a section's distance away
         .listSectionSpacing(0)
         .listRowBackground(Color.clear)
         .listRowSeparator(.hidden)
@@ -246,8 +232,6 @@ public struct ArrivalsStopPickerView: View {
             onAction(.tappedRefreshNearby)
         case .tappedStation(let station):
             onAction(.tappedStation(station))
-        case .tappedShowLess:
-            onAction(.tappedShowLessNearby)
         }
     }
 
@@ -307,7 +291,6 @@ private struct Previewer: View {
     var favourites: [StopRow] = previewFavourites
     var recents: [StopRow] = previewRecents
     var nearby: [StopRow] = previewNearby
-    var isNearbyExpanded = false
     var searchResults: (searchTerm: String, stations: [StopRow])?
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
 
@@ -315,13 +298,7 @@ private struct Previewer: View {
         if let searchResults {
             .searchResults(searchTerm: searchResults.searchTerm, stations: searchResults.stations)
         } else {
-            .browse(
-                favourites: favourites,
-                recents: recents,
-                nearby: nearby,
-                canShowMoreNearby: !nearby.isEmpty && !isNearbyExpanded,
-                canShowLessNearby: isNearbyExpanded
-            )
+            .browse(favourites: favourites, recents: recents, nearby: nearby)
         }
     }
 
@@ -359,11 +336,8 @@ private let previewNearby = [
     Previewer()
 }
 
-#Preview("Nearby - expanded to the limit") {
-    Previewer(
-        nearby: previewNearby + [StopRow(ModelStubs.nearbyStationFinchleyCentral)],
-        isNearbyExpanded: true
-    )
+#Preview("Nearby - expandable") {
+    Previewer(nearby: previewNearby + [StopRow(ModelStubs.nearbyStationFinchleyCentral)])
 }
 
 #Preview("New user - location not asked") {
