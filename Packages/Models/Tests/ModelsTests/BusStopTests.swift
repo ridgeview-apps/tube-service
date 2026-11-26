@@ -84,6 +84,43 @@ struct BusStopTests {
     }
 
     @Test
+    func nearbyPlacesAreThoseWhoseNearestStopIsWithinTheRadius() {
+        let database = BusStopDatabase(stops: [
+            stop("outside", name: "Far Road", metresNorth: 510),
+            stop("inside", name: "Near Road", metresNorth: 490)
+        ])
+
+        let places = database.nearbyPlaces(to: origin, within: 500, limit: 20)
+
+        #expect(places.map(\.id) == ["inside"])
+    }
+
+    @Test
+    func nearbyPlacesKeepTheirStopsBeyondTheRadius() {
+        let database = BusStopDatabase(stops: [
+            stop("near side", name: "Edge Road", metresNorth: 450),
+            stop("far side", name: "Edge Road", metresNorth: 550)
+        ])
+
+        let places = database.nearbyPlaces(to: origin, within: 500, limit: 20)
+
+        #expect(places.map { $0.stops.map(\.stop.id) } == [["near side", "far side"]])
+    }
+
+    @Test
+    func nearbyPlacesAreTheNearestUpToTheLimit() {
+        let database = BusStopDatabase(stops: [
+            stop("third", name: "Third Road", metresNorth: 300),
+            stop("first", name: "First Road", metresNorth: 100),
+            stop("second", name: "Second Road", metresNorth: 200)
+        ])
+
+        let places = database.nearbyPlaces(to: origin, within: 500, limit: 2)
+
+        #expect(places.map(\.id) == ["first", "second"])
+    }
+
+    @Test
     func oppositeStopIsTheOtherStopAtAPlaceOfTwo() {
         let northbound = stop("north", name: "Holloway Road", metresNorth: 0)
         let southbound = stop("south", name: "Holloway Road", metresNorth: 30)

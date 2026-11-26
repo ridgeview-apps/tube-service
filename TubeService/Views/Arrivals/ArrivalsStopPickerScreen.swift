@@ -27,9 +27,8 @@ struct ArrivalsStopPickerScreen: View {
     private static let maxNearby = 9
     private static let maxRecents = 3
 
-    private static let maxBusNearbyPlaces = 9
-    private static let maxBusPlaceDistance: Double = 800
-    private static let busStopsToGroup = 60
+    private static let maxBusNearbyPlaces = 20
+    private static let maxBusPlaceDistance: Double = 500
 
     @State private var searchText = ""
     @State private var isSearchPresented = false
@@ -74,7 +73,7 @@ struct ArrivalsStopPickerScreen: View {
     @ViewBuilder private var selectedModeView: some View {
         if arrivalsMode == .buses && searchText.trimmed().isEmpty {
             BusStopsView(
-                nearby: Array(nearbyBusPlaces.prefix(Self.maxBusNearbyPlaces)),
+                nearby: nearbyBusPlaces,
                 locationAccess: locationAccess,
                 onAction: handleBusStopsAction
             )
@@ -93,10 +92,11 @@ struct ArrivalsStopPickerScreen: View {
 
     private var nearbyBusPlaces: [NearbyBusPlace] {
         guard let coordinate = location.currentLocationCoordinate else { return [] }
-        return BusStopDatabase.london
-            .nearbyStops(to: coordinate, limit: Self.busStopsToGroup)
-            .groupedByPlace()
-            .filter { $0.distance <= Self.maxBusPlaceDistance }
+        return BusStopDatabase.london.nearbyPlaces(
+            to: coordinate,
+            within: Self.maxBusPlaceDistance,
+            limit: Self.maxBusNearbyPlaces
+        )
     }
 
     private var content: ArrivalsStopPickerView.Content {

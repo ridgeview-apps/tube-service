@@ -127,10 +127,10 @@ private struct NearbyBusStopsMap: View {
 private struct Previewer: View {
     var location = LocationCoordinate(lat: 51.530823, lon: -0.123821)
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
-    var placeCount = 9
+    var placeCount = 20
 
     private var places: [NearbyBusPlace] {
-        BusStopDatabase.london.nearbyStops(to: location, limit: 60).groupedByPlace().prefix(placeCount).map(\.self)
+        BusStopDatabase.london.nearbyPlaces(to: location, within: 500, limit: placeCount)
     }
 
     var body: some View {
