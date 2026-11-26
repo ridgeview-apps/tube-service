@@ -2339,7 +2339,18 @@
         }
       }
     },
-    "nearby.stations.less.results.button.title" : {
+    "nearby.show.all.button.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show all"
+          }
+        }
+      }
+    },
+    "nearby.show.less.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
@@ -2357,17 +2368,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tap refresh to try again"
-          }
-        }
-      }
-    },
-    "nearby.stations.more.results.button.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show more"
           }
         }
       }

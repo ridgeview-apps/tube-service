@@ -8,11 +8,9 @@ struct NearbyStationsSection: View {
     enum Action: Sendable {
         case tappedRefresh
         case tappedStation(Station)
-        case tappedShowLess
     }
 
     var title: LocalizedStringResource?
-    let canShowLess: Bool
     let locationAccess: LocationAccess
     let rows: [StopRow]
     let onAction: (Action) -> Void
@@ -44,11 +42,6 @@ struct NearbyStationsSection: View {
                 LineGroupSectionHeader(title: title, imageName: "location")
                 Spacer()
                 statusView
-                if canShowLess {
-                    SectionHeaderButton(title: .nearbyStationsLessResultsButtonTitle) {
-                        withAnimation { onAction(.tappedShowLess) }
-                    }
-                }
             }
             .secondarySectionHeaderStyle()
         } else {
