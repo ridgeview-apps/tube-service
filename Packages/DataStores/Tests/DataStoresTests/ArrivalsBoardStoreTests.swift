@@ -8,10 +8,17 @@ import Testing
 struct ArrivalsBoardStoreTests {
 
     // Northern line → .arrivalPredictions
-    private let predictionsLineGroup = Station.LineGroup(atcoCode: "940GZZLUAGL", lineIds: [.northern])
+    private let predictionsLineGroup = ArrivalsBoardStore.Board.lineGroup(
+        Station.LineGroup(atcoCode: "940GZZLUAGL", lineIds: [.northern])
+    )
 
     // Elizabeth line → .arrivalDepartures
-    private let departuresLineGroup = Station.LineGroup(atcoCode: "910GPADTLL", lineIds: [.elizabeth])
+    private let departuresLineGroup = ArrivalsBoardStore.Board.lineGroup(
+        Station.LineGroup(atcoCode: "910GPADTLL", lineIds: [.elizabeth])
+    )
+
+    private let busStop = ArrivalsBoardStore.Board.busStop("490000129R")
+    private let oppositeBusStop = ArrivalsBoardStore.Board.busStop("490000129S")
 
     private func makeStore(tflAPI: StubTflAPIClient = StubTflAPIClient()) -> ArrivalsBoardStore {
         ArrivalsBoardStore(tflAPI: tflAPI)
@@ -145,6 +152,60 @@ struct ArrivalsBoardStoreTests {
             return
         }
         #expect(items == [scheduled])
+    }
+
+    // MARK: - refresh (bus arrivals)
+
+    @Test
+    func refresh_busStop_success_setsBoardDataWithOneRequest() async {
+        let tflAPI = StubTflAPIClient()
+        let arrival = BusArrival(
+            id: "-1871560000",
+            lineName: "73",
+            destinationName: "Oxford Circus",
+            towards: "Euston",
+            timeToStation: 40,
+            naptanID: "490000129R",
+            platformName: "R"
+        )
+        tflAPI.stubbedBusArrivals = .success200([arrival])
+        let store = makeStore(tflAPI: tflAPI)
+
+        await store.refresh(for: busStop)
+
+        guard case .busArrivals(let arrivals) = store.boardData.value else {
+            Issue.record("Expected .busArrivals board data")
+            return
+        }
+        #expect(arrivals == [arrival])
+        #expect(store.boardData.fetchState.isSuccess == true)
+        #expect(tflAPI.fetchBusArrivalsCallCount == 1)
+        #expect(tflAPI.fetchArrivalPredictionsCallCount == 0)
+        #expect(tflAPI.fetchArrivalDeparturesCallCount == 0)
+    }
+
+    @Test
+    func refresh_busStop_networkError_setsFetchError() async {
+        let tflAPI = StubTflAPIClient()
+        tflAPI.fetchBusArrivalsError = URLError(.notConnectedToInternet)
+        let store = makeStore(tflAPI: tflAPI)
+
+        await store.refresh(for: busStop)
+
+        #expect(store.boardData.value == nil)
+        #expect(store.boardData.fetchState.isError == true)
+    }
+
+    @Test
+    func switchingBusStop_clearsThePreviousStopsBoard() async {
+        let store = makeStore()
+        await store.refresh(for: busStop)
+
+        store.startAutoRefresh(for: oppositeBusStop)
+
+        #expect(store.boardData.value == nil)
+        #expect(store.boardData.fetchedAt == nil)
+        store.stopAutoRefresh()
     }
 
     // MARK: - Deduplication

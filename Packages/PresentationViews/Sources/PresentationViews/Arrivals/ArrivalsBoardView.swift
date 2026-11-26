@@ -8,6 +8,7 @@ struct ArrivalsBoardView: View {
 
     let platformName: String
     let cellItems: [ArrivalsBoardCellItem]
+    var style: ArrivalsBoardState.Style = .train
 
     @Binding var isExpanded: Bool
 
@@ -22,7 +23,19 @@ struct ArrivalsBoardView: View {
     @State private var rotationCellAnimated = false
     @State private var rotatingCellIndex: Int?
 
-    private let collapsedStateMaxCellCount = 3
+    private var collapsedStateMaxCellCount: Int {
+        switch style {
+        case .train: 3
+        case .bus: 5
+        }
+    }
+
+    private var cellSpacing: CGFloat {
+        switch style {
+        case .train: 20
+        case .bus: 14
+        }
+    }
 
     // MARK: Body
 
@@ -54,7 +67,7 @@ struct ArrivalsBoardView: View {
     }
 
     private var cells: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: cellSpacing) {
             ForEach(fixedCellItems) { cellItem in
                 makeCell(with: cellItem)
                     .animation(nil, value: rotatingCellIndex)
@@ -119,7 +132,7 @@ struct ArrivalsBoardView: View {
     }
 
     private func makeCell(with cellItem: ArrivalsBoardCellItem) -> some View {
-        ArrivalsBoardCellView(item: cellItem)
+        ArrivalsBoardCellView(item: cellItem, style: style)
             .id(cellItem.id)
     }
 
@@ -157,6 +170,7 @@ extension ArrivalsBoardView {
         self.init(
             platformName: boardState.platformName,
             cellItems: boardState.cellItems,
+            style: boardState.style,
             isExpanded: isExpanded,
             rotatingCellTimer: rotatingCellTimer
         )

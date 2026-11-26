@@ -118,6 +118,24 @@ struct TflAPIRouteTests {
     }
 
     @Test
+    func busArrivalsEndpoint() throws {
+        let route: TflAPIRoute = .busArrivals(stopID: "490000129R")
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+
+        #expect(url.absoluteString == "https://foo.com/StopPoint/490000129R/Arrivals?app_key=testAppKey")
+    }
+
+    @Test
+    func busStopDisruptionsEndpoint() throws {
+        let route: TflAPIRoute = .busStopDisruptions(stopID: "490000129R")
+
+        let url = try route.toURL(relativeTo: baseURL, appKey: appKey)
+
+        #expect(url.absoluteString == "https://foo.com/StopPoint/490000129R/Disruption?app_key=testAppKey")
+    }
+
+    @Test
     func journeyResultsEndpointIncludesOptionalParameters() throws {
         let params = JourneyRequestParams(
             from: .icsCode("1000266"),

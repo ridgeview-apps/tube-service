@@ -3,16 +3,29 @@ import SwiftUI
 
 struct ArrivalsBoardCellView: View {
     let item: ArrivalsBoardCellItem
+    var style: ArrivalsBoardState.Style = .train
 
     @ScaledMetric(relativeTo: .headline) private var numberLabelWidth: CGFloat = 28
+    @ScaledMetric(relativeTo: .headline) private var routeLabelWidth: CGFloat = 52
     @ScaledMetric(relativeTo: .headline) private var numberLabelHeight: CGFloat = 32
+    @ScaledMetric(relativeTo: .headline) private var routeLabelHeight: CGFloat = 26
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            numberLabel
-            VStack(alignment: .leading, spacing: 4) {
-                headerRow
-                footerRow
+        Group {
+            switch style {
+            case .train:
+                HStack(alignment: .top, spacing: 12) {
+                    numberLabel
+                    VStack(alignment: .leading, spacing: 4) {
+                        headerRow
+                        footerRow
+                    }
+                }
+            case .bus:
+                HStack(alignment: .firstTextBaseline, spacing: 12) {
+                    numberLabel
+                    headerRow
+                }
             }
         }
         .accessibilityElement(children: .combine)
@@ -21,7 +34,8 @@ struct ArrivalsBoardCellView: View {
     private var numberLabel: some View {
         let label = item.numberLabel
 
-        return Text(label.valueText)
+        return Text(label.text)
+            .lineLimit(1)
             .padding(2)
             .minimumScaleFactor(0.4)
             .foregroundColor(label.textColor)
@@ -31,7 +45,10 @@ struct ArrivalsBoardCellView: View {
                 x: label.textShadow.x,
                 y: label.textShadow.y
             )
-            .frame(width: numberLabelWidth, height: numberLabelHeight)
+            .frame(
+                width: label.width == .route ? routeLabelWidth : numberLabelWidth,
+                height: style == .bus ? routeLabelHeight : numberLabelHeight
+            )
             .background(label.backgroundColor)
             .clipShape(numberLabelShape)
             .overlay(numberLabelShape.strokeBorder(.white, lineWidth: 0.75))

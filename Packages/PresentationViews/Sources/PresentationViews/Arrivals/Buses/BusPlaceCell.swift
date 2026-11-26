@@ -47,16 +47,21 @@ struct BusPlaceCell: View {
     @ViewBuilder private var header: some View {
         if dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: 2) {
-                Text(place.name)
+                placeName
                 distanceText
             }
         } else {
             HStack {
-                Text(place.name)
+                placeName
                 Spacer()
                 distanceText
             }
         }
+    }
+
+    private var placeName: some View {
+        Text(place.name)
+            .font(.headline)
     }
 
     private var distanceText: some View {
@@ -77,14 +82,12 @@ struct BusPlaceCell: View {
             HStack(spacing: 12) {
                 BusStopTile(letter: stop.letter)
                     .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                VStack(alignment: .leading, spacing: 2) {
+                VStack(alignment: .leading, spacing: 4) {
                     if let towards = stop.towards {
                         Text(.busStopTowards(towards))
                             .font(.subheadline)
                     }
-                    Text(verbatim: stop.routes.joined(separator: " · "))
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    BusRouteTags(routes: stop.routes)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }

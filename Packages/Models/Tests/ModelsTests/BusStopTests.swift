@@ -83,6 +83,36 @@ struct BusStopTests {
         #expect(nearby.map(\.stop.id) == ["nearest", "near"])
     }
 
+    @Test
+    func oppositeStopIsTheOtherStopAtAPlaceOfTwo() {
+        let northbound = stop("north", name: "Holloway Road", metresNorth: 0)
+        let southbound = stop("south", name: "Holloway Road", metresNorth: 30)
+        let database = BusStopDatabase(stops: [northbound, southbound, stop("other", name: "Other", metresNorth: 10)])
+
+        #expect(database.oppositeStop(of: northbound)?.id == "south")
+        #expect(database.oppositeStop(of: southbound)?.id == "north")
+    }
+
+    @Test
+    func aStopAloneHasNoOppositeStop() {
+        let lone = stop("lone", name: "Swan Lane", metresNorth: 0)
+        let database = BusStopDatabase(stops: [lone, stop("other", name: "Other", metresNorth: 20)])
+
+        #expect(database.oppositeStop(of: lone) == nil)
+    }
+
+    @Test
+    func aPlaceOfMoreThanTwoStopsHasNoOppositeStop() {
+        let first = stop("A", name: "King's Cross Station", metresNorth: 0)
+        let database = BusStopDatabase(stops: [
+            first,
+            stop("B", name: "King's Cross Station", metresNorth: 20),
+            stop("C", name: "King's Cross Station", metresNorth: 40)
+        ])
+
+        #expect(database.oppositeStop(of: first) == nil)
+    }
+
     // MARK: - Helpers
 
     private func nearbyStop(_ id: String, name: String, area: String?, metresNorth: Double) -> NearbyBusStop {

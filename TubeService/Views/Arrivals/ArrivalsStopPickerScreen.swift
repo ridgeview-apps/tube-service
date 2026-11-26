@@ -155,8 +155,8 @@ struct ArrivalsStopPickerScreen: View {
 
     private func handleBusStopsAction(_ action: BusStopsView.Action) {
         switch action {
-        case .tappedStop:
-            break
+        case .tappedStop(let stop):
+            navigator.push(.busStop(.arrivals(stop)))
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
         }

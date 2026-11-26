@@ -1,12 +1,14 @@
 import Shared
 import SwiftUI
 
-/// The Station screen's live platform boards for the selected line group, followed by the favourite button.
+/// Live boards, with a placeholder while they first load and a message when there are none.
 struct StationBoardsView: View {
 
-    let boardStates: [ArrivalsBoardState]
-    let loadingState: LoadingState
-    @Binding var isFavourite: Bool
+    let arrivals: LiveArrivals
+    var style: ArrivalsBoardState.Style = .train
+
+    private var boardStates: [ArrivalsBoardState] { arrivals.boardStates }
+    private var loadingState: LoadingState { arrivals.loadingState }
 
     private let rotatingCellTimer = ObservableTimer.repeating(every: 3.0)
     @State private var expandedBoardIDs = Set<String>()
@@ -14,31 +16,29 @@ struct StationBoardsView: View {
 
     var body: some View {
         StationSection(cardBackground: false) {
-            VStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 8) {
-                    refreshFailure
-                    if !boardStates.isEmpty {
-                        VStack(spacing: 24) {
-                            ForEach(boardStates) { boardState in
-                                ArrivalsBoardView(
-                                    platformName: boardState.platformName,
-                                    cellItems: boardState.cellItems,
-                                    isExpanded: isExpanded(boardID: boardState.id),
-                                    rotatingCellTimer: rotatingCellTimer
-                                )
-                                .buttonStyle(.plain)
-                            }
-                        }
-                    } else {
-                        switch loadingState {
-                        case .loading: placeholderBoard
-                        case .loaded: messageBoard(Text(.stationArrivalsEmpty), hint: Text(.stationArrivalsEmptyHint))
-                        case .failure(let errorMessage):
-                            messageBoard(Text(errorMessage), hint: Text(.stationArrivalsFailureRetryHint))
+            VStack(alignment: .leading, spacing: 8) {
+                refreshFailure
+                if !boardStates.isEmpty {
+                    VStack(spacing: 24) {
+                        ForEach(boardStates) { boardState in
+                            ArrivalsBoardView(
+                                platformName: boardState.platformName,
+                                cellItems: boardState.cellItems,
+                                style: boardState.style,
+                                isExpanded: isExpanded(boardID: boardState.id),
+                                rotatingCellTimer: rotatingCellTimer
+                            )
+                            .buttonStyle(.plain)
                         }
                     }
+                } else {
+                    switch loadingState {
+                    case .loading: placeholderBoard
+                    case .loaded: messageBoard(Text(.stationArrivalsEmpty), hint: Text(.stationArrivalsEmptyHint))
+                    case .failure(let errorMessage):
+                        messageBoard(Text(errorMessage), hint: Text(.stationArrivalsFailureRetryHint))
+                    }
                 }
-                FavouritesButton(.station, style: .large, isSelected: $isFavourite)
             }
         }
     }
@@ -61,8 +61,9 @@ struct StationBoardsView: View {
         // Only the contents pulse, so a slow load still looks alive while the board keeps its frame
         PhaseAnimator(pausesRepeatingAnimations ? [false] : [false, true]) { isDimmed in
             ArrivalsBoardView(
-                platformName: Self.placeholderBoardState.platformName,
-                cellItems: Self.placeholderBoardState.cellItems,
+                platformName: placeholderBoardState.platformName,
+                cellItems: placeholderBoardState.cellItems,
+                style: style,
                 isExpanded: .constant(false),
                 contentOpacity: isDimmed ? 0.4 : 1
             )
@@ -74,14 +75,21 @@ struct StationBoardsView: View {
         .accessibilityHidden(true)
     }
 
+    private var placeholderBoardState: ArrivalsBoardState {
+        switch style {
+        case .train: Self.trainPlaceholderBoardState
+        case .bus: Self.busPlaceholderBoardState
+        }
+    }
+
     // The text is only ever shown redacted or invisible, so it's never localized
-    private static let placeholderBoardState = ArrivalsBoardState(
+    private static let trainPlaceholderBoardState = ArrivalsBoardState(
         platformName: "Northbound - Platform 1",
         cellItems: (1...3).map { number in
             ArrivalsBoardCellItem(
                 id: "placeholder-\(number)",
                 numberLabel: .init(
-                    value: number,
+                    text: String(number),
                     backgroundColor: .black,
                     textColor: .white,
                     textShadow: (color: .clear, radius: 0, x: 0, y: 0)
@@ -97,11 +105,36 @@ struct StationBoardsView: View {
         }
     )
 
+    private static let busPlaceholderBoardState = ArrivalsBoardState(
+        platformName: "Stop A",
+        cellItems: (1...5).map { number in
+            ArrivalsBoardCellItem(
+                id: "placeholder-\(number)",
+                numberLabel: .init(
+                    text: "000",
+                    width: .route,
+                    backgroundColor: .bus,
+                    textColor: .white,
+                    textShadow: (color: .clear, radius: 0, x: 0, y: 0)
+                ),
+                headerRow: .init(
+                    style: .tube,
+                    destination: .towards("Placeholder destination"),
+                    countdownText: .verbatim("0 mins"),
+                    needsStrikethrough: false
+                ),
+                footerRow: nil
+            )
+        },
+        style: .bus
+    )
+
     // Laid over an invisible placeholder board, so the screen doesn't jump when loading ends
     private func messageBoard(_ message: Text, hint: Text) -> some View {
         ArrivalsBoardView(
-            platformName: Self.placeholderBoardState.platformName,
-            cellItems: Self.placeholderBoardState.cellItems,
+            platformName: placeholderBoardState.platformName,
+            cellItems: placeholderBoardState.cellItems,
+            style: style,
             isExpanded: .constant(false),
             contentOpacity: 0
         )

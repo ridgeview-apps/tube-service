@@ -156,8 +156,6 @@ private extension String {
 private extension Sequence where Element == DisruptedPoint {
 
     func toNoticesGroupedByStationID(stationsByAtcoCode: [String: Station]) -> [Station.ID: [StationNotice]] {
-        var noticesByStationID = [Station.ID: [StationNotice]]()
-
         let stationNotices = compactMap { disruptedPoint -> (Station.ID, StationNotice)? in
             guard let atcoCode = disruptedPoint.atcoCode,
                 let stationID = stationsByAtcoCode[atcoCode]?.id,
@@ -165,16 +163,6 @@ private extension Sequence where Element == DisruptedPoint {
             else { return nil }
             return (stationID, notice)
         }
-
-        // Sorted before removing duplicates, so a duplicate keeps its highest priority
-        for (stationID, notice) in stationNotices.sorted(by: { $0.1.priority < $1.1.priority }) {
-            var notices = noticesByStationID[stationID] ?? []
-            if !notices.contains(where: { $0.text == notice.text }) {
-                notices.append(notice)
-            }
-            noticesByStationID[stationID] = notices
-        }
-
-        return noticesByStationID
+        return Dictionary(grouping: stationNotices, by: \.0).mapValues { $0.map(\.1).prioritised() }
     }
 }

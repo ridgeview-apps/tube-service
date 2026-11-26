@@ -41,6 +41,14 @@ import ModelStubs
             .success200(Fixtures.disruptedStations)
         }
 
+        public func fetchBusArrivals(stopID: BusStop.ID) async throws -> HTTPResponse<[BusArrival]> {
+            .success200([])
+        }
+
+        public func fetchBusStopDisruptions(stopID: BusStop.ID) async throws -> HTTPResponse<[DisruptedPoint]> {
+            .success200([])
+        }
+
         public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
             .success200(Fixtures.journeyResults)
         }

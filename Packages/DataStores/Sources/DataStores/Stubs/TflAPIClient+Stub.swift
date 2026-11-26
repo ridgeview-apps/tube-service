@@ -57,6 +57,26 @@ import Shared
             return stubbedDisruptedPoints
         }
 
+        public private(set) var fetchBusArrivalsCallCount = 0
+        public var stubbedBusArrivals: HTTPResponse<[BusArrival]> = .success200(ModelStubs.busArrivalsKingsCrossStationR)
+        public var fetchBusArrivalsError: Error?
+        public var fetchBusArrivalsDelay: Duration?
+        public func fetchBusArrivals(stopID: BusStop.ID) async throws -> HTTPResponse<[BusArrival]> {
+            fetchBusArrivalsCallCount += 1
+            if let fetchBusArrivalsDelay { try await Task.sleep(for: fetchBusArrivalsDelay) }
+            if let fetchBusArrivalsError { throw fetchBusArrivalsError }
+            return stubbedBusArrivals
+        }
+
+        public private(set) var fetchBusStopDisruptionsCallCount = 0
+        public var stubbedBusStopDisruptions: HTTPResponse<[DisruptedPoint]> = .success200(ModelStubs.busStopDisruptions)
+        public var fetchBusStopDisruptionsError: Error?
+        public func fetchBusStopDisruptions(stopID: BusStop.ID) async throws -> HTTPResponse<[DisruptedPoint]> {
+            fetchBusStopDisruptionsCallCount += 1
+            if let fetchBusStopDisruptionsError { throw fetchBusStopDisruptionsError }
+            return stubbedBusStopDisruptions
+        }
+
         public private(set) var fetchJourneyResultsCallCount = 0
         public var stubbedJourneyResults: HTTPResponse<JourneyResults> = .success200(ModelStubs.journeyResultsKingsXToWaterlooNow)
         public var fetchJourneyResultsError: Error?
