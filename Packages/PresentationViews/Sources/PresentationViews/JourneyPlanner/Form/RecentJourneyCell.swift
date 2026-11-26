@@ -73,7 +73,7 @@ struct RecentJourneyCell: View {
 
     private var journeyFromToLocation: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(item.fromLocation.name)
+            Text(item.fromLocation.shortName)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(
                     .firstPairItem("\(item.id)"),
@@ -81,7 +81,7 @@ struct RecentJourneyCell: View {
                     in: animationNamespace
                 )
                 .routeAnchor(.from)
-            Text(item.toLocation.name)
+            Text(item.toLocation.shortName)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .swapValuesGeometryEffectID(
                     .secondPairItem("\(item.id)"),
@@ -99,7 +99,7 @@ struct RecentJourneyCell: View {
     private var journeyViaLocation: some View {
         if let viaLocation = item.viaLocation {
             HStack {
-                Text(.recentJourneyCellVia(viaLocation.name))
+                Text(.recentJourneyCellVia(viaLocation.shortName))
                 Spacer()
             }
             .font(.caption)
@@ -157,6 +157,19 @@ private struct Previewer: View {
                 fromLocation: .station(ModelStubs.angelStation),
                 toLocation: .station(ModelStubs.eastFinchleyStation),
                 viaLocation: .station(ModelStubs.kingsCrossStation),
+                lastUsed: .distantPast
+            ),
+            .init(
+                id: UUID(),
+                fromLocation: .namedLocation(
+                    .init(
+                        name: .init(title: "Charing Cross", subtitle: "City of Westminster"),
+                        coordinate: .init(lat: 0, lon: 0),
+                        isCurrentLocation: false
+                    )
+                ),
+                toLocation: .station(ModelStubs.eastFinchleyStation),
+                viaLocation: nil,
                 lastUsed: .distantPast
             )
         ]

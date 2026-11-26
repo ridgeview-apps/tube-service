@@ -55,6 +55,13 @@ extension JourneyLocation {
             }
         }
     }
+
+    var shortName: String {
+        if case .namedLocation(let location) = self, let title = location.name?.title, !title.isEmpty {
+            return title
+        }
+        return name
+    }
 }
 
 
