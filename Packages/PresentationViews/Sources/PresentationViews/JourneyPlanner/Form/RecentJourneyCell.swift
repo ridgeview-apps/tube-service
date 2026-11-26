@@ -38,9 +38,10 @@ struct RecentJourneyCell: View {
             JourneyPlannerSwapButton(
                 isSwapped: $isSwapped,
                 valueA: $item.fromLocation,
-                valueB: $item.toLocation
+                valueB: $item.toLocation,
+                style: .plain
             )
-            .padding(.leading, 12)
+            .padding(.leading, 10)
             Button {
                 withAnimation {
                     onAction()
@@ -50,7 +51,6 @@ struct RecentJourneyCell: View {
             }
             .accessibilityIdentifier(AccessibilityID.JourneyPlanner.recentJourney)
         }
-        .cardStyle()
     }
 
     var buttonLabel: some View {
@@ -63,8 +63,8 @@ struct RecentJourneyCell: View {
             .routeIndicatorOverlay(leadingOffset: 14, leadingPadding: 28)
             Spacer()
             Image(systemName: "chevron.right")
-                .imageScale(.small)
-                .foregroundStyle(Color.accentColor)
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.tertiary)
         }
         .contentShape(Rectangle())
         .padding(.vertical, 12)
@@ -103,6 +103,7 @@ struct RecentJourneyCell: View {
                 Spacer()
             }
             .font(.caption)
+            .foregroundStyle(.secondary)
         }
     }
 }
@@ -134,10 +135,10 @@ private struct Previewer: View {
                     onAction: onAction
                 )
             }
-            .listRowBackground(Color.defaultBackground)
+            .listRowInsets(EdgeInsets())
         }
-        .listStyle(.plain)
-
+        .listStyle(.insetGrouped)
+        .buttonStyle(.plain)
     }
 }
 

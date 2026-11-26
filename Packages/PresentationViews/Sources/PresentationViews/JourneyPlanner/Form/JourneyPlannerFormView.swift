@@ -42,7 +42,8 @@ public struct JourneyPlannerFormView: View {
         }
         .accessibilityIdentifier(AccessibilityID.JourneyPlanner.form)
         .buttonStyle(.plain)
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
+        .contentMargins(.top, 0, for: .scrollContent)
         .defaultScrollContentBackgroundColor()
         .scrollBounceBehavior(.basedOnSize)
         .defaultMaxWidthWithFullBackground()
@@ -69,7 +70,7 @@ public struct JourneyPlannerFormView: View {
         }
         .listRowBackground(Color.defaultBackground)
         .listRowSeparator(.hidden)
-        .listRowInsets(.init(top: 12, leading: 16, bottom: 8, trailing: 16))
+        .listRowInsets(.init(top: 12, leading: 0, bottom: 8, trailing: 0))
     }
 
     private var resetButton: some View {
@@ -175,9 +176,8 @@ public struct JourneyPlannerFormView: View {
                 }
                 .secondarySectionHeaderStyle()
             }
-            .listRowSeparator(.hidden)
-            .listRowBackground(Color.defaultBackground)
-            .listRowInsets(.init(top: 0, leading: 16, bottom: 12, trailing: 16))
+            .listRowBackground(Color.defaultCellBackground)
+            .listRowInsets(EdgeInsets())
         }
     }
 
@@ -221,6 +221,7 @@ private struct Previewer: View {
                 onAction: { print("Action \($0)") }
             )
             .navigationTitle("Preview")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
