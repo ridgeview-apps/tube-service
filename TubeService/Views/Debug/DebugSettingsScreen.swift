@@ -34,6 +34,7 @@ struct DebugSettingsScreen: View {
                 Section {
                     Toggle("Status History", isOn: $featureFlags.isStatusHistoryEnabled)
                     Toggle("Notifications", isOn: $featureFlags.isNotificationsEnabled)
+                    Toggle("Buses", isOn: $featureFlags.isBusesEnabled)
                     Toggle("Bypass Paywall", isOn: $featureFlags.isPaywallBypassed)
                 } header: {
                     Text("Feature Toggles")

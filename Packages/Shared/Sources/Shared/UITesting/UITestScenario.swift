@@ -26,7 +26,7 @@ public struct UITestScenario: Codable, Sendable {
     public var seed: Seed
     /// Subscribed to Tube Service Plus (through the debug paywall bypass).
     public var hasTubeServicePlus: Bool
-    /// Turns on the features still behind debug flags (status history and notifications).
+    /// Turns on the features still behind debug flags (status history, notifications and buses).
     public var enablesUnreleasedFeatures: Bool
 
     public init(

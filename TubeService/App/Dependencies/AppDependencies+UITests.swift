@@ -18,7 +18,8 @@ import Shared
             userDefaults.featureFlags = FeatureFlags(
                 isStatusHistoryEnabled: scenario.enablesUnreleasedFeatures,
                 isNotificationsEnabled: scenario.enablesUnreleasedFeatures,
-                isPaywallBypassed: scenario.hasTubeServicePlus
+                isPaywallBypassed: scenario.hasTubeServicePlus,
+                isBusesEnabled: scenario.enablesUnreleasedFeatures
             )
 
             let locationManager = StubLocationManager()

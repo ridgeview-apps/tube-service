@@ -2,21 +2,15 @@ import Models
 import Shared
 import SwiftUI
 
-/// The nearby stations, or the location access, loading, empty or failure row in their place.
-struct NearbyStationsSection: View {
-
-    enum Action: Sendable {
-        case tappedRefresh
-        case tappedStation(Station)
-    }
+/// The nearby stops, or the location access, loading, empty or failure row in their place.
+struct NearbySection<Rows: View>: View {
 
     var title: LocalizedStringResource?
     let locationAccess: LocationAccess
-    let rows: [StopRow]
-    let onAction: (Action) -> Void
-
-    /// For a `ScrollViewReader`. A nearby station can also be in Recents, so the row's own ID isn't unique in the list.
-    static func scrollID(for row: StopRow) -> String { "nearby-\(row.id)" }
+    let isEmpty: Bool
+    let noResultsText: LocalizedStringResource
+    let onRefresh: () -> Void
+    @ViewBuilder let rows: Rows
 
     var body: some View {
         Section {
@@ -25,13 +19,13 @@ struct NearbyStationsSection: View {
                 allowLocationRow
             case .denied:
                 locationOffRow
-            case .allowed(.loaded) where rows.isEmpty:
+            case .allowed(.loaded) where isEmpty:
                 zeroResultsView
-            case .allowed(.failure) where rows.isEmpty:
+            case .allowed(.failure) where isEmpty:
                 failureRow
             case .allowed:
-                // A failed update keeps the last stations, which are usually still right
-                stationRows
+                // A failed update keeps the last stops, which are usually still right
+                rows
             }
         } header: {
             headerView
@@ -57,8 +51,8 @@ struct NearbyStationsSection: View {
         case .allowed(.loading):
             LoadingStatusView(loadingState: .loading)
                 .defaultLoadingStatusStyle()
-        // Without stations, the failure row explains the error instead
-        case .allowed(.failure) where !rows.isEmpty:
+        // Without stops, the failure row explains the error instead
+        case .allowed(.failure) where !isEmpty:
             updateFailureView
         default:
             EmptyView()
@@ -72,7 +66,7 @@ struct NearbyStationsSection: View {
             )
             .defaultLoadingStatusStyle()
             Button {
-                onAction(.tappedRefresh)
+                onRefresh()
             } label: {
                 Label(.refreshButtonTitle, systemImage: "arrow.clockwise")
                     .labelStyle(.iconOnly)
@@ -120,31 +114,8 @@ struct NearbyStationsSection: View {
 
     private var zeroResultsView: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text(.nearbyStationsNoResults)
+            Text(noResultsText)
             refreshButton
-        }
-    }
-
-    private var stationRows: some View {
-        ForEach(rows) { row in
-            Button {
-                switch row.kind {
-                case .station(let station):
-                    onAction(.tappedStation(station))
-                }
-            } label: {
-                StopRowCell(row: row)
-            }
-            .buttonStyle(.plain)
-            .accessibilityIdentifier(accessibilityID(for: row))
-            .id(Self.scrollID(for: row))
-        }
-    }
-
-    private func accessibilityID(for row: StopRow) -> String {
-        switch row.kind {
-        case .station(let station):
-            AccessibilityID.Nearby.station(station.id)
         }
     }
 
@@ -161,7 +132,7 @@ struct NearbyStationsSection: View {
             }
             Spacer()
             Button {
-                onAction(.tappedRefresh)
+                onRefresh()
             } label: {
                 Text(.refreshButtonTitle)
             }
@@ -174,7 +145,7 @@ struct NearbyStationsSection: View {
 
     private var refreshButton: some View {
         Button {
-            onAction(.tappedRefresh)
+            onRefresh()
         } label: {
             HStack(spacing: 4) {
                 Image(systemName: "arrow.clockwise")

@@ -18,11 +18,22 @@ struct ArrivalsStopPickerScreen: View {
     )
     private var userPreferences: UserPreferences = .default
 
+    @AppStorage(
+        UserDefaults.Keys.featureFlags.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var featureFlags: FeatureFlags = .default
+
     private static let maxNearby = 9
     private static let maxRecents = 3
 
+    private static let maxBusNearbyPlaces = 9
+    private static let maxBusPlaceDistance: Double = 800
+    private static let busStopsToGroup = 60
+
     @State private var searchText = ""
     @State private var isSearchPresented = false
+    @State private var arrivalsMode = ArrivalsMode.trains
 
     // The automatic placement hides the field until you scroll on iOS 27 in compact width. In regular width the
     // drawer spans the whole window, wider than the list's maximum width.
@@ -33,24 +44,59 @@ struct ArrivalsStopPickerScreen: View {
     // MARK: - Layout
 
     var body: some View {
+        modeContent
+            .navigationTitle(Text(L10n.arrivalsNavigationTitle))
+            .navigationBarTitleDisplayMode(.inline)
+            .searchable(
+                text: $searchText,
+                isPresented: $isSearchPresented,
+                placement: searchFieldPlacement,
+                prompt: Text(L10n.searchPrompt)
+            )
+            .autocorrectionDisabled()
+            .refreshable {
+                location.refreshCurrentLocation()
+            }
+            .detectsLocationChanges()
+    }
+
+    @ViewBuilder private var modeContent: some View {
+        if featureFlags.isBusesEnabled {
+            selectedModeView
+                .safeAreaBar(edge: .top) {
+                    ArrivalsModePicker(selectedMode: $arrivalsMode)
+                }
+        } else {
+            trainsView
+        }
+    }
+
+    @ViewBuilder private var selectedModeView: some View {
+        if arrivalsMode == .buses && searchText.trimmed().isEmpty {
+            BusStopsView(
+                nearby: Array(nearbyBusPlaces.prefix(Self.maxBusNearbyPlaces)),
+                locationAccess: locationAccess,
+                onAction: handleBusStopsAction
+            )
+        } else {
+            trainsView
+        }
+    }
+
+    private var trainsView: some View {
         ArrivalsStopPickerView(
             content: content,
             locationAccess: locationAccess,
             onAction: handleAction
         )
-        .navigationTitle(Text(L10n.arrivalsNavigationTitle))
-        .navigationBarTitleDisplayMode(.inline)
-        .searchable(
-            text: $searchText,
-            isPresented: $isSearchPresented,
-            placement: searchFieldPlacement,
-            prompt: Text(L10n.searchPrompt)
-        )
-        .autocorrectionDisabled()
-        .refreshable {
-            location.refreshCurrentLocation()
-        }
-        .detectsLocationChanges()
+    }
+
+    private var nearbyBusPlaces: [NearbyBusPlace] {
+        guard let coordinate = location.currentLocationCoordinate else { return [] }
+        return BusStopDatabase.london
+            .nearbyStops(to: coordinate, limit: Self.busStopsToGroup)
+            .groupedByPlace()
+            .filter { $0.distance <= Self.maxBusPlaceDistance }
     }
 
     private var content: ArrivalsStopPickerView.Content {
@@ -104,6 +150,15 @@ struct ArrivalsStopPickerScreen: View {
             userPreferences.reorderFavouriteStops(stationIDs.map { .station(id: $0) })
         case .removeFavourites(let stationIDs):
             userPreferences.removeFavouriteStops(stationIDs.map { .station(id: $0) })
+        }
+    }
+
+    private func handleBusStopsAction(_ action: BusStopsView.Action) {
+        switch action {
+        case .tappedStop:
+            break
+        case .tappedRefreshNearby:
+            location.refreshCurrentLocation()
         }
     }
 }

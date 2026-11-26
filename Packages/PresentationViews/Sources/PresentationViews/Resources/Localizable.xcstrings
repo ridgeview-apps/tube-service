@@ -139,6 +139,39 @@
         }
       }
     },
+    "arrivals.mode.buses" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buses"
+          }
+        }
+      }
+    },
+    "arrivals.mode.picker.label" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrivals for"
+          }
+        }
+      }
+    },
+    "arrivals.mode.trains" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trains"
+          }
+        }
+      }
+    },
     "arrivals.navigation.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -190,6 +223,39 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Arrivals"
+          }
+        }
+      }
+    },
+    "bus.stop.letter %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop %@"
+          }
+        }
+      }
+    },
+    "bus.stop.routes %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routes %@"
+          }
+        }
+      }
+    },
+    "bus.stop.towards %@" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "towards %@"
           }
         }
       }
@@ -2335,6 +2401,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tube (Night map)"
+          }
+        }
+      }
+    },
+    "nearby.bus.stops.more %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld more stops"
+          }
+        }
+      }
+    },
+    "nearby.bus.stops.no.results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No bus stops found"
           }
         }
       }
