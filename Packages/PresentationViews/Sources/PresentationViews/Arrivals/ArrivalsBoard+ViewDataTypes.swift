@@ -6,21 +6,31 @@ import SwiftUI
 
 public struct ArrivalsBoardState: Identifiable, Sendable {
 
+    enum Style: Sendable {
+        case train
+        case bus
+    }
+
     public var id: String { platformName }
 
     let platformName: String
     let cellItems: [ArrivalsBoardCellItem]
+    var style: Style = .train
 }
 
 struct ArrivalsBoardCellItem: Identifiable, Sendable {
 
     struct NumberLabel {
-        let value: Int
+        enum Width {
+            case number
+            case route
+        }
+
+        let text: String
+        var width: Width = .number
         let backgroundColor: Color
         let textColor: Color
         let textShadow: TextShadowSettings
-
-        var valueText: String { String(value) }
     }
 
     enum TextType {

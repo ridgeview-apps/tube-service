@@ -57,6 +57,14 @@ public struct TflAPIClient: TflAPIClientType {
         )
     }
 
+    public func fetchBusArrivals(stopID: BusStop.ID) async throws -> HTTPResponse<[BusArrival]> {
+        return try await perform(.busArrivals(stopID: stopID), as: [BusArrival].self)
+    }
+
+    public func fetchBusStopDisruptions(stopID: BusStop.ID) async throws -> HTTPResponse<[DisruptedPoint]> {
+        return try await perform(.busStopDisruptions(stopID: stopID), as: [DisruptedPoint].self)
+    }
+
     public func fetchJourneyResults(for params: JourneyRequestParams) async throws -> HTTPResponse<JourneyResults> {
         return try await perform(
             .journeyResults(params),

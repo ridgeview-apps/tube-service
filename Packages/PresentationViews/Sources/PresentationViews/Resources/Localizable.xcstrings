@@ -227,6 +227,17 @@
         }
       }
     },
+    "bus.stop.info.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop info"
+          }
+        }
+      }
+    },
     "bus.stop.letter %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -238,6 +249,28 @@
         }
       }
     },
+    "bus.stop.notices.empty" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No closures or diversions reported at this stop."
+          }
+        }
+      }
+    },
+    "bus.stop.opposite.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opposite stop"
+          }
+        }
+      }
+    },
     "bus.stop.routes %@" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -245,6 +278,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Routes %@"
+          }
+        }
+      }
+    },
+    "bus.stop.routes.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All routes"
+          }
+        }
+      }
+    },
+    "bus.stop.routes.more %lld" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "+%lld"
+          }
+        }
+      }
+    },
+    "bus.stop.routes.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No routes listed for this stop."
+          }
+        }
+      }
+    },
+    "bus.stop.routes.section.header.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Routes"
           }
         }
       }

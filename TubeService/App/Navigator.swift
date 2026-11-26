@@ -11,6 +11,7 @@ enum Destination: Hashable, Identifiable {
     case lineStatus(LineStatusDestination)
     case notifications(NotificationsDestination)
     case station(StationDestination)
+    case busStop(BusStopDestination)
     case mapDetail(mapLink: MapLink)
     case settings
     case debugSettings
@@ -25,7 +26,7 @@ enum Destination: Hashable, Identifiable {
         switch self {
         case .lineStatus(let destination): destination.paywallContext
         case .notifications(let destination): destination.paywallContext
-        case .journeyPlanner, .station, .mapDetail, .settings, .debugSettings, .systemStatus, .paywall: nil
+        case .journeyPlanner, .station, .busStop, .mapDetail, .settings, .debugSettings, .systemStatus, .paywall: nil
         }
     }
 }

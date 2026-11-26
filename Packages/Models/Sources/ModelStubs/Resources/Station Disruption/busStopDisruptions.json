@@ -1,0 +1,14 @@
+[
+    {
+        "$type": "Tfl.Api.Presentation.Entities.DisruptedPoint, Tfl.Api.Presentation.Entities",
+        "atcoCode": "490000129R",
+        "fromDate": "2026-11-20T05:00:00Z",
+        "toDate": "2026-12-20T23:59:00Z",
+        "description": "King's Cross Station (R) towards Euston: This stop is closed due to roadworks. Please use the temporary stop 50 metres before it on Euston Road.",
+        "commonName": "King's Cross Station",
+        "type": "Closure",
+        "mode": "bus",
+        "stationAtcoCode": "490000129R",
+        "appearance": "PlannedWork"
+    }
+]

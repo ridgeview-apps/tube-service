@@ -13,7 +13,7 @@ extension ArrivalDeparture {
         return .init(
             id: cellID,
             numberLabel: .init(
-                value: arrivalNumber,
+                text: String(arrivalNumber),
                 backgroundColor: lineID.backgroundColor,
                 textColor: lineID.textColor,
                 textShadow: lineID.textShadow

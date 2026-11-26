@@ -44,10 +44,10 @@ struct StationArrivalsScreen: View {
                 )
                 // Restarts on appear too, because the refresh stops while another screen is pushed on top
                 .onAppear {
-                    arrivalsBoard.startAutoRefresh(for: selectedLineGroup)
+                    arrivalsBoard.startAutoRefresh(for: .lineGroup(selectedLineGroup))
                 }
                 .onChange(of: selectedLineGroup) {
-                    arrivalsBoard.startAutoRefresh(for: selectedLineGroup)
+                    arrivalsBoard.startAutoRefresh(for: .lineGroup(selectedLineGroup))
                 }
             }
         }
@@ -98,11 +98,11 @@ struct StationArrivalsScreen: View {
 
     private func refreshArrivalsBoard() async {
         guard let selectedLineGroup else { return }
-        await arrivalsBoard.refresh(for: selectedLineGroup)
-        arrivalsBoard.resetAutoRefreshTimer(for: selectedLineGroup)
+        await arrivalsBoard.refresh(for: .lineGroup(selectedLineGroup))
+        arrivalsBoard.resetAutoRefreshTimer(for: .lineGroup(selectedLineGroup))
     }
 
-    private var arrivals: StationArrivalsView.Arrivals {
+    private var arrivals: LiveArrivals {
         .init(
             boardStates: boardStates,
             refreshDate: arrivalsBoard.boardData.fetchedAt,
@@ -116,7 +116,7 @@ struct StationArrivalsScreen: View {
             return predictions.toPlatformBoardStates()
         case .departures(let lineID, let items):
             return items.toPlatformBoardStates(forLineID: lineID)
-        case nil:
+        case .busArrivals, nil:
             return []
         }
     }

@@ -11,6 +11,7 @@ final class AppDataStore {
 
     private(set) var lineStatus: LineStatusDataStore
     private(set) var stations: StationsDataStore
+    private(set) var busStops: BusStopsDataStore
     private(set) var location: LocationDataStore
     private(set) var localSearchResults: LocalSearchResultsStore
     private(set) var systemStatus: SystemStatusDataStore
@@ -30,6 +31,7 @@ final class AppDataStore {
 
         let stations = StationsDataStore(tflAPI: dependencies.tflAPI, now: now)
         self.stations = stations
+        self.busStops = BusStopsDataStore(tflAPI: dependencies.tflAPI, now: now)
 
         let purchases = PurchaseStore(
             productIDs: dependencies.purchaseProductIDs,

@@ -11,6 +11,8 @@ public protocol TflAPIClientType: Sendable {
         forLineGroup lineGroup: Station.LineGroup
     ) async throws -> HTTPResponse<[ArrivalDeparture]>
     func fetchStationDisruptions() async throws -> HTTPResponse<[DisruptedPoint]>
+    func fetchBusArrivals(stopID: BusStop.ID) async throws -> HTTPResponse<[BusArrival]>
+    func fetchBusStopDisruptions(stopID: BusStop.ID) async throws -> HTTPResponse<[DisruptedPoint]>
     func fetchJourneyResults(
         for params: JourneyRequestParams
     ) async throws -> HTTPResponse<JourneyResults>

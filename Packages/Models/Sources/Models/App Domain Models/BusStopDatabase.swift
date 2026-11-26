@@ -18,4 +18,13 @@ public struct BusStopDatabase: Sendable {
             .sorted { $0.distance < $1.distance }
         return Array(nearest.prefix(limit))
     }
+
+    /// The stop across the road, when the stop's place has just one other stop.
+    public func oppositeStop(of stop: BusStop) -> BusStop? {
+        let place = nearbyStops(to: stop.location, limit: 20)
+            .groupedByPlace()
+            .first { place in place.stops.contains { $0.stop.id == stop.id } }
+        guard let place, place.stops.count == 2 else { return nil }
+        return place.stops.first { $0.stop.id != stop.id }?.stop
+    }
 }

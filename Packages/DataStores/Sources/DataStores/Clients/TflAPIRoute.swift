@@ -7,6 +7,8 @@ enum TflAPIRoute {
     case arrivalPredictions(stationCode: String, [TrainLineID])
     case arrivalDepartures(stationCode: String, [TrainLineID])
     case stationDisruptions([ModeID])
+    case busArrivals(stopID: BusStop.ID)
+    case busStopDisruptions(stopID: BusStop.ID)
     case journeyResults(JourneyRequestParams)
 
     func toURL(relativeTo baseURL: URL, appKey: String) throws -> URL {
@@ -43,6 +45,10 @@ enum TflAPIRoute {
             return ["StopPoint", stationCode, "ArrivalDepartures"]
         case let .stationDisruptions(modes):
             return ["StopPoint", "Mode", modes.toURLPathParam(), "Disruption"]
+        case let .busArrivals(stopID):
+            return ["StopPoint", stopID, "Arrivals"]
+        case let .busStopDisruptions(stopID):
+            return ["StopPoint", stopID, "Disruption"]
         case let .journeyResults(params):
             return [
                 "Journey", "JourneyResults", params.from.toURLPathParam(), "to",
@@ -54,7 +60,7 @@ enum TflAPIRoute {
     private var queryItems: [URLQueryItem] {
         switch self {
         case .currentLineStatuses, .lineStatusesForDateRange, .arrivalPredictions,
-            .stationDisruptions:
+            .stationDisruptions, .busArrivals, .busStopDisruptions:
             return []
         case let .arrivalDepartures(_, lineIDs):
             return [URLQueryItem(name: "lineIds", value: lineIDs.toURLPathParam())]

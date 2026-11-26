@@ -2,7 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A station's live boards, split into parts that a bus Stop screen can reuse.
+/// A station's live boards, below its line status and above the favourite button.
 public struct StationArrivalsView: View {
 
     public enum Action {
@@ -10,32 +10,9 @@ public struct StationArrivalsView: View {
         case tappedLineStatusRow
     }
 
-    public struct Arrivals {
-        public let boardStates: [ArrivalsBoardState]
-        public let refreshDate: Date?
-        public let loadingState: LoadingState
-
-        public init(boardStates: [ArrivalsBoardState], refreshDate: Date?, loadingState: LoadingState) {
-            self.boardStates = boardStates
-            self.refreshDate = refreshDate
-            self.loadingState = loadingState
-        }
-
-        /// The update time, for the navigation bar's subtitle.
-        public var lastUpdatedSubtitle: Text {
-            guard let refreshDate else { return Text(verbatim: "") }
-            return Text(.refreshStatusLastUpdated(Self.timeText(refreshDate)))
-        }
-
-        // Just the time: live arrivals are never from another day, so "today" adds nothing
-        private static func timeText(_ date: Date) -> String {
-            date.formatted(date: .omitted, time: .shortened)
-        }
-    }
-
     public let station: Station
     public let selectedLineGroup: Station.LineGroup
-    public let arrivals: Arrivals
+    public let arrivals: LiveArrivals
     /// The status of every line at the station.
     public let lines: [Line]
     /// True until the line statuses first arrive or fail to load.
@@ -47,7 +24,7 @@ public struct StationArrivalsView: View {
     public init(
         station: Station,
         selectedLineGroup: Station.LineGroup,
-        arrivals: Arrivals,
+        arrivals: LiveArrivals,
         lines: [Line],
         isLoadingLines: Bool,
         isFavourite: Binding<Bool>,
@@ -89,11 +66,11 @@ public struct StationArrivalsView: View {
                     onTap: lineStatus.isDisruption ? { onAction(.tappedLineStatusRow) } : nil
                 )
                 .padding(.horizontal, 16)
-                StationBoardsView(
-                    boardStates: arrivals.boardStates,
-                    loadingState: arrivals.loadingState,
-                    isFavourite: $isFavourite
-                )
+                StationBoardsView(arrivals: arrivals)
+                FavouritesButton(.station, style: .large, isSelected: $isFavourite)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
             }
             .padding(.top, hasChips ? 8 : 16)
             .padding(.bottom, 16)

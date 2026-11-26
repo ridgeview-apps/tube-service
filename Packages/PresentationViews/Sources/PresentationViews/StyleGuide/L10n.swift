@@ -8,6 +8,8 @@ public enum L10n {
     public static let arrivalsNavigationTitle = LocalizedStringResource.arrivalsNavigationTitle
     public static let arrivalsTabTitle = LocalizedStringResource.arrivalsTabTitle
 
+    public static let busStopInfoTitle = LocalizedStringResource.busStopInfoTitle
+
     public static let errorNoInternetConnection = LocalizedStringResource.errorNoInternetConnection
     public static let errorSaveFailed = LocalizedStringResource.errorSaveFailed
     public static let errorSomethingWentWrong = LocalizedStringResource.errorSomethingWentWrong

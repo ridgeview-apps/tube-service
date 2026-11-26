@@ -45,6 +45,7 @@ extension View {
             .environment(dataStore)
             .environment(dataStore.lineStatus)
             .environment(dataStore.stations)
+            .environment(dataStore.busStops)
             .environment(dataStore.location)
             .environment(dataStore.localSearchResults)
             .environment(dataStore.systemStatus)

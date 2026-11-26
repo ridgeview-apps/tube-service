@@ -53,6 +53,9 @@ public extension ModelStubs {
         hammerDistrictAndCircleBothPlatforms.filter { $0.platformName == "Eastbound - Platform 2" }
     static let hammerDistrictAndCircleWestboundArrivals =
         hammerDistrictAndCircleBothPlatforms.filter { $0.platformName == "Westbound - Platform 1" }
+
+    static let busArrivalsKingsCrossStationR: [BusArrival] =
+        decodedValue(for: loadJSON(named: "busArrivalsKingsCrossStationR"))
 }
 
 // MARK: - Line status stubs
@@ -114,6 +117,8 @@ public extension ModelStubs {
 public extension ModelStubs {
     static let disruptedStations: [DisruptedPoint] =
         decodedValue(for: loadJSON(named: "disruptedStations"))
+    static let busStopDisruptions: [DisruptedPoint] =
+        decodedValue(for: loadJSON(named: "busStopDisruptions"))
 }
 
 
