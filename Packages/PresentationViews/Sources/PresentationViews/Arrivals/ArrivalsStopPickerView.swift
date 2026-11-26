@@ -49,6 +49,10 @@ public struct ArrivalsStopPickerView: View {
         isNearbyExpanded ? nearby : Array(nearby.prefix(Self.collapsedNearbyCount))
     }
 
+    private var firstNewNearbyScrollID: String? {
+        nearby.dropFirst(Self.collapsedNearbyCount).first.map(NearbyStationsSection.scrollID)
+    }
+
     // MARK: - Init
 
     public init(
@@ -92,21 +96,29 @@ public struct ArrivalsStopPickerView: View {
     }
 
     private func browseList(favourites: [StopRow], recents: [StopRow]) -> some View {
-        List {
-            favouritesSection(favourites)
-            recentsSection(recents)
-            NearbyStationsSection(
-                title: .searchNearbySectionTitle,
-                locationAccess: locationAccess,
-                rows: visibleNearby,
-                onAction: handleNearbyAction
-            )
-            if isNearbyExpandable {
-                nearbyExpansionButton
+        ScrollViewReader { reader in
+            List {
+                favouritesSection(favourites)
+                recentsSection(recents)
+                NearbyStationsSection(
+                    title: .searchNearbySectionTitle,
+                    locationAccess: locationAccess,
+                    rows: visibleNearby,
+                    onAction: handleNearbyAction
+                )
+                if isNearbyExpandable {
+                    nearbyExpansionButton
+                }
             }
-        }
-        .onChange(of: Set(nearby.map(\.id))) {
-            isNearbyExpanded = false
+            .onChange(of: isNearbyExpanded) {
+                // With no anchor, this only scrolls if the station is off screen, and only far enough to show it
+                if isNearbyExpanded, let firstNewNearbyScrollID {
+                    withAnimation { reader.scrollTo(firstNewNearbyScrollID) }
+                }
+            }
+            .onChange(of: Set(nearby.map(\.id))) {
+                isNearbyExpanded = false
+            }
         }
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.list)
     }
