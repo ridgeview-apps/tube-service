@@ -15,6 +15,9 @@ struct NearbyStationsSection: View {
     let rows: [StopRow]
     let onAction: (Action) -> Void
 
+    /// For a `ScrollViewReader`. A nearby station can also be in Recents, so the row's own ID isn't unique in the list.
+    static func scrollID(for row: StopRow) -> String { "nearby-\(row.id)" }
+
     var body: some View {
         Section {
             switch locationAccess.state {
@@ -134,6 +137,7 @@ struct NearbyStationsSection: View {
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier(accessibilityID(for: row))
+            .id(Self.scrollID(for: row))
         }
     }
 
