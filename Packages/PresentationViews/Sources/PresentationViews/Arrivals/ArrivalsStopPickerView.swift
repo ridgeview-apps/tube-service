@@ -29,13 +29,25 @@ public struct ArrivalsStopPickerView: View {
     @Environment(\.isSearching) private var isSearching
 
     private var favourites: [StopRow] {
-        if case .browse(let favourites, _, _) = content { favourites } else { [] }
+        guard case .browse(let favourites, _, _) = content else { return [] }
+        return favourites
     }
 
     private var canReorderFavourites: Bool { favourites.count > 1 }
 
     // Favourite rows can't be tapped in edit mode, so editing would leave them as dead shortcuts while searching
     private var canEditFavourites: Bool { !favourites.isEmpty && !isSearching }
+
+    private var nearby: [StopRow] {
+        guard case .browse(_, _, let nearby) = content else { return [] }
+        return nearby
+    }
+
+    private var isNearbyExpandable: Bool { nearby.count > Self.collapsedNearbyCount }
+
+    private var visibleNearby: [StopRow] {
+        isNearbyExpanded ? nearby : Array(nearby.prefix(Self.collapsedNearbyCount))
+    }
 
     // MARK: - Init
 
@@ -62,8 +74,8 @@ public struct ArrivalsStopPickerView: View {
 
     @ViewBuilder private var contentView: some View {
         switch content {
-        case .browse(let favourites, let recents, let nearby):
-            browseList(favourites: favourites, recents: recents, nearby: nearby)
+        case .browse(let favourites, let recents, _):
+            browseList(favourites: favourites, recents: recents)
         case .searchResults(let searchTerm, let stations) where stations.isEmpty:
             ContentUnavailableView.search(text: searchTerm)
         case .searchResults(_, let stations):
@@ -79,31 +91,22 @@ public struct ArrivalsStopPickerView: View {
         }
     }
 
-    private func browseList(favourites: [StopRow], recents: [StopRow], nearby: [StopRow]) -> some View {
-        let isNearbyExpandable = nearby.count > Self.collapsedNearbyCount
-        let visibleNearby = isNearbyExpanded ? nearby : Array(nearby.prefix(Self.collapsedNearbyCount))
-        return ScrollViewReader { reader in
-            List {
-                favouritesSection(favourites)
-                recentsSection(recents)
-                NearbyStationsSection(
-                    title: .searchNearbySectionTitle,
-                    locationAccess: locationAccess,
-                    rows: visibleNearby,
-                    onAction: handleNearbyAction
-                )
-                if isNearbyExpandable {
-                    nearbyExpansionButton
-                }
+    private func browseList(favourites: [StopRow], recents: [StopRow]) -> some View {
+        List {
+            favouritesSection(favourites)
+            recentsSection(recents)
+            NearbyStationsSection(
+                title: .searchNearbySectionTitle,
+                locationAccess: locationAccess,
+                rows: visibleNearby,
+                onAction: handleNearbyAction
+            )
+            if isNearbyExpandable {
+                nearbyExpansionButton
             }
-            .onChange(of: isNearbyExpanded) {
-                if isNearbyExpanded {
-                    withAnimation { reader.scrollTo(Self.nearbyExpansionButtonID) }
-                }
-            }
-            .onChange(of: Set(nearby.map(\.id))) {
-                isNearbyExpanded = false
-            }
+        }
+        .onChange(of: Set(nearby.map(\.id))) {
+            isNearbyExpanded = false
         }
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.list)
     }
@@ -196,8 +199,6 @@ public struct ArrivalsStopPickerView: View {
         .accessibilityIdentifier(AccessibilityID.ArrivalsStopPicker.station(row.stationID))
     }
 
-    private static let nearbyExpansionButtonID = "nearbyExpansionButton"
-
     private var nearbyExpansionButton: some View {
         Section {
             HStack {
@@ -210,7 +211,6 @@ public struct ArrivalsStopPickerView: View {
                 .font(.subheadline)
                 Spacer()
             }
-            .id(Self.nearbyExpansionButtonID)
         }
         // Keeps the button against the Nearby card it expands, rather than a section's distance away
         .listSectionSpacing(0)
