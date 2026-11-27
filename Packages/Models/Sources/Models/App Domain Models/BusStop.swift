@@ -51,6 +51,8 @@ public struct NearbyBusPlace: Identifiable, Hashable, Sendable {
     public let distance: Double
     /// Nearest first.
     public let stops: [NearbyBusStop]
+
+    static let maxSpan: Double = 150
 }
 
 extension Sequence where Element == NearbyBusStop {
@@ -58,11 +60,10 @@ extension Sequence where Element == NearbyBusStop {
     /// Groups stops into places, nearest first. Stops join a place if they share its stop area or name, and are
     /// within 150 m of its nearest stop, since some stop areas stretch along a road for half a kilometre.
     public func groupedByPlace() -> [NearbyBusPlace] {
-        let maxPlaceSpan: Double = 150
         var groups: [[NearbyBusStop]] = []
         for nearbyStop in sorted(by: { $0.distance < $1.distance }) {
             let index = groups.firstIndex { group in
-                group[0].stop.location.distance(to: nearbyStop.stop.location) <= maxPlaceSpan
+                group[0].stop.location.distance(to: nearbyStop.stop.location) <= NearbyBusPlace.maxSpan
                     && group.contains { $0.stop.isSamePlace(as: nearbyStop.stop) }
             }
             if let index {
