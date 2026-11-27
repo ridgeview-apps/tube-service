@@ -1,8 +1,8 @@
 name: Seed data
 
-# Regenerates the app's bundled station files from live TfL data and, if they
-# changed, opens a PR whose description summarises the changes. The PR targets
-# the branch the workflow ran on.
+# Regenerates the app's seed data files from live TfL and NaPTAN data and, if
+# they changed, opens a PR whose description summarises the changes. The PR
+# targets the branch the workflow ran on.
 #
 # No TfL key: the only one is the app's, and this would use up its users' rate
 # limit (see TfLClient).
@@ -15,13 +15,18 @@ on:
   workflow_dispatch:
     inputs:
       only:
-        description: 'Station file to regenerate'
+        description: 'Seed file to regenerate'
         type: choice
         options:
           - all
-          - london
+          - london-stations
           - national-rail
+          - london-bus-stops
         default: all
+      dry_run:
+        description: 'Check the new data without writing it or opening a PR'
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}
@@ -43,15 +48,19 @@ jobs:
         run: xcodebuild -version
       - name: Seed data tests
         run: swift test --package-path Scripts/SeedData
-      - name: Regenerate station files
+      - name: Regenerate seed files
         env:
           ONLY: ${{ inputs.only }}
+          DRY_RUN: ${{ inputs.dry_run }}
         run: |
-          if [[ "$ONLY" == "all" ]]; then
-            Scripts/seed-data.sh --summary "$RUNNER_TEMP/seed-data.md"
-          else
-            Scripts/seed-data.sh --only "$ONLY" --summary "$RUNNER_TEMP/seed-data.md"
+          arguments=(--summary "$RUNNER_TEMP/seed-data.md")
+          if [[ "$ONLY" != "all" ]]; then
+            arguments+=(--only "$ONLY")
           fi
+          if [[ "$DRY_RUN" == "true" ]]; then
+            arguments+=(--dry-run)
+          fi
+          Scripts/seed-data.sh "${arguments[@]}"
       # Also runs when validation fails, so the errors show on the run's page
       - name: Show summary
         if: always()
@@ -59,10 +68,11 @@ jobs:
           if [[ -f "$RUNNER_TEMP/seed-data.md" ]]; then
             cat "$RUNNER_TEMP/seed-data.md" >> "$GITHUB_STEP_SUMMARY"
           fi
+      # git status rather than git diff, which misses a seed file's first run
       - name: Check for changes
         id: changes
         run: |
-          if git diff --quiet -- Packages/Models/Sources/Models/Resources; then
+          if [[ -z "$(git status --porcelain -- Packages/Models/Sources/Models/Resources Packages/Models/Seed)" ]]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -85,7 +95,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
-          git add Packages/Models/Sources/Models/Resources
-          git commit -m "Update station seed data"
+          git add Packages/Models/Sources/Models/Resources Packages/Models/Seed
+          git commit -m "Update seed data"
           git push origin "$branch"
-          gh pr create --base "$BASE_BRANCH" --head "$branch" --title "Update station seed data" --body-file "$RUNNER_TEMP/seed-data.md"
+          gh pr create --base "$BASE_BRANCH" --head "$branch" --title "Update seed data" --body-file "$RUNNER_TEMP/seed-data.md"

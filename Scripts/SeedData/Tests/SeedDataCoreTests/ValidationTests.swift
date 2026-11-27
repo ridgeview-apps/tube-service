@@ -142,3 +142,47 @@ struct ValidationTests {
         )
     }
 }
+
+struct BusStopValidationTests {
+
+    private func stop(_ id: String, stopCode: String?, lat: Double = 51.5) -> LondonBusStop {
+        LondonBusStop(
+            id: id,
+            name: "Laurel Way",
+            locality: "Totteridge",
+            letter: nil,
+            towards: nil,
+            stopCode: stopCode,
+            stopAreaID: nil,
+            lat: lat,
+            lon: -0.17,
+            bearing: "S",
+            isHailAndRide: true,
+            routes: ["251"]
+        )
+    }
+
+    @Test
+    func passesValidStops() {
+        #expect(Validation.validate([stop("490002257Y", stopCode: "95535"), stop("490002257Z", stopCode: nil)], currentCount: 2, allowShrink: false).isEmpty)
+    }
+
+    @Test
+    func warnsAboutStopCodesSharedByMoreThanOneStop() {
+        let issues = Validation.validate([stop("490002257Y", stopCode: "95535"), stop("490002257Z", stopCode: "95535")], currentCount: nil, allowShrink: false)
+
+        #expect(issues == [.warning("londonBusStops.sql has 1 stop codes shared by more than one stop: 95535")])
+    }
+
+    @Test
+    func failsOnDuplicateIDsAndCoordinatesOutsideTheUK() {
+        let issues = Validation.validate([stop("490002257Y", stopCode: nil), stop("490002257Y", stopCode: nil, lat: 0)], currentCount: nil, allowShrink: false)
+
+        #expect(
+            issues == [
+                .error("londonBusStops.sql has duplicate ids: 490002257Y"),
+                .error("londonBusStops.sql has coordinates outside the UK: Laurel Way")
+            ]
+        )
+    }
+}
