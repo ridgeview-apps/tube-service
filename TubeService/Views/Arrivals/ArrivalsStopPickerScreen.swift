@@ -158,6 +158,8 @@ struct ArrivalsStopPickerScreen: View {
             location.refreshCurrentLocation()
         case .tappedClearRecents:
             userPreferences.clearRecentlySelectedStations()
+        case .removeRecent(let stationID):
+            userPreferences.removeRecentlySelectedStation(stationID)
         case .reorderFavourites(let stationIDs):
             userPreferences.reorderFavouriteStops(stationIDs.map { .station(id: $0) })
         case .removeFavourites(let stationIDs):
@@ -173,6 +175,8 @@ struct ArrivalsStopPickerScreen: View {
             location.refreshCurrentLocation()
         case .tappedClearRecents:
             userPreferences.clearRecentlySelectedBusStops()
+        case .removeRecent(let stopID):
+            userPreferences.removeRecentlySelectedBusStop(stopID)
         case .reorderFavourites(let stopIDs):
             userPreferences.reorderFavouriteStops(stopIDs.map { .busStop(id: $0) })
         case .removeFavourites(let stopIDs):

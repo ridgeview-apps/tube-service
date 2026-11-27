@@ -10,6 +10,16 @@ public extension View {
 
 }
 
+extension View {
+    func swipeToRemove(action: @escaping () -> Void) -> some View {
+        swipeActions {
+            Button(role: .destructive, action: action) {
+                Label(.globalRemove, systemImage: "trash")
+            }
+        }
+    }
+}
+
 extension ForEach where Content: View {
 
     func onDeleteItem<Element>(
