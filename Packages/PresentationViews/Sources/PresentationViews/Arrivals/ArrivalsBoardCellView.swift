@@ -6,16 +6,17 @@ struct ArrivalsBoardCellView: View {
     var style: ArrivalsBoardState.Style = .train
 
     @ScaledMetric(relativeTo: .headline) private var numberLabelWidth: CGFloat = 28
-    @ScaledMetric(relativeTo: .headline) private var routeLabelWidth: CGFloat = 52
     @ScaledMetric(relativeTo: .headline) private var numberLabelHeight: CGFloat = 32
-    @ScaledMetric(relativeTo: .headline) private var routeLabelHeight: CGFloat = 26
+    @ScaledMetric(relativeTo: .subheadline) private var arrivalNumberWidth: CGFloat = 20
+    @ScaledMetric(relativeTo: .subheadline) private var routeWidth: CGFloat = 44
+    @ScaledMetric(relativeTo: .subheadline) private var routeHeight: CGFloat = 22
 
     var body: some View {
         Group {
             switch style {
             case .train:
                 HStack(alignment: .top, spacing: 12) {
-                    numberLabel
+                    leadingLabel
                     VStack(alignment: .leading, spacing: 4) {
                         headerRow
                         footerRow
@@ -23,7 +24,7 @@ struct ArrivalsBoardCellView: View {
                 }
             case .bus:
                 HStack(alignment: .firstTextBaseline, spacing: 12) {
-                    numberLabel
+                    leadingLabel
                     headerRow
                 }
             }
@@ -31,10 +32,31 @@ struct ArrivalsBoardCellView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private var numberLabel: some View {
-        let label = item.numberLabel
+    @ViewBuilder private var leadingLabel: some View {
+        switch item.leadingLabel {
+        case .lineTile(let label):
+            lineTile(label)
+        case .busRoute(let arrivalNumber, let route):
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(arrivalNumber, format: .number)
+                    .font(.subheadline)
+                    .foregroundStyle(Color.arrivalsBoardPrimary.opacity(0.6))
+                    .frame(width: arrivalNumberWidth, alignment: .trailing)
+                    .accessibilityHidden(true)
+                Text(route)
+                    .font(.subheadline.weight(.semibold))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .foregroundStyle(.white)
+                    .frame(width: routeWidth, height: routeHeight)
+                    .background(Color.bus, in: .rect(cornerRadius: 5, style: .continuous))
+            }
+        }
+    }
 
-        return Text(label.text)
+    private func lineTile(_ label: ArrivalsBoardCellItem.NumberLabel) -> some View {
+        Text(label.text)
             .lineLimit(1)
             .padding(2)
             .minimumScaleFactor(0.4)
@@ -45,10 +67,7 @@ struct ArrivalsBoardCellView: View {
                 x: label.textShadow.x,
                 y: label.textShadow.y
             )
-            .frame(
-                width: label.width == .route ? routeLabelWidth : numberLabelWidth,
-                height: style == .bus ? routeLabelHeight : numberLabelHeight
-            )
+            .frame(width: numberLabelWidth, height: numberLabelHeight)
             .background(label.backgroundColor)
             .clipShape(numberLabelShape)
             .overlay(numberLabelShape.strokeBorder(.white, lineWidth: 0.75))

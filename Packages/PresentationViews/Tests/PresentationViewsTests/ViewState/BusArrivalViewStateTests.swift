@@ -26,7 +26,8 @@ struct BusArrivalViewStateTests {
         let boardStates = arrivals.toBoardStates(at: stop, route: nil)
 
         #expect(boardStates.map { $0.cellItems.map(\.id) } == [["soonest-1", "sooner-2", "later-3"]])
-        #expect(boardStates.first?.cellItems.map(\.numberLabel.text) == ["73", "N73", "30"])
+        #expect(boardStates.first?.cellItems.map(\.busArrivalNumber) == [1, 2, 3])
+        #expect(boardStates.first?.cellItems.map(\.busRoute) == ["73", "N73", "30"])
         #expect(boardStates.first?.style == .bus)
     }
 
@@ -41,6 +42,7 @@ struct BusArrivalViewStateTests {
         let boardStates = arrivals.toBoardStates(at: stop, route: "30")
 
         #expect(boardStates.map { $0.cellItems.map(\.id) } == [["a-1", "c-2"]])
+        #expect(boardStates.first?.cellItems.map(\.busArrivalNumber) == [1, 2])
     }
 
     @Test
@@ -90,5 +92,17 @@ struct BusArrivalViewStateTests {
             naptanID: "490000129R",
             platformName: "R"
         )
+    }
+}
+
+private extension ArrivalsBoardCellItem {
+    var busArrivalNumber: Int? {
+        guard case .busRoute(let arrivalNumber, _) = leadingLabel else { return nil }
+        return arrivalNumber
+    }
+
+    var busRoute: String? {
+        guard case .busRoute(_, let route) = leadingLabel else { return nil }
+        return route
     }
 }

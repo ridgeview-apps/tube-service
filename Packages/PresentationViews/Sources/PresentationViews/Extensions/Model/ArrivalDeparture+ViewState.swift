@@ -12,11 +12,13 @@ extension ArrivalDeparture {
 
         return .init(
             id: cellID,
-            numberLabel: .init(
-                text: String(arrivalNumber),
-                backgroundColor: lineID.backgroundColor,
-                textColor: lineID.textColor,
-                textShadow: lineID.textShadow
+            leadingLabel: .lineTile(
+                .init(
+                    text: String(arrivalNumber),
+                    backgroundColor: lineID.backgroundColor,
+                    textColor: lineID.textColor,
+                    textShadow: lineID.textShadow
+                )
             ),
             headerRow: headerRowState,
             footerRow: footerRow
