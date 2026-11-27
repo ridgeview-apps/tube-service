@@ -52,8 +52,9 @@ public extension SeedDiff {
     /// Keeps a PR description well under GitHub's 65,536-character limit, even when TfL changes every entry.
     static var maximumListedEntries: Int { 50 }
 
-    /// One Markdown section for the file: counts, then removed, changed and added entries, then any issues.
-    func markdown(file: String, issues: [SeedIssue]) -> String {
+    /// One Markdown section for the file: counts, then removed, changed and added entries, then any issues and
+    /// `breakdown`, the dataset's own counts of entries worth checking.
+    func markdown(file: String, issues: [SeedIssue], breakdown: [String] = []) -> String {
         var lines = ["## \(file)", ""]
 
         if isEmpty {
@@ -66,6 +67,7 @@ public extension SeedDiff {
         lines += Self.list("Changed", changed.map { "\(Self.describe($0.new)): \($0.new.changedFields(from: $0.old).joined(separator: "; "))" })
         lines += Self.list("Added", added.map(Self.describe))
         lines += Self.list("Issues", issues.map(\.description))
+        lines += Self.list("Breakdown", breakdown)
 
         return lines.joined(separator: "\n") + "\n"
     }
@@ -132,6 +134,43 @@ extension NationalRailStopPoint: SeedEntry {
         }
         if naptanId != old.naptanId {
             fields.append("naptanId: \(old.naptanId) → \(naptanId)")
+        }
+        if lat != old.lat || lon != old.lon {
+            fields.append("location")
+        }
+        return fields
+    }
+}
+
+extension LondonBusStop: SeedEntry {
+
+    public var diffID: String { id }
+    public var diffName: String { letter.map { "\(name) (\($0))" } ?? name }
+    // FavouriteStop.busStop(id:) and the recent bus stops both store the NaPTAN ID.
+    public static var removalImpact: String { "affects saved favourites and recents" }
+
+    public func changedFields(from old: LondonBusStop) -> [String] {
+        var fields: [String] = []
+        func compare(_ field: String, _ old: String?, _ new: String?) {
+            if old != new {
+                fields.append("\(field): \(old.map { "\"\($0)\"" } ?? "none") → \(new.map { "\"\($0)\"" } ?? "none")")
+            }
+        }
+        compare("name", old.name, name)
+        compare("locality", old.locality, locality)
+        compare("letter", old.letter, letter)
+        compare("towards", old.towards, towards)
+        compare("stop code", old.stopCode, stopCode)
+        compare("stop area", old.stopAreaID, stopAreaID)
+        compare("bearing", old.bearing, bearing)
+        if isHailAndRide != old.isHailAndRide {
+            fields.append(isHailAndRide ? "now hail and ride" : "no longer hail and ride")
+        }
+        if routes != old.routes {
+            let removedRoutes = old.routes.filter { !routes.contains($0) }.map { "−\($0)" }
+            let addedRoutes = routes.filter { !old.routes.contains($0) }.map { "+\($0)" }
+            let routeChanges = removedRoutes + addedRoutes
+            fields.append(routeChanges.isEmpty ? "routes reordered" : "routes: \(routeChanges.joined(separator: ", "))")
         }
         if lat != old.lat || lon != old.lon {
             fields.append("location")

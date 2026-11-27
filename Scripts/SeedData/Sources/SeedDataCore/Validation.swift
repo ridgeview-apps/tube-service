@@ -117,3 +117,29 @@ public extension Validation {
         return issues
     }
 }
+
+public extension Validation {
+
+    static func validate(
+        _ stops: [LondonBusStop],
+        currentCount: Int?,
+        allowShrink: Bool,
+        file: String = "londonBusStops.sql"
+    ) -> [SeedIssue] {
+        nonEmpty(stops, file: file)
+            + unique(stops, by: \.id, idName: "id", file: file)
+            + notShrunk(newCount: stops.count, currentCount: currentCount, allowShrink: allowShrink, file: file)
+            + withinUK(stops, coordinate: { ($0.lat, $0.lon) }, name: \.name, file: file)
+            + sharedStopCodes(stops, file: file)
+    }
+
+    // A warning rather than an error: NaPTAN itself gives a few different stops the same code.
+    static func sharedStopCodes(_ stops: [LondonBusStop], file: String) -> [SeedIssue] {
+        let sharedCodes = Dictionary(grouping: stops.compactMap(\.stopCode), by: { $0 })
+            .filter { $0.value.count > 1 }
+            .keys
+            .sorted()
+
+        return sharedCodes.isEmpty ? [] : [.warning("\(file) has \(sharedCodes.count) stop codes shared by more than one stop: \(sharedCodes.joined(separator: ", "))")]
+    }
+}

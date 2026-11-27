@@ -29,7 +29,14 @@ struct NationalRailBuilderTests {
 
         #expect(
             stopPoints == [
-                TfLStopPoint(naptanId: "910GABWDXR", commonName: "Abbey Wood Rail Station", icsCode: "1001001", lat: 51.491225, lon: 0.12084),
+                TfLStopPoint(
+                    naptanId: "910GABWDXR",
+                    commonName: "Abbey Wood Rail Station",
+                    icsCode: "1001001",
+                    lat: 51.491225,
+                    lon: 0.12084,
+                    stopType: "NaptanRailStation"
+                ),
                 TfLStopPoint(naptanId: "910GLWRNCHL", commonName: "Lawrence Hill Rail Station", icsCode: nil, lat: nil, lon: nil)
             ]
         )

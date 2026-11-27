@@ -133,3 +133,57 @@ struct SeedDiffTests {
         #expect(markdown.hasSuffix("- …and 1 more\n"))
     }
 }
+
+struct BusStopDiffTests {
+
+    private func stop(
+        name: String = "King's Cross Station",
+        letter: String? = "D",
+        stopCode: String? = "54174",
+        isHailAndRide: Bool = false,
+        routes: [String] = ["46", "63"]
+    ) -> LondonBusStop {
+        LondonBusStop(
+            id: "490000129D",
+            name: name,
+            locality: "King's Cross",
+            letter: letter,
+            towards: "Farringdon",
+            stopCode: stopCode,
+            stopAreaID: nil,
+            lat: 51.53,
+            lon: -0.12,
+            bearing: "S",
+            isHailAndRide: isHailAndRide,
+            routes: routes
+        )
+    }
+
+    @Test
+    func namesAStopWithItsLetter() {
+        #expect(stop().diffName == "King's Cross Station (D)")
+        #expect(stop(letter: nil).diffName == "King's Cross Station")
+    }
+
+    @Test
+    func describesChangedBusStopFields() {
+        let new = stop(name: "King's Cross", letter: nil, stopCode: nil, isHailAndRide: true, routes: ["63", "N63"])
+
+        #expect(
+            new.changedFields(from: stop()) == [
+                "name: \"King's Cross Station\" → \"King's Cross\"",
+                "letter: \"D\" → none",
+                "stop code: \"54174\" → none",
+                "now hail and ride",
+                "routes: −46, +N63"
+            ]
+        )
+    }
+
+    @Test
+    func listsTheBreakdownAfterTheIssues() {
+        let markdown = SeedDiff(old: [stop()], new: [stop()]).markdown(file: "londonBusStops.sql", issues: [], breakdown: ["1 stops"])
+
+        #expect(markdown == "## londonBusStops.sql\n\nNo changes.\n\n### Breakdown\n\n- 1 stops\n")
+    }
+}

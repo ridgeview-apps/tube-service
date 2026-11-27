@@ -1,5 +1,5 @@
 #!/bin/zsh
-# Regenerates the app's bundled station files from live TfL data.
+# Regenerates the app's seed data files from live TfL and NaPTAN data.
 #
 #   Scripts/seed-data.sh                        # regenerate every file
 #   Scripts/seed-data.sh --only national-rail   # regenerate one file
