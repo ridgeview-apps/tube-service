@@ -7,13 +7,7 @@ extension BusArrival {
         guard let id, let lineName else { return nil }
         return .init(
             id: "\(id)-\(arrivalNumber)",
-            numberLabel: .init(
-                text: lineName,
-                width: .route,
-                backgroundColor: .bus,
-                textColor: .white,
-                textShadow: (color: .clear, radius: 0, x: 0, y: 0)
-            ),
+            leadingLabel: .busRoute(arrivalNumber: arrivalNumber, route: lineName),
             headerRow: .init(
                 style: .tube,
                 destination: .towards(destinationName ?? towards ?? ""),

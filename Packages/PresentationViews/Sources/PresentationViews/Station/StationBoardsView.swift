@@ -88,11 +88,13 @@ struct StationBoardsView: View {
         cellItems: (1...3).map { number in
             ArrivalsBoardCellItem(
                 id: "placeholder-\(number)",
-                numberLabel: .init(
-                    text: String(number),
-                    backgroundColor: .black,
-                    textColor: .white,
-                    textShadow: (color: .clear, radius: 0, x: 0, y: 0)
+                leadingLabel: .lineTile(
+                    .init(
+                        text: String(number),
+                        backgroundColor: .black,
+                        textColor: .white,
+                        textShadow: (color: .clear, radius: 0, x: 0, y: 0)
+                    )
                 ),
                 headerRow: .init(
                     style: .tube,
@@ -110,13 +112,7 @@ struct StationBoardsView: View {
         cellItems: (1...5).map { number in
             ArrivalsBoardCellItem(
                 id: "placeholder-\(number)",
-                numberLabel: .init(
-                    text: "000",
-                    width: .route,
-                    backgroundColor: .bus,
-                    textColor: .white,
-                    textShadow: (color: .clear, radius: 0, x: 0, y: 0)
-                ),
+                leadingLabel: .busRoute(arrivalNumber: number, route: "000"),
                 headerRow: .init(
                     style: .tube,
                     destination: .towards("Placeholder destination"),

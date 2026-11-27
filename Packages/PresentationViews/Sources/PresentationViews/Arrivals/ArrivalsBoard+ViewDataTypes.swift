@@ -21,16 +21,15 @@ public struct ArrivalsBoardState: Identifiable, Sendable {
 struct ArrivalsBoardCellItem: Identifiable, Sendable {
 
     struct NumberLabel {
-        enum Width {
-            case number
-            case route
-        }
-
         let text: String
-        var width: Width = .number
         let backgroundColor: Color
         let textColor: Color
         let textShadow: TextShadowSettings
+    }
+
+    enum LeadingLabel {
+        case lineTile(NumberLabel)
+        case busRoute(arrivalNumber: Int, route: String)
     }
 
     enum TextType {
@@ -73,7 +72,7 @@ struct ArrivalsBoardCellItem: Identifiable, Sendable {
     }
 
     let id: String
-    let numberLabel: NumberLabel
+    let leadingLabel: LeadingLabel
     let headerRow: HeaderRowState
     let footerRow: FooterRowType?
 }
