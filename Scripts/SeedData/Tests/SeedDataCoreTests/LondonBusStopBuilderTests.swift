@@ -295,3 +295,34 @@ struct LondonBusStopBuilderTests {
         )
     }
 }
+
+struct TfLStopPointsPageTests {
+
+    private func page(stopCount: Int, pageSize: Int = 3, total: Int = 9) -> TfLStopPointsPage {
+        let stopPoints = (0..<stopCount).map { TfLStopPoint(naptanId: "490\($0)", commonName: "Stop", icsCode: nil, lat: 51.5, lon: -0.1) }
+        return TfLStopPointsPage(stopPoints: stopPoints, pageSize: pageSize, total: total, page: 1)
+    }
+
+    @Test
+    func aFullPageIsNotTheLast() {
+        #expect(!page(stopCount: 3).isLastPage)
+    }
+
+    @Test
+    func aShortPageIsTheLast() {
+        #expect(page(stopCount: 2).isLastPage)
+    }
+
+    @Test
+    func anEmptyPageIsTheLast() {
+        #expect(page(stopCount: 0).isLastPage)
+        #expect(page(stopCount: 0, pageSize: 0).isLastPage)
+    }
+
+    // TfL reported a total of 32,571 on its first pages and about 58,000 on its 33rd in the same run.
+    @Test
+    func ignoresTheReportedTotal() {
+        #expect(!page(stopCount: 3, total: 3).isLastPage)
+        #expect(page(stopCount: 2, total: 58_000).isLastPage)
+    }
+}

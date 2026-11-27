@@ -106,6 +106,11 @@ public struct TfLStopPointsPage: Decodable, Equatable, Sendable {
         self.total = total
         self.page = page
     }
+
+    /// TfL's `total` changes between pages of the same run, so only a short or empty page marks the end.
+    public var isLastPage: Bool {
+        stopPoints.isEmpty || stopPoints.count < pageSize
+    }
 }
 
 public struct TfLLine: Decodable, Equatable, Sendable {

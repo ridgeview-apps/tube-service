@@ -187,15 +187,18 @@ struct SeedData {
     static func generateLondonBusStops(client: TfLClient, fileURL: URL, options: Options) async throws -> DatasetResult {
         var stopPoints: [TfLStopPoint] = []
         var page = 1
-        var pageCount = 1
-        repeat {
-            print("Fetching bus stop points, page \(page) of \(page == 1 ? "?" : String(pageCount))…")
+        while true {
+            print("Fetching bus stop points, page \(page)…")
             let response = try await client.fetchBusStopPoints(page: page)
-            guard !response.stopPoints.isEmpty else { break }
             stopPoints += response.stopPoints
-            pageCount = min(maximumBusStopPages, Int((Double(response.total) / Double(max(response.pageSize, 1))).rounded(.up)))
+            if response.isLastPage {
+                break
+            }
+            guard page < maximumBusStopPages else {
+                throw UsageError("TfL still had bus stop points after \(maximumBusStopPages) pages; check its paging")
+            }
             page += 1
-        } while page <= pageCount
+        }
 
         print("Fetching NaPTAN's London stops…")
         let naptanStops = try await NaptanClient().fetchLondonStops()
@@ -216,7 +219,7 @@ struct SeedData {
         )
     }
 
-    /// TfL had 33 pages in 2026; the cap only stops a runaway loop if its paging changes.
+    /// TfL had 33 pages in 2026; the cap stops a runaway loop if its paging changes.
     static let maximumBusStopPages = 100
 
     /// Reports the run and writes the file unless there's an error or it's a dry run.
