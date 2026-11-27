@@ -10,6 +10,12 @@ struct BusStopArrivalsScreen: View {
     @Environment(Navigator.self) private var navigator
     @Environment(BusStopsDataStore.self) private var busStops
 
+    @AppStorage(
+        UserDefaults.Keys.userPreferences.rawValue,
+        store: AppDependencies.current.userDefaults.value
+    )
+    private var userPreferences: UserPreferences = .default
+
     @State private var arrivalsBoard = ArrivalsBoardStore(
         tflAPI: AppDependencies.current.tflAPI,
         now: { AppDependencies.current.clock.now }
@@ -32,6 +38,7 @@ struct BusStopArrivalsScreen: View {
             selectedRoute: selectedRoute,
             arrivals: arrivals,
             notices: busStops.notices(forStopID: stop.id),
+            isFavourite: isFavouriteStop,
             onRefresh: {
                 // In its own task because SwiftUI cancels the refreshable's task when the screen updates
                 // mid-refresh, which would cancel the board's fetch too
@@ -48,6 +55,9 @@ struct BusStopArrivalsScreen: View {
                     openInfo()
                 }
             }
+            ToolbarItem {
+                FavouritesButton(.busStop, style: .small, isSelected: isFavouriteStop)
+            }
         }
         // Restarts on appear too, because the refresh stops while another screen is pushed on top
         .onAppear {
@@ -60,6 +70,7 @@ struct BusStopArrivalsScreen: View {
             arrivalsBoard.stopAutoRefresh()
         }
         .task(id: stop) {
+            userPreferences.saveRecentlySelectedBusStop(stop.id)
             await busStops.refreshNoticesIfStale(for: stop.id)
         }
         .onSceneDidBecomeActive {
@@ -86,6 +97,18 @@ struct BusStopArrivalsScreen: View {
             refreshDate: arrivalsBoard.boardData.fetchedAt,
             loadingState: arrivalsBoard.boardData.fetchState.loadingState
         )
+    }
+
+    private var isFavouriteStop: Binding<Bool> {
+        .init {
+            userPreferences.containsFavouriteStop(.busStop(id: stop.id))
+        } set: { isFavourite in
+            if isFavourite {
+                userPreferences.addFavouriteStop(.busStop(id: stop.id))
+            } else {
+                userPreferences.removeFavouriteStops([.busStop(id: stop.id)])
+            }
+        }
     }
 
     private func refreshArrivalsBoard() async {

@@ -183,6 +183,17 @@
         }
       }
     },
+    "arrivals.no.favourites.bus.subtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap ★ on a stop to see its arrivals here."
+          }
+        }
+      }
+    },
     "arrivals.no.favourites.button.title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -564,6 +575,50 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove this station from your favourites?"
+          }
+        }
+      }
+    },
+    "favourites.button.stop.add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add stop to favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.stop.added" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop added to favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.stop.remove" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove stop from favourites"
+          }
+        }
+      }
+    },
+    "favourites.button.stop.remove.confirm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove this stop from your favourites?"
           }
         }
       }
