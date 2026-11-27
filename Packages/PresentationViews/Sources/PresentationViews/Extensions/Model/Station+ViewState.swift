@@ -17,6 +17,7 @@ public extension Sequence where Element == Station {
         return stops.compactMap { stop in
             switch stop {
             case .station(let id): stationsByID[id]
+            case .busStop: nil
             }
         }
     }

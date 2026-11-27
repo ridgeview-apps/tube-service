@@ -2,7 +2,7 @@ import Models
 import Shared
 import SwiftUI
 
-/// A bus stop's live board, below its direction, the stop opposite and any current notice.
+/// A bus stop's live board, below its direction, the stop opposite and any current notice, and above the favourite button.
 public struct BusStopArrivalsView: View {
 
     public enum Action {
@@ -19,6 +19,7 @@ public struct BusStopArrivalsView: View {
     let arrivals: LiveArrivals
     /// Nil until they first arrive.
     let notices: [StationNotice]?
+    @Binding var isFavourite: Bool
     let onRefresh: @Sendable () async -> Void
     let onAction: (Action) -> Void
 
@@ -31,6 +32,7 @@ public struct BusStopArrivalsView: View {
         selectedRoute: String?,
         arrivals: LiveArrivals,
         notices: [StationNotice]?,
+        isFavourite: Binding<Bool>,
         onRefresh: @escaping @Sendable () async -> Void,
         onAction: @escaping (Action) -> Void
     ) {
@@ -40,6 +42,7 @@ public struct BusStopArrivalsView: View {
         self.selectedRoute = selectedRoute
         self.arrivals = arrivals
         self.notices = notices
+        self._isFavourite = isFavourite
         self.onRefresh = onRefresh
         self.onAction = onAction
     }
@@ -68,6 +71,10 @@ public struct BusStopArrivalsView: View {
                 }
                 .padding(.horizontal, 16)
                 StationBoardsView(arrivals: arrivals, style: .bus)
+                FavouritesButton(.busStop, style: .large, isSelected: $isFavourite)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
             }
             .padding(.top, hasChips ? 8 : 16)
             .padding(.bottom, 16)
@@ -190,6 +197,7 @@ private struct Previewer: View {
     var notices: [StationNotice]? = []
     var hasOpposite = true
     @State var selectedRoute: String?
+    @State private var isFavourite = false
     @State private var shownStop: BusStop?
 
     private var currentStop: BusStop { shownStop ?? stop }
@@ -207,6 +215,7 @@ private struct Previewer: View {
                     loadingState: loadingState
                 ),
                 notices: notices,
+                isFavourite: $isFavourite,
                 onRefresh: {},
                 onAction: { action in
                     switch action {

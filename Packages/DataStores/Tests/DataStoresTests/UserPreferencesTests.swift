@@ -10,9 +10,11 @@ struct UserPreferencesTests {
     func rawValueRoundTripPreservesPreferences() throws {
         var expected = UserPreferences.default
         expected.addFavouriteStop(.station(id: "HUBKGX"))
+        expected.addFavouriteStop(.busStop(id: "490000129D"))
         expected.addFavouriteStop(.station(id: "940GZZLUAGL"))
         expected.addFavouriteLine(.bakerloo)
         expected.saveRecentlySelectedStation("940GZZLUAGL")
+        expected.saveRecentlySelectedBusStop("490000129E")
         expected.saveSelectedLineGroup(stationWithTwoLineGroups.lineGroups[1], at: stationWithTwoLineGroups)
         expected.journeyModePreset = .custom([.tube, .walking])
         expected.markAsRead(systemStatusMessageID: "message")
@@ -31,6 +33,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteStops == expected.favouriteStops)
         #expect(decoded.favouriteLineIDs == expected.favouriteLineIDs)
         #expect(decoded.recentlySelectedStations == expected.recentlySelectedStations)
+        #expect(decoded.recentlySelectedBusStops == expected.recentlySelectedBusStops)
         #expect(decoded.selectedLineGroupIDs == expected.selectedLineGroupIDs)
         #expect(decoded.journeyModePreset == expected.journeyModePreset)
         #expect(decoded.recentlySavedJourneys == expected.recentlySavedJourneys)
@@ -46,6 +49,7 @@ struct UserPreferencesTests {
         #expect(decoded.favouriteStops.isEmpty)
         #expect(decoded.favouriteLineIDs.isEmpty)
         #expect(decoded.recentlySelectedStations.isEmpty)
+        #expect(decoded.recentlySelectedBusStops.isEmpty)
         #expect(decoded.selectedLineGroupIDs.isEmpty)
         #expect(decoded.journeyModePreset == .trainAndBus)
         #expect(decoded.recentlySavedJourneys.isEmpty)
@@ -161,12 +165,22 @@ struct UserPreferencesTests {
 
     @Test
     func decodingFavouriteStopsSkipsUnknownStopTypesAndDuplicates() throws {
-        let json = #"{"favouriteStops":[{"station":{"id":"HUBKGX"}},{"busStop":{"id":"490000001A"}},{"station":{"id":"HUBKGX"}}]}"#
+        let json = #"{"favouriteStops":[{"station":{"id":"HUBKGX"}},{"pier":{"id":"930GBSP"}},{"station":{"id":"HUBKGX"}}]}"#
         let data = try #require(json.data(using: .utf8))
 
         let decoded = try JSONDecoder().decode(UserPreferences.self, from: data)
 
         #expect(decoded.favouriteStops == [.station(id: "HUBKGX")])
+    }
+
+    @Test
+    func decodingFavouriteStopsKeepsStationsAndBusStopsInOneOrder() throws {
+        let decoded = try decodePreferences(
+            #"{"favouriteStops":[{"busStop":{"id":"490000129D"}},{"station":{"id":"HUBKGX"}},{"busStop":{"id":"490000129E"}}]}"#
+        )
+
+        #expect(decoded.favouriteStops == [.busStop(id: "490000129D"), .station(id: "HUBKGX"), .busStop(id: "490000129E")])
+        #expect(decoded.favouriteStops.busStopIDs == ["490000129D", "490000129E"])
     }
 
     // MARK: - Legacy favourites migration
@@ -269,6 +283,40 @@ struct UserPreferencesTests {
         userPreferences.clearRecentlySelectedStations()
 
         #expect(userPreferences.recentlySelectedStations.isEmpty)
+    }
+
+    @Test
+    func savingARecentBusStopPutsItFirstWithoutDuplicates() throws {
+        var userPreferences = UserPreferences.default
+
+        userPreferences.saveRecentlySelectedBusStop("490000129D")
+        userPreferences.saveRecentlySelectedBusStop("490000129E")
+        userPreferences.saveRecentlySelectedBusStop("490000129D")
+
+        #expect(userPreferences.recentlySelectedBusStops == ["490000129D", "490000129E"])
+    }
+
+    @Test
+    func recentBusStopsKeepTheLatestTen() throws {
+        var userPreferences = UserPreferences.default
+
+        for number in 1...11 {
+            userPreferences.saveRecentlySelectedBusStop("stop-\(number)")
+        }
+
+        #expect(userPreferences.recentlySelectedBusStops == (2...11).reversed().map { "stop-\($0)" })
+    }
+
+    @Test
+    func recentBusStopsAreSeparateFromRecentStations() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.saveRecentlySelectedStation("940GZZLUAGL")
+        userPreferences.saveRecentlySelectedBusStop("490000129D")
+
+        userPreferences.clearRecentlySelectedBusStops()
+
+        #expect(userPreferences.recentlySelectedBusStops.isEmpty)
+        #expect(userPreferences.recentlySelectedStations == ["940GZZLUAGL"])
     }
 
     // MARK: - Selected line groups

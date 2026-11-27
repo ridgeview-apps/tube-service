@@ -73,6 +73,8 @@ struct ArrivalsStopPickerScreen: View {
     @ViewBuilder private var selectedModeView: some View {
         if arrivalsMode == .buses && searchText.trimmed().isEmpty {
             BusStopsView(
+                favourites: favouriteBusStops,
+                recents: recentBusStops,
                 nearby: nearbyBusPlaces,
                 locationAccess: locationAccess,
                 onAction: handleBusStopsAction
@@ -97,6 +99,16 @@ struct ArrivalsStopPickerScreen: View {
             within: Self.maxBusPlaceDistance,
             limit: Self.maxBusNearbyPlaces
         )
+    }
+
+    private var favouriteBusStops: [BusStop] {
+        BusStopDatabase.london.stops(ids: userPreferences.favouriteStops.busStopIDs)
+    }
+
+    private var recentBusStops: [BusStop] {
+        let favouriteIDs = Set(userPreferences.favouriteStops.busStopIDs)
+        let recentIDs = userPreferences.recentlySelectedBusStops.filter { !favouriteIDs.contains($0) }
+        return Array(BusStopDatabase.london.stops(ids: recentIDs).prefix(Self.maxRecents))
     }
 
     private var content: ArrivalsStopPickerView.Content {
@@ -159,6 +171,12 @@ struct ArrivalsStopPickerScreen: View {
             navigator.push(.busStop(.arrivals(stop)))
         case .tappedRefreshNearby:
             location.refreshCurrentLocation()
+        case .tappedClearRecents:
+            userPreferences.clearRecentlySelectedBusStops()
+        case .reorderFavourites(let stopIDs):
+            userPreferences.reorderFavouriteStops(stopIDs.map { .busStop(id: $0) })
+        case .removeFavourites(let stopIDs):
+            userPreferences.removeFavouriteStops(stopIDs.map { .busStop(id: $0) })
         }
     }
 }

@@ -5,6 +5,7 @@ extension UserPreferences {
     enum CodingKeys: String, CodingKey {
         case favouriteStops
         case recentlySelectedStations
+        case recentlySelectedBusStops
         case selectedLineGroupIDs
         case favouriteLineIDs
         case journeyModePreset
@@ -21,6 +22,7 @@ extension UserPreferences {
             favouriteStops = try Self.migratedLegacyFavouriteStops(from: decoder)
         }
         recentlySelectedStations = (try? container.decode([Station.ID].self, forKey: .recentlySelectedStations)) ?? []
+        recentlySelectedBusStops = (try? container.decode([BusStop.ID].self, forKey: .recentlySelectedBusStops)) ?? []
         selectedLineGroupIDs =
             (try? container.decode([Station.ID: Station.LineGroup.ID].self, forKey: .selectedLineGroupIDs)) ?? [:]
 
@@ -37,6 +39,7 @@ extension UserPreferences {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(favouriteStops, forKey: .favouriteStops)
         try container.encode(recentlySelectedStations, forKey: .recentlySelectedStations)
+        try container.encode(recentlySelectedBusStops, forKey: .recentlySelectedBusStops)
         try container.encode(selectedLineGroupIDs, forKey: .selectedLineGroupIDs)
         try container.encode(favouriteLineIDs, forKey: .favouriteLineIDs)
         try container.encode(journeyModePreset, forKey: .journeyModePreset)

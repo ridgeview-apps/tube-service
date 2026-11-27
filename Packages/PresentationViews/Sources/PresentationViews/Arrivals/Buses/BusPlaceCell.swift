@@ -95,17 +95,7 @@ struct BusPlaceCell: View {
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(accessibilityLabel(for: stop))
+        .accessibilityLabel(stop.accessibilityDescription(locale: locale))
         .accessibilityAddTraits(.isButton)
-    }
-
-    private func accessibilityLabel(for stop: BusStop) -> String {
-        let routes = stop.routes.formatted(.list(type: .and).locale(locale))
-        let parts = [
-            stop.letter.map { String(localized: .busStopLetter($0)) },
-            stop.towards.map { String(localized: .busStopTowards($0)) },
-            String(localized: .busStopRoutes(routes))
-        ]
-        return parts.compactMap { $0 }.joined(separator: ", ")
     }
 }

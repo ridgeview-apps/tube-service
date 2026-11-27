@@ -103,9 +103,9 @@ struct StationViewStateTests {
     }
 
     @Test
-    func favouriteStationsSkipUnknownStations() {
+    func favouriteStationsSkipUnknownStationsAndBusStops() {
         let stations = [makeStation("940GZZLUAGL"), makeStation("HUBKGX")]
-        let stops: [FavouriteStop] = [.station(id: "NOT-A-STATION"), .station(id: "940GZZLUAGL")]
+        let stops: [FavouriteStop] = [.station(id: "NOT-A-STATION"), .busStop(id: "490000129D"), .station(id: "940GZZLUAGL")]
 
         #expect(stations.favourites(matching: stops).map(\.id) == ["940GZZLUAGL"])
     }

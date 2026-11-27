@@ -7,6 +7,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteStops: [],
         favouriteLineIDs: [],
         recentlySelectedStations: [],
+        recentlySelectedBusStops: [],
         journeyModePreset: .trainAndBus,
         recentlySavedJourneys: [],
         readSystemStatusMessage: nil
@@ -15,6 +16,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     public internal(set) var favouriteStops: [FavouriteStop]
     public internal(set) var favouriteLineIDs: [Line.ID]
     public var recentlySelectedStations: [Station.ID]
+    public var recentlySelectedBusStops: [BusStop.ID]
     public internal(set) var selectedLineGroupIDs: [Station.ID: Station.LineGroup.ID]
     public var journeyModePreset: JourneyModePreset
     public var recentlySavedJourneys: [SavedJourney]
@@ -24,6 +26,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         favouriteStops: [FavouriteStop],
         favouriteLineIDs: [Line.ID] = [],
         recentlySelectedStations: [Station.ID] = [],
+        recentlySelectedBusStops: [BusStop.ID] = [],
         selectedLineGroupIDs: [Station.ID: Station.LineGroup.ID] = [:],
         journeyModePreset: JourneyModePreset,
         recentlySavedJourneys: [SavedJourney],
@@ -32,6 +35,7 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         self.favouriteStops = favouriteStops.removingDuplicates()
         self.favouriteLineIDs = favouriteLineIDs.removingDuplicates()
         self.recentlySelectedStations = recentlySelectedStations
+        self.recentlySelectedBusStops = recentlySelectedBusStops
         self.selectedLineGroupIDs = selectedLineGroupIDs
         self.journeyModePreset = journeyModePreset
         self.recentlySavedJourneys = recentlySavedJourneys
@@ -103,14 +107,19 @@ public struct UserPreferences: Equatable, Codable, Sendable {
     // MARK: - Recent Selections
 
     public mutating func saveRecentlySelectedStation(_ stationID: Station.ID) {
-        var updatedValues = recentlySelectedStations
-        updatedValues.removeAll { $0 == stationID }
-        updatedValues.insert(stationID, at: 0)
-        recentlySelectedStations = Array(updatedValues.prefix(10))
+        recentlySelectedStations = recentlySelectedStations.savingRecent(stationID)
     }
 
     public mutating func clearRecentlySelectedStations() {
         recentlySelectedStations = []
+    }
+
+    public mutating func saveRecentlySelectedBusStop(_ stopID: BusStop.ID) {
+        recentlySelectedBusStops = recentlySelectedBusStops.savingRecent(stopID)
+    }
+
+    public mutating func clearRecentlySelectedBusStops() {
+        recentlySelectedBusStops = []
     }
 
     public mutating func saveRecentJourney(_ journey: SavedJourney) {
@@ -159,6 +168,12 @@ public struct UserPreferences: Equatable, Codable, Sendable {
 
     public mutating func markAsRead(systemStatusMessageID: SystemStatus.ID) {
         readSystemStatusMessage = systemStatusMessageID
+    }
+}
+
+private extension Array where Element == String {
+    func savingRecent(_ id: String) -> [String] {
+        Array(([id] + filter { $0 != id }).prefix(10))
     }
 }
 

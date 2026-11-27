@@ -10,6 +10,12 @@ public struct BusStopDatabase: Sendable {
         self.stops = stops
     }
 
+    /// The stops with the given IDs, in the same order, skipping any that aren't found.
+    public func stops(ids: [BusStop.ID]) -> [BusStop] {
+        let stopsByID = Dictionary(stops.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
+        return ids.compactMap { stopsByID[$0] }
+    }
+
     /// The stops nearest to `location`, nearest first.
     public func nearbyStops(to location: LocationCoordinate, limit: Int) -> [NearbyBusStop] {
         let nearest =

@@ -10,6 +10,7 @@ public struct FavouritesButton: View {
     /// Named in the copy, as both screens use the same ★ and the Station screen pushes the line screen
     public enum Kind {
         case station
+        case busStop
         case line
     }
 
@@ -133,6 +134,7 @@ private extension FavouritesButton.Kind {
     var addTitle: LocalizedStringResource {
         switch self {
         case .station: .favouritesButtonStationAdd
+        case .busStop: .favouritesButtonStopAdd
         case .line: .favouritesButtonLineAdd
         }
     }
@@ -140,6 +142,7 @@ private extension FavouritesButton.Kind {
     var addedTitle: LocalizedStringResource {
         switch self {
         case .station: .favouritesButtonStationAdded
+        case .busStop: .favouritesButtonStopAdded
         case .line: .favouritesButtonLineAdded
         }
     }
@@ -147,6 +150,7 @@ private extension FavouritesButton.Kind {
     var removeTitle: LocalizedStringResource {
         switch self {
         case .station: .favouritesButtonStationRemove
+        case .busStop: .favouritesButtonStopRemove
         case .line: .favouritesButtonLineRemove
         }
     }
@@ -154,6 +158,7 @@ private extension FavouritesButton.Kind {
     var removeConfirmTitle: LocalizedStringResource {
         switch self {
         case .station: .favouritesButtonStationRemoveConfirm
+        case .busStop: .favouritesButtonStopRemoveConfirm
         case .line: .favouritesButtonLineRemoveConfirm
         }
     }

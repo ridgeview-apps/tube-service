@@ -172,28 +172,11 @@ public struct ArrivalsStopPickerView: View {
     }
 
     private var noFavouritesHintRow: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "star")
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(.arrivalsNoFavouritesTitle)
-                Text(.arrivalsNoFavouritesSubtitle)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
+        NoFavouritesHintRow(
+            subtitle: .arrivalsNoFavouritesSubtitle,
             // The button only activates search, so it has nothing to do once search is active
-            if !isSearching {
-                Button(.arrivalsNoFavouritesButtonTitle) {
-                    onAction(.tappedFindStation)
-                }
-                .buttonStyle(.bordered)
-                .buttonBorderShape(.capsule)
-                .controlSize(.small)
-            }
-        }
-        .frame(minHeight: 52)
+            findButton: isSearching ? nil : (.arrivalsNoFavouritesButtonTitle, { onAction(.tappedFindStation) })
+        )
     }
 
     @ViewBuilder private func recentsSection(_ recents: [StopRow]) -> some View {

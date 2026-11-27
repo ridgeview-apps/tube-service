@@ -121,6 +121,17 @@ struct BusStopTests {
     }
 
     @Test
+    func stopsByIDFollowTheIDsOrderAndSkipUnknownIDs() {
+        let database = BusStopDatabase(stops: [
+            stop("A", metresNorth: 0),
+            stop("B", metresNorth: 10),
+            stop("C", metresNorth: 20)
+        ])
+
+        #expect(database.stops(ids: ["C", "gone", "A"]).map(\.id) == ["C", "A"])
+    }
+
+    @Test
     func oppositeStopIsTheOtherStopAtAPlaceOfTwo() {
         let northbound = stop("north", name: "Holloway Road", metresNorth: 0)
         let southbound = stop("south", name: "Holloway Road", metresNorth: 30)
