@@ -10,6 +10,7 @@ public struct BusStopsView: View {
         case tappedStop(BusStop)
         case tappedRefreshNearby
         case tappedClearRecents
+        case removeRecent(BusStop.ID)
         case reorderFavourites([BusStop.ID])
         case removeFavourites([BusStop.ID])
     }
@@ -140,6 +141,9 @@ public struct BusStopsView: View {
                         BusStopCell(stop: stop)
                     }
                     .buttonStyle(.plain)
+                    .swipeToRemove {
+                        onAction(.removeRecent(stop.id))
+                    }
                 }
             } header: {
                 HStack {

@@ -110,12 +110,20 @@ public struct UserPreferences: Equatable, Codable, Sendable {
         recentlySelectedStations = recentlySelectedStations.savingRecent(stationID)
     }
 
+    public mutating func removeRecentlySelectedStation(_ stationID: Station.ID) {
+        recentlySelectedStations.removeAll { $0 == stationID }
+    }
+
     public mutating func clearRecentlySelectedStations() {
         recentlySelectedStations = []
     }
 
     public mutating func saveRecentlySelectedBusStop(_ stopID: BusStop.ID) {
         recentlySelectedBusStops = recentlySelectedBusStops.savingRecent(stopID)
+    }
+
+    public mutating func removeRecentlySelectedBusStop(_ stopID: BusStop.ID) {
+        recentlySelectedBusStops.removeAll { $0 == stopID }
     }
 
     public mutating func clearRecentlySelectedBusStops() {

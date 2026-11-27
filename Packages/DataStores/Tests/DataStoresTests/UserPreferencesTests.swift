@@ -286,6 +286,18 @@ struct UserPreferencesTests {
     }
 
     @Test
+    func removingARecentStationKeepsTheOthersInOrder() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.saveRecentlySelectedStation("940GZZLUAGL")
+        userPreferences.saveRecentlySelectedStation("940GZZLUEFY")
+        userPreferences.saveRecentlySelectedStation("HUBKGX")
+
+        userPreferences.removeRecentlySelectedStation("940GZZLUEFY")
+
+        #expect(userPreferences.recentlySelectedStations == ["HUBKGX", "940GZZLUAGL"])
+    }
+
+    @Test
     func savingARecentBusStopPutsItFirstWithoutDuplicates() throws {
         var userPreferences = UserPreferences.default
 
@@ -305,6 +317,18 @@ struct UserPreferencesTests {
         }
 
         #expect(userPreferences.recentlySelectedBusStops == (2...11).reversed().map { "stop-\($0)" })
+    }
+
+    @Test
+    func removingARecentBusStopKeepsTheOthersInOrder() throws {
+        var userPreferences = UserPreferences.default
+        userPreferences.saveRecentlySelectedBusStop("490000129D")
+        userPreferences.saveRecentlySelectedBusStop("490000129E")
+        userPreferences.saveRecentlySelectedBusStop("490000129R")
+
+        userPreferences.removeRecentlySelectedBusStop("490000129E")
+
+        #expect(userPreferences.recentlySelectedBusStops == ["490000129R", "490000129D"])
     }
 
     @Test

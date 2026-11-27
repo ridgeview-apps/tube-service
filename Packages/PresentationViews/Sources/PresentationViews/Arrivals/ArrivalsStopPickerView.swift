@@ -14,6 +14,7 @@ public struct ArrivalsStopPickerView: View {
         case tappedFindStation
         case tappedRefreshNearby
         case tappedClearRecents
+        case removeRecent(Station.ID)
         case reorderFavourites([Station.ID])
         case removeFavourites([Station.ID])
     }
@@ -184,6 +185,9 @@ public struct ArrivalsStopPickerView: View {
             Section {
                 ForEach(recents) { row in
                     stationButton(for: row)
+                        .swipeToRemove {
+                            onAction(.removeRecent(row.stationID))
+                        }
                 }
             } header: {
                 HStack {
