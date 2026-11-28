@@ -25,7 +25,33 @@ struct BusPlaceCell: View {
 
     private var hiddenStopCount: Int { place.stops.count - visibleStops.count }
 
-    var body: some View {
+    private var onlyStop: BusStop? { place.stops.count == 1 ? place.stops.first?.stop : nil }
+
+    @ViewBuilder var body: some View {
+        if let onlyStop {
+            onlyStopButton(for: onlyStop)
+        } else {
+            stopList
+        }
+    }
+
+    private func onlyStopButton(for stop: BusStop) -> some View {
+        Button {
+            onAction(.tappedStop(stop))
+        } label: {
+            VStack(alignment: .leading, spacing: 10) {
+                header
+                stopLabel(for: stop)
+            }
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel([place.name, formattedDistance, stop.accessibilityDescription(locale: locale)].joined(separator: ", "))
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private var stopList: some View {
         VStack(alignment: .leading, spacing: 10) {
             header
             ForEach(visibleStops, id: \.stop.id) { nearbyStop in
@@ -79,23 +105,56 @@ struct BusPlaceCell: View {
         Button {
             onAction(.tappedStop(stop))
         } label: {
-            HStack(spacing: 12) {
-                BusStopTile(letter: stop.letter)
-                    .dynamicTypeSize(...DynamicTypeSize.accessibility1)
-                VStack(alignment: .leading, spacing: 4) {
-                    if let towards = stop.towards {
-                        Text(.busStopTowards(towards))
-                            .font(.subheadline)
-                    }
-                    BusRouteTags(routes: stop.routes)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .contentShape(Rectangle())
+            stopLabel(for: stop)
+                .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(stop.accessibilityDescription(locale: locale))
         .accessibilityAddTraits(.isButton)
     }
+
+    private func stopLabel(for stop: BusStop) -> some View {
+        HStack(spacing: 12) {
+            BusStopTile(letter: stop.letter)
+                .dynamicTypeSize(...DynamicTypeSize.accessibility1)
+            VStack(alignment: .leading, spacing: 4) {
+                if let towards = stop.towards {
+                    Text(.busStopTowards(towards))
+                        .font(.subheadline)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                BusRouteTags(routes: stop.routes)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+}
+
+// MARK: - Previews
+
+private struct Previewer: View {
+    let placeID: NearbyBusPlace.ID
+
+    private var place: NearbyBusPlace? {
+        BusStopDatabase.london
+            .nearbyPlaces(to: LocationCoordinate(lat: 51.6302, lon: -0.1791), within: 500, limit: 30)
+            .first { $0.id == placeID }
+    }
+
+    var body: some View {
+        List {
+            if let place {
+                BusPlaceCell(place: place, isExpanded: false) { print($0) }
+            }
+        }
+    }
+}
+
+#Preview("One stop") {
+    Previewer(placeID: "490015488M")
+}
+
+#Preview("Two stops") {
+    Previewer(placeID: "490014562W")
 }
