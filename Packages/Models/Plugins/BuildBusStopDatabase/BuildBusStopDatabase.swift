@@ -9,9 +9,8 @@ struct BuildBusStopDatabase: BuildToolPlugin {
         return [
             .buildCommand(
                 displayName: "Build londonBusStops.sqlite",
-                executable: URL(filePath: "/bin/sh"),
-                // sqlite3 appends to an existing database rather than replacing it
-                arguments: ["-c", "rm -f \"$1\" && /usr/bin/sqlite3 \"$1\" < \"$2\"", "sh", database.path, sql.path],
+                executable: URL(filePath: "/usr/bin/sqlite3"),
+                arguments: ["-bail", ":memory:", ".open --new \"\(database.path)\"", ".read \"\(sql.path)\""],
                 inputFiles: [sql],
                 outputFiles: [database]
             )
