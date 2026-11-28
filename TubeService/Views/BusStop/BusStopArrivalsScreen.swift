@@ -140,7 +140,7 @@ struct BusStopArrivalsScreen: View {
 #if DEBUG
     #Preview {
         PreviewEnvironment(withNavigationHost: true) {
-            BusStopArrivalsScreen(stop: BusStopDatabase.london.nearbyStops(to: LocationCoordinate(lat: 51.53047, lon: -0.12169), limit: 1)[0].stop)
+            BusStopArrivalsScreen(stop: BusStopDatabase.london.stops(ids: ["490000129R"])[0])
         }
     }
 #endif

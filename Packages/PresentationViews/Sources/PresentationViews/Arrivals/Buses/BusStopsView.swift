@@ -234,7 +234,7 @@ private struct NearbyBusStopsMap: View {
 private struct Previewer: View {
     var location = LocationCoordinate(lat: 51.530823, lon: -0.123821)
     var locationAccessState: LocationAccess.State = .allowed(.loaded)
-    var placeCount = 20
+    var placeCount = 30
     var favouriteIDs = ["490000129D", "490000129R"]
     var recentIDs = ["490000129E"]
 

@@ -27,7 +27,7 @@ struct ArrivalsStopPickerScreen: View {
     private static let maxNearby = 9
     private static let maxRecents = 3
 
-    private static let maxBusNearbyPlaces = 20
+    private static let maxBusNearbyPlaces = 30
     private static let maxBusPlaceDistance: Double = 500
 
     @State private var searchText = ""

@@ -6,29 +6,44 @@ public struct BusStop: Identifiable, Hashable, Sendable {
     /// The stop's NaPTAN ID, which TfL's arrivals take.
     public let id: ID
     public let name: String
-    /// The letter on the stop's flag, e.g. "H" or "KX". Many outer London stops have none.
+    /// NaPTAN's locality, e.g. "Pentonville". Stops outside London have none.
+    public let locality: String?
+    /// The letter on the stop's flag, e.g. "H", "KX" or "155". Many outer London stops have none.
     public let letter: String?
     public let towards: String?
+    /// The 5-digit code on the stop's flag. A few codes are shared by two stops.
+    public let stopCode: String?
     /// TfL's stop area, shared by some stops on either side of a road. The busiest stops often have none.
     public let stopAreaID: String?
     public let location: LocationCoordinate
+    /// The direction buses travel from the stop, e.g. "SE".
+    public let bearing: String?
+    public let isHailAndRide: Bool
     public let routes: [String]
 
     public init(
         id: ID,
         name: String,
+        locality: String?,
         letter: String?,
         towards: String?,
+        stopCode: String?,
         stopAreaID: String?,
         location: LocationCoordinate,
+        bearing: String?,
+        isHailAndRide: Bool,
         routes: [String]
     ) {
         self.id = id
         self.name = name
+        self.locality = locality
         self.letter = letter
         self.towards = towards
+        self.stopCode = stopCode
         self.stopAreaID = stopAreaID
         self.location = location
+        self.bearing = bearing
+        self.isHailAndRide = isHailAndRide
         self.routes = routes
     }
 }

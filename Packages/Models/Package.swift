@@ -23,8 +23,10 @@ let package = Package(
             name: "Models",
             dependencies: ["Shared"],
             path: "Sources/Models",
-            resources: [.process("Resources")]
+            resources: [.process("Resources")],
+            plugins: ["BuildBusStopDatabase"]
         ),
+        .plugin(name: "BuildBusStopDatabase", capability: .buildTool()),
         .target(
             name: "ModelStubs",
             dependencies: [

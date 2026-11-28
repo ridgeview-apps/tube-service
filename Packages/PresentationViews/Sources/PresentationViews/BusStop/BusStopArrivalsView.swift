@@ -190,7 +190,7 @@ private extension View {
 import ModelStubs
 
 private struct Previewer: View {
-    var stop = BusStopDatabase.london.nearbyStops(to: LocationCoordinate(lat: 51.53047, lon: -0.12169), limit: 1)[0].stop
+    var stop = BusStopDatabase.london.stops(ids: ["490000129R"])[0]
     var busArrivals: [BusArrival] = ModelStubs.busArrivalsKingsCrossStationR
     var loadingState: LoadingState = .loaded
     var refreshDate: Date? = .now
@@ -236,7 +236,7 @@ private struct Previewer: View {
 }
 
 #Preview("Opposite stop") {
-    Previewer(stop: BusStopDatabase.london.nearbyStops(to: LocationCoordinate(lat: 51.62669, lon: -0.17531), limit: 1)[0].stop)
+    Previewer(stop: BusStopDatabase.london.stops(ids: ["490006060N"])[0])
 }
 
 #Preview("Route selected") {
@@ -265,10 +265,14 @@ private struct Previewer: View {
         stop: BusStop(
             id: "490000129X",
             name: "Swan Lane",
+            locality: nil,
             letter: "SL",
             towards: "Whetstone",
+            stopCode: nil,
             stopAreaID: nil,
             location: LocationCoordinate(lat: 51.63, lon: -0.18),
+            bearing: nil,
+            isHailAndRide: false,
             routes: ["263"]
         ),
         busArrivals: ModelStubs.busArrivalsKingsCrossStationR.filter { $0.lineName == "73" }.map {
@@ -283,10 +287,14 @@ private struct Previewer: View {
         stop: BusStop(
             id: "490000129Y",
             name: "Totteridge & Whetstone Station",
+            locality: nil,
             letter: nil,
             towards: "Barnet",
+            stopCode: nil,
             stopAreaID: nil,
             location: LocationCoordinate(lat: 51.6302, lon: -0.1791),
+            bearing: nil,
+            isHailAndRide: false,
             routes: ["34", "125", "251"]
         ),
         hasOpposite: false
