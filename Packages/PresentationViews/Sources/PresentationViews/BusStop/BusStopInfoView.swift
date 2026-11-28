@@ -44,7 +44,7 @@ public struct BusStopInfoView: View {
 
 // MARK: - Previews
 
-private let previewStop = BusStopDatabase.london.nearbyStops(to: LocationCoordinate(lat: 51.53047, lon: -0.12169), limit: 1)[0].stop
+private let previewStop = BusStopDatabase.london.stops(ids: ["490000129R"])[0]
 
 #Preview("Stop info") {
     Color.clear.sheet(isPresented: .constant(true)) {

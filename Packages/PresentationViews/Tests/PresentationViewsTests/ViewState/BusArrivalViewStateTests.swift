@@ -8,10 +8,14 @@ struct BusArrivalViewStateTests {
     private let stop = BusStop(
         id: "490000129R",
         name: "King's Cross Station",
+        locality: nil,
         letter: "R",
         towards: "Euston",
+        stopCode: nil,
         stopAreaID: nil,
         location: LocationCoordinate(lat: 51.53047, lon: -0.12169),
+        bearing: nil,
+        isHailAndRide: false,
         routes: ["30", "73", "N73"]
     )
 
@@ -59,10 +63,14 @@ struct BusArrivalViewStateTests {
         let stopWithoutLetter = BusStop(
             id: "490013766E",
             name: "Totteridge & Whetstone Station",
+            locality: nil,
             letter: nil,
             towards: "Barnet",
+            stopCode: nil,
             stopAreaID: nil,
             location: LocationCoordinate(lat: 51.6302, lon: -0.1791),
+            bearing: nil,
+            isHailAndRide: false,
             routes: ["34"]
         )
 

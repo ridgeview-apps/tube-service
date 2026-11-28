@@ -71,16 +71,58 @@ struct BusStopTests {
     }
 
     @Test
-    func databaseReturnsTheNearestStopsUpToTheLimit() {
+    func everyBundledStopReads() throws {
+        let stops = try BusStopDatabase.london.allStops()
+
+        #expect(!stops.isEmpty)
+    }
+
+    @Test
+    func databaseKeepsEveryFieldOfAStop() {
+        let full = BusStop(
+            id: "490000129D",
+            name: "King's Cross Station",
+            locality: "Kings Cross",
+            letter: "155",
+            towards: "Farringdon or Holborn Circus",
+            stopCode: "54174",
+            stopAreaID: "490G00129D",
+            location: LocationCoordinate(lat: 51.53045, lon: -0.12328),
+            bearing: "SE",
+            isHailAndRide: true,
+            routes: ["46", "63", "N63"]
+        )
+        let sparse = BusStop(
+            id: "03700074",
+            name: "Langley Road",
+            locality: nil,
+            letter: nil,
+            towards: nil,
+            stopCode: nil,
+            stopAreaID: nil,
+            location: LocationCoordinate(lat: 51.504967, lon: -0.573346),
+            bearing: nil,
+            isHailAndRide: false,
+            routes: []
+        )
+        let database = BusStopDatabase(stops: [full, sparse])
+
+        #expect(database.stops(ids: [full.id, sparse.id]) == [full, sparse])
+    }
+
+    @Test
+    func nearbyPlacesIncludeStopsInEveryDirection() {
         let database = BusStopDatabase(stops: [
-            stop("far", metresNorth: 300),
-            stop("nearest", metresNorth: 10),
-            stop("near", metresNorth: 100)
+            stop("north", name: "North Road", metresNorth: 450),
+            stop("south", name: "South Road", metresNorth: -450),
+            stop("east", name: "East Road", metresEast: 450),
+            stop("west", name: "West Road", metresEast: -450),
+            stop("too far east", name: "Far Road", metresEast: 600)
         ])
 
-        let nearby = database.nearbyStops(to: origin, limit: 2)
+        let places = database.nearbyPlaces(to: origin, within: 500, limit: 20)
 
-        #expect(nearby.map(\.stop.id) == ["nearest", "near"])
+        #expect(Set(places.map(\.id)) == ["north", "south", "east", "west"])
     }
 
     @Test
@@ -167,14 +209,27 @@ struct BusStopTests {
         NearbyBusStop(stop(id, name: name, area: area, metresNorth: metresNorth), distance: metresNorth)
     }
 
-    private func stop(_ id: String, name: String = "Stop", area: String? = nil, metresNorth: Double) -> BusStop {
+    private func stop(
+        _ id: String,
+        name: String = "Stop",
+        area: String? = nil,
+        metresNorth: Double = 0,
+        metresEast: Double = 0
+    ) -> BusStop {
         BusStop(
             id: id,
             name: name,
+            locality: nil,
             letter: nil,
             towards: nil,
+            stopCode: nil,
             stopAreaID: area,
-            location: LocationCoordinate(lat: origin.lat + metresNorth / 111_195, lon: origin.lon),
+            location: LocationCoordinate(
+                lat: origin.lat + metresNorth / 111_195,
+                lon: origin.lon + metresEast / (111_195 * cos(origin.lat * .pi / 180))
+            ),
+            bearing: nil,
+            isHailAndRide: false,
             routes: []
         )
     }

@@ -43,8 +43,8 @@ extension BusStop {
 
 #Preview(traits: .sizeThatFitsLayout) {
     VStack(alignment: .leading, spacing: 16) {
-        ForEach(BusStopDatabase.london.nearbyStops(to: LocationCoordinate(lat: 51.530823, lon: -0.123821), limit: 3), id: \.stop.id) {
-            BusStopCell(stop: $0.stop)
+        ForEach(BusStopDatabase.london.stops(ids: ["490000129D", "490000129R", "490001227E", "40004406070A"])) {
+            BusStopCell(stop: $0)
         }
     }
     .frame(width: 360)
